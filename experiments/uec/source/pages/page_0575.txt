@@ -1,0 +1,15 @@
+ 575 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+An overview of the encapsulations over IPv4, IPv6, IP/UDP, and UFH_32 is depicted in Figure 3-145. 
+When using native IP encapsulation, the first header of the IP payload is the PDS entropy header, and 
+the next header is the TSS header. When using UDP/IP encapsulation, the first header of the UDP 
+payload is the TSS header. The PDS header implicitly always follows the TSS header (i.e., no next header 
+field is present in the TSS header). The following section describes how these headers are constructed. 
+The length of the encapsulated payload, L, includes the UET header, UET payload, and UET trailer. The 
+length is included within the ipv4.total_length, ipv6.payload_length or udp.length field depending on 
+how the length field is encoded in the packet encapsulations shown in Figure 3-146, Figure 3-147, and 
+Figure 3-148. 
+ 
+Figure 3-145 - UET Secure Transport Packets 
+ 

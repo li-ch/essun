@@ -1,0 +1,40 @@
+ 284 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The wire protocol does not provide direct support for fully ordered completions at the target. For 
+example, rendezvous transactions do not use the same sequence number space for payload delivery as 
+they do for initial request processing. As another example, the fully ordered completion order for 
+deferrable sends is based on the order in which matching receives are provided to the implementation. 
+This is beyond the scope of the transport definition. 
+Implementation Note: 
+The transport definition does not preclude libfabric provider implementations that deliver stronger 
+completion ordering; however, such implementations are vendor-defined. One historical completion 
+model—where send-after-write ordering is guaranteed—delivers the completion for a send 
+transaction only after all preceding writes have completed. This requires leveraging the information 
+from the sequence number space to determine when all prior writes have completed. 
+ 
+3.4.9.1.3 Data Ordering 
+Data ordering refers to the order in which data for a given target location is placed. Specifically, if two 
+messages access a single memory address from a single source, data ordering describes the order in 
+which the accesses become globally observable. Ordering between bytes in a given message is not 
+defined. That is, the last byte of a message MAY become globally observable in host memory before the 
+first byte. Similarly, the last byte of a message MAY be the last byte of a message deposited in memory. 
+Implementations MAY provide stronger ordering semantics, but those are beyond the scope of this 
+specification and are not likely to be portable. 
+The RUD and RUDI protocols do not make any data ordering guarantees. 
+Implementations of the ROD protocol that support atomic operations MAY provide an option to achieve 
+data ordering (RAW, WAW, WAR) for ATOMIC and FETCHING_ATOMIC operations on data that is 16 
+bytes in size or less. The granularity of such ordering is limited to the size of a single element of the size 
+of the datatype. Implementations MAY combine atomic operations on the target FEP so that not every 
+update is globally observable at the target. 
+Informative Text: 
+The node and bus architecture that a FEP is attached to are beyond the scope of this specification; 
+however, the data ordering model is purposefully relaxed based on known limitations in 
+contemporary (ca. 2025) architectures and implementations. 
+ 
+3.4.9.2 Consistency and Atomicity 
+If atomic operations are supported, atomicity MUST be guaranteed at the granularity of a single element 
+of the size of the datatype. 
+If atomic operations are supported, concurrent atomic operations MUST be consistent at the target at 
+the granularity of a single element of the size of the datatype. Concurrent operations are defined as two 
+operations targeting the same {FA, JobID, PIDonFEP, Resource Index, Memory Key/Match Bits, Offset} 

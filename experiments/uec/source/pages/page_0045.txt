@@ -1,0 +1,54 @@
+ 45 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+Communicators are identified by 
+IDs. The IM allocates a new ID to 
+each created communicator. Note 
+that two identical communicators 
+with different reproducibility 
+modes will be assigned two 
+different CIDs. 
+In-place collective operation A collective operation where some 
+ranks use the same buffer for both 
+input and output data. 
+INC function Aggregation and distribution 
+capability required in an INC switch 
+to perform collective offload. 
+INC manager (IM) A software entity that discovers 
+INC switch capability and manages 
+INC switch resources for a UE 
+fabric. It is responsible for 
+configuration of the resources 
+allocated to communicators for 
+collective offload. 
+INC switch A UE switch with the capability to 
+support INC. 
+Switch endpoint (SEP) The logical entity inside an INC 
+switch to provide connections to 
+FEPs and other SEPs. 
+Credit-based flow control Best-effort VC A virtual channel configured to not 
+use the CBFC credit mechanisms. 
+CBFC message A link-level message between a 
+CBFC sender and receiver. 
+Different CBFC messages are 
+formatted as either a CtlOS or a 
+fully formed Ethernet packet. 
+Cell A unit of storage in a data buffer. 
+Packets are usually divided into 
+one or more cells for storage. The 
+number of cells in a receiver’s data 
+buffer is directly related to the 
+number of credits that a sender 
+can use. 
+Control ordered set An 8-byte message format used by 
+CBFC and LLR to pass information 
+between link partners. 
+Credit A token representing a unit of data 
+storage at the receiver. Credits 
+allow a sender to transmit data 
+packets and are consumed at the 
+sender as packets are transmitted. 
+Credits are returned to the sender 
+by the receiver when the receiver 
+has released buffer resources that 

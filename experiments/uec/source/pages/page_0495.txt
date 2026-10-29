@@ -1,0 +1,46 @@
+ 495 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-100 - RCCC Source State 
+Name Type Default Description 
+ccc.credit unsigned 
+integer 
+MaxWnd Amount of credit currently at source for this CCC. 
+(units: bytes) 
+ccc.credit_target unsigned 
+integer 
+0 Cumulative credit target source has requested (or 
+is about to request). Represents cumulative credit 
+requested since the CCC was established. 
+(units: bytes) 
+ccc.cumulative_credit unsigned 
+integer 
+0 Cumulative credit value the destination has sent 
+to the source since the CCC was established. 
+ccc.credit_target_sent boolean FALSE TRUE if source has told the destination its current 
+credit target. 
+ccc.speculating boolean TRUE TRUE if the source is in the startup phase using 
+speculative credit. 
+ 
+3.6.14.3 RCCC Credit Timer 
+RCCC requires a credit timer at the source to cover a corner case where credit packets can be lost. When 
+a sender enters an active state — that is, it has no credit available but has data to send — it starts a 
+timer with a timeout equal to the retransmit timeout. When the timer expires, the 
+RCCC.OnSourceCreditTimer() pseudocode is executed. 
+3.6.14.4 RCCC Source Algorithm 
+The RCCC algorithm processes the CCC API events as follows: 
+RCCC.OnACK(): 
+#A PDC is always present if we received an ACK 
+pdc_present=TRUE 
+RCCC.stopSpeculating(pdc_present) 
+  
+RCCC.OnNACK(pdc_present): 
+RCCC.stopSpeculating(pdc_present) 
+#waiting_rtx will have changed, so the pull target will have changed 
+ccc.credit_target = computeCreditTarget() 
+ccc.credit_target_sent = FALSE 
+ 
+RCCC.OnInferredLoss(pdc_present): 
+RCCC.stopSpeculating(pdc_present) 
+ccc.credit_target = computeCreditTarget() 
+ccc.credit_target_sent = FALSE 

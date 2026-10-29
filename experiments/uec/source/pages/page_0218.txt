@@ -1,0 +1,28 @@
+ 218 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Implementation Note: 
+The standard SES header carries a ses.message_id that is carried back to the initiator in the SES 
+“response with data header” (i.e., with read response data). Some optimized SES headers do not carry 
+a message ID. When the message ID is not present, the original PSN is used to identify the transaction 
+at the initiator. PDS passes each PSN to SES. The original request PSN is needed only for the optimized 
+response with data header (Figure 3-27). In these cases, SES passes it back to the initiator in a special 
+header field. 
+ 
+3.4.3 Semantic Header Formats 
+Several header formats are needed to implement UET. Those formats are shown here in both illustrated 
+and tabular forms. Some header fields (e.g., ses.opcode) use enumerated types defined in Section 3.4.7. 
+All reserved fields MUST be set to 0 and ignored upon receipt. Header formats are selected based on the 
+guidelines in 3.4.3.8. 
+3.4.3.1 Standard Header Format 
+The standard header format shown in Table 3-9 is used for most operation types. Table 3-9 illustrates 
+the fields present when ses.som is set to 1, and Table 3-10 presents the slight variation on the header 
+for when ses.som is set to 0. Implementations MUST support using the UET_HDR_REQUEST_STD format 
+for any request operation in the AI Base, AI Full, and HPC profiles. It is used for any multi-packet 
+operation and for any operation that requires matching criteria—including those that need a full 
+memory key as part of implementing fi_write() or fi_read(). Either the UET_HDR_REQUEST_STD or the 
+UET_HDR_REQUEST_MEDIUM header in Figure 3-16 MUST be used when completion data is needed. 
+The field names and sizes are summarized in Table 3-9. 
+ 
+Figure 3-11 - Standard Header Format when ses.som is 1 (UET_HDR_REQUEST_STD) 
+ 

@@ -1,0 +1,37 @@
+# Vertical-slice smoke experiment, ASTRA-sim analytical twin of
+# w1_decode_smoke.yaml: the SAME W1 Dense TP Decode workload and ring8 free
+# parameter topology, executed on the pinned ASTRA-sim analytical
+# congestion-unaware frontend (T022 / D-028). Observables are only what that
+# backend can emit honestly: O-CCT (parsed completion time). O-CONSERVATION
+# is unsupported there (no byte accounting in the analytical output) and is
+# deliberately not requested — an explicit per-backend gap, not an omission.
+# Evidence level E0 only; the L0-vs-DES comparison is D-019 milestone 2.
+experiment_id: EXP-VS-W1-SMOKE-ASTRA-001
+research_question: RQ2
+claim_id: C2
+baseline_id: EXP-VS-W1-SMOKE-001
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/topologies/ring8_free_params.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_astra_sim_analytical.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- astra_sim_analytical
+seed: 20261026
+repetitions: 1
+metrics: []
+observables:
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_free_v1 (transport-agnostic, free parameters)
+  workload: w1_dense_tp_decode smoke configuration
+  implementation: >-
+    ASTRA-sim analytical congestion-unaware frontend at pinned commit
+    4ce9ecf, native Ring AllReduce, no standard semantics
+evidence_level_requested: E0

@@ -1,0 +1,52 @@
+# Calibration-ladder A8 anchor-point RUN, upper point:
+# the L0 ring identity at CAL-A8's UPPER emulated added-latency point —
+# L = 140 ns ("emulating either 64ns or 140ns of additional memory access
+# overheads over same-NUMA-node memory"; Pond, ASPLOS 2023,
+# docs/calibration/anchors_staging.md §A8) — B = 64 B/ns (A-L0-BW registry
+# point, fixed), r = 8 (free smoke default; the anchor stages no rank
+# count), payload 16384 B (the A-W1-SIZE registry smoke point — the
+# small-message regime where the L axis is visible in O-CCT; a declared
+# model-side regime choice, not an anchor number).
+#
+# DECLARED READING: the anchor's 140 ns is an EMULATED study input (bounds
+# plausible CXL device latency; NOT a device measurement), read onto L as
+# per-traversal added latency — the same reading as the plan's A-L0-LAT
+# row. The anchor's MEASURED output at this point is a workload-goal
+# fraction (37% of 158 workloads), which no manifest field can carry; the
+# blindness is quantified in the stage's calibration record, not smoothed.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes an analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A8-ANCHOR140-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a8/workloads/w1_dense_tp_decode_tp8_16kib.yaml
+infra_graph:
+  path: experiments/calibration/a8/topologies/ring8_a8_l140_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a8/profiles/implementation_profile_l0_ring_cal_a8_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_a8_l140_v1 (unidirectional ring, r=8, L=140 ns CAL-A8 upper emulated added-latency point, B=64 B/ns registry point fixed)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (registry smoke point; the anchor stages no collective/size — declared model-side regime choice)
+  implementation: analytical L0 ring identity; CAL-A8 comparison is latency-axis placement plus a structural population/SLO-blindness classification against an external published emulation study — PROPOSED, review required
+evidence_level_requested: E0

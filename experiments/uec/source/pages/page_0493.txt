@@ -1,0 +1,40 @@
+ 493 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+▪ If there is a match to existing CCCs (forward direction and reverse direction), then 
+those CCCs are used. 
+▪ If there is no existing CCC, then forward- and reverse-direction CCCs are allocated. 
+o If the PDC is ROD, then allocate forward and reverse CCCs. 
+In summary, if there is an existing CCC, a new RUD PDC SHOULD use the existing CCC, and a new ROD 
+PDC MUST NOT use the existing CCC. If there is no CCC, then a new CCC and CCC_ID are allocated. The 
+CCC_ID is scoped such that a CCC_ID is unique at the source among CCCs sending to the same 
+destination FEP. The same CCC_ID value MAY be used for PDCs to different FEPs. Similar to PDCIDs, the 
+assigned CCC_IDs are locally scoped. 
+The CCC_ID SHOULD be used for both new requests and responses with payload larger than 
+Max_ACK_Data_Size. That is, there SHOULD be one common pool of shared CCCs for both semantic 
+requests and semantic responses with payload. 
+When a PDS Request arrives at the destination, which is the target of the PDC, the PDS determines if 
+there is an existing CCC: 
+• If the pds.flags.syn field is set, a PDC lookup is attempted using the pds.spdcid and ip.src_addr 
+FEP address: 
+o If the PDC is already established, the associated CCC is used. 
+o If the PDC has not been established, then a new PDC will be established. 
+▪ A lookup on {ip.src_addr, pds.ccc_id} is done to assign the CCC. This lookup 
+MUST be performed against both source and destination CCCs at the target of 
+the PDC. Lookups for source and destination CCCs are performed 
+independently, and allocations can occur independently. 
+▪ If the lookup finds a match, the PDC is associated with the existing CCC instance. 
+▪ If the lookup does not find a match, a new CCC is allocated. 
+• If pds.flags.syn is cleared, then a lookup on pds.dpdcid is done: 
+o On the forward direction (packets arriving at target), the pds.dpdcid field is used to find 
+the associated CCCs that were associated with the PDC when it was established. 
+Note that the lookup used to associate a CCC with a PDC at the destination does not include the 
+pds.spdcid field, meaning that multiple PDCs may share a CCC. Also, the PDC type and traffic class are 
+not included, as the source MUST NOT use the same CCC_ID for different CCC instances to the same 
+destination FEP. The traffic on a forward path of one PDC MAY share a CCC with the return path of 
+another PDC. This is accomplished by the lookup of both source and destination CCC state when the CCC 
+is associated with the PDC. 
+When a new PDC is established that would be associated with an existing CCC, if all the PDCs associated 
+with the CCC are already in the process of closing, then the source MUST NOT use the existing CCC and 
+instead MUST allocate a new CCC. This prevents a potential deadlock where a source has no remaining 
+credit to start a new PDC and no active PDC on which to request such credit.  

@@ -1,0 +1,60 @@
+ 49 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+SES PDS
+[Send, MID 1, MO 0]
+Initiator Target
+PDS SES
+[Send, MID 1, MO 0]
+[MID1,MO0,RESP], def_rsp
+[MID 1, MO 0, RESP]
+[MID 1, MO 1, RESP]
+[MID1,MO1,RESP], def_rsp
+[MID1,MO2,RESP], !def_rsp
+[MID 1, MO 2, RESP]
+PacketsMessages Packets MessagesPackets
+MSG SEND
+REQUEST
+MSG 
+COMPLETION
+[Send, MID 1, MO 1]
+[Send, MID 1, MO 2]
+[Send, MID 1, MO 1]
+[Send, MID 1, MO 2]
+Mark PSN 333 
+as received
+Mark PSN 333 as 
+transmitted
+SES response not stored for 
+PSN 333 & 334,
+SES response is stored for 
+PSN 335Free state 
+for PSN 335
+Free SES response 
+state for PSN 335
+Non-default 
+state (e.g. NACK)
+FEP-A FEP-B
+If there is no Request packet to transmit, this is 
+Control Packet of type =  Clear Only  
+MSG SEND
+REQUEST [Send, MID 2, MO 0]
+ 
+Figure 1-4 - Example Sequence Diagram Figure 
+1.2.4 References 
+The UE specification makes both normative and informative references. Normative references are 
+required to assure interoperability among UE components. Informative references are intended to 
+provide additional background and further understanding of the UE operating environment.  Each 
+chapter of the UE specification may provide a list of normative and informative references. 
+The following normative references are used in this introductory material: 
+[1] IETF RFC 2119, "Key words for use in RFCs to Indicate Requirement Levels," 1997. [Online]. 
+Available: https://www.rfc-editor.org/rfc/rfc2119. 
+[2] IETF RFC 8174, "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words," 2017. [Online]. 
+Available: https://www.rfc-editor.org/rfc/rfc8174. 
+[3] IETF RFC 2474, "Definition of the Differentiated Services Field (DS Field) in the IPv4 and IPv6 
+Headers," 1998. [Online]. Available: https://datatracker.ietf.org/doc/html/rfc2474. 
+[4] IETF BCP14, "IETF Best Pratice 14," 2023. [Online]. Available: 
+https://datatracker.ietf.org/doc/bcp14/. 
+1.3 System View and Nomenclature 
+The field of AI and HPC is evolving at a very fast pace. AI models are changing at an even faster pace. 
+This has created a need for fine-tuned systems that scale horizontally and vertically for various AI and 

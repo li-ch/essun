@@ -1,0 +1,43 @@
+ 609 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+signal values set by the switch control plane during configuration. The buckets MUST not overlap in their 
+ranges and their ranges MUST be contiguous. Bucket ranges are inclusive. 
+Because different signal types often carry values of differing magnitudes, quantization bucket ranges for 
+compact CSIG tags are configured separately for each signal type. The switch control plane sets buckets’ 
+minimum and maximum values during configuration. 
+The compact CSIG tag includes 5 bits of signal value. There are 25 = 32 quantized values, each 
+corresponding to one bucket. Before quantizing a raw signal’s value, the switch hardware MUST ensure 
+that the raw signal’s value is of a precision (length in bits) that matches the precision of that signal’s 
+quantization bucket ranges. If the precision of the raw signal’s value exceeds that of the signal’s 
+quantization bucket ranges by e bits, the hardware right bit-shifts the raw signal’s value by e bits. No bit-
+shift is performed if the precision of the raw signal value is less than or equal to that of the signal’s 
+quantization bucket ranges. The hardware then performs a simple range check on the resulting signal 
+value to map the raw value to the bucket in which it falls. The index of that bucket is the quantized 
+value. 
+If a raw signal value is less than the minimum bound of bucket index 0 (the least raw signal value 
+represented in the quantization’s configuration), it is out-of-range low, and the switch hardware MUST 
+quantize that raw signal value as falling within bucket index 0. If a raw signal value is greater than the 
+maximum bound of bucket index 31 (the greatest raw signal value represented in the quantization’s 
+configuration), it is out-of-range high, and the switch hardware MUST quantize that raw signal value as 
+falling within bucket 31. Switch implementations SHOULD keep event counters for out-of-range low and 
+out-of-range high occurrences during quantization. The reporting and use of these counters is 
+implementation-specific and outside the scope of this specification. 
+Table 4-6 - Quantization Algorithm—Compact Tag 
+Bucket Index Range 
+0 [min, max] 
+1 [min, max] 
+…  
+31 [min, max] 
+Note: 
+• 32 buckets 
+• Fully configurable 
+• 32 range checkers per signal type (any sharing across signal types is implementation-specific) 
+ 
+ 
+4.2.4.1.6 Wide CSIG Tag Quantization Algorithm 
+The wide CSIG tag includes 20 bits of signal value. There are 220 = 1048576 quantized values, each 
+corresponding to one bucket. For a given signal type, the quantization is parameterized by a bucket 
+range exponent e >= 1 and base value b >= 0, where b MUST be either zero or a power of two. 2e 
+contiguous unquantized signal values map to each bucket. To quantize an unquantized signal value v, a 
+device computes (v – b) and maps the result to the index of the bucket in which it falls—a simple shift 

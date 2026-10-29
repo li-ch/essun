@@ -1,0 +1,35 @@
+# Calibration-ladder GF-02 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the BIDIRECTIONAL-MISREAD HAZARD point B = 900 B/ns — the
+# hazard this anchor exists to document, executed as a bracket: the poster's
+# own stated ceiling ("NVLink's peak bi-directional bandwidth is 900 GB/s")
+# is a BIDIRECTIONAL marketing figure; using it as the identity's
+# per-direction B would predict CCT 900/360 = 2.5x FASTER than the measured
+# plateau (asymptotically, exact ratio of the bandwidth terms). The verified
+# thread shows exactly this convention confusion live: the poster reads
+# their 360 as "only achieving uni-directional bandwidth" (arithmetically
+# loose — the per-direction figure is 450, and 360 < 450) and the
+# maintainer's reply settles only that 360 is the expected H100 number,
+# leaving the convention to be pinned by the comparison itself. Any
+# CCT-vs-CCT use of this anchor MUST settle busbw-vs-raw-BW and
+# bidirectional-vs-per-direction first; this row quantifies the cost of not
+# doing so. NEVER a bridge, target, or recommended value.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW); 900 is the anchor's own
+# stated figure (unsplit), fixed BEFORE any model output was read. L = 200
+# ns is the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_gf02_bidir900_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 900
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT). Provenance: B = 900 B/ns = the anchor's own bidirectional
+  peak figure used UNPLIT as a per-direction injection rate — a declared
+  hazard bracket quantifying the counting-convention error, never a
+  physical reading (the physical per-direction point is the 450 sibling).
+  L from the free A-L0X-LAT registry point. Values are anchor-stated /
+  free-registry points, never our measurements, never tuned.

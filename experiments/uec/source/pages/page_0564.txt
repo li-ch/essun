@@ -1,0 +1,38 @@
+ 564 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The default cipher algorithm MUST be AES-GCM [AES-GCM] with a 256-bit key and a 16 byte ICV 
+selected by the algorithm from the SDKDB.  
+There are several academic papers that provide an informative overview of the desired cryptographic 
+properties of AEAD ciphers. Specifically references [44], [49], [50], and [51] provide the terminology 
+used in the following sections. Additionally, the IETF Crypto (CFRG) working group is developing on an 
+RFC draft that also summarizes these requirements and provides additional information [39]. 
+Because out-of-order reception is used, the integrity of the AEAD cipher also depends on limiting the 
+number of attempts to forge (authentication failures) packets. An FEP MUST drop ALL packets on the 
+domain when the sdiXXInAuthFailPkts counter exceeds the authFailThreshold, then generate an event to 
+the SDME. 
+The input key into the symmetric cipher MUST be a cryptographic key per NIST SP800-108 [40]. 
+3.7.5.5 IV Considerations 
+AEAD ciphers treat the IV as a nonce and MUST NOT be reused for the same key (SDK). This property is 
+called “nonce misuse” and will be prevented by constructing the nonce from an epoch and counter per 
+the TSC Section 3.7.5.6. 
+Nonce hiding provides confidentiality for the nonce value used to encrypt plaintext. This is accomplished 
+by creating an IVMask which MUST be XORed with the packet IV before it is sent into the cipher engine. 
+TSS MUST use a deterministic IV construction for AES-GCM ciphers per Section 8.2 of [36]. Section 9.1 of 
+the AES-GCM specification [36] discusses loss of power and reboot with respect to a repeating IV. If a 
+FEP reboots or reinitializes, or loses power, the FEP MUST reestablish communication with the SDME to 
+update the epoch before sending UET traffic. Updating the epoch ensures the nonce properties of the 
+nonce. An FEP that can store the current TSC MAY continue using the stored IV provided the nonce 
+properties are preserved. 
+In direct KDF mode, the IVMASK MUST be provisioned by the SDME as part of the key-rotation process. 
+The IVMASK MUST be a cryptographically random number. This is achieved by generating the IVMASK 
+from a NIST 800-90C TRNG random source. 
+3.7.5.6 Time-stamp Counter (TSC) 
+The time-stamp counter is used as part of the IV for the symmetric cipher. The FEP MUST guarantee that 
+each packet has a strictly increasing TSC and that packets MUST never be sent with the same TSC value. 
+ 
+The TSC counter is a 64-bit field that MUST be constructed by concatenation of two fields: 
+1. A 16-bit epoch identifier that MAY be source-specific or global to the secure domain. 
+2. A 48-bit counter MUST be incremented for each packet sent. 
+The counter portion has these additional requirements: 
+1. The counter MUST be initialized to 0 when the epoch is started, changed, or updated. 

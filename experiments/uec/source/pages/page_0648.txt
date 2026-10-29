@@ -1,0 +1,48 @@
+ 648 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+An example frame, with the well-known 01-80-C2-00-00-01 (as a point of reference) as its destination 
+address and with a good FCS (0x0d 0x7f 0x0f 0x58) is as follows: 
+0x01 0x80 0xc2 0x00 0x00 0x01 0x00 0x0a 0x35 0x55 0x45 0x43 0x00 0x2e 0xc7 
+0x11 0x18 0xba 0x0e 0x82 0x93 0x3a 0x75 0xa3 0x30 0xed 0x84 0xc1 0x7b 0x4b 
+0x2f 0xe7 0xf3 0xc9 0x22 0x9d 0x03 0xf8 0xe2 0x9a 0x02 0xea 0x0b 0x3b 0x8a 
+0x5b 0x02 0x41 0x6c 0xbb 0x16 0x89 0xc3 0xb6 0x4b 0x10 0x62 0xbe 0xdf 0xbe 
+0x0d 0x7f 0x0f 0x58 
+ 
+The same frame with a poisoned FCS (0xa7 0xd5 0xa5 0xf2) is as follows: 
+0x01 0x80 0xc2 0x00 0x00 0x01 0x00 0x0a 0x35 0x55 0x45 0x43 0x00 0x2e 0xc7 
+0x11 0x18 0xba 0x0e 0x82 0x93 0x3a 0x75 0xa3 0x30 0xed 0x84 0xc1 0x7b 0x4b 
+0x2f 0xe7 0xf3 0xc9 0x22 0x9d 0x03 0xf8 0xe2 0x9a 0x02 0xea 0x0b 0x3b 0x8a 
+0x5b 0x02 0x41 0x6c 0xbb 0x16 0x89 0xc3 0xb6 0x4b 0x10 0x62 0xbe 0xdf 0xbe 
+0xa7 0xd5 0xa5 0xf2 
+ 
+Octets are transmitted in the order written (left to right). The lower (least-significant) bit of each octet is 
+transmitted first. The upper (most-significant) bit of each octet is transmitted last. 
+LLR-eligible frames received with an fcs_status of POISONED are treated by the RX LLR in the same 
+manner as LLR-eligible frames received with an fcs_status of GOOD: An LLR-eligible frame with an 
+expected sequence number and an fcs_status of POISONED will not trigger a replay and will increment 
+next_rx_seq. 
+5.1.11 Counters 
+The counters shown in Table 5-13 are defined for LLR. 
+Table 5-13 - LLR counters 
+Counter Description 
+tx_init_ctl_os A count of the number of LLR_INIT Control Ordered Sets transmitted.  
+tx_init_echo_ctl_os A count of the number of LLR_INIT_ECHO Control Ordered Sets transmitted. 
+tx_ack_ctl_os A count of the number of LLR_ACK Control Ordered Sets transmitted.  
+tx_nack_ctl_os A count of the number of LLR_NACK Control Ordered Sets transmitted.  
+tx_discard A count of the number of LLR-eligible frames discarded by the LLR TX when the TX 
+state machine is in the INIT state and the llr_init_behavior is set to DISCARD, or 
+when the TX state machine is in the FLUSH state  and the llr_flush_behavior is set 
+to DISCARD. 
+tx_ok A count of the number of LLR-eligible frames transmitted with a good FCS. 
+tx_poisoned A count of the number of LLR-eligible frames transmitted with a poisoned FCS. 
+tx_replay A count of the number of times that the transmitter exited the REPLAY state (i.e., 
+completed a replay operation). 
+rx_init_ctl_os A count of the number of LLR_INIT Control Ordered Sets received.  
+rx_init_echo_ctl_os A count of the number of LLR_INIT_ECHO Control Ordered Sets received.  
+rx_ack_ctl_os A count of the number of LLR_ACK Control Ordered Sets received.  
+rx_nack_ctl_os A count of the number of LLR_NACK Control Ordered Sets received.  
+rx_ack_nack_seq_error A count of LLR_ACK/LLR_NACK sequence number errors. The counter is 
+incremented each time an LLR_ACK or LLR_NACK is received for which 
+ack_nack_seq_ok is FALSE. 
+rx_ok A count of the number of LLR-eligible frames received with a good FCS. 

@@ -1,0 +1,45 @@
+ 254 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+NOT be delayed for the purpose of being ordered behind other UET_SYNC_WRITE messages when RUD 
+is used. 
+The target SHOULD associate each ses.sync_group with the ses.JobID that initiated it, and SHOULD 
+verify the ses.JobID against the stored value for a ses.sync_group. 
+Implementation Note: 
+Implementations should be mindful of the need to cleanup synchronized operation tracking resources 
+in failure scenarios.  For example, when a sync group that is occupying a resource does not complete 
+at the target. 
+ 
+3.4.5 Semantic Protocol Sequences  
+This section describes the general semantic sequences in the protocol. Ladder diagrams are provided for 
+the various semantic operations to illustrate the relevant concepts. For simplicity, the diagrams do not 
+illustrate out-of-order packet delivery. PDS-level packets are not shown unless they are relevant to the 
+semantic processing. Not all information carried on a packet is illustrated. Only those fields that are 
+needed to illustrate the concept are included. In this section, lossless networks (as noted in the PDS 
+specification) use TC_request for green and purple arcs, while the blue and orange arcs use  
+TC_response. Similarly, in best-effort operation, the solid arcs use TC_low while the dotted arcs use 
+TC_high. Usage of trimming (and the corresponding TC_med) is not covered in the semantic figures. 
+Section 3.6.4.7 specifies the mapping of UET to traffic classes and DSCP values. In some figures, two 
+PDCs are used: a forward-direction PDC (green requests with blue responses) and a reverse-direction 
+PDC (purple requests with orange responses). Green request/completion arcs are shown in the 
+interaction between libfabric and SES for initiator to target messages, and purple request/completion 
+arcs are shown in the interaction between libfabric and SES for target to initiator messages. 
+3.4.5.1 Requests with Payloads 
+Requests with payloads consist of sends, tagged sends, writes, and atomics. In the figures here, send 
+operations are used as a general illustration. 
+ 
+Figure 3-29 - Single-Packet Request, Expected Message 
+Initiator Target
+Tagged SEND
+REQUEST
+Request 
+Processed
+SES PDSPDS SES
+Msgs + PacketsMessages Msgs + PacketsPackets Messages
+Tagged SEND
+Tagged SEND
+MSG 
+COMPLETION
+(optional)
+SEND 
+COMPLETION ACK PSN=99

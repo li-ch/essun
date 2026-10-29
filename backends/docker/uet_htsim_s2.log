@@ -1,0 +1,121 @@
+===================================================================
+P2 / Stage S2 — uet-htsim container smoke run (OD-002 third-backend)
+===================================================================
+Date (UTC):        2026-10-27T09:42:30Z
+Host Docker:       29.8.2 (linux/arm64)
+Image:             essun/uet-htsim:s1
+Image ID:          sha256:7eafbdd387fd521d5531050ae40ab97f0a3b81f3424c95619fbc5095da83d312
+Repo digests:      essun/uet-htsim@sha256:7eafbdd387fd521d5531050ae40ab97f0a3b81f3424c95619fbc5095da83d312
+uet-htsim pin:     65ea315b25725df9791a5b93b61cbd6938cba0a8 (verified in S1;
+                   binary sha256 fe5a1c645719b792bb56c631fbd991cf7f6c824af8a97f42971bd59b584cd896)
+Smoke target:      smallest documented example, README "Run Custom Scenarios":
+                   ./htsim_uec -tm connection_matrices/one.cm  (single flow, UEC CMS)
+                   executed from /opt/uet-htsim/htsim/sim/datacenter
+
+===================================================================
+COMMANDS EXECUTED (host)
+===================================================================
+docker run --name uet-htsim-s2 essun/uet-htsim:s1 bash -lc 'cd /opt/uet-htsim/htsim/sim/datacenter && ./htsim_uec -tm connection_matrices/one.cm; ec=$?; echo "EXIT_CODE=$ec"; exit $ec'   # run 1 (named container, artifact extraction)
+docker cp uet-htsim-s2:/opt/uet-htsim/htsim/sim/datacenter/logout.dat backends/docker/uet_htsim_s2_logout.dat
+docker run --rm essun/uet-htsim:s1 bash -lc 'cd /opt/uet-htsim/htsim/sim/datacenter && ./htsim_uec -tm connection_matrices/one.cm; ec=$?; echo "EXIT_CODE=$ec"; exit $ec'   # run 2 (determinism re-run)
+
+===================================================================
+RUN 1 — full stdout (container)
+===================================================================
+traffic matrix input file: connection_matrices/one.cm
+Packet size (MTU) is 4150
+Parsed args
+Logging to logout.dat
+Linkspeed set to 100Gbps
+Loading connection matrix from  connection_matrices/one.cm
+Nodes: 16 Connections: 1 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 1us links and 0us switching latency for 6us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 178450 bytes
+Tier 0 QueueSize Up 178450 bytes
+Tier 1 QueueSize Down 178450 bytes
+Tier 1 QueueSize Up 178450 bytes
+Tier 2 QueueSize Down 178450 bytes
+Setting min RTO to 100.656
+Setting ECN to parameters low 37350 high 145250 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=145250 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=1000000 switch_latency=0 diameter_latency=6000000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=100000000000 oversub=1 radix_down=2 queue_down=178450 radix_up=2 queue_up=178450 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=100000000000 oversub=1 radix_down=2 queue_down=178450 radix_up=2 queue_up=178450 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=100000000000 oversub=1 radix_down=4 queue_down=178450
+queue_id 2 ecn_low 37350 ecn_high 145250
+network_max_unloaded_rtt 14.0227
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=10517040 _network_linkspeed=100000000000 _network_rtt=14022720 _network_bdp=175284 _qa_gate=2^3 _qa_threshold=4.20682e+07 _scaling_factor_a=1.16856 _scaling_factor_b=0.87642 _alpha=0.00159158 _fi=23873.7 _eta=716.21 _qa_scaling=1 _gamma=0.8 _fi_scale=0.29214 _delay_alpha=0.0125 _adjust_period_threshold=14022720 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 1000000001 _base_rtt=14022720 _base_bdp=175284 _bdp=175284 _min_cwnd=4150 _maxwnd=262926 _cwnd=262926
+Starting simulation
+Flow Uec_0_13 flowId 1000000001 uecSrc 0 starting at 0
+Flow Uec_0_13 flowId 1000000001 uecSrc 0 finished at 176.2 total messages 1 total packets 490 RTS 0 total bytes 2002140 in_flight now 0 fair_inc 0 prop_inc 15938 fast_inc 519430 eta_inc 8592 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 490 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 124 NACKs: 0 Pulls: 0 sleek_pkts: 0
+EXIT_CODE=0
+
+RUN 1 exit code:   0  (sim EXIT_CODE=0 echoed above; docker run RC=0)
+RUN 1 wall time:   ~0.005 s real (container /usr/bin/time, trial run)
+
+===================================================================
+EXPECTED-ARTIFACT CHECK
+===================================================================
+1) README-documented stdout sections, all present in RUN 1:
+   Starting simulation line: 1
+   flow start line: 1
+   flow finished line: 1
+   Done line: 1
+   summary line: 1
+   (config/setup section precedes them: fat-tree topology cfg, NSCC
+    parameter init, per-flow instance init — see stdout above)
+2) Default log artifact logout.dat (per -o FNAME, Default: logout.dat):
+   size 209 bytes, sha256 4733da8c5b6261e7610ab9fa2f38c26f2b110065bc0a017631a9e9e0f68a74a6
+   copied to backends/docker/uet_htsim_s2_logout.dat (htsim binary # TRACE format,
+   records Uec_0_13 / Uec_sink_0_13, pktsize 4150, hostnicrate 100000 Mbps)
+
+===================================================================
+RUN 2 — determinism re-run (same image, same command, defaults only)
+===================================================================
+traffic matrix input file: connection_matrices/one.cm
+Packet size (MTU) is 4150
+Parsed args
+Logging to logout.dat
+Linkspeed set to 100Gbps
+Loading connection matrix from  connection_matrices/one.cm
+Nodes: 16 Connections: 1 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 1us links and 0us switching latency for 6us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 178450 bytes
+Tier 0 QueueSize Up 178450 bytes
+Tier 1 QueueSize Down 178450 bytes
+Tier 1 QueueSize Up 178450 bytes
+Tier 2 QueueSize Down 178450 bytes
+Setting min RTO to 100.656
+Setting ECN to parameters low 37350 high 145250 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=145250 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=1000000 switch_latency=0 diameter_latency=6000000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=100000000000 oversub=1 radix_down=2 queue_down=178450 radix_up=2 queue_up=178450 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=100000000000 oversub=1 radix_down=2 queue_down=178450 radix_up=2 queue_up=178450 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=100000000000 oversub=1 radix_down=4 queue_down=178450
+queue_id 2 ecn_low 37350 ecn_high 145250
+network_max_unloaded_rtt 14.0227
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=10517040 _network_linkspeed=100000000000 _network_rtt=14022720 _network_bdp=175284 _qa_gate=2^3 _qa_threshold=4.20682e+07 _scaling_factor_a=1.16856 _scaling_factor_b=0.87642 _alpha=0.00159158 _fi=23873.7 _eta=716.21 _qa_scaling=1 _gamma=0.8 _fi_scale=0.29214 _delay_alpha=0.0125 _adjust_period_threshold=14022720 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 1000000001 _base_rtt=14022720 _base_bdp=175284 _bdp=175284 _min_cwnd=4150 _maxwnd=262926 _cwnd=262926
+Starting simulation
+Flow Uec_0_13 flowId 1000000001 uecSrc 0 starting at 0
+Flow Uec_0_13 flowId 1000000001 uecSrc 0 finished at 176.2 total messages 1 total packets 490 RTS 0 total bytes 2002140 in_flight now 0 fair_inc 0 prop_inc 15938 fast_inc 519430 eta_inc 8592 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 490 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 124 NACKs: 0 Pulls: 0 sleek_pkts: 0
+EXIT_CODE=0
+
+RUN 2 exit code:   0
+diff run1 run2:    no differences (stdout sha256 both runs:
+                   7bbf3b6b748943e72ec3fc93274bd2468d29c27c5aee7544fe45f0024fd6bd98)
+
+===================================================================
+VERDICT: PASS — exit 0, README-documented runtime output reproduced
+(flow Uec_0_13 finished at 176.2us, 490 packets, 2002140 bytes,
+summary New: 490 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 124 NACKs: 0),
+default logout.dat artifact produced, and the run is byte-identical
+across two invocations with no explicit seed (fixed default).
+===================================================================

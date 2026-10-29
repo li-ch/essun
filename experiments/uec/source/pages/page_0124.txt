@@ -1,0 +1,20 @@
+ 124 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-9 - Transmit Queue Example 
+A UET provider SHOULD support multiple transmit queues. 
+A UET provider SHOULD support mapping a traffic class to one or more transmit queues, such that 
+different traffic classes MAY be mapped to different sets of transmit queues. 
+A UET provider SHOULD distribute unordered message operations associated with a particular traffic 
+class (e.g., TCa) across the set of transmit queues that are configured to service that traffic class (e.g., 
+TCa). 
+When a libfabric endpoint is configured for message ordering, a UET provider MUST constrain the 
+operations for that endpoint to a single transmit queue. The libfabric message ordering modes were 
+discussed in Section 2.2.6. 
+2.2.8.2 Receive Queues and Registered Memory Regions 
+Receive queues are used for libfabric APIs that post buffers to be used for receiving messages from the 
+network (e.g., fi_recv(), fi_trecv(), etc.). Receive queues contain elements that identify the associated 
+data buffer and its attributes (such as a tag). The provider inserts elements into a receive queue, and 
+NIC hardware removes elements from a receive queue. When the NIC hardware removes an element, it 
+stores message data received from the network in the associated data buffer. 

@@ -1,0 +1,45 @@
+ 715 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+      "Augments the LLDP port's remote-systems-data with received  
+   UE Link CBFC TLV"; 
+    container uel-cbfc-tlv-extension { 
+      description 
+        "Holds the received UE LLDP CBFC TLV data"; 
+      uses uel-cbfc-tlv; 
+    } 
+  } 
+} 
+ 
+5.3.4 References 
+5.3.4.1 Normative References 
+[1]  IEEE Std 802.1AB-2016, "IEEE Standard for Local and Metropolitan Area Networks - Station and 
+Media Access Control Connectivity Discovery," 2016. [Online]. Available: 
+https://ieeexplore.ieee.org/document/7433915. 
+[2]  IEEE Std 802.1ABcu-2021, "IEEE Standard for Local and Metropolitan Area Networks - Station and 
+Media Access Control Connectivity Discovery, Amendment 1: YANG Data Model," 2021. [Online]. 
+Available: https://ieeexplore.ieee.org/document/9756407. 
+[3]  IETF RFC 7950, "The YANG 1.1 Data Modeling Language," 2016. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc7950. 
+[4]  IETF RFC 8343, "A YANG Data Model for Interface Management," 2018. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc8343. 
+[5]  IETF RFC 6241, "The YANG 1.1 Data Modeling Language," 2011. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc6241. 
+5.3.4.2 Informative References 
+[6]  IETF RFC 6242, "Using the NETCONF Protocol over Secure Shell (SSH)," 2011. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc6242. 
+[7]  IETF RFC 6536, "Network Configuration Protocol (NETCONF) Access Control Model," 2012. 
+[Online]. Available: https://datatracker.ietf.org/doc/html/rfc6536. 
+[8]  IETF RFC 4122, "A Universally Unique Identifier (UUID) URN Namespace," 2005. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc4122. 
+[9]  IEEE Std 802.1ABdh-2021, "IEEE Standard for Local and Metropolitan Area Networks – Station and 
+Media Access Control Connectivity Discovery, Amendment 2: Support for Multiframe Protocol 
+Data Units," 2021. [Online]. Available: https://ieeexplore.ieee.org/document/9760302. 
+[10]  IEEE Std 802.1CBdb-2021, "Frame Replication and Elimination for Reliability Amendment 2: Extend 
+Stream Identification Functions," 2021. [Online]. Available: 
+https://ieeexplore.ieee.org/document/9740589. 
+[11]  IEEE Std 802.1CBcv-2021, "Frame Replication and Elimination for Reliability Amendment 1: 
+Information Model, YANG Data Model, and Management Information Base Module," 2021. 
+[Online]. Available: https://ieeexplore.ieee.org/document/9715061. 
+[12]  IEEE Std 802.1CB-2017, "Frame Replication and Elimination for Reliability," 2017. [Online]. 
+Available: https://ieeexplore.ieee.org/document/8091139. 

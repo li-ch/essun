@@ -1,0 +1,40 @@
+ 214 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Packets of a single message are generated with packet sequence numbers (PSNs) and offsets within the 
+message that are ascending through the message. That is, the first packet of the message MUST have 
+the first sequence number (e.g., PSN=A) used for the message and MUST have the ses.som bit set. The 
+Nth packet MUST have PSN=A + N-1; thus, in the logical interface from SES to PDS, packets are provided 
+in order. Similarly, the first packet of a message MUST have an offset within the message of 0. The Nth 
+packet MUST carry an offset of (N-1) * Payload MTU in the ses.header_data field. The final packet of the 
+message MUST have the ses.eom bit set. Packets from a single message MUST be contiguous in the 
+sequence number space. That is, two messages MUST NOT be interleaved in their delivery to PDS for a 
+single PDC. 
+For the ROD protocol, packets MUST be delivered to the wire in the order of their sequence number. For 
+the RUD protocol, packets MAY be delivered to the wire in any order. 
+From the perspective of generating packets within a message, deferrable sends can behave like one 
+message (i.e., when they are not deferred), in which case they follow single message packet generation 
+ordering rules. Deferrable sends can also behave like two (or more) messages (i.e., when the deferrable 
+send is deferred), in which case the two (or more) messages follow the ordering and interleaving rules of 
+the PDCs that are used. The first message carries an ses.som bit on the first packet and generates M 
+packets from the N packets that the overall payload of the deferrable send. It concludes with ses.eom 
+set on the last packet of the original message. The second (and subsequent) message(s) also carries an 
+ses.som bit on the first packet. Each message generates up to N packets, where N is the number of 
+packets needed to transfer the entire message. Each message that is part of the deferrable send is 
+treated as an independent message for the purposes of the above rules. 
+3.4.2.7.1.4 Completion Ordering 
+SES does not directly provide completion ordering. Completion ordering is a function of the FEP—and 
+the hardware/software interface of the FEP. When using RUD or RUDI, two operations are not 
+guaranteed to have any particular relationship in the completion of the network portion of the 
+transaction—either at the initiator or target. Additional discussion of ordering (3.4.9.1) and completion 
+ordering (3.4.9.1.2) is provided in the memory model description. 
+3.4.2.7.2 Unified Local Ordering 
+The Unified Local semantic layer is defined to run over an ordered reliability layer. This places all 
+requests—reads, writes, and atomics—on the wire in the order they were generated and provides 
+ordering to the target endpoint. Ordering is preserved only on a per-peer-FEP basis through the 
+network. At the target, the ordering semantics depend on the memory semantics of the target device. 
+Implementation Note: 
+RODL on its own is insufficient to achieve per-address write-after-read (WAR) ordering. WAR 
+ordering can be achieved only if a) RODL is used with the option to disable retransmits, or b) each 
+read is marked as guaranteed delivery. 
+ 

@@ -1,0 +1,40 @@
+ 322 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+b. If a Close Command CP was already received and a packet with a higher PSN is received, 
+transmit a NACK with pds.nack_code = UET_CLOSING. 
+c. Transmit a PDS ACK for the Close Command CP packet. 
+i. If using UET encryption and the EXPECTED_0RTT_START method for Start_PSN, 
+return the Expected_PSN with the closing ACK (See Section 3.5.8.2.1). 
+ii. If the target negotiated support for tracking Syn_Retx_Safety_Time and the 
+Remaining_Time in the Close Command CP is non-zero, the target tracks the 
+remaining Syn_Retx_Safety_Time. All arriving packets with pds.flags.syn = 1 and the 
+{source FA, SPDCID} associated with Syn_Retx_Safety_Time are NACK’d with 
+pds.nack_code = UET_CLOSING. 
+iii. If the target did not negotiate support for tracking Syn_Retx_Safety_Time or if the 
+Remaining_Time in the Close Command CP is zero, no timer is required. 
+iv. Close the PDC and free resources not needed for tracking Remaining_Time (if 
+Remaining _Time is non-zero). 
+The Close Command CP is allocated a unique PSN—the next PSN in the sequence—and the initiator 
+retransmits the packet if an ACK is not received. If the target receives a Close Command CP for a PDC 
+that is already closed, the target MUST transmit a PDC NACK to the initiator. 
+If a target decides to close the PDC, it sends a Close Request CP. A timer—Close_REQ_Timer—may be 
+used to constrain the time the initiator takes to send a Close Command CP. If the initiator does not issue 
+a Close Command CP in response to the Close Request CP within the configured time (Close_REQ_Time), 
+the target may issue a NACK with pds.nack_code = UET_CLOSING_IN_ERR. The PSN is set to be one 
+larger than the highest PSN that was received, acknowledged, and cleared. The PDC is then closed. 
+The simplified state machine for closing a PDC is shown in Figure 3-57. At the initiator, once a PDC 
+moves to QUIESCE state, new messages are not started. If a new message is received it is either pushed 
+to another PDC or, if resources are stressed, it may be pushed to a pending queue (either in HW or SW) 
+that holds packets waiting for PDC resources. Handling this is implementation specific.  
+In the example above, ‘close events’ are determined locally within a FEP and include: 
+1. Receiving a Close Request CP from the target. 
+2. Identifying limited PDC resources at the initiator and deciding to free a PDC by closing it. 
+3. Expiring a PDC lifetime timer. 
+The initiator does not need to wait for a clear from the target for any read response unless the read 
+response is stateful. The initiator MUST wait to receive all outstanding read responses before issuing a 
+Close Command CP. 
+The Close Command CP is an implicit clear of all PSNs on forward direction and ACK for all PSNs on the 
+return direction. If a Close Command CP arrives at a target and that target has any outstanding 
+operations, these are all terminated and the PDC is closed. If the target detects an error—such as an 
+incomplete message—then the PDC is closed in error and the event reported. 

@@ -1,0 +1,25 @@
+# Calibration-ladder GF-11 topology: UNIDIRECTIONAL RING of 64 ranks at
+# the GF-11 scaling point — B = 64 B/ns, L = 702 ns per hop.
+#
+# ROLE: the r=64 leg of the chain-family scaling demonstration: the ring
+# chain 2(r-1)L = 126L = 88452 ns at r=64 vs 2L = 1404 at r=2 — a 63x
+# latency-chain growth across the anchor's 32x rank span, vs the measured
+# overhead-fraction growth 7% -> ~70% (a ~1.59x total-time growth under
+# the constant-SoL reading) and the crossbar's exact flatness. The three
+# executed chains (1x / 6x / 63x growth over r=2 -> 64) bracket the
+# measured growth from both sides — no L0 chain matches it, the residual
+# is kernel/multicast overhead. t = 63M/2048 + 88452 at r=64. Same honesty
+# rules as crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: ring64_gf11_b64_l702_v1
+topology_class: unidirectional_ring
+ranks: 64
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 702
+notes: >
+  Unidirectional ring of 64 ranks, B = 64 B/ns (free registry), per-hop
+  latency L = 702 ns (GF-11 derived reading SoL/2; declared reading: one
+  ring hop = one pair exchange). Identity t = 63M/2048 + 88452 (chain
+  2 x 63 x L). The ring leg of the GF-11 rank-scaling comparison. Values
+  are anchor arithmetic / free registry points, never ours, never tuned,
+  never standard-normative.

@@ -1,0 +1,38 @@
+ 77 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2 UE Software Layer 
+2.1 UE Software Overview 
+The UEC develops specifications, software APIs, and open-source code for various AI/HPC use 
+cases/applications. This includes, but is not limited to, software related to the following areas: 
+• Support of UE transports and API within the OFI ecosystem (libfabric). 
+• Support of UE transports and API within the Linux RDMA subsystem. 
+• Software reference models of UET transport. 
+• Linux kernel API changes and extensions to support UET. 
+• Interface additions and changes required to support UET where appropriate (e.g., within the 
+Linux kernel). 
+• Example applications. 
+2.1.1 Software Specifications 
+2.1.1.1 Libfabric Mapping 
+The HPC and AI industries have established the use of abstraction layers within communication libraries 
+to isolate low-level details of the transport layer from the inner workings of the communication libraries. 
+UE adopts libfabric [1], also known as Open Fabric Interfaces (OFI), as the communication abstraction 
+layer. The libfabric mapping specification defines how the libfabric APIs are implemented to support the 
+Ultra Ethernet Transport. The goal of this mapping is to extend and change libfabric as required to 
+provide a vendor-interoperable mapping that supports all the Ultra Ethernet profiles defined by the 
+transport working group. The specification also identifies the requirements imposed on UET libfabric by 
+this mapping. 
+2.1.1.2 Libibverbs Mapping 
+The verbs API, or more simply known as “verbs,” has broad industry adoption and direct *CCL use. As 
+defined, verbs targets RDMA transports and is tightly coupled with the Linux RDMA kernel subsystem. 
+The UE libibverbs mapping extends libibverbs to operate over UET. The key benefits of this specification 
+include: 
+• Increases adoption of UET by simplifying the migration and transition of RDMA verbs 
+applications over UET. 
+• Strengthens UET integration within the Linux RDMA subsystem. 
+• Allows NICs that support multiple transports, such as RoCE and UET, to leverage a common 
+software API model and infrastructure. 
+• Allows multiple vendors to share higher-level software implementations for advanced UE profile 
+support. For example, a common libfabric provider may be implemented over the UE libibverbs 
+mapping for devices that do not natively implement tag matching or other advanced semantics 
+in hardware. A common provider can support the AI full or HPC profiles. 

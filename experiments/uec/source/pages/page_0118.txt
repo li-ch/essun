@@ -1,0 +1,69 @@
+ 118 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+fi_rma() API Description Requirements SES Opcode 
+CQ data as part of the transfer (the 
+remote CQ data is written into the 
+target endpoint CQ) 
+The remote CQ data is carried in 
+the ses.header_data field of the 
+SES header 
+• The ses.hd bit is set in the SES 
+header to indicate that the 
+ses.header_data field is valid 
+ 
+ 
+ 
+ 
+2.2.5.4.4 fi_atomic() APIs 
+The fi_atomic() APIs enable remote atomic operations. There are APIs for: 
+• Initiating an atomic operation to remote memory (sometimes referred to as non-fetching 
+atomics). 
+• Initiating an atomic operation to remote memory and retrieving the initial value (referred to as 
+fetching atomics). 
+• Initiating an atomic compare operation to remote memory and retrieving the initial value (which 
+is a type of fetching atomic). 
+• Querying provider support for specific atomic operations. 
+The fi_atomic() APIs are NOT supported for FI_EP_DGRAM endpoints. 
+UET providers MUST support bulk non-fetching atomics operations; however, fetching atomics MUST be 
+limited to a single unit of the indicated data type. 
+Table 2-26 summarizes the fi_atomic() API requirements and shows the mapping of the APIs to the UET 
+SES opcodes. 
+Table 2-26 - fi_atomic() API Requirements 
+fi_atomic() API Description Requirements SES Opcode 
+diatomic The fi_atomic() API transfers 
+the data contained in the 
+user-specified data buffer to 
+a remote node 
+API MUST be supported 
+by all profiles 
+UET_ATOMIC 
+fi_atomicv The fi_atomicv() API adds 
+support for a scatter-gather 
+list to fi_atomic() 
+API MUST be supported 
+by all profiles 
+ 
+Maximum size of scatter-
+gather list is vendor-
+specific 
+UET_ATOMIC  
+fi_atomicmsg The fi_atomicmsg() API 
+supports more granular 
+control of the atomic 
+operation per call using flag 
+parameters 
+API MUST be supported 
+by all profiles 
+ 
+The following flags MUST 
+be supported: 
+• FI_COMPLETION 
+• FI_INJECT 
+• FI_FENCE 
+UET_ATOMIC or 
+UET_TSEND_ATOMIC  
+ 
+UET_TSEND_ATOMIC is 
+used when the 
+FI_TAGGED flag is set 

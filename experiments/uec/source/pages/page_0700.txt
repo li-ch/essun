@@ -1,0 +1,45 @@
+ 700 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Port(name)
+...
+uel-options-tlv-extension // (5.3.2.1.6) 
+enum llr-want;      // (5.3.2.1.6.1)  r-w
+enum llr-enable;     // (5.3.2.1.6.1)  r  
+boolean ipgr-capable; // (5.3.2.1.6.2)  r-w
+enum csig-capable; // (5.3.2.1.6.3)  r-w
+enum ufh-capable; // (5.3.2.1.6.4)  r-w
+enum ufh-status; // (5.3.2.1.6.4)  r
+eint ufh-32-version; // (5.3.2.1.6.4)  r
+uint ufh-32-rr; // (5.3.2.1.6.4)  r
+uint ufh-32-addr-bits; // (5.3.2.1.6.4)  r-w
+uint ufh-16-version; // (5.3.2.1.6.4)  r
+uint ufh-16-rr; // (5.3.2.1.6.4)  r
+unit ufh-16-addr-bits; // (5.3.2.1.6.4)  r-w
+boolean tlvs-tx-org-uec-link-neg-options-enable; // (5.3.2.1) r-w
+remote-systems-data(time-mark, remote-index)
+timeticks timemark; // (RFC 2021 section 6) r
+uint32 remote-index; // r
+ 
+uel-options-tlv-extension // (5.3.2.1.6) 
+enum llr-want;      // (5.3.2.1.6.1)  r
+enum llr-enable;     // (5.3.2.1.6.1)  r 
+boolean ipgr-capable; // (5.3.2.1.6.2)  r
+enum csig-capable; // (5.3.2.1.6.3)  r
+enum ufh-capable; // (5.3.2.1.6.4)  r
+enum ufh-status; // (5.3.2.1.6.4)  r
+eint ufh-32-version; // (5.3.2.1.6.4)  r
+uint ufh-32-rr; // (5.3.2.1.6.4)  r
+uint ufh-32-addr-bits; // (5.3.2.1.6.4)  r
+uint ufh-16-version; // (5.3.2.1.6.4)  r
+uint ufh-16-rr; // (5.3.2.1.6.4)  r
+unit ufh-16-addr-bits; // (5.3.2.1.6.4)  r
+LLDP Port model objects
+Objects added by this model
+ 
+Figure 5-22 - UE Link Negotiation Options TLV Model 
+5.3.3.1.2 UE Link Negotiation CBFC TLV Model 
+The attributes for the UE Link Negotiation CBFC TLV are obtained from both system-wide and per-port 
+objects. A UML-like representation of the management model for the UE TLV is provided in this 
+subclause. The model augments the IEEE LLDP port model. The UML for the UE extension objects is 
+derived from the UML specified in the IEEE Std 802.1AB and is shown in Figure 5-23.  

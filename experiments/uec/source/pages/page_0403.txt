@@ -1,0 +1,28 @@
+ 403 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+   
+The standard RUD Send sequence shown in Figure 3-97 also applies to non-fetching atomics. In this 
+scenario with non-guaranteed delivery, a clear is not required. In general, PSN state may be freed once 
+all lower PSNs are in clear state—either by receiving a CLEAR_PSN or because the SES Response did not 
+require a clear. 
+3.5.20.2.2 Single-Packet Send Sequence—Guaranteed Delivery 
+PDS sequences for send and write are the same on best-effort and lossless networks. The standard RUD 
+send sequence for a single-packet message with an SES guaranteed delivery response is shown in Figure 
+3-98. The sequence in Figure 3-98 proceeds as follows: 
+1. The PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 
+332. 
+2. SES at the initiator transfers a packet to PDS for transmission. 
+3. PDS at the initiator transmits the packet on the PDC with PSN = 333 and marks PSN = 333 as 
+transmitted. 
+4. PDS at the target receives the packet, marks PSN = 333 as received, and delivers the packet to 
+SES. 
+5. SES at the target provides the sematic response to PDS with guaranteed delivery indication 
+(gtd_del) 
+6. PDS at the target transmits an ACK packet for PSN = 333 that includes the SES Response. 
+a. The ACK pds.flags.req = REQ _CLEAR, as a clear is required. 
+b. CACK_PSN is not incremented, as SES Response is guaranteed delivery. 
+ 
+Figure 3-97 - Standard RUD Send Sequence for Single- Packet Message, Non-Guaranteed Delivery 
+ 
+ 

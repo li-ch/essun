@@ -1,0 +1,34 @@
+ 624 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The min(ABW/C) signal provides the NSCC sender with a direct, quantitative measure of the spare 
+capacity at a path’s bottleneck. This information allows NSCC to better match the increase in a flow’s 
+sending rate to spare capacity, and thus avoid undershoots and overshoots, both of which can lengthen 
+flow completion times. Because the min(ABW/C) signal is normalized by an output port’s line rate, it 
+correctly relatively ranks the fractional spare capacities of output ports along a path, even when they 
+run at heterogeneous port speeds. 
+4.2.9.3 max(Delay) 
+When a source FEP sends a packet with a CSIG tag for signal type max(Delay), and that packet traverses 
+a path through the UE fabric, that packet’s CSIG tag records, among all switches along the packet’s path, 
+the maximum service delay in nanoseconds incurred by the packet at any one switch. Both the 
+unquantized and quantized delay values are represented as integers. 
+As each switch computes its own intra-switch delay using only switch-local timestamps, there is no need 
+for clock synchronization across switches in support of these measurements. 
+4.2.9.3.1 Per-Hop Delay Measurement Method 
+In a CSIG-capable fabric, at each hop along a path, the switch pipeline measures per-packet delay. 
+The queueing delay D experienced by a packet is given by:  
+𝐷 = 𝑡2 −  𝑡1  
+where t2 is the local timestamp in nanoseconds when the start-of-packet (SOP) signal is sent by the 
+output port’s MAC, and t1 is the local timestamp in nanoseconds when the SOP signal is received from 
+the input port’s MAC. 
+4.2.9.3.2 Timestamping Points in Switch Pipeline 
+Figure 4-10 shows the switch pipeline and the two points at which a switch SHOULD timestamp a 
+packet’s arrival and departure. The aim is for this delay measurement to capture the queueing delay 
+experienced by the packet. IP refers to ingress pipeline processing, and EP refers to egress pipeline 
+processing in a switch. 
+Measuring the interval between the start of the ingress pipeline and the end of the egress pipeline 
+offers two principal advantages: 
+• It’s straightforward to perform CSIG-Compare-and-Update() on the packet in these stages. 
+ 
+Figure 4-10 - Timestamping Points in Switch Pipeline 
+ 

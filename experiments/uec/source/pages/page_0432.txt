@@ -1,0 +1,6 @@
+ 432 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+Figure 3-118 - Header Stack for General UET and RUD Requests over the UFH_32 header 

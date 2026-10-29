@@ -1,0 +1,20 @@
+ 411 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.5.20.3 Negative Acknowledgements, Packet Drops, and Retries 
+This section specifies the RUD sequences for packet drops and other cases that cause PDS 
+retransmissions. Negative acknowledgements (NACKs) can occur at PDS or SES. This section covers PDS 
+NACKs. SES NACKs are not visible to PDS. SES NACKs appear as SES guaranteed delivery responses that 
+are carried, but not interpreted, by PDS. Retry attempts at SES appear as new requests to PDS. 
+3.5.20.3.1 Single-Packet PDS NACK Sequence 
+Figure 3-104 shows the PDS NACK sequence for a RUD Send of a single-packet message. The sequence in 
+Figure 3-104 proceeds as follows: 
+1. The PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 
+332. 
+2. FEP-A generates a packet with MID = 14 to transmit, and PDS transmits the packet with PSN = 
+333. 
+ 
+Figure 3-103 - Standard RUD Sequence for Multi-Packet Read 
+ 
+ 

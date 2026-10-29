@@ -1,0 +1,44 @@
+# Calibration-ladder A5 anchor-point RUN, slice 2: the
+# L0 2D-torus identity at CAL-A5's own arithmetic — 8x32 grid (the declared
+# 3D->2D projection of the TPU v4 4x8x8 measured slice, r=256), B = 50 B/ns
+# (READING 1: the anchor's §7.3 'ICI link bandwidth is 2x IB—400 vs. 200
+# Gbit/s' quote reads 50 GB/s per link; direction convention flagged
+# UNVERIFIED by the staging doc), L = 200 ns (A-L0T-LAT registry point),
+# payload 4096 B (the anchor's individual all-to-all DMA size; power of two,
+# gate-accepted exactly at every power-of-two dimension — no bracketing).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A5-S256-ANCHOR-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a5/workloads/w1_dense_tp_decode_tp256_4kib.yaml
+infra_graph:
+  path: experiments/calibration/a5/topologies/torus2d256_a5_8x32_b50_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a5/profiles/implementation_profile_l0_torus2d_cal_a5_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_torus2d
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: torus2d256_a5_8x32_b50_v1 (2D torus, r=256, declared 3D->2D projection of CAL-A5's 4x8x8 slice; B=50 B/ns CAL-A5 reading-1 anchor point, L=200 ns free)
+  workload: w1_dense_tp_decode tp256, payload 4096 B (CAL-A5's individual all-to-all DMA size; all-to-all vs allreduce never compared — no mixed metric)
+  implementation: analytical L0 free-parameter identity; CAL-A5 comparison is a topology-sensitivity falsifier + per-link BW placement against an external published measurement — PROPOSED, review required
+evidence_level_requested: E0

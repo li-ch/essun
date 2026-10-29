@@ -1,0 +1,43 @@
+ 183 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+response with data is sent using a PDS request from the target to the initiator. Control packets are used 
+for management purposes, e.g., to request the status of a request packet or to probe a path’s 
+congestion situation. 
+In support of the ordering objectives and the use of multiple, concurrent, independent paths, the 
+reliability layer is designed with five packet delivery modes. Those modes support the semantic needs of 
+both HPC and AI, while enabling highly optimized, highly scalable implementations. In some use cases, 
+the same message may utilize more than one packet delivery mode. For example, an MPI 
+implementation might use an ordered mode to ensure header ordering together with an unordered 
+delivery mode for the payload. The five packet delivery modes are: 
+1. Reliable, unordered delivery for operations (RUD): The RUD packet delivery mode is designed 
+to enable operations that are passed to the semantic sublayer only once but can tolerate 
+reordering in the network (e.g., atomic add operations). This allows all bulk data to be routed 
+unordered across the network. The reliability sublayer detects duplicate packets so that each 
+packet is delivered to the semantic sublayer only once (i.e., operates on host memory only 
+once). 
+2. Reliable, ordered delivery (ROD): The ROD packet delivery mode maintains the order for all 
+packets between two endpoints. It is designed for applications that require message ordering, 
+e.g., MPI’s match ordering or OpenSHMEM put-with-signal semantics. As an example, MPI can 
+transfer a header using an ordered delivery protocol and then transfer the body of the message 
+using a different protocol. This provides ordering at the message level and unordered bulk data. 
+The reliability sublayer detects replays and ensures that the operation within each packet 
+interacts with host memory only once. 
+3. Reliable, ordered delivery for local networks (RODL): The RODL packet delivery mode is a 
+variation of the ROD packet delivery mode that is optimized for networks using the Unified Local 
+profile. RODL allows implementations to omit PDS‑layer retransmission for efficiency, relying on 
+mechanisms such as LLR for reliability. The header format is optimized for wire efficiency. 
+4. Reliable, unordered delivery for idempotent3 operations (RUDI): The RUDI packet delivery 
+mode supports special applications where very small messages need to be delivered between an 
+extreme number of endpoints. It takes advantage of the fact that some data—like bulk payload 
+delivery—can be written into memory multiple times up until the final message completion is 
+delivered at the initiator. RUDI packets can be reordered in the network and replayed due to 
+loss, leading them to be delivered more than once to the semantic sublayer and in any order. 
+Because end-user semantics can be complex, this protocol may not be appropriate for all use 
+cases; yet, due to its stateless nature at the receiver, it is the most scalable of the delivery 
+modes because it requires no state at the receiver. 
+5. Unreliable, unordered delivery (UUD): As with most transport layers, UET provides an 
+unreliable packet delivery mode. Unreliable packets (or datagrams) can be used if guaranteed 
+delivery is not required. 
+ 
+3 Idempotent operations give the same result with the no additional side effects when performed multiple times.  

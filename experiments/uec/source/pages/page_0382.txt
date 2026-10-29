@@ -1,0 +1,49 @@
+ 382 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+   if (OOO_COUNT > loss_threshold_pkts) && loss_recovery_mode = FALSE) { 
+   // if calculating OOO_COUNT at source: 
+   if (ooo_rcvd_bytes > loss_threshold_bytes) && loss_recovery_mode = FALSE){ 
+      loss_recovery_mode = TRUE 
+      recovery_psn = highest_sent_psn 
+      last_rtx_psn = Src_Lowest_Not_Rcvd_PSN;  // First PSN considered lost 
+   } 
+   if (loss_recovery_mode) { 
+      // Retransmit as many lost PSN as cwnd allows 
+      while((last_rtx_psn < Src_Lowest_Not_Rcvd_PSN + cwnd_pkts) &&  
+            (last_rtx_psn < recovery_psn)) { 
+         enqueue last_rtx_psn for retransmission; 
+         last_rtx_psn = next unacked PSN between last_rtx_psn and  
+              recovery_psn 
+         if (last_rtx_psn == NULL) { 
+            last_rtx_psn = recovery_psn + 1; 
+         } 
+      } 
+   } 
+}  //End of ACK processing 
+ 
+On Retransmit { 
+   // Loss recovery processing already applied cwnd 
+   // Transmit all enqueued packets 
+   if (last_rtx_psn > recovery_psn) { 
+      loss_recovery_mode = FALSE; 
+   } 
+} //End of Retransmit processing 
+ 
+This attempts to identify all PSNs that are roughly within the loss_retx_factor congestion window 
+relative to the oldest unacknowledged packet. When supported, packets are not retransmitted more 
+than once using this loss detection mechanism 
+See Section 3.5.15.5.2 for how to recover lost ACKs using this loss detection mechanism. 
+Informative Text: 
+For clarity in comparing the destination and source methods for determining OOO_COUNT, the 
+equations are simplified to fit in a single line by letting pdc/ccc = inflight_pdc_bytes/inflight_ccc_byte 
+and excluding min_retx_config in this comparison. The pdc/ccc term is used when multiple PDCs share 
+a CCC to scale the CCC state for each individual PDC. 
+Consider the calculation used in the destination method shown as equation A below. Equations A, B, 
+and C are mathematically equivalent. 
+A. (OOO_COUNT > loss_threshold_pkts) 
+ 
+B. (OOO_COUNT > (loss_retx_factor * cwnd * pdc/ccc) / avg_tx_pkt_size 
+ 
+C. OOO_COUNT * avg_tx_pkt_size > loss_retx_factor * cwnd * pdc/ccc 
+ 

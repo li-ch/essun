@@ -1,0 +1,42 @@
+ 203 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.2.3.4 Initiator Identifiers 
+The ses.initiator field is included in the UET header and is part of the matching criteria (3.4.2.3.5). The 
+ses.initiator field contains the job level “rank” of the initiating process. An initiator has meaning only 
+within the context of a JobID (i.e., it is a rank numbered from 0 to N-1, where N is the total number of 
+ranks in the application). As such, it MAY be assigned by a user-controllable resource. In many 
+messaging APIs—including various CCL libraries and MPI—the receive operation (e.g., MPI_Irecv()) 
+specifies the rank that a message must come from in order to match to that receive. This ses.initiator 
+field is intended to carry that rank—or a proxy for that rank (e.g., the source rank could be translated to 
+a global rank rather than the communicator-specific rank used in MPI). This is expressed in libfabric 
+through the FI_DIRECTED_RECV portion of the API. 
+3.4.2.3.5 Matching and Nonmatching Operations 
+The UET header defines a set of fields to enable either matching or nonmatching operations. When the 
+message indicates it is a tagged send (e.g., UET_TAGGED_SEND, UET_RENDEZVOUS_TSEND), the 
+“matching criteria” (the 64 ses.match_bits field and the ses.initiator_id field) are used for buffer 
+selection. When matching is not requested (e.g., UET_SEND, UET_RENDEZVOUS_SEND), a network 
+message selects the next buffer provided by the Resource Index. The matching (if present) and 
+nonmatching resources associated with a Resource Index are logically separated. 
+Matching operations exist in various forms. The traditional form of matching as defined through the 
+libfabric fi_trecv() API uses matching criteria—specifically the ses.match_bits and the ses.initiator fields 
+of the message—to select the buffer. In this approach (as exemplified in fi_trecv() and other historical 
+software APIs), the matching criteria can provide ignore bits for each of the 64 match bits and/or be set 
+to receive from “any source” (i.e., using FI_ADDR_UNSPEC—see fi_trecv()). Support for MPI matching 
+requires wildcard matching for both a tag field and a source field, and this is accomplished through a 
+combination of ignore bits and FI_ADDR_UNSPEC. For *CCL implementations that support send/recv, 
+their matching behaviors are typically a subset of this behavior, where the matching criteria may not be 
+wildcarded; however, that is a property of the libfabric endpoint and not the wire protocol. When 
+Informative Text: 
+The text above notes that send/receive, tagged send/receive, and RMA opcodes have three different 
+Resource Index spaces. That is, a Resource Index using send/receive selects different resources 
+(completion queue, set of target buffers) from a tagged send/receive using that same Resource Index 
+value. Similarly, an RMA opcode using that same numeric value accesses a third set of resources. 
+Whether that is thought of as three separate Resource Index tables or one table with three sets of 
+resources selected by the operation type is an implementation detail beyond the scope of this spec. 
+Informative Text: 
+The ses.initiator field is currently defined as the initiator ID and is relative to the JobID in both relative 
+addressing and absolute addressing. The initiator ID does not currently have a separate trust model or 
+addressing model for absolute addressing, because there is not a currently known use case for the 
+initiator ID in absolute addressing mode. Future extensions of the specification may include updates 
+to the initiator ID definition for absolute addressing if a well-defined use case emerges. 

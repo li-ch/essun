@@ -1,0 +1,80 @@
+# Assumption registry for the analytical L0-TFC credit-window model
+# (flagship slice, binding BIND-UEC11-FC-R02-L0TFC). Per-model file
+# (same house rule as assumptions_l05.yaml: unrelated additions cannot
+# shift other models' run identities).
+#
+# PROVENANCE NOTE: the ONLY standard-derived value in this model is the
+# 256-byte credit unit (UEC 1.1 §3.6.15, requirement UEC11-FC-R05, anchor
+# UEC11-S3.6.15-TFC) — it is NOT an assumption and lives as the named
+# constant TFC_CREDIT_UNIT_BYTES in src/essun/backends/analytical/l0_tfc.py.
+# Every value below is a free parameter: not standard-derived, not measured.
+assumptions_id: assumptions_tfc_v1
+status: PROPOSED
+assumptions:
+  - id: A-TFC-BW
+    parameter: link.bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Free parameter, equal to the L0 ring value (A-L0-BW) on purpose: the
+      TFC identity shares L0's bandwidth term, and sharing B (with L,
+      A-TFC-LAT) is what makes the window>=BDP convergence anchor to the
+      landed L0 identity meaningful.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: flagship-slice
+    review: PROPOSED
+  - id: A-TFC-LAT
+    parameter: link.hop_latency_ns
+    value: 200
+    unit: ns
+    range: [0, 2000]
+    rationale: >
+      Free parameter, equal to the L0 ring value (A-L0-LAT); one hop
+      latency per chunk transfer, same chain as L0.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: flagship-slice
+    review: PROPOSED
+  - id: A-TFC-W
+    parameter: tfc.window_bytes
+    value: 12800
+    unit: bytes
+    range: [256, 1048576]
+    rationale: >
+      Free parameter: granted TFC credit per ring neighbor pair, in
+      256-byte credit units (the unit is spec-anchored via UEC11-FC-R05;
+      the AMOUNT is a deployment choice the spec leaves free). 12800 = 50
+      units: with B=64 and L+L_cr=400 the BDP is 25600 bytes (100 units),
+      so this run sits in the window-limited regime (R_eff = 32 B/ns) —
+      the slice demonstrates the observable change, not just the
+      convergence anchor.
+    sensitivity: high for O-CCT when W < B*(L+L_cr), zero at or above BDP, zero for O-CONSERVATION
+    owner: flagship-slice
+    review: PROPOSED
+  - id: A-TFC-CR
+    parameter: tfc.credit_return_latency_ns
+    value: 200
+    unit: ns
+    range: [0, 2000]
+    rationale: >
+      Free parameter NEW in this model: the credit-loop return time (data
+      forward one hop, then credit CP back across the pair's reverse
+      direction). The UEC spec does not fix credit-return timing — it is
+      an implementation/deployment property, so it is an explicit free
+      parameter of the binding, never a spec value. Chosen equal to the
+      hop latency as the simplest non-trivial round trip.
+    sensitivity: high for O-CCT when W < B*(L+L_cr) (RTT scales the rate cap), zero for O-CONSERVATION
+    owner: flagship-slice
+    review: PROPOSED
+  - id: A-TFC-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Same equal-chunk construction as every L0 family member (A-L0-DIV):
+      the identity assumes r | M so every chunk is an integral byte count;
+      non-divisible payloads are rejected at execution time.
+    sensitivity: rejection-only guard (no numeric sensitivity)
+    owner: flagship-slice
+    review: PROPOSED

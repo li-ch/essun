@@ -1,0 +1,40 @@
+ 297 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.3 Packet Delivery Services 
+The packet delivery sublayer services include: 
+• Delivery of requests and responses sourced by the local SES to the destination SES. 
+o PDS processes SES packets—not messages. 
+▪ SES requests PDS to deliver a packet with specified ordering and reliability. 
+o PDS processes SES responses. 
+▪ SES generates a response for each delivered packet, nominally ‘success’ or ‘fail’, 
+and optionally including a small amount of state (e.g., fail reason) and/or data. 
+▪ An SES Response may carry data (e.g., fetching atomic or read data). 
+▪ SES indicates which responses are guaranteed to be delivered. 
+▪ The SES Response is carried in a PDS ACK packet. 
+• Receiving and forwarding requests and responses from destination SES to local SES. 
+• Providing reliability and ordering guarantees for packets received from SES and transmitted on 
+the wire as well as packets received from the wire and passed to SES. 
+o PDS offers both reliable and unreliable packet delivery modes. 
+o PDS offers both ordered and unordered packet delivery modes. 
+• Setting up and tearing down dynamic connections between fabric endpoints (FEPs). 
+o PDS provides a connectionless interface to SES; using dynamically established 
+ephemeral connections, referred to as packet delivery contexts (PDCs), between FEPs on 
+an as-needed basis. 
+o PDS also provides connectionless reliable delivery for idempotent operations; a separate 
+delivery mode (RUDI—see Section 3.5.7.4)  is used for this that does not establish any 
+connection. 
+o PDS provides connection-oriented services to SES, using reserved PDCs configured by 
+the user. 
+PDS defines packet delivery modes that provide varied ordering and reliability services. Each UET profile 
+defines which packet delivery modes are available within that profile and which congestion 
+management schemes are available. UET profiles are defined in the UET overview section. UET packet 
+delivery modes are defined in this PDS section—refer to Section 3.5.6. 
+The UET PDS is designed in close conjunction with SES and CMS. SES is responsible for: 
+• Segmenting messages into packets provided to PDS for transmission 
+• Reassembling packets received from PDS into messages 
+• Generating a response for every request packet received 
+PDS is unaware of the SES transaction type. Data returned in response to a read request is called ‘return 
+data’. This is carried in a PDS ACK or in a PDS Request on the return direction as described in Section 
+3.5.12.1. 
+CMS services include: 

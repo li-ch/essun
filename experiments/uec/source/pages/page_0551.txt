@@ -1,0 +1,65 @@
+ 551 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Threat from Attacker Threat Mitigation 
+• Unreliable unordered delivery (UUD) requires a higher-level 
+application to implement packet insertion, removal, and 
+replay detection and is out of scope for UET. 
+Arbitrarily modify existing traffic in the 
+network outside of the endpoint as a 
+manipulator-in the-middle 
+• The packet data including encrypted payload is 
+authenticated so any modified data can be detected, and 
+the packet is dropped and reported when it fails 
+authentication. Once a packet is authenticated, the receiver 
+can trust the routing information it contains and verify it is 
+the intended recipient of the received packet. 
+• Trimmed packets utilized for congestion control do not 
+contain an ICV since the original payload is removed when 
+it is trimmed. This makes them vulnerable to this attack. A 
+trimmed packet is used only for congestion control state 
+and cannot open a connection or cause misplacement or 
+corruption of original data. 
+Perform timing attacks by brute force or 
+inserting traffic at a particular time as a 
+manipulator-in the-middle  
+Replay of memory transactions that open a previously closed 
+PDC is considered a timing attack. The protocol will require the 
+use of a secure Start_PSN that is saved by the sender and 
+receiver or assigned by the receiver and is never reused for the 
+same encryption/decryption key. Attempting to replay the 
+request to open a connection after the connection was closed 
+will result in the request being rejected and reported by the 
+receiver since the PSN will be invalid. PDS is required to close 
+after 231-32K packets. This prevents replaying across counter 
+wraps. 
+Arbitrarily insert traffic into the network at 
+the application layer and observe ciphertext  
+The protocol utilizes AES-GCM-256 encryption to make brute 
+force discovery of the plaintext cryptographically infeasible.  
+Snoop traffic at any location in the network 
+to derive actionable data or information as a 
+side channel 
+• The protocol authenticates the entire packet including 
+packet headers used in the security protocol and encrypt all 
+payload data. 
+• Side-channel attacks based on the encrypted data is 
+considered out of scope of the UET threat model. 
+• Side-channel attacks against the clear text authenticated 
+header are also considered out-of-scope.  
+Manipulation of IP DSCP  • Considered out of scope since it requires 
+trusting/authenticating the switch function. 
+Connection Setup replay • Epoch-based rejection (see Section 3.7.10) of old requests 
+by TSS. 
+• When the PDC is created, either a random or Expected_PSN 
+is used to set Start_PSN (see Section 3.5.8.2.1). 
+• Trimmed packets received by TSS cannot create a PDC. 
+Nonce reuse • The TSC field is constructed from a packet counter and 
+epoch. Reuse properties of the nonce are achieved if epoch 
+is distributed by SDME, and a FEP does not reuse epoch if it 
+cannot be stored across reboot. 
+Nonce hiding • Additional random IVMask or IVMask from KDF is XORed 
+with IV before being presented to the cipher engine. 
+Unreliable transport considerations • A PDC is torn down if the number of authentication failures 
+is above a threshold. 
+• IV is obfuscated using IVMask. 

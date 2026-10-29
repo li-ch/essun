@@ -1,0 +1,40 @@
+ 308 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.7.2 Reliable Ordered Delivery (ROD) 
+The ROD delivery mode guarantees that each packet is delivered to the target SES once and only once in 
+the order the packets are sent from SES to PDS at the initiator. A ROD PDC requires packets to be 
+transmitted in the same order in which SES sends the packets to PDS. The packets on a ROD PDC are 
+transmitted in order over the network port using a single network path (i.e., using a single entropy 
+value) and arrive at the target network port in the same order (excluding error scenarios). 
+ROD uses GoBackN loss recovery. GoBackN drops all packets that arrive out of order, requiring the 
+source to retransmit all packets starting from the first missing PSN. That is, the missing PSN is referred to 
+as ‘N’ and the source goes back to ‘N’ and retransmits. 
+ROD ACKs are transmitted in the same order as the packets they ACK and read responses are 
+transmitted on the wire in packet order. There are no ordering requirements between PDS ACKs on the 
+forward direction and read responses on the return direction. An ACK may be sent and arrive out of 
+order when that ACK is requested, e.g., based on receiving a duplicate packet or ACK request CP. Refer 
+to Section 3.5.21.1. 
+3.5.7.3 Reliable Ordered Delivery for Local Networks (RODL) 
+The RODL delivery mode has the same requirements as ROD with the following exceptions: 
+• RODL uses bidirectional PDCs. This allows the target FEP to initiate transactions. 
+• RODL includes the option to exclude PDS retransmissions. 
+• RODL over the UFH_16 header compresses the PDS header, specifying a smaller PDCID space, 
+smaller clear state, and compressed flags. 
+• When using RODL over the UFH_16 header, the 32-bit expected PSN is included in the CRC 
+calculation and not explicitly included in the header once the PDC is established. 
+• RODL carries ACK state in the PDS Request for the reverse direction. 
+• RODL over the UFH_16 header is optimized for fabrics with a single tier of switching. 
+3.5.7.4 Reliable Unordered Delivery for Idempotent Operations (RUDI) 
+Idempotent means a packet can be processed by the target SES multiple times and the result is the 
+same. For example, multiple RMA Writes to a memory address or multiple RMA Reads from a memory 
+address. 
+The RUDI delivery mode guarantees that each packet is delivered to SES at least once. Packets are 
+delivered in the order they arrive from the network and every RUDI packet received from the network is 
+delivered to SES without attempting to remove duplicate packets. PDS assigns unique identifiers per 
+packet for RUDI. The RUDI packet identifiers for different packets need not be related to each other (i.e., 
+the RUDI packet identifiers are not required to be based off an incrementing counter). RUDI is optimized 
+to enhance scalability and minimize endpoint state, relative to RUD, by exploiting the relaxed 
+requirements associated with being able to deliver a packet more than once. RUDI requires no PDS or 
+SES state at the target, uses a RUDI response per packet, and supports direct data placement out of 
+order; thus, RUDI is very efficient at the PDS and SES levels. 

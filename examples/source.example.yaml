@@ -1,0 +1,14 @@
+source_id: EXAMPLE-SOURCE
+category: standard
+title: Illustrative public specification
+version: '1.0'
+url: https://example.org/specification
+sha256: <illustrative-not-a-real-hash>
+access: PUBLIC_READ
+license_url: https://example.org/license
+ingestion_scope: example_only
+redistribution_scope: example_only
+role: schema_example
+notes: Not a real standard or source used by the project
+owner: Specification lead
+retrieved_at: '2026-10-26'

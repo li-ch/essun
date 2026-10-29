@@ -1,0 +1,49 @@
+# Calibration-ladder A7 topology: unidirectional ring of 8 ranks at the
+# CAL-A7 ANCHOR POINT B = 64 B/ns per direction — the PER-LINK reading of
+# the anchor (AMD Instinct MI300X Infinity Fabric: "7 bidirectional
+# Infinity Fabric links per GPU, each 128 GB/s"; docs/calibration/
+# anchors_staging.md §A7). Reading declared (plan §2.1 unit convention,
+# stated for CAL-A7 exactly): the links are quoted BIDIRECTIONAL, so
+# 128 GB/s/link => 64 GB/s = 64 B/ns per direction per link (decimal
+# units, 1 GB/s = 1 B/ns).
+#
+# ROLE OF THIS TOPOLOGY: CAL-A7's fabric is a NON-SWITCHED FULL MESH (7
+# dedicated per-pair links per GPU, no switch hop — the staging doc's
+# resolution of the datasheet-vs-Hot-Chips wording: treat as fully
+# connected per Hot Chips + Lenovo). The ring here is the ring ALGORITHM
+# EMBEDDED in that mesh: every ring hop runs over one dedicated 1-hop
+# pair, so B = the anchor's per-pair per-direction rate 64 B/ns and the
+# latency chain 2*(r-1)*L = 14L models 7 such 1-hop pairs per phase.
+# A ring uses 1 of the 7 outgoing per-pair links per rank, so this
+# reading exercises 1/7 of the anchor's per-GPU injection capacity — the
+# conservative structural extreme; the aggregate reading (crossbar8_a7_
+# agg448_v1, this stage's twin) exercises all 7. Both are executed,
+# neither is chosen: algorithm choice on real MI300X stacks belongs to
+# RCCL/NCCL, not to this stage.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward any
+# anchor output. 64 B/ns is where the sweep's anchor-point row sits,
+# chosen BY THE ANCHOR's own staged arithmetic. CAL-A7 is a SPEC CEILING,
+# never an achieved value. Note the registry coincidence (placement fact,
+# value untouched): the A-L0-BW registry point is exactly 64 B/ns, so the
+# smoke default of the free per-link axis sits ON this anchor's
+# per-direction per-link rate (0% offset). L = 200 ns is the A-L0-LAT
+# registry point (KEEP; the GPU-fabric latency axis is unanchored — plan
+# gap §4.2 — and belongs to its own global stage).
+topology_id: ring8_a7_link64_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Ring hops are
+  dedicated 1-hop pairs of the MI300X full mesh (no switch traversed);
+  per-pair dedicated capacity is exactly what this per-link B expresses.
+  Provenance: B = 64 B/ns is CAL-A7's staged per-link per-direction rate
+  (anchor PROPOSED in the anchor registry; spec
+  ceiling, never an achieved value); L = 200 ns is the free A-L0-LAT
+  registry point. Values are anchor quotes / assumptions, never our
+  measurements.

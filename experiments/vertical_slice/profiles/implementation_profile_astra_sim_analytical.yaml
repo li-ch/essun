@@ -1,0 +1,20 @@
+# Implementation profile for the ASTRA-sim analytical (congestion-unaware)
+# frontend at the pinned commit (T022 / D-028). Translation-only stage S1;
+# execution wiring lands with S2.
+implementation_profile_id: astra_sim_analytical_free_v1
+status: PROPOSED
+backend: astra_sim_analytical
+fidelity: DES (collective-level; congestion-unaware analytical transport)
+model: >
+  ASTRA-sim 2.0 analytical congestion-unaware frontend, native Ring
+  AllReduce on a single-dimension Ring logical topology
+  (src/essun/backends/astra_sim/adapter.py).
+pin:
+  astra_sim_commit: 4ce9ecfe746a3ee5fe47559a11d91644d641fa7f
+  chakra_commit: 0e3cd40c569f0a4cacb6d961bb56be53407abd2f
+  docker_image: essun/astra-sim-analytical:s1
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+translation_assumptions_source: >
+  TRANSLATION_ASSUMPTIONS in src/essun/backends/astra_sim/adapter.py
+  (A-AS1-*; every ASTRA-sim-side knob carries an in-tree source anchor)
+measurement_source: none   # not calibrated; free parameters only

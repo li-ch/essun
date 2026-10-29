@@ -1,0 +1,36 @@
+ 166 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.4.13 Error Handling 
+INC errors fall into the following categories: 
+• Transmission error (e.g., unrecoverable packet loss or link loss) 
+• Format error (e.g., unexpected CSN, datatype mismatch, unsupported data type, etc.) 
+• Member failure (e.g., timeout) 
+• SEP failure (e.g., timeout) 
+• IM failure (e.g., timeout) 
+In most cases, transmission errors are avoided using a lossless transport alongside FEC and LLR. Errors 
+that are not recovered by FEC and LLR are recovered by PDS retransmission. 
+Link loss can be avoided using redundant links or other mechanisms, which are out of scope for this 
+specification. 
+Uncorrectable errors encountered by the ranks or switches are reported to the IM. In such a case, the 
+IM destroys the INC communicator and notifies all ranks and switches involved. 
+2.4.14 INC Manager 
+The INC manager (IM) coordinates the setup and teardown of collective offload to INC switches. It uses 
+switch capability information to allocate switch resources for collective offload. 
+The IM requires network connectivity to the ranks of a job and INC switches. It can operate in the same 
+network as the INC data plane, or in a separate management network. 
+The IM exposes a gRPC server to the ranks of a job, which act as clients. The ranks are configured with a 
+URL to the IM’s gRPC server. The IM, in turn, uses gNMI as a client to communicate with the INC 
+switches. 
+2.4.15 UET Libfabric Provider and IM 
+The IM exposes a gRPC server supporting a UE-defined protocol that interacts with a UET libfabric 
+provider on behalf of an application that intends to use INC. 
+The protocol supports the following operations: 
+• Capability query 
+• Communicator creation/destruction 
+• Communicator status query 
+2.4.15.1 The gRPC API 
+The full .proto file specifying the API exposed to the UET provider can be found at the following URL: 
+<https://github.com/ultraethernet/uec-inc/blob/main/proto/uec-uet-inc-im.proto> 
+It is reproduced below: 
+syntax = "proto3"; 

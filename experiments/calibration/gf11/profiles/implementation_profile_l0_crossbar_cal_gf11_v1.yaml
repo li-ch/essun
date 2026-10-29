@@ -1,0 +1,87 @@
+# Implementation profile for the calibration-ladder GF-11 runs/sweeps on
+# the analytical L0 backends (gap-fill anchor GF-11 —
+# "Achieving Near Speed-of-Light Latency in GPU Collectives",
+# arXiv:2607.16100; public arXiv paper, license-clean; numbers AS STAGED,
+# not re-fetched).
+implementation_profile_id: analytical_l0_crossbar_cal_gf11_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. The sweeps additionally
+  execute the ring (analytical_l0, t = 2(r-1)/r*M/B + 2(r-1)*L) and
+  recursive-doubling (analytical_l0_recursive_doubling, t = 2(r-1)/r*M/B +
+  2*log2(r)*L) identities — the three single-port L0 chains differ ONLY in
+  the latency chain, which is exactly the axis GF-11's small-message
+  bracket isolates. ROLE per the gap-fill doc §GF-11: (a) small-message
+  O-CCT on current-gen NVLink5 (plan gap 3) — the anchor's measured
+  bracket on 4 GB200s (NCCL 2.29.1 ring 11.0 µs vs LLBuffer one-shot
+  2.37 µs) "brackets what any model may predict without accusing the
+  fabric", executed as the corpus's FIRST current-gen measured CCT-vs-CCT
+  small-message comparison; (b) measured current-gen latency components
+  (plan gap 2): LL2 RTT 306 ns and remote store 792 ns decompose the SoL
+  bound 1404 ns = 2x306 + 792 EXACTLY (the anchor's own equation), and the
+  derived per-phase reading L = 702 ns maps the decomposition onto the
+  identity's 2L term — the FIRST current-gen bare-hardware-anchored L in
+  the corpus; (c) multi-rank latency-overhead scaling (R4): the anchor's
+  7%-at-2-GPU to ~70%-at-64-GPU overhead growth vs the chains' 1x/6x/63x
+  latency-chain growth across the same rank span. NOTHING IS TUNED: every
+  B/L value was fixed by anchor/registry arithmetic BEFORE any stage
+  output was read; the sweeps measure WHERE the identities sit relative to
+  the anchor's measured bracket (ratios and absolute deltas), never
+  adjusted toward it. GF-11 stages no clean per-rank B (the 130 TB/s NVL72
+  aggregate has an unstated direction split and 2-sig-fig rounding) — B is
+  the registry 64 everywhere, and the B-axis arithmetic is recorded NOT
+  EXECUTED in the stage record.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns / link.bytes_per_ns) fixed at the free
+  A-L0X-BW / A-L0-BW / A-L0D-BW registry point 64 everywhere; L
+  (link.pair_latency_ns / link.hop_latency_ns) swept by anchor/registry
+  arithmetic: 702 = the DERIVED per-phase reading of the measured SoL
+  (1404/2 — the headline mapping; the SoL-total alternative reading 1404
+  executed as its own row), 306 = the measured LL2 RTT component, 792 =
+  the measured remote-store component, 800 = CAL-A10's assumption-class
+  check row, 200 = the A-L0X-LAT registry reference. Ranks are
+  ANCHOR-PINNED: r=2 (the decomposition system), r=4 (the bracket
+  system), r=64 (the scaling endpoint); r=8 and r=72 recorded not executed
+  (the anchor stages no collective number at either — its 8-GPU rows are
+  vLLM ITL percentages, an application metric with no model surface; 72
+  is not a power of two so the exchange fabric rejects it). Payload grid:
+  {128, 512, 2048, 8192, 32768, 41216, 65536} B — the anchor's 128-B
+  cache-line granularity reading at the base, the plan's small-message
+  regime boundary 64 KiB at the top, and 41216 B = the EXACT payload at
+  which the crossbar identity at the derived L crosses the anchor's
+  near-optimal measured leg (t = 966 + 1404 = 2370 ns on the nose —
+  executed as a cell so the crossover claim is run-backed); every size
+  divisible by 2/4/64 so the divisibility gates accept the exact sizes.
+  Run payloads pin the 128-B reading at each of the three anchor ranks
+  plus the registry twin at r=4 (t = 403 ns vs the anchor-mapped 1407 ns,
+  ratio exactly 1407/403). NO parameter was tuned toward any anchor
+  output; the bracket is placement arithmetic.
+measurement_source: >
+  GF-11 staged numbers (arXiv:2607.16100, hardware microbenchmarks on
+  GB200 NVL72 and 2/4-GPU GB200 systems plus Alps GH200 nodes; software
+  pins NCCL 2.29.1, NVSHMEM 3.5.21, MSCCL++ 0.8.0, vLLM 0.15.1;
+  docs/calibration/anchors_gapfill.md §GF-11; numbers AS STAGED, not
+  re-fetched; gap-fill anchor, NOT yet an integrated anchor row — the owner
+  integrates accepted rows; confidence H — extracted from HTML, hardware
+  measurements; author-run microbenchmarks, preprint). CAVEAT CLASSES
+  carried by this profile: the per-size latency table lives in a FIGURE
+  (not enumerated in text) — the 128-B size reading of the bracket is a
+  DECLARED ambiguity carried on every CCT row, and the sweeps bracket it
+  with the 7-size grid incl. the exact 41216 B crossover cell; the SoL ->
+  L mapping carries a x2-class reading ambiguity (702 per phase vs 1404
+  whole-SOL-as-L — both executed as rows); the 2-GPU decomposition is
+  app-free bare hardware but the 4-GPU bracket rows are FULL-STACK
+  collective times (NCCL/LLBuffer kernels — a different quantity class
+  than L); the "about 7%"/"roughly 70%" overhead figures are prose
+  approximations; the vLLM ITL rows (7-13% / 9-11%) and the "0.9% cost
+  per µs" sensitivity are application-level context with no model surface
+  (recorded, not executed); the 130 TB/s NVL72 aggregate and the Alps
+  150 GB/s NVLink figures are system descriptors with unstated direction
+  conventions (recorded, not executed); compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

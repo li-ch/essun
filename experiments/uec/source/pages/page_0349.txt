@@ -1,0 +1,38 @@
+ 349 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+CLEAR_PSN is maintained as the highest clear sequence number received in each direction on a PDC. 
+The CLEAR_PSN will always monotonically increase. The CLEAR_PSN state on the forward and return 
+directions are independent. 
+When SES indicates that an SES Response requires guaranteed delivery, PDS requests a clear by setting 
+pds.flags.req to REQ_CLEAR in the associated PDC ACK. 
+PDS provides a CLEAR_PSN in response to receiving an ACK with pds.flags.req set to REQ_CLEAR or 
+receiving a Clear Request CP. PDS provides the CLEAR_PSN either by carrying pds.clear_psn_offset in an 
+outgoing PDS Request or, if there are no requests pending, by sending a Clear Command CP. 
+When no requests are pending, the Clear Command CP MUST be sent either immediately or after a local 
+timer expires to allow CLEAR_PSN to progress at the destination. A timer SHOULD be used and initialized 
+to PDS_Clear_Time.  
+3.5.11.4.4 CACK_PSN 
+The cumulative ACK PSN (CACK_PSN) MUST be supported for RUD/ROD/RODL PDCs. The pds.cack_psn 
+field is carried in full 32-bit format in the PDS ACK header field on RUD/ROD. CACK_PSN is reduced in 
+size on RODL packets. See Section 3.5.10.5 and Section 3.5.12.4.4. 
+CACK_PSN is defined such that all earlier PSNs up to and including CACK_PSN have been successfully 
+received, and all corresponding guaranteed delivery SES responses have been cleared. The CACK_PSN 
+MUST NOT advance beyond the lowest PSN requiring guaranteed delivery that has not been cleared by 
+CLEAR_PSN. This is described in more detail in Section 3.5.12.4.4. 
+CACK_PSN MUST be initialized to the PDC’s Start_PSN minus 1 when a PDC is created. 
+3.5.11.4.5 ACK_PSN 
+The acknowledgement PSN, ACK_PSN, identifies the packet that triggered the generation of an ACK. 
+ACK_PSN is indirectly carried in the RUD/ROD/RODL ACK header using the pds.ack_psn_offset field. The 
+pds.ack_psn_offset field is a 16-bit signed integer in twos-complement format that is added to 
+CACK_PSN to determine ACK_PSN. The msb of pds.ack_psn_offset is extended to create the 32-bit value 
+added to pds.psn. See the examples in Table 3-52. 
+Table 3-52 - Example PSN OFFSET Calculation 
+ACK_PSN_OFFSET CACK_PSN ACK_PSN 
+0x0024 0x62231120 0x62231144 
+0xFFDC (-36) 0x62231120 0x622310FC 
+0x0010 0xFFFFFFF3 0x00000003 
+0xFEE2 (-286) 0x00000079 0xFFFFFF5B 
+3.5.11.4.6 SACK_PSN 
+SACK_PSN is the base or lowest PSN in the pds.sack_bitmap field of a RUD/ROD ACK_CC and ACK_CCX 
+header, as described in Section 3.5.12. 

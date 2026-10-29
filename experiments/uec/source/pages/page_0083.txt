@@ -1,0 +1,20 @@
+ 83 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A libfabric provider implements the libfabric API over vendor-specific lower-level software and hardware 
+interfaces. Libfabric does not define the software/hardware interfaces that a provider uses to access 
+network hardware. The libfabric UET Provider Software Architecture is illustrated in Figure 2-3. 
+ 
+Figure 2-3 - Libfabric UET Provider Software Architecture  
+A kernel driver MUST be provided to facilitate operations that require a privileged entity, such as JobID 
+assignment, provisioning, or security key management. The vendor low-level NIC hardware interface 
+SHOULD use kernel bypass techniques when accessing the hardware for performance reasons. 
+The interface between the kernel driver and a privileged entity is referred to as the UET Control API. The 
+privileged entities that interface with the kernel driver are expected to vary across deployments. Thus, 
+UET standardizes the UET Control APIs for Linux implementations to allow: 
+• Kernel drivers that implement the standard interface to interoperate across deployments, and 
+• Privileged entities to interoperate with kernel drivers from multiple vendors. 
+Netlink was selected as the foundation for the UET Control APIs in Linux environments due to its 
+flexibility, extensibility, and wide availability. Implementations for non-Linux operating systems are 
+expected to provide similar functionality. More details on the UET Control APIs are provided in 
+subsequent sections of this specification. 

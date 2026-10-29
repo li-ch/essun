@@ -1,0 +1,40 @@
+ 499 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+values of k result in less bursty sharing of incoming capacity but require a higher volume of control 
+messages. 
+Only a single credit timer is needed per FEP14 for a traffic class to handle any number of incoming PDCs 
+in that traffic class at the FEP. 
+OnCreditTimer (once every k * MTU/(linkspeed*credit_rate) seconds):  
+if active_senders.size() > 0:  
+#round robin across active sources (other sharing strategies 
+#possible, not shown) 
+sender = active_senders.pop_front() 
+sender.cumulative_credit =  
+min(sender.credit_target, sender.cumulative_credit + k * mtu) 
+sendCreditControlMessage(sender, sender.cumulative_credit) 
+ 
+if sender.cumulative_credit < sender.credit_target: 
+active_senders.push_back(sender) 
+else:  
+#source has no more demand, add to idle_senders list 
+idle_senders.push_back(sender) 
+else if idle_senders.size() > 0:  
+#We have no active sources, send credit to idle sources to 
+#allow them to speculative start if needed. 
+sender = idle_senders.pop_front() 
+sender.cumulative_credit += k * mtu 
+sendCreditControlMessage(sender, sender.cumulative_credit) 
+ 
+if sender.cumulative_credit < sender.credit_target + MaxWnd:      
+#only send up to MaxWnd credits 
+idle_senders.push_back(sender) 
+ 
+When sending a Credit CP, the pds.payload.credit field is set to the value of sender.cumulative_credit. 
+3.6.14.7 Dynamic Credit Rate 
+The destination credit rate is typically constant in normal operations, being set to a value marginally 
+smaller than linkspeed (e.g., 99%). In certain cases, however, it is desirable for the destination to 
+dynamically reduce its total credit rate. To enable this, RCCC can modify the credit_rate global 
+ 
+14 Where multiple FEPs are co-located in such a way as to share CCCs, only one timer is needed per TC per group of 
+FEPs sharing CCCs. 

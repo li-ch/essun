@@ -1,0 +1,37 @@
+ 152 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• SourceID 
+2.3.11 Memory Registration 
+UET verbs extends RDMA verbs memory registration with UET-focused capabilities. UET verbs memory 
+registration extensions are outlined below. Extended memory registration capabilities are aligned with 
+UET libfabric support. 
+There are three main configurations of MRs used to control the granularity of access: 
+• MR + PD – This is the traditional PD model where only QPs that are part of the same PD can 
+access the MR. 
+• MR + PD + JobID – This protects the MR even further, allowing an MR to be bound to a JobID. 
+Only operations within the JobID targeting a QP in the same PD can access the MR. 
+• MR + PD + QP – This provides even further protection of an MR by attaching it to the QP. Only 
+that QP has access to the MR. 
+The above configurations provide different levels of MR protection for incoming requests at the target. 
+Alternatively, as an initiator, the only restriction for sending data from an MR in an outgoing request is 
+that the QP and MR must be within the same PD. An application can send data on a QP from any MR 
+under the same PD, to any JobID with a JKey allocated within that PD, regardless of whether the MR was 
+bound to a specific JobID. 
+2.3.11.1 Attach / Detach MR 
+UET verbs allows a vendor to expose an MR to the network as a separate operation from its creation. A 
+vendor can indicate this requirement through a QP usage flag. Exposing an MR to the network requires 
+attaching an existing MR to a QP. Network access can be revoked by detaching the MR. MR attach and 
+detach functions are UET verbs extensions to QP operations. The behavior of attaching an MR to a QP is 
+aligned with the libfabric FI_MR_ENDPOINT requirement (see Section 3.4.2.3.6). 
+2.3.11.2 Job Based MRs 
+An MR may optionally be associated with a specific job by specifying the job key when allocating the MR 
+(i.e., job-restricted). When a job key is specified, only incoming requests within that job will be allowed 
+to access the MR. The QP, MR, and job key must all belong to the same PD. 
+2.3.11.3 Derived MRs 
+Derived MRs are new memory regions that are wholly contained within an existing region but may have 
+different access rights or other attributes. A derived region must be within the same PD as the existing 
+region. Deriving a region allows a vendor to share page mappings or other hardware resources between 
+the two regions. UET verbs extends memory registration to support derived memory regions. Derived 
+MRs are an optional optimization that a vendor may support. UET devices MAY support the semantics of 
+derived regions, even if underlying optimizations are not available. 

@@ -1,0 +1,40 @@
+ 445 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+algorithms, which may reduce performance. CBFC SHOULD NOT be used anywhere in a best-effort 
+network. 
+Implementation Note: 
+SES and PDS in conjunction with the TC mappings presented in Section 3.6.4.7 are designed for either 
+best-effort or lossless operation. Historical deployments have utilized flow control on the egress link 
+(egress switch to NIC) in networks that were otherwise best-effort networks; however, this is not a 
+recommended deployment model. Implementations that wish to support this model and use the 
+best-effort TC mappings should take great care. 
+ 
+Informative Text: 
+CBFC, which operates at the link level, should not be confused with receiver-credit congestion control, 
+which operates end-to-end and is one of the UET-CC algorithms. 
+ 
+3.6.4.7 Mapping UET to Traffic Classes and DSCP  
+UET-CC is designed to operate using either two traffic classes (TCs) or three traffic classes, where each 
+TC is provided independent packet buffering, ECN marking, trimming, and scheduling services relative to 
+other TCs. UET packets are mapped to a traffic class based on DSCP. UET defines mappings onto 
+between two and six DSCP values that utilize abstract names (e.g., DSCP_TRIMMABLE). Each of the DSCP 
+names is mapped to an underlying DSCP value based on the network (and class of UET traffic). 
+The allocation of packet types to traffic classes depends on whether the network is best-effort or 
+lossless. This specification focuses on best-effort operation, but traffic classes for lossless are also 
+described in Section 3.6.4.7.3. 
+3.6.4.7.1 DSCP Mappings 
+In the simplest deployments, UET can use as few as two DSCP values, as illustrated in Table 3-85. This 
+operational model does not use trimming and segregates packets into either a bulk data DSCP or a 
+control DSCP. The bulk data DSCP is named DSCP_NO_TRIM to retain some nomenclature overlap with 
+the trimming use case. A third DSCP, DSCP_TRIMMABLE_RTX, can also be used without trimming to 
+separate retransmitted packets. 
+Table 3-85 - UET DSCP Mappings without Trimming 
+PDS Packet Types 2 DSCP Mapping 3 DSCP Mapping 
+PDS Requests (RUD, ROD, RUDI) DSCP_NO_TRIM DSCP_NO_TRIM 
+Retransmitted PDS Requests DSCP_NO_TRIM DSCP_TRIMMABLE_RTX 
+Control Packets DSCP_CONTROL or 
+DSCP_NO_TRIM 
+DSCP_CONTROL or 
+DSCP_NO_TRIM 
+PDS ACKs  DSCP_CONTROL DSCP_CONTROL 

@@ -1,0 +1,40 @@
+ 510 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+When more than one single-path PDC exists between a source and destination, PDS should request the 
+allocation of different CCCs for them. The different CCCs between the same pair of FEPs SHOULD 
+coordinate to allocate different entropy values to reduce the frequency that CCCs use the same single 
+path. 
+Informative Text: 
+The motivation for using different but coordinated CCCs is to reduce the impact of flow collisions. A 
+flow collision on one PDC is unlikely to affect another PDC if they use different EVs, and congestion 
+state from one single-path EV is not a good predictor of available capacity using a different single-
+path EV. 
+ 
+3.6.16.3 Oblivious Multipath Spraying 
+The source maintains a space of entropy values to use for the CCC, but it does not keep information 
+about which entropy values are less congested than others. A typical size for the entropy space is 256 
+values, but other sized spaces MAY be used. The source SHOULD use entropy values from the entropy 
+space in a pseudo-random order, with the goal being to use all the entropy values once before 
+repeating. It is beneficial for each source to independently re-randomize the pseudo-random sequence 
+periodically to reduce the probability of multiple sources synchronizing on sequences that hash to 
+similar path sequences. 
+How the source chooses a pseudo-random sequence is implementation defined. A simple modular 
+counter, while not pseudo-random, suffices for protocol interoperability and so is permitted, but it relies 
+on switch ECMP hash functions to provide pseudo-random load balancing. This may be sufficient in 
+many deployments. If so, the counter SHOULD be initialized randomly to avoid synchronization. 
+Oblivious spraying is most effective when combined with packet trimming. With packet trimming, on 
+congestive loss, the source will receive a NACK quickly from the destination and will retransmit the 
+packet as soon as congestion control permits. The retransmitted packet will, with high probability, take a 
+different path. The use of a relatively low trimming threshold of around one BDP prevents queues 
+growing unnecessarily large, and as trimmed packets use little capacity at the congestion bottleneck and 
+elicit fast retransmissions on a different path, oblivious spraying with trimming can do a good job of 
+actively load balancing the network. 
+Oblivious spraying without packet trimming is discouraged, as it will result in load balancing that is less 
+even than path-aware spraying. However, in a network without packet trimming, a source MAY choose 
+to employ oblivious spraying if it cannot hold enough per-path state. 
+3.6.16.4 Path-aware Multipath Spraying 
+As with oblivious spraying, the source maintains a space of entropy values to use for the CCC and uses 
+those entropy values in a pseudo-random order. The size of this space SHOULD be chosen adaptively so 
+that each value used can be considered for reuse within less than two RTTs. This approach is to ensure 
+that load balancing is not responding to out-of-date path congestion information. 

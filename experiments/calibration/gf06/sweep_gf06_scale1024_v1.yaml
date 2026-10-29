@@ -1,0 +1,72 @@
+# Calibration-ladder GF-06 sweep #3: the anchor's
+# STATED SCALE — r = 1,024 hosts of the UET-htsim three-tier fat tree
+# at the GF-06 sim-config link rate (B = 12.5 B/ns from "100 Gbit/s
+# links"; L = 1000 ns DECLARED IMPORT of GF-05's staged per-hop
+# decomposition — GF-06 stages no latency component). PCM deploys on
+# "the packet-level Ultra Ethernet transport simulator (UET-htsim)";
+# this sweep executes the structural content of that sentence the L0
+# family can carry, PLUS the two-user sim-config cross-check.
+#
+# THREE ROWS, THREE ROLES (all at equal L and r):
+# 1. crossbar1024_gf06_simline12_5_v1 (BASELINE): the NON-BLOCKING
+#    single-stage CEILING abstraction of the paper's own 1,024-host
+#    fat tree (the role CAL-A1/A2 spec ceilings and GF-05's crossbar1024
+#    row play) — never a prediction of the fat tree. It executes the
+#    structural rank-count fact: the bandwidth coefficient 2(r-1)/r =
+#    1023/512 is exactly (8/7)*(r-1)/r = 1023/896 ~ 1.1421 above the
+#    r=8 smoke default — at most +1/7 ~ +14.29% for ANY r (identical
+#    to GF-05's scale sweep: the SAME host count, the SAME structural
+#    class).
+# 2. crossbar1024_gf06_xcheck100_v1: the UET-htsim TWO-USER
+#    CROSS-CHECK — GF-05's sim link rate (100 B/ns from "800 Gbps") on
+#    GF-06's scale and ladder. The family's two independent staged
+#    configs differ by EXACTLY x8 on the bandwidth axis; the executed
+#    CCT ratio t(12.5)/t(100) falls monotonically toward the exact
+#    asymptote 8 as the payload grows (exact values in the stage
+#    record) — config-provenance arithmetic, never an outcome claim.
+# 3. ring1024_gf06_simline12_5_v1: the MULTI-HOP SCHEDULE contrast at
+#    the same scale/config — the ring charges the per-hop latency
+#    2*(r-1) = 2,046 times per AllReduce (latency chain exactly
+#    2,046,000 ns) against the crossbar's 2; ring-minus-crossbar is
+#    exactly 2*(r-2)*L = 2,044,000 ns at every size (identity, verified
+#    on executed rows). The regime boundary M* = L*B*r = 12,800,000 B
+#    is exactly 1/8 of GF-05's M* = 102,400,000 B, so the bracketing
+#    members (8 MiB below, 16 MiB above — the latter IS the anchor's
+#    staged workload-range upper) sit at the same M*-relative positions
+#    as GF-05's 64/128 MiB bracket and the executed ring/crossbar
+#    ratios are IDENTICAL (755997/299747 ~ 2.522; 7387083/4193333 ~
+#    1.762) — the ratio at equal M*-relative position is B-INVARIANT,
+#    the displacement technique's scale-invariance property executed on
+#    a second anchor. CONFOUNDER ORDERING from the anchor's own
+#    numbers: schedule structure (1.76-2.52x at the bracketing sizes,
+#    unbounded below M*) sits INSIDE the anchor's measured CM envelope
+#    band (1.11x reaction-delay ... 3x incast tuning) and far above its
+#    finest-grained effect; the x8 sim-config spread exceeds the whole
+#    envelope; rank-count structure (+14.2%) lands WITHIN it — the
+#    honest R3 classification this stage records.
+#
+# NOTHING IS TUNED: GF-06 stages no (size -> time) series in any
+# CCT-comparable metric class (its FCT tables are unstaged); no row is
+# compared to any anchor time. Payload grid: 18-size ladder 1024*2^k
+# (1 KiB -> 128 MiB) — every size divisible by r = 1024 = 2^10
+# (A-L0-DIV / A-L0X-DIV accept, no bracketing), including the shared
+# 2 MiB member (k=11), the staged workload-range upper 16 MiB (k=14),
+# and executed rows bracketing M* = 12,800,000 B.
+sweep: cal_gf06_scale1024_v1
+workload: experiments/calibration/gf06/workloads/w1_dense_tp_decode_tp1024_1kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf06/topologies/crossbar1024_gf06_simline12_5_v1.yaml
+grid:
+  payload_sizes_bytes: [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf06/topologies/crossbar1024_gf06_simline12_5_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar1024_gf06_xcheck100_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf06/topologies/ring1024_gf06_simline12_5_v1.yaml

@@ -1,0 +1,37 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 50 B/ns, L =
+# 1000 ns — the 2:1 OVERSUBSCRIPTION displacement row of the anchor's
+# own sim-config point (SMaRTT+REPS simulate "2:1/4:1/8:1
+# oversubscribed" fat trees). DECLARED READING (structural
+# effective-bandwidth displacement, stage A11's technique): an s:1
+# oversubscribed fat tree gives cross-bisection traffic line_rate/s per
+# rank at the oversubscribed tier — a FIRST-ORDER capacity displacement
+# only; the queueing dynamics of a subscribed fabric are INEXPRESSIBLE
+# at L0 (per-pair bandwidth independent of other pairs is exactly the
+# no-congestion abstraction; the loader has no subscription key). Row
+# factor 2 exactly: asymptotic CCT ratio vs the anchor row exactly
+# 100/50 = 2. TRIPLE READING COINCIDENCE, recorded never conflated:
+# 50 = (a) 2:1 oversubscription displacement of 100; (b) the flagged
+# BIDIRECTIONAL-AGGREGATE reading of the anchor's "800 Gbps"; (c) the
+# alternative "outperforms by 50%" reading where "50% better" means
+# t_baseline = 2 x t_SMaRTT (displacement B/2) — three independent
+# declared readings land on one number, which is why this row is
+# executed once with all three provenances recorded. 50 is also
+# numerically identical to CAL-A1/A5/A11's per-direction rate
+# (cross-anchor coincidence, recorded). Nothing tuned.
+topology_id: crossbar8_gf05_sub2to1_50_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the 2:1 oversubscription
+  displacement of GF-05's sim line rate (100/2 = 50 B/ns; declared
+  structural reading). Identity t = 2(r-1)/r*M/B + 2L with L = 1000 ns
+  (GF-05 per-hop decomposition). No congestion, no queueing, no
+  subscription structure — the displacement locates the oversubscription
+  envelope's MAGNITUDE only (asymptotic CCT factor exactly 2), never its
+  mechanism. Provenance: 800 Gbps line rate / 2 (oversubscription ratio
+  staged by the anchor); values are anchor-derived displacements, never
+  our measurements, never tuned.

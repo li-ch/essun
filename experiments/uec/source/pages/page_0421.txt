@@ -1,0 +1,41 @@
+ 421 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2. RODL can be implemented without PDS retransmission. 
+a. This saves state with a trade-off of packet loss leading to PDC closure 
+3. RODL allows sending the CACK_PSN for the reverse path in lieu of ACK packets. 
+a. Since the PDC is bidirectional, PDS Requests flowing in one direction can carry the 
+CACK_PSN for the other direction. 
+b. Alternatively, normal ACK packets can be used. 
+The RODL header format when running over the UFH_16 header is illustrated in Figure 3-68. See 
+Section 3.5.25.9 for a description of the RODL header mapped over the UFH_16 header. RODL also 
+runs over UDP/IP/ETH or directly over UFH_32, as illustrated in Section 3.5.25.8. 
+When using RODL over the UFH_16 header, the pds.flags field is reduced to 3 bits and the 
+pds.psn_state is reduced to 24 bits. The header is compressed in the following ways: 
+1. The 32-bit PSN is carried implicitly in the CRC once the PDC is established. 
+a. This saves 32 bits on the wire by taking advantage of the in-order arrival of packets. 
+b. During PDC establishment, the pds.psn field is carried in the header. 
+i. RODL carries the 24 least significant bits of the full 32-bit PSN in the 
+pds.psn_state.psn_lsb field. 
+ii. All start PSN values have the upper 8 bits set to zero. 
+2. The pds.pdc_info field used during PDC establishment is reduced to 2 bits such that 
+pds.pdc_info = [rsvd, use_rsvd_pdc]. 
+3. The pds.spdcid and pds.dpdcid field sizes are reduced to 12 bits. 
+4. A 24-bit pds.psn_state field is defined. 
+a. pds.psn_state carries the request PSN during PDC establishment (pds.flags.syn = 1). 
+b. Once the PDC is established (flags.syn = 0), pds.psn_state carries 
+{pds.psn_state.clear_psn_offset, pds.psn_state.rev_cack_psn_lsb}; each field is 12 bits. 
+c. The PDC uses full 32-bit CLEAR_PSN and CACK_PSN, which are maintained on both sides 
+of the PDC. The lsbs are carried in the packets. This limits the number of outstanding 
+packets on a single RODL PDC. 
+5. RODL does not support NSCC or packet trimming. 
+a. RODL supports ACK and NACK. 
+b. RODL does not support ACK_CC, ACK_CCX, and NACK_CCX. 
+3.5.22.1 RODL Services 
+RODL uses GoBackN retransmission such as ROD when retransmission is supported. RODL can operate 
+without retransmission. If a packet is lost on a RODL PDC that does not support retransmission, the PDC 
+is closed in error. Refer to Section 3.5.7.3. 
+3.5.22.1.1 No PDS retransmission 
+PDS is extended to support an option to exclude PDS retransmission on RODL PDCs. When 
+retransmission is not supported, the loss of a single packet is fatal to the PDC and the PDC MUST be 
+closed in error. 

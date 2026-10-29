@@ -1,0 +1,15 @@
+# W1 Dense TP Decode — tp_size 64, for atlas rank class 64 (G2 / D-025).
+# All sizes are integer byte counts; deterministic by construction.
+# Same shape convention as w1_dense_tp_decode_tp4.yaml,
+# w1_dense_tp_decode_tp8.yaml, w1_dense_tp_decode_tp16.yaml and
+# w1_dense_tp_decode_tp32.yaml (layers 2 x steps 3 = 6 AllReduce ops per
+# config); only tp_size differs.
+# The per-config payload size is OVERRIDDEN by the sweep grid
+# (grid.payload_sizes_bytes); the allreduce_bytes below is only the
+# file default, recorded in table.json for provenance.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-atlas-64r
+tp_size: 64
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # free parameter A-W1-SIZE (16 KiB), see assumptions_l0.yaml

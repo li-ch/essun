@@ -1,0 +1,122 @@
+ 372 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Name Value Error Type Source 
+Action 
+Description 
+UET_NO_RESOURCE 
+(Section 3.5.8.2) 
+0x0A NORMAL Retransmit 
+(RETX) 
+General resource not available – 
+implementation-specific resource not listed in 
+NACKs 0x03—0x08; set pds.spdcid = 0 if there 
+is no associated PDC 
+UET_PSN_OOR_WINDOW 
+(Section 3.5.8.2) 
+0x0B NORMAL Retransmit 
+(RETX if 
+PSN 
+>CACK) 
+PSN outside tracking window 
+(e.g., beyond end of available bitmap) 
+reserved 0x0C - - - 
+UET_ROD_OOO 
+(Section 3.5.21.1) 
+0x0D NORMAL Retransmit 
+(RETX) 
+A PSN arrived out of order on a ROD or RODL 
+PDC 
+UET_INV_DPDCID 
+(Section 3.5.8.2) 
+0x0E PDC_FATAL Close PDC 
+(RETRY) 
+pds.dpdcid is not recognized and 
+pds.flags.syn not set; set pds.spdcid = 0 
+UET_PDC_HDR_ 
+MISMATCH 
+Section 3.5.8.2) 
+0x0F PDC_FATAL Close PDC 
+(RETRY) 
+The packet does not have pds.flags.syn set 
+but did not match connection state (e.g., 
+ip.src_addr or other field doesn’t match PDC 
+state) 
+(This is an optional check separate from 
+required check for a valid pds.dpdcid);  
+set pds.spdcid = 0 
+UET_CLOSING 
+(Section 3.5.8.3) 
+0x10 PDC_FATAL 
+(drop 
+packet) 
+Report 
+error 
+(RETRY) 
+ 
+The target PDCID is in a closed state or is in 
+the process of being closed and a new PDS 
+Request is received that advances the PSN 
+UET_CLOSING_IN_ERR 
+(Section 3.5.8.3) 
+0x11 PDC_FATAL Close PDC 
+(no 
+retransmit) 
+Timeout at target during close process (e.g., 
+no response to Close Request CP). 
+(Max_RTO_Retx_Cnt exceeded—NACK the 
+Close Command CP) 
+UET_PKT_NOT_RCVD 
+(Section 3.5.16.2) 
+0x12 PDC_ERR Retransmit 
+(RETX) 
+CP arrived with ‘ACK Request’ but packet with 
+requested PSN was not received (Section 
+3.5.16) 
+UET_GTD_RESP_UNAVAIL 
+(Section 3.5.16.2) 
+0x13 PDC_FATAL 
+  
+Close PDC 
+(FAIL) 
+(no 
+retransmit) 
+Duplicate PSN is received, state indicates 
+there is a guaranteed delivery SES Response 
+but that response cannot be found, and this 
+PSN was not cleared (implementation error) 
+UET_ACK_WITH_DATA 
+(Section 3.5.16.2) 
+0x14 PDC_ERR Retransmit 
+(RETX  
+original 
+pkt) 
+ACK Request CP for PSN with associated read 
+response data 
+UET_INVALID_SYN 
+(Section 3.5.8.2) 
+0x15 PDC_FATAL Close PDC 
+(RETRY) 
+Packet is received with pds.flags.syn set with 
+pds.psn outside the expected range of PSNs 
+with pds.flags.syn 
+UET_PDC_MODE_ 
+MISMATCH 
+(Section 3.5.8.2) 
+0x16 PDC_FATAL Close PDC 
+(RETRY) 
+Packet is received and delivery mode does not 
+match (RUD/ROD/RODL) 
+UET_NEW_START_PSN 
+(Section 3.5.8.2.1) 
+0x17 NORMAL Retransmit 
+(RETX) 
+Resend all packets with new Start_PSN 
+UET_RCVD_SES_PROCG 
+(Section 3.5.13) 
+0x18 NORMAL Retransmit  
+(ACK may 
+arrive 
+This can occur, e.g., if a delayed packet and a 
+retransmission arrive at destination close in 
+time 

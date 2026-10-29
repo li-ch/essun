@@ -1,0 +1,42 @@
+# Calibration-ladder A6 derated-bridge RUN: same as
+# run_a6_rail_16gib_v1 except B = 320 B/ns = CAL-A12's ~80%
+# software-effective derating x the anchor's 400 B/ns rail — the plan's
+# MANDATORY normalization when a spec/config ceiling is compared with a
+# measured series (CALIBRATION_PLAN.md §1.1 row CAL-A12). Places the
+# measured series between the derated and ceiling readings in the record;
+# nothing is tuned.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits).
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A6-DER-16GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a6/workloads/w1_dense_tp_decode_tp32_16gib.yaml
+infra_graph:
+  path: experiments/calibration/a6/topologies/ring32_a6_derated320_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a6/profiles/implementation_profile_l0_ring_cal_a6_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring32_a6_derated320_v1 (unidirectional ring, r=32; B=320 B/ns = CAL-A12 ~80% derating x the anchor's 400 rail arithmetic — anchor-informed span point, never tuned; L=200 ns free)
+  workload: w1_dense_tp_decode tp32, payload 17179869184 B = 16 GiB = CAL-A6's largest staged size exactly (gate-accepted, no bracketing)
+  implementation: analytical L0 free-parameter identity; CAL-A6 comparison is the ladder's noise-floor anchor + secondary O-CCT target for hybrid rail topologies against an external published measurement — PROPOSED, review required
+evidence_level_requested: E0

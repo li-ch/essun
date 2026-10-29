@@ -1,0 +1,27 @@
+# W1 Dense TP Decode — tp_size 64 at payload 128 B: the GF-11 SCALING-point
+# payload (calibration ladder; gap-fill anchor GF-11 —
+# "Achieving Near Speed-of-Light Latency in GPU Collectives", arXiv:2607.16100;
+# docs/calibration/anchors_gapfill.md §GF-11; numbers AS STAGED, not
+# re-fetched).
+#
+# WHY THIS PAYLOAD AND RANK (anchor-pinned): the anchor's multi-rank
+# scaling endpoint is 64 GPUs — "Even at 64 GPUs, multicast one-shot
+# variants stay within roughly 70% overhead of the SoL bound" (vs "about
+# 7% overhead ... at 2 GPUs") — so r=64 is the scaling system's own rank
+# count, and r=2/4/64 together are exactly the anchor's three staged rank
+# counts (the L-Sweep grid of the sweeps; r=8 and r=72 = NVL72's own GPU
+# count are recorded NOT executed — the anchor stages no collective number
+# at either: its vLLM 8-GPU rows are ITL percentages, an application-level
+# metric with no model surface; 72 is not a power of two so A-L0D-POW2
+# rejects the exchange fabric). The 128-B payload is the anchor's stated
+# granularity ("128-B cache-line FP32"), same declared-reading ambiguity as
+# the tp2/tp4 files. 128 is divisible by 64 — the divisibility gates accept
+# the exact size, no bracketing. Same W1 shape (2 layers x 3 decode steps
+# = 6 AllReduce ops per config). Nothing measured or standard-normative;
+# integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf11-tp64
+tp_size: 64
+layers: 2
+steps: 3
+allreduce_bytes: 128   # 128-B cache-line granularity — the anchor's declared small-message size reading (per-size table is a figure)

@@ -1,0 +1,97 @@
+# Implementation profile for the calibration-ladder GF-07 runs/sweeps
+# on the analytical L0 crossbar backend (gap-fill
+# anchor GF-07, "Characterizing the Impact of Congestion in Modern HPC
+# Interconnects", arXiv:2604.11432 — measured collective slowdowns
+# across 5 HPC fabrics: Leonardo HDR IB Dragonfly+, CRESCO8 NDR IB
+# 1.67:1-blocking fat tree, LUMI Cray Slingshot dragonfly, HAICGU EDR
+# IB+RoCE, Nanjing RoCE NSLB).
+implementation_profile_id: analytical_l0_crossbar_cal_gf07_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. ROLE per the
+  gap-fill doc §GF-07: R3 measured congestion-effect magnitudes for
+  collective-time degradation across fabric classes — the
+  falsification envelope (5% -> 25x) any congestion-effect model must
+  fall inside; direct evidence for plan gap 7 (no scale-up congestion
+  anchor exists — these are scale-out HPC fabrics, staged under the
+  same labeled-proxy rule as CAL-A11). The crossbar rows execute
+  (a) the two STAGED per-node fabric rates as carriers (LUMI 4x200
+  Gb/s => B = 100 B/ns; Leonardo 400 Gb/s/node => B = 50 B/ns;
+  declared per-node-aggregate -> single-port readings), (b) the
+  measured envelope factors as exact-fraction effective-bandwidth
+  displacements at the LUMI carrier (20/19 => 95, 4/3 => 75, 10/7 =>
+  70, 5/3 => 60, 5 => 20, 25/2 => 8 exact-0.08 reading, 25 => 4), (c)
+  the ONLY measured absolute bandwidth pair (Nanjing victim AllToAll
+  180 Gb/s => 22.5 and NSLB-off 120 Gb/s => 15 B/ns; exact pair factor
+  3/2), (d) the anchor's own collapse factor 5 at BOTH carriers (the
+  cross-fabric transfer probe), and (e) the non-blocking ceiling, its
+  25x displacement, and the ring schedule contrast at r=64 — the
+  anchor's largest staged exact node count. CONGESTION ITSELF — the
+  anchor's subject (incast trees, DCQCN sawtooth > 16 MiB, NSLB,
+  per-flow HW congestion management, global-aware adaptive routing,
+  interference from ~2% of a partition) — is OUT of this input space by
+  the backend's capability declaration ("congestion" among
+  explicitly_unsupported) and by the loader surface (no
+  congestion/queueing/load-balancing/adaptive-routing key exists).
+  The stage's central expressiveness findings are recorded in
+  results/calibration/.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) and L (link.pair_latency_ns) fixed by
+  anchor/registry arithmetic BEFORE any stage output was read; L stays
+  at the A-L0X-LAT registry point 200 throughout — GF-07 stages NO
+  latency number (stage A11 precedent). Envelope sweep (r=8, carrier
+  B_ref = 100 = LUMI's staged per-node aggregate): B in {100 carrier,
+  95 = 20/19 floor (LUMI "always within 5%"), 75 = 4/3 (Open MPI
+  AllReduce "up to 25% bandwidth loss"), 70 = 10/7 (bursty alltoall
+  "70% of baseline"), 64 = A-L0X-BW registry point (placement),
+  60 = 5/3 (steady incast "60%"), 22.5 = 180 Gb/s Nanjing measured
+  peak (absolute), 20 = 5 (Leonardo "0.2" exact), 15 = 120 Gb/s
+  Nanjing NSLB-off (absolute), 8 = 25/2 (bursty incast "0.08" exact
+  reading), 4 = 25 (CRESCO8 AllToAll "up to 25x")}. Carrier sweep
+  (r=8): {50 Leonardo carrier, 10 = 50/5 the Leonardo collapse factor
+  at its OWN rate, 100, 20 = 100/5 the same factor at the LUMI
+  carrier}. Scale sweep (r=64 = the anchor's largest staged exact node
+  count): crossbar B in {100 non-blocking ceiling, 4 = the worst 25x
+  displacement} and the ring at B=100 (schedule contrast). Payload
+  ladders: the anchor's OWN staged vector range as a power-of-2 ladder
+  8*2^k (8 B -> 16 MiB, 22 sizes, includes the DCQCN-threshold 16 MiB
+  and every in-range member of the standard 12-size ladder of stages
+  A1/A2/A7/A9/A11/GF-05) at r=8; 64*2^k (64 B -> 16 MiB, 19 sizes,
+  brackets the ring boundary M* = L*B*r = 1,280,000 B) at r=64.
+  Non-representable displacements RECORDED NOT EXECUTED (exact
+  fractions in the stage record): 25/3 = 100/12 (the bursty-incast
+  paper gloss "12x", mutually inconsistent with the exact 0.08 = 25/2
+  reading — both kept), 10000/167 = 100/1.67 (CRESCO8's 1.67:1
+  blocking as a first-order effective-B displacement). NO parameter
+  was tuned toward any anchor output — the anchor stages no
+  (size -> time) series (its outcomes are collective BANDWIDTH RATIOS;
+  the two Nanjing absolute bandwidths are AllToAll-class); the sweeps
+  measure WHERE the identities sit relative to the anchor's fabric
+  rates, measured envelope, absolute pair, and stated scale.
+measurement_source: >
+  GF-07 staged numbers (Characterizing the Impact of Congestion in
+  Modern HPC Interconnects, arXiv:2604.11432;
+  docs/calibration/anchors_gapfill.md §GF-07; numbers AS STAGED, not
+  re-fetched; gap-fill anchor, NOT yet an integrated anchor row — the owner
+  integrates accepted rows; confidence H — numbers extracted from the
+  paper HTML). CAVEAT CLASSES carried by this profile: production/
+  testbed MEASUREMENTS on five HPC SCALE-OUT fabrics, not GPU
+  scale-up, not UEC silicon (labeled proxy, CAL-A11 rule); outcome
+  metrics are collective bandwidth ratios on victim collectives
+  (1,000 iterations, 100 warmup discarded; vectors 8 B–16 MiB), with
+  per-fabric uncongested baselines — NO (size -> time) series and no
+  shared reference fabric is staged, so the carrier B_ref is a
+  DECLARED reading (LUMI, the managed floor) and NO comparison against
+  any anchor time is attempted; incast/AllToAll victim classes have no
+  L0 collective counterpart (allreduce only) — every envelope factor
+  enters as a DECLARED dimensionless displacement (A11/GF-05
+  technique), the one AllReduce-class quote (25% loss) included;
+  "up to" quotes are envelope EDGES, not means; per-node rates carry
+  no direction split (flagged); compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

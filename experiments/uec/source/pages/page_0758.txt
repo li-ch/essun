@@ -1,0 +1,24 @@
+ 758 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 7-5 - UE Switch Manageability Architecture 
+The components of the UE switch manageability architecture can be described as follows. 
+• Network switch is a component of the network fabric. Data ports are used for inter-server or 
+inter-node fabric communications. Management port(s) of the switch platform connect to a 
+separate and dedicated physical network infrastructure used for managing switches. 
+• A remote management client manages the switch and directly communicates over 
+management ports with the management agent on the switch. The management interface 
+referenced here is the northbound interface from the NOS on the switch. 
+• Management agent resides inside the NOS and exposes the northbound interface for 
+management. Typically, the management agent is accessed over management ports. Remote 
+management communication may happen over data ports. 
+• SAI is the southbound interface on the switch. SAI is not visible to the remote management 
+client. SAI is used for configuring and monitoring the switch ASIC. 
+7.5.3 YANG Model Extensions for UE 
+YANG (Yet Another Next Generation) is a data modeling language used to define the configuration and 
+operational state data of network devices for management and automation. YANG provides a 
+hierarchical, tree-based structure to model data, including configuration data, operational state, remote 
+procedure calls (RPCs), and event notifications. YANG is protocol-independent and can be accessed by 
+various protocols including OpenConfig and Netconf. YANG models can be serialized into various 
+formats such as XML and JSON, facilitating automation and communication between network devices 

@@ -1,0 +1,141 @@
+# Assumption registry for the W5 PD/KV workload.
+# Per-family file (like assumptions_w3.yaml): unrelated
+# additions cannot shift other families' run identities. Same house format:
+# every assumption has a range, rationale, sensitivity, owner and review status.
+assumptions_id: assumptions_w5_v1
+status: PROPOSED
+assumptions:
+  - id: A-W5-PLACE
+    parameter: workload.prefill_nodes
+    value: static_role_partition_round_robin_request_placement
+    unit: none
+    range: 1 <= prefill_nodes < tp_size (ranks [0, P) prefill, [P, tp_size) decode; request q on prefill node q%P and decode node P+q%D)
+    rationale: >
+      Node placement is INPUT geometry: ranks [0, P) play the prefill role
+      and ranks [P, r) the decode role — a static role partition of the PD
+      group — and request q is placed deterministically (prefill q%P,
+      decode P+q%D over D = r - P). Not standard-derived and not measured;
+      a real deployment derives the split and placement from its
+      disaggregation strategy. Interleaved role layouts, explicit placement
+      tables, or a decode node equal to a prefill node are different
+      identities and are not generated; P leaving no decode node is
+      rejected loudly.
+    sensitivity: high for which node pairs carry each request's KV transfer; zero for every byte total
+    owner: workload
+    review: PROPOSED
+  - id: A-W5-SIZE
+    parameter: workload.chunk_bytes
+    value: 4096
+    unit: bytes
+    range: [64, 67108864]
+    rationale: >
+      Free parameter: one KV chunk's byte count — the unit of allocation,
+      write, transfer, visibility, read and release alike (identical width
+      on every stage, integer bytes). Model-derived in a real deployment
+      (layers x kv_heads x head_dim x dtype x chunk tokens); a free
+      parameter here.
+    sensitivity: high for every byte count (all payloads scale linearly)
+    owner: workload
+    review: PROPOSED
+  - id: A-W5-LIFE
+    parameter: model.kv_lifecycle
+    value: alloc_write_transfer_visible_read_release_stage_order
+    unit: none
+    range: [alloc_write_transfer_visible_read_release_stage_order, alloc_on_decode_node, release_per_chunk]
+    rationale: >
+      The task's acceptance stages, frozen as a stage order per KV chunk:
+      allocation on the PREFILL node, prefill's local write into the
+      allocated slot, the memory-semantic transfer to the decode node, the
+      visibility barrier, decode's reads, then per-request release on the
+      decode node after the LAST read. Allocation on the decode node
+      (remote alloc) or per-chunk release are different identities and are
+      not generated. Chunk chain: alloc(q, c>0) depends on write(q, c-1)
+      (prefill produces the sequence chunk by chunk, the W5 analogue of
+      W2's A-W2-DAG chunk chain).
+    sensitivity: high for the dependency DAG (every lifecycle test); zero for byte totals
+    owner: workload
+    review: PROPOSED
+  - id: A-W5-VIS
+    parameter: model.visibility_semantics
+    value: visible_barrier_after_transfer_reads_gated_on_full_request_visibility
+    unit: none
+    range: [full_request_visibility_gate, per_chunk_visibility_gate, eventual_visibility]
+    rationale: >
+      Visibility is an explicit OP (kv_visible), not an implicit side
+      effect: it depends on the chunk's transfer, and no read of the chunk
+      may be ordered before it — asserted as DAG reachability in tests,
+      not merely by emission position. The first read of request q
+      (read(q, 0, 0)) depends on visible(q, c) for ALL c: decode of a
+      request starts only after its ENTIRE prefill KV is visible (the
+      load-bearing PD request dependency). Per-chunk gating (decode may
+      start on a partially visible request) or eventual/weak visibility
+      orderings are different identities and are not generated. Where a
+      real standard defines memory-ordering semantics they remain
+      PROPOSED until ingested under license review; nothing here is
+      standard-derived.
+    sensitivity: high for the decode-start dependency edge set; zero for byte totals
+    owner: workload
+    review: PROPOSED
+  - id: A-W5-MEM
+    parameter: model.memory_traffic_semantics
+    value: kv_migrating_transfer_once_then_decode_local_reads
+    unit: none
+    range: [kv_migrating_local_reads, kv_stays_on_prefill_remote_reads, mixed_residency]
+    rationale: >
+      Only kv_transfer crosses the fabric (src != dst by construction):
+      writes/reads are node-local under the generated KV-MIGRATING
+      identity (each chunk moves prefill -> decode exactly once, then
+      decode reads its local memory). The alternative identity — KV stays
+      on the prefill node and every decode read is a REMOTE fabric read
+      — is a different model and is NOT generated. Control ops
+      (kv_alloc/kv_visible/kv_release) carry zero payload: no bytes move.
+      Whether an executor charges fabric bandwidth for any op remains the
+      executor's declared decision; the generator marks endpoints, not
+      wire counts.
+    sensitivity: high for fabric byte totals (which op kinds are fabric ops at all)
+    owner: workload
+    review: PROPOSED
+  - id: A-W5-DAG
+    parameter: model.dependency_semantics
+    value: serialized_per_request_read_chain_requests_independent
+    unit: none
+    range: [serialized_per_request_read_chain, overlapped_reads, cross_request_batching]
+    rationale: >
+      Request dependencies: decode reads form ONE serialized chain per
+      request — step-major, chunk-minor (read(q, s, c) <-
+      read(q, s, c-1); read(q, s>0, 0) <- read(q, s-1, C-1)) — gated on
+      full visibility at its head; release(q) depends on the chain's tail
+      read(q, S-1, C-1). Requests NEVER depend on each other (concurrent
+      serving is the executor's business,  scope). Overlapped or
+      pipelined reads and cross-request batching are different identities
+      and are not generated. Emission order (request-major) is a
+      topological order of the DAG.
+    sensitivity: high for any critical-path time once an executor exists; zero for byte accounting
+    owner: workload
+    review: PROPOSED
+  - id: A-W5-STEP
+    parameter: workload.decode_steps
+    value: uniform_fixed_steps_per_request
+    unit: steps
+    range: integer >= 1, uniform across requests
+    rationale: >
+      Every request decodes for exactly S steps (fixed-step batch).
+      Variable request lengths, early exit and serving-scheduler behavior
+      (continuous batching, queueing) are  scope and are NOT generated
+      here; the free parameter S keeps the workload deterministic.
+    sensitivity: high for read op count (S*C reads per request) and read byte totals
+    owner: workload
+    review: PROPOSED
+notes: >
+  HONEST SCOPE: W5 issues memory-semantic ops
+  (kv_alloc/kv_write/kv_transfer/kv_visible/kv_read/kv_release) and NO
+  registered backend executes any of them — the five L0 analytical models
+  declare only allreduce/reducescatter/allgather collectives, and both
+  Docker-pinned adapters translate W1 only. A W5 manifest is rejected
+  loudly by the run path's collective capability gate (a tested
+  behavior, not an accident). Executing PD/KV traffic needs a
+  memory-semantics fabric model (L1/L2); until one lands, W5 is a
+  generator + exact integer byte identities + lifecycle DAG properties,
+  testable without execution. No normative values are used anywhere in
+  this registry; memory-ordering semantics of any standard remain
+  PROPOSED until ingested under license review.

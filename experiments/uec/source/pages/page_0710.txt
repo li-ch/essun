@@ -1,0 +1,60 @@
+ 710 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  identity r-pktid-selector { 
+    description 
+      "Specify the type of VC packet identifier."; 
+  } 
+  identity r-no-packet-identification { 
+    base r-pktid-selector; 
+ description 
+   "Indicates packet identification over LLDP is disabled  
+   for this VC[x]. Packets are identified by the port 
+   configuration on each side of the link without any  
+   LLDP verification."; 
+  } 
+  identity r-pcpdei-identification { 
+    base r-pktid-selector; 
+    description 
+      "Indicates the packet identification for this VC[x] 
+      is based on mask and match to the PCP/DEI bits. 
+      Signaled as the value 0x1.";  
+  } 
+  identity r-dscp-identification { 
+    base r-pktid-selector; 
+    description 
+      "Indicates the packet identification for this VC[x] 
+      is based on mask and match to the DSCP bits. 
+      Signaled as the value 0x2."; 
+  } 
+  identity r-handle-identification { 
+    base r-pktid-selector; 
+    description 
+      "Indicates the packet identification for this VC[x] 
+      is based on a matching opaque handle which can 
+   match a stream handle as specified by IEEE Std 802.1CB 
+      or other system defined packet identification. 
+      Signaled as the value 0x3."; 
+  }   
+  identity error-code-selector { 
+    description 
+   "Specify the type of error."; 
+  } 
+  identity error-no { 
+    base error-code-selector; 
+    description 
+   "No error. Signaled as value 0."; 
+  } 
+  identity error-cell-size { 
+    base error-code-selector; 
+    description 
+   "The sender is unable to support the receiver 
+   cell size. Signaled as value 1."; 
+  } 
+  identity error-vc { 
+    base error-code-selector; 
+    description 
+   "The sender cannot support a requested VC. 
+      Signaled as value 2."; 
+  } 
+  identity error-credit-pool { 

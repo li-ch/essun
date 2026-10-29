@@ -1,0 +1,43 @@
+ 380 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The OOO-based loss detection calculations track the number of bytes that have been transmitted but 
+not yet received at the destination on each PDC and on each CCC, as well as tracking the lowest PSN that 
+has not been received at the destination per the SACK bitmap. The threshold used to determine if OOO-
+based loss detection could be triggered is calculated using: 
+   loss_threshold_bytes = max(loss_retx_factor * cwnd * inflight_pdc_bytes /  
+                              inflight_ccc_bytes, min_retx_config) 
+ 
+where loss_retx_factor is roughly a number of loaded RTTs, and min_retx_config sets a minimum to 
+reduce spurious retransmission. This is based, roughly, on the following concept: cwnd reflects how 
+many bytes may be inflight on the CCC. This is adjusted for what percentage of those bytes are on this 
+PDC (cwnd * PDC bytes/CCC bytes). Then allow for a few RTTs (loss_retx_factor) due to various delays. 
+However, this can trigger when there are low rates of traffic, so include a minimum threshold 
+(min_retx_config). If there are more out-of-order bytes than the calculated threshold, some packets may 
+have been lost. 
+This calculated threshold is in units of bytes. It is translated to packets, which can be done by dividing 
+the number of bytes in flight by the number of packets in flight, or using a configured number (e.g., 
+MTU) if the workload is known. The result is loss_threshold_pkts. Similarly, cwnd needs to be translated 
+from bytes to packets—cwnd_pkts. 
+   loss_threshold_pkts = loss_threshold_bytes / avg_tx_pkt_size 
+   cwnd_pkts = cwnd_bytes / avg_tx_pkt_size 
+ 
+When loss is detected, the PDS source enters the loss recovery mode and takes a snapshot of the lowest 
+PSN not yet received at the destination based on SACK bitmap and the highest sent PSN (HPSN). Any 
+unacknowledged packets between Src_Lowest_Not_Rcvd_PSN and HPSN are considered lost. PDS ACKs 
+continue to arrive with SACK bitmaps and these may update some of these PSNs to ‘received’ state. 
+As each ACK is received, the OOO_COUNT loss recovery mechanism updates the state that was snapshot 
+on entering loss recovery mode; the update is based on Src_Lowest_Not_Rcvd_PSN and the SACK 
+bitmap. It then retransmits the packets considered lost while obeying the window limit. After all 
+retransmissions are completed, new packets are transmitted if the window allows. While in loss 
+recovery mode, OOO_COUNT is ignored. 
+At the destination, OOO_COUNT is generated. The following pseudo-code describes how OOO_COUNT 
+may be calculated. The term ‘received’ here means the packet was accepted and passed to SES. The 
+function find_next_lowest_psn_not_received() is similar to calculating CACK_PSN except CACK_PSN 
+advances only when a PSN is cleared, while Dest_Lowest_Not_Rcvd_PSN advances as soon as a PSN is 
+received. 
+init OOO_COUNT = 0; 
+if packet received { 
+   if PSN == Dest_Lowest_Not_Rcvd_PSN {    # advance ‘lowest PSN not rcvd’ 
+      PREV_LOW = Dest_Lowest_Not_Rcvd_PSN; 
+      Dest_Lowest_Not_Rcvd_PSN = determine_new_lowest_not_rcvd_psn(); 

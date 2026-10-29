@@ -1,0 +1,43 @@
+# Calibration-ladder A6 topology: the HIERARCHICAL twin reading of the
+# anchor's own shape — a 2D torus grid of dim1 = 4 (the anchor's NODE
+# count, the RoCE rail dimension) x dim2 = 8 (the anchor's GPUs per node,
+# the intra-node NVLink dimension), r = 32, at the anchor-point link
+# bandwidth B = 400 B/ns (the rail arithmetic of the staged "16*200Gbps
+# ROCEv2", same value and same provenance as ring32_a6_rail400_v1).
+#
+# WHY THIS FILE EXISTS (declared structural demonstration, never a fit):
+# the anchor's topology IS 4x8, and the L0 family's only multi-level
+# identity is this 2D torus (A-L0T-SEQ sequential full-message rings,
+# A-L0T-UNIF uniform B/L across BOTH dimensions). Under A-L0T-UNIF the
+# intra-node NVLink dimension is forced onto the SAME rail rate B as the
+# node dimension — the hybrid's link heterogeneity is INEXPRESSIBLE here,
+# exactly the uniform-link blindness class the plan §2.1 A-L0T-UNIF /
+# A-L0-FD rows keep as structural. The 2D identity also moves
+# 2*(3/4) + 2*(7/8) = 13/4 x M per rank vs the flat ring's 62/32 = 1.9375
+# (wire ratio 52/31 = 1.677) because each dimension reduces the FULL
+# message — a different algorithm, not a competing fit. The calibration
+# record quantifies its placement (+53.3% to +105.0% across the
+# derated-to-ceiling span B = 320..400, both versions and sizes; the
+# single-port endpoint B = 25 sits orders of magnitude off, as a rail
+# aggregate squeezed through one 200 Gbps port should) and classifies the
+# gap as structural; nothing is tuned to close it.
+topology_id: torus2d32_a6_4x8_b400_v1
+topology_class: torus2d_ring_x_ring
+ranks: 32
+grid:
+  dim1_ranks: 4   # node dimension (RoCE rail legs)
+  dim2_ranks: 8   # intra-node dimension (NVLink legs)
+link:
+  bytes_per_ns: 400
+  hop_latency_ns: 200
+notes: >
+  Two wrapped dimensions; dimension-d rings connect ranks that agree on
+  the other dimension's coordinate; dim1 = 4 nodes, dim2 = 8 GPUs per
+  node = the anchor's own 4x8 H100 shape (no projection distortion on the
+  SHAPE — the distortion is A-L0T-UNIF forcing the rail rate onto the
+  NVLink dimension, declared in the header). Both dimensions share B and
+  L; dimensions execute sequentially over the full message. No
+  congestion, no credits, no packetization, no per-dimension
+  heterogeneity — L0 transport model only. Provenance: B = 400 B/ns =
+  the anchor's staged per-node rail arithmetic (config ceiling, never a
+  measurement); L = 200 ns free A-L0T-LAT registry point.

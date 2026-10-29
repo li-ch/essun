@@ -1,0 +1,30 @@
+ 221 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 3-12 - Standard Header Format when ses.som is 0 (UET_HDR_REQUEST_STD) 
+Table 3-10 - Standard Header Format Fields when ses.som is 0 
+Field Size  Description  Section Ref 
+rsvd 2 Table 3-9  
+opcode 6 Table 3-9 3.4.7.2 
+version (ver) 2 Table 3-9  
+Delivery Complete (dc) 1 Table 3-9 3.4.9.3 
+Initiator Error (ie) 1 Table 3-9 3.4.6.4.1 
+Relative (rel) 1 Table 3-9 3.4.2.3 
+header data present (hd) 1 Table 3-9 3.4.2.9 
+End of Msg (eom) 1 Table 3-9  
+Start of Msg(som) 1 Table 3-9  
+message_id 16 Table 3-9 3.4.2.14 
+ri_generation 8 Table 3-9 3.4.4.7.3 
+JobID 24 Table 3-9 3.4.2.3.1 
+rsvd 4 Table 3-9  
+PIDonFEP 12 Table 3-9 3.4.2.3.2 
+rsvd 4 Table 3-9  
+resource_index 12 Table 3-9 3.4.2.3.3 
+buffer_offset 64 Table 3-9  
+initiator 32 Table 3-9 3.4.2.3.4 
+match_bits 64 Table 3-9 3.4.2.3.5 
+rsvd 18 Reserved. MUST be 0.  
+payload_length 14 Length (in bytes) of the payload portion of this 
+packet. 
+ 

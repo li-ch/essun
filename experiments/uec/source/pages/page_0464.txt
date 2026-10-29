@@ -1,0 +1,37 @@
+ 464 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.9.3 pds.ack_cc_state for TFC and RCCC 
+TFC and optionally RCCC, when NSCC is not enabled, use pds.ack_cc_state when pds.type = ACK_CC and 
+pds.cc_type = CC_CREDIT. The format is shown in Figure 3-129. 
+Table 3-91 - pds.ack_cc_state for ACK_CC with CC_TYPE = CC_CREDIT 
+Field Name Size (in bits) Field Description 
+credit 24 Credit, allocated by the destination (units: 
+256 bytes) 
+ooo_count 16 Count of out of order packets (units: 
+packets) 
+ 
+3.6.9.3.1 pds.ack_cc_state.credit for TFC and RCCC 
+This field is carried in the ACK_CC when pds.cc_type = CC_CREDIT. It is used to provide a credit-based 
+flow control between two FEPs. 
+The pds.ack_cc_state.credit field allows the destination to indicate to the source how much additional 
+data can be sent on this CCC. The source MUST stop transmitting when credit is exhausted. The source 
+MUST NOT transmit more packets than are allowed by the credit allocation (e.g., do not go below zero 
+when tracking credit). 
+The pds.ack_cc_state.credit field is in units of 256 bytes and is a cumulative field that wraps. It indicates 
+the total amount of credit allocated by the destination to the CCC since it started (this excludes any 
+speculative credit the source started with when the CCC was established, but that was not allocated by 
+the destination). The RCCC and TFC pseudocode describe how the credit is used at the source. When 
+NSCC is enabled, credit is returned in Credit CPs (see Section 3.5.16.6). 
+3.6.9.3.2 pds.ack_cc_state.ooo_count for TFC and RCCC 
+The pds.ack_cc_state.ooo_count field when TFC or RCCC is enabled serves the same purpose and is 
+processed the same as when NCSS is enabled.  See Section 3.6.9.2.3. 
+3.6.9.4 CSIG Reflection Headers in pds.ack_ccx_state and pds.nack_ccx_state 
+The 64-bit CSIG Reflection Headers are carried in the pds.ack_ccx_state and pds.nack_ccx_state fields 
+of ACK_CCX and NACK_CCX packets, respectively. The format of the CSIG Reflection Header depends on 
+the size of the CSIG tag data being reflected. The format of the CSIG Reflection Header for a compact 
+CSIG tag is shown in Figure 3-130 and the header fields are defined in Table 3-92. The format of the CSIG 
+Reflection Header for the wide CSIG tag is shown in Figure 3-131 and the header fields are defined in 
+ 
+Figure 3-129 - pds.ack_cc_state for UET TYPE = ACK_CC and CC_TYPE = CC_CREDIT 
+ 

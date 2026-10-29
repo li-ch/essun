@@ -1,0 +1,41 @@
+# Calibration-ladder GF-03 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the SPEC/THEORETICAL aggregate B = 900 B/ns per rank per
+# direction — GF-03's own quoted "theoretical" ("NCCL allreduce peak ~837
+# GB/s", "93% of theoretical — theoretical quoted as 900 GB/s class";
+# docs/calibration/anchors_gapfill.md §GF-03). Cross-anchor note: 900 B/ns
+# per-direction injection is EXACTLY CAL-A2's derived normalization line
+# (1.8 TB/s bidirectional NVLink per GPU / 2) and CAL-A1's 18 links x 50
+# B/ns per direction — the B300/Blackwell Ultra generation carries the same
+# per-GPU NVLink-5 class rate the GB200 anchors stage. Decimal units,
+# 1 GB/s = 1 B/ns.
+#
+# DOMAIN NOTE (plan §2.1 A-L0X-PORT): unlike GF-01's xGMI full mesh, the
+# single-port crossbar abstraction is the DECLARED, IN-DOMAIN reading for
+# the NVSwitch class (per-GPU aggregate injection cap; KEEP for
+# NVSwitch-class validity domains) — B300 systems are NVSwitch-class.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-03 measurements; 900 is the anchor's own theoretical quote, fixed
+# BEFORE any model output was read. The plateau comparison shows where the
+# spec reading sits relative to the measured 837 peak (model busbw -> 900 =
+# the anchor's own 93% derating made model-exact); it does not move B.
+# L = 200 ns is the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_gf03_spec900_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 900
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT — in-domain for the NVSwitch class this anchor measures).
+  No congestion, no credits, no packetization — L0 transport model only.
+  Provenance: B = 900 B/ns is GF-03's staged "theoretical" quote for the
+  B300 NVLink-5 class (= CAL-A2's per-GPU per-direction line = CAL-A1's
+  18x50; gap-fill anchor, PROPOSED, not yet an integrated anchor row); the
+  anchor's MEASURED readings (peak 837, nvbandwidth D2D 782/717) have
+  their own sibling topologies. L = 200 ns from the free A-L0X-LAT
+  registry point. Values are anchor quotes / free-registry points, never
+  our measurements, never tuned.

@@ -1,0 +1,62 @@
+ 44 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+Libfabric event queue (EQ) A queue used to collect and report 
+the completion of asynchronous 
+operations and events. Event 
+queues report events that are not 
+directly associated with data 
+transfer operations. See libfabric 
+<https://ofiwg.github.io/libfabric/v
+1.20.1/man/fi_eq.3.html>. 
+Message passing interface (MPI) A standardized and portable 
+message-passing communications 
+library interface designed for 
+parallel computing (e.g., MPI-4.1 
+as defined by the MPI Forum). 
+Partitioned global address space 
+(PGAS) 
+A parallel programming model that 
+uses a logically partitioned global 
+memory address space to enhance 
+performance and efficiency in 
+distributed systems. 
+Shared memory / symmetric 
+hierarchical memory parallel 
+programming library (SHMEM) 
+A communications library for 
+distributed memory environments 
+focusing on one-sided 
+communication allowing 
+applications to read and write each 
+other's memory. 
+In-Network Collectives (INC) Collective operation (short: 
+Collective) 
+A collective operation is a group 
+communication operation as 
+defined in MPI. Examples are 
+reduce, allreduce, or barrier. 
+Collective operations generally 
+execute on predefined groups of 
+FEPs that are arranged into 
+communicators. To trigger the 
+execution of a collective operation, 
+all ranks of a communicator must 
+call the same operation with the 
+same communicator and matching 
+arguments. 
+Communicator An ordered set of ranks of a job 
+that participate in collective 
+operations that are initiated in a 
+common shared order. Each 
+communicator has a specific 
+reproducibility mode defined.  
+Collective sequence number (CSN) A sequence number for collective 
+operations. CSNs must be 
+consistent across all ranks in a 
+communicator. The CSN is 
+increased by an invocation of a 
+collective operation. 
+Communicator ID (CID) A 20-bit number that identifies a 
+communicator within a fabric. 

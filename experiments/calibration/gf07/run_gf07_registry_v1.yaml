@@ -1,0 +1,54 @@
+# Calibration-ladder GF-07 registry-twin RUN (gap-fill
+# anchor): the L0 single-stage crossbar identity at the FREE REGISTRY
+# DEFAULTS — r=8, B=64 B/ns (A-L0X-BW), L=200 ns (A-L0X-LAT) — at the
+# SAME payload 16777216 B = 16 MiB as run_gf07_carrier100_v1.yaml, so
+# the pair isolates the B axis exactly (both runs' latency term is
+# exactly 400 ns).
+#
+# ROLE: the placement reference. GF-07 stages no (size -> time) series,
+# so there is no CCT target; what the pair measures is WHERE the
+# registry defaults sit relative to the anchor's axes: on the B axis
+# the registry point 64 falls INSIDE the anchor's measured congestion
+# envelope band (between the steady-incast displacement 60 = factor
+# 5/3 and the bursty-alltoall displacement 70 = factor 10/7), and its
+# asymptotic CCT ratio vs the carrier is exactly 100/64 = 25/16 —
+# i.e., an L0 run at registry defaults is numerically indistinguishable
+# from a 25–40% congested collective on the anchor's fabrics
+# (placement arithmetic, never a tuning target). NO comparison to any
+# anchor time is attempted (the anchor stages bandwidth ratios only).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF07-REG64-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf07/workloads/w1_dense_tp_decode_tp8_16mib.yaml
+infra_graph:
+  path: experiments/calibration/gf07/topologies/crossbar8_gf07_reg64_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf07/profiles/implementation_profile_l0_crossbar_cal_gf07_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf07_reg64_l200_v1 (one non-blocking switch stage; r=8, B=64 B/ns and L=200 ns — both free registry points, no GF-07 provenance)
+  workload: w1_dense_tp_decode tp8, payload 2^24 (16 MiB, the anchor's maximum staged vector size; executed as a free probe)
+  implementation: analytical L0 crossbar identity; the registry-twin placement against the GF-07 carrier run (same payload, B axis isolated) — PROPOSED, review required; no anchor-time comparison, no claim or label changed
+evidence_level_requested: E0

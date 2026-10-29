@@ -1,0 +1,25 @@
+ 405 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2. The PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 
+332. 
+3. On the initiator, the PSN increases with each packet and CLEAR_PSN increases with CACK_PSN 
+arriving from target. 
+a. Because all these SES responses are not guaranteed, CACK_PSN increases as the 
+generated ACKs fill in the SACK bitmap, rather than when CLEAR_PSN is received. 
+4. A single ACK arriving may ACK more than one packet; PDS may generate multiple messages to 
+SES—the PSN ACK’d might not be consecutive. 
+   
+3.5.20.2.4 Multi-Packet Send Sequence—Guaranteed Delivery  
+The sequence for a RUD Send of a multi-packet message with a guaranteed delivery SES Response is 
+shown in Figure 3-100. This example shows all four packets in MID = 1 marked as guaranteed delivery. If 
+this is an error event, SES marks one packet as guaranteed delivery and may mark other packets as not 
+requiring guaranteed delivery. This is allowed when any one packet in a message contains an error, 
+because the message is completed in error, and it is not critical that all responses in a multi-packet 
+message be delivered. 
+All PSNs with guaranteed delivery have independent ACKs (i.e., an ACK per PSN), while the PSN = 337 
+and 338 are coalesced into one ACK. Because CLEAR = 336 arrived before the ACK 338 and both 337 and 
+ 
+Figure 3-99 - Standard RUD Send Sequence for Multi-Packet Message, Non-Guaranteed Delivery 
+ 
+ 

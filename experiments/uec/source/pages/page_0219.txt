@@ -1,0 +1,62 @@
+ 219 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-9 - Standard Header Format Fields when ses.som is 1 
+Field Size  Description  Section Ref 
+rsvd 2 Reserved. MUST be 0.  
+opcode 6 The operation being performed for this 
+packet. (Table 3-23) 
+ 
+3.4.7.2 
+version (ver) 2 Semantic protocol version; Set to 0 in the 
+initial version. 
+ 
+ 
+Delivery Complete (dc) 1 Defer the semantic response for this until the 
+packet has been made globally observable 
+(3.4.9.3). This matches the 
+FI_DELIVERY_COMPLETE option in libfabric. 
+3.4.9.3 
+Initiator Error (ie) 1 Indicates this packet encountered an error at 
+the initiator. Initiator Error prevents the 
+packet from being written at the target. 
+Initiator Error should be set only for packets 
+that MUST cause the message to complete in 
+error. This is primarily designed for messages 
+consisting of more than one packet. 
+3.4.6.4.1 
+Relative (rel) 1 This packet uses relative addressing. 3.4.2.3 
+header data present (hd) 1 Header data was provided for this message. 3.4.2.9 
+End of Msg (eom) 1 Indicates the last packet of the message. 
+ses.eom MUST be set on the last packet of a 
+message. 
+3.4.2.7.1.3 
+Start of Msg(som) 1 Indicates this is the first packet of a message. 
+Impacts the interpretation of header data. 
+3.4.2.7.1.3 
+message_id 16 Message identifier: Assists in associating 
+different packets to one message at the 
+target. Also assists in reverse-mapping 
+responses to message. 
+The value of 0 is reserved to indicate that the 
+message ID is not valid. 
+3.4.2.14 
+ri_generation 8 Resource Index Generation 3.4.4.7.3.2 
+JobID 24 JobID used for relative addressing and for 
+buffer access authorization. 
+Note: Matches size of VXLAN VNI. 
+3.4.2.3.1 
+rsvd 4 Reserved. MUST be 0.  
+PIDonFEP 12 The PIDonFEP value to be used at the target. 3.4.2.3.2 
+rsvd 4 Reserved. MUST be 0.  
+resource_index 12 Resource Index field. 
+ 
+3.4.2.3.3 
+buffer_offset 64 Offset within the target buffer used for 0 
+based addressing. The first memory access of 
+the first packet in a message begins at Buffer 
+Offset bytes from the base of the memory 
+region selected. In multi-packet messages, 
+Buffer Offset is the same across packets, so 
+that the Buffer Offset and Request Length can 
+ 

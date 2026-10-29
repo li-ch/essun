@@ -1,0 +1,56 @@
+# Calibration-ladder GF-11 anchor-point RUN #2 (gap-fill
+# anchor): the L0 single-stage crossbar identity at the 4-GPU BRACKET point
+# mapped to the anchor's NEAR-OPTIMAL leg — r=4, B=64 B/ns (registry),
+# L=702 ns (derived per-phase reading of the measured SoL), payload 128 B
+# (the anchor's declared small-message size reading).
+#
+# ROLE: the anchor's measured bracket on 4 GB200s is [2370, 11000] ns
+# (LLBuffer one-shot 2.37 µs; NCCL 2.29.1 ring 11.0 µs) — "which bracket
+# what any model may predict without accusing the fabric". This run lands
+# the one-shot-mapped model point: exact CCT 1407 ns = 3 + 1404 (wire 3 ns
+# = 1.5*128/64). PLACEMENTS (recorded, never tuned): 2370/1407 = exactly
+# 790/469 ~ 1.684 — the model floor sits 40.6% BELOW the near-optimal
+# measured leg (the gap is kernel/sync/software, not fabric); the measured
+# leg carries 161/234 ~ 68.8% overhead over the constant-SoL reading; the
+# NCCL leg sits 11000/1407 ~ 7.82x above the floor; the measured
+# ring-vs-one-shot ratio 1100/237 ~ 4.64 EXCEEDS the identity family's
+# full chain ratio 6L/2L = 3 at r=4, so no shared-(B,L) identity pair
+# spans the implementation gap. The size-reading sensitivity is exact: the
+# identity crosses the near-optimal leg at M = 41216 B (executed as a
+# sweep cell hitting 2370 ns on the nose).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF11-ONESHOT4-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp4_128b.yaml
+infra_graph:
+  path: experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l702_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf11/profiles/implementation_profile_l0_crossbar_cal_gf11_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar4_gf11_b64_l702_v1 (one non-blocking switch stage; r=4 = the anchor's bracket system (4 GB200s, NCCL ring 11.0 µs vs one-shot 2.37 µs small-message); B=64 B/ns = free registry; L=702 ns = derived reading of the 2-GPU measured SoL charged at r=4 — declared reading, the SoL-total alternative (L=1404) is its own row)
+  workload: w1_dense_tp_decode tp4, payload 128 B (the anchor's 128-B cache-line granularity — DECLARED size reading, the per-size table is a figure; the 41216 B crossover cell brackets the reading)
+  implementation: analytical L0 crossbar identity at the one-shot-mapped point (exact CCT 1407 ns); GF-11 comparison is the measured small-message bracket placement (2370/1407 = 790/469 below the near-optimal leg; 11000/1407 above it) — PROPOSED, review required
+evidence_level_requested: E0

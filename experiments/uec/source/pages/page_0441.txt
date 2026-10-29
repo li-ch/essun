@@ -1,0 +1,41 @@
+ 441 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+switches, the only REQUIRED in-network telemetry is ECN marking. Endpoint telemetry including end-to-
+end latency and endpoint state (e.g., dropped packets) is included. Support for packet trimming is 
+REQUIRED by UET-CC endpoints but is OPTIONAL to support or enable in UE switches. 
+3.6.4.1 Explicit Congestion Notification (ECN) 
+The use of ECN is a required mode for the UE congestion management and MUST be supported by UE-
+compliant endpoints and switches. As defined in IETF RFC 3168 [14], ECN is a single bit of telemetry per 
+packet that is provided by network switches. 
+Each switch monitors the queue depth for the traffic class used by the protocol. As IP packets traverse 
+the network, the ECN flag is set if a configured threshold is crossed (called deterministic marking). 
+Alternatively, the probability of marking the packet may vary based on the queue depth (called 
+probabilistic marking). UET switches MUST support using instantaneous queue depth when determining 
+whether to ECN-mark a packet. 
+If NSCC is enabled or if path-aware ECN-based load balancing is enabled, all UET data packets MUST be 
+marked as ECN-capable by setting the IP ECN-ECT bit. In other cases, setting ECN-ECT is OPTIONAL. 
+The NSCC algorithm defined in this specification assumes that the ECN congestion experienced (ECN-CE) 
+flag is set when a packet is dequeued, whereas IETF RFC 3168 [14] implies ECN-CE is set when a packet is 
+enqueued but would otherwise have been dropped. Setting ECN-CE on dequeue is common practice in 
+current network switches, as it provides a more up-to-date indication of network congestion. The UET-
+CC sender algorithm will not perform as desired if ECN-CE is set on enqueue. Switches SHOULD perform 
+ECN marking when the packet is dequeued. 
+3.6.4.2 Round-Trip Time (RTT) 
+The NSCC algorithm uses latency as an indication of the level of congestion in the path from the sender 
+to the receiver. To measure latency, UET-CC measures the round-trip time (RTT). To avoid return-path 
+congestion being misinterpreted as forward path congestion, it is RECOMMENDED that UET ACKs, 
+NACKs, and control packets are sent using a higher priority traffic class than UET data packets (Section 
+3.6.4.7). There may be some delay between a UET data packet arriving at the destination and an ACK 
+being transmitted. To avoid this receiver delay being misinterpreted as a sign of network congestion, the 
+destination is REQUIRED to measure this delay and report it in ACK packets as 
+pds.ack_cc_state.service_time (Section 3.6.9.2.4). The source then subtracts 
+pds.ack_cc_state.service_time from the measured round-trip time to obtain an estimate of the actual 
+network round-trip time. The algorithm to measure RTT is therefore: 
+1. The source saves a timestamp for some or all transmitted PDS request packets. 
+2. The destination PDS calculates the service time at the target: 
+a. The destination PDS captures the arrival time of the received packet and the transmit 
+time of the corresponding PDS ACK. 
+b. Service time = ACK.transmit time – PDS_request.arrival time. 
+c. Service time is carried in the associated ACK packet. 
+3. The source calculates the RTT using the timestamp from the arrival of the ACK message. 

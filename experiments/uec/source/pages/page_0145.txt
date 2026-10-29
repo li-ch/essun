@@ -1,0 +1,43 @@
+ 145 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+SES Field Verbs Mapping Note 
+buffer_offset ibv_send_wr::remote_addr Offset into the target buffer to write to with 
+zero-based addressing on the memory region 
+initiator ibv_qp_init_attr_ex::src_id UET-extended QP attributes 
+memory_key ibv_mr::rkey64 
+ibv_send_wr::rkey64 
+UET-extended MR and send work requests 
+header_data ibv_send_wr::imm_data64 
+ibv_wc::imm_data64 
+UET-extended send work requests and work 
+completions 
+request_length ibv_send_wr::ibv_sge[]::length Total length of the data being sent in a message 
+(i.e., total across all SGEs) 
+ 
+2.3.4 Device Discovery 
+UET verbs can leverage the RDMA verbs infrastructure to report devices that support UET with minimal 
+changes. This re-uses the device, device context, command fd, async event fd, and port objects. 
+2.3.4.1 GID Type 
+GIDs identify addressing information underneath the SES and PDS headers and identify the transport 
+address used by a queue pair. UET verbs defines the following GID types. 
+• UET_UDP - Indicates that UET is layered over UDP/IP headers using the UET identified UDP 
+port. 
+• UET_IP - Indicates that UET is layered over the IP header, plus the PDS entropy header. 
+• UET_UFH - Indicates that UET is layered over the UFH header. 
+Devices that support UET MUST support one or more of the UET GID types. Applications will select the 
+UET protocol by choosing an appropriate GID entry. 
+2.3.5 UET Services 
+A single UET service is exposed through UET verbs as a queue pair object. Each allocated QP represents a 
+PIDonFEP + Resource Index combination. 
+2.3.5.1 Queue Pairs (QPs) 
+2.3.5.1.1 QP Types 
+UET verbs introduces a reliable unconnected (RU) QP type. UET also supports the unreliable datagram 
+(UD) QP type. The QP type is paired with a specific GID entry to identify the transport and network 
+protocols. Supporting combinations are: 
+• UD QP + UET UDP GID 
+• UD QP + UET IP GID 
+• UD QP + UET UFH GID 
+• RU QP + UET UDP GID 
+• RU QP + UET IP GID 
+• RU QP + UET UFH GID 

@@ -1,0 +1,41 @@
+Fifth: do not cram the soldiers into one tent.
+
+The old instinct was to pack to the limit: larger chips, fuller racks. Compute grows with area, but I/O bandwidth and power grow only with perimeter: the mismatch worsens as one packs. Heat is more concrete: a megawatt rack may need hundreds of square meters just for cooling; a gigawatt hall may hold only a thousand racks yet occupy a square kilometer, with water pipes stretched a kilometer. Floor space in the hall is cheap; chips in the rack are expensive. So we do not chase megawatt racks. We let the army stand open, then bind it with optics into one machine: stand sparsely, compute tightly, physically sparse, logically tight.
+
+Sixth: in each generation, fight only a few hard battles.
+
+Pick twenty physical limits at once, each at 90% odds, and the joint success rate is near zero. Pick five, and one can still ship. Choosing what to take on and what to defer to a later form is itself part of design.
+
+4 Down to Practice: Three Things That Must Be Done Right
+
+Principle and path are set. What must be got right in the current build comes down to three things.
+
+First: switches must be high radix.
+
+Everyone agrees on this. The more exits at a junction, the fewer handoffs across the army. For the same scale, higher radix means fewer intermediate layers, and the latency and power saved are real.
+
+Second: compute chips must also be high radix.
+
+This one is often overlooked. The old view was that the chip should just compute; one or two outbound links are enough, leaving the rest to the network. In an army of a million, that is like forcing a whole battalion’s dispatches through a single door.
+
+The chip itself must be a junction. More exits buy three gains:
+
+First, higher total outbound bandwidth. Second, more paths: if one breaks, another remains, and in ten-thousand-GPU clusters, link and module failure is the norm, not the surprise. Third, and most important, one-hop coverage equals switch ports times chip ports.
+
+Both sides are multipliers. Double the chip’s radix and one doubles the one-hop SuperNode scale. The larger that one-hop reach, the shorter the path for barrier and aggregation: exactly the innermost, most frequent Nested BSP layers fall inside that reach.
+
+Raising the product of these two radices sets the parallelism at every nested hardware layer.
+
+Third: use high-density NPO to bring light to the very edge of the compute chip.
+
+The closer electro-optical conversion sits to the chip edge, the shorter the copper segment that remains. What this buys is a result that sounds contradictory but is natural: physically sparse, logically tight—stand sparsely, compute tightly.
+
+Logically tight means one-hop reach, memory semantics, and that the whole SuperNode remains one computer. Physically sparse means chips need not crowd into one iron box; they can spread out. Across this six-layer nest, physical space can open and relax freely; nothing needs to be crushed into a tiny volume.
+
+Figure 3: Design freedom from NPO: package at ten millimeters, board at ten centimeters, rack at one meter, SuperNode at ten meters, data hall at a hundred meters, and data center at a kilometer. Moving the electro-optical boundary inward from 1 m to 10 mm relaxes every outer layer—physically sparse, logically tight.
+
+Look at the scale, illustrated in Fig. 3: from inside to outside, five orders of magnitude.
+
+The critical ring is the innermost. In the past, the electro-optical boundary sat around one meter: optics only after leaving the chassis. That meant the whole stretch from package through board to rack was carried by copper alone. Copper is unforgiving: push the rate up, and the wire grows thicker and reaches shorter; the board fights insertion loss, the rack fights density, and every step meets a physical limit. NPO moves that boundary inward by two orders of magnitude, to ten millimeters at the package edge. Copper travels only the last few centimeters; everything beyond is handed to light.
+
+Once the boundary moves inward, every outer layer relaxes. The board no longer fights insertion loss for dozens of copper cables, and the rack need not pack full or pile to a megawatt. Racks can simply pull apart, since light does not care about that distance. Each layer outward can expand tenfold in scale, and components can sit more sparsely. And through that entire expansion, logically it remains one computer.

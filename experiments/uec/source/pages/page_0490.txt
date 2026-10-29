@@ -1,0 +1,41 @@
+ 490 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-99 - NSCC Destination CC State 
+Name Type Default Description 
+pdc.rcvd_bytes unsigned 
+integer 
+0 The total number of accepted new bytes on this PDC. 
+(units: bytes) 
+ 
+3.6.13.9 NSCC Destination Algorithm 
+OnRX(pkt): 
+if pkt contains data and pkt is not trimmed and pkt is not a duplicate: 
+pdc.rcvd_bytes += pkt.nominal_pktsize 
+ 
+The pds.ack_cc_state.rcvd_bytes field in the ACK sent from the destination is in units of 256 bytes. It is 
+derived from the pdc.rcvd_bytes as follows: 
+Rcvd_Bytes = ceil(pdc.rcvd_bytes / 256.0) 
+The value needs to be rounded up to avoid never acknowledging small packets when the remaining 
+inflight is smaller than 256 bytes. The Rcvd_Bytes value can be equivalently calculated using integer 
+arithmetic as: 
+Rcvd_Bytes = (pdc.rcvd_bytes + 255) >> 8 
+3.6.13.10 Using CSIG max(Delay) 
+NSCC can use the CSIG max(Delay) signal for determining the bottleneck queueing delay instead of the 
+default method of deriving it from the packets’ RTT. This requires the CSIG to be enabled in the NSCC 
+CCC as well as in the corresponding FEP. In NSCC, the csig_maxdelay_enable configuration parameter 
+(see Table 3-97) must be set to TRUE. The FEP’s CSIG policy MUST enforce the insertion of CSIG tags with 
+the max(Delay) signal in all packets (see Section 4.2.5.2). 
+All ACK packets processed by CSIG-enabled NSCC are expected to include the CSIG max(Delay) header. If 
+for some reason the CSIG max(Delay) signal is not available in an ACK received by the CCC, 
+ccc.csig_missing_cnt is increased, and the acknowledgement is ignored. If the counter crosses a 
+threshold, NSCC falls back to calculating the queueing delay based on RTT measurements. It is up to the 
+administrator to respond to this event and choose further actions. NSCC will stay in the fallback state. 
+Informative Text: 
+The inclusion of CSIG tags for signal types other than max(Delay) on distinct packets of an NSCC PDC is 
+outside the scope of this specification. In these situations, care is required to prevent spurious 
+fallback to RTT‑based congestion signals and to adjust NSCC parameters when max(Delay) feedback is 
+less frequent than per‑ACK. This can be achieved by resetting the counter for ACKs without a 
+max(Delay) signal, requiring the configuration of the fallback threshold to suppress such transitions, 
+or by other suitable means. 
+ 

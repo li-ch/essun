@@ -1,0 +1,50 @@
+ 37 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+Packet delivery context (PDC)  A logical unidirectional and often 
+transient entity (established by the 
+transport) between two FEPs, 
+which exists at the initiator and at 
+the target FEP to control the 
+successful transmission of packets.  
+Packet delivery sublayer (PDS) The part of the Ultra Ethernet 
+Transport (UET) protocol 
+responsible for delivering packets 
+with desired ordering and 
+reliability over IP/Ethernet 
+networks. 
+Packet window  The maximum number of 
+unacknowledged bytes that can be 
+outstanding on a congestion 
+control context between two FEPs. 
+Port A single Media Access Control 
+(MAC) as defined by IEEE 802.3 
+and any UE extensions. 
+Relative addressing A mode of addressing a resource 
+within the parallel job model to 
+ensure scalability to the largest 
+process counts. Includes four 
+complementary parts of a 
+destination address: (1) an FA 
+identifying a FEP, (2) a JobID 
+identifying a job in a cluster 
+uniquely, (3) a local PIDonFEP 
+ranging from 0 to P-1 identifying 
+one of the P OSI PIDs that are 
+associated with a destination FEP 
+(that are part of the job), and (4) a 
+Resource Index. 
+Semantic sublayer (SES) The part of the Ultra Ethernet 
+Transport (UET) protocol that 
+implements the OFI libfabric API. 
+Switch A device with two or more ports 
+that forwards packets received 
+based on the packet’s FA or other 
+information/state. 
+Target  The FEP that responds to the 
+initiation of a PDC from an 
+initiator. The target does not 
+initiate messages on the PDC and 
+only responds to messages from 
+the initiator. 

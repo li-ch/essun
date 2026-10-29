@@ -1,0 +1,31 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 12.1875 B/ns
+# (= 195/16 exactly, decimal-representable), L = 1000 ns (declared
+# import) — the GOODPUT-DERATING TRANSFER row: the anchor's only
+# representable outcome fraction (UCCL goodput/line = 39/40 exactly,
+# 195 = 200 x 39/40) transferred DIMENSIONLESS onto the anchor's own
+# sim-config point: 12.5 x 39/40 = 195/16 = 12.1875. Declared transfer,
+# never a derivation (the goodput figure is measured on UCCL hardware;
+# the sim links are the UET-htsim config — the factor carries no units,
+# same transfer class as GF-05's HW x5 onto its sim point). Purpose: the
+# derating magnitude at the sim point is then READABLE OFF THE EXECUTED
+# GRID — this row's asymptotic CCT ratio vs the anchor row is exactly
+# 40/39 (the derating's CCT shadow: a 2.5% goodput shortfall maps to a
+# 2.56% asymptotic CCT increase), and vs the per-server line row (200)
+# exactly 64. Nothing tuned; no anchor time compared anywhere.
+topology_id: crossbar8_gf06_simline12_1875_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.1875
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the UCCL goodput derating
+  fraction 39/40 transferred onto GF-06's sim-config point (12.5 x
+  39/40 = 195/16 = 12.1875, exact finite decimal — the second and last
+  representable executed displacement of this stage). Identity
+  t = 2(r-1)/r*M/B + 2L, L = 1000 ns declared import. The derating
+  MECHANISM (chunk-level control, CC behavior, NIC parallelism) is
+  inexpressible; magnitude only. Provenance: anchor-staged outcome
+  fraction on the declared dimensionless-transfer reading; never our
+  measurements, never tuned.

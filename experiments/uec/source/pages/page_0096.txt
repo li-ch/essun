@@ -1,0 +1,33 @@
+ 96 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 2-7 provides a top-level depiction of relationships between key libfabric objects and the 
+associated APIs. The purpose of the diagram is to provide context that promotes easier understanding 
+of subsequent text in this specification. A typical API flow for creating the objects is summarized in the 
+following bullets: 
+• The fi_getinfo() API is used to identify locally available providers and their capabilities. 
+o fi_getinfo() returns a list of fi_info structures. 
+• The application selects the fi_info structure associated with the desired provider and uses the 
+fi_info structure as a parameter to the fi_fabric() API, which creates a fabric object. 
+o In libfabric, a fabric represents a network. 
+• The fi_eq_open() API is used to create an event queue that is bound to the fabric. 
+o Event queues are used to report the completion of asynchronous control operations and 
+events. 
+• The fi_domain() API is used to create a domain object that is bound to the fabric. 
+o In libfabric, a domain represents a NIC. 
+• The fi_endpoint() API is used to create an endpoint object that is bound to the domain. 
+o In libfabric, an endpoint represents a transport-level communication portal. 
+• The fi_cq_open() API is used to create one or more completion queues. 
+o Completion resources (i.e., completion queues or completion counters) are used to 
+report the results of submitted data transfer operations. 
+• The fi_cntr_open() API is optionally used to create one or more completion counters. 
+• The fi_ep_bind() API is used to bind the resource to the endpoint, such as event queues, 
+completion queues, completion counters, address vectors, or shared transmit/receive contexts. 
+• The fi_mr_reg() API is used to create a memory region that is bound to the domain. 
+• The fi_mr_bind() API is used to bind the memory region to the endpoint (instead of the domain). 
+o UET requires memory regions be bound to endpoints as specified in Table 2-4. 
+• The fi_av_open() API is used to create an address vector under the domain, to be bound to the 
+endpoint. 
+o Address vectors are used to efficiently represent destination endpoints. 
+• The fi_av_insert() API is used to insert one or more entries in the address vector. 
+• The data transfer APIs are be used for endpoint communication. 

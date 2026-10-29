@@ -1,0 +1,29 @@
+# UEC TFC credit-window topology: unidirectional ring of 8 ranks with a
+# per-neighbor-pair TFC credit context (flagship slice, UEC11-FC-R02).
+# Link values are the L0-ring free parameters (A-TFC-BW/A-TFC-LAT share the
+# A-L0-BW/A-L0-LAT values so the convergence anchor to the landed L0 ring
+# identity is meaningful). The tfc block carries the binding's parameters:
+# window_bytes is granted credit (must be an integral number of 256-byte
+# credit units, UEC11-FC-R05); credit_return_latency_ns is the free
+# credit-loop return time (A-TFC-CR). See
+# experiments/vertical_slice/assumptions_tfc.yaml; nothing here is
+# standard-derived except the 256-byte unit, and nothing is measured.
+schema_version: 0.3.0
+topology_id: ring8_tfc_window_v1
+topology_class: unidirectional_ring_tfc_window
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+tfc:
+  window_bytes: 12800        # 50 credit units; BDP = 64*(200+200) = 25600 B
+  credit_return_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor. Each ring neighbor pair
+  carries one TFC credit context of window_bytes granted bytes; the
+  admission law UEC11-FC-R02 caps each source's steady rate at one window
+  per credit round trip (see src/essun/backends/analytical/l0_tfc.py).
+  At 50 credit units the ring runs window-limited (R_eff = 32 B/ns vs the
+  64 B/ns link): 100 units (25.6 KB) would be exactly the line-rate edge.
+  No congestion, no packetization, no credit-request dynamics — the
+  steady-window analytical identity only.

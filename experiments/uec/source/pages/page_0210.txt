@@ -1,0 +1,42 @@
+ 210 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.2.5.6 Rendezvous Send Transactions 
+A rendezvous send transaction is defined as an operation that sends a request from an initiator to a 
+target. On successfully identifying a buffer, the target then “pulls” the data from the initiator. The initial 
+request MAY have an “eager” portion of data that is transferred with it. Eager transfers are payload 
+transfers before the buffer has been identified at the target. In a rendezvous transaction, the target 
+controls how the eager portion of the transfer is handled. If the matching buffer is not found, it may be 
+buffered, or it may be discarded and requested from the initiator later. 
+In UET, a rendezvous transaction begins with a rendezvous request (send or tsend). The rendezvous 
+request includes information about a buffer at the initiator. This information is a full set of addressing 
+information to enable the read to later retrieve the remainder of the full message payload. The read is 
+semantically identical to other read operations in UET in all ways—including their packetization and 
+implementation options as described in the packet delivery sublayer (PDS); however, the read for a 
+rendezvous transaction requires completion tracking at the target beyond the typical scope of fi_read(). 
+See 3.4.5.3 for additional discussion and for an implementation note on rendezvous implementations. 
+3.4.2.5.7 Deferrable Send Transactions 
+A deferrable send is a separate type of send transaction (for send or tsend) that can be deferred by the 
+target of the send. Deferrable sends can then be resumed later. A deferrable send begins with a 
+deferrable send request (send or tsend—see Table 3-23 for a list of opcodes) that includes a restart 
+token containing a 32-bit portion allocated by the initiator and a 32-bit portion that will be filled in by 
+the target. The target responds with a semantic response indicating whether the message was accepted 
+or not. Accepted messages can be accepted in their entirety or partially. If the message was not 
+accepted in its entirety, a later request from the target to the initiator—a ready to restart—uses a token 
+to indicate to the initiator that the original message can be restarted. The ready-to-restart request can 
+include an offset to allow it to start somewhere other than the start of the message. This allows the 
+implementation to capture the initial portion of the message in an unexpected buffer and copy it when 
+the matching receive (e.g., fi_trecv()) is posted. 
+ 
+Informative Text: 
+The deferrable send transaction provides a wire protocol implementation and optimization of an 
+“eager long” protocol [8]. Conceptually, the round-trip time required for a rendezvous operation has 
+a negative impact on the performance of moderate sized messages when the message is expected. 
+Eager long protocols optimize for the expected message case. Deferrable sends go one step further by 
+providing a wire protocol that reduces (though does not eliminate) the wasted bandwidth associated 
+with unexpected messages using an eager long protocol. Deferrable sends also include a wire 
+transaction that does not require implementing a read operation to pull the remainder of the data. 
+Informative Text: 
+A deferrable send could be implemented with an “eager” limit; however, this is a matter of device 
+architecture.  In this context, an eager portion does not go into the wire protocol, because it does not 
+impact the behavior of the target. The eager size is not part of the libfabric API.  

@@ -1,0 +1,39 @@
+ 448 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-87 - UET DSCP to TC Mappings for Best Effort Networks 
+ 
+RUDI packets are not controlled by UET-CC. RUDI packets that consume substantial bandwidth to a 
+destination SHOULD be mapped to a separate traffic class. How this traffic class is configured and the 
+DSCP used are network-specific parameters that depend on the use case. 
+A single PDC mapped over two best-effort traffic classes is illustrated in Figure 3-124. The PDC is 
+between two PDS instances, as depicted within the dashed box in Figure 3-124. 
+3.6.4.7.3 Traffic Classes for Lossless Networks 
+When UET is used in lossless networks, a different mapping of packet types to traffic classes is required 
+to avoid potential deadlocks. In a lossless network, two TCs, TC_request and TC_response, SHOULD be 
+DSCP 2 TC Mapping 3 TC Mapping 
+DSCP_CONTROL TC_high TC_high 
+DSCP_TRIMMED TC_high TC_med 
+DSCP_TRIMMED_LASTHOP TC_high TC_med 
+DSCP_TRIMMABLE TC_low TC_low 
+DSCP_TRIMMABLE_RTX TC_low  TC_low 
+DSCP_NO_TRIM  TC_low TC_low 
+Note: 
+• DSCP_TRIMMABLE_RTX should be used to reduce the probability of loss of a retransmitted packet —even 
+though it shares the TC_low traffic class. 
+ 
+Figure 3-124 - PDC mapped over Best-Effort Ethernet: Traffic Class Mapping (ROD and RUD) 
+ 
+TC_high
+TC_low
+ACK
+PDSPDS
+RETURN DATA
+REQUEST
+ACK
+TARGETINITIATOR
+SES
+FEP-A FEP-B
+SES
+PDC Forward direction
+Return direction

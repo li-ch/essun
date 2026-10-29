@@ -1,0 +1,18 @@
+# W1 Dense TP Decode — tp_size 16 (the GF-04 anchor's two-node rank
+# count: mpirun -np 2 x -g 8, verified verbatim 2026-10-28) at 4294967296
+# B = 2^32 (4 GiB): a member of the anchor's two-node command-line regime
+# ("./build/all_reduce_perf -b 32 -e 10G -f 2 -g 8" — 32 B x 2^k, capped
+# at -e 10G so the last row is 8 GiB = 2^33; 4 GiB is the largest size
+# COMMON to both the single-node and two-node ladders, hence the same-size
+# comparison point of the 8->16 scaling pair — the store runs execute at
+# 2^32 on BOTH rank counts, and the tp16 sweep grid extends to the
+# two-node ladder top 2^33). 2^32 divisible by 16 (A-L0-DIV ACCEPTS
+# exactly, no bracketing; 2^30 and 2^33 also divisible). Same W1 shape
+# (2 layers x 3 steps = 6 AllReduce ops per config); integer byte counts;
+# deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-gf04
+tp_size: 16
+layers: 2
+steps: 3
+allreduce_bytes: 4294967296   # 2^32 (4 GiB); common ladder member; free parameter A-W1-SIZE

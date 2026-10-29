@@ -1,0 +1,37 @@
+ 647 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+LLR_ACK might stress the send buffer capacity, but as a rare event it should not affect performance 
+significantly. 
+5.1.9.1.4 LLR_NACK CtlOS 
+The LLR_NACK CtlOS is sent when the ACK/NACK state machine is in the SEND_NACK state. The 
+LLR_NACK CtlOS contains the ack_nack_seq value that is equal to next_rx_seq – 1. 
+When an LLR_NACK CtlOS is received, it is processed as described in Section 5.1.8. If an LLR_NACK is lost, 
+the transmitter continues sending new frames (rather than promptly starting retransmission). That data 
+will be discarded until the replay_timer expires and replay is initiated. 
+5.1.9.1.5 Control Ordered Set transmission priority 
+LLR Control Ordered Set is selected for transmission based on the priority shown in Table 5-12: 
+Table 5-12 - Control Ordered Set Transmission Priority 
+Transmission Priority Control Ordered Set 
+Highest LLR_INIT_ECHO 
+ LLR_INIT 
+Lowest LLR_ACK or LLR_NACK 
+ 
+There is no priority difference between LLR_ACKs and LLR_NACKs, as the LLR should never be 
+attempting to send an LLR_NACK at the same time as an LLR_ACK. If credit-based flow control is also 
+active, arbitration between CBFC CtlOS transmission and LLR CtlOS transmission should employ an 
+algorithm that avoids starvation of either. To that end, round robin is recommended. 
+5.1.10 Error propagation 
+There are certain error scenarios where the LLR must indicate that the data in an LLR-eligible frame is 
+bad without provoking the link partner to send an LLR_NACK and trigger a replay. These scenarios 
+include cut-through switch architectures and the occurrence of multi-bit RAM errors (e.g., in the LLR 
+replay RAM). In these cases, an LLR replay will not result in the delivery of correct data, as the data 
+stored in the replay buffer is irrecoverably corrupted. 
+To provide the ability to indicate that the data in an LLR-eligible frame is bad without triggering a replay, 
+the MAC poisons the FCS of transmitted LLR-eligible frames. The FCS is poisoned by applying an XOR of 
+0xAAAAAAAA. Specifically, follow the procedure of IEEE Std 802.3-2022 “3.2.  Frame Check Sequence 
+(FCS) field” except replace “e)” with: 
+e) The odd terms of the bit sequence are complemented, and the result is the CRC. 
+The LLR sets the poison_fcs flag on the transmit interface to the MAC to indicate that it wishes the FCS 
+to be poisoned. When the MAC receives an LLR-eligible frame with a poisoned FCS, it indicates this by 
+setting the fcs_status field on the receive interface to POISONED. 

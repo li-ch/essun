@@ -1,0 +1,41 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 12.5 B/ns,
+# L = 291000 ns — the REACTION-DELAY reading row (N = 256): GF-06
+# quantifies CM reaction delay directly: PCM's scheduling fairness
+# "degrades to 0.818 at N=256 and 0.782 at N=512, corresponding to
+# reaction delays of 291 and 582 us", with "Maximum FCT increases by
+# 1.11x and 1.32x". The two staged delay points reconcile EXACTLY on
+# delay proportional to N: 291000/256 = 582000/512 = 36375/32 =
+# 1136.71875 ns per flow (exact identity arithmetic, the stage's
+# 84us/7-class reconciliation). EXPRESSIVENESS HONESTY: a CM reaction
+# delay is time-varying scheduler state — NO input key exists at L0;
+# this row charges it as a STATIC per-pair latency purely to locate its
+# timescale on the free axis, and that static reading is FALSIFIED by
+# the anchor's own outcomes: under it, CCT at the anchor's staged
+# workload sizes would rise by factors of ~5-30x (latency term 582000 ns
+# vs sub-100-us bandwidth terms), while the anchor MEASURES max-FCT
+# increases of only 1.11-1.32x — the reaction delay is amortized across
+# reactions, not paid per transfer (recorded: the implied base max-FCT
+# under a purely additive reading would be 291000/(11/100) = 29100000/11
+# ~ 2.65 ms at N=256 and 582000/(8/25) = 1818750 ns at N=512 —
+# arithmetic, never a prediction). OUTSIDE the free range [10, 2000] —
+# recorded, registry untouched. The FCT factors 111/100 and 33/25
+# themselves are RECORDED as envelope fractions (their carrier
+# displacements 1250/111 and 625/66 are non-representable). Nothing
+# tuned; no anchor FCT compared to any CCT.
+topology_id: crossbar8_gf06_l291000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 291000
+notes: >
+  Non-blocking single-stage abstraction at the GF-06 anchor sim-config
+  bandwidth (12.5 B/ns) with L set to the anchor's staged CM reaction
+  delay at N=256 (291 us = 291000 ns — time-varying scheduler state
+  charged as static per-pair latency under a DECLARED surrogate reading
+  whose static semantics the anchor's own 1.11x max-FCT factor
+  contradicts; outside the free range [10, 2000], recorded). Identity
+  t = 2(r-1)/r*M/B + 2L. Provenance: anchor-staged reaction-delay quote;
+  reading declared and honestly falsified as static semantics. Never our
+  measurements, never tuned.

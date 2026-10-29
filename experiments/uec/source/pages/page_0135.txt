@@ -1,0 +1,41 @@
+ 135 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.3 UE Verbs Mapping 
+UET verbs are device and transport primitive operations for accessing hardware devices supporting the 
+Ultra Ethernet Transport. UET verbs are defined as fully backward-compatible extensions to RDMA verbs 
+(via the libibverbs API). For the purposes of this document, RDMA verbs refers to the portions of the 
+libibverbs API that support specification-compliant hardware and transport operations defined for 
+InfiniBand, RoCE, RoCEv2, and iWARP. 
+The RDMA verbs APIs and proposed extensions that target UET support are collectively referred to as 
+UET verbs. The objectives of UET verbs include the following, which are used to drive UET verbs API 
+requirements: 
+• Existing binary RDMA verbs applications must continue to work unmodified over RDMA 
+networks (i.e., UET verbs will maintain ABI compatibility). Existing RDMA verbs applications must 
+be modified to work over UET. 
+• Existing RDMA verbs applications that are recompiled against a version of libibverbs that 
+supports UET must continue to work unmodified over RDMA networks (i.e., API compatibility is 
+maintained). 
+• The AI Base profile is the primary target of this specification. Select features of additional 
+profiles are included where such mappings are straightforward. Full support for additional 
+profiles is left for future extensions. 
+• It should be possible to develop a libfabric provider compliant with the libfabric mapping 
+specification over UET verbs. 
+• UET verbs shall maintain independence from the API used by the peer application as well as 
+preserve transport interoperability. 
+• UET verbs extensions to RDMA verbs shall be generalized where possible, such that they may be 
+usable by other transports or RDMA enhancements. 
+• UET verbs should permit simultaneous use of multiple transport services (e.g., an application 
+may use UET for CCL and an RDMA transport to access storage). 
+This document defines explicit UET verbs extensions to RDMA verbs. It is the intent that the UET 
+extensions will be proposed to the RDMA-Core upstream community as defined. However, UET 
+extensions should be viewed in terms of the concepts being exposed, as the upstreaming process will 
+result in negotiating with the upstream community on how UET verbs is ultimately defined. 
+Informative Text: 
+This spec provides a high-level description of how verbs is mapped over UET. Design specifics are 
+purposefully left out. Code changes specific to UET verbs in rdma-core can be found here: 
+<https://github.com/ultraethernet/uet-rdma-core/tree/uet> 
+ 
+2.3.1 Verbs Terminology 
+Verbs is defined in Chapter 11 of the InfiniBand Architecture Specification [1] as an abstract definition of 
+the functionality provided by an InfiniBand NIC. libibverbs was designed as a formal software API aligned 

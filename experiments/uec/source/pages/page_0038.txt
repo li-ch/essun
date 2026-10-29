@@ -1,0 +1,55 @@
+ 38 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+Traffic class (TC) A classification of network traffic 
+that identifies mechanisms and 
+resources within endpoints and 
+switches used for the isolated 
+transmission of packets (e.g., 
+queues, buffers, schedulers). 
+Traffic classes are distinct from one 
+another and can be prioritized 
+between one another. Attributes 
+and fields of received packets are 
+used to identify a traffic class (e.g., 
+Differentiated Services Code Point 
+(DSCP) [3]). 
+Transaction One or more messages (and 
+supporting packets) needed to 
+implement the libfabric request 
+and deliver the payload requested 
+by the user. 
+UE Transport Protocol (UET) A method including protocol, 
+packet formats, and FEP policies by 
+which FEPs communicate. 
+Unified Forwarding Header (UFH) A compact encoding of the fabric 
+address and key protocol fields 
+that overlays the MAC SA and DA 
+in the frame header. 
+Parallel Communication Job A job consists of one or more 
+ranks. 
+JobID A unique identifier for a parallel 
+job within a cluster. JobIDs are 
+used for addressing and 
+authorization purposes. 
+Parallel job A collection of processes running 
+on a cluster that belongs to the 
+same user and can communicate. 
+Parallel job model A mode of cluster operation that 
+involves MPI/*CCL or SHMEM. The 
+parallel job execution is 
+characterized by a “run to 
+completion” model (in which 
+checkpoint/restart is a simple 
+reliability technique). 
+PIDonFEP An identifier of a process 
+associated with a FEP numbered 
+from 0 to P-1. If each FEP has the 
+same number of processes 
+associated with it, each endpoint 
+can easily compute the PIDonFEP 
+of a particular RankID. 
+Rank A process that cooperates to 
+compute a particular workload. A 
+job can spawn multiple ranks on 

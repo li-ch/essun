@@ -1,0 +1,56 @@
+# Calibration-ladder GF-06 sweep #2: the TIMESCALE
+# LADDER — the L axis is the axis GF-06's anchor leaves anchor-free at
+# the component level (unlike GF-05, its UET-htsim config stages NO
+# latency component; its only latency-class figures are quantities of
+# other kinds). Every row below is a GF-06-staged number charged as a
+# per-pair latency under a DECLARED reading, and the sweep exists to
+# make the reading classes and their consequences exact:
+#   200   = A-L0X-LAT / A-L0-LAT registry point (baseline; placement);
+#   332   = one packet serialization of the anchor's own staged config:
+#           4150 B / 12.5 B/ns = 332 ns EXACTLY (packetization has no
+#           input key; GF-05 bounded its 40.96 ns MTU serialization the
+#           same way — GF-06's costs 2075/256 ~ 8.11x more, exactly
+#           8 x 4150/4096);
+#   15000 = the incast-setup "RTT of ~15 us" (path-round-trip class;
+#           outside the free range [10, 2000] — GF-05's base-RTT 12000
+#           pattern; the two UET-htsim users' RTT-class figures differ
+#           by exactly 5/4, recorded);
+#   291000 / 582000 = the CM reaction delays at N=256/512 (time-varying
+#           scheduler state — NO L0 input key; static surrogate
+#           readings, declared and honestly FALSIFIED as static
+#           semantics by the anchor's own outcomes: the anchor measures
+#           max-FCT increases of only 1.11x/1.32x (exact 111/100,
+#           33/25) while a static reading would inflate CCT by ~5-30x
+#           at the staged sizes; the delays reconcile EXACTLY on
+#           delay = N x 36375/32 ns (291000/256 = 582000/512), and the
+#           FCT-factor growth when the delay doubles is exactly 44/37
+#           — SUB-LINEAR).
+# Identity (verified on every executed row below): every row pair
+# differs by EXACTLY 2(L1 - L2) ns at every payload size — the
+# bandwidth term is L-independent, so the whole ladder is
+# arithmetic-transparent in L.
+#
+# NOTHING IS TUNED: no row is compared to any anchor time (the anchor's
+# FCT tables are unstaged; its outcome numbers are not CCTs). Payload
+# grid: the same 12-size ladder 2^k (8 KiB -> 16 MiB) as the envelope
+# sweep — includes the staged 64 KiB chunk size, the 2 MiB run-pair
+# size, and the staged range upper 16 MiB; r=8 divides every size
+# (A-L0-DIV / A-L0X-DIV accept, no bracketing).
+sweep: cal_gf06_latency_v1
+workload: experiments/calibration/gf06/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf06/topologies/crossbar8_gf06_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_l200_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_l332_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_l15000_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_l291000_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_l582000_v1.yaml

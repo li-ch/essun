@@ -1,0 +1,69 @@
+# Calibration-ladder GF-05 sweep #2: the R1
+# SIM-CONFIG LATENCY AXIS — the anchor's own uet-htsim latency numbers
+# landed on the free L axis at fixed B=100 (the paper's staged
+# "400ns switch traversal latency" and "link latency 600 ns"; the
+# uet-htsim config is "itself anchor-able sim-config provenance" per
+# the gap-fill doc §GF-05, for the pinned third-backend family).
+# (v2 supersedes an identical-grid v1 preparation draft whose comment
+# misstated two latency-fraction percentages — grid, topologies, and
+# executed numbers are unchanged; the unreferenced v1 sweep dir remains
+# in the append-only results store)
+#
+# NOTHING IS TUNED: the L ladder was fixed by anchor/registry
+# arithmetic BEFORE any stage output was read —
+#   400  = the staged SWITCH-TRAVERSAL component alone (verbatim);
+#   600  = the staged LINK component alone (verbatim);
+#   1000 = their sum — the per-hop pair-latency reading, THE ANCHOR
+#          point of this sweep and its baseline (identical topology
+#          file to the envelope sweep's B row 100);
+#   200  = A-L0X-LAT registry point (placement row; 5x below the
+#          anchor's own per-hop decomposition);
+#   6000 = the 6-HOP ONE-WAY-PATH reading: base RTT = 84 us / 7 =
+#          12000 ns exactly (the paper's own "roughly 84 us = 7 base
+#          RTTs"), and 12000 = 2 x 6 x (400+600) exactly — consistent
+#          with a 6-hop one-way path (a 5-switch 6-link 3-tier path
+#          gives 11200, within one switch traversal; CONSISTENT-WITH,
+#          flagged interpretation, the tier/hop count is not staged);
+#          6000 = 6 x 1000;
+#   12000 = the BASE-RTT reading — the anchor's own control-loop
+#          timescale (SMaRTT "target RTT 1.5x base RTT", window
+#          "clamped to 1.5 BDP") charged as static per-pair latency:
+#          the largest latency reading constructible from the anchor's
+#          own numbers. Note: 12000 exceeds the A-L0X-LAT free-range
+#          upper 2000 ns because base RTT is a PATH-ROUND-TRIP
+#          quantity, NOT a per-hop parameter — the per-hop
+#          decomposition (1000) is the quantity the plan's gap §4.2
+#          candidate upper (~800-1000 ns) speaks to; recorded, the
+#          registry range is untouched.
+#
+# The executed signature is exact arithmetic: t = 2(r-1)/r*M/B + 2L, so
+# every row differs from the anchor row by exactly 2*(L - 1000) ns at
+# EVERY payload size (an identity, verified on executed rows in the
+# stage record); the latency FRACTION of CCT is what the ladder sizes
+# sweep out (from ~0.0013% at 8 GiB through 5.17% at the anchor's own
+# 2 MiB to 93.31% at 8 KiB on the anchor row). GF-05 stages no
+# per-collective time series in any metric class — no row is compared
+# to any anchor time.
+#
+# Payload grid: the same 12-size ladder 8*2^k (8 KiB -> 8 GiB) as
+# stages A1/A2/A7/A9/A11 (includes the anchor's 2 MiB flow size);
+# r=8 divides every size (A-L0-DIV / A-L0X-DIV accept, no bracketing).
+sweep: cal_gf05_latency_v2
+workload: experiments/calibration/gf05/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf05/topologies/crossbar8_gf05_line100_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_line100_l12000_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_line100_l6000_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_line100_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_line100_l600_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_line100_l400_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_line100_l200_v1.yaml

@@ -1,0 +1,53 @@
+ 260 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+they may complete in either order at the initiator or the target. Implementation-specific mechanisms 
+are used to reconcile the two completion points and deliver one completion queue entry to the user 
+application. 
+ 
+Figure 3-33 illustrates a specific two completions at the initiator. In this example, an implementation 
+would use the fields of the read—the Resource Index and the Memory Key—to encode information 
+that would allow the read completion to be mapped to the original transaction. This is fully supported 
+in the Memory Key definition by using a provider defined key. Whatever bits are chosen for encoding 
+such information would need to be delivered in a read completion between the device and the 
+libfabric provider. 
+ 
+Read completions can be implemented by delivering a completion after every read response has been 
+acknowledged. Unacknowledged read responses are retransmitted by PDS until they are 
+acknowledged. 
+ 
+ 
+Figure 3-34 - Rendezvous Transaction, Unexpected Message Case 
+3.4.5.4 Deferrable Send Transactions 
+Deferrable send transactions are a similar concept to rendezvous sends. Deferrable sends begin a 
+transfer of the message. The congestion management sublayer is expected to limit the outstanding 
+payload based on the current congestion state. This means that approximately one BDP of data at the 
+Initiator Target
+SEND
+REQUEST
+Buffer Not 
+Found
+SES PDSPDS SES
+Msgs + PacketsMessages Msgs + PacketsPackets Messages
+Send MID 1, Offset 0
+Send MID = 1, Off = 0
+Send MID = 1, Off = N
+Eager size 
+Read MID 7, Off = J
+Send MID 1, Offset N
+Read MID 7, Off = J+M
+Read 
+COMPLETION
+MSG 
+COMPLETION
+SEND 
+COMPLETION
+Payload, Off=J
+...
+...
+Payload, Off=J+M
+J Bytes of 
+Payload Buffered
+(0 <= J <= Eager)
+Matching Buffer 
+Posted

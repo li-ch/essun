@@ -1,0 +1,11 @@
+ 425 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.23.2 Standard Sequences 
+This section specifies the normal processing sequences for RUDI. Figure 3-110 shows the standard RUDI 
+RMA Write sequence for a multi-packet message. 
+  
+Figure 3-111 shows the standard RUDI RMA Read sequence for a multi-packet message. RUDI return 
+data is carried in a response packet on the forward direction.  
+ 
+Figure 3-110 - Standard RUDI RMA Write Sequence for Multi-Packet Message 

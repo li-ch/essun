@@ -1,0 +1,39 @@
+ 246 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+In normal message processing, the modified length is typically the requested length; however, target 
+implementations are allowed to truncate the message for a variety of reasons—including, but not 
+limited to, managing unexpected messages and server use cases that bound the size of the message that 
+is accepted. The ses.modified_length field MUST indicate the entire length of the accepted operation—
+except in the case of deferrable send responses. 
+A deferrable send response indicates a ses.modified_length of 0 even if it buffers some of the operation 
+in an eager buffer. The ready-to-restart message indicates how much of the message to resend. 
+The ses.payload_length field MUST encode the length of the payload (in bytes) returned in this packet. 
+3.4.4.4 Unified Local Profile Response Generation 
+Semantic responses to semantic requests that used the UET_HDR_REQUEST_LCL format use the 
+UET_HDR_RESPONSE_DATA_LCL format. All responses to messages packed into a single PDS packet are 
+returned in a single PDS acknowledgment. The acknowledgement to PDS can be a simple 
+UET_DEFAULT_RESPONSE when a write transaction completes without encountering processing errors. 
+In this case, a distinct acknowledgement packet need not be generated immediately, as a cumulative 
+acknowledgement is sufficient. 
+When a PDS acknowledgment packet is generated, it MUST contain one 
+UET_HDR_RESPONSE_DATA_LCL for each UET_HDR_REQUEST_LCL packed into the corresponding PDS 
+request packet. Any UET_HDR_REQUEST_LCL with a UET_READ or UET_FETCHING_ATOMIC opcode 
+MUST generate a response using the UET_RESPONSE_W_DATA opcode. If any semantic request packed 
+into a single PDS request packet requires a UET_RESPONSE_W_DATA opcode with a non-RC_OK return 
+code, a PDS acknowledgement packet MUST be generated, and it MUST contain one semantic response 
+for each semantic request that was packed into that PDS request packet. 
+All semantic responses using ROD or RODL MUST be generated in order. A semantic response MUST 
+NOT be generated until all required local processing has completed. Required processing includes local 
+error detection, but excludes waiting for a completion unless ses.dc is asserted. For any semantic 
+request with ses.dc set, the corresponding semantic response MUST NOT be generated until the 
+completion has been received. 
+Implementation Note: 
+Examples of local completion include a PCIExpress UIO completion or an AXI completion. 
+ 
+3.4.4.5 Rendezvous Processing 
+Informative Text: 
+The rendezvous transaction is intended to be implemented by a combination of hardware and 
+software that resides within the libfabric provider. To provide interoperable operation, the entire 
+rendezvous transaction must be compatible. 
+ 

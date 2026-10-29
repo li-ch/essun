@@ -1,0 +1,40 @@
+ 319 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.8.2.1.3 Method Interoperability 
+Endpoints using different methods can still establish PDCs by falling back to target assigned Start_PSN 
+values, at the cost of an extra RTT.  If the initiator is using EXPECTED_0RTT_START and the target is 
+using RANDOM_1RTT_START, the target assigns a Random_Start_PSN and the initiator adopts it.  If the 
+initiator is using RANDOM_1RTT_START and the target is using EXPECTED_0RTT_START, the target 
+rejects the initial Start_PSN and returns the Target_Start_PSN to retry. 
+Both miss-matched combinations incur an extra RTT for PDC establishment. If the initiator was 
+speculatively sending data before PDC establishment, a potential full BDP of traffic can be dropped and 
+require retransmission. This loss of data can be avoided by an initiator using a NOOP control packet to 
+establish the PDC. 
+Implementations SHOULD use either a single method across all FEPs or provide a configuration option 
+permitting a slow start option (e.g., using NOOP CP) for RANDOM_1RTT_START initiators. 
+3.5.8.2.1.4 Method Applicability 
+The two methods are not independent implementation options. The RANDOM_1RTT_START method 
+assures the target will transmit a NACK with pds.nack_code = UET_NEW_START_PSN, requiring the 
+initiator to re-initiate PDC establishment. The EXPECTED_0RTT_START method is an optional 
+optimization layered upon the mechanisms of the RANDOM_1RTT_START method.   
+An initiator adopts the Start_PSN received in the NACK pds.payload.start_psn field and use it to re-
+initiate PDC establishment.  The NACK may arrive from a target using either method.  A target can reject 
+the initial PDC establishment and assign a new Start_PSN to the initiator using the 
+pds.payload.start_psn field of a transmitted NACK.  A target implementing the EXPECTED_0RTT_START 
+method requires this ability for anti-replay protection since rejecting stale Start_PSN values uses the 
+same NACK exchange. 
+A consequence of these requirements is that the mechanisms of the RANDOM_1RTT_START method 
+are present in every conforming implementation. When using TSS and implementation MUST support 
+the mechanisms of the RANDOM_1RTT_START method. The initiator's behavior is identical for both 
+methods. In both cases, the initiator adopts the returned Start_PSN and re-initiates PDC establishment, 
+regardless of whether that value was random or reflects the target’s anti-replay floor. Note that an 
+implementation that supports only RANDOM_1RTT_START is compliant and simpler to implement 
+because it does not require SD state or closing-ACK feedback. 
+3.5.8.2.1.5 Anti-Replay Scope and Shared-SD Behavior 
+The Start_PSN validation specified in Section 3.5.8.2.1 protects only the establishment of a new PDC. 
+Once a PDC is ESTABLISHED, replay is prevented by the normal per‑PDC PSN receive window, which 
+discards duplicate PSNs, together with the encryption’s per‑packet integrity. Target_Start_PSN defines 
+the new interval that becomes available once a PDC closes. By advancing the floor as the PDC is 
+released, the target ensures that no recorded establishment can be replayed to recover a retired 
+Start_PSN that lies below the floor. 

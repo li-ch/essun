@@ -1,0 +1,12 @@
+ 70 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Switches that trim packets (denoted by the scissor icon in Figure 1-15) change the DSCP values to 
+DSCP_TRIMMED or DSCP_TRIMMED_LASTHOP depending upon where they are in the fabric topology. 
+The DSCP values for trimmed packets can be mapped to a third traffic class (TC_med) if available, 
+otherwise TC_high is used. The management actions for mapping DSCP values to the traffic classes 
+within the switches is either vendor-specific or currently unspecified. 
+The congestion management sublayer of UET is designed with the expectation of using at least two 
+traffic classes for PDCs to achieve high performance. The network operator is responsible for allocating 
+and configuring the traffic classes used by UET. The mapping of UET packet types to traffic classes is 
+dependent on whether the network is best effort or lossless. See CMS Section 3.6.4.7 for further details. 

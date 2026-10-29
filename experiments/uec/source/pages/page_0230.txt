@@ -1,0 +1,41 @@
+ 230 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-13 - Unified Local Semantic Header with ac=1 (UET_HDR_REQUEST_LCL) 
+Field Size Description Section Ref 
+Address compression (ac) 1 See Table 3-12  
+More messages (mm) 1 See Table 3-12  
+opcode 6 See Table 3-8  
+Version (ver) 2 See Table 3-8  
+Delivery Complete (dc) 1 See Table 3-8  
+Initiator Error (ie) 1 See Table 3-8  
+JobID 8 See Table 3-12  
+request_length 12 Length of the payload to be 
+transferred (in bytes). 0 is a 
+legal transfer size. Maximum 
+size is 4KB-1 bytes, but limited 
+by the configured Payload MTU 
+ 
+address_offset 32 Compressed address expressed 
+as a 2s-complement offset 
+relative to the prior operation 
+ 
+ 
+Address compression uses two’s complement math to calculate the address offset. “Chaining” is used so 
+each message uses the target address calculated for the previous message. Table 3-14 shows the target 
+address and the address offset in the SES header when ses.ac = 1. 
+Table 3-14 - Target Address and Offset when ses.ac=1 
+ac Target address 
+(decimal) 
+address_offset 
+(decimal) 
+Target address (hex) Address_offset  
+(hex) 
+0 8590996480 - 0x0000_0002_0010_3400 - 
+1 8590996736 256 0x0000_0002_0010_3500 0x0000_0100 
+1 8590995968 -768 0x0000_0002_0010_3200 0xFFFF_FD00 
+1 8623489024 32493056 0x0000_0002_0200_0000 0x01EF_CE00 
+ 
+When UET_HDR_REQUEST_LCL is used for atomic operations, if the extension header is present, it 
+directly follows the 12-byte base header and the atomic header follows the extension header, as 
+illustrated in Figure 3-20.  

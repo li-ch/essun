@@ -1,0 +1,54 @@
+# Calibration-ladder A10 anchor-scale RUN, CHAINED side step
+# 3): the L0 ring identity at the same anchor point and scale ceiling —
+# r = 1024, L = 800 ns = CAL-A10's stated 0.8 us assumption under the
+# DECLARED SECONDARY per-hop reading (this identity charges the figure
+# 2*(r-1) = 2046 times per AllReduce; the primary end-to-end pair reading
+# runs on the crossbar twin run_a10_flat1024_v1.yaml — the dual-reading
+# spread is quantified in the stage record, not adjudicated here), B = 64
+# B/ns (A-L0-BW registry point, fixed free), payload 16384 B (registry
+# smoke point). 16384 = 2^14 is divisible by 1024 = 2^10, so the A-L0-DIV
+# gate ACCEPTS exactly — no bracketing.
+#
+# ASSUMPTION-CLASS HONESTY: CAL-A10 publishes NO completion time; this
+# run cannot be compared to any anchor CCT. Its role is to place the
+# linear-chain identity's small-message O-CCT AT the anchor's assumption
+# point and scale ceiling in the append-only store, so the record's
+# flat-vs-chained arithmetic at r = 1024 is backed by run ids on BOTH
+# sides. Nothing is tuned — the anchor stages no output any parameter
+# could be tuned toward.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes an analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A10-CHAIN1024-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a10/workloads/w1_dense_tp_decode_tp1024_16kib.yaml
+infra_graph:
+  path: experiments/calibration/a10/topologies/ring1024_a10_hop800_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a10/profiles/implementation_profile_l0_ring_cal_a10_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring1024_a10_hop800_v1 (unidirectional ring; r=1024 = the anchor's stated scale ceiling, L=800 ns = CAL-A10's assumption-class figure under the declared secondary per-hop reading, B=64 B/ns free registry point)
+  workload: w1_dense_tp_decode tp1024, payload 16384 B (registry smoke point; the anchor names no size — declared model-side regime choice)
+  implementation: analytical L0 ring identity; CAL-A10 comparison is assumption-class placement at the anchor's scale ceiling only (the anchor stages no completion time) — PROPOSED, review required
+evidence_level_requested: E0

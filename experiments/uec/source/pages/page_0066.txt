@@ -1,0 +1,27 @@
+ 66 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+While UET provides excellent performance on best-effort networks leveraging multi-pathing and 
+improved congestion control assisted by network telemetry, it is also architected to run on lossless 
+networks. For best-effort networks, UET embraces two fundamental lessons learned from the success of 
+Ethernet, TCP/IP, and large-scale networks deployed for various applications including the cloud—that 
+transport protocols should provide loss recovery and that many large-scale lossless fabrics are 
+challenging to operate without triggering head-of-line blocking and congestion spreading. Following 
+these principles, the UE transport builds on the proven path of distributed routing algorithms and 
+endpoint-based reliability and congestion control. 
+1.5.3 Network Fabric 
+The network fabric consists of Ethernet switches and the associated elements described below. 
+1.5.3.1 Elements 
+The UE switch fabric incorporates three common functional planes: control plane, data plane, and 
+management plane. These are depicted in Figure 1-14 and described as follows. 
+1.5.3.1.1 Control Plane 
+The control plane is responsible for running critical functions such as routing protocols to maintain 
+communication between fabric switches. This layer is managed by networking operating systems (NOSs) 
+such as SONiC, FBOSS, and others. The control plane interacts with the switch data plane using standard 
+APIs such as SAI or vendor-specific APIs. 
+1.5.3.1.2 Data Plane 
+The data plane, also referred to as the forwarding plane, is responsible for forwarding packets in the 
+network. This layer spans the UE endpoint (i.e., FEP) and the network switches. For clarity, the data 
+ 
+Figure 1-14 - Layered View of Networking Functionality 
+ 

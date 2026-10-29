@@ -1,0 +1,48 @@
+# Calibration-ladder GF-08 sweep #2: the CARRIER
+# (direction-reading) TRANSFER probe — the measured 8x congestion
+# factor executed at BOTH direction readings of Falcon's staged
+# 200 Gbps peak (GF-08, ACM SIGCOMM 2025; docs/calibration/
+# anchors_gapfill.md §GF-08; numbers AS STAGED, not re-fetched).
+#
+# The anchor's abstract stages "peak performance of 200 Gbps" with NO
+# direction split. GF-07's executed finding (a dimensionless congestion
+# factor is asymptotically carrier-independent but reads differently at
+# FINITE size through the latency fraction, closed form
+# d/dx[(x*f+2L)/(x+2L)] = 2L(f-1)/(x+2L)^2 > 0 with x = c_rank*M/B_ref)
+# is replicated here with the anchor's own factor 8 at its two readings:
+#   25    = the per-endpoint primary reading (uncongested reference);
+#   3.125 = 25/8 (the 8x factor at the primary carrier);
+#   12.5  = the bidirectional-aggregate alternative reading
+#           (uncongested reference);
+#   1.5625 = 12.5/8 (the SAME 8x factor at the alternative carrier).
+# Executed property: at every finite size the observed ratio at the
+# SLOWER carrier (12.5) reads CLOSER to the factor 8 than at the faster
+# carrier (25); both converge to exactly 8 in the bandwidth-bound limit.
+# The consequence is the stage's honest reading-ambiguity bound: the
+# direction convention alone moves the observed displacement by more
+# than the anchor's own lossy factor (33/20), so any reuse of the 8x
+# must pin the direction reading first.
+#
+# NOTHING IS TUNED: every B above was fixed by anchor arithmetic BEFORE
+# any stage output was read. L fixed at the A-L0X-LAT registry point
+# 200 (GF-08 stages no abstract-level latency number). Same DECLARED
+# FREE PROBE payload ladder as sweep_gf08_envelope_v1.yaml (8*2^k,
+# 8 B -> 16 MiB, 22 sizes; brackets the implied per-op size 625/3
+# ~ 208.33 B between its 128/256 members; r=8 divides every size).
+sweep: cal_gf08_carrier_v1
+workload: experiments/calibration/gf08/workloads/w1_dense_tp_decode_tp8_16kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf08/topologies/crossbar8_gf08_falcon25_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_falcon25_l200_v1.yaml
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_roce8x3_125_l200_v1.yaml
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_alt12_5_l200_v1.yaml
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_roce8xalt1_5625_l200_v1.yaml

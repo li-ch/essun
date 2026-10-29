@@ -1,0 +1,42 @@
+ 735 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+If a 100GBASE-R PHY performs FEC error overwrite marking, the decoder SHALL use the stateless 
+64B/66B decoder specified in 119.2.5.8.2 of [5] instead of the state-diagram decoder defined by Figure 
+82–17 of [1]. In addition, the decoder SHALL set to EBLOCK_R the first four 66-bit blocks (accounting for 
+any alignment marker removal) following an uncorrected codeword (when Clause 91 RS-FEC is used) or 
+two associated uncorrected codewords (when Clause 161 RS-FEC-Int is used). 
+If a 100GBASE-R PHY does not perform FEC error overwrite marking, the decoder SHALL use the rules in 
+Table 6-5 instead of the state-diagram decoder defined by Figure 82–17 of [1]. 
+Table 6-5 - PCS stateless decoder rules for 100GBASE-R without FEC error overwrite marking 
+Reset + 
+!align_status 
+R_TYPE (rx_codedi-7 
+through rx_codedi-1) 
+R_TYPE (rx_codedi) Resulting rx_rawi 
+1 any block type any block type LBLOCK_R 
+0 any block type E EBLOCK_R 
+0 E any block type EBLOCK_R 
+0 any combination not listed above DECODE(rx_codedi) 
+ 
+6.2.3.2 PCS 64B/66B Encoder 
+The following requirements apply in all supported data rates.The PCS encoder SHALL use the stateless 
+encoder as specified in subclause 119.2.4.1.2 of [5], rather than the state-diagram PCS encoder (defined 
+by Figure 82–16 or Figure 119–14 of [1]).  
+Informative Text: 
+The stateless encoder assumes that the block type sequence that the MAC generates is valid, and thus 
+the PCS encodes the blocks as they arrive with no further checking. 
+6.2.4 RS required modifications 
+Support of CtlOS requires several enhancements to the reconciliation sublayer (RS) specified in the 
+Ethernet standard. 
+When the MAC sublayer requests transmission of a CtlOS, the RS indicates a CtlOS on the MII, 
+corresponding to the RS transmission of TXD<63:0> and TXC<7:0>. Otherwise (when not a CtlOS), the RS 
+requests transmission of 64 data bits by the PHY as described in [1], subclause 81.1.7.1.4. 
+When the RS detects a valid CtlOS on the MII, corresponding to the RS reception of RXD<63:0> and 
+RXC<7:0>, the RS sends an indication to the MAC sublayer. Otherwise (when not a CtlOS), the RS maps 
+the MII signals to PLS_DATA.indication as described in [1], subclause 81.1.7.2. 
+6.2.4.1 MII transmit functional specifications 
+The transmit RS is permitted to send a CtlOS (composed of the CtlOS control character and subsequent 
+seven data octets) anywhere in the MII data stream, subject to the restriction that the CtlOS control 
+character is aligned to lane 0 on the transmit MII. See [1], subclause 81.2 for details on the MII data 
+stream. 

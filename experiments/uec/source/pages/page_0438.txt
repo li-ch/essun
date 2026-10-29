@@ -1,0 +1,11 @@
+ 438 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+  
+Informative Text: 
+The size and padding calculation exclude any other headers such at VLAN or CSIG. These headers may 
+be removed by network elements. It is required that the total size of the base packet be 64B or larger. 
+ 
+Figure 3-123 - Example packets using padding 

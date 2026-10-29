@@ -1,0 +1,29 @@
+ 80 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Software Description 
+calls over UET using the UET reference provider model. This provides an 
+example of how an application can use the UET libfabric implementation.  
+UE Wireshark plugin [2] A fork of the Wireshark open-source network protocol analyzer with a 
+dissector for UET 
+ 
+2.1.4 References 
+The following references are utilized by the UEC Software Working Group. Github repositories [2], [3], 
+[4], and [7] are currently private and require UEC membership for access. These repositories are planned 
+to be transitioned to allow public visibility.  
+[1] GitHub, "ofiwg/libfabric OpenFabrics Release v2.0.0," 2024. [Online]. Available: 
+https://github.com/ofiwg/libfabric/releases/tag/v2.0.0. 
+[2] Github, "ultraethernet/uet-wireshark UE Wireshark Plugin," 2025. [Online]. Available: 
+https://github.com/ultraethernet/uet-wireshark. 
+[3] Github, "ultraethernet/uet-ref-prov UE transport user-space reference model," 2025. [Online]. 
+Available: https://github.com/ultraethernet/uet-ref-prov. 
+[4] Github, "ultraethernet/uet-linux-kernel UE transport kernel-space reference model," 2025. [Online]. 
+Available: https://github.com/ultraethernet/uet-linux-kernel. 
+[5] Github, "ultraethernet/uet-rccl-plugin RCCL UET reference plugin," 2025. [Online]. Available: 
+https://github.com/ultraethernet/uet-rccl-plugin. 
+[6] Netdev, "Network Devices, the Kernel, and You!," [Online]. Available: 
+https://www.kernel.org/doc/html/latest/networking/netdevices.html. [Accessed 2025]. 
+[7] Github, “ultraethernet/uet-rdma-core RDMA core user-space libraries and daemons,” 2026. 
+[Online]. Available: https://github.com/ultraethernet/uet-rdma-core 
+ 
+  

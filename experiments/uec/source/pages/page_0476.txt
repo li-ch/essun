@@ -1,0 +1,41 @@
+ 476 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ccc.state = ACTIVE  #remove CC from scheduler ready list 
+ 
+process_ev(entropy, reason): 
+UET-CC does not prescribe how the feedback information received from ACKs and NACKs is used to load 
+balance. Oblivious load balancing and adaptive load balancing are both permitted, as described in 
+Section 3.6.16. Some load balancing schemes require little (or no) action in process_ev(), and others may 
+vary in what they do based on the reason. Load balancing schemes that do not require processing of an 
+entropy for a given reason are not required to process the entropy for that reason. If the CCC is used for 
+a ROD or TFC PDC, process_ev() does nothing. 
+3.6.12.4 Receiver Algorithm 
+The following pseudocode defines the common CCC behavior at the CCC destination. The conditions for 
+sending an ACK are specified in the PDS Section 3.5.12. RCCC also maintains a credit timer that clocks 
+out credit. This is detailed in Section 3.6.14.5. 
+OnRX(pkt): 
+if rccc: RCCC.OnRX(pkt) 
+if nscc: NSCC.OnRX(pkt) 
+if pkt.IsTrimmed: 
+lastHopTrim = (pkt.ip.dscp == DSCP_TRIMMED_LASTHOP) 
+sendNACK(pkt.pds.psn, Entropy, lastHopTrim, pkt.ip.ecn.ce) 
+else if conditions are met to send an ACK: 
+sendACK(pkt.pds.psn, Entropy, pkt.ip.ecn.ce)  
+#other ACK CC_STATE fields will be filled in by the 
+#relevant CC algorithm 
+ 
+3.6.13 Network Signal-based Congestion Control 
+This section specifies the NSCC algorithm, which is based on the SMaRTT [9] and Strack [10] algorithms. 
+NSCC uses a congestion window, ccc.cwnd, that limits the amount of outstanding in-flight data. NSCC 
+permits sending only when ccc.cwnd > (ccc.inflight + MTU12). As with other window-based congestion 
+control protocols, NSCC relies on ACK clocking to regulate the amount of data permitted into the 
+network. The arrival of ACKs indicates that previously transmitted data has left the network and allows 
+the transmission of additional data. In NSCC, the ACK clock that decreases ccc.inflight is driven from the 
+pds.ack_cc_state.rcvd_bytes field returned by the destination in ACK packets, which indicates the 
+amount of data that has arrived at the destination. When the source is told by the destination that an 
+additional amount of data has left the network, ccc.inflight is reduced, allowing more data to be sent. 
+Similarly, ccc.inflight is reduced if a packet is known or inferred to have been lost. These mechanisms are 
+resilient to reordering caused by multipath spraying. Note that ccc.inflight can go slightly negative 
+ 
+12 In some implementations, it may be possible to use the actual packet size instead of the MTU.  

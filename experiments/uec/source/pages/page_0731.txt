@@ -1,0 +1,38 @@
+ 731 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+6.1.1.2  PHY rates and types supported 
+The following Ethernet PHY rates and types are in scope for UE: 
+● 100GBASE-R family 
+o 100GBASE-KR1, 100GBASE-CR1, 100GBASE-VR1, 100GBASE-SR1, 100GBASE-DR, 100GBASE-
+FR1 
+● 200GBASE-R family 
+o 200GBASE-KR2, 200GBASE-CR2, 200GBASE-VR2, 200GBASE-SR2 
+● 400GBASE-R family 
+o 400GBASE-KR4, 400GBASE-CR4, 400GBASE-VR4, 400GBASE-SR4, 400GBASE-DR4, 400GBASE-
+FR4 
+● 800GBASE-R family 
+o 800GBASE-KR8, 800GBASE-CR8, 800GBASE-VR8, 800GBASE-SR8, 800GBASE-DR8 
+The clauses within the Ethernet standard that specify these PHY types are listed by media type in 
+Section 6.1.1.1. 
+In addition, the following 100 Gb/s per lane interfaces are in scope: 
+● Chip-to-chip attachment unit interfaces (Annex 120F) 
+o 100GAUI-1 C2C, 200GAUI-2 C2C, 400GAUI-4 C2C, 800GAUI-8 C2C, 1.6TAUI-16 C2C 
+● Chip-to-module attachment unit interfaces (Annex 120G) 
+o 100GAUI-1 C2M, 200GAUI-2 C2M, 400GAUI-4 C2M, 800GAUI-8 C2M, 1.6TAUI-16 C2M 
+ 
+6.1.2 UE PHYS for 200 Gb/s per Lane Signaling 
+UE PHYs include a subset of Ethernet PHYs with 200 Gb/s per lane signaling, as defined in this section. 
+6.1.2.1 Media Support 
+The following physical media are supported for 200 Gb/s per lane signaling, with relevant clause 
+numbers in the Ethernet standard: 
+• Backplane (KR, clause 178) 
+• Copper cable (CR, clause 179) 
+• Parallel SMF up to 500 m (DR, clause 180) 
+• WDM SMF up to 500 m (FR4-500, clause 181) 
+Note that the PHYs for the media above all use the same RS-FEC (544,514) with interleaving of 10-bit 
+symbols from four RS-FEC codewords. These PHYs do not use inner FEC or a separate FEC sublayer. 
+6.1.2.2 PHY Rates and Types Supported 
+The following Ethernet PHY rates and types are in scope for UE: 
+• 200GBASE-R family 
+o 200GBASE-KR1, 200GBASE-CR1, 200GBASE-DR1 

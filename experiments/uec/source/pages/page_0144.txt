@@ -1,0 +1,29 @@
+ 144 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 2-17 shows the relationship between verbs objects for Relative Addressing. 
+ 
+Figure 2-17 - Verbs Relative Addressing Model 
+UET verbs maintains a flexible access model to MRs for relative addressing. MR access restrictions can 
+be: 
+• MR is unrestricted on the PIDonFEP. Any peer may access it using any QP that shares the PD. 
+• MR is restricted to a QP (i.e., RI restricted). Any peer may access it using only that QP. 
+2.3.3.3 Mapping UET SES Fields 
+Most SES header fields map directly to UET verbs concepts. Table 2-48 defines the conceptual mapping 
+between SES header fields and UET verbs. Actual API details may differ slightly from that shown. 
+Table 2-48 - SES Field Mapping to UET Verbs 
+SES Field Verbs Mapping Note 
+opcode ibv_send_wr::opcode Message operation used for a send work request 
+ver SGID entry type The type assigned to the SGID entry implies the 
+UET version being used 
+DC ibv_send_wr::send_flags 
+IBV_SEND_DELIVERY_COMPLETE 
+New send flag for a send work request 
+rel QPN bit 31 – absolute/relative 
+addressing  
+UET-defined format for QPN (see Section 
+2.3.5.1.3). Absolute addressing is enabled by 
+setting this bit. 
+JobID ibv_job and ibv_job_key New job objects 
+PIDonFEP QPN bits 11:0 UET-defined format for QPN 
+resource_index QPN bits 23:12 UET-defined format for QPN 

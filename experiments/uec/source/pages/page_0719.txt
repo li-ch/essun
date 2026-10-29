@@ -1,0 +1,51 @@
+ 719 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+identified as ZYXM in Figure 5-25. The X and M bits are the well-known local address and multicast bits 
+in the MAC header; the ZY bits are new per SLAP. To identify UFH: 
+• The Z and Y bits are set to 00 indicating an Administratively Assigned Identifier (AAI)18.  
+• The X bit is set to 1 indicating local assignment. 
+• The M bit is retained to indicate a multicast frame. 
+This UFH specification further defines the upper 4 bits of the DA for additional UFH specific flags. 
+• The V bit identifies UFH version, with V = 0 indicating the current version. 
+• The W bit is interpreted in the context of V = 0. 
+o W = 0 -> Normal format with broad applicability (32-bit address container, hop-limit). 
+o W = 1 -> Compressed format for efficiency (16-bit address container). 
+• The RR bits are reserved and currently set to 00. 
+Per this spec, a transmitter generating a UFH frame MUST set V to 0, and a receiver must verify the V 
+and W bits to process the frame. V = 1 is available for a future version. 
+UFH uses the IEEE SLAP AAI encoding as it gives the administrator of a local domain the freedom to 
+define the address structure and reclaim 44 bits from the DA and 44 bits from the SA. The intent behind 
+the Extended Local Identifier (ELI) and Standard Assigned Identifier (SAI) encodings is to share local 
+address space across companies or standards, and the bits used to encode this (CID for ELI, undefined 
+for SAI) will result in fewer available bits and lower efficiency. 
+The IEEE Std 802-2024 specification does not define a mechanism for different applications to 
+simultaneously use AAI-encoded addresses within a network. This need is not anticipated, but if 
+required, it is possible to use the RR bits for disambiguation. 
+UFH should be viewed as a distinct header format with its own address space and forwarding semantics 
+as described later in Section 5.4.6. Network devices identify it by matching the flags byte. 
+ 
+ 
+ 
+18 Alternative encodings are possible if approved by the IEEE. 
+ 
+Figure 5-25 - UFH Header Identification 
+ 
+ 
+        
+        
+    
+ 
+        
+ 
+        
+ 
+        
+ 
+        
+ 
+        
+Octets shown in readable format , not wire format
+MAC DA
+MAC SA
+         

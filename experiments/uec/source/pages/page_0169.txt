@@ -1,0 +1,60 @@
+ 169 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  // For different jobs with identical node allocations and different 
+  // identical communicators in those jobs, the switch will always apply the 
+  // same order of reduction operations 
+  CONSISTENT_GLOBAL = 3; 
+  NATURAL = 4; 
+} 
+ 
+enum RoundingMode { 
+  // Round to nearest, ties to even 
+  NEAREST_TIE_EVEN = 0; 
+  // Round to nearest, ties away from zero 
+  NEAREST_TIE_AWAY = 1; 
+  // Round toward 0 
+  TRUNCATION = 2; 
+  // Round toward plus infinity 
+  CEILING = 3; 
+  // Round toward minus infinity 
+  FLOOR = 4; 
+} 
+ 
+enum ProtocolType { 
+  DEFERRABLE_SEND = 0; 
+} 
+ 
+// Indicates what INC functionality can be provided by the fabric 
+message Capabilities { 
+  repeated Collective collectives = 1; 
+  // Operations 
+  repeated Operation operations = 2; 
+  optional Ordering ordering = 3; 
+  repeated ProtocolType protocol_types = 4; 
+  // The maximum payload MTU 
+  optional uint32 payload_mtu = 5; 
+  // The bandwidth for collectives 
+  optional uint32 bandwidth = 6; 
+  repeated RoundingMode rounding_modes = 7; 
+} 
+ 
+message FlowControlInfo { 
+  // Cell size 
+  // Initial credit is equal to the cell size if non-zero, or 1, otherwise. 
+  uint32 cell_size = 1; 
+  // Packet overhead 
+  uint32 packet_overhead = 2; 
+} 
+ 
+message RegistrationRequest { 
+  // The rank's addressing information. 
+  AddressingInfo rank_addr = 1; 
+  // The payload MTU supported by the rank 
+  uint32 payload_mtu = 2; 
+  optional FlowControlInfo flow_control_info = 3; 
+} 
+ 
+message RegistrationReply { 
+} 
+ 

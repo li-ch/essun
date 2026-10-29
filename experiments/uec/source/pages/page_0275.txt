@@ -1,0 +1,45 @@
+ 275 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.7 Enumerated Types Used in Headers 
+This section enumerates field definitions for various header types. This includes opcodes, return codes, 
+and NACK types. 
+3.4.7.1 PDS Next Header Enumerations 
+The next header field used by the TSS header and the PDS header is enumerated in Table 3-22. The next 
+header field indicates the size and format of the semantic header following the PDS header (see Section 
+3.5.11.2).  
+Informative Text: 
+Future iterations of the specification may include the ability to encapsulate and encrypt other types of 
+traffic in the UET Security Protocol. This would increase the usage of the next header enumeration 
+within the encryption header.  
+ 
+Table 3-22 - Next Header Enumeration 
+Mnemonic Constant Description 
+UET_HDR_NONE 0x00 No header follows this header. 
+UET_HDR_REQUEST_SMALL 0x01 The semantic header following the PDS header is the 
+one illustrated in Figure 3-15. 
+UET_HDR_REQUEST_MEDIUM 0x02 The semantic header following the PDS header is the 
+one illustrated in Figure 3-16. 
+UET_HDR_REQUEST_STD 0x03 The semantic header following the PDS header is the 
+one illustrated in Figure 3-11, Figure 3-12, Figure 3-13, 
+or Figure 3-14. 
+UET_HDR_RESPONSE 0x04 The semantic header following the PDS header is the 
+one illustrated in Figure 3-25. 
+UET_HDR_RESPONSE_DATA 0x05 The semantic header following the PDS header is the 
+one illustrated in Figure 3-26. 
+UET_HDR_RESPONSE_DATA_SMALL 0x06 The semantic header following the PDS header is the 
+one illustrated in Figure 3-27. 
+UET_HDR_REQUEST_LCL 0x07 The semantic header following the PDS header is the 
+one illustrated in Figure 3-17 and Figure 3-19 
+UET_HDR_RESPONSE_DATA_LCL 0x08 The semantic header following the PDS header is the 
+one illustrated in Figure 3-28 
+UET_HDR_CP_ACK 0x09 The header following the PDS header is the one 
+illustrated in Figure 3-87. 
+Reserved 0x0A-0x0E  
+UET_HDR_VENDOR_DEFINED 0x0F The semantic header following the PDS header is 
+vendor-defined. 
+ 
+3.4.7.2 Opcode Enumerations 
+The opcode field in the header is enumerated for requests in Table 3-23 and for responses in Table 3-24. 
+Each opcode space reserves encodings for vendor innovation. 
+ 

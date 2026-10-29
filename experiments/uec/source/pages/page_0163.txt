@@ -1,0 +1,36 @@
+ 163 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Name Size (bits) Description Reference 
+fo 1 Forced output. When set to 1, BCAST and SYNCBCAST root ranks expect output data.  
+rsvd 3 Reserved.  
+op_type 8 INC operation type. Table 2-49 
+cid 20 Communicator ID.  
+csn 12 Collective sequence number. Starts at 0; increments by one every operation.  
+data_type 8 Datatype.  Set to 0x00 if the collective operation does not perform reduction. Table 3-28 
+reduce_op 8 Reduction operation. Set to 0x00 if the collective operation does not perform reduction. Table 2-50 
+ 
+The CSN is incremented by broadcast collective operations even if no message is received, ensuring 
+global synchronization. Non-root FEPs in a broadcast collective operation increment the expected CSN 
+without receiving a message, ensuring subsequent CSNs align. The CSN is incremented by all ranks for 
+each new collective operation. 
+If data arrives at the receiving FEP and a buffer is not available, the FEP generates a response indicating 
+the event (see Section 3.4.5.4). 
+Because deferrable send is used, packets are retransmitted with new pds.psn values when delivered to 
+SES and acknowledged. A NACK is not generated when a message is deferred; the defer is 
+communicated via the SES response in an ACK. 
+Sending the RTR message optimizes latency as compared to waiting for a pre-configured time. If the 
+buffer is posted more quickly than the ‘buffer-not-ready’ timer, the RTR message will trigger 
+retransmission faster than waiting for the configured time period. The timer becomes a backup to the 
+RTR message, as not all FEPs support generation of UET_DEFERRABLE_RTR. 
+SEPs receiving a message with an unknown ses.inc_info.ver MUST ignore the rest of ses.inc_info, reject 
+the message and return RC_UNSUPPORTED_OP (see Table 3-25). 
+2.4.11.2 Packet Delivery and Congestion Management 
+INC uses ROD PDCs, which provide in-order delivery of requests and responses. Reserved PDCs are used 
+to simplify the SEP. Each INC communicator is allocated an individual PDC. 
+INC PDCs may optionally use UET transport flow control (TFC–See Section 3.6.15), allowing the receiving 
+SEP or FEP to constrain in-flight data on a PDC based on buffer availability. 
+No special PDS or CMS features are required to support INC. UET profiles supporting INC MUST support 
+reserved PDCs. 
+2.4.11.3 Transport Security 
+No special TSS features are required to support INC. 

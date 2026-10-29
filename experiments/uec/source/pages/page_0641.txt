@@ -1,0 +1,53 @@
+ 641 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Variable name Description 
+It is set to zero in the INIT state. 
+replay_ct_is_max Set to TRUE when the replay_ct is greater than or equal to the 
+replay_ct_max configuration value. If the replay_ct_max value is all ones, 
+then replay_ct_is_max is never set TRUE. 
+replay_done Set to TRUE when all of the frames in the LLR replay buffer are transmitted. 
+If nack_received is set to TRUE, replay_done SHOULD be set to TRUE. It is 
+not necessary or productive to continue the replay once an LLR_NACK has 
+been received. 
+PCS_status A Boolean value that indicates the status of the link. Set to TRUE when the 
+link is up and set to FALSE otherwise. 
+pcs_lost_status_timer A timer used to progress the LLR transmit state machine into the FLUSH 
+state when the PCS_status has been FALSE for too long (even if there are no 
+unacknowledged frames). 
+The rules governing the operation of the pcs_lost_status_timer are as 
+follows: 
+1) The pcs_lost_status_timer is set to zero and stopped whenever the LLR 
+state is LLR_OFF, INIT, or FLUSH, or whenever the PCS_status is TRUE. 
+2) The pcs_lost_status_timer is activated whenever the PCS_status is 
+FALSE. 
+3) If the pcs_lost_status_timer reaches pcs_lost_status_timer_max, it has 
+expired. It is then held at pcs_lost_status_timer_max until the LLR 
+transmit state machine enters the FLUSH state, at which point it will be 
+set to zero. 
+The pcs_lost_status_timer SHOULD have a resolution better than 100 ns. 
+The size of the pcs_lost_status_timer should allow the timer to count to 4 
+seconds. A value of 0 causes immediate expiration of the timer. Support for 
+non-zero values is optional. 
+pcs_lost_status_timer_expired Set to TRUE when the pcs_lost_status_timer equals 
+pcs_lost_status_timer_max. 
+data_age_timer A timer used to time how long data has been resident in the replay buffer 
+without any forward progress being made on acknowledging the data.  
+The data_age_timer is an approximate measure of the age of the data in the 
+replay buffer without requiring an implementation to timestamp each 
+frame. 
+Expiry of the data_age_timer will result in the data held in the replay buffer 
+being discarded. 
+The purpose of the data_age_timer is to discard data that is too old, 
+regardless of the number of replays that may have been performed. In 
+particular, it can be used if the replay_ct_max is set to all ones. 
+The rules governing the operation of the data_age_timer are as follows:  
+1) The data_age_timer is set to zero and stopped whenever 
+outstanding_seq is zero. 
+2) The data_age_timer is activated (if not already) when the end of a new 
+LLR frame is transmitted. 
+3) The data_age_timer is set to zero when an LLR_ACK or LLR_NACK is 
+received that is acknowledging some frames held in the replay buffer. If 
+outstanding_seq is non-zero after the LLR_ACK/LLR_NACK has been 
+processed, then the data_age_timer is activated; otherwise it is held at 
+zero (see rule 1). 

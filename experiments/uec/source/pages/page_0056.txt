@@ -1,0 +1,40 @@
+ 56 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The Resource Index is useful to address a specific subroutine or function in a server (e.g., running a FaaS 
+or rPC service). When a packet arrives at a destination FEP, the target PASID is determined based on the 
+PIDonFEP. The JobID is not part of addressing but is used for authorization. 
+Direct memory addressing mode is used only for the Unified Local profile. The direct memory address 
+has two complementary parts: 
+1. An FA identifying a FEP. 
+2. A JobID uniquely identifying a job in a cluster. 
+With direct memory addressing, a single network visible address space is associated with the entire 
+JobID at the target FEP. The JobID is used to provide isolation. System-level software is responsible for 
+managing addresses in this addressing mode. 
+Messages represent a single communication transaction in the UE network. Figure 1-10 shows the main 
+concepts behind message communication delivery. A transaction is created by a process calling into the 
+UET libfabric provider, which in turn calls into the semantics layer. The semantic sublayer creates various 
+messages to complete the transaction. A message and its associated buffer are split into a spatially 
+ordered set of packets, with respect to memory addressing, at the source FEP. The packets are sent and 
+routed, potentially out of order, through the network along paths. A message may initially involve a 
+rendezvous protocol step as discussed in the UET semantics specification. 
+The source of such a message is called the initiator, and the destination is called the target. Each packet 
+has a source FEP and a destination FEP. A path is an ordered set of links (between nodes and/or 
+switches) through which two FEPs communicate. Without considering packet loss in the fabric, packets 
+of the same traffic class (TC) sent along the same path are always received at the destination FEP in the 
+order they were sent at the source. When packets are routed along multiple paths between two FEPs, 
+no ordered arrival among different paths is guaranteed. UET expects that switches will, in the absence of 
+routing changes, deliver two packets from the same PDC, with the same entropy value and traffic class, 
+along the same path (see Section 1.5.3.5). The UE transport protocol (UET) defines protocols, packet 
+formats, and FEP policies by which FEPs communicate. A FEP can be designed to support either parallel, 
+client/server, or both traffic types. 
+A packet delivery context (PDC) is a unidirectional logical and often transient entity (defined by the 
+transport) between two FEPs, that exists at the initiator FEP and at the target FEP to control the 
+successful transmission of packets. The packet delivery sublayer (PDS) creates and uses PDCs to provide 
+the requested ordering and reliability delivery mode. Reliability is implemented using acknowledgment 
+packets (i.e., ACKs and NACKs), which the destination transmits to the source to indicate successful end-
+to-end reception. The congestion management sublayer (CMS) controls the number of bytes that a 
+source can transmit to a destination at any given time. A packet window is the maximum number of 
+unacknowledged bytes that can be outstanding on a CCC. Multiple processes of the same job can share 
+a single PDC, and a single process can use multiple PDCs to communicate with another process. Between 
+two FEPs, there can be one or more PDCs, and each packet identifies an associated PDC. 

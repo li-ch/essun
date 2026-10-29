@@ -1,0 +1,39 @@
+ 597 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4.1.4.2 Multiple instances of UET per network 
+In some circumstances, two isolated instances of UET may be running in the same network but using 
+different traffic classes. In this case, the single-instance UET model described above can be extended. To 
+extend the traffic class mapping for the multiple instance case, additional DSCP values for 
+DSCP_TRIMMABLE can be used, called DSCP_TRIMMABLE1 and DSCP_TRIMMABLE2, which are mapped 
+to two different lower-priority traffic classes. 
+A shared higher-priority traffic class SHOULD be used for the control traffic of both instances. 
+Alternatively, deployments MAY choose to use separate traffic classes, if available, to isolate control 
+traffic for each UET instance. 
+Using a single traffic class for control traffic avoids overusing scarce traffic classes in the network. This, 
+however, reduces isolation between UET instances, because one instance with excessive control traffic 
+may reduce performance for another instance. 
+In the case where a common DSCP_CONTROL codepoint is used for the control traffic of multiple 
+instances, the DSCP_TRIMMED codepoint SHOULD be mapped to a different medium-priority or high-
+priority traffic class. When traffic classes are scarce, trimmed packets MAY be also mapped to the 
+higher-priority traffic class, and packets other than DSCP_CONTROL packets SHOULD have a lower drop 
+threshold to reduce the chance that bursts of trimmed packets lead to control packet loss. 
+When using a single DSCP for all control packets and another DSCP for trimmed packets from multiple 
+UET instances, the DSCPs can be used to correctly identify trimmed packets. However, the target FEP 
+cannot rely on the DSCP field to demultiplex between trimmed packets belonging to different UET 
+transport instances. 
+With this approach, when running N UET instances, the network will be configured to have N + 2 traffic 
+classes and N+3 DSCPs: one codepoint for each of the N data packet codepoints mapping to the N data 
+traffic classes (lower priority); one codepoint for control packets mapping to the control traffic class 
+(higher priority); and one codepoint for trimmed and one for trimmed last-hop packets, mapping to the 
+trimmed traffic (medium priority). 
+The alternative is to use a separate set of traffic classes for each UET instance. This provides better 
+isolation between the control and trimming traffic for the instances of UET transport at the expense of 
+using additional traffic classes. For example, when a sufficient number of traffic classes are available, a 
+straightforward approach is for two UET instances to utilize four distinct codepoints for trimmed 
+packets: DSCP_TRIMMED1, DSCP_TRIMMED_LAST_HOP1, DSCP_TRIMMED2, and, 
+DSCP_TRIMMED_LAST_HOP2. One pair of codepoints are configured for each UET instance, and the 
+codepoints are mapped to the respective medium priority traffic classes. 
+In total, if the network has N UET instances, it will use N*3 traffic classes and a minimum of N*4 DSCPs. 
+This approach is expensive, both in the number of traffic classes used and the number of codepoints 
+used, but offers the best isolation. 

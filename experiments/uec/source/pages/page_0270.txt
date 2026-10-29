@@ -1,0 +1,19 @@
+ 270 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+illustration shows an error being delivered to SES for the packet that is in error. It is expected that the 
+message completion at the initiator would also signal an error in this case. 
+In other cases, an error at the initiator may need to terminate the message that is in progress. In this 
+case, the sequence in Figure 3-43 is used. Here, a UET_MSG_ERROR with ses.eom set is sent using the 
+message ID of the message that is being terminated. As indicated in the figure, a message using this 
+mechanism may be terminated before delivering all of the packets in the message. 
+3.4.5.8 Unified Local Transactions 
+At the semantic layer, Unified Local transactions are largely similar to their counterparts in AI Base, AI 
+Full, and HPC; however, the supported operations are much narrower. Three examples are illustrated: 
+UET_WRITE without delivery complete (Figure 3-44), UET_WRITE with delivery complete (Figure 3-45), 
+and UET_READ (Figure 3-46). Error flows are the same as RMA error flows with error signaling in-band as 
+ 
+Figure 3-43 - Multi-Packet Request, Expected Message, with Message Error 
+ 
+Figure 3-44 - Unified Local UET_WRITE with ses.dc=0 
+ 

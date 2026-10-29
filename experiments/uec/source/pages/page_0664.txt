@@ -1,0 +1,52 @@
+ 664 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 5-9 - CC_Update Packet Format 
+5.2.7 MAC and MAC Control Layer Interfaces to CBFC 
+5.2.7.1 MAC Service Interface Additions 
+CBFC acts as a MAC client above the MAC control layer as shown in Figure 5-7. 
+5.2.7.2 MAC Insertion of CBFC Messages 
+The MAC layer must be modified to allow for CtlOS messages to preempt the transmission of in-progress 
+Ethernet packets. This allows for regular and more frequent CF_Update messages than would otherwise 
+be possible. See Section 5.2.11 for more information on CtlOS message handling. 
+The counter values contained in a CC_Update packet are related to the packets that are transmitted 
+prior to the CC_Update transmission. When CBFC generates a CC_Update packet, it must be delivered to 
+the MAC (or MAC control) layer using the MA_DATA.request interface to maintain its relative position to 
+other data packets when transmitted. 
+5.2.7.3 MAC Reception of CBFC Messages 
+When the MAC (or MAC control) receives a correctly formed CC_Update packet, it must be forwarded to 
+the upper layer MAC client on the MA_DATA.indication primitive for processing in strict packet order 
+relative to all other received data packets, because the payload counters are relative to the CC_Update 
+packet’s position to other packets on the physical link. 
+CF_Update CtlOS messages should be removed from the RX data path and forwarded directly to the 
+CBFC layer via the MA_CONTROL.indication primitive with the CF_Update counter values. 
+5.2.8 CBFC Initialization 
+The two end stations of a link, sender and receiver, must have several configurable parameters 
+initialized in a consistent manner for correct operation. Per-link features and parameters may be 
+Byte 0 Byte 1 Byte 2 Byte 3
+0
+4
+8
+12
+16 Msg Type
+20
+24
+28
+32
+36
+40
+44
+48
+52
+56
+60
+for i = 0 or 16
+OUI
+FCS
+S_VC_CC[i]
+S_VC_CC[i+15]
+Data
+Eth-Type (0x8808) Opcode (0xFFFE)
+MACDA
+MACSA

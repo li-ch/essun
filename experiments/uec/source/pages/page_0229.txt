@@ -1,0 +1,29 @@
+ 229 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The maximum size of the SES payloads (i.e., the sum of all ses.request_length fields) MUST NOT exceed 
+the configured Payload MTU. If the requests include read or fetching atomic messages, the sum of the 
+SES payloads in the responses (i.e., the sum of all ses.payload_length in the response packet) MUST 
+NOT exceed the configured Payload MTU. The maximum size of the packet with all network headers and 
+payloads MUST NOT exceed the network configured MTU. 
+SES aggregates multiple messages into a single PDS payload, setting the ses.mm flag and ses.ac flag as 
+needed. The multiple messages appear as a single SES payload to the PDS layer. 
+The SES at the destination FEP generates a corresponding packed response. The responses MUST be 
+packed in the same order as the request messages. Association of response with request is done 
+implicitly using the order. If the Payload MTU of the response is exceeded, SES returns a single response 
+with ses.opcode = UET_RESPONSE and ses.return_code = RC_UNSUPPORTED_SIZE. This will result in all 
+messages in the associated packed request failing. 
+If all messages use next_hdr = UET_DEFAULT_RESPONSE with ses.return_code = RC_OK, a single 
+response may be used. The source FEP maintains the necessary state to associate the responses in a 
+packed response with the appropriate message. If a single UET_DEFAULT_RESPONSE with RC_OK is 
+received, then all messages in the packed payload were successful. 
+The ses.ac bit MUST be set to 0 for the first semantic header in a packet, and MAY be set to 0 or 1 for 
+any subsequent header in the packet. When ses.ac is set to 1, the format used is shown in Figure 3-19, 
+and the compressed address field is treated as an offset relative to the address used for the immediately 
+prior semantic header. The presence and size of the extension header is a function of the previous 
+message in the packet with ses.ac = 0. 
+ 
+ 
+ 
+Figure 3-19 - Unified Local Semantic Header with ac=1 (also uses UET_HDR_REQUEST_LCL) 
+ 

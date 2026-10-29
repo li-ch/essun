@@ -1,0 +1,14 @@
+ 324 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.8.4 PDC Lifetime 
+The lifetime of a PDC depends on the use case of the network. An implementation may choose to 
+provide configuration parameters to control PDC lifetime, but these are not specified here. A PDC may 
+exist for a very brief time—as short as the time to send a single packet and receive the associated 
+acknowledgement plus one RTT. This could occur when there is pressure on the number of PDCs 
+supported by an implementation. Alternatively, a PDC may exist for an extended period, as long as the 
+life of an application (or more). 
+An example sequence for PDC setup/teardown is shown in Figure 3-58. Note the Close Command CP is 
+sent directly after the ACK = 132, so these packets may arrive at the target in either order. 
+ 
+Figure 3-58 - Sequence for PDC Setup and Teardown 

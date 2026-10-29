@@ -1,0 +1,40 @@
+ 685 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.3 UE Link Negotiation 
+UE link negotiation defines the negotiation of optional link local features for the UE link layer that 
+extend the operation of the UE link beyond those of a standard IEEE Std 802.3 Ethernet. These optional 
+link local features can be used only on a UE link where both link partners support the optional features 
+and desire to enable them. 
+This specification defines the negotiation of the following optional link local features: 
+1. Link layer retry (LLR) 
+2. Credit based flow control (CBFC) 
+3. Inter-packet gap reduction (IPGR). Also known as idle reduction 
+4. Congestion signaling (CSIG) 
+5. Unified forwarding header (UFH)  
+To support automatic discovery, negotiation, and selection among the optional link local features, a 
+negotiation protocol is built on top of UE link layer configuration information exchanged by the IEEE Link 
+Layer Discovery Protocol [1] , [2] , [9] . The UE link layer configuration information is exchanged by the 
+Link Layer Discovery Protocol (LLDP) within UE Organizationally Specific Type-Length-Values (TLVs), 
+which are formatted as specified in IEEE Std 802.1AB. The UE link configuration information, exchanged 
+by LLDP and stored in the LLDP database, is in turn used to configure and enable optional link local 
+features. 
+The management processes for each feature use the LLDP database to indicate their port’s capabilities 
+and configuration and to determine the capabilities and configuration of their remote link partner. The 
+local and remote LLDP database information is used to enable and disable each feature requiring co-
+ordination between the link partners, deliver any parameters required to initialize the feature, and 
+provide indication of capabilities available at each port. 
+TLV tuples describe the capabilities of a UE link, for example LLR and CBFC support, as well as 
+configuration details such as the number of virtual channels supported by CBFC. The capabilities 
+advertised using LLDP can be used by network management to map the network topology along with 
+the capabilities available at each link, allowing the manager to determine paths that support the 
+optional features. 
+Any device that supports the widely deployed IEEE LLDP can be easily extended (often via software only) 
+to support this negotiation protocol. In the event that a device does not support the UE Link Negotiation 
+Options TLVs, the use of UE link local optional features would be disabled by the negotiation protocol. 
+This provides backward compatibility with standard IEEE 802.3 Link Layer devices that do not provide 
+the UE organizationally specific LLDP TLVs. The use of the negotiation protocol can be overridden by 
+configuration management to allow manual configuration of link features when necessary. 
+5.3.1 LLDP Overview 
+LLDP is a link layer protocol that allows an Ethernet device to advertise the capabilities and current 
+status of the system at a port. The port provides the service to a logical link control (LLC) entity that in 

@@ -1,0 +1,32 @@
+# Calibration-ladder GF-05 topology: fully-connected crossbar of 1,024
+# ranks at B = 12.5 B/ns, L = 1000 ns — the FAIRNESS-QUOTE CONFIGURATION
+# row: the anchor's own stated experimental context "2 MiB permutation,
+# 1,024 nodes, 8:1 oversubscription" (under Swift "the FCT of the
+# slowest flow is 65% longer than the fastest flow"), executed as the
+# non-blocking ceiling displaced by the 8:1 oversubscription ratio
+# (declared structural effective-bandwidth reading, first-order only;
+# queueing inexpressible). The 65% per-flow spread itself is
+# INEXPRESSIBLE at L0 (identical flows by construction — spread exactly
+# 0; no per-flow observable exists), so this row locates the
+# configuration's MAGNITUDE (asymptotic CCT factor exactly 8 vs the
+# non-blocking row at equal B-class) — the anchor's own oversubscription
+# structure displaces CCT by more than every CC effect it measures.
+# Includes the anchor's own 2 MiB flow size in the executed ladder
+# (k=11). Nothing tuned; no FCT comparison is attempted (metric bridge
+# declared inexpressible).
+topology_id: crossbar1024_gf05_sub8to1_12_5_v1
+topology_class: fully_connected_crossbar
+ranks: 1024
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at GF-05's fairness-quote
+  configuration (r = 1024 nodes, 8:1 oversubscription displaced to
+  B = 12.5 B/ns = 100/8, exact 25/2) and per-hop latency L = 1000 ns.
+  Identity t = 2(r-1)/r*M/B + 2L. The per-flow fairness spread (65%)
+  has no L0 counterpart observable — identical flows by construction;
+  the row places the configuration's magnitude only. Provenance:
+  anchor-staged configuration (1,024 nodes, 8:1); never our
+  measurements, never tuned.

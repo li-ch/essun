@@ -1,0 +1,41 @@
+ 244 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+allows PDS to coalesce acknowledgements. Semantic processing MUST complete before setting the 
+opcode to UET_DEFAULT_RESPONSE. A response opcode of UET_DEFAULT_RESPONSE does not need to 
+be marked for guaranteed delivery. A message that has received responses for all packets at the initiator 
+is presumed to be a UET_DEFAULT_RESPONSE unless another response encoding has been sent and 
+marked for guaranteed delivery at the target. Any response that cannot use the 
+UET_DEFAULT_RESPONSE opcode (because it does not meet the requirements above) MUST be marked 
+for guaranteed delivery. Marking a response for guaranteed delivery prevents acknowledgement 
+coalescing at the packet delivery sublayer, because the packet delivery sublayer cannot communicate 
+the unique content in a guaranteed delivery response in a coalesced acknowledgement. 
+Informative Text: 
+One semantic response per message is a MUST because the transport does not have a way to signal 
+over the wire that a semantic response is not needed. 
+ 
+Implementation Note: 
+Acknowledgement coalescing at the packet delivery sublayer is specifically enabled by the 
+UET_DEFAULT_RESPONSE opcode and the UET_NO_RESPONSE opcode (see below). 
+Acknowledgement coalescing leads to three quirky characteristics that implementors should be 
+aware of. First, two UET_DEFAULT_RESPONSE semantic responses can be coalesced into a single 
+acknowledgement. There is no guarantee that the two UET_DEFAULT_RESPONSE messages will have 
+the same ses.JobID or ses.message_id. They are certainly not likely to have the same modified 
+length. Nonetheless, the two can be coalesced, which means that the initiator has no mechanism to 
+retrieve that required information other than through lookup of the PSN. Second, during coalescing, 
+a UET_NO_RESPONSE can be coalesced with a UET_DEFAULT_RESPONSE. This effectively promotes 
+the signal received at the initiator from UET_NO_RESPONSE to UET_DEFAULT_RESPOSE. This 
+semantic promotion is one of the reasons that the semantic response to a deferrable send is 
+required to wait for semantic processing to complete. Third, a UET_NO_RESPONSE can be promoted 
+to UET_DEFAULT_RESPONSE when responding to a retransmit. This is an extreme corner case.  
+ 
+An implementation MAY provide multiple semantic responses per message; however, three rules apply 
+in this case. First, an additional semantic response MUST either utilize the same opcode and return code 
+as the first semantic response or deliver an error response. Second, the first packet with a semantic 
+error (non RC_OK) MUST be marked for guaranteed delivery. Error responses MAY be replicated for 
+many packets; however, subsequent errors MUST NOT be marked for guaranteed delivery. Finally, more 
+than one semantic response MUST NOT be provided per packet. 
+Implementation Note: 
+A careful reader may note that the above rules allow for up to two different responses per message 
+to be generated and marked for guaranteed delivery in the case of a multi-packet message — a first 
+response that indicates RC_OK with some other condition that requires guaranteed delivery and a 

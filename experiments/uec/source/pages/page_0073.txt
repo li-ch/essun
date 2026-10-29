@@ -1,0 +1,41 @@
+ 73 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+applications can select the transport protocol functionality that best suits their needs. The PDS sublayer 
+defines a protocol with multiple modes of operation that offer all combinations of reliable, unreliable, 
+ordered, and unordered packet delivery services. 
+Congestion Management Sublayer (CMS): End-to-end congestion management is essential to achieve 
+high network efficiency, reduce packet loss, and minimize latency while maintaining fairness between 
+competing flows. Traffic classes are used in the network to separate traffic flows that have different 
+characteristics and requirements from the network. To maintain fairness and assure a low latency 
+control loop, UE congestion management is designed to be used on all traffic in the same traffic class. 
+Traffic class configuration is the responsibility of the network operator. High network efficiency and 
+reduced latency are achieved by allowing UET congestion management to enable multi-path packet 
+spraying across the fabric and avoid hot spots when congestion signals arrive. Under UET, PDCs with 
+unordered flows may simultaneously use all paths to the destination, achieving a more balanced use of 
+all network paths. Link load imbalances are avoided by the coordinated choice of the paths between the 
+endpoints and switches guided by real-time congestion management. This fine-grained load balancing 
+results in improved network utilization and reduced tail latency. 
+Transport Security Sublayer (TSS): AI training and inference often occur in hosted networks where job 
+isolation is required. Moreover, AI models are increasingly sensitive and become valuable business 
+assets. Recognizing this, the UE transport incorporates network security by design and can encrypt and 
+authenticate all network traffic sent between computation endpoints in an AI training or inference job. 
+As jobs grow in scale, it is necessary to support encryption without ballooning the session state in hosts 
+and network interfaces. In service of this, UET incorporates new key management mechanisms that 
+allow efficient sharing of keys among large numbers of compute nodes participating in a job. It is 
+designed to be efficiently implemented at the high speeds and scales required by AI training and 
+inference. HPC jobs hosted on large Ethernet networks have similar characteristics and require 
+comparable security mechanisms. Note that TSS is an optional feature. 
+1.6.3 Network Layer 
+Optional UE network layer feature specifications are provided in Section 4. UE does not require any 
+changes to the network layer, but UET congestion management expects support for explicit congestion 
+notification (ECN) as specified in IETF RFC 3168, but with the additional constraint of marking congested 
+packets when dequeuing for transmission instead of enqueuing. 
+Packet Trimming: Congestion is inevitable within the fabric. As fabric speeds increase and more 
+pressure is put on limited switch chip buffering, congestion signals become more prevalent and the 
+information within those signals becomes more important in determining a corrective course of action. 
+UE defines a packet trimming feature that allows switches to truncate contested packets, modify the 
+DSCP field of the truncated packet, and forward the truncated packet toward the destination as the 
+congestion signal. Packet trimming provides considerably more congestion information than the ECN 
+bits alone. Packet trimming is optional for switches to implement and mandatory for FEPs to receive 
+trimmed packets. 

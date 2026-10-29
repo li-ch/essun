@@ -1,0 +1,44 @@
+ 588 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+[36] NIST SP 800-38D, "Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode 
+(GCM) and GMAC," 2007. [Online]. Available: 
+https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf. 
+[37] NSA CNSA Suite 2.0, "CNSA Suite 2.0 and Quantum Computing FAQ," 2024. [Online]. Available: 
+https://media.defense.gov/2022/Sep/07/2003071836/-1/-1/0/CSI_CNSA_2.0_FAQ_.PDF. 
+[38] NIST SP 800-131A Rev. 2, "Transitioning the Use of Cryptographic Algorithms and Key Lengths," 
+March 2019. [Online]. Available: 
+https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf. 
+[39] A. Bozhko, "draft-irtf-cfrg-aead-properties-09 - Properties of AEAD Algorithms," 11 10 2024. 
+[Online]. Available: https://www.ietf.org/archive/id/draft-irtf-cfrg-aead-properties-09.html. 
+[40] NIST SP 800-108r1 (Revision 1, Update 1), "Recommendation for Key Derivation Using 
+Pseudorandom Functions," 2024. [Online]. Available: 
+https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-108r1-upd1.pdf. 
+[41] NIST FIPS-197, "Advanced Encryption Standard (AES)," 2001. [Online]. Available: 
+https://csrc.nist.gov/files/pubs/fips/197/final/docs/fips-197.pdf. 
+[42] NIST SP 800-38B, "Recommendation for Block Cipher Modes of Operation: the CMAC Mode for 
+Authentication," 2016. [Online]. Available: 
+https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38B.pdf. 
+[43] NIST CAVP, "Cryptographic Algorithm Validation Program," NIST Computer Security Resource 
+Center, 2025. [Online]. Available: https://csrc.nist.gov/Projects/Cryptographic-Algorithm-
+Validation-Program/Key-Derivation. 
+[44] IETF RFC 3635, "Definitions of Managed Objects for the Ethernet-like Interface Types," 2003. 
+[Online]. Available: https://datatracker.ietf.org/doc/html/rfc3635. 
+[45] IETF RFC 9001, "Using TLS to Secure QUIC," May 2021. [Online]. Available: https://www.rfc-
+editor.org/rfc/rfc9001.html. 
+[46] V. T. Hoang, S. Tessaro and A. Thiruvengadam, "The multi-user security of GCM, revisited: Tight 
+bounds for nonce randomization," in Proceedings of the 2018 ACM SIGSAC Conference on 
+Computer and Communications Security, 2018.  
+[47] IETF RFC 8645, "Re-keying Mechanisms for Symmetric Keys," August 2019. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc8645. 
+[48] IETF RFC 1982, "Serial Number Arithmetic," August 1996. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc1982. 
+[49] M. Bellare, R. Ng and B. Tackmann, "Nonces Are Noticed: AEAD Revisited," in Advances in 
+Cryptology – CRYPTO 2019, Springer, 2019, pp. 235-265. 
+[50] P. Rogaway and T. Shrimpton, "A Provable-Security Treatment of the Key-Wrap Problem," in 
+Advances in Cryptology - EUROCRYPT 200, Berlin, Heidelberg, 2006.  
+[51] T. Shrimpton, "A Characterization of Authenticated-Encryption as a Form of Chosen-Ciphertext 
+Security," 2004. [Online]. Available: https://eprint.iacr.org/2004/272. 
+[52] IETF RFC 3385, “Internet Protocol Small Computer System Interface (iSCSI) Cyclic Redundancy 
+Check (CRC)/Checksum Considerations,” September 2002.  Online . Available: 
+https://datatracker.ietf.org/doc/rfc3385/. 

@@ -1,0 +1,15 @@
+ 97 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-7 - Key Libfabric Objects and Associated APIs 
+2.2.5.1 Libfabric Addressing 
+Libfabric provides flexible endpoint addressing, where the available address formats are defined by an 
+enumeration. A new value, FI_ADDR_UET, is added to the enumeration to identify the UET address 
+format. Support for representation of UET libfabric endpoint addresses in the FI_ADDR_STR format is 
+NOT required. 
+The components of a UET libfabric endpoint address are shown in Table 2-10.  
+Table 2-10 - UET Libfabric Endpoint Address 
+Field Name Size (bits) Description 
+Version 8 Version number that identifies the format of the address 
+• The fields in this table are associated with version 0 

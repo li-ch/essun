@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/scaleup/evidence.schema.json",
+  "title": "Claim evidence record",
+  "type": "object",
+  "required": [
+    "claim_id",
+    "statement",
+    "status",
+    "evidence_level",
+    "validity_domain",
+    "review_status"
+  ],
+  "properties": {
+    "claim_id": {
+      "type": "string"
+    },
+    "statement": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PROPOSED",
+        "IMPLEMENTED_UNVERIFIED",
+        "VERIFIED",
+        "CALIBRATED",
+        "EXTERNALLY_REPRODUCED",
+        "REJECTED"
+      ]
+    },
+    "supporting_runs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "refuting_runs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "baselines": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "validity_domain": {
+      "type": "object"
+    },
+    "evidence_level": {
+      "enum": [
+        "E0",
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ]
+    },
+    "external_reproduction": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "paper_locations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_status": {
+      "type": "string"
+    },
+    "counterexamples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

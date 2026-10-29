@@ -1,0 +1,1884 @@
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+--htsim_opts -topo /opt/astra-sim/examples/network/htsim/8nodes.topo 
+FatTree topology input file: /opt/astra-sim/examples/network/htsim/8nodes.topo
+Using subflow count 1
+requested nodes 8
+Using algo=5 epsilon=1
+Logging to logout.dat
+Topology load done
+Fat Tree topology with 1us Src-ToR links, 1us ToR-Agg links, 1us Agg-Core links, 0us ToR switch latency, 0us Agg switch latency, 0us Core switch latency.
+no_of_tor_uplinks: 8
+no_of_agg_uplinks: 16
+No of nodes: 8
+No of pods: 2
+Hosts per pod: 4
+Hosts per pod: 4
+ToR switches per pod: 2
+Agg switches per pod: 2
+No of core switches: 4
+Tier 0 QueueSize Down 12000 bytes
+Tier 0 QueueSize Up 12000 bytes
+Tier 1 QueueSize Down 12000 bytes
+Tier 1 QueueSize Up 12000 bytes
+Tier 2 QueueSize Down 12000 bytes
+FatTree constructor done, 8 nodes created
+actual nodes 8
+Send flow 1 from 0 to 1 with size 32768
+Send flow 2 from 1 to 2 with size 32768
+pathcount 2
+Send flow 3 from 2 to 3 with size 32768
+Send flow 4 from 3 to 4 with size 32768
+pathcount 16
+Send flow 5 from 4 to 5 with size 32768
+Send flow 6 from 5 to 6 with size 32768
+pathcount 2
+Send flow 7 from 6 to 7 with size 32768
+Send flow 8 from 7 to 0 with size 32768
+pathcount 16
+Finish receiving flow 1 from 0 to 1
+Flow tcpsrc finished at 0.00691008
+Finish sending flow 1 from 0 to 1
+Finish receiving flow 3 from 2 to 3
+Flow tcpsrc finished at 0.00691008
+Finish sending flow 3 from 2 to 3
+Finish receiving flow 5 from 4 to 5
+Flow tcpsrc finished at 0.00691008
+Finish sending flow 5 from 4 to 5
+Finish receiving flow 7 from 6 to 7
+Flow tcpsrc finished at 0.00691008
+Finish sending flow 7 from 6 to 7
+Send flow 9 from 1 to 2 with size 32768
+Send flow 10 from 3 to 4 with size 32768
+Send flow 11 from 5 to 6 with size 32768
+Send flow 12 from 7 to 0 with size 32768
+Finish receiving flow 2 from 1 to 2
+Flow tcpsrc finished at 0.0131502
+Finish sending flow 2 from 1 to 2
+Finish receiving flow 6 from 5 to 6
+Flow tcpsrc finished at 0.0131502
+Finish sending flow 6 from 5 to 6
+Send flow 13 from 2 to 3 with size 32768
+Send flow 14 from 6 to 7 with size 32768
+Finish receiving flow 9 from 1 to 2
+Flow tcpsrc finished at 0.0201202
+Finish sending flow 9 from 1 to 2
+Finish receiving flow 11 from 5 to 6
+Flow tcpsrc finished at 0.0201202
+Finish sending flow 11 from 5 to 6
+Finish receiving flow 13 from 2 to 3
+Flow tcpsrc finished at 0.0201202
+Finish sending flow 13 from 2 to 3
+Finish receiving flow 14 from 6 to 7
+Flow tcpsrc finished at 0.0201202
+Finish sending flow 14 from 6 to 7
+Send flow 15 from 2 to 3 with size 32768
+Send flow 16 from 6 to 7 with size 32768
+Send flow 17 from 3 to 4 with size 32768
+Send flow 18 from 7 to 0 with size 32768
+Finish receiving flow 8 from 7 to 0
+Flow tcpsrc finished at 0.0202903
+Finish sending flow 8 from 7 to 0
+Send flow 19 from 0 to 1 with size 32768
+Finish receiving flow 4 from 3 to 4
+Flow tcpsrc finished at 0.0208903
+Finish sending flow 4 from 3 to 4
+Send flow 20 from 4 to 5 with size 32768
+Finish receiving flow 15 from 2 to 3
+Flow tcpsrc finished at 0.0270903
+Finish sending flow 15 from 2 to 3
+Finish receiving flow 16 from 6 to 7
+Flow tcpsrc finished at 0.0270903
+Finish sending flow 16 from 6 to 7
+Send flow 21 from 3 to 4 with size 32768
+Send flow 22 from 7 to 0 with size 32768
+Finish receiving flow 19 from 0 to 1
+Flow tcpsrc finished at 0.0272604
+Finish sending flow 19 from 0 to 1
+Send flow 23 from 1 to 2 with size 32768
+Finish receiving flow 20 from 4 to 5
+Flow tcpsrc finished at 0.0278604
+Finish sending flow 20 from 4 to 5
+Send flow 24 from 5 to 6 with size 32768
+Finish receiving flow 23 from 1 to 2
+Flow tcpsrc finished at 0.0404706
+Finish sending flow 23 from 1 to 2
+Send flow 25 from 2 to 3 with size 32768
+Finish receiving flow 17 from 3 to 4
+Flow tcpsrc finished at 0.0406904
+Finish sending flow 17 from 3 to 4
+Send flow 26 from 4 to 5 with size 32768
+Finish receiving flow 24 from 5 to 6
+Flow tcpsrc finished at 0.0410706
+Finish sending flow 24 from 5 to 6
+Send flow 27 from 6 to 7 with size 32768
+Finish receiving flow 10 from 3 to 4
+Flow tcpsrc finished at 0.0457303
+Finish sending flow 10 from 3 to 4
+Finish receiving flow 18 from 7 to 0
+Flow tcpsrc finished at 0.0457906
+Finish sending flow 18 from 7 to 0
+Send flow 28 from 4 to 5 with size 32768
+Send flow 29 from 0 to 1 with size 32768
+Finish receiving flow 25 from 2 to 3
+Flow tcpsrc finished at 0.0474406
+Finish sending flow 25 from 2 to 3
+Send flow 30 from 3 to 4 with size 32768
+Finish receiving flow 22 from 7 to 0
+Flow tcpsrc finished at 0.0475306
+Finish sending flow 22 from 7 to 0
+Finish receiving flow 21 from 3 to 4
+Flow tcpsrc finished at 0.0475904
+Finish sending flow 21 from 3 to 4
+Send flow 31 from 0 to 1 with size 32768
+Send flow 32 from 4 to 5 with size 32768
+Finish receiving flow 26 from 4 to 5
+Flow tcpsrc finished at 0.0476604
+Finish sending flow 26 from 4 to 5
+Send flow 33 from 5 to 6 with size 32768
+Finish receiving flow 27 from 6 to 7
+Flow tcpsrc finished at 0.0480406
+Finish sending flow 27 from 6 to 7
+Send flow 34 from 7 to 0 with size 32768
+Finish receiving flow 29 from 0 to 1
+Flow tcpsrc finished at 0.0530407
+Finish sending flow 29 from 0 to 1
+Finish receiving flow 28 from 4 to 5
+Flow tcpsrc finished at 0.0531004
+Finish sending flow 28 from 4 to 5
+Send flow 35 from 1 to 2 with size 32768
+Send flow 36 from 5 to 6 with size 32768
+Finish receiving flow 31 from 0 to 1
+Flow tcpsrc finished at 0.0545007
+Finish sending flow 31 from 0 to 1
+Finish receiving flow 32 from 4 to 5
+Flow tcpsrc finished at 0.0545604
+Finish sending flow 32 from 4 to 5
+Send flow 37 from 1 to 2 with size 32768
+Send flow 38 from 5 to 6 with size 32768
+Finish receiving flow 33 from 5 to 6
+Flow tcpsrc finished at 0.0608706
+Finish sending flow 33 from 5 to 6
+Send flow 39 from 6 to 7 with size 32768
+Finish receiving flow 35 from 1 to 2
+Flow tcpsrc finished at 0.0662509
+Finish sending flow 35 from 1 to 2
+Finish receiving flow 36 from 5 to 6
+Flow tcpsrc finished at 0.0663106
+Finish sending flow 36 from 5 to 6
+Send flow 40 from 2 to 3 with size 32768
+Send flow 41 from 6 to 7 with size 32768
+Finish receiving flow 37 from 1 to 2
+Flow tcpsrc finished at 0.0677109
+Finish sending flow 37 from 1 to 2
+Finish receiving flow 38 from 5 to 6
+Flow tcpsrc finished at 0.0677706
+Finish sending flow 38 from 5 to 6
+Send flow 42 from 2 to 3 with size 32768
+Finish receiving flow 30 from 3 to 4
+Flow tcpsrc finished at 0.067791
+Finish sending flow 30 from 3 to 4
+Send flow 43 from 6 to 7 with size 32768
+Finish receiving flow 39 from 6 to 7
+Flow tcpsrc finished at 0.0678407
+Finish sending flow 39 from 6 to 7
+Send flow 44 from 4 to 5 with size 32768
+Send flow 45 from 7 to 0 with size 32768
+Finish receiving flow 34 from 7 to 0
+Flow tcpsrc finished at 0.068391
+Finish sending flow 34 from 7 to 0
+Send flow 46 from 0 to 1 with size 32768
+Finish receiving flow 40 from 2 to 3
+Flow tcpsrc finished at 0.073221
+Finish sending flow 40 from 2 to 3
+Finish receiving flow 41 from 6 to 7
+Flow tcpsrc finished at 0.0732807
+Finish sending flow 41 from 6 to 7
+Send flow 47 from 3 to 4 with size 32768
+Send flow 48 from 7 to 0 with size 32768
+Finish receiving flow 42 from 2 to 3
+Flow tcpsrc finished at 0.074681
+Finish sending flow 42 from 2 to 3
+Finish receiving flow 43 from 6 to 7
+Flow tcpsrc finished at 0.0747407
+Finish sending flow 43 from 6 to 7
+Send flow 49 from 3 to 4 with size 32768
+Finish receiving flow 44 from 4 to 5
+Flow tcpsrc finished at 0.074761
+Finish sending flow 44 from 4 to 5
+Send flow 50 from 7 to 0 with size 32768
+Send flow 51 from 5 to 6 with size 32768
+Finish receiving flow 46 from 0 to 1
+Flow tcpsrc finished at 0.075361
+Finish sending flow 46 from 0 to 1
+Send flow 52 from 1 to 2 with size 32768
+Finish receiving flow 51 from 5 to 6
+Flow tcpsrc finished at 0.0879712
+Finish sending flow 51 from 5 to 6
+Send flow 53 from 6 to 7 with size 32768
+Finish receiving flow 52 from 1 to 2
+Flow tcpsrc finished at 0.0885712
+Finish sending flow 52 from 1 to 2
+Send flow 54 from 2 to 3 with size 32768
+Finish receiving flow 47 from 3 to 4
+Flow tcpsrc finished at 0.0935713
+Finish sending flow 47 from 3 to 4
+Finish receiving flow 45 from 7 to 0
+Flow tcpsrc finished at 0.093591
+Finish sending flow 45 from 7 to 0
+Send flow 55 from 4 to 5 with size 32768
+Finish receiving flow 48 from 7 to 0
+Flow tcpsrc finished at 0.093651
+Finish sending flow 48 from 7 to 0
+Send flow 56 from 0 to 1 with size 32768
+Send flow 57 from 0 to 1 with size 32768
+Finish receiving flow 53 from 6 to 7
+Flow tcpsrc finished at 0.0949413
+Finish sending flow 53 from 6 to 7
+Send flow 58 from 7 to 0 with size 32768
+Finish receiving flow 49 from 3 to 4
+Flow tcpsrc finished at 0.0950313
+Finish sending flow 49 from 3 to 4
+Finish receiving flow 50 from 7 to 0
+Flow tcpsrc finished at 0.095091
+Finish sending flow 50 from 7 to 0
+Send flow 59 from 4 to 5 with size 32768
+Send flow 60 from 0 to 1 with size 32768
+Finish receiving flow 54 from 2 to 3
+Flow tcpsrc finished at 0.0955413
+Finish sending flow 54 from 2 to 3
+Send flow 61 from 3 to 4 with size 32768
+Finish receiving flow 55 from 4 to 5
+Flow tcpsrc finished at 0.100541
+Finish sending flow 55 from 4 to 5
+Send flow 62 from 5 to 6 with size 32768
+Finish receiving flow 56 from 0 to 1
+Flow tcpsrc finished at 0.101201
+Finish sending flow 56 from 0 to 1
+Send flow 63 from 1 to 2 with size 32768
+Finish receiving flow 57 from 0 to 1
+Flow tcpsrc finished at 0.101321
+Finish sending flow 57 from 0 to 1
+Send flow 64 from 1 to 2 with size 32768
+Finish receiving flow 59 from 4 to 5
+Flow tcpsrc finished at 0.102001
+Finish sending flow 59 from 4 to 5
+Send flow 65 from 5 to 6 with size 32768
+Finish receiving flow 60 from 0 to 1
+Flow tcpsrc finished at 0.102061
+Finish sending flow 60 from 0 to 1
+Send flow 66 from 1 to 2 with size 32768
+Finish receiving flow 62 from 5 to 6
+Flow tcpsrc finished at 0.113752
+Finish sending flow 62 from 5 to 6
+Send flow 67 from 6 to 7 with size 32768
+Finish receiving flow 63 from 1 to 2
+Flow tcpsrc finished at 0.115131
+Finish sending flow 63 from 1 to 2
+Finish receiving flow 65 from 5 to 6
+Flow tcpsrc finished at 0.115152
+Finish sending flow 65 from 5 to 6
+Send flow 68 from 6 to 7 with size 32768
+Send flow 69 from 2 to 3 with size 32768
+Finish receiving flow 58 from 7 to 0
+Flow tcpsrc finished at 0.115232
+Finish sending flow 58 from 7 to 0
+Send flow 70 from 0 to 1 with size 32768
+Finish receiving flow 64 from 1 to 2
+Flow tcpsrc finished at 0.115431
+Finish sending flow 64 from 1 to 2
+Send flow 71 from 2 to 3 with size 32768
+Finish receiving flow 66 from 1 to 2
+Flow tcpsrc finished at 0.115851
+Finish sending flow 66 from 1 to 2
+Send flow 72 from 2 to 3 with size 32768
+Finish receiving flow 61 from 3 to 4
+Flow tcpsrc finished at 0.115892
+Finish sending flow 61 from 3 to 4
+Send flow 73 from 4 to 5 with size 32768
+Finish receiving flow 67 from 6 to 7
+Flow tcpsrc finished at 0.120662
+Finish sending flow 67 from 6 to 7
+Send flow 74 from 7 to 0 with size 32768
+Finish receiving flow 68 from 6 to 7
+Flow tcpsrc finished at 0.122062
+Finish sending flow 68 from 6 to 7
+Send flow 75 from 7 to 0 with size 32768
+Finish receiving flow 70 from 0 to 1
+Flow tcpsrc finished at 0.122142
+Finish sending flow 70 from 0 to 1
+Send flow 76 from 1 to 2 with size 32768
+Finish receiving flow 69 from 2 to 3
+Flow tcpsrc finished at 0.122761
+Finish sending flow 69 from 2 to 3
+Send flow 77 from 3 to 4 with size 32768
+Finish receiving flow 73 from 4 to 5
+Flow tcpsrc finished at 0.122802
+Finish sending flow 73 from 4 to 5
+Send flow 78 from 5 to 6 with size 32768
+Finish receiving flow 71 from 2 to 3
+Flow tcpsrc finished at 0.123301
+Finish sending flow 71 from 2 to 3
+Send flow 79 from 3 to 4 with size 32768
+Finish receiving flow 72 from 2 to 3
+Flow tcpsrc finished at 0.123541
+Finish sending flow 72 from 2 to 3
+Send flow 80 from 3 to 4 with size 32768
+Finish receiving flow 76 from 1 to 2
+Flow tcpsrc finished at 0.135292
+Finish sending flow 76 from 1 to 2
+Send flow 81 from 2 to 3 with size 32768
+Finish receiving flow 78 from 5 to 6
+Flow tcpsrc finished at 0.135952
+Finish sending flow 78 from 5 to 6
+Send flow 82 from 6 to 7 with size 32768
+Finish receiving flow 81 from 2 to 3
+Flow tcpsrc finished at 0.142202
+Finish sending flow 81 from 2 to 3
+Send flow 83 from 3 to 4 with size 32768
+Finish receiving flow 75 from 7 to 0
+Flow tcpsrc finished at 0.142352
+Finish sending flow 75 from 7 to 0
+Send flow 84 from 0 to 1 with size 32768
+Finish receiving flow 82 from 6 to 7
+Flow tcpsrc finished at 0.142862
+Finish sending flow 82 from 6 to 7
+Send flow 85 from 7 to 0 with size 32768
+Finish receiving flow 77 from 3 to 4
+Flow tcpsrc finished at 0.143232
+Finish sending flow 77 from 3 to 4
+Send flow 86 from 4 to 5 with size 32768
+Finish receiving flow 79 from 3 to 4
+Flow tcpsrc finished at 0.143772
+Finish sending flow 79 from 3 to 4
+Send flow 87 from 4 to 5 with size 32768
+Finish receiving flow 84 from 0 to 1
+Flow tcpsrc finished at 0.149262
+Finish sending flow 84 from 0 to 1
+Send flow 88 from 1 to 2 with size 32768
+Finish receiving flow 86 from 4 to 5
+Flow tcpsrc finished at 0.150262
+Finish sending flow 86 from 4 to 5
+Send flow 89 from 5 to 6 with size 32768
+Finish receiving flow 80 from 3 to 4
+Flow tcpsrc finished at 0.150312
+Finish sending flow 80 from 3 to 4
+Send flow 90 from 4 to 5 with size 32768
+Finish receiving flow 87 from 4 to 5
+Flow tcpsrc finished at 0.150862
+Finish sending flow 87 from 4 to 5
+Send flow 91 from 5 to 6 with size 32768
+Finish receiving flow 90 from 4 to 5
+Flow tcpsrc finished at 0.157222
+Finish sending flow 90 from 4 to 5
+Send flow 92 from 5 to 6 with size 32768
+Finish receiving flow 88 from 1 to 2
+Flow tcpsrc finished at 0.162412
+Finish sending flow 88 from 1 to 2
+Send flow 93 from 2 to 3 with size 32768
+Finish receiving flow 83 from 3 to 4
+Flow tcpsrc finished at 0.162492
+Finish sending flow 83 from 3 to 4
+Send flow 94 from 4 to 5 with size 32768
+Finish receiving flow 85 from 7 to 0
+Flow tcpsrc finished at 0.163152
+Finish sending flow 85 from 7 to 0
+Send flow 95 from 0 to 1 with size 32768
+Finish receiving flow 89 from 5 to 6
+Flow tcpsrc finished at 0.163472
+Finish sending flow 89 from 5 to 6
+Send flow 96 from 6 to 7 with size 32768
+Finish receiving flow 91 from 5 to 6
+Flow tcpsrc finished at 0.164132
+Finish sending flow 91 from 5 to 6
+Send flow 97 from 6 to 7 with size 32768
+Finish receiving flow 93 from 2 to 3
+Flow tcpsrc finished at 0.169322
+Finish sending flow 93 from 2 to 3
+Send flow 98 from 3 to 4 with size 32768
+Finish receiving flow 94 from 4 to 5
+Flow tcpsrc finished at 0.169402
+Finish sending flow 94 from 4 to 5
+Send flow 99 from 5 to 6 with size 32768
+Finish receiving flow 95 from 0 to 1
+Flow tcpsrc finished at 0.170062
+Finish sending flow 95 from 0 to 1
+Send flow 100 from 1 to 2 with size 32768
+Finish receiving flow 92 from 5 to 6
+Flow tcpsrc finished at 0.170372
+Finish sending flow 92 from 5 to 6
+Send flow 101 from 6 to 7 with size 32768
+Finish receiving flow 96 from 6 to 7
+Flow tcpsrc finished at 0.170382
+Finish sending flow 96 from 6 to 7
+Send flow 102 from 7 to 0 with size 32768
+Finish receiving flow 97 from 6 to 7
+Flow tcpsrc finished at 0.171102
+Finish sending flow 97 from 6 to 7
+Send flow 103 from 7 to 0 with size 32768
+Finish receiving flow 101 from 6 to 7
+Flow tcpsrc finished at 0.177282
+Finish sending flow 101 from 6 to 7
+Send flow 104 from 7 to 0 with size 32768
+Finish receiving flow 99 from 5 to 6
+Flow tcpsrc finished at 0.182552
+Finish sending flow 99 from 5 to 6
+Send flow 105 from 6 to 7 with size 32768
+Finish receiving flow 100 from 1 to 2
+Flow tcpsrc finished at 0.183212
+Finish sending flow 100 from 1 to 2
+Send flow 106 from 2 to 3 with size 32768
+Finish receiving flow 105 from 6 to 7
+Flow tcpsrc finished at 0.189473
+Finish sending flow 105 from 6 to 7
+Send flow 107 from 7 to 0 with size 32768
+Finish receiving flow 98 from 3 to 4
+Flow tcpsrc finished at 0.189613
+Finish sending flow 98 from 3 to 4
+Send flow 108 from 4 to 5 with size 32768
+Finish receiving flow 106 from 2 to 3
+Flow tcpsrc finished at 0.190123
+Finish sending flow 106 from 2 to 3
+Send flow 109 from 3 to 4 with size 32768
+Finish receiving flow 102 from 7 to 0
+Flow tcpsrc finished at 0.190732
+Finish sending flow 102 from 7 to 0
+Send flow 110 from 0 to 1 with size 32768
+Finish receiving flow 108 from 4 to 5
+Flow tcpsrc finished at 0.196523
+Finish sending flow 108 from 4 to 5
+Send flow 111 from 5 to 6 with size 32768
+Finish receiving flow 110 from 0 to 1
+Flow tcpsrc finished at 0.197642
+Finish sending flow 110 from 0 to 1
+Send flow 112 from 1 to 2 with size 32768
+Finish receiving flow 111 from 5 to 6
+Flow tcpsrc finished at 0.209683
+Finish sending flow 111 from 5 to 6
+Send flow 113 from 6 to 7 with size 32768
+Finish receiving flow 112 from 1 to 2
+Flow tcpsrc finished at 0.210793
+Finish sending flow 112 from 1 to 2
+Send flow 114 from 2 to 3 with size 32768
+Finish receiving flow 104 from 7 to 0
+Flow tcpsrc finished at 0.211672
+Finish sending flow 104 from 7 to 0
+Finish receiving flow 107 from 7 to 0
+Flow tcpsrc finished at 0.215223
+Finish sending flow 107 from 7 to 0
+Finish receiving flow 113 from 6 to 7
+Flow tcpsrc finished at 0.216653
+Finish sending flow 113 from 6 to 7
+Send flow 115 from 7 to 0 with size 32768
+Finish receiving flow 114 from 2 to 3
+Flow tcpsrc finished at 0.217703
+Finish sending flow 114 from 2 to 3
+Send flow 116 from 3 to 4 with size 32768
+Finish receiving flow 115 from 7 to 0
+Flow tcpsrc finished at 0.237003
+Finish sending flow 115 from 7 to 0
+Finish receiving flow 116 from 3 to 4
+Flow tcpsrc finished at 0.238003
+Finish sending flow 116 from 3 to 4
+At 260 RTO 250 MDEV 0 RTT 0 SEQ 22 HSENT 34501 CWND 33 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 260 RTO 250 MDEV 0 RTT 0 SEQ 20 HSENT 34501 CWND 31 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 260 RTO 250 MDEV 0 RTT 0 SEQ 22 HSENT 34501 CWND 33 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 260 RTO 250 MDEV 0 RTT 0 SEQ 21 HSENT 34501 CWND 32 FAST RECOVERY? 0 Flow ID mtcp_3_0_4
+Finish receiving flow 12 from 7 to 0
+Flow tcpsrc finished at 260.007
+Finish sending flow 12 from 7 to 0
+Send flow 117 from 0 to 1 with size 32768
+Finish receiving flow 74 from 7 to 0
+Flow tcpsrc finished at 260.007
+Finish sending flow 74 from 7 to 0
+Send flow 118 from 0 to 1 with size 32768
+Finish receiving flow 103 from 7 to 0
+Flow tcpsrc finished at 260.007
+Finish sending flow 103 from 7 to 0
+Send flow 119 from 0 to 1 with size 32768
+Send flow 120 from 0 to 1 with size 32768
+Finish receiving flow 109 from 3 to 4
+Flow tcpsrc finished at 260.008
+Finish sending flow 109 from 3 to 4
+Send flow 121 from 4 to 5 with size 32768
+Send flow 122 from 0 to 1 with size 32768
+Send flow 123 from 4 to 5 with size 32768
+Send flow 124 from 0 to 1 with size 32768
+Finish receiving flow 121 from 4 to 5
+Flow tcpsrc finished at 260.015
+Finish sending flow 121 from 4 to 5
+Send flow 125 from 5 to 6 with size 32768
+Finish receiving flow 123 from 4 to 5
+Flow tcpsrc finished at 260.015
+Finish sending flow 123 from 4 to 5
+Send flow 126 from 5 to 6 with size 32768
+Finish receiving flow 117 from 0 to 1
+Flow tcpsrc finished at 260.017
+Finish sending flow 117 from 0 to 1
+Send flow 127 from 1 to 2 with size 32768
+Finish receiving flow 118 from 0 to 1
+Flow tcpsrc finished at 260.018
+Finish sending flow 118 from 0 to 1
+Send flow 128 from 1 to 2 with size 32768
+Finish receiving flow 119 from 0 to 1
+Flow tcpsrc finished at 260.019
+Finish sending flow 119 from 0 to 1
+Send flow 129 from 1 to 2 with size 32768
+Finish receiving flow 120 from 0 to 1
+Flow tcpsrc finished at 260.019
+Finish sending flow 120 from 0 to 1
+Finish receiving flow 122 from 0 to 1
+Flow tcpsrc finished at 260.019
+Finish sending flow 122 from 0 to 1
+Send flow 130 from 1 to 2 with size 32768
+Finish receiving flow 124 from 0 to 1
+Flow tcpsrc finished at 260.019
+Finish sending flow 124 from 0 to 1
+Send flow 131 from 1 to 2 with size 32768
+Send flow 132 from 1 to 2 with size 32768
+Finish receiving flow 125 from 5 to 6
+Flow tcpsrc finished at 260.029
+Finish sending flow 125 from 5 to 6
+Send flow 133 from 6 to 7 with size 32768
+Finish receiving flow 126 from 5 to 6
+Flow tcpsrc finished at 260.029
+Finish sending flow 126 from 5 to 6
+Send flow 134 from 6 to 7 with size 32768
+Finish receiving flow 127 from 1 to 2
+Flow tcpsrc finished at 260.03
+Finish sending flow 127 from 1 to 2
+Send flow 135 from 2 to 3 with size 32768
+Finish receiving flow 128 from 1 to 2
+Flow tcpsrc finished at 260.031
+Finish sending flow 128 from 1 to 2
+Send flow 136 from 2 to 3 with size 32768
+Finish receiving flow 129 from 1 to 2
+Flow tcpsrc finished at 260.034
+Finish sending flow 129 from 1 to 2
+Send flow 137 from 2 to 3 with size 32768
+Finish receiving flow 130 from 1 to 2
+Flow tcpsrc finished at 260.034
+Finish sending flow 130 from 1 to 2
+Finish receiving flow 131 from 1 to 2
+Flow tcpsrc finished at 260.034
+Finish sending flow 131 from 1 to 2
+Send flow 138 from 2 to 3 with size 32768
+Send flow 139 from 2 to 3 with size 32768
+Finish receiving flow 132 from 1 to 2
+Flow tcpsrc finished at 260.034
+Finish sending flow 132 from 1 to 2
+Send flow 140 from 2 to 3 with size 32768
+Finish receiving flow 133 from 6 to 7
+Flow tcpsrc finished at 260.036
+Finish sending flow 133 from 6 to 7
+Send flow 141 from 7 to 0 with size 32768
+Finish receiving flow 134 from 6 to 7
+Flow tcpsrc finished at 260.036
+Finish sending flow 134 from 6 to 7
+Send flow 142 from 7 to 0 with size 32768
+Finish receiving flow 135 from 2 to 3
+Flow tcpsrc finished at 260.037
+Finish sending flow 135 from 2 to 3
+Send flow 143 from 3 to 4 with size 32768
+Finish receiving flow 136 from 2 to 3
+Flow tcpsrc finished at 260.039
+Finish sending flow 136 from 2 to 3
+Send flow 144 from 3 to 4 with size 32768
+Finish receiving flow 137 from 2 to 3
+Flow tcpsrc finished at 260.043
+Finish sending flow 137 from 2 to 3
+Send flow 145 from 3 to 4 with size 32768
+Finish receiving flow 138 from 2 to 3
+Flow tcpsrc finished at 260.044
+Finish sending flow 138 from 2 to 3
+Finish receiving flow 139 from 2 to 3
+Flow tcpsrc finished at 260.044
+Finish sending flow 139 from 2 to 3
+Send flow 146 from 3 to 4 with size 32768
+Finish receiving flow 140 from 2 to 3
+Flow tcpsrc finished at 260.044
+Finish sending flow 140 from 2 to 3
+Send flow 147 from 3 to 4 with size 32768
+Send flow 148 from 3 to 4 with size 32768
+Finish receiving flow 141 from 7 to 0
+Flow tcpsrc finished at 260.056
+Finish sending flow 141 from 7 to 0
+Send flow 149 from 0 to 1 with size 32768
+Finish receiving flow 142 from 7 to 0
+Flow tcpsrc finished at 260.057
+Finish sending flow 142 from 7 to 0
+Send flow 150 from 0 to 1 with size 32768
+Finish receiving flow 143 from 3 to 4
+Flow tcpsrc finished at 260.059
+Finish sending flow 143 from 3 to 4
+Send flow 151 from 4 to 5 with size 32768
+Finish receiving flow 145 from 3 to 4
+Flow tcpsrc finished at 260.064
+Finish sending flow 145 from 3 to 4
+Send flow 152 from 4 to 5 with size 32768
+Finish receiving flow 149 from 0 to 1
+Flow tcpsrc finished at 260.064
+Finish sending flow 149 from 0 to 1
+Send flow 153 from 1 to 2 with size 32768
+Finish receiving flow 150 from 0 to 1
+Flow tcpsrc finished at 260.064
+Finish sending flow 150 from 0 to 1
+Send flow 154 from 1 to 2 with size 32768
+Finish receiving flow 146 from 3 to 4
+Flow tcpsrc finished at 260.065
+Finish sending flow 146 from 3 to 4
+Send flow 155 from 4 to 5 with size 32768
+Finish receiving flow 147 from 3 to 4
+Flow tcpsrc finished at 260.066
+Finish sending flow 147 from 3 to 4
+Send flow 156 from 4 to 5 with size 32768
+Finish receiving flow 148 from 3 to 4
+Flow tcpsrc finished at 260.066
+Finish sending flow 148 from 3 to 4
+Send flow 157 from 4 to 5 with size 32768
+Finish receiving flow 144 from 3 to 4
+Flow tcpsrc finished at 260.066
+Finish sending flow 144 from 3 to 4
+Finish receiving flow 151 from 4 to 5
+Flow tcpsrc finished at 260.066
+Finish sending flow 151 from 4 to 5
+Send flow 158 from 4 to 5 with size 32768
+Send flow 159 from 5 to 6 with size 32768
+Finish receiving flow 152 from 4 to 5
+Flow tcpsrc finished at 260.073
+Finish sending flow 152 from 4 to 5
+Send flow 160 from 5 to 6 with size 32768
+Finish receiving flow 155 from 4 to 5
+Flow tcpsrc finished at 260.074
+Finish sending flow 155 from 4 to 5
+Send flow 161 from 5 to 6 with size 32768
+Finish receiving flow 156 from 4 to 5
+Flow tcpsrc finished at 260.075
+Finish sending flow 156 from 4 to 5
+Send flow 162 from 5 to 6 with size 32768
+Finish receiving flow 157 from 4 to 5
+Flow tcpsrc finished at 260.075
+Finish sending flow 157 from 4 to 5
+Send flow 163 from 5 to 6 with size 32768
+Finish receiving flow 158 from 4 to 5
+Flow tcpsrc finished at 260.075
+Finish sending flow 158 from 4 to 5
+Send flow 164 from 5 to 6 with size 32768
+Finish receiving flow 153 from 1 to 2
+Flow tcpsrc finished at 260.077
+Finish sending flow 153 from 1 to 2
+Send flow 165 from 2 to 3 with size 32768
+Finish receiving flow 154 from 1 to 2
+Flow tcpsrc finished at 260.078
+Finish sending flow 154 from 1 to 2
+Send flow 166 from 2 to 3 with size 32768
+Finish receiving flow 159 from 5 to 6
+Flow tcpsrc finished at 260.079
+Finish sending flow 159 from 5 to 6
+Send flow 167 from 6 to 7 with size 32768
+Finish receiving flow 165 from 2 to 3
+Flow tcpsrc finished at 260.084
+Finish sending flow 165 from 2 to 3
+Send flow 168 from 3 to 4 with size 32768
+Finish receiving flow 166 from 2 to 3
+Flow tcpsrc finished at 260.085
+Finish sending flow 166 from 2 to 3
+Send flow 169 from 3 to 4 with size 32768
+Finish receiving flow 160 from 5 to 6
+Flow tcpsrc finished at 260.086
+Finish sending flow 160 from 5 to 6
+Finish receiving flow 167 from 6 to 7
+Flow tcpsrc finished at 260.086
+Finish sending flow 167 from 6 to 7
+Send flow 170 from 6 to 7 with size 32768
+Send flow 171 from 7 to 0 with size 32768
+Finish receiving flow 161 from 5 to 6
+Flow tcpsrc finished at 260.088
+Finish sending flow 161 from 5 to 6
+Send flow 172 from 6 to 7 with size 32768
+Finish receiving flow 162 from 5 to 6
+Flow tcpsrc finished at 260.089
+Finish sending flow 162 from 5 to 6
+Send flow 173 from 6 to 7 with size 32768
+Finish receiving flow 163 from 5 to 6
+Flow tcpsrc finished at 260.09
+Finish sending flow 163 from 5 to 6
+Send flow 174 from 6 to 7 with size 32768
+Finish receiving flow 164 from 5 to 6
+Flow tcpsrc finished at 260.09
+Finish sending flow 164 from 5 to 6
+Send flow 175 from 6 to 7 with size 32768
+Finish receiving flow 170 from 6 to 7
+Flow tcpsrc finished at 260.093
+Finish sending flow 170 from 6 to 7
+Send flow 176 from 7 to 0 with size 32768
+Finish receiving flow 172 from 6 to 7
+Flow tcpsrc finished at 260.096
+Finish sending flow 172 from 6 to 7
+Send flow 177 from 7 to 0 with size 32768
+Finish receiving flow 173 from 6 to 7
+Flow tcpsrc finished at 260.098
+Finish sending flow 173 from 6 to 7
+Send flow 178 from 7 to 0 with size 32768
+Finish receiving flow 174 from 6 to 7
+Flow tcpsrc finished at 260.098
+Finish sending flow 174 from 6 to 7
+Send flow 179 from 7 to 0 with size 32768
+Finish receiving flow 175 from 6 to 7
+Flow tcpsrc finished at 260.098
+Finish sending flow 175 from 6 to 7
+Send flow 180 from 7 to 0 with size 32768
+Finish receiving flow 168 from 3 to 4
+Flow tcpsrc finished at 260.105
+Finish sending flow 168 from 3 to 4
+Send flow 181 from 4 to 5 with size 32768
+Finish receiving flow 169 from 3 to 4
+Flow tcpsrc finished at 260.105
+Finish sending flow 169 from 3 to 4
+Send flow 182 from 4 to 5 with size 32768
+Finish receiving flow 171 from 7 to 0
+Flow tcpsrc finished at 260.107
+Finish sending flow 171 from 7 to 0
+Send flow 183 from 0 to 1 with size 32768
+Finish receiving flow 181 from 4 to 5
+Flow tcpsrc finished at 260.112
+Finish sending flow 181 from 4 to 5
+Send flow 184 from 5 to 6 with size 32768
+Finish receiving flow 182 from 4 to 5
+Flow tcpsrc finished at 260.112
+Finish sending flow 182 from 4 to 5
+Send flow 185 from 5 to 6 with size 32768
+Finish receiving flow 183 from 0 to 1
+Flow tcpsrc finished at 260.114
+Finish sending flow 183 from 0 to 1
+Send flow 186 from 1 to 2 with size 32768
+Finish receiving flow 176 from 7 to 0
+Flow tcpsrc finished at 260.115
+Finish sending flow 176 from 7 to 0
+Send flow 187 from 0 to 1 with size 32768
+Finish receiving flow 177 from 7 to 0
+Flow tcpsrc finished at 260.117
+Finish sending flow 177 from 7 to 0
+Send flow 188 from 0 to 1 with size 32768
+Finish receiving flow 178 from 7 to 0
+Flow tcpsrc finished at 260.118
+Finish sending flow 178 from 7 to 0
+Send flow 189 from 0 to 1 with size 32768
+Finish receiving flow 179 from 7 to 0
+Flow tcpsrc finished at 260.119
+Finish sending flow 179 from 7 to 0
+Send flow 190 from 0 to 1 with size 32768
+Finish receiving flow 180 from 7 to 0
+Flow tcpsrc finished at 260.119
+Finish sending flow 180 from 7 to 0
+Send flow 191 from 0 to 1 with size 32768
+Finish receiving flow 187 from 0 to 1
+Flow tcpsrc finished at 260.122
+Finish sending flow 187 from 0 to 1
+Send flow 192 from 1 to 2 with size 32768
+Finish receiving flow 184 from 5 to 6
+Flow tcpsrc finished at 260.125
+Finish sending flow 184 from 5 to 6
+Send flow 193 from 6 to 7 with size 32768
+Finish receiving flow 188 from 0 to 1
+Flow tcpsrc finished at 260.125
+Finish sending flow 188 from 0 to 1
+Send flow 194 from 1 to 2 with size 32768
+Finish receiving flow 185 from 5 to 6
+Flow tcpsrc finished at 260.126
+Finish sending flow 185 from 5 to 6
+Send flow 195 from 6 to 7 with size 32768
+Finish receiving flow 189 from 0 to 1
+Flow tcpsrc finished at 260.127
+Finish sending flow 189 from 0 to 1
+Send flow 196 from 1 to 2 with size 32768
+Finish receiving flow 186 from 1 to 2
+Flow tcpsrc finished at 260.127
+Finish sending flow 186 from 1 to 2
+Send flow 197 from 2 to 3 with size 32768
+Finish receiving flow 190 from 0 to 1
+Flow tcpsrc finished at 260.127
+Finish sending flow 190 from 0 to 1
+Send flow 198 from 1 to 2 with size 32768
+Finish receiving flow 191 from 0 to 1
+Flow tcpsrc finished at 260.127
+Finish sending flow 191 from 0 to 1
+Send flow 199 from 1 to 2 with size 32768
+Finish receiving flow 193 from 6 to 7
+Flow tcpsrc finished at 260.132
+Finish sending flow 193 from 6 to 7
+Send flow 200 from 7 to 0 with size 32768
+Finish receiving flow 195 from 6 to 7
+Flow tcpsrc finished at 260.133
+Finish sending flow 195 from 6 to 7
+Send flow 201 from 7 to 0 with size 32768
+Finish receiving flow 197 from 2 to 3
+Flow tcpsrc finished at 260.134
+Finish sending flow 197 from 2 to 3
+Send flow 202 from 3 to 4 with size 32768
+Finish receiving flow 192 from 1 to 2
+Flow tcpsrc finished at 260.136
+Finish sending flow 192 from 1 to 2
+Send flow 203 from 2 to 3 with size 32768
+Finish receiving flow 194 from 1 to 2
+Flow tcpsrc finished at 260.139
+Finish sending flow 194 from 1 to 2
+Send flow 204 from 2 to 3 with size 32768
+Finish receiving flow 196 from 1 to 2
+Flow tcpsrc finished at 260.141
+Finish sending flow 196 from 1 to 2
+Send flow 205 from 2 to 3 with size 32768
+Finish receiving flow 198 from 1 to 2
+Flow tcpsrc finished at 260.141
+Finish sending flow 198 from 1 to 2
+Send flow 206 from 2 to 3 with size 32768
+Finish receiving flow 199 from 1 to 2
+Flow tcpsrc finished at 260.141
+Finish sending flow 199 from 1 to 2
+Send flow 207 from 2 to 3 with size 32768
+Finish receiving flow 203 from 2 to 3
+Flow tcpsrc finished at 260.143
+Finish sending flow 203 from 2 to 3
+Send flow 208 from 3 to 4 with size 32768
+Finish receiving flow 204 from 2 to 3
+Flow tcpsrc finished at 260.147
+Finish sending flow 204 from 2 to 3
+Send flow 209 from 3 to 4 with size 32768
+Finish receiving flow 205 from 2 to 3
+Flow tcpsrc finished at 260.149
+Finish sending flow 205 from 2 to 3
+Send flow 210 from 3 to 4 with size 32768
+Finish receiving flow 206 from 2 to 3
+Flow tcpsrc finished at 260.15
+Finish sending flow 206 from 2 to 3
+Send flow 211 from 3 to 4 with size 32768
+Finish receiving flow 207 from 2 to 3
+Flow tcpsrc finished at 260.15
+Finish sending flow 207 from 2 to 3
+Send flow 212 from 3 to 4 with size 32768
+Finish receiving flow 200 from 7 to 0
+Flow tcpsrc finished at 260.153
+Finish sending flow 200 from 7 to 0
+Send flow 213 from 0 to 1 with size 32768
+Finish receiving flow 201 from 7 to 0
+Flow tcpsrc finished at 260.153
+Finish sending flow 201 from 7 to 0
+Send flow 214 from 0 to 1 with size 32768
+Finish receiving flow 202 from 3 to 4
+Flow tcpsrc finished at 260.154
+Finish sending flow 202 from 3 to 4
+Send flow 215 from 4 to 5 with size 32768
+Finish receiving flow 213 from 0 to 1
+Flow tcpsrc finished at 260.16
+Finish sending flow 213 from 0 to 1
+Send flow 216 from 1 to 2 with size 32768
+Finish receiving flow 214 from 0 to 1
+Flow tcpsrc finished at 260.16
+Finish sending flow 214 from 0 to 1
+Send flow 217 from 1 to 2 with size 32768
+Finish receiving flow 215 from 4 to 5
+Flow tcpsrc finished at 260.161
+Finish sending flow 215 from 4 to 5
+Send flow 218 from 5 to 6 with size 32768
+Finish receiving flow 208 from 3 to 4
+Flow tcpsrc finished at 260.164
+Finish sending flow 208 from 3 to 4
+Send flow 219 from 4 to 5 with size 32768
+Finish receiving flow 209 from 3 to 4
+Flow tcpsrc finished at 260.167
+Finish sending flow 209 from 3 to 4
+Send flow 220 from 4 to 5 with size 32768
+Finish receiving flow 210 from 3 to 4
+Flow tcpsrc finished at 260.17
+Finish sending flow 210 from 3 to 4
+Send flow 221 from 4 to 5 with size 32768
+Finish receiving flow 211 from 3 to 4
+Flow tcpsrc finished at 260.17
+Finish sending flow 211 from 3 to 4
+Send flow 222 from 4 to 5 with size 32768
+Finish receiving flow 219 from 4 to 5
+Flow tcpsrc finished at 260.171
+Finish sending flow 219 from 4 to 5
+Send flow 223 from 5 to 6 with size 32768
+Finish receiving flow 212 from 3 to 4
+Flow tcpsrc finished at 260.171
+Finish sending flow 212 from 3 to 4
+Send flow 224 from 4 to 5 with size 32768
+Finish receiving flow 216 from 1 to 2
+Flow tcpsrc finished at 260.173
+Finish sending flow 216 from 1 to 2
+Send flow 225 from 2 to 3 with size 32768
+Finish receiving flow 217 from 1 to 2
+Flow tcpsrc finished at 260.174
+Finish sending flow 217 from 1 to 2
+Send flow 226 from 2 to 3 with size 32768
+Finish receiving flow 218 from 5 to 6
+Flow tcpsrc finished at 260.174
+Finish sending flow 218 from 5 to 6
+Send flow 227 from 6 to 7 with size 32768
+Finish receiving flow 220 from 4 to 5
+Flow tcpsrc finished at 260.174
+Finish sending flow 220 from 4 to 5
+Send flow 228 from 5 to 6 with size 32768
+Finish receiving flow 221 from 4 to 5
+Flow tcpsrc finished at 260.177
+Finish sending flow 221 from 4 to 5
+Send flow 229 from 5 to 6 with size 32768
+Finish receiving flow 222 from 4 to 5
+Flow tcpsrc finished at 260.178
+Finish sending flow 222 from 4 to 5
+Send flow 230 from 5 to 6 with size 32768
+Finish receiving flow 224 from 4 to 5
+Flow tcpsrc finished at 260.178
+Finish sending flow 224 from 4 to 5
+Send flow 231 from 5 to 6 with size 32768
+Finish receiving flow 225 from 2 to 3
+Flow tcpsrc finished at 260.18
+Finish sending flow 225 from 2 to 3
+Send flow 232 from 3 to 4 with size 32768
+Finish receiving flow 226 from 2 to 3
+Flow tcpsrc finished at 260.181
+Finish sending flow 226 from 2 to 3
+Send flow 233 from 3 to 4 with size 32768
+Finish receiving flow 227 from 6 to 7
+Flow tcpsrc finished at 260.181
+Finish sending flow 227 from 6 to 7
+Send flow 234 from 7 to 0 with size 32768
+Finish receiving flow 223 from 5 to 6
+Flow tcpsrc finished at 260.184
+Finish sending flow 223 from 5 to 6
+Send flow 235 from 6 to 7 with size 32768
+Finish receiving flow 228 from 5 to 6
+Flow tcpsrc finished at 260.188
+Finish sending flow 228 from 5 to 6
+Send flow 236 from 6 to 7 with size 32768
+Finish receiving flow 229 from 5 to 6
+Flow tcpsrc finished at 260.19
+Finish sending flow 229 from 5 to 6
+Send flow 237 from 6 to 7 with size 32768
+Finish receiving flow 230 from 5 to 6
+Flow tcpsrc finished at 260.191
+Finish sending flow 230 from 5 to 6
+Send flow 238 from 6 to 7 with size 32768
+Finish receiving flow 235 from 6 to 7
+Flow tcpsrc finished at 260.191
+Finish sending flow 235 from 6 to 7
+Send flow 239 from 7 to 0 with size 32768
+Finish receiving flow 231 from 5 to 6
+Flow tcpsrc finished at 260.192
+Finish sending flow 231 from 5 to 6
+Send flow 240 from 6 to 7 with size 32768
+Finish receiving flow 236 from 6 to 7
+Flow tcpsrc finished at 260.196
+Finish sending flow 236 from 6 to 7
+Send flow 241 from 7 to 0 with size 32768
+Finish receiving flow 237 from 6 to 7
+Flow tcpsrc finished at 260.198
+Finish sending flow 237 from 6 to 7
+Send flow 242 from 7 to 0 with size 32768
+Finish receiving flow 238 from 6 to 7
+Flow tcpsrc finished at 260.199
+Finish sending flow 238 from 6 to 7
+Send flow 243 from 7 to 0 with size 32768
+Finish receiving flow 240 from 6 to 7
+Flow tcpsrc finished at 260.199
+Finish sending flow 240 from 6 to 7
+Send flow 244 from 7 to 0 with size 32768
+Finish receiving flow 232 from 3 to 4
+Flow tcpsrc finished at 260.2
+Finish sending flow 232 from 3 to 4
+Send flow 245 from 4 to 5 with size 32768
+Finish receiving flow 234 from 7 to 0
+Flow tcpsrc finished at 260.201
+Finish sending flow 234 from 7 to 0
+Send flow 246 from 0 to 1 with size 32768
+Finish receiving flow 245 from 4 to 5
+Flow tcpsrc finished at 260.207
+Finish sending flow 245 from 4 to 5
+Send flow 247 from 5 to 6 with size 32768
+Finish receiving flow 246 from 0 to 1
+Flow tcpsrc finished at 260.208
+Finish sending flow 246 from 0 to 1
+Send flow 248 from 1 to 2 with size 32768
+Finish receiving flow 239 from 7 to 0
+Flow tcpsrc finished at 260.211
+Finish sending flow 239 from 7 to 0
+Send flow 249 from 0 to 1 with size 32768
+Finish receiving flow 241 from 7 to 0
+Flow tcpsrc finished at 260.216
+Finish sending flow 241 from 7 to 0
+Send flow 250 from 0 to 1 with size 32768
+Finish receiving flow 249 from 0 to 1
+Flow tcpsrc finished at 260.218
+Finish sending flow 249 from 0 to 1
+Send flow 251 from 1 to 2 with size 32768
+Finish receiving flow 243 from 7 to 0
+Flow tcpsrc finished at 260.219
+Finish sending flow 243 from 7 to 0
+Send flow 252 from 0 to 1 with size 32768
+Finish receiving flow 247 from 5 to 6
+Flow tcpsrc finished at 260.22
+Finish sending flow 247 from 5 to 6
+Finish receiving flow 242 from 7 to 0
+Flow tcpsrc finished at 260.22
+Finish sending flow 242 from 7 to 0
+Send flow 253 from 6 to 7 with size 32768
+Send flow 254 from 0 to 1 with size 32768
+Finish receiving flow 248 from 1 to 2
+Flow tcpsrc finished at 260.221
+Finish sending flow 248 from 1 to 2
+Send flow 255 from 2 to 3 with size 32768
+Finish receiving flow 250 from 0 to 1
+Flow tcpsrc finished at 260.223
+Finish sending flow 250 from 0 to 1
+Send flow 256 from 1 to 2 with size 32768
+Finish receiving flow 252 from 0 to 1
+Flow tcpsrc finished at 260.226
+Finish sending flow 252 from 0 to 1
+Send flow 257 from 1 to 2 with size 32768
+Finish receiving flow 253 from 6 to 7
+Flow tcpsrc finished at 260.227
+Finish sending flow 253 from 6 to 7
+Send flow 258 from 7 to 0 with size 32768
+Finish receiving flow 254 from 0 to 1
+Flow tcpsrc finished at 260.227
+Finish sending flow 254 from 0 to 1
+Send flow 259 from 1 to 2 with size 32768
+Finish receiving flow 255 from 2 to 3
+Flow tcpsrc finished at 260.228
+Finish sending flow 255 from 2 to 3
+Send flow 260 from 3 to 4 with size 32768
+Finish receiving flow 251 from 1 to 2
+Flow tcpsrc finished at 260.232
+Finish sending flow 251 from 1 to 2
+Send flow 261 from 2 to 3 with size 32768
+Finish receiving flow 256 from 1 to 2
+Flow tcpsrc finished at 260.237
+Finish sending flow 256 from 1 to 2
+Send flow 262 from 2 to 3 with size 32768
+Finish receiving flow 261 from 2 to 3
+Flow tcpsrc finished at 260.239
+Finish sending flow 261 from 2 to 3
+Send flow 263 from 3 to 4 with size 32768
+Finish receiving flow 257 from 1 to 2
+Flow tcpsrc finished at 260.239
+Finish sending flow 257 from 1 to 2
+Send flow 264 from 2 to 3 with size 32768
+Finish receiving flow 259 from 1 to 2
+Flow tcpsrc finished at 260.241
+Finish sending flow 259 from 1 to 2
+Send flow 265 from 2 to 3 with size 32768
+Finish receiving flow 262 from 2 to 3
+Flow tcpsrc finished at 260.244
+Finish sending flow 262 from 2 to 3
+Send flow 266 from 3 to 4 with size 32768
+Finish receiving flow 264 from 2 to 3
+Flow tcpsrc finished at 260.247
+Finish sending flow 264 from 2 to 3
+Send flow 267 from 3 to 4 with size 32768
+Finish receiving flow 265 from 2 to 3
+Flow tcpsrc finished at 260.248
+Finish sending flow 265 from 2 to 3
+Send flow 268 from 3 to 4 with size 32768
+Finish receiving flow 263 from 3 to 4
+Flow tcpsrc finished at 260.259
+Finish sending flow 263 from 3 to 4
+Send flow 269 from 4 to 5 with size 32768
+Finish receiving flow 269 from 4 to 5
+Flow tcpsrc finished at 260.266
+Finish sending flow 269 from 4 to 5
+Send flow 270 from 5 to 6 with size 32768
+Finish receiving flow 268 from 3 to 4
+Flow tcpsrc finished at 260.268
+Finish sending flow 268 from 3 to 4
+Send flow 271 from 4 to 5 with size 32768
+Finish receiving flow 266 from 3 to 4
+Flow tcpsrc finished at 260.27
+Finish sending flow 266 from 3 to 4
+Send flow 272 from 4 to 5 with size 32768
+Finish receiving flow 271 from 4 to 5
+Flow tcpsrc finished at 260.275
+Finish sending flow 271 from 4 to 5
+Send flow 273 from 5 to 6 with size 32768
+Finish receiving flow 272 from 4 to 5
+Flow tcpsrc finished at 260.277
+Finish sending flow 272 from 4 to 5
+Send flow 274 from 5 to 6 with size 32768
+Finish receiving flow 270 from 5 to 6
+Flow tcpsrc finished at 260.279
+Finish sending flow 270 from 5 to 6
+Send flow 275 from 6 to 7 with size 32768
+Finish receiving flow 275 from 6 to 7
+Flow tcpsrc finished at 260.286
+Finish sending flow 275 from 6 to 7
+Send flow 276 from 7 to 0 with size 32768
+Finish receiving flow 273 from 5 to 6
+Flow tcpsrc finished at 260.288
+Finish sending flow 273 from 5 to 6
+Send flow 277 from 6 to 7 with size 32768
+Finish receiving flow 274 from 5 to 6
+Flow tcpsrc finished at 260.29
+Finish sending flow 274 from 5 to 6
+Send flow 278 from 6 to 7 with size 32768
+Finish receiving flow 277 from 6 to 7
+Flow tcpsrc finished at 260.295
+Finish sending flow 277 from 6 to 7
+Send flow 279 from 7 to 0 with size 32768
+Finish receiving flow 278 from 6 to 7
+Flow tcpsrc finished at 260.297
+Finish sending flow 278 from 6 to 7
+Send flow 280 from 7 to 0 with size 32768
+Finish receiving flow 276 from 7 to 0
+Flow tcpsrc finished at 260.307
+Finish sending flow 276 from 7 to 0
+Send flow 281 from 0 to 1 with size 32768
+Finish receiving flow 281 from 0 to 1
+Flow tcpsrc finished at 260.314
+Finish sending flow 281 from 0 to 1
+Send flow 282 from 1 to 2 with size 32768
+Finish receiving flow 279 from 7 to 0
+Flow tcpsrc finished at 260.316
+Finish sending flow 279 from 7 to 0
+Send flow 283 from 0 to 1 with size 32768
+Finish receiving flow 280 from 7 to 0
+Flow tcpsrc finished at 260.317
+Finish sending flow 280 from 7 to 0
+Send flow 284 from 0 to 1 with size 32768
+Finish receiving flow 283 from 0 to 1
+Flow tcpsrc finished at 260.323
+Finish sending flow 283 from 0 to 1
+Send flow 285 from 1 to 2 with size 32768
+Finish receiving flow 284 from 0 to 1
+Flow tcpsrc finished at 260.324
+Finish sending flow 284 from 0 to 1
+Send flow 286 from 1 to 2 with size 32768
+Finish receiving flow 282 from 1 to 2
+Flow tcpsrc finished at 260.327
+Finish sending flow 282 from 1 to 2
+Send flow 287 from 2 to 3 with size 32768
+Finish receiving flow 287 from 2 to 3
+Flow tcpsrc finished at 260.334
+Finish sending flow 287 from 2 to 3
+Send flow 288 from 3 to 4 with size 32768
+Finish receiving flow 285 from 1 to 2
+Flow tcpsrc finished at 260.336
+Finish sending flow 285 from 1 to 2
+Send flow 289 from 2 to 3 with size 32768
+Finish receiving flow 286 from 1 to 2
+Flow tcpsrc finished at 260.337
+Finish sending flow 286 from 1 to 2
+Send flow 290 from 2 to 3 with size 32768
+Finish receiving flow 289 from 2 to 3
+Flow tcpsrc finished at 260.343
+Finish sending flow 289 from 2 to 3
+Send flow 291 from 3 to 4 with size 32768
+Finish receiving flow 290 from 2 to 3
+Flow tcpsrc finished at 260.344
+Finish sending flow 290 from 2 to 3
+Send flow 292 from 3 to 4 with size 32768
+Finish receiving flow 288 from 3 to 4
+Flow tcpsrc finished at 260.354
+Finish sending flow 288 from 3 to 4
+Send flow 293 from 4 to 5 with size 32768
+Finish receiving flow 293 from 4 to 5
+Flow tcpsrc finished at 260.361
+Finish sending flow 293 from 4 to 5
+Send flow 294 from 5 to 6 with size 32768
+Finish receiving flow 292 from 3 to 4
+Flow tcpsrc finished at 260.365
+Finish sending flow 292 from 3 to 4
+Send flow 295 from 4 to 5 with size 32768
+Finish receiving flow 291 from 3 to 4
+Flow tcpsrc finished at 260.369
+Finish sending flow 291 from 3 to 4
+Send flow 296 from 4 to 5 with size 32768
+Finish receiving flow 295 from 4 to 5
+Flow tcpsrc finished at 260.372
+Finish sending flow 295 from 4 to 5
+Send flow 297 from 5 to 6 with size 32768
+Finish receiving flow 294 from 5 to 6
+Flow tcpsrc finished at 260.374
+Finish sending flow 294 from 5 to 6
+Send flow 298 from 6 to 7 with size 32768
+Finish receiving flow 296 from 4 to 5
+Flow tcpsrc finished at 260.375
+Finish sending flow 296 from 4 to 5
+Send flow 299 from 5 to 6 with size 32768
+Finish receiving flow 298 from 6 to 7
+Flow tcpsrc finished at 260.381
+Finish sending flow 298 from 6 to 7
+Send flow 300 from 7 to 0 with size 32768
+Finish receiving flow 297 from 5 to 6
+Flow tcpsrc finished at 260.385
+Finish sending flow 297 from 5 to 6
+Send flow 301 from 6 to 7 with size 32768
+Finish receiving flow 299 from 5 to 6
+Flow tcpsrc finished at 260.389
+Finish sending flow 299 from 5 to 6
+Send flow 302 from 6 to 7 with size 32768
+Finish receiving flow 301 from 6 to 7
+Flow tcpsrc finished at 260.392
+Finish sending flow 301 from 6 to 7
+Send flow 303 from 7 to 0 with size 32768
+Finish receiving flow 302 from 6 to 7
+Flow tcpsrc finished at 260.396
+Finish sending flow 302 from 6 to 7
+Send flow 304 from 7 to 0 with size 32768
+Finish receiving flow 303 from 7 to 0
+Flow tcpsrc finished at 260.412
+Finish sending flow 303 from 7 to 0
+Send flow 305 from 0 to 1 with size 32768
+Finish receiving flow 305 from 0 to 1
+Flow tcpsrc finished at 260.419
+Finish sending flow 305 from 0 to 1
+Send flow 306 from 1 to 2 with size 32768
+Finish receiving flow 306 from 1 to 2
+Flow tcpsrc finished at 260.432
+Finish sending flow 306 from 1 to 2
+Send flow 307 from 2 to 3 with size 32768
+Finish receiving flow 307 from 2 to 3
+Flow tcpsrc finished at 260.439
+Finish sending flow 307 from 2 to 3
+Send flow 308 from 3 to 4 with size 32768
+Finish receiving flow 308 from 3 to 4
+Flow tcpsrc finished at 260.465
+Finish sending flow 308 from 3 to 4
+Send flow 309 from 4 to 5 with size 32768
+Finish receiving flow 309 from 4 to 5
+Flow tcpsrc finished at 260.472
+Finish sending flow 309 from 4 to 5
+Send flow 310 from 5 to 6 with size 32768
+Finish receiving flow 310 from 5 to 6
+Flow tcpsrc finished at 260.485
+Finish sending flow 310 from 5 to 6
+Send flow 311 from 6 to 7 with size 32768
+Finish receiving flow 311 from 6 to 7
+Flow tcpsrc finished at 260.492
+Finish sending flow 311 from 6 to 7
+Send flow 312 from 7 to 0 with size 32768
+Finish receiving flow 312 from 7 to 0
+Flow tcpsrc finished at 260.512
+Finish sending flow 312 from 7 to 0
+Send flow 313 from 0 to 1 with size 32768
+Finish receiving flow 313 from 0 to 1
+Flow tcpsrc finished at 260.519
+Finish sending flow 313 from 0 to 1
+Send flow 314 from 1 to 2 with size 32768
+Finish receiving flow 314 from 1 to 2
+Flow tcpsrc finished at 260.532
+Finish sending flow 314 from 1 to 2
+Send flow 315 from 2 to 3 with size 32768
+Finish receiving flow 315 from 2 to 3
+Flow tcpsrc finished at 260.539
+Finish sending flow 315 from 2 to 3
+Send flow 316 from 3 to 4 with size 32768
+Finish receiving flow 316 from 3 to 4
+Flow tcpsrc finished at 260.565
+Finish sending flow 316 from 3 to 4
+Send flow 317 from 4 to 5 with size 32768
+Finish receiving flow 317 from 4 to 5
+Flow tcpsrc finished at 260.572
+Finish sending flow 317 from 4 to 5
+Send flow 318 from 5 to 6 with size 32768
+Finish receiving flow 318 from 5 to 6
+Flow tcpsrc finished at 260.585
+Finish sending flow 318 from 5 to 6
+Send flow 319 from 6 to 7 with size 32768
+Finish receiving flow 319 from 6 to 7
+Flow tcpsrc finished at 260.592
+Finish sending flow 319 from 6 to 7
+Send flow 320 from 7 to 0 with size 32768
+.At 520 RTO 250 MDEV 0 RTT 0 SEQ 20 HSENT 34501 CWND 31 FAST RECOVERY? 0 Flow ID mtcp_3_0_4
+At 520 RTO 250 MDEV 0 RTT 0 SEQ 22 HSENT 34501 CWND 33 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 520 RTO 250 MDEV 0 RTT 0 SEQ 20 HSENT 34501 CWND 31 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 520 RTO 250 MDEV 0 RTT 0 SEQ 22 HSENT 34501 CWND 33 FAST RECOVERY? 0 Flow ID mtcp_3_0_4
+At 520 RTO 250 MDEV 0 RTT 0 SEQ 22 HSENT 34501 CWND 33 FAST RECOVERY? 0 Flow ID mtcp_3_0_4
+At 520 RTO 250 MDEV 0 RTT 0 SEQ 21 HSENT 34501 CWND 32 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 520 RTO 250 MDEV 0 RTT 0 SEQ 21 HSENT 34501 CWND 32 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 520 RTO 250 MDEV 0 RTT 0 SEQ 21 HSENT 34501 CWND 32 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+Finish receiving flow 233 from 3 to 4
+Flow tcpsrc finished at 520.007
+Finish sending flow 233 from 3 to 4
+Send flow 321 from 4 to 5 with size 32768
+Finish receiving flow 244 from 7 to 0
+Flow tcpsrc finished at 520.008
+Finish sending flow 244 from 7 to 0
+Send flow 322 from 0 to 1 with size 32768
+Finish receiving flow 258 from 7 to 0
+Flow tcpsrc finished at 520.008
+Finish sending flow 258 from 7 to 0
+Finish receiving flow 260 from 3 to 4
+Flow tcpsrc finished at 520.008
+Finish sending flow 260 from 3 to 4
+Send flow 323 from 0 to 1 with size 32768
+Send flow 324 from 4 to 5 with size 32768
+Finish receiving flow 267 from 3 to 4
+Flow tcpsrc finished at 520.008
+Finish sending flow 267 from 3 to 4
+Send flow 325 from 4 to 5 with size 32768
+Finish receiving flow 300 from 7 to 0
+Flow tcpsrc finished at 520.008
+Finish sending flow 300 from 7 to 0
+Send flow 326 from 0 to 1 with size 32768
+Finish receiving flow 320 from 7 to 0
+Flow tcpsrc finished at 520.01
+Finish sending flow 320 from 7 to 0
+Send flow 327 from 0 to 1 with size 32768
+Finish receiving flow 304 from 7 to 0
+Flow tcpsrc finished at 520.015
+Finish sending flow 304 from 7 to 0
+Send flow 328 from 0 to 1 with size 32768
+Finish receiving flow 321 from 4 to 5
+Flow tcpsrc finished at 520.015
+Finish sending flow 321 from 4 to 5
+Send flow 329 from 5 to 6 with size 32768
+Finish receiving flow 324 from 4 to 5
+Flow tcpsrc finished at 520.016
+Finish sending flow 324 from 4 to 5
+Send flow 330 from 5 to 6 with size 32768
+Finish receiving flow 325 from 4 to 5
+Flow tcpsrc finished at 520.016
+Finish sending flow 325 from 4 to 5
+Send flow 331 from 5 to 6 with size 32768
+Finish receiving flow 322 from 0 to 1
+Flow tcpsrc finished at 520.016
+Finish sending flow 322 from 0 to 1
+Send flow 332 from 1 to 2 with size 32768
+Finish receiving flow 323 from 0 to 1
+Flow tcpsrc finished at 520.016
+Finish sending flow 323 from 0 to 1
+Send flow 333 from 1 to 2 with size 32768
+Finish receiving flow 326 from 0 to 1
+Flow tcpsrc finished at 520.017
+Finish sending flow 326 from 0 to 1
+Send flow 334 from 1 to 2 with size 32768
+Finish receiving flow 327 from 0 to 1
+Flow tcpsrc finished at 520.017
+Finish sending flow 327 from 0 to 1
+Send flow 335 from 1 to 2 with size 32768
+Finish receiving flow 328 from 0 to 1
+Flow tcpsrc finished at 520.022
+Finish sending flow 328 from 0 to 1
+Send flow 336 from 1 to 2 with size 32768
+Finish receiving flow 329 from 5 to 6
+Flow tcpsrc finished at 520.028
+Finish sending flow 329 from 5 to 6
+Send flow 337 from 6 to 7 with size 32768
+Finish receiving flow 330 from 5 to 6
+Flow tcpsrc finished at 520.03
+Finish sending flow 330 from 5 to 6
+Send flow 338 from 6 to 7 with size 32768
+Finish receiving flow 331 from 5 to 6
+Flow tcpsrc finished at 520.03
+Finish sending flow 331 from 5 to 6
+Send flow 339 from 6 to 7 with size 32768
+Finish receiving flow 332 from 1 to 2
+Flow tcpsrc finished at 520.03
+Finish sending flow 332 from 1 to 2
+Send flow 340 from 2 to 3 with size 32768
+Finish receiving flow 333 from 1 to 2
+Flow tcpsrc finished at 520.031
+Finish sending flow 333 from 1 to 2
+Send flow 341 from 2 to 3 with size 32768
+Finish receiving flow 334 from 1 to 2
+Flow tcpsrc finished at 520.031
+Finish sending flow 334 from 1 to 2
+Send flow 342 from 2 to 3 with size 32768
+Finish receiving flow 335 from 1 to 2
+Flow tcpsrc finished at 520.032
+Finish sending flow 335 from 1 to 2
+Send flow 343 from 2 to 3 with size 32768
+Finish receiving flow 337 from 6 to 7
+Flow tcpsrc finished at 520.036
+Finish sending flow 337 from 6 to 7
+Send flow 344 from 7 to 0 with size 32768
+Finish receiving flow 336 from 1 to 2
+Flow tcpsrc finished at 520.036
+Finish sending flow 336 from 1 to 2
+Send flow 345 from 2 to 3 with size 32768
+Finish receiving flow 338 from 6 to 7
+Flow tcpsrc finished at 520.037
+Finish sending flow 338 from 6 to 7
+Send flow 346 from 7 to 0 with size 32768
+Finish receiving flow 339 from 6 to 7
+Flow tcpsrc finished at 520.037
+Finish sending flow 339 from 6 to 7
+Send flow 347 from 7 to 0 with size 32768
+Finish receiving flow 340 from 2 to 3
+Flow tcpsrc finished at 520.038
+Finish sending flow 340 from 2 to 3
+Send flow 348 from 3 to 4 with size 32768
+Finish receiving flow 341 from 2 to 3
+Flow tcpsrc finished at 520.039
+Finish sending flow 341 from 2 to 3
+Send flow 349 from 3 to 4 with size 32768
+Finish receiving flow 342 from 2 to 3
+Flow tcpsrc finished at 520.04
+Finish sending flow 342 from 2 to 3
+Send flow 350 from 3 to 4 with size 32768
+Finish receiving flow 343 from 2 to 3
+Flow tcpsrc finished at 520.04
+Finish sending flow 343 from 2 to 3
+Send flow 351 from 3 to 4 with size 32768
+Finish receiving flow 345 from 2 to 3
+Flow tcpsrc finished at 520.043
+Finish sending flow 345 from 2 to 3
+Send flow 352 from 3 to 4 with size 32768
+Finish receiving flow 346 from 7 to 0
+Flow tcpsrc finished at 520.057
+Finish sending flow 346 from 7 to 0
+Send flow 353 from 0 to 1 with size 32768
+Finish receiving flow 347 from 7 to 0
+Flow tcpsrc finished at 520.058
+Finish sending flow 347 from 7 to 0
+Send flow 354 from 0 to 1 with size 32768
+Finish receiving flow 348 from 3 to 4
+Flow tcpsrc finished at 520.058
+Finish sending flow 348 from 3 to 4
+Send flow 355 from 4 to 5 with size 32768
+Finish receiving flow 349 from 3 to 4
+Flow tcpsrc finished at 520.059
+Finish sending flow 349 from 3 to 4
+Send flow 356 from 4 to 5 with size 32768
+Finish receiving flow 351 from 3 to 4
+Flow tcpsrc finished at 520.06
+Finish sending flow 351 from 3 to 4
+Send flow 357 from 4 to 5 with size 32768
+Finish receiving flow 352 from 3 to 4
+Flow tcpsrc finished at 520.064
+Finish sending flow 352 from 3 to 4
+Send flow 358 from 4 to 5 with size 32768
+Finish receiving flow 353 from 0 to 1
+Flow tcpsrc finished at 520.065
+Finish sending flow 353 from 0 to 1
+Send flow 359 from 1 to 2 with size 32768
+Finish receiving flow 354 from 0 to 1
+Flow tcpsrc finished at 520.065
+Finish sending flow 354 from 0 to 1
+Send flow 360 from 1 to 2 with size 32768
+Finish receiving flow 355 from 4 to 5
+Flow tcpsrc finished at 520.066
+Finish sending flow 355 from 4 to 5
+Send flow 361 from 5 to 6 with size 32768
+Finish receiving flow 356 from 4 to 5
+Flow tcpsrc finished at 520.066
+Finish sending flow 356 from 4 to 5
+Send flow 362 from 5 to 6 with size 32768
+Finish receiving flow 350 from 3 to 4
+Flow tcpsrc finished at 520.066
+Finish sending flow 350 from 3 to 4
+Send flow 363 from 4 to 5 with size 32768
+Finish receiving flow 357 from 4 to 5
+Flow tcpsrc finished at 520.067
+Finish sending flow 357 from 4 to 5
+Send flow 364 from 5 to 6 with size 32768
+Finish receiving flow 358 from 4 to 5
+Flow tcpsrc finished at 520.071
+Finish sending flow 358 from 4 to 5
+Send flow 365 from 5 to 6 with size 32768
+Finish receiving flow 363 from 4 to 5
+Flow tcpsrc finished at 520.073
+Finish sending flow 363 from 4 to 5
+Send flow 366 from 5 to 6 with size 32768
+Finish receiving flow 359 from 1 to 2
+Flow tcpsrc finished at 520.078
+Finish sending flow 359 from 1 to 2
+Send flow 367 from 2 to 3 with size 32768
+Finish receiving flow 361 from 5 to 6
+Flow tcpsrc finished at 520.079
+Finish sending flow 361 from 5 to 6
+Finish receiving flow 360 from 1 to 2
+Flow tcpsrc finished at 520.079
+Finish sending flow 360 from 1 to 2
+Send flow 368 from 6 to 7 with size 32768
+Send flow 369 from 2 to 3 with size 32768
+Finish receiving flow 362 from 5 to 6
+Flow tcpsrc finished at 520.08
+Finish sending flow 362 from 5 to 6
+Send flow 370 from 6 to 7 with size 32768
+Finish receiving flow 364 from 5 to 6
+Flow tcpsrc finished at 520.081
+Finish sending flow 364 from 5 to 6
+Send flow 371 from 6 to 7 with size 32768
+Finish receiving flow 365 from 5 to 6
+Flow tcpsrc finished at 520.084
+Finish sending flow 365 from 5 to 6
+Send flow 372 from 6 to 7 with size 32768
+Finish receiving flow 367 from 2 to 3
+Flow tcpsrc finished at 520.086
+Finish sending flow 367 from 2 to 3
+Send flow 373 from 3 to 4 with size 32768
+Finish receiving flow 369 from 2 to 3
+Flow tcpsrc finished at 520.086
+Finish sending flow 369 from 2 to 3
+Send flow 374 from 3 to 4 with size 32768
+Finish receiving flow 368 from 6 to 7
+Flow tcpsrc finished at 520.086
+Finish sending flow 368 from 6 to 7
+Send flow 375 from 7 to 0 with size 32768
+Finish receiving flow 366 from 5 to 6
+Flow tcpsrc finished at 520.087
+Finish sending flow 366 from 5 to 6
+Send flow 376 from 6 to 7 with size 32768
+Finish receiving flow 370 from 6 to 7
+Flow tcpsrc finished at 520.087
+Finish sending flow 370 from 6 to 7
+Send flow 377 from 7 to 0 with size 32768
+Finish receiving flow 371 from 6 to 7
+Flow tcpsrc finished at 520.088
+Finish sending flow 371 from 6 to 7
+Send flow 378 from 7 to 0 with size 32768
+Finish receiving flow 372 from 6 to 7
+Flow tcpsrc finished at 520.092
+Finish sending flow 372 from 6 to 7
+Send flow 379 from 7 to 0 with size 32768
+Finish receiving flow 376 from 6 to 7
+Flow tcpsrc finished at 520.094
+Finish sending flow 376 from 6 to 7
+Send flow 380 from 7 to 0 with size 32768
+Finish receiving flow 373 from 3 to 4
+Flow tcpsrc finished at 520.106
+Finish sending flow 373 from 3 to 4
+Send flow 381 from 4 to 5 with size 32768
+Finish receiving flow 374 from 3 to 4
+Flow tcpsrc finished at 520.107
+Finish sending flow 374 from 3 to 4
+Send flow 382 from 4 to 5 with size 32768
+Finish receiving flow 377 from 7 to 0
+Flow tcpsrc finished at 520.108
+Finish sending flow 377 from 7 to 0
+Send flow 383 from 0 to 1 with size 32768
+Finish receiving flow 379 from 7 to 0
+Flow tcpsrc finished at 520.112
+Finish sending flow 379 from 7 to 0
+Send flow 384 from 0 to 1 with size 32768
+Finish receiving flow 381 from 4 to 5
+Flow tcpsrc finished at 520.114
+Finish sending flow 381 from 4 to 5
+Send flow 385 from 5 to 6 with size 32768
+Finish receiving flow 382 from 4 to 5
+Flow tcpsrc finished at 520.114
+Finish sending flow 382 from 4 to 5
+Send flow 386 from 5 to 6 with size 32768
+Finish receiving flow 380 from 7 to 0
+Flow tcpsrc finished at 520.114
+Finish sending flow 380 from 7 to 0
+Send flow 387 from 0 to 1 with size 32768
+Finish receiving flow 383 from 0 to 1
+Flow tcpsrc finished at 520.115
+Finish sending flow 383 from 0 to 1
+Send flow 388 from 1 to 2 with size 32768
+Finish receiving flow 378 from 7 to 0
+Flow tcpsrc finished at 520.115
+Finish sending flow 378 from 7 to 0
+Send flow 389 from 0 to 1 with size 32768
+Finish receiving flow 384 from 0 to 1
+Flow tcpsrc finished at 520.12
+Finish sending flow 384 from 0 to 1
+Send flow 390 from 1 to 2 with size 32768
+Finish receiving flow 387 from 0 to 1
+Flow tcpsrc finished at 520.121
+Finish sending flow 387 from 0 to 1
+Send flow 391 from 1 to 2 with size 32768
+Finish receiving flow 389 from 0 to 1
+Flow tcpsrc finished at 520.122
+Finish sending flow 389 from 0 to 1
+Send flow 392 from 1 to 2 with size 32768
+Finish receiving flow 385 from 5 to 6
+Flow tcpsrc finished at 520.127
+Finish sending flow 385 from 5 to 6
+Send flow 393 from 6 to 7 with size 32768
+Finish receiving flow 386 from 5 to 6
+Flow tcpsrc finished at 520.127
+Finish sending flow 386 from 5 to 6
+Send flow 394 from 6 to 7 with size 32768
+Finish receiving flow 388 from 1 to 2
+Flow tcpsrc finished at 520.128
+Finish sending flow 388 from 1 to 2
+Send flow 395 from 2 to 3 with size 32768
+Finish receiving flow 390 from 1 to 2
+Flow tcpsrc finished at 520.134
+Finish sending flow 390 from 1 to 2
+Send flow 396 from 2 to 3 with size 32768
+Finish receiving flow 393 from 6 to 7
+Flow tcpsrc finished at 520.134
+Finish sending flow 393 from 6 to 7
+Send flow 397 from 7 to 0 with size 32768
+Finish receiving flow 391 from 1 to 2
+Flow tcpsrc finished at 520.135
+Finish sending flow 391 from 1 to 2
+Send flow 398 from 2 to 3 with size 32768
+Finish receiving flow 394 from 6 to 7
+Flow tcpsrc finished at 520.135
+Finish sending flow 394 from 6 to 7
+Send flow 399 from 7 to 0 with size 32768
+Finish receiving flow 395 from 2 to 3
+Flow tcpsrc finished at 520.135
+Finish sending flow 395 from 2 to 3
+Send flow 400 from 3 to 4 with size 32768
+Finish receiving flow 392 from 1 to 2
+Flow tcpsrc finished at 520.136
+Finish sending flow 392 from 1 to 2
+Send flow 401 from 2 to 3 with size 32768
+Finish receiving flow 396 from 2 to 3
+Flow tcpsrc finished at 520.141
+Finish sending flow 396 from 2 to 3
+Send flow 402 from 3 to 4 with size 32768
+Finish receiving flow 398 from 2 to 3
+Flow tcpsrc finished at 520.142
+Finish sending flow 398 from 2 to 3
+Send flow 403 from 3 to 4 with size 32768
+Finish receiving flow 401 from 2 to 3
+Flow tcpsrc finished at 520.142
+Finish sending flow 401 from 2 to 3
+Send flow 404 from 3 to 4 with size 32768
+Finish receiving flow 397 from 7 to 0
+Flow tcpsrc finished at 520.155
+Finish sending flow 397 from 7 to 0
+Send flow 405 from 0 to 1 with size 32768
+Finish receiving flow 399 from 7 to 0
+Flow tcpsrc finished at 520.155
+Finish sending flow 399 from 7 to 0
+Send flow 406 from 0 to 1 with size 32768
+Finish receiving flow 400 from 3 to 4
+Flow tcpsrc finished at 520.156
+Finish sending flow 400 from 3 to 4
+Send flow 407 from 4 to 5 with size 32768
+Finish receiving flow 402 from 3 to 4
+Flow tcpsrc finished at 520.162
+Finish sending flow 402 from 3 to 4
+Send flow 408 from 4 to 5 with size 32768
+Finish receiving flow 405 from 0 to 1
+Flow tcpsrc finished at 520.162
+Finish sending flow 405 from 0 to 1
+Send flow 409 from 1 to 2 with size 32768
+Finish receiving flow 403 from 3 to 4
+Flow tcpsrc finished at 520.162
+Finish sending flow 403 from 3 to 4
+Send flow 410 from 4 to 5 with size 32768
+Finish receiving flow 406 from 0 to 1
+Flow tcpsrc finished at 520.162
+Finish sending flow 406 from 0 to 1
+Send flow 411 from 1 to 2 with size 32768
+Finish receiving flow 404 from 3 to 4
+Flow tcpsrc finished at 520.163
+Finish sending flow 404 from 3 to 4
+Send flow 412 from 4 to 5 with size 32768
+Finish receiving flow 407 from 4 to 5
+Flow tcpsrc finished at 520.163
+Finish sending flow 407 from 4 to 5
+Send flow 413 from 5 to 6 with size 32768
+Finish receiving flow 408 from 4 to 5
+Flow tcpsrc finished at 520.169
+Finish sending flow 408 from 4 to 5
+Send flow 414 from 5 to 6 with size 32768
+Finish receiving flow 410 from 4 to 5
+Flow tcpsrc finished at 520.17
+Finish sending flow 410 from 4 to 5
+Send flow 415 from 5 to 6 with size 32768
+Finish receiving flow 412 from 4 to 5
+Flow tcpsrc finished at 520.17
+Finish sending flow 412 from 4 to 5
+Send flow 416 from 5 to 6 with size 32768
+Finish receiving flow 409 from 1 to 2
+Flow tcpsrc finished at 520.175
+Finish sending flow 409 from 1 to 2
+Send flow 417 from 2 to 3 with size 32768
+Finish receiving flow 411 from 1 to 2
+Flow tcpsrc finished at 520.176
+Finish sending flow 411 from 1 to 2
+Send flow 418 from 2 to 3 with size 32768
+Finish receiving flow 413 from 5 to 6
+Flow tcpsrc finished at 520.176
+Finish sending flow 413 from 5 to 6
+Send flow 419 from 6 to 7 with size 32768
+Finish receiving flow 414 from 5 to 6
+Flow tcpsrc finished at 520.182
+Finish sending flow 414 from 5 to 6
+Send flow 420 from 6 to 7 with size 32768
+Finish receiving flow 417 from 2 to 3
+Flow tcpsrc finished at 520.182
+Finish sending flow 417 from 2 to 3
+Send flow 421 from 3 to 4 with size 32768
+Finish receiving flow 418 from 2 to 3
+Flow tcpsrc finished at 520.183
+Finish sending flow 418 from 2 to 3
+Send flow 422 from 3 to 4 with size 32768
+Finish receiving flow 415 from 5 to 6
+Flow tcpsrc finished at 520.183
+Finish sending flow 415 from 5 to 6
+Send flow 423 from 6 to 7 with size 32768
+Finish receiving flow 419 from 6 to 7
+Flow tcpsrc finished at 520.183
+Finish sending flow 419 from 6 to 7
+Send flow 424 from 7 to 0 with size 32768
+Finish receiving flow 416 from 5 to 6
+Flow tcpsrc finished at 520.184
+Finish sending flow 416 from 5 to 6
+Send flow 425 from 6 to 7 with size 32768
+Finish receiving flow 420 from 6 to 7
+Flow tcpsrc finished at 520.189
+Finish sending flow 420 from 6 to 7
+Send flow 426 from 7 to 0 with size 32768
+Finish receiving flow 423 from 6 to 7
+Flow tcpsrc finished at 520.19
+Finish sending flow 423 from 6 to 7
+Send flow 427 from 7 to 0 with size 32768
+Finish receiving flow 425 from 6 to 7
+Flow tcpsrc finished at 520.191
+Finish sending flow 425 from 6 to 7
+Send flow 428 from 7 to 0 with size 32768
+Finish receiving flow 421 from 3 to 4
+Flow tcpsrc finished at 520.203
+Finish sending flow 421 from 3 to 4
+Send flow 429 from 4 to 5 with size 32768
+Finish receiving flow 422 from 3 to 4
+Flow tcpsrc finished at 520.203
+Finish sending flow 422 from 3 to 4
+Send flow 430 from 4 to 5 with size 32768
+Finish receiving flow 424 from 7 to 0
+Flow tcpsrc finished at 520.204
+Finish sending flow 424 from 7 to 0
+Send flow 431 from 0 to 1 with size 32768
+Finish receiving flow 426 from 7 to 0
+Flow tcpsrc finished at 520.21
+Finish sending flow 426 from 7 to 0
+Send flow 432 from 0 to 1 with size 32768
+Finish receiving flow 429 from 4 to 5
+Flow tcpsrc finished at 520.21
+Finish sending flow 429 from 4 to 5
+Send flow 433 from 5 to 6 with size 32768
+Finish receiving flow 430 from 4 to 5
+Flow tcpsrc finished at 520.21
+Finish sending flow 430 from 4 to 5
+Send flow 434 from 5 to 6 with size 32768
+Finish receiving flow 427 from 7 to 0
+Flow tcpsrc finished at 520.21
+Finish sending flow 427 from 7 to 0
+Send flow 435 from 0 to 1 with size 32768
+Finish receiving flow 431 from 0 to 1
+Flow tcpsrc finished at 520.211
+Finish sending flow 431 from 0 to 1
+Send flow 436 from 1 to 2 with size 32768
+Finish receiving flow 428 from 7 to 0
+Flow tcpsrc finished at 520.211
+Finish sending flow 428 from 7 to 0
+Send flow 437 from 0 to 1 with size 32768
+Finish receiving flow 432 from 0 to 1
+Flow tcpsrc finished at 520.217
+Finish sending flow 432 from 0 to 1
+Send flow 438 from 1 to 2 with size 32768
+Finish receiving flow 435 from 0 to 1
+Flow tcpsrc finished at 520.217
+Finish sending flow 435 from 0 to 1
+Send flow 439 from 1 to 2 with size 32768
+Finish receiving flow 437 from 0 to 1
+Flow tcpsrc finished at 520.218
+Finish sending flow 437 from 0 to 1
+Send flow 440 from 1 to 2 with size 32768
+Finish receiving flow 433 from 5 to 6
+Flow tcpsrc finished at 520.223
+Finish sending flow 433 from 5 to 6
+Send flow 441 from 6 to 7 with size 32768
+Finish receiving flow 434 from 5 to 6
+Flow tcpsrc finished at 520.224
+Finish sending flow 434 from 5 to 6
+Finish receiving flow 436 from 1 to 2
+Flow tcpsrc finished at 520.224
+Finish sending flow 436 from 1 to 2
+Send flow 442 from 2 to 3 with size 32768
+ [workload] [info] sys[6] finished, 520223565 cycles, exposed communication 520223565 cycles.
+ [statistics] [info] sys[6]. Post statistics processing start.
+ [statistics] [info] sys[6]. Post statistics processing end.
+ [statistics] [info] sys[6], Wall time: 520223565
+ [statistics] [info] sys[6], Comm time: 520223565
+Finish receiving flow 438 from 1 to 2
+Flow tcpsrc finished at 520.23
+Finish sending flow 438 from 1 to 2
+Send flow 443 from 2 to 3 with size 32768
+Finish receiving flow 441 from 6 to 7
+Flow tcpsrc finished at 520.23
+Finish sending flow 441 from 6 to 7
+Finish receiving flow 439 from 1 to 2
+Flow tcpsrc finished at 520.23
+Finish sending flow 439 from 1 to 2
+Send flow 444 from 2 to 3 with size 32768
+Finish receiving flow 442 from 2 to 3
+Flow tcpsrc finished at 520.231
+Finish sending flow 442 from 2 to 3
+Send flow 445 from 3 to 4 with size 32768
+Finish receiving flow 440 from 1 to 2
+Flow tcpsrc finished at 520.231
+Finish sending flow 440 from 1 to 2
+Finish receiving flow 443 from 2 to 3
+Flow tcpsrc finished at 520.237
+Finish sending flow 443 from 2 to 3
+Send flow 446 from 3 to 4 with size 32768
+Finish receiving flow 444 from 2 to 3
+Flow tcpsrc finished at 520.237
+Finish sending flow 444 from 2 to 3
+Finish receiving flow 446 from 3 to 4
+Flow tcpsrc finished at 520.257
+Finish sending flow 446 from 3 to 4
+Send flow 447 from 4 to 5 with size 32768
+Finish receiving flow 447 from 4 to 5
+Flow tcpsrc finished at 520.264
+Finish sending flow 447 from 4 to 5
+ [workload] [info] sys[7] finished, 520229815 cycles, exposed communication 520229815 cycles.
+ [statistics] [info] sys[7]. Post statistics processing start.
+ [statistics] [info] sys[7]. Post statistics processing end.
+ [statistics] [info] sys[7], Wall time: 520229815
+ [statistics] [info] sys[7], Comm time: 520229815
+ [workload] [info] sys[2] finished, 520231236 cycles, exposed communication 520231236 cycles.
+ [statistics] [info] sys[2]. Post statistics processing start.
+ [statistics] [info] sys[2]. Post statistics processing end.
+ [statistics] [info] sys[2], Wall time: 520231236
+ [statistics] [info] sys[2], Comm time: 520231236
+ [workload] [info] sys[3] finished, 520237406 cycles, exposed communication 520237406 cycles.
+ [statistics] [info] sys[3]. Post statistics processing start.
+ [statistics] [info] sys[3]. Post statistics processing end.
+ [statistics] [info] sys[3], Wall time: 520237406
+ [statistics] [info] sys[3], Comm time: 520237406
+ [workload] [info] sys[5] finished, 520263887 cycles, exposed communication 520263887 cycles.
+ [statistics] [info] sys[5]. Post statistics processing start.
+ [statistics] [info] sys[5]. Post statistics processing end.
+ [statistics] [info] sys[5], Wall time: 520263887
+ [statistics] [info] sys[5], Comm time: 520263887
+At 780 RTO 250 MDEV 0 RTT 0 SEQ 20 HSENT 34501 CWND 31 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 780 RTO 250 MDEV 0 RTT 0 SEQ 22 HSENT 34501 CWND 33 FAST RECOVERY? 0 Flow ID mtcp_7_0_0
+At 780 RTO 250 MDEV 0 RTT 0 SEQ 22 HSENT 34501 CWND 33 FAST RECOVERY? 0 Flow ID mtcp_3_0_4
+Finish receiving flow 344 from 7 to 0
+Flow tcpsrc finished at 780.007
+Finish sending flow 344 from 7 to 0
+Send flow 448 from 0 to 1 with size 32768
+Finish receiving flow 375 from 7 to 0
+Flow tcpsrc finished at 780.007
+Finish sending flow 375 from 7 to 0
+Finish receiving flow 445 from 3 to 4
+Flow tcpsrc finished at 780.008
+Finish sending flow 445 from 3 to 4
+ [workload] [info] sys[0] finished, 780007024 cycles, exposed communication 780007024 cycles.
+ [statistics] [info] sys[0]. Post statistics processing start.
+ [statistics] [info] sys[0]. Post statistics processing end.
+ [statistics] [info] sys[0], Wall time: 780007024
+ [statistics] [info] sys[0], Comm time: 780007024
+ [workload] [info] sys[4] finished, 780007745 cycles, exposed communication 780007745 cycles.
+ [statistics] [info] sys[4]. Post statistics processing start.
+ [statistics] [info] sys[4]. Post statistics processing end.
+ [statistics] [info] sys[4], Wall time: 780007745
+ [statistics] [info] sys[4], Comm time: 780007745
+Finish receiving flow 448 from 0 to 1
+Flow tcpsrc finished at 780.014
+Finish sending flow 448 from 0 to 1
+HTSim stopping simulation...
+ [workload] [info] sys[1] finished, 780013678 cycles, exposed communication 780013678 cycles.
+ [statistics] [info] sys[1]. Post statistics processing start.
+ [statistics] [info] sys[1]. Post statistics processing end.
+ [statistics] [info] sys[1], Wall time: 780013678
+ [statistics] [info] sys[1], Comm time: 780013678
+.
+Simulation of events finished
+ASTRA_EXIT=0
+ELAPSED_SECONDS=0

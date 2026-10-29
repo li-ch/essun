@@ -1,0 +1,40 @@
+ 502 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+type of CSIG tag, a sender would send a fraction of its packets with the max(Delay) signal and 
+another fraction with the min(ABW/C) signal. However, this approach increases controller 
+complexity. The controller would require an additional configuration parameter (i.e., the fraction 
+of min(ABW/C) packets), reducing the frequency of obtaining the latency signal, and potentially 
+creating issues with multiple traffic class scenarios, without clear corresponding benefits. 
+Therefore, this approach is not considered further. 
+The last difference to HPCC is using ECN to estimate queue depth. The key observation is that the 
+ECN marking rate is directly derived from queue length by routers. The receiver can observe the 
+(average) ECN marking rate, and armed with knowledge of the ECN marking parameters (see 
+Section 3.6.17), can infer what the queue length is. In particular, if the receiver knows  ECN 
+configuration parameters queue_low.min_thresh and queue_low.max_thresh, it can measure the 
+average ECN marking rate and reverse engineer the queue length as follows: 
+• If the average marking rate is ~0, queue length must be <= queue_low.min_thresh 
+• If the average marking rate is 1, queue length must be >= queue_low.max_thresh 
+• If 0 < ecn_rate < 1, queue length = queue_low.min_thresh + ecn_rate * 
+(queue_low.max_thresh – queue_low.min_thresh) 
+As long as the setpoint for HPCC is set in between queue_low.min_thresh and 
+queue_low.max_thresh , the receiver has a direct way to determine the queue length. 
+Experiments show that by using an EWMA on the ECE bit at the receiver, the ECN marking rate 
+can be tracked with very good accuracy (median error less than 0.3%), which means that the 
+resulting error in queue depth estimation is also low. 
+ 
+The RCCC oversubscribed congestion control algorithm has two parts: a part that is run on arrival of data 
+or trimmed packets at the receiver, and another one that runs the congestion control algorithm that 
+may run less frequently. The full pseudocode is provided in Section 3.6.14.7.2.2. 
+On each packet arrival, the algorithm updates the average_delay value with an exponential moving 
+average, using information from CSIG tags, ECN marks, and packet trim status. If the CSIG tag is present 
+and has type max(Delay), the quantized signal values are de-quantized by looking up the metric value 
+and the bucket ranges provided by the control plane using the inverse of the process described in 
+Section 4.2.4.1.5 for the compact tag format and in Section 4.2.4.1.6 for the wide tag format. The min 
+value of each bucket is used to represent the resulting value of the de-quantization process. 
+Once every CC_INVOCATION_DELTA microseconds, where CC_INVOCATION_DELTA is a configuration 
+parameter, the congestion control algorithm is invoked, which updates the receiver credit rate (See 
+Table 3-101 in Section 3.6.14.5.1). The CC_INVOCATION_DELTA parameter offers a tradeoff between 
+responding quickly and reducing the cost of congestion control invocations. By setting the 
+CC_INVOCATION_DELTA parameter to small values, the congestion control algorithm can be invoked on 
+a per-packet basis, but this requires more processing and might become a performance bottleneck at 

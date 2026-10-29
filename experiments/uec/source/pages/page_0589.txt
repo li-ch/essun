@@ -1,0 +1,18 @@
+ 589 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+[53] Github, "uet-pcm / uet_pcm.h," 2026. [Online]. Available: https://github.com/ultraethernet/uet-
+pcm/blob/main/uet_pcm.h. [Accessed 2026]. 
+[54] IETF RFC 9000, "QUIC: A UDP-Based Multiplexed and Secure Transport," 2021. [Online]. Available: 
+https://www.ietf.org/rfc/rfc9000.html. 
+[55] T. Chen, A. Kubicek, L. Huang and T. Hoefler, "{CrossPipe}: Towards Optimal Pipeline Schedules for 
+{Cross-Datacenter} Training.," in 2025 USENIX Annual Technical Conference (USENIX ATC 25), 2025. 
+[56] T. Bonato, S. Abdous, A. Kabbani, A. Ghalayini, N. Gebara, T. Lam, A. Agarwal, T. Chen, Z. Yu and K. 
+Taranov, "Uno: A One-Stop Solution for Inter-and Intra-Data Center Congestion Control and 
+Reliable Connectivity," in Proceedings of the International Conference for High Performance 
+Computing, Networking, Storage and Analysis, 2025. 
+[57] Y. Li, R. Miao, H. H. Liu, Y. Zhuang, F. Feng, L. Tang, Z. Cao, M. Zhang, F. Kelly and M. Alizadeh, 
+"HPCC: High precision congestion control," in Proceedings of the ACM special interest group on 
+data communication, 2019. 
+ 
+  

@@ -1,0 +1,20 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 100 B/ns, L =
+# 600 ns — the LINK-COMPONENT row of the latency sweep: the anchor's
+# own staged "link latency 600 ns" read alone as the per-pair latency
+# (declared component reading: one link, no switch term). Together with
+# the L=400 row this executes the anchor's per-hop decomposition
+# {link 600, switch 400, sum 1000} as three placement points on the
+# free L axis. Placement arithmetic only, never tuning. See
+# crossbar8_gf05_line100_v1.yaml for full GF-05 provenance.
+topology_id: crossbar8_gf05_line100_l600_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 600
+notes: >
+  Link component row (L = 600 ns = GF-05's staged "link latency 600 ns",
+  verbatim) at GF-05's fixed sim line rate B = 100 B/ns. Identity
+  t = 2(r-1)/r*M/B + 2L. Sim-config provenance class. Provenance:
+  anchor-staged sim config; never our measurements, never tuned.

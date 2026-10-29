@@ -1,0 +1,16 @@
+ 429 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  
+3.5.25.3 UET over UDP/IP using Encryption 
+Figure 3-114 shows the full header stack, depicting important fields necessary for parsing when using 
+UDP, UET CRC and UET encryption. 
+ 
+ 
+Figure 3-113 - Full Header: UET/UDP/IP with UET CRC, no TSS 
+ 
+ 
+ 
+Figure 3-114 - Full Header: UET/UDP/IP with Encryption 
+ 
+ 

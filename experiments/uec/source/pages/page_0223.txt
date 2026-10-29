@@ -1,0 +1,22 @@
+ 223 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+RTR message containing a target restart token value other than 0. Any deferrable send that contains a 
+target restart token value of 0 MAY be deferred. 
+Each time the deferrable send is restarted, it MUST carry the addressing fields and header data from the 
+original request. This allows for implementations where the deferrable send is restarted multiple times 
+without reserving a buffer at the target. The request length in the restarted deferrable send MUST be 
+the request length indicated by the target in the RTR message. 
+Informative Text: 
+Deferrable sends can utilize the various resource exhaustion sequences described in 3.4.4.6.1. These 
+sequences do not count as deferrals of the deferrable send. 
+ 
+ 
+ 
+Implementation Note: 
+It should be noted that the restarted deferrable send cannot carry a starting offset for delivering the 
+payload; thus, if the target has buffered a portion of the payload and the restart of the deferrable 
+send begins at a non-zero offset into the buffer, the target is required to remember this.  
+ 
+Figure 3-13 - Standard Header Format as Used for Deferrable Sends 
+ 

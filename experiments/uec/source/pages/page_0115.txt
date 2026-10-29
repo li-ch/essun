@@ -1,0 +1,54 @@
+ 115 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.2.5.4.2 fi_tagged() APIs 
+The fi_tagged() APIs are used to perform tagged data transfer operations. There are APIs to post receive 
+buffers for incoming messages and APIs for initiating transmission of outgoing messages. 
+The fi_tagged() APIs are NOT supported for FI_EP_DGRAM endpoints. 
+The fi_tagged() APIs MUST be supported by the AI Full and HPC profiles. 
+The fi_tagged() Receive API requirements are summarized in Table 2-23. 
+Table 2-23 - fi_tagged() Receive API Requirements 
+fi_tagged() API Description Requirements 
+fi_trecv Like fi_recv() but with a tag. Posted 
+receive buffers are searched in the order 
+they were posted to match sends.  
+The ignore parameter contains a bitmask 
+that is applied to the tag to support 
+wildcard tag matches. 
+API MUST be supported by AI Full and HPC 
+profiles 
+ 
+The AI Full profile is required to support only 
+exact match tags. If wildcard tags are not 
+supported, the UET provider MUST fail the API 
+request if any of the ignore bits are set 
+The HPC profile MUST support wildcard tag 
+matching 
+fi_trecvv Like fi_recvv() but with a tag API MUST be supported by AI Full and HPC 
+profiles 
+fi_trecvmsg Like fi_recvmsg() but with a tag API MUST be supported by AI Full and HPC 
+profiles 
+ 
+Table 2-24 summarizes the fi_tagged() send API requirements and shows the mapping of the APIs to the 
+UET SES opcodes. 
+Table 2-24 - fi_tagged() Send API Requirements 
+fi_tagged() API Description Requirements SES Opcode 
+fi_tsend Like fi_send() but with tag API MUST be 
+supported by 
+AI Full and HPC 
+profiles 
+AI Full profile: 
+• UET_TAGGED_SEND or 
+• UET_DEFERRABLE_TSEND 
+Use of UET_TAGGED_SEND vs. 
+UET_DEFERRABLE_TSEND is based on 
+message size as described in Section 
+2.2.5.3.4.1 
+HPC profile: 
+• UET_TAGGED_SEND or 
+• UET_RENDEZVOUS_TSEND 
+Use of UET_TAGGED_SEND vs. 
+UET_RENDEZVOUS_TSEND is based 
+on message size as described in 
+Section 2.2.5.3.4.1 
+fi_tsendv Like fi_sendv() but with tag Same as fi_tsend() Same as fi_tsend() 

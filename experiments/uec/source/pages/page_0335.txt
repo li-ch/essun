@@ -1,0 +1,80 @@
+ 335 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-40 - Header Fields for RUD/ROD Request 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = ROD Request or RUD Request 
+next_hdr 4 Encoding identifying UET Semantic type (Refer to SES Section 
+3.4.3.8) 
+flags (7 bits) 
+• rsvd 
+• retx 
+• ar 
+ 
+• syn 
+• rsvd 
+ 
+2  
+1 
+1 
+ 
+1 
+2 
+pds.flags = [rsvd, retx, ar, syn, rsvd] 
+• Reserved  
+• 1 => This packet is a retransmit (Refer to Section 
+3.5.11.8.4) 
+• 1 => ACK Request, when set an ACK is requested to be sent 
+for this packet (Refer to Section 3.5.12.2) 
+• 1 => PDC establishment request 
+• Reserved 
+clear_psn_offset 16 Encoding of CLEAR_PSN relative to PSN 
+This field is a sequence number used to acknowledge reception 
+of PDS ACKs 
+psn 32 Packet sequence number assigned to the PDS Request 
+spdcid 16 Source PDCID; PDCID assigned by FEP that is source of the 
+packet 
+ 
+ 
+ 
+{dpdcid}  
+ 
+or 
+ 
+{pdc_info, 
+psn_offset} 
+ 
+ 
+ 
+16 
+ 
+ 
+ 
+4 
+12 
+This field is overloaded as specified in Section 3.5.8.2 
+• When pds.flags.syn = 0: 
+o Destination PDCID assigned by FEP that is the 
+destination of the packet 
+• When pds.flags.syn = 1: {pds.pdc_info, pds.psn_offset} 
+ 
+Encoding for pds.pdc_info = [rsvd, rsvd, rsvd, use_rsvd_pdc] 
+• pds.pdc_info.reserved(3) 
+• pds.pdc_info.use_rsvd_pdc 
+1 = use PDC from reserved pool 
+0 = use PDC from global shared pool 
+ 
+pds.psn_offset is the numerical difference between the PSN in 
+this packet and the Start_PSN on the PDC; refer to Section 
+3.5.8.2 
+ 
+3.5.10.5 RODL Request 
+The PDS header format for a RODL Request packet is shown in Figure 3-67. The header fields are 
+described in Table 3-41. 
+When using RODL over the UFH_16 header, for maximized wire efficiency, the RODL header is 
+compressed to the format shown in Figure 3-68. The header fields are described in Table 3-42. 

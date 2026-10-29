@@ -1,0 +1,10 @@
+Nodes 16
+Connections 8
+0->1 start 0 size 28672 id 25
+1->2 start 0 size 28672 id 26
+2->3 start 0 size 28672 id 27
+3->4 start 0 size 28672 id 28
+4->5 start 0 size 28672 id 29
+5->6 start 0 size 28672 id 30
+6->7 start 0 size 28672 id 31
+7->0 start 0 size 28672 id 32

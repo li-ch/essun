@@ -1,0 +1,34 @@
+# Calibration-ladder GF-03 topology: fully-connected EXCHANGE fabric of 8
+# ranks at the spec aggregate point B = 900 B/ns — recursive-halving/
+# doubling AllReduce (backend analytical_l0_recursive_doubling), L = 200 ns.
+# Same provenance as crossbar8_gf03_spec900_v1 (GF-03's own "theoretical"
+# quote = CAL-A2's per-direction line). ROLE (same as GF-01's third chain):
+# the three L0 identities share the bandwidth term 2(r-1)/r*M/B and differ
+# ONLY in the latency chain — ring 14L, doubling 2*log2(8)L = 6L, crossbar
+# 2L — and GF-03's only staged CCT row (2 MiB in 42-52 us) sits far above
+# every aggregate-reading chain, so all three chains are executed to
+# bracket where the identities sit relative to that row. r=8 is a power of
+# two, so A-L0D-POW2 accepts natively; the doubling backend is
+# run-manifest-unreachable (the A7 record's gate finding) and is executed
+# through the sweep path only.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0D-BW), never tuned toward any
+# model output; 900 is the anchor's own theoretical quote. L = 200 ns is
+# the A-L0D-LAT registry point (KEEP). In-domain single-port reading for
+# the NVSwitch class (A-L0X-PORT analog for the exchange identity).
+topology_id: exchange8_gf03_spec900_v1
+topology_class: fully_connected_exchange
+ranks: 8
+nic:
+  injection_bytes_per_ns: 900
+link:
+  pair_latency_ns: 200
+notes: >
+  Partner-exchange steps over a fully-reachable fabric: one partner per
+  rank per step (XOR schedule), log2(r)=3 steps per phase, 6L latency
+  chain total. No congestion, no credits, no packetization — L0 transport
+  model only. Provenance: B = 900 B/ns from GF-03's staged "theoretical"
+  quote (= CAL-A2's per-GPU per-direction line = CAL-A1's 18 x 50;
+  gap-fill anchor, PROPOSED, not yet an integrated anchor row), L from the free
+  A-L0D-LAT registry point. Values are anchor quotes / free-registry
+  points, never our measurements, never tuned.

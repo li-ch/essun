@@ -1,0 +1,122 @@
+Emerging AI applications are making compute the cornerstone of industrial intelligent transformation. Yang promised, "Huawei is committed to innovating at the system level, building a computing-foundation product portfolio, and going open source and open system. We will continue working with customers, partners, and developers to help this ecosystem thrive and offer the world a new option for compute."
+
+Themed Advancing the Agentic World, HUAWEI CONNECT 2026 will delve into AI across three dimensions: strategy, technology, and ecosystems. You can expect an in-depth look at our latest strategic initiatives, and we'll also be unveiling our all-new digital and intelligent infrastructure products, scenario-specific solutions for industries, and development tools. The event will run from September 17 to 19 at the Shanghai World Expo Exhibition & Convention Center and Shanghai Expo Center. For more information, please visit HUAWEI CONNECT 2026 online at www.huawei.com/en/events/huaweiconnect
+
+FAQ:
+
+Q1: What is agentic AI? Why does it have higher demands on computing architecture?
+
+Answer: Agentic AI refers to AI systems that can autonomously plan, invoke other tools, and execute tasks multiple times independently. Compared with traditional generative AI, agentic AI requires more frequent data exchange between CPUs, NPUs, memory, and storage devices, thereby placing higher demands on communications efficiency and resource coordination.
+
+Q2: What is KV Cache? What are Attention and FFN? What is the purpose of Attention-FFN disaggregation?
+
+KV cache stores historical key-value pairs during AI model inference to avoid redundant computation. The longer the context, the more memory it consumes.
+
+Attention is a mechanism that captures contextual relationships, while FFNs (Feed-Forward Networks) handle layer-by-layer feature transformation. They are both core computational modules of the Transformer architecture.
+
+Attention-FFN disaggregation (AFD) decouples Attention and FFN and deploys them onto different compute units to enable flexible CPU-NPU mixes for different workloads. This improves inference efficiency and resource utilization. AFD is particularly valuable for agentic AI which requires frequent CPU-NPU collaboration.
+
+More News
+
+Learn More
+
+Online Services
+
+Consumer Products
+
+Global Service Hotline
+
+Local Website
+
+Huawei Cloud
+
+Sales: +852-800-931-122
+
+Chatbot
+
+Enterprise
+
+Global Service Hotline
+
+Pricing/Info
+
+Carrier Network
+
+Global Service Hotline
+
+All Contacts
+
+About Huawei
+
+Our Company
+
+Sustainability
+
+Trust Center
+
+Executives
+
+Careers
+
+Suppliers
+
+See More
+
+News & Events
+
+Media Center
+
+Events
+
+Explore Huawei
+
+HuaweiTech
+
+Intelligent World 2035
+
+Striding Towards the Intelligent World
+
+GDII
+
+Huawei Blog
+
+Publications
+
+Products
+
+Consumer
+
+Enterprise
+
+Carrier
+
+Huawei Cloud
+
+Digital Power
+
+Support
+
+Consumer Support
+
+Huawei Cloud Support
+
+Enterprise Support
+
+Carrier Support
+
+Digital Power Support
+
+Security Incident Response
+
+Huawei Cloud
+
+Copyright © @year Huawei Technologies Co., Ltd.
+
+Contact
+
+Terms of Use
+
+Privacy
+
+Cookies
+

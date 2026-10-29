@@ -1,0 +1,8 @@
+# Implementation profile for the analytical L0 backend (free-parameter model).
+implementation_profile_id: analytical_l0_free_v1
+status: PROPOSED
+backend: analytical_l0
+fidelity: L0
+model: chunked ring AllReduce (see src/essun/backends/analytical/l0.py)
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+measurement_source: none   # not calibrated; values are assumptions, not measurements

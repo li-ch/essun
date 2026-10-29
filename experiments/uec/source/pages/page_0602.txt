@@ -1,0 +1,43 @@
+ 602 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4.2.1 Terminology 
+Term Description 
+CSIG Congestion signaling 
+EOP End of packet 
+Locator metadata Contextual information stored in a CSIG tag to identify where in the network that tag 
+was updated 
+Monitoring entity An entity responsible for collecting telemetry captured via CSIG and/or other methods, 
+and provisioned to scale appropriately to report arrival rates 
+Probe CSIG-tagged packet created for the express purpose of in-network telemetry collection 
+(in contrast with CSIG-tagged packets sent by non-telemetry applications) 
+Signal type and value In-network telemetry information of interest 
+SOP Start of packet 
+VLAN tag An IEEE Std 802.1Q-2022 clause 9-compliant VLAN tag [2]  
+ 
+4.2.2 Overview 
+This specification defines CSIG, a simple in-band network telemetry method in which packets collect 
+fine-grained measurements at switches as they traverse a network path. CSIG incurs low telemetry 
+collection overhead by limiting in-packet state to a single, fixed-size CSIG tag that stores a signal value 
+measured at a single switch (independent of the number of hops the packet traverses). 
+Each switch along a path inspects and (where appropriate) updates this single tag in accordance with a 
+signal type encoded in the tag and policies configured by the network administrator (e.g., choices of 
+parameters that govern quantization and time granularity of measured values). Network endpoints can 
+consume arriving CSIG signals for use by in-band functions such as congestion control and load 
+balancing. Monitoring entities at network endpoints can also process arriving CSIG signals for use in such 
+out-of-band functions as performance analysis, debugging, and SLA assurance. When included in packets 
+that comprise applications’ usual traffic flows, CSIG tags gather in-context telemetry that indicates the 
+state of the network path as experienced by an application’s packet. In addition, monitoring frameworks 
+can include CSIG tags in dedicated probe packets to measure the network’s state. 
+The CSIG tag is a link-level Ethernet tag that carries telemetry information end to end. Its definition is 
+independent of any specific layer 3 network encapsulation or layer 4 transport. Although a CSIG tag does 
+not itself specify the higher-layer transport and/or application for which it carries a signal, that signal 
+must nevertheless be interpreted in context. This specification discusses means to associate the signal in 
+a CSIG tag with the appropriate higher-level transport context (in Ultra Ethernet Transport [UET], the 
+appropriate congestion control context [CCC]), and means for reflection of the signal in a tag on a UET 
+packet arriving at a destination endpoint back to the source endpoint in the header of a UET layer 4 ACK 
+or NACK. 
+Informative Text: 
+Note that because CSIG is an optional UE feature, for CSIG tags to be carried end to end in a UE fabric 
+all switches in the UE fabric must support CSIG, and the fabric must be configured to enable the use of 
+CSIG. Please refer to further discussion of these deployment considerations in Section 4.2.10. 

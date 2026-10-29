@@ -1,0 +1,32 @@
+ 302 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Function Name Direction Description and Parameters 
+TRUE. PDS calls this with pdc_pause = TRUE or rudi_pause = TRUE 
+and later calls again with pdc_pause = FALSE or rudi_pause = FALSE. 
+• An implementation MAY allow responses when pds_pause() is 
+invoked with pds_pause = TRUE or rudi_pause = TRUE. 
+pds_ses_error() PDS to SES PDS unrecoverable Error 
+ pds_error, tx_pkt_handle or rx_pkt_handle 
+• If a PDC has an unrecoverable error, PDS returns a pds_ses_error for 
+every outstanding, unacknowledged SES request packet associated 
+with the error event—this may be all outstanding packets if PDS is 
+torn down in error. 
+ 
+PDC processing at the initiator and target is largely symmetrical, accepting requests from SES to transmit 
+a packet and returning the corresponding SES Response. At the target, SES requests are limited to 
+responses to SES read requests (i.e., return data). 
+Only the initiator issues a query for an eager window size as only the initiator can transmit Send 
+messages. These sequences of related functions are shown in the high-level diagram in Figure 3-54 and 
+are described in more detail ahead. 
+Figure 3-54 shows how these example APIs would interact between the SES-PDS at both the initiator and 
+target. The thicker arrow around the (Request/ACK) and (Return Data/ACK) illustrates the independent 
+PSN spaces used on the forward and return direction. PSNs are described in Section 3.5.8.  
+3.5.5 PDS Configuration Parameters 
+Table 3-35 contains a summary of the PDS configuration parameters. At least one set of the PDS 
+configuration parameters MUST be supported for each FEP. If reserved PDCs are supported, a second 
+set of these parameters MUST be supported for each FEP. The reserved pool, discussed in Section 
+3.5.18, is used for special services. 
+ 
+Figure 3-54 - Example PDS-SES Interface between Initiator and Target 
+ 

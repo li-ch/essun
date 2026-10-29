@@ -1,0 +1,43 @@
+ 158 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 2-51 - Required Datatype Combinations 
+Name 
+UET_INC_MIN 
+UET_INC_MAX 
+UET_INC_SUM 
+UET_INC_LOR 
+UET_INC_LAND 
+UET_INC_BOR 
+UET_INC_BAND 
+UET_INC_LXOR 
+UET_INC_BXOR 
+UET_TYPE_INT32 MUST MUST MUST MUST MUST MUST MUST MUST MUST 
+UET_TYPE_UINT32 MUST MUST MUST MUST MUST MUST MUST MUST MUST 
+UET_TYPE_BF16 MUST MUST MUST       
+UET_TYPE_FP16 MUST MUST MUST       
+ 
+Informative Text: 
+This specification does not mandate an internal accumulator length. It is recommended to select a 
+sufficiently large datatype for accumulation. 
+ 
+2.4.6 Operator Ordering Modes 
+INC implementations MUST support at least one of the following operator ordering modes when 
+configured through the IM: 
+• No ordering: No guarantee of the reduction order. 
+• Consistent ordering in the same communicator: For the same communicator, the switch always 
+applies the same order of reduction operations. 
+• Consistent ordering across different communicators: For different communicators with 
+identical attributes in the same job, the switch always applies the same order of reduction 
+operations. 
+• Consistent ordering across different communicators and jobs: For different jobs with identical 
+node allocations and different communicators with identical attributes in those jobs, the switch 
+always applies the same order of reduction operations. 
+• Natural ordering: The switch reduces in the order of ranks beginning from 0 to p-1. For example  
+p=4: sum(sum(sum(0,1),2),3); note that this mode limits parallelism and may lead to lower 
+performance. 
+2.4.7 Operator Rounding Modes 
+INC implementations MUST support the following floating-point rounding modes: 
+• Round to nearest, ties to even. 
+INC implementations MAY support any of the following floating-point rounding modes: 
+• Round to nearest, ties away from zero. 

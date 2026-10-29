@@ -1,0 +1,44 @@
+# Calibration-ladder GF-09 topology: fully-connected crossbar of 8
+# ranks at the OVERSUBSCRIPTION WORKED-EXAMPLE DISPLACEMENT, exact-33%
+# reading — B = 16.5 B/ns (= 50 x 33/100), L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-09,
+# arXiv:2508.08906; numbers AS STAGED): the paper's oversubscription
+# example — the bottleneck "can only satisfy 33% of the bandwidth".
+# READING AMBIGUITY (recorded, both readings kept): "33%" is either
+# exactly 33/100 (this row: 50 x 33/100 = 16.5 B/ns, representable,
+# EXECUTED; asymptotic CCT ratio vs the carrier exactly 100/33 ~ 3.0303)
+# or the 3:1-oversubscription rounding 1/3 (50/3 ~ 16.67 B/ns,
+# NON-representable as a finite decimal, RECORDED NOT EXECUTED in the
+# stage record). The two readings differ by exactly 1/300 in share
+  # (~0.33% relative) — BELOW every corpus noise floor (CAL-A4 ~5%
+# validated band, CAL-A6 5-8% software swing), i.e. immaterial on the
+# B axis; the ambiguity is recorded with its magnitude and left to the
+# owner.
+#
+# WORKED-EXAMPLE CLASS (honesty): design-doc algebra, not a
+# measurement and not a target — executed with the declared
+# dimensionless-proxy technique (GF-05/GF-07/GF-08 precedent; GF-05
+# executed its oversubscription series 2:1/4:1/8:1 the same way on
+# the uet-htsim line rate).
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS placed by anchor/registry
+# arithmetic BEFORE any stage output was read, never tuned. r = 8 free
+# smoke default. Design-target / worked-example class — never achieved
+# values.
+topology_id: crossbar8_gf09_oversub33x16_5_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 16.5
+link:
+  pair_latency_ns: 200
+notes: >
+  Worked-example displacement row, exact-33% reading: B = 16.5 B/ns =
+  50 x 33/100 (the GF-09 staged oversubscription example — the
+  bottleneck "can only satisfy 33% of the bandwidth"), L = 200 ns
+  registry. Identity t = 2(r-1)/r*M/B + 2L; asymptotic CCT ratio vs
+  the carrier exactly 100/33 (~3.0303; the 1/3 reading would give
+  exactly 3 — the readings differ by 1/99 in the asymptote). The row
+  sits BELOW the plan §2.1 anchored span [20, 64]. Placement only,
+  never tuned; worked-example class.

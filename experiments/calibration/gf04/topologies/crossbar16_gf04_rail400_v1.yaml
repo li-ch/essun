@@ -1,0 +1,19 @@
+# Calibration-ladder GF-04 topology: fully-connected (crossbar)
+# abstraction of 16 ranks at the RAIL-BOUND bracket B = 400 B/ns (the
+# anchor's own fetched "16x200 Gbps RoCEv2 NIC" per-node config under the
+# per-direction port convention => 16 x 25 = 400 B/ns rail aggregate; a
+# config ceiling, never a measurement — the crossbar twin of
+# ring16_gf04_rail400_v1, executed so the rail bracket is represented on
+# both topology classes). HONESTY: anchor-config arithmetic, fixed before
+# any model output was read; L = 200 ns A-L0X-LAT registry point (KEEP).
+topology_id: crossbar16_gf04_rail400_v1
+topology_class: fully_connected_crossbar
+ranks: 16
+nic:
+  injection_bytes_per_ns: 400
+link:
+  pair_latency_ns: 200
+notes: >
+  Fully-connected abstraction of the GF-04 two-node leg at the
+  inter-node rail aggregate 400 B/ns (anchor config arithmetic, header).
+  Ceiling, never a measurement; never tuned.

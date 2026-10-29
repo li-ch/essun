@@ -1,0 +1,51 @@
+# Calibration-ladder GF-05 topology: unidirectional ring of 1,024
+# ranks at per-link B = 100 B/ns (the anchor's sim line rate, declared
+# per-direction reading) and per-hop L = 1000 ns (the anchor's per-hop
+# decomposition: 600 ns link + 400 ns switch traversal). This is the
+# stage's MULTI-HOP SCHEDULE CONTRAST at the anchor's own stated scale:
+# every ring hop is one link traversal, so the identity charges the
+# per-hop latency 2*(r-1) = 2,046 times per AllReduce — a latency chain
+# of exactly 2,046,000 ns per op — against the crossbar's 2 (once per
+# phase); at equal B the ring-minus-crossbar difference is exactly
+# 2*(r-2)*L = 2,044,000 ns at EVERY payload size (an identity of the
+# two backends, verified on executed rows in the stage record).
+#
+# WHY THIS ROW IS IN THIS STAGE: the anchor's headline results are
+# congestion-control effect sizes (up to 50% FCT improvements; RoCE
+# baselines 3-6x from optimal). This row shows that SCHEDULE STRUCTURE
+# ALONE — an in-model choice, no congestion — produces CCT swings far
+# beyond that envelope at the anchor's own scale: across the ladder
+# members bracketing the ring's regime boundary M* = L*B*r =
+# 102,400,000 B (~97.66 MiB; the payload where the ring's bandwidth
+# term equals its latency chain) the ring/crossbar ratio flips from
+# latency-dominant to bandwidth-dominant (exact values in the record;
+# the ring is slower at EVERY size, the ratio tending to 1 from above).
+# Schedule structure, rank-count structure (<= +1/7), oversubscription
+# structure (x2/x4/x8), and the CC envelope (x1.06-1.5 between schemes)
+# are four separable confounders — the CC effect the paper measures is
+# the SMALLEST of them, which is the honest R3 classification this
+# stage records.
+#
+# HONESTY: the ring is a schedule-structure probe embedded in the
+# anchor's link class and scale — no schedule is claimed to be THE
+# SMaRTT/uet-htsim behavior (the paper's FCT tables are unstaged); B
+# and L are free parameters placed at the anchor's sim-config numbers,
+# never tuned. Every 1024*2^k grid size divides exactly (A-L0-DIV
+# accepts, no bracketing).
+topology_id: ring1024_gf05_line100_v1
+topology_class: unidirectional_ring
+ranks: 1024
+link:
+  bytes_per_ns: 100
+  hop_latency_ns: 1000
+notes: >
+  One send and one receive direction per neighbor, modeled
+  independently; full-duplex uniform per-direction links (A-L0-FD).
+  Ring hops are single link traversals of GF-05's sim line rate at its
+  own per-hop latency decomposition. Identity
+  t = 2(r-1)/r*M/B + 2(r-1)*L; latency chain 2*(r-1)*L = 2,046,000 ns
+  at r = 1,024. No congestion, no credits, no packetization — L0
+  transport model only. Provenance: B = 100 B/ns from GF-05's staged
+  800 Gbps sim bandwidth (declared per-direction reading); L = 1000 ns
+  from its staged 600+400 per-hop decomposition; values are anchor
+  quotes / registry defaults, never our measurements.

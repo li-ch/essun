@@ -1,0 +1,37 @@
+ 28 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+1 Introduction 
+1.1 Background 
+The Ultra Ethernet Consortium (UEC) is an industry effort—involving many contributors including 
+hyperscalers, system vendors, silicon providers, and others—with a mission to enhance Ethernet for use 
+in AI and HPC. 
+Contributors are aiming to cover all aspects of a successful specification, including software APIs, 
+network protocols, hardware friendliness and scalability, network operation, compliance, and 
+extensibility. In service of the UEC’s mission, this document provides a specification of new protocols for 
+use over Ethernet networks and optional enhancements to existing Ethernet protocols that improve 
+performance, function, and interoperability of AI and HPC applications. 
+The Ultra Ethernet (UE) specification covers a broad range of software and hardware relevant to AI and 
+HPC workloads: from the API supported by UE-compliant devices to the services offered by the 
+transport, link, and physical layers, as well as management, interoperability, benchmarks, and 
+compliance requirements. 
+UE does not require or mandate changes to the network layer or the Ethernet PHY and link layers. For 
+instance, a UE-compliant implementation might use Ethernet switches common in the market at the 
+time of publishing the specification. However, UE offers optional network, Ethernet PHY, and link layer 
+features that enable better performance for demanding applications. Over time, and as experience is 
+gathered, it is possible that some of these optional features might become commonplace and even 
+required. A UE-compliant implementation supports the mandatory requirements in this specification. 
+1.1.1 UEC Organization 
+UE architecture comprises the four lower layers of the classic ISO/OSI networking model along with 
+software services and the APIs that expose these services to the upper layers. Each of the four layers is 
+addressed by a UEC working group (depicted as rows in Figure 1-1), which defines the required 
+architecture with strict requirements and characterization in terms of scalability, capability, 
+performance, and interoperability. The UEC management working group provides Ethernet fabric and 
+endpoint management. The UE management architecture includes management protocols, transports, 
+and data models. The UEC Compliance working group, in collaboration with the Technical Advisory 
+Committee (TAC), defines the compliance and interoperability requirements. The UEC Management and 
+Debug & Performance working groups interact with all the aforementioned working groups. 
+Additionally, UEC is adding storage services alongside the network services for relevant application and 
+workloads. The working groups depicted as columns in Figure 1-1 were formed after the initial set of 
+working groups depicted as rows. Their contributions to the UE specification and other standalone 
+documents are scheduled for a future release. 

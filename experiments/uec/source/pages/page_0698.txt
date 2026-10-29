@@ -1,0 +1,33 @@
+ 698 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Selected if R_PktID_Sel = 2. The 6-bit R_MaskDSCP field identifies the bits of the L3 DSCP field that are 
+valid for identifying this VC. 
+5.3.2.2.15.9 R_DSCP 
+Selected if R_PktID_Sel = 2. The 6-bit R_DSCP field contains the L3 packet DSCP value after the 
+R_MaskDSCP mask is applied identifying this VC. The set of packets that are members of the VC are 
+those where (DSCP & R_MaskDSCP) == R_DSCP is TRUE. 
+5.3.2.2.15.10 R_Handle 
+Selected if R_PktID_Sel = 3. The 12-bit R_Handle is an opaque handle that can be used as an identifier 
+for a packet match method. The R_Handle is intended to cover complex packet match cases that can’t 
+be expressed by a simple mask and match of the PCP, DEI, and DSCP bits. The use of R_Handle requires 
+pre-arranged values by network management on each side of the link. These pre-arranged R_Handle 
+lists MUST match on both sides of the link. In some cases, a standard packet match method can be used, 
+such as stream identification as defined in IEEE Std 802.1CB-2017 [12] and IEEE Std 802.1CBdb-2021 
+clause 6 [10] . In other cases, the methods can be proprietary. There is no requirement to support any 
+particular packet match method or identifier list. 
+5.3.2.2.15.11 R_VC_CreditLimit 
+The 24-bit R_VC_CreditLimit field identifies the credits available for this VC receiver. A receiver SHALL 
+NOT set both R_VC_CreditLimit and R_TotalCredits to non-zero values. CBFC operates with either 
+R_VC_CreditLimit or R_TotalCredits, but not both. 
+5.3.2.2.15.12 Resv 
+All reserved fields are sent as 0 and ignored on receive. 
+5.3.3 UE LLDP YANG 
+This clause specifies the YANG modules that provide control and status monitoring of UE link options. 
+The YANG objects are based on the TLVs detailed in clause 2. This YANG model uses the YANG 1.1 data 
+modeling language as specified in [3] . The YANG framework applies hierarchy by using a uniform 
+resource name (URN) [8] , a private uniform resource identifier (URI), and the YANG objects that form a 
+hierarchy. 
+The YANG structure that incorporates the UE link YANG modules is represented by Figure 5-21. In this 
+diagram, white boxes are defined by the IETF, gray boxes are defined by the IEEE, and hashed boxes are 
+defined by the UE. As shown in the diagram, the UE link YANG augments IEEE LLDP management [2] . 

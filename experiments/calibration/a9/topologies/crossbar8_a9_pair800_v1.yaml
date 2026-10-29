@@ -1,0 +1,37 @@
+# Calibration-ladder A9 topology: crossbar of 8 ranks at L = 800 ns =
+# 0.8 us — the CAL-A10 assumption-class GPU-fabric end-to-end latency
+# (HiPC 2025 workshop UALink-vs-NVLink analytical model: "NVIDIA does
+# not publish end-to-end latency for NVLink Network; we assume 0.8 us").
+# CROSS-CLASS TRANSFER ROW, labeled: this is NOT a CAL-A9 number — it is
+# included because the calibration plan's §2.1 row A-L0X-LAT states the
+# pair-latency span as "~80 ns CXL-class (CAL-A9) to 800 ns GPU-class
+# assumption (CAL-A10)", so this row is the UPPER ENDPOINT of the plan's
+# own stated span on the exact parameter (link.pair_latency_ns) the plan
+# quotes it for. Stage A8 sweeps the same 800 on the RING hop-latency
+# axis (A-L0-LAT); this row is the crossbar/pair-latency completion of
+# the plan's span, a different parameter.
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0X-LAT), never tuned. 800 ns
+# is an ASSUMPTION published in a peer-reviewed USAGE (CAL-A10,
+# confidence M per the staging doc — quote via public snippet, paywalled
+# parameter table), NOT a measurement and NOT CXL-class: recording it
+# here transfers nothing between fabric classes; the row exists to
+# execute the plan's stated span endpoint. B = 64 B/ns is the fixed free
+# A-L0X-BW registry point; r = 8 the free smoke-default rank count.
+topology_id: crossbar8_a9_pair800_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 800
+notes: >
+  Single non-blocking switch-stage abstraction of 8 ranks at the upper
+  endpoint of the plan's stated pair-latency span (CAL-A10's 0.8 us
+  assumption-class GPU-fabric end-to-end; cross-class transfer, labeled).
+  L0 transport model only. Provenance: L = 800 ns from CAL-A10's stated
+  model assumption (anchor PROPOSED in the anchor registry, history-only since
+  ; assumption, not measurement; confidence M — verify wording
+  against the paywalled paper at owner integration). B = 64 B/ns free
+  A-L0X-BW registry point. Values are anchor/staging quotes / registry
+  defaults, never our measurements.

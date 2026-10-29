@@ -1,0 +1,42 @@
+ 33 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Abbreviation Definition 
+RoCE RDMA over converged Ethernet 
+ROD Reliable ordered delivery 
+RODL Reliable ordered delivery for local networks 
+RS Reconciliation sublayer 
+RS-FEC Reed-Solomon forward error correction 
+RTO Retransmission timeout 
+RTR Restart transmission request 
+RTT Round trip time 
+RUD Reliable unordered delivery 
+RUDI Reliable unordered deliver of idempotent operations 
+SACK Selective acknowledgement 
+SD Secure domain 
+SDK Secure domain key 
+SDKDB Secure domain key database 
+SDI Secure domain identifier 
+SDME Secure domain management entity 
+SER Symbol error ratio 
+SES Semantic sublayer 
+SHMEM Shared memory / Symmetric hierarchical memory 
+SMF Single-mode fiber 
+SSI Secure source identifier 
+TC Traffic class 
+TSC Timestamp counter 
+TSS Transport security sublayer 
+UCR Uncorrectable codeword ratio 
+UE Ultra Ethernet 
+UET Ultra Ethernet Transport 
+UEC Ultra Ethernet Consortium 
+UFH Unified Forwarding Header 
+UUD Unreliable unordered delivery 
+VAS Virtual address space 
+VC  Virtual channel 
+VLAN Virtual LAN (local area network) 
+WDM Wavelength division multiplexing 
+YANG Yet another next generation 
+ 
+ 
+ 

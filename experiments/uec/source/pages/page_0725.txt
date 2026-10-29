@@ -1,0 +1,38 @@
+ 725 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.4.10 UFH and Transport Layer Checksums 
+Transport protocols such as TCP/IP and UDP/IP include a checksum field whose calculation covers the 
+payload, the transport header, and select fields from the IP header represented by a pseudo-IP header. 
+The pseudo-IP header includes the source and destination IP addresses, the IP protocol used to identify 
+the transport, and the transport length (header + payload). 
+This method of checksum calculation and verification remains unchanged when such transports are 
+carried over UFH. The initiator and receiver assume the packet is carried over IP and create a suitable 
+pseudo-IP header based on the source and destination UFH address containers, the IP protocol number 
+assigned to the transport, and the length from the transport header. 
+All endpoints in a UFH domain (see next section) must be configured to consistently use the IPv4 or IPv6 
+pseudo-header. The UFH address containers are masked and then expanded to the necessary length by 
+adding a suitable address prefix. The prefix can be one that is assigned to the UFH domain and can be 
+set to all zeros if there is no intent to use the full address for any function other than checksum 
+calculation. 
+Example  
+• Suppose a UFH-_32 format contains a non-IP 24-bit address “00.aa.bb.cc”. 
+• The desire is to map it to an IPv6 pseudo-header for checksum calculations. 
+• Suppose the UFH domain is assigned the IPv6 prefix “XX:YY:  ”. 
+• Then the generated address for checksum calculation is “XX:YY:  ::0:aa:bb:cc”. 
+This approach simplifies protocol migration to UFH and will additionally support stateless translation to 
+Ethernet + IP at gateway switches if required. 
+A sender MAY set the transport header checksum to zero for the special case of UDP over IPv4 and it 
+MUST be ignored by a receiver. 
+5.4.11 UFH Deployment Considerations 
+For simplicity of deployment, it is assumed that all endpoints and switches within a UFH domain can 
+support UFH and can communicate with each other using UFH on ALL network paths. UFH usage within 
+the domain MUST be explicitly enabled using a suitable administrative approach. 
+If a UFH domain is a standalone cluster with no external connectivity, a sender’s decision to use UFH will 
+be based primarily on the needs of an application. In more complex deployments, a UFH domain may be 
+a local island within a larger network. Devices and paths within the island are UFH-capable, but 
+destinations outside the domain are either not capable or not reachable via a UFH-capable path. A 
+sender’s decision to use UFH will depend on both the application and on the relative locations of the 
+sender and destination. 
+In theory, it is possible to carry UFH packets from one UFH domain to another by translating them to 
+Ethernet + IP at gateway switches or by encapsulating them in tunnels that support L2 payloads, such as 

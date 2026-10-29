@@ -1,0 +1,22 @@
+ 141 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-14 - Verbs to UET Object Mapping 
+Based on Figure 2-14, Figure 2-13 is updated to construct Figure 2-15 to show the MR access rules using 
+the verbs objects. 
+ 
+Figure 2-15 - Verbs Memory Region Access 
+Table 2-47 shows the exact access requirements used for the optimized and non-optimized RKey 
+formats against both the relative and absolute addressing models. 
+Table 2-47 - Memory Region Binding Requirements 
+Addressing 
+Model 
+Memory Key Type Header Format MR Access MR Binding 
+Absolute 
+Addressing 
+Optimized 
+Optimized 
+non-matching 
+RI restricted { Device, PD, QP } 
+RI job restricted { Device, PD, QP, JobID } 

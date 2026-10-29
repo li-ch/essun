@@ -1,0 +1,42 @@
+ 248 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+In some cases, the target may not want to accept the entire deferrable send operation. For example, it 
+may be an unexpected message in a buffered unexpected header implementation (3.4.4.7.2.1). In such 
+cases, deferrable sends stop the transfer of payload. An implementation of deferrable sends SHOULD 
+implement a buffered header solution (3.4.4.7.2.1) and MUST implement a back-off and retry 
+(3.4.4.7.1.1) for when the header space is exhausted. 
+The deferrable send message contains a token to restart the message transfer that consists of a 32-bit 
+ses.initiator_restart_token—allocated entirely by the initiator—and a 32-bit ses.target_restart_token, 
+allocated entirely by the target. In the initial request, the ses.target_restart_token MUST be set to 0. 
+When the target is ready to restart a deferred send, it sends a ready-to-restart (RTR) message containing 
+the ses.initiator_restart_token to the initiator and restarts the message transfer. The target MAY 
+allocate a target restart token and include it in the RTR message. If the target does not allocate a target 
+restart token, the target MUST set the ses.target_restart-token field to 0. If the target allocates a target 
+restart token, it MUST guarantee that the restarted deferrable send will match a buffer. Otherwise, the 
+target MAY defer the deferrable send again. If a deferrable send received a semantic response with a 
+ses.modified_length of 0, the implementation MUST NOT restart the message until the corresponding 
+RTR is received. Such a response is a request to defer the deferrable send. The restart MUST send the 
+portion of the original message requested by the RTR message. An implementation that uses the back-
+off and retry method MUST NOT send an RTR message for the corresponding deferrable send. In 
+contrast with the ses.modified_length of 0 response above, the back-off and retry scheme uses an 
+RC_NO_MATCH response that indicates that no header was captured and that an RTR will never be 
+generated. 
+Implementation Note: 
+The usage of the restart token is defined to directly signal the state of the transaction to 
+implementations on both ends. An initiator can know whether the deferrable send may be deferred 
+again, and the target can know whether resources have been allocated. 
+ 
+Informative Text: 
+Rendezvous transactions and deferrable send transactions are semantically similar operations with 
+different optimization points and different implementation implications. Rendezvous is optimized to 
+not utilize bandwidth when messages are unexpected, which is common in HPC. Deferrable send is 
+optimized for latency in the expected message case. An implementation of rendezvous could set 
+eager length to the request length, then truncate the eager portion of the message to the size of the 
+modified length when the semantic response returned. In this case, the difference between 
+rendezvous and deferable send would be whether the remainder of the data was transferred using a 
+read message or by restarting a prior transmit message. 
+3.4.4.6.1 Supporting Deferrable Send as Send 
+For implementations that do not support deferrable send, it is possible for a target device to implement 
+deferrable send operations (UET_DEFERRABLE_SEND) as send operations (UET_SEND) by using a subset 
+of the functionality defined above (and below). This applies to tagged sends (UET_DEFERRABLE_TSEND / 

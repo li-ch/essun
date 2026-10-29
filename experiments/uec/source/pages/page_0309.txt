@@ -1,0 +1,39 @@
+ 309 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+RUDI does not use ACKs. The response to each RUDI request is a RUDI response. RUDI uses NACK for 
+early detection of packet loss. 
+The intended use for RUDI is ‘do lots of RMA writes/RMA reads to multiple destinations and then 
+barrier’. For example, an application can use RUDI to exchange data among participating processes (e.g., 
+send a series of write and read operations) and, after all of these are completed, perform another send 
+that generates a completion at the target(s) to indicate all data movement is done. 
+PDS has no knowledge of idempotency and relies on SES to identify when RUDI may be used. RUDI is 
+never used for non-idempotent operations. 
+When using UET congestion control (UET-CC) on a FEP and assigning RUDI to the same traffic class as 
+RUD/ROD, it is the responsibility of the application to avoid creating congestion in the network. RUDI is 
+not controlled by UET CC. If RUDI is used for large data transfers, then it SHOULD NOT use the same 
+traffic class as RUD/ROD traffic that is using UET-CC, as it may impact performance of the RUD/ROD 
+traffic. 
+3.5.7.5 Unreliable Unordered Delivery (UUD) 
+The UUD delivery mode is a basic datagram service. An unreliable datagram service enables best-effort 
+delivery. UUD avoids the need for applications to use a different semantic sublayer (and network API) 
+such as UDP to leverage unreliable datagrams. 
+When using UET-CC on a FEP and assigning UUD to the same traffic class as RUD/ROD, it is the 
+responsibility of the application to avoid creating congestion in the network. UUD is not controlled by 
+UET-CC. If UUD is used for large data transfers then it SHOULD NOT use the same traffic class as 
+RUD/ROD traffic that is using UET-CC, as it may impact performance of the RUD/ROD traffic. 
+Informative Text: 
+Unreliable ordered delivery is not specified. The four modes provided map to all common fielded use 
+cases. 
+ 
+3.5.7.6 Ordered Packets vs. Ordered Messages 
+PDS offers ordered and unordered packet delivery modes. PDS manages packet sequence number (PSN) 
+spaces for each PDC to provide ordered delivery. PDS has no knowledge of message ordering. SES is 
+responsible for message ordering. 
+3.5.8 Packet Delivery Contexts (PDC)  
+A packet delivery context (PDC) is a dynamically established FEP-to-FEP connection that provides the 
+context needed to implement reliability, ordering, duplicate packet elimination, and congestion 
+management. 
+A PDC is used to send requests from an initiator to a target with PSNs that are returned in ACK 
+responses by the target. Packets are transmitted in both directions. A PDC uses TX state on the initiator 
+(next sequence number, ACK bitmap, etc.) and RX state (received sequence number state, ACK state 

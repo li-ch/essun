@@ -1,0 +1,50 @@
+ 276 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-23 - Supported Request Messages (Opcode) 
+Mnemonic Constant Description 
+UET_NO_OP 0x00 SES message that performs no operation. MUST be a single-
+packet message. A FEP is not required to identify a buffer or 
+completion queue at the target for a UET_NO_OP. 
+UET_WRITE 0x01 RMA write: Used to support fi_write(). 
+UET_READ 0x02 RMA read: Used to support fi_read(). 
+UET_ATOMIC 0x03  
+UET_FETCHING_ATOMIC 0x04 Includes compare and swap. 
+UET_SEND 0x05 (non-matching) send message. 
+UET_RENDEZVOUS_SEND 0x06 Incorporated to allow send over ROD (for ordering) with bulk 
+payload over RUD. 
+UET_DATAGRAM_SEND 0x07 Only valid when used with a UUD delivery mode. 
+UET_DEFERRABLE_SEND 0x08 A send message where the payload transfer may be deferred by 
+the target. 
+UET_TAGGED_SEND 0x09 A tagged send message using match bits for buffer selection. 
+UET_RENDEZVOUS_TSEND 0x0A A rendezvous version of the tagged send. 
+UET_DEFERRABLE_TSEND 0x0B A deferrable version of the tagged send. 
+UET_DEFERRABLE_RTR 0x0C A deferred send is ready to restart. 
+UET_TSEND_ATOMIC 0x0D Atomic operations with tagged send addressing semantics. 
+UET_TSEND_FETCH_ATOMIC 0x0E Fetching atomic operations (including compare and swap) using 
+tagged send addressing semantics. 
+UET_MSG_ERROR 0x0F Used to terminate an in-progress message ID. Can be sent as an 
+early final packet of a message for an in-flight message that 
+encounters an an initiator error or rejected by the target with a 
+recoverable error. Invalid for the UUD delivery mode. 
+UET_SYNC_WRITE 0x10 Synchronized RMA write that is part of a synchronization group, 
+including writes with immediate that terminate the group. 
+UET_SYNC_ATOMIC 0x11 Synchronized non-fetching atomic operation that terminates a 
+synchronization group. 
+Reserved 0x12-0x2F  
+UET_VENDOR_DEFINED[15] 0x30-0x3E An encoding space to allow vendor extensions for 
+experimentation and differentiation. 
+UET_OP_EXTENDED 0x3F This opcode is reserved as an opcode space escape to an 
+extended opcode location to be defined at a later time. 
+ 
+Table 3-24 - Supported Response Messages (Opcode) 
+Mnemonic Constant Description 
+UET_DEFAULT_RESPONSE 0x00 A default response, where the return code is RC_OK, the modified 
+length is the requested length, and the list is UET_EXPECTED. 
+UET_RESPONSE 0x01 A response other than a default response. 
+UET_RESPONSE_W_DATA 0x02 A response carrying data. 
+UET_NO_RESPONSE 0x03 An indication that no semantic response is available at this time. 
+Reserved 0x05-0x2F  
+UET_VENDOR_DEFINED[16] 0x30-0x3F An encoding space to allow vendor extensions for 
+experimentation and differentiation. 
+ 

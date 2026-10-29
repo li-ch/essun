@@ -1,0 +1,43 @@
+# Calibration-ladder A6 anchor-point RUN: the L0 ring
+# identity at CAL-A6's own arithmetic — r = 32 (4 nodes x 8 H100), B = 400
+# B/ns (the staged "16*200Gbps ROCEv2" per-node rail under the
+# per-direction Ethernet port convention; a config ceiling, never a
+# measurement), L = 200 ns (A-L0-LAT registry point), payload 17179869184
+# B = 16 GiB = 2^34 EXACTLY (the anchor's largest staged size; 32 divides
+# 2^34, so the A-L0-DIV gate accepts it with NO bracketing).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A6-RAIL-16GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a6/workloads/w1_dense_tp_decode_tp32_16gib.yaml
+infra_graph:
+  path: experiments/calibration/a6/topologies/ring32_a6_rail400_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a6/profiles/implementation_profile_l0_ring_cal_a6_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring32_a6_rail400_v1 (unidirectional ring, r=32 = CAL-A6's 4x8 H100 count; B=400 B/ns = the anchor's staged per-node rail arithmetic — hybrid projected to the uniform bottleneck rate, declared in the topology file; L=200 ns free)
+  workload: w1_dense_tp_decode tp32, payload 17179869184 B = 16 GiB = CAL-A6's largest staged size exactly (gate-accepted, no bracketing)
+  implementation: analytical L0 free-parameter identity; CAL-A6 comparison is the ladder's noise-floor anchor + secondary O-CCT target for hybrid rail topologies against an external published measurement — PROPOSED, review required
+evidence_level_requested: E0

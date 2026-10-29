@@ -1,0 +1,42 @@
+# Calibration-ladder GF-04 SCALING-NULL RUN (gap-fill
+# anchor): the L0 flat-ring identity at r=16 carrying the SAME B=476.37
+# B/ns as the r=8 anchor-point run — the counterfactual leg that isolates
+# what rank-count structure alone does in the identity family (payload and
+# everything else identical to run_gf04_ring8_anchor476_4gib_v1). At fixed
+# uniform B the family is asymptotically rank-invariant in busbw, so the
+# busbw(16)/busbw(8) ratio from this run pair is the model-side statement
+# of the 8->16 scaling claim; the anchor measures 0.98593 (a 1.41% drop).
+# Declared bracket, not a physical reading (at uniform 476.37 the
+# inter-node hops would exceed the 400 B/ns rail aggregate — the
+# physically-projected twin is run_gf04_ring16_rail400_4gib_v1).
+#
+# claim_id is deliberately EMPTY (p1 stage boundary: zero claim edits).
+# Evidence level E0; comparison PROPOSED in results/calibration/.
+experiment_id: EXP-CAL-GF04-RING16-ANCHOR476-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp16_4gib.yaml
+infra_graph:
+  path: experiments/calibration/gf04/topologies/ring16_gf04_anchor476_37_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf04/profiles/implementation_profile_l0_ring_cal_gf04_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring16_gf04_anchor476_37_v1 (unidirectional ring, r=16, B=476.37 B/ns carried unchanged from the single-node reading — the declared scaling-null counterfactual, not a physical reading)
+  workload: w1_dense_tp_decode tp16, payload 2^32 (common size of the 8->16 pair; gate-accepted)
+  implementation: analytical L0 free-parameter identity; the run pair measures the identity family's own 8->16 structure for the GF-04 scaling comparison — PROPOSED, review required
+evidence_level_requested: E0

@@ -1,0 +1,59 @@
+# Calibration-ladder GF-09 design-target-point RUN 
+# gap-fill anchor): the L0 single-stage crossbar identity at the GF-09
+# DESIGN-CLASS CARRIER — r=8, B=50 B/ns (the staged "400+ Gbps" design
+# class floor under the declared decimal + per-direction Ethernet-rate
+# reading; a TARGET/CLASS FLOOR, never an achieved value — CAL-A1/A2
+# ceiling discipline, A10 assumption-class discipline), L=200 ns
+# (A-L0X-LAT registry point — the latency targets are swept in
+# sweep_gf09_latency_v1.yaml), payload 2097152 B = 2 MiB (a member of
+# the standard 12-size ladder and GF-05's run-pair payload — the R1
+# cross-stage comparability point; GF-09 stages NO size regime, so the
+# run pair executes a declared free probe).
+#
+# ROLE: GF-09's staged numbers are design targets, protocol constants,
+# and worked examples — no (size -> time) series exists, and NO
+# comparison to any anchor time is attempted. What this run lands in
+# the append-only store is the carrier point of the design-target
+# placement so the PROPOSED record's arithmetic (vs the registry-twin
+# run_gf09_registry_v1.yaml at the SAME payload: asymptotic pure-B CCT
+# ratio exactly 64/50 = 32/25 = 1.28) is backed by run ids. The UEC
+# transport semantics the paper describes (NSCC congestion control,
+# CBFC credit loop, SACK-based retransmission) are OUT of the L0 input
+# space by capability declaration. B and L are free parameters placed
+# at the anchor's staged design class / registry default, never tuned.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF09-UEC50-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf09/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf09/profiles/implementation_profile_l0_crossbar_cal_gf09_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf09_uec50_l200_v1 (one non-blocking switch stage; r=8, B=50 B/ns = the GF-09 staged "400+ Gbps" design-class floor under the declared per-direction reading — an open-ended class floor, never an achieved value; L=200 ns registry — the anchor's latency targets are swept separately)
+  workload: w1_dense_tp_decode tp8, payload 2^21 (2 MiB, a standard-ladder member and GF-05's run-pair payload; GF-09 stages no size regime — executed as a declared free probe)
+  implementation: analytical L0 crossbar identity; GF-09 comparison is design-target placement only (design targets / protocol constants / worked examples, never measurements; the UEC transport semantics are out of model scope by capability declaration; no anchor-time comparison) — PROPOSED, review required
+evidence_level_requested: E0

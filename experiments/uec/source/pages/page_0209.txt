@@ -1,0 +1,39 @@
+ 209 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+which the data will be retrieved) then has some control over the exact handling of that message and the 
+resulting change in the state of the buffer that addressing information specifies (3.4.2.6). For example, a 
+target buffer could be defined as use-once or could be defined as write-only. For any access violation 
+(e.g., the memory key is not valid, a read accesses a write-only buffer, etc.), a return code (Table 3-25) is 
+generated that indicates the error. 
+3.4.2.5.4 Atomic operations 
+Atomic operations are defined within UET. Both fetching atomic and non-fetching atomic operations are 
+included. Atomics utilize the same addressing semantics as RMA read and write. Fetching atomic 
+operations are limited to a single element of a datatype. Non-fetching atomic operations (or, just atomic 
+operations) may be as large as a message—up to the full request length. Atomicity is limited in scope to 
+a single element granularity and limited to the scope of a single {FA, JobID, PIDonFEP, Resource Index, 
+Memory Key}. Variants of atomic operations using tagged addressing semantics are supported on 
+profiles that support tagged sends, in which case atomicity is limited in scope to a {FA, JobID, PIDonFEP, 
+Resource Index, Matching Criteria}. JobID is not part of determining the scope of atomics when absolute 
+addressing is used. 
+3.4.2.5.4.1 Atomic Operations and Datatypes 
+A broad range of atomic datatypes and operations is supported within the UET definition. These types 
+and operations target traditional HPC as well as AI/ML workloads. An enumeration of supported 
+operations and datatypes is found in Section 3.4.7.4. 
+3.4.2.5.4.2 Atomic Operation Control Fields 
+Atomic operations are tightly tied to the memory model exposed by the network (3.4.9). As such, 
+controls (Table 3-29) to convey the semantics required for the operation are provided as part of the 
+atomic header definition. 
+3.4.2.5.5 Synchronized Operations 
+Synchronized operations are a class of operations designed to provide an aggregate completion across a 
+collection of unordered RMA write operations. Synchronized operations utilize the same addressing 
+information as writes (3.4.2.5.2) and atomics operations (3.4.2.5.4). In addition, they add a 
+synchronization group field to track which operations are completed together and a synchronization 
+count field to track the number of operations in the group. 
+Synchronized operations come in two forms: synchronized write operations and synchronized 
+completing operations. Synchronized write operations behave the same as standard writes (3.4.2.5.2) 
+but carry a sync group ID that identifies the write as part of a synchronization group. Synchronized 
+completing operations are: synchronized write with header data (immediate data) and synchronized 
+atomic operations. In each synchronization group, the synchronized completing operation is guaranteed 
+to be performed at the target after the associated synchronized writes have been received and 
+processed by SES. 

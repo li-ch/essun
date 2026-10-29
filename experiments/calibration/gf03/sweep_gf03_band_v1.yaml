@@ -1,0 +1,51 @@
+# Calibration-ladder GF-03 BAND sweep (gap-fill anchor
+# GF-03): where do the L0 identities sit relative to the anchor's ONLY
+# staged CCT row — NCCL AllReduce "completes 2 MiB in as little as
+# 42–52 µs" (a best-case band) on the B300 NVLink-5 system?
+#
+# NOTHING IS TUNED: the executed points were fixed by the anchor's own
+# staged numbers / cross-anchor arithmetic BEFORE any model output was
+# read — ring B=50 (CAL-A1's NVLink5 per-port per-direction arithmetic;
+# the anchor's fabric class), crossbar B=717/782 (the anchor's two
+# nvbandwidth unidirectional D2D readings), crossbar B=837 (the anchor's
+# MEASURED allreduce peak), crossbar/doubling B=900 (the anchor's own
+# "theoretical" quote = the CAL-A2 line), L=200 ns (A-L0-LAT / A-L0X-LAT
+# / A-L0D-LAT registry point) everywhere — ALL five B readings execute at
+# ALL five sizes, so the anchor's own 2 MiB row is executed at every
+# reading. The outcome — every aggregate-reading chain 8.0-11.6x BELOW
+# the band while the per-link ring overshoots 1.5-1.8x, so no fixed
+# (B, L) from the anchor's own numbers expresses the row — is a recorded
+# placement, never a parameter choice; the implied effective-B (71-88
+# B/ns at r=8) and implied-L (18.8-24.0 µs) diagnostics are computed FROM
+# the measurements in the record, never set.
+#
+# Payload grid: {2^16, 2^18, 2^20, 2^21, 2^22} = {64 KiB, 256 KiB, 1 MiB,
+# 2 MiB, 4 MiB} — the anchor's exact 2 MiB row bracketed two sizes each
+# side (all divisible by r=8, gates ACCEPT; the anchor's size itself
+# executes exactly — no bracketing of IT, brackets are context rows).
+# Baseline = the per-link ring reading (the conservative single-channel
+# schedule on the NVSwitch fabric), so the delta column reads as
+# identity-choice displacement.
+sweep: cal_gf03_band_v1
+workload: experiments/calibration/gf03/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/gf03/topologies/ring8_gf03_link50_v1.yaml
+grid:
+  payload_sizes_bytes: [65536, 262144, 1048576, 2097152, 4194304]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf03/topologies/ring8_gf03_link50_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_d2d717_v1.yaml
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_d2d782_v1.yaml
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_peak837_v1.yaml
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_spec900_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/gf03/topologies/exchange8_gf03_spec900_v1.yaml

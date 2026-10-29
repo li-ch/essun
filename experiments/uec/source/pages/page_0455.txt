@@ -1,0 +1,39 @@
+ 455 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Starting at line rate will work well most of the time, when the destination is idle and when there is no 
+overall network congestion. The biggest risk when starting at line rate is for the destination to be 
+already receiving other flows, such that its link is already saturated. In such cases, many packets will be 
+lost. The difficulty in such cases is knowing quickly which packets need retransmission and adapting the 
+window to enable safe and fast retransmission. When available, packet trimming enables accurate and 
+fast loss detection. 
+Finally, outcast is a case where a source has many active PDCs to different destinations, and the PDCs 
+are bottlenecked by the source’s link(s). UE FEPs include a scheduler that determines which PDC sends 
+when, so that data is generated for sending at no more than the source’s linkspeed. The main 
+consideration here is that during an outcast, the scheduler rather than the CC window may be what 
+limits transmission. Under such circumstances, the default initial window may be much larger than can 
+be used, and so care must be taken when initializing the control loop. 
+After the initial burst of packets, two different approaches for adjusting the window of in-flight data are 
+permitted: one where the destination dictates how the window evolves based on explicit demand, and 
+one where the source controls the window based on feedback from the destination and the network. 
+The sender- and receiver-driven approaches behave similarly in the first RTT, starting at line rate by 
+default and spraying packets across paths to avoid collisions. They differ, however, in their handling of 
+incast and overall network congestion. 
+RCCC addresses incast at the receiver by tracking the unsatisfied demand (the amount of unsent data, or 
+backlog) from each source. The receiver gives credit in a round robin (or any other sharing approach) to 
+each source to avoid congesting its incoming network links. The source can measure unsatisfied demand 
+by counting the number of outstanding bytes yet to be sent for the messages it is currently processing 
+for any given target. In oversubscribed networks, RCCC needs an additional mechanism to deal with core 
+congestion. 
+NSCC addresses incast and overall congestion with a single mechanism. Its incast handling does not 
+directly take into account what the destination knows about the incast traffic, but it does not need an 
+additional mechanism to cope with the other types of congestion. 
+Both sender- and receiver-driven approaches need to take care in outcast scenarios, where neither the 
+network nor the destination is the bottleneck. In this scenario, network or destination feedback might 
+suggest the absence of congestion. However, the FEP cannot transmit at line rate to any specific 
+destination due to the source scheduler dividing the link's capacity among multiple PDCs destined for 
+various endpoints. CC algorithms need to take care not to use this lack of negative feedback as an 
+indication that they should increase the sending window, as this can lead to unnecessary congestion 
+when the outcast ends and the CC algorithm then sends at an unreasonable rate. 
+In this document we present algorithms for both receiver- and sender-driven approaches. TFC is 
+described in Section 3.6.15. 

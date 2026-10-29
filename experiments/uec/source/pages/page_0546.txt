@@ -1,0 +1,46 @@
+ 546 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+      sw_access: ro | rw | wo | none 
+      range: [min, max] | 
+             { enum: [v0, v1, ...] } 
+      init: cfg_provided | zero | hw_init | 
+            { explicit_value: <scalar> }  
+ 
+For example, the signal interface allows the definition of timed trigger that fires every 2 ms as: 
+Parameters can be used to differentiate multiple instances of the same algorithm. For example, there 
+could be two instances of NSCC—one for AI and one for storage traffic—with different parameters. The 
+configuration to invoke is defined in Section 3.6.18.8.5. Each of the two instances would use a separate 
+YAML configuration, and the difference between those instances (their personality) can be configured 
+through parameters in the YAML file. 
+3.6.18.9 Algorithm Runtime Model 
+To guarantee correct operation regardless of implementation, PCM algorithms MUST be written to 
+assume the following runtime PCM runtime properties: 
+• The PCM subsystem invokes algorithm callback functions when one or more triggers fire due to 
+TX, RX, or TIME events, when a transmit EV is required by the data path or when telegrams are 
+delivered to the algorithm. 
+• The algorithm is invoked once for every set of fired RX, TX, or TIME triggers, or EV transmit 
+request or received telegrams. 
+• Each invocation delivers only the set of fired triggers, an EV Transmit Request, or a telegram. 
+• The PCM subsystem guarantees that for a given CCC there is a maximum of one invocation 
+active at any time. 
+• For TX or RX events, the set of fired triggers associated with these events is delivered to the 
+algorithm in packet order, but events may be skipped. 
+o TX events are delivered in packet order. 
+o RX events are delivered in packet order. 
+o There is no delivery order guarantee between TX and RX events. 
+o When events are skipped, no triggers for the associated event are delivered. 
+• For TIME events, fired triggers are reliably delivered but may be delayed. 
+o There is no delivery order guarantee between different TIME events. 
+o There is no delivery order guarantee between TIME, RX, and TX events. 
+signal: 
+  name: “uet_time_current” 
+  macro: “t_time” 
+  accumulator: “uet_last" 
+    trigger: 
+      op: wc                # Wildcard operator, don't compare on value 
+      mode: count_or_time   # Trigger fire mode 
+      mode_refval: 0 15625  # Fire every 2ms 
+      arm_mode: continuous  # Fire continually 
+      action: invoke        # Invoke PCM 
+      invoke_dealine: 0     # Don’t delay invocation 

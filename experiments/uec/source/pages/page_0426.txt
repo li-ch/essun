@@ -1,0 +1,23 @@
+ 426 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.5.23.3 Negative Acknowledgements, Packet Drops, and Retries 
+This section specifies the RUDI sequences for packet drops and other cases that cause a retry. 
+The methods for determining packet loss are retransmit timeout (RTO) at the initiator, NACKs from 
+target, and trimmed RUDI responses. The target transmits a NACK if a trimmed RUDI request is received 
+and SHOULD transmit a NACK when PDS resources are not available. 
+The initiator retransmits the request to recover from all packet loss events. The sequence is similar to 
+that shown for packet loss on RUD as seen in Figure 3-104 and Figure 3-105. 
+RUDI Responses are never NACK’d. There is no state at the target to handle a NACK for a RUDI response. 
+3.5.24 Error Model 
+This section specifies the PDS error model. There are different types of events: 
+• Normal events are handled without impacting the PDC state. 
+o For example, sending a NACK due to trimmed packets or out of resources at the target, 
+RTO timeout when a packet is lost in the network, etc. 
+• Unexpected events that occur due to implementation errata or denial of service attacks, which 
+MUST be handled without impacting well-behaved PDCs (i.e., NACK error type of PDC_ERR). 
+o For example, receiving a packet with a PSN that is out of range. 
+ 
+Figure 3-111 - Standard RUDI RMA Read Sequence for Multi-Packet Message 
+ 

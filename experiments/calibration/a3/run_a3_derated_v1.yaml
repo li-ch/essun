@@ -1,0 +1,42 @@
+# Calibration-ladder A3 derated-bridge RUN: the L0
+# single-port crossbar identity at B=720 B/ns = CAL-A2's 900 ceiling x
+# CAL-A12's ~80% software-effective derating (the spec-to-measured bridge
+# the plan §1.1 CAL-A12 row makes mandatory), at the same 32 GiB floor
+# bracket payload as the anchor-point run. Locates where a CAL-A12-style
+# software-scheduled measurement would sit relative to CAL-A3's staged
+# 32 GiB row; NOT an independent validation of the derating.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits).
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A3-DER720-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a3/workloads/w1_dense_tp_decode_tp72_32gib_floorbr.yaml
+infra_graph:
+  path: experiments/calibration/a3/topologies/crossbar72_a3_derated720_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a3/profiles/implementation_profile_l0_crossbar_cal_a3_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar72_a3_derated720_v1 (NVSwitch-class abstraction, r=72, B=720 B/ns = 0.8 x CAL-A2 ceiling via CAL-A12 derating, L=200 ns free)
+  workload: w1_dense_tp_decode tp72, payload 2^35-32 (32 GiB floor bracket; A-L0X-DIV rejects the exact power-of-two sizes at r=72)
+  implementation: analytical L0 free-parameter identity; CAL-A3 comparison is CCT-vs-CCT against an external published measurement — PROPOSED, review required
+evidence_level_requested: E0

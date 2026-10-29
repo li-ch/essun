@@ -1,0 +1,61 @@
+ 122 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The AI Base profile MUST select the packet delivery mode according to Table 2-29. 
+Table 2-29 - Packet Delivery Mode Selection Criteria for AI Base Profile 
+SEND Ordering R/W Ordering SEND Operation RMA or ATOMIC Operation 
+N N RUD RUD 
+N Y RUD ROD 
+Y N ROD RUD 
+Y Y ROD ROD 
+ 
+The AI Full profile MUST select the packet delivery mode according to Table 2-30. 
+Table 2-30 - Packet Delivery Mode Selection Criteria for AI Full Profile 
+SEND Ordering R/W 
+Ordering 
+SEND or TAGGED 
+SEND Operation 
+DEFERRABLE TAGGED 
+SEND Operation 
+RMA or ATOMIC 
+Operation 
+N N RUD RUD RUD 
+N Y RUD RUD ROD 
+Y N ROD Initial/eager data: ROD 
+Remaining data: RUD 
+RUD 
+Y Y ROD Initial/eager data: ROD 
+Remaining data: RUD 
+ROD 
+ 
+The HPC profile MUST select either ROD, RUD, or RUDI. The selection is based on the operation type, the 
+message ordering modes that are configured, and vendor-specific policy. The HPC profile MUST select 
+the packet delivery mode according to Table 2-31. In the cases that show RUD/RUDI, the selection of 
+whether to use RUD or RUDI SHOULD be made based on vendor-specific policy. 
+Table 2-31 - Packet Delivery Mode Selection Criteria for HPC Profile 
+Send 
+Ordering 
+R/W 
+Ordering 
+SEND or TAGGED SEND 
+Operation 
+RENDEZVOUS Operation RMA 
+Operation 
+ATOMIC 
+Operation 
+N N RUD RUD RUD/RUDI RUD 
+N Y RUD RUD ROD ROD 
+Y N ROD Initial/eager data: ROD 
+Remaining data: RUD 
+RUD/RUDI RUD 
+Y Y ROD Initial/eager data: ROD 
+Remaining data: RUD 
+ROD ROD 
+ 
+2.2.7 Traffic Classes 
+The SES sublayer is aware of only data traffic classes. The libfabric application is not aware of traffic 
+classes used by PDS.  The default value is shown in Table 2-32. 
+Implementation Note: 
+Other sublayers of UET use additional traffic classes with associated DSCP values for services that are 
+not visible to the libfabric provider. These traffic classes are configured via OS-specific means (e.g., 
+Linux TC) and SHOULD be consistent throughout the network. 

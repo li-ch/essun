@@ -1,0 +1,65 @@
+ 634 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+significant bit. For example, an LLR-eligible frame with frame_seq[19:0]=0x4A2D3 would result in the 
+following preamble being transmitted: 
+10_00011110_11100010_01000101_11001011_10101010_10101010_10101010_10101011 
+ 
+Table 5-2 - 64B/66B Block Format for UE Link Frame Preamble 
+Input Data 
+Sync  
+Block Payload 
+       Bit Position:  0 
+1 
+2  65 
+Control Block Format  Block Type 
+Field 
+       
+S₀ D₁ D₂ D₃ D₄ D₅ D₆ D7 10 0x78 D₁ D₂ D₃ D4 D₅ D₆ D7 
+LLR-ineligible 10 0x78 0x55 0x55 0x55 0x5
+5 
+0x5
+5 
+0x5
+5 
+0xD
+5 
+LLR-eligible 10 0x78 <3:0> = 0x7 
+<7:4> = frame_seq 
+<19:16> 
+frame_seq <15:8 
+> 
+frame_se
+q <7:0> 
+0x5
+5 
+0x5
+5 
+0x5
+5 
+0xD
+5 
+5.1.2 Interface modifications 
+The transmit path interface from the MAC client to the LLR (MCF:MA_DATA.request) requires two 
+additional fields to support UE link operation. 
+Table 5-3 - MAC Client to LLR Transmit Path Additional Fields 
+Field Name Description 
+frame_desire_llr Indicates the desire for the frame to be sent as LLR-eligible. 
+Values: TRUE (LLR-desired), FALSE (Default transmission) 
+frame_bad Indicates that the frame payload data is bad. 
+This is used to ensure that errors are correctly propagated to the link partner but 
+will not trigger an LLR replay. 
+ 
+The transmit path interfaces from the LLR to the MAC control (LLR:MA_DATA.request) and from the 
+MAC control to the MAC (MAC:MA_DATA.request) each require three additional fields to support LLR 
+operation. 
+Table 5-4 - LLR to MAC Control to MAC Transmit Path Additional Fields 
+Field Name Description 
+frame_type Indicates the type of frame. 
+Values: LLR_ELIGIBLE, LLR_INELIGIBLE 
+poison_fcs Indicates that the MAC should send the frame with a poisoned FCS. 
+A poisoned FCS ensures that errors are correctly propagated to the link partner but 
+will not trigger an LLR replay. 
+llr_field The LLR-related control fields to be placed into the preamble of LLR_ELIGIBLE 
+frames by the MAC; consists of a 20-bit sequence number for the frame. 
+ 

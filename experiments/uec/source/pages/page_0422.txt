@@ -1,0 +1,32 @@
+ 422 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+If retransmission is disabled and a RODL packet is determined to be lost or corrupted (e.g., CRC invalid), 
+the PDC is closed in error and all outstanding messages after the lost packet are dropped and completed 
+in error. PDS returns a NACK PSN for the missing PSN and every packet that arrives thereafter for all 
+packets excluding a Close Command control packet. The pds.nack_code is set to UET_UNEXP_EVENT for 
+request packets. The CACK PSN does not advance beyond the missing PSN minus one. 
+When a lost packet event occurs on a PDC without retransmission, the initiator sends a Close Command 
+control packet. The target responds to the Close Command CP with an ACK packet and closes the PDC. 
+The target accepts the Close Command CP despite the PSN being out of order. Both initiator and target 
+ignore maximum PSN range if necessary for the Close Command CP under this error case. 
+3.5.22.1.2 Bidirectional PDCs and Reverse ACKs  
+Bidirectional PDCs reduce the amount of state required for two FEPs to exchange transactions and 
+enable the use of reverse path ACKs. RODL PDCs are defined to be bidirectional. 
+Bidirectional PDCs allow the target to generate semantic requests in the return direction. The basic 
+sequence for establishing and closing of the PDC remains the same—the role of initiator is assigned to 
+the FEP that initiates the PDC. Only the initiator closes a PDC. The target may request the initiator to 
+close the PDC. 
+The PDC close flow is modified at the target. Before the target requests that the initiator start the close 
+sequence, it MUST wait until all transactions initiated by the target FEP on that PDC are completed, 
+including clear processing, before sending the close request. When the initiator sends a close command, 
+the target MUST complete all active transactions on the PDC before acknowledging the close command. 
+The packet flow for a Unified Local profile bidirectional PDC is illustrated in Figure 3-109. The PDC is 
+configured for lossless operation (e.g., using CBFC or PFC and LLR) using RODL. An important factor in 
+lossless networks is deadlock avoidance. Responses MUST use a different traffic class than requests. ACK 
+packets are used to carry response data for read and fetching atomic operations. 
+For example, in Figure 3-109, the red and blue lines are PDS requests that are mapped to the same 
+traffic class. Max_ACK_Data_Size MUST be set to match the Payload MTU, so all response data is carried 
+in acknowledgements. ACKs and NACKs are mapped to a second traffic class, unique from PDS requests.  
+RODL is designed to run over a lossless fabric and uses the traffic class mapping defined for UET over 
+lossless. This means PDS requests and control packets use a different traffic class than ACKs and NACKs. 

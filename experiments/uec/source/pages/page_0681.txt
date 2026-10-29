@@ -1,0 +1,38 @@
+ 681 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 5-29 - UE CtlOS Message Type Values 
+UE Feature CtlOS Msg type value (D1) 
+LLR ACK 0x01 
+NACK 0x02 
+INIT 0x03 
+INIT_ECHO 0x04 
+CBFC CF_Update 0x10 
+ 
+The PCS 64B/66B encoding must be modified to translate an xMII Lane 0 control character of 0x5C to the 
+block type of 0x4B with an O-code value of 0x6. This definition supports both IEEE sequence ordered 
+sets and the new control ordered sets within the same structure. See the UE PHY specification for 
+additional details. 
+Table 5-30 - Modified 64B/66B PCS Encoding for Ordered Sets 
+Input 
+data 
+Sync [2:9] [10:17] [18:25] [26:33] [34:37] [38:41] [42:49] [50:57] [58:65] 
+Ordered 
+Set 
+‘b10 0x4B D1 D2 D3 O-code D4[4:7] D5 D6 D7 
+Note: 
+• O-code value is 0x0 for sequence ordered sets and 0x6 for UE control ordered sets.  
+5.2.11.2 Link Layer and MAC CtlOS Insertion Rules 
+The following rules govern the insertion of CtlOS messages into the TX data stream. 
+• CtlOS must always be 8-byte aligned with the xMII control code in lane 0. 
+• CtlOS are allowed to preempt a packet except: 
+o Within the first 256 bytes of a packet. 
+• A packet that is preempted by a CtlOS must continue transmission of data immediately 
+following the CtlOS. 
+• CtlOS must be limited to less than 2% of link bandwidth. 
+o Enforced by guaranteeing a minimum distance of at least 400 B between two CtlOS. 
+• CtlOS should use less than 0.5% of link bandwidth under usual circumstances. 
+o Spacing of approximately 1600 bytes between two CtlOS. 
+Guaranteed spacing between two CtlOS has several advantages, including simplifying the RX CtlOS 
+handling logic. The minimum spacing rules must be observed even if there are no packets in transit and 
+the CtlOS would be separated only by IDLE characters. 

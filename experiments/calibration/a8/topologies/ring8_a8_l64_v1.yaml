@@ -1,0 +1,46 @@
+# Calibration-ladder A8 topology: unidirectional ring of 8 ranks at per-hop
+# latency L = 64 ns — CAL-A8's LOWER ANCHOR POINT (Pond, ASPLOS 2023:
+# "emulating either 64ns or 140ns of additional memory access overheads
+# over same-NUMA-node memory"; docs/calibration/anchors_staging.md §A8).
+# This is the stage's anchor-point topology for the lower emulated addition.
+#
+# DECLARED READING (never silent): CAL-A8's numbers are EMULATED additions
+# — study INPUTS injected in hardware, not CXL device measurements (staging
+# caveat: "they bound plausible device latencies rather than measure one").
+# They are read onto the identity's per-hop latency L as per-traversal
+# ADDED latency beyond the serialization term — the same reading the plan's
+# A-L0-LAT row uses ("64-140 ns emulated added memory latency (CAL-A8)").
+# Pond studies per-VM memory access over pooled CXL fabric (memory-semantic,
+# load/store); the L0 identity executes a collective over a ring — the
+# projection of a per-access ns-scale onto the collective hop-latency axis
+# is a DECLARED distortion, recorded in the stage's calibration record.
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0-LAT), never tuned toward any
+# CAL-A8 output — the anchor's measured outputs are workload-goal FRACTIONS
+# (43%/37% of 158 workloads), which the L0 input space cannot even express
+# (no population/SLO axis; quantified in the stage record). The stage's L
+# span {10, 64, 140, 200, 800, 2000} was fixed by registry/anchor/plan
+# arithmetic BEFORE any stage output was read: 10 = A-L0-LAT registry free
+# range lower endpoint [10, 2000]; 64/140 = the CAL-A8 emulated points;
+# 200 = the A-L0-LAT registry point (KEEP); 800 = the plan's anchored-axis
+# upper endpoint (CAL-A10 assumption-class 0.8 us); 2000 = the registry
+# free-range upper endpoint, anchor-free above the plan's NARROW candidate.
+# B = 64 B/ns is the A-L0-BW registry point, kept FIXED (the anchor says
+# nothing about bandwidth; sweeping L only). r = 8 is the smoke default
+# rank count — the anchor stages no rank count, so nothing is derived.
+topology_id: ring8_a8_l64_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 64
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: L = 64
+  ns is CAL-A8's lower emulated added-latency point (Pond, ASPLOS 2023;
+  arXiv:2203.00241; emulated study input bounding plausible CXL-class
+  device latency, NOT a device measurement); B = 64 B/ns is the free
+  A-L0-BW registry point; r = 8 is the free smoke default (anchor stages
+  no rank count). Values are anchor quotes / registry defaults, never our
+  measurements.

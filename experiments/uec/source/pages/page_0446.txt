@@ -1,0 +1,42 @@
+ 446 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+PDS Packet Types 2 DSCP Mapping 3 DSCP Mapping 
+PDS NACKs DSCP_CONTROL DSCP_CONTROL 
+RUDI Send/Write Response Packets DSCP_CONTROL DSCP_CONTROL 
+RUDI Read Response Packets DSCP_NO_TRIM DSCP_NO_TRIM 
+Note: 
+• Control packets default to using DSCP_CONTROL.  Special use cases —such as those needing sequencing 
+behind other packets—MAY place control packets on DSCP_NO_TRIM. 
+ 
+If trimming is enabled, additional information is needed to separate trimmable from trimmed packets. 
+This is accomplished by using a third DSCP, as shown in Table 3-86. Additional DSCP values can be used 
+to provide additional information to UET-CC, as shown in the 4+ DSCP Mapping column Table 3-86. 
+Additional DSCP values beyond four may be needed to indicate a packet should not be trimmed 
+(DSCP_NO_TRIM) if an ACK, NACK, or control packet would be larger than the trim size, for example. 
+Similarly, it may be advantageous to indicate that a packet is a retransmitted packet. 
+UET does not mandate that specific numeric values be associated with these DSCP names; the mapping 
+of DSCP names to specific values is the responsibility of the network operator and is dependent on the 
+specific network configuration. Similarly, it is possible for a network to have more than one class of UET 
+traffic, in which case these DSCP names and traffic classes may be replicated as appropriate. 
+Table 3-86 - UET DSCP Mappings with Trimming 
+PDS Packet Types 3 DSCP Mapping 4+ DSCP Mapping 
+PDS Requests (RUD, ROD, RODL, RUDI) DSCP_TRIMMABLE DSCP_TRIMMABLE 
+Retransmitted PDS Requests DCSP_TRIMMABLE  
+ 
+DSCP_TRIMMABLE or 
+DSCP_TRIMMABLE_RTX1 
+Control Packets2 DSCP_CONTROL or 
+DSCP_TRIMMABLE 
+DSCP_CONTROL or 
+DSCP_TRIMMABLE or 
+DSCP_NO_TRIM3 
+PDS ACKs >= Trimmable_ACK_Size DSCP_TRIMMABLE DSCP_TRIMMABLE 
+PDS ACKs < Trimmable_ACK_Size DSCP_CONTROL DSCP_CONTROL 
+PDS NACKs DSCP_CONTROL DSCP_CONTROL 
+RUDI Send/Write Response Packets DSCP_CONTROL DSCP_CONTROL 
+RUDI Read Response Packets DSCP_TRIMMABLE DSCP_TRIMMABLE or 
+DSCP_NO_TRIM 
+Trimmed Packet DSCP_TRIMMED DSCP_TRIMMED 
+Packet Trimmed on Last Hop DSCP_TRIMMED DSCP_TRIMMED_LASTHOP 
+Note: 

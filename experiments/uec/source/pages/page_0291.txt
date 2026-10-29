@@ -1,0 +1,22 @@
+ 291 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• The completion for the write immediate informs the *CCL at rank S that the receive entry is 
+available, which is useful when there is a pending send transaction for rank R. 
+• An application call is subsequently made to the *ccl_send() API by rank S to send a message to 
+rank R. 
+• The *CCL at rank S consults the rendezvous queue data structures and calls the libfabric 
+fi_write() API to generate an RMA write for the purpose of writing the message to the buffer 
+posted by rank R. 
+• The completion for the fi_write() is assumed to inform the *CCL at rank S that the message has 
+been delivered to the posted buffer and is globally observable. 
+• The *CCL at rank S then calls the libfabric fi_writedata() API to generate an RMA write with 
+immediate for the purpose of generating a completion to the *CCL at rank R. 
+• The *CCL then delivers completions to the application for the *ccl_recv() at rank R and the 
+*ccl_send() at rank S. 
+The above sequence is for the case when a valid receive entry is available at the time *ccl_send() is 
+called. If a valid receive entry is not available, the *CCL saves the request in a send pending queue. 
+When the completion of an RMA write immediate indicates that a receive entry has been posted for 
+rank R, the send pending queue is checked, and if there is a pending send request for rank R, that 
+request is removed from the queue and serviced using the posted receive entry. In this manner, the 
+proposal does not require receiver not ready (RNR) functionality from UET.  

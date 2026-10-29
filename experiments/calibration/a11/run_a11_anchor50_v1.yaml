@@ -1,0 +1,61 @@
+# Calibration-ladder A11 anchor-point RUN: the L0
+# single-stage crossbar identity at the CAL-A11 ANCHOR POINT link
+# bandwidth — r=8, B=50 B/ns (the staged "400G single-mode optics
+# between RTSWs and CTSWs" under the declared decimal + IEEE
+# per-direction reading; flagged alternative reading 25 B/ns recorded
+# in the calibration record, not executed), L=200 ns (A-L0X-LAT
+# registry point, FIXED and free: CAL-A11 stages no latency number),
+# payload 8*2^30 = 8 GiB (the largest member of the stage's 12-size
+# ladder — the bandwidth-bound regime the anchor's axis governs; at
+# this size the latency term is ~1.3e-6 of CCT, i.e. the pure
+# bandwidth regime).
+#
+# SCALE-OUT HONESTY (plan §1.1 row CAL-A11: "Cannot calibrate O-CCT for
+# scale-up — a scale-out rail-optimized RoCE fabric... Secondary sanity
+# context for exactly the effects L0 declares out of scope"): CAL-A11
+# stages NO per-collective (size -> time) series (its throughput tables
+# live in the paper PDF) — this run cannot be compared to any anchor
+# CCT. Its role is to place the identity AT the anchor's link class in
+# the append-only store, so the PROPOSED record's B-axis placement
+# arithmetic (vs the registry-point twin run_a11_registry64_v1.yaml:
+# asymptotic CCT ratio exactly 25/32 = 0.78125, per-op delta an
+# arithmetic fact of the identity) is backed by run ids. B is a free
+# parameter placed at the anchor's staged number, never tuned; the
+# mapping B_link-rate -> per-rank injection is a DECLARED model-side
+# reading ("one rank = one rail"), recorded in the topology file.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A11-ANCHOR50-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a11/workloads/w1_dense_tp_decode_tp8_8gib.yaml
+infra_graph:
+  path: experiments/calibration/a11/topologies/crossbar8_a11_link50_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a11/profiles/implementation_profile_l0_crossbar_cal_a11_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_a11_link50_v1 (one non-blocking switch stage; r=8, B=50 B/ns = CAL-A11 400 Gbps optics per direction under the declared reading, L=200 ns free registry point)
+  workload: w1_dense_tp_decode tp8, payload 8*2^30 (8 GiB, the bandwidth-bound ladder member)
+  implementation: analytical L0 crossbar identity; CAL-A11 comparison is bandwidth-axis placement at the anchor's link class only (scale-out sanity context; no staged time series) — PROPOSED, review required
+evidence_level_requested: E0

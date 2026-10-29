@@ -1,0 +1,27 @@
+# W1 Dense TP Decode — tp_size 8 at payload 16777216 B = 16 MiB: the
+# MAXIMUM vector size of GF-07's staged measurement range "vectors 8 B–
+# 16 MiB" (Characterizing the Impact of Congestion in Modern HPC
+# Interconnects, arXiv:2604.11432; docs/calibration/anchors_gapfill.md
+# §GF-07; numbers AS STAGED, not re-fetched). 16 MiB is also the
+# anchor's own DCQCN threshold quote ("recurring sawtooth pattern ...
+# larger than 16 MiB" — RoCE/DCQCN), so the run pair below pins the L0
+# identity exactly at the anchor's range edge. The anchor measures
+# COLLECTIVE BANDWIDTH RATIOS on victim collectives (1,000 iterations,
+# 100 warmup discarded), NOT (size -> time) series — NO comparison to
+# any anchor time is attempted anywhere; this payload is the free
+# A-W1-SIZE probe at the r=8 smoke default. 2^24 is divisible by 8 so
+# the A-L0-DIV / A-L0X-DIV gates ACCEPT the exact size — no bracketing.
+# The envelope/carrier sweeps override this payload per grid cell over
+# the anchor's OWN range as a power-of-2 ladder 8*2^k (8 B -> 16 MiB,
+# 22 sizes), which contains every in-range member of the standard
+# 12-size ladder used by stages A1/A2/A7/A9/A11/GF-05 (8 KiB, 32 KiB,
+# 128 KiB, 512 KiB, 2 MiB, 8 MiB). Same workload shape as every other
+# W1 file (2 layers x 3 decode steps = 6 AllReduce ops per config).
+# Nothing here is measured or standard-normative; integer byte counts;
+# deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf07-tp8
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 16777216   # 16 MiB — the anchor's maximum staged vector; free parameter A-W1-SIZE

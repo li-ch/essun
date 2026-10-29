@@ -1,0 +1,21 @@
+# Calibration-ladder A4 sweep endpoint: unidirectional ring of 4 ranks at
+# B = 50 B/ns — the CAL-A1 NVLink5 per-port per-direction point
+# (57.6 Tbps full-duplex / 72 ports; stage A1's derivation), carried here
+# as the cross-generation upper endpoint of the per-link anchor span
+# (plan §2.1 A-L0-BW: [20, 64] B/ns per link per direction across the
+# anchor set). FREE PARAMETER with anchor provenance — never tuned toward
+# any anchor output (the anchor stages no hardware completion-time series
+# to tune toward). L = 200 ns is the A-L0-LAT registry point. r = 4
+# divides every stage-A4 size exactly (A-L0-DIV accepts; no bracketing).
+topology_id: ring4_a4_b50_v1
+topology_class: unidirectional_ring
+ranks: 4
+link:
+  bytes_per_ns: 50
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: B =
+  50 B/ns is CAL-A1's per-port per-direction derivation (stage A1); L =
+  200 ns is the free A-L0-LAT registry point.

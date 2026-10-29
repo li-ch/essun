@@ -1,0 +1,40 @@
+ 643 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+implementation supports will depend on the implementation’s sublayer delays, the 
+intended link length to be supported, and the minimum frame size that the implementation 
+supports. 
+• The TX LLR will not accept a new LLR-desired frame for transmission from the MAC client if 
+the outstanding_data value is greater than or equal to the outstanding_data_max. This is to 
+ensure the correct operation of the pause and PFC mechanisms by limiting the maximum 
+amount of data that can be replayed to the same amount as the bandwidth-delay product 
+for the link. 
+• The TX LLR will not accept a new LLR-desired frame for transmission from the MAC client if 
+there is not sufficient space in the replay buffer to store the entire LLR-eligible frame. The 
+LLR is not permitted to truncate LLR-eligible frames when it has run out of replay buffer 
+space. The size of the replay buffer is implementation-dependent and should be sized based 
+on the implementation’s sublayer delays and intended link length to be supported. 
+• When an LLR_NACK is received, the nack_received variable is set to TRUE. The TX LLR 
+completes the transmission of any frame (LLR-eligible or LLR-ineligible) that it is in the 
+middle of transmitting. It then transitions to the REPLAY state, where a replay of the LLR-
+eligible frames held in the replay buffer is performed. Transmitting new LLR-ineligible 
+frames may be allowed during the REPLAY state. This is recommended particularly for time-
+sensitive LLR-ineligible frames. Expiry of the replay_timer if the replay_ct is less than 
+replay_ct_max will also transition the state machine to the REPLAY state. 
+Expiry of the replay_timer when the replay_ct equals replay_ct_max (if replay_ct_max is not 255 (i.e., 
+all-ones)) will transition the state machine to the FLUSH state. 
+When in the FLUSH state, the LLR discards all frames held in the replay buffer without transmitting 
+them. The state machine will then transition to the INIT state if the re_init_on_discard control is TRUE. 
+5.1.6 Transmission of LLR_ACKs/LLR_NACKs 
+LLR_ACKs and LLR_NACKs are sent using Control Ordered Set (see Table 5-8). Transmitted LLR_ACKs and 
+LLR_NACKs contain a sequence number (ack_nack_seq) that is the sequence number of the most recent 
+successfully received LLR-eligible frame. A successfully received LLR-eligible frame is defined as one that 
+has an fcs_status of GOOD or POISONED and for which expected_frame is TRUE. 
+Once an LLR_INIT_ECHO has been sent by the local LLR, LLR_ACKs are periodically sent to the link 
+partner to indicate the sequence number of the most recent successfully received LLR-eligible frame. 
+Reception of an LLR-eligible frame with an unexpected sequence number that is not a duplicate 
+(missing_frame per Table 5-11, regardless of the value of fcs_status), or reception of an LLR-eligible 
+frame with the expected sequence number and an fcs_status of BAD, will result in the sending of a 
+single LLR_NACK. No further LLR_ACKs or LLR_NACKs will be sent until an LLR-eligible frame is received 
+with the expected sequence number and an fcs_status of GOOD or POISONED. At that point, the 
+sending of LLR_ACKs is resumed. 

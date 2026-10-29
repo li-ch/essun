@@ -1,0 +1,41 @@
+# Calibration-ladder A1 anchor-point RUN: the L0
+# single-port crossbar identity at the CAL-A1 anchor point — r=72, B=50
+# B/ns (per-port per-direction, derived from the anchor's own numbers),
+# L=200 ns (A-L0X-LAT registry point), payload 72*2^25 = 2.25 GiB (the
+# bandwidth-bound ladder neighbor of CAL-A3's measured 2 GiB row).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A1-PORT50-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/workloads/w1_dense_tp_decode_tp72.yaml
+infra_graph:
+  path: experiments/calibration/a1/topologies/crossbar72_a1_port50_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a1/profiles/implementation_profile_l0_crossbar_free.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar72_a1_port50_v1 (NVSwitch-class abstraction, r=72 = CAL-A1 radix, B=50 B/ns anchor point, L=200 ns free)
+  workload: w1_dense_tp_decode tp72, payload 2.25 GiB (bandwidth-bound regime)
+  implementation: analytical L0 free-parameter identity; CAL-A1 comparison is normalization-ceiling only (spec, not a time series) — PROPOSED, review required
+evidence_level_requested: E0

@@ -1,0 +1,39 @@
+ 632 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The receive MAC delivers LLR-eligible frames and LLR-ineligible frames to the LLR layer. For each LLR-
+eligible frame, the MAC relays the sequence number of the LLR-eligible frame extracted from the 
+preamble. The LLR checks that the sequence number of the LLR-eligible frame is the next expected 
+sequence number. The LLR discards LLR-eligible frames that are not expected and returns an LLR_NACK 
+to the link partner to indicate that a frame has been lost. 
+During normal operation, the LLR receiver periodically sends LLR_ACKs that acknowledge the most 
+recent successfully received frame. When an out-of-sequence frame is received, a single LLR_NACK is 
+sent to indicate the error. No further LLR_ACKs or LLR_NACKs are sent until the frame with the expected 
+sequence number is successfully received. 
+LLR provides lossless link operation for data from the Ethernet LLC/MAC client layer. In the standard 
+IEEE layering model, LLR is located between the LLC/MAC client layer and MAC control layer. LLR is 
+above the MAC control layer because the sending of pause frames from the MAC control layer is not 
+blocked by LLR while it is performing a replay operation. However, it should be noted that the reception 
+of pause frames does not stop the replay of previously sent data frames by LLR and acts only on new 
+data frames (LLR-ineligible or LLR-eligible) from the LLC/MAC client layer. In this respect, showing the 
+LLR above the MAC control layer is slightly misleading, and care should be taken when implementing the 
+pause mechanism. Priority-based flow control (PFC) frames interact with LLR in the same way as pause 
+frames. 
+The correct MAC control pause behavior is achieved by bypassing the MAC control request and 
+information interfaces around the LLR. Requests to send pause frames are made to the MAC control 
+MAC:MA_DATA.request
+MAC
+MAC:MA_DATA.indication
+MAC Control
+LLR:MA_DATA.indication
+LLR
+LLR:MA_DATA.request
+MAC client
+MA_CONTROL.indication
+MA_CONTROL.request
+MCF:MA_DATA.indication
+MCF:MA_DATA.request
+LLR
+ 
+Figure 5-2 - MAC Control interface connectivity. 
+ 

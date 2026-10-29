@@ -1,0 +1,34 @@
+ 527 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Signal Name Function Description Datatype Unit 
+uet_rx_telegram_local LB, CC Local telegram received uint 1 
+uet_rx_telegram_peer LB, CC Remote telegram received unit 1 
+uet_rx_telegram_type LB, CC Telegram type uint 1 
+uet_tx_ev_tbl_depth LB Depth of EV table uint 1 
+uet_tx_ev_tbl_idx LB EV table Index uint 1 
+ 
+3.6.18.4.4 Signal-Accumulation Function Combinations  
+Not all combinations of signals and accumulation functions are useful. This specification defines a 
+mandatory subset to ensure implementations can specialize for a minimal, interoperable baseline. Other 
+combinations may be provided. An implementation MAY implement accumulation functions for any 
+signal that it finds useful. 
+3.6.18.4.4.1 CC Signal-Accumulation Functions 
+ 
+Table 3-110 - CC Signal Accumulation Functions 
+Signal/Accumulation uet_op_sum uet_op_max uet_op_min uet_op_last 
+uet_rx_ack MUST N/A N/A MAY 
+uet_rx_ack_bytes MUST N/A N/A MUST 
+uet_rx_ack_count MUST N/A N/A MAY 
+uet_rx_ack_ecn MAY N/A N/A MUST 
+uet_rx_ack_gen_bytes N/A N/A N/A MAY 
+uet_rx_ack_gen_timer N/A N/A N/A MAY 
+uet_rx_ack_probe MAY N/A N/A MAY 
+uet_rx_ack_rtt MUST MUST MUST MUST 
+uet_rx_ack_svc MUST MAY MAY MUST 
+uet_rx_cookie N/A N/A N/A MUST 
+uet_rx_credit MUST N/A N/A MAY 
+uet_rx_credit_req MAY N/A N/A MAY 
+uet_rx_credit_req_value MAY MAY MAY MUST 
+uet_rx_ctl MAY N/A N/A MAY 
+uet_rx_cwnd_penalty N/A N/A N/A MAY 

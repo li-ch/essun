@@ -1,0 +1,26 @@
+# Calibration-ladder GF-10 latency row: NV-SLI REMOTE ACCESS — crossbar
+# r=8, B = 25 B/ns (the GF-10 carrier), L = 8000 ns.
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# the NV-SLI system shows remote access over NV-SLI at "~8 µs" (vs local
+# "~5 µs": the local/remote system-internal spread is exactly 8/5 = 1.6x).
+# App-level quantity class (software stack included — bound, not
+# equality), 4x ABOVE the A-L0X-LAT declared free-range upper 2000 ns
+# (recorded; the range is untouched). NV-SLI system class as on the
+# L=5000 row: the row executes the value on the shared carrier for axis
+# placement.
+topology_id: crossbar8_gf10_b25_l8000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 8000
+notes: >
+  Single non-blocking switch-stage abstraction: uniform per-pair latency
+  L = 8000 ns (GF-10's staged NV-SLI remote-access measurement, ~8 µs,
+  app-level) at the measured carrier B = 25 B/ns, charged once per phase
+  by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). Placement row on
+  the measured latency axis: 40x the registry point, 4x the declared
+  free-range upper (bound not equality — app-level quantity class).
+  Value is an anchor measurement, never our measurement.

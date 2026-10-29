@@ -1,0 +1,56 @@
+ 570 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 3-143 - Cluster KDF mode for IPv4 and Packets with Explicit SSI 
+3.7.8.2 Cluster KDF mode for IPv6 without explicit SSI 
+For IPv6 traffic MUST use two-block mode to accommodate the larger IPv6 source address. The Context 
+in the IPv6 case is 208 bits and MUST be the following field: 
+• LabelCluster  = 0x5531 or ‘U1’ in ASCII 
+• Contextv6 = 0x00000000|| current_epoch  || Rekey || ipv6.src_addr 
+ 
+                                 
+             
+   
+      
+                                   
+          
+    
+   
+         
+              
+   
+         
+              
+    
+          
+  
+              
+       
+             
+            
+            
+         
+                       
+     
+    
+                   
+        
+       
+               
+           
+     
+     
+                                   
+   
+         
+              
+    
+                       
+     
+     
+  
+            
+            
+        
+     

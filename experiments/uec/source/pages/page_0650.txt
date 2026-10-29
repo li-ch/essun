@@ -1,0 +1,38 @@
+ 650 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2 Credit-based Flow Control 
+This specification defines the protocols, procedures, and message formats that enable credit-based flow 
+control (CBFC) on a per-priority basis on a UE full duplex link (see Section 6.1.1.2). 
+CBFC is an alternative to the IEEE 802.1Q-2022 [6] standard priority-based flow control (PFC), which is 
+intended to eliminate frame loss due to buffer congestion at the receiver. When either CFBC or PFC are 
+enabled on a link, the IEEE 802.3 [1] PAUSE mechanism must not be enabled. The choice to use PFC or 
+CBFC should be based on the need for lossless packet delivery and the relative advantages of each 
+mechanism (see 5.2.2). 
+While CBFC can replace PFC, the protocol is designed to allow for possible simultaneous operation with 
+PFC to manage multiple chip resources. 
+CBFC is an optional link layer feature in a UE network defined for an individual full-duplex point-to-point 
+connection. 
+5.2.1 Lossless Packet Delivery Use Cases 
+Network applications require reliable packet delivery. Ethernet fabrics can be lossless or best effort. In 
+best-effort fabrics, reliable packet delivery is guaranteed by an end-to-end reliable transport protocol, 
+but the hop-by-hop links are best effort where packet drops due to congestion are allowed. 
+The UE Transport (UET) layer is defined to provide end-to-end reliable packet delivery in a best-effort 
+network by utilizing the following components: 
+• Packet retransmission from the source. 
+• Support for out-of-order packet arrival at the receiver. 
+• Congestion control to limit packet drop probability in switches. 
+Congestion and the resulting lack of buffer space in switches is the main reason for packet drops in best-
+effort Ethernet networks. 
+In a lossless fabric, the hop-by-hop propagation of a packet is lossless via a suitable link-level flow 
+control scheme. At the Link Layer, lossless packet transmission between link partners can be controlled 
+by permitting packet transmission only if there is buffer space available at the receiver by utilizing link-
+level flow control. PFC and CBFC are two ways of achieving lossless packet delivery on a hop-by-hop 
+basis to achieve a lossless Ethernet fabric. Lossless fabrics remove the need for end-to-end 
+retransmissions and the delays associated with them. 
+Link-layer lossless packet delivery on a per-priority basis can also be useful in many situations. Small 
+networks and lower loads can benefit from link-level flow control by simplifying network management 
+and endpoint configuration and their buffer requirements. Link-level flow control may be preferable in 
+certain network topologies such as Torus or Dragonfly as well HPC and AI applications with short 
+messages. Link-level flow control may also be preferable for certain traffic classes with short control or 
+command messages at a low rate. 

@@ -1,0 +1,16 @@
+claim_id: C2-EXAMPLE
+statement: Illustrative claim record only; no result is asserted.
+status: PROPOSED
+supporting_runs: []
+refuting_runs: []
+baselines:
+- B3
+- B4
+validity_domain:
+  description: No real validity domain; schema example only
+evidence_level: E0
+external_reproduction: []
+paper_locations:
+- planned:method-section-only
+review_status: draft
+counterexamples: []

@@ -1,0 +1,64 @@
+ 680 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Item Requirement Required Value(s) 
+CC_msg_timer 
+MUST support a configurable period 
+for CC_Update packet generation by 
+the sender. 
+1 µs ≤ CC_msg_timer ≤ 250 ms 
+Counters 
+S_P_CL Sender Port Credit Limit 0 ≤ S_P_CL ≤ (220 – 1) 
+S_VC_CL[x] Sender VC Credit Limit 0 ≤ S_VC_CL x  ≤ (220 – 1) 
+S_VC_CC[x] Sender VC Credits Consumed 0 ≤ S_VC_CC x  ≤ (220 – 1) 
+S_VC_CF[x] Sender VC Credits Freed 0 ≤ S_VC_CF x  ≤ (215 – 1) 
+R_VC_CC[x] Receiver VC Credits Consumed 0 ≤ R_VC_CC x  ≤ (220 – 1) 
+R_VC_CF[x] Receiver VC Credits Freed 0 ≤ R_VC_CF x  ≤ (215 – 1) 
+VC mapping 
+VLAN mapping 
+MUST support a flexible mapping of 
+{VLAN.PCP, VLAN.DEI} to 
+ VC number for full range or any subset 
+of PCP/DEI. 
+ 
+DSCP mapping 
+MUST support a flexible mapping of 
+ip.dscp to VC number for full range or 
+any subset of DSCP.  
+ 
+Note: 
+1. Implementations MUST support either a single CF_max_timer or a per-VC CF_max_timer[x] with a 
+minimum granularity between 1 byte and 16384 bytes. 
+5.2.11 Control Ordered Sets (CtlOS) in UE Link Layer 
+The CtlOS is a message mechanism utilized by the credit-based flow control (CBFC) and Link Layer Retry 
+(LLR) features. The general format is extensible to future link-level features as well. It is an 8-byte 
+message encoded as an ordered set in the 64b/66b PCS encoding with an O-code value to distinguish it 
+from standard IEEE Std 802.3 [1]sequence ordered sets. 
+5.2.11.1 Control Ordered Sets Format 
+Control ordered sets use a control character of 0x5C on the xMII bus between the MAC/RS and PCS. This 
+distinguishes them from the standard sequence ordered sets, which use a control character of 0x9C. 
+Table 5-28 - CtlOS Format on xMII 
+Ordered Set Lane 0 
+(D0, control 
+character) 
+Lane 1 
+(D1) 
+Lane 2 
+(D2) 
+Lane 3 
+(D3) 
+Lane 4  
+(D4) 
+Lane 5 
+(D5) 
+Lane 6 
+(D6) 
+Lane 7 
+(D7) 
+CtlOS 0x5C Type D2 D3 {D4[7:4], 
+0x6} 
+D5 D6 D7 
+ 
+The CtlOS type field is used to encode the CtlOS message type. Table 5-29 defines all UE CtlOS message 
+type values. Each CtlOS message has 5.5 bytes in D2-D7 for message-specific information. 
+ 

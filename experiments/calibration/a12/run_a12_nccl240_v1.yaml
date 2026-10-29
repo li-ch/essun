@@ -1,0 +1,44 @@
+# Calibration-ladder A12 anchor-point RUN: the L0
+# single-port crossbar identity at CAL-A12's NCCL-MODEL point — r=8,
+# B=240 B/ns per rank per direction (12 links x 20 B/ns: the issue's own
+# `system->totalBw` figure at `ncclTopoSearchInit`, from NCCL
+# src/graph/topo.h modeling each NVLink-3 link at 20 GB/s), L=200 ns
+# (A-L0X-LAT registry point), payload 8*2^26 = 512 MiB (identical to
+# the physical-point run; only B differs, so the CCT ratio between the
+# two runs IS the derating bridge end-to-end, exact).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A12-NCCL240-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a12/workloads/w1_dense_tp_decode_tp8_512mib.yaml
+infra_graph:
+  path: experiments/calibration/a12/topologies/crossbar8_a12_nccl240_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a12/profiles/implementation_profile_l0_crossbar_cal_a12_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_a12_nccl240_v1 (NVSwitch-class abstraction of the anchor's 8-GPU A100 server, r=8, B=240 B/ns = 12 x 20 NCCL topo-model total — the issue's system->totalBw, L=200 ns free)
+  workload: w1_dense_tp_decode tp8, payload 512 MiB (bandwidth-bound regime member of the 8*2^k ladder)
+  implementation: analytical L0 free-parameter identity; CAL-A12 comparison is the software-model side of the derating-bridge anchor (the 0.8 stages A2/A6/A7 used comes from this issue) — PROPOSED, review required
+evidence_level_requested: E0

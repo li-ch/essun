@@ -1,0 +1,31 @@
+# Implementation profile for the calibration-ladder GF-04 runs on the
+# analytical L0 crossbar backend (gap-fill anchor
+# GF-04; docs/calibration/anchors_gapfill.md §GF-04).
+implementation_profile_id: analytical_l0_crossbar_cal_gf04_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. The single-node leg of
+  the anchor is an NVSwitch fabric — the KEEP domain of A-L0X-PORT (the
+  same convention as stage GF-02); the r=16 executions carry the same
+  declared uniform projection as the ring family (no per-leg asymmetry
+  parameter exists). Same pinned busbw = algbw x 2(r-1)/r mapping (plan
+  §3 targets rule; nccl-tests source fetched 2026-10-28 by stage GF-02).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) at {476.37 = the anchor's single-node
+  figure (the r=8 anchor point; GF-02-bracketed above-ceiling class),
+  469.67 = the anchor's two-node figure, 400 = the anchor's own rail
+  arithmetic (16x200 Gbps RoCEv2 per node, per-direction port
+  convention)} — all fixed by anchor/config arithmetic BEFORE any model
+  output was read. L fixed at the A-L0X-LAT registry point 200 ns.
+  NOTHING was tuned toward the GF-04 measurements.
+measurement_source: >
+  Same as implementation_profile_l0_ring_cal_gf04_v1 (the GF-04 anchor's
+  staged + fetch-verified numbers, including the fetch corrections
+  recorded in the stage record's verification block). Vendor blog, not
+  peer-reviewed; PROPOSED evidence only; no E3/E4 language.

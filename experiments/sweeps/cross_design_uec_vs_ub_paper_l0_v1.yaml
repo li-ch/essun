@@ -1,0 +1,56 @@
+# FIRST cross-design same-workload L0 comparison: UEC flavor
+# vs UnifiedBus PAPER-DERIVED flavor.
+#
+# HONESTY RULE (absolute): the UnifiedBus rows come from a paper-derived
+# design profile, NOT a normative standard profile (specification track
+# license-gated, pending license review/). Whether such a profile satisfies the
+# public-release gate's "2 distinct standards" leg is an open decision
+#
+# E0 evidence only: every value is a closed-form L0 analytical identity
+# under explicit FREE parameters. What separates the flavors in this table:
+#   - SHARED (equal by construction, one record): B = 64 bytes/ns and
+#     L = 200 ns in every flavor file (A-XDUO-BW / A-XDUO-LAT,
+#     experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml); one workload
+#     file (tp_size 64); one payload grid. No public source on EITHER side
+#     anchors a per-lane rate or per-hop latency usable at L0 (UBP-F01 /
+#     UBP-F02 mark the UB silence; UEC 1.1 fixes no such number).
+#   - ANCHORED (the only honest differences): the UB row's rank scale
+#     (UBP-P17: 64 NPUs/rack, PAPER_REPORTED) and identity (crossbar as
+#     the rack full-mesh level per the S3 map, with UBP-P06 the
+#     switch-free adjacency precedent, VENDOR_CLAIMED). The UEC rows'
+#     identities are FREE stand-ins (A-XDUO-IDUEC) — UEC 1.1 §1.5.3.3 is
+#     informative and mandates no fabric class.
+# Consequence, stated before any run: the UB row and the UEC crossbar row
+# are numerically IDENTICAL (delta exactly 0) — that coincidence is the
+# table's honesty anchor, not a defect. The nonzero deltas among UEC rows
+# are arithmetic facts of free identity choices, NOT flavor physics.
+# Deltas vs baseline are matched per payload size by the runner.
+#
+# UB-anchored structures at OTHER scales (16-NPU switch-free UBP-P06,
+# 1024-NPU pod UBP-P18 with the 64x16 torus stand-in) are excluded from
+# this table by the same-workload gate itself (one workload = one
+# tp_size) and by unlanded fidelity (hierarchy needs L1)
+#
+# Baseline = the UEC-flavor crossbar (the identity-matched control), so
+# the UB row's delta column reads exactly 0 at every payload size.
+sweep: cross_design_uec_vs_ub_paper_l0_v1
+workload: experiments/workloads/w1_dense_tp_decode_rack64.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/topologies/crossbar64_uec_free_params.yaml
+grid:
+  payload_sizes_bytes: [16384, 1048576]   # free parameters A-XDUO-PAYLOAD (16 KiB, 1 MiB)
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/topologies/ring64_uec_free_params.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/topologies/crossbar64_uec_free_params.yaml     # UEC flavor, identity-matched control (baseline)
+    - experiments/topologies/crossbar64_ub_rack_free_params.yaml  # UB paper flavor: ranks + identity ANCHORED, B/L free
+  - algorithm: allreduce_torus2d
+    topologies:
+    - experiments/topologies/torus2d64_uec_free_params.yaml

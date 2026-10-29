@@ -1,0 +1,8 @@
+# W1 Dense TP Decode — smoke configuration (T020 increment).
+# All sizes are integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-smoke
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # free parameter A-W1-SIZE (16 KiB), see assumptions_l0.yaml

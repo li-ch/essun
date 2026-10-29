@@ -1,0 +1,13 @@
+ 326 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.5.9.2 PDS Manager 
+Within PDS, some functions are general and others are specific to individual PDCs. Examples of general 
+functions include the allocation of PDCs, the handling of error events that are not associated with a 
+specific PDC, the assignment of SES packets to PDCs, etc. These services are provided by the PDS 
+manager state machine. Figure 3-60 illustrates the services within the PDS manager. 
+ 
+Figure 3-59 - PDS Top Level State Machines 
+ 
+ 

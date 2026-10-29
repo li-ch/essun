@@ -1,0 +1,29 @@
+ 657 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Counter Position # of instances Width (bits) Initial Value 
+• The width of the S_P_CL, S_P_CU, S_VC_CL[x], and S_VC_CU[x] counters MUST support the per -VC CC 
+counter width of 20 bits. These counters are not visible externally. 
+ 
+CF and CC counter size is determined by the frequency of update messages as well as the round-trip 
+time (RTT) between link partners and the size of the receiver's dedicated input buffer. To support a 
+reach of 500 m, with approximate RTT = 5 µs and credit size of 64 B, then 7.8k credits can be in flight at 
+800 GE. A counter of 15 bits (up to 16k) for the per-VC credit freed cyclic credit counters is needed. 
+CC_Update messages are meant to be much less frequent than CF_Update messages and use little link 
+bandwidth. CC counters of 20 bits support 219 credits. For a credit size of 64 B, CC counters of 20 bits can 
+support a buffer size of up to 32 MB between updates. For CC_Update messages to use less than 0.01% 
+of link bandwidth they need to be able to represent up to 800000 bytes of data, well within the 32 MB 
+limit, leaving room for future faster port speeds. 
+5.2.5.4 CBFC Point-to-Point Messages 
+Two message types are supported for communication between link partners: 
+• CF_Update: Credit freed counter update from receiver to sender. The purpose of this message is 
+to return credits to the sender so they can be reused to transmit additional packets. 
+• CC_Update: Credit consumed counter update from sender to receiver. The purpose of this 
+message is to recapture possible “leaked” credits resulting from packet drops due to link errors 
+such as uncorrectable FEC errors or packet CRC errors. 
+Table 5-19 - CBFC Message Types 
+Message Direction Format Frequency Content 
+CF_Update Receiver-to-Sender CtlOS (8 B) High Two R_VC_CF[x] counter values 
+CC_Update Sender-to-Receiver Packet (64 B) Low Up to 16 S_VC_CC[x] counter values 
+ 
+The exact format of each CBFC message is described in Section 5.2.6. 

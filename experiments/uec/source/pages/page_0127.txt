@@ -1,0 +1,24 @@
+ 127 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The rekey parameters MAY be requested by the kernel driver or pushed by a key management system. 
+The architecture for obtaining the rekey parameters is shown in Figure 2-11. 
+The steps shown in Figure 2-11 are: 
+1. UET provider kernel driver makes a rekey request to privileged user process via the UET Control 
+API. 
+2. The privileged user process communicates with a key management system and returns the 
+requested rekey information. 
+3. The provider kernel driver programs the key parameters into the NIC hardware. 
+Requirements associated with this architecture are: 
+• A UET provider kernel driver MUST support sending rekey requests to a privileged user process 
+using the UET Control API. 
+• The privileged user process MUST respond to rekey requests from the provider kernel driver 
+with rekey parameters. 
+• The provider kernel driver MUST accept both solicited and unsolicited rekey parameters 
+received from the privileged user process, and it MUST program the key parameters into the NIC 
+hardware. 
+ 
+The provider kernel driver MUST include the parameters specified by Table 2-35 in rekey requests. 
+ 
+Figure 2-11 - Rekey Parameter Acquisition Architecture 
+ 

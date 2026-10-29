@@ -1,0 +1,22 @@
+# Calibration-ladder GF-04 topology: fully-connected (crossbar)
+# abstraction of 16 ranks (the anchor's 2x8 two-node count) at the
+# anchor's TWO-NODE figure B = 469.67 B/ns ("NCCL on two nodes with 16
+# GPUs | 469.67 GB/s", fetched and verified 2026-10-28; pinned busbw = B
+# mapping). Same uniform-projection declaration as the ring16 twin (the
+# L0 input space has no per-leg asymmetry parameter); same GF-02
+# classification note (469.67 exceeds 450 by 4.37%, in-network-computing
+# class — the 8->16 RATIO is this stage's target, not the absolute
+# class). HONESTY: B swept free (A-L0X-BW), anchor-stated, fixed BEFORE
+# any model output was read; L = 200 ns A-L0X-LAT registry point (KEEP).
+topology_id: crossbar16_gf04_anchor469_67_v1
+topology_class: fully_connected_crossbar
+ranks: 16
+nic:
+  injection_bytes_per_ns: 469.67
+link:
+  pair_latency_ns: 200
+notes: >
+  Fully-connected abstraction of the GF-04 two-node 16-GPU leg at the
+  anchor's own two-node busbw summary figure 469.67 B/ns (uniform
+  projection of the hybrid NVSwitch+RoCE fabric; rail-bound bracket in
+  crossbar16_gf04_rail400_v1). Anchor-stated, never our measurement.

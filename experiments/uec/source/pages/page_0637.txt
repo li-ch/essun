@@ -1,0 +1,44 @@
+ 637 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+transmitted from least-significant bit to most-significant bit. For example, an LLR_ACK with 
+ack_nack_seq[19:0]=0x12345 would result in the following CtlOS being transmitted: 
+ 10_11010010_10000000_01001000_00101100_01101010_00000000_00000000_00000000. 
+For the LLR signaling CtlOS, D1 is set to the CtlOS message type. Four different message types are 
+supported and are identified by the value of D1: LLR_ACK, LLR_NACK, LLR_INIT, and LLR_INIT_ECHO (see 
+Section 5.1.9 for more detail on the purpose of these messages). The 20-bit message sequence number 
+is carried in D2 (sequence number bits <19:12>), D3 (sequence number bits <11:4>), and D4[7:4] 
+(sequence number bits <3:0>). In addition, the LLR_INIT and LLR_INIT_ECHO types carry init data bits 
+<15:8> in D5 and bits <7:0> in D6. For example, an LLR_INIT with init_seq[19:0]=0x8A72C and 
+init_data[15:0]=0x4DE1 would result in the following CtlOS being transmitted: 
+10_11010010_11000000_01010001_01001110_01100011_10110010_10000111_00000000. 
+ 
+LLR_ACK/LLR_NACK Control Ordered Set should be transmitted periodically (according to 
+ctlos_target_spacing) to ensure an adequate frequency of communication between stations, with the 
+appropriate sequence number corresponding to the most recently processed received frame. 
+Implementations may deviate (for any given interval between successive Control Ordered Set) from the 
+target spacing, but the LLR_TX MUST transmit the CtlOS LLR_ACK / LLR_NACK at a rate between a 
+maximum rate of once every 400 bytes and a minimum rate of once every 17296 bytes16 (unless the 
+ACK/NACK transmit state machine is in the NACK_SENT state). To mitigate the impact on per-frame 
+switch latency, a CtlOS SHALL NOT be inserted among the first 256 bytes of a frame. Similarly, two CtlOS 
+within the same frame MUST be spaced apart by at least 2 KB of data so that underrun can be managed 
+on cut-through switches. 
+5.1.4 LLR configuration 
+The LLR REQUIRES certain configuration registers to be accessible to management software for the 
+purposes of configuring and controlling its operation. The llr_mode_local and llr_mode_remote are 
+enabled from the link negotiation process. The llr_mode_local is set when negotiation determines that 
+both ends of a link support LLR. The llr_mode_remote is set when negotiation receives indication from 
+the remote end of the link that its llr_mode_local has been set to ON. 
+Table 5-9 - LLR Configuration Registers 
+Variable name Description 
+llr_mode_local Configures the mode of operation of the LLR. Once this is set, an LLR_INIT may be 
+received. 
+Values: OFF, ON 
+llr_mode_remote Configures the mode of operation of the LLR. Once this is set, LLR_INIT may be 
+sent. 
+Values: OFF, ON 
+ 
+16 Allowing a minimum rate of once every 17296 bytes provides a tolerance of up to 400+512 bytes beyond the 
+maximum configurable CtlOS_target_spacing value of 16384 bytes. The extra 912 bytes represents the cumulative 
+impact of implementation factors that can delay the specific point at which CtlOS is inserted into the stream, such 
+as insertion of a CtlOS from another function as well as avoiding a CtlOS within the first 256 bytes of a frame . 

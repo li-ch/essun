@@ -1,0 +1,41 @@
+ 251 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+buffered message headers MUST be compared against new receive operations that were provided. If a 
+new receive operation matches the unexpected buffered header, the implementation MUST provide the 
+buffered payload to the target user application. This is accomplished via hardware or software. If an 
+implementation has chosen this mechanism, it MAY degrade to the back-off and retry mechanism at any 
+point (e.g., if the buffered header space is exhausted). 
+Rendezvous sends and deferrable sends8 MAY be used with a buffered unexpected message scheme. If a 
+rendezvous end uses buffered unexpected messages, the implementation MUST return a modified 
+length less than or equal to the eager part of the rendezvous request. If a deferrable send uses buffered 
+unexpected messages, the implementation MUST return a modified length of either zero or the request 
+length. A modified length of zero is the signal in a response to a deferrable send that indicates to the 
+initiator that the operation was deferred. Note, however, that an implementation MAY combine a 
+buffered unexpected message scheme for standard sends with a buffered header scheme for 
+rendezvous sends and deferrable sends. 
+3.4.4.7.3 Unexpected Messages and Resource Exhaustion over ROD PDC 
+This section applies to both untagged messages over a ROD PDC and tagged messages using wildcard 
+matching over a ROD PDC and covers limitations of the resource exhaustion scheme when using 
+ordering as well as how ordering interacts with resource exhaustion. Handling unexpected messages 
+over an ordered PDC while using wildcard matching can be a challenging problem. Typically associated 
+with flow control in MPI, the combination of a strong ordering requirement with the possibility of 
+matching any receive buffer that has been posted has always been difficult to implement efficiently. 
+Solutions like back-off and retry do not work well, because a wildcard receive can be posted just after a 
+message has been rejected as unexpected. For untagged messages, any receive is effectively a wildcard 
+receive. A subsequent message in flight from the same initiator could match the wildcard receive out of 
+order because no other mechanism is available to establish ordering. Per-peer sequence numbering at 
+the MPI level does not work, because one receive is allowed to specify that it wants to receive from 
+MPI_ANY_SOURCE. The back-off and retry scheme MUST NOT be used for unexpected messages using 
+wildcard matching over a ROD PDC or for untagged messages over a ROD PDC. 
+Because these solutions are hard, the general solution implemented is buffered unexpected messages. 
+Buffered headers with rendezvous sends is also part of the typical solution. Implementations providing 
+wildcard matching over a ROD PDC MUST implement buffered unexpected messages or buffered 
+headers as a solution. 
+Buffered unexpected messages and buffered headers can still run into scenarios where the buffering 
+resources are exhausted. These scenarios are relatively uncommon but happen deterministically in 
+some applications. The libfabric over UET definition MUST include a buffer exhaustion solution. Scalable 
+solutions to buffer exhaustion have long proven challenging. To cover a breadth of use cases, two 
+solutions are provided in sections 3.4.4.7.3.1 and 3.4.4.7.3.2. 
+ 
+8 In this paragraph, “sends” is intended to capture both tagged and untagged sends.  

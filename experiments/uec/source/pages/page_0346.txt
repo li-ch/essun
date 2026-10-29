@@ -1,0 +1,35 @@
+ 346 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-51 - Header fields for UUD Request 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = UUD Request 
+next_hdr 4 Encoding identifying UET Semantic type  
+flags 7 No flags are defined for UUD packets. Set to 0x0 
+on transmission and ignored on reception. 
+rsvd 16 Reserved 
+ 
+3.5.10.15 RUD/ROD Default Response SES Header 
+The format of the default SES response header is shown in Figure 3-78. This section describes how PDS 
+formats a UET_DEFAULT_RESPONSE. The SES discussion of UET_DEFAULT_RESPONSE is in Section 
+3.4.4.3. When a packet is received with a PSN that has already been received, and when an ACK Request 
+CP is received for a PSN that has already been received, an ACK is generated. If that PSN has a 
+guaranteed delivery SES response, that response is sent. If that PSN has a default SES response, the ACK 
+is generated with the SES header shown in Figure 3-78. The header fields are described in Table 3-69 
+with additional details in Section 3.5.17. 
+Default SES headers alleviate the need to store the SES response for every packet until the associated 
+clear arrives. 
+ 
+3.5.11 Header Fields 
+This section provides additional description of the header fields specified in Section 3.5.10. 
+ 
+Figure 3-77 - UUD Header Format 
+ 
+ 
+Figure 3-78 - RUD/ROD Default SES Header Format 

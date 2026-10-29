@@ -1,0 +1,40 @@
+ 457 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Multiple CCCs between the same FEPs using the same traffic class MAY share some state, such as a 
+baseline estimate for RTT. 
+3.6.7.1 CCC for RUDI & UUD 
+RUDI and UUD do not support UET CC. Neither uses an ACK packet to carry the required congestion 
+control state. The rationale is that these will typically be used when sending small messages to large 
+numbers of destinations. Closed-loop congestion control for a single-packet PDC is generally not 
+meaningful, as there is no flow to control. 
+When RUDI and/or UUD is used to carry significant bandwidth, these SHOULD NOT be mapped to the 
+same traffic class as UET CC traffic. 
+3.6.8 Source Context 
+Each CCC gates admission of packets to the network for the corresponding PDCs. Each CCC does this 
+using feedback from the network and the destination, and it uses this feedback to control the aggregate 
+amount of unacknowledged data permitted to enter the network using that CCC. Multiple CCCs can co-
+exist at one source. This can happen when each CCC controls traffic to a different destination, when 
+CCCs to the same destination use different traffic classes, when PDCs to the same destination mix single-
+path ROD and RUD traffic, or when there are multiple single-path ROD PDCs to the same destination. 
+When multiple CCCs simultaneously allow data to be sent, it is the role of a scheduler in the sending FEP 
+to determine the order that PDCs may send, and how the transmission capacity is allotted among them. 
+Scheduler behavior is implementation specific. 
+With protocols such as TCP, if multiple connections have sufficient congestion window to send, it is 
+common for them all to do so until their windows fill. If their aggregate rate exceeds the link speed, they 
+can then build a substantial output queue downstream of the congestion control gate. With UET, it is 
+NOT RECOMMENDED to allow PDCs to build a significant output queue, though some small amount of 
+queuing downstream of the CCC gate may be needed by implementations. 
+For example, when a CCC is limited by a window and an ACK arrives that causes that CCC to extend the 
+window, the CCC would then normally cause a packet to be transmitted (this is known as ACK-clocking 
+and is a desirable property for congestion control). However, other CCCs at the same source may be in 
+the same situation, and so it is possible for multiple CCCs to allow transmission simultaneously. The 
+source’s scheduler must keep track of which CCCs currently permit transmission and schedule 
+transmission from PDCs under the control of these CCCs. When multiple CCCs or PDCs within a CCC have 
+data available to send, the source’s scheduler selects an eligible PDC in an implementation-specific 
+manner. 
+Conceptually then, the following steps occur: 
+1. The CCC determines whether any of its PDCs may be scheduled. 
+2. The scheduler then decides which PDC to send next from those that are schedulable. 
+3. On the selected PDC, a packet is generated to be sent. This may be new data or a 
+retransmission. 

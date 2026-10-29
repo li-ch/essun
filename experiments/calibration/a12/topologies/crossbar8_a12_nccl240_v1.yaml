@@ -1,0 +1,40 @@
+# Calibration-ladder A12 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the NCCL-MODEL point of CAL-A12's own system — B = 240
+# bytes/ns per rank per direction. Provenance is the anchor's headline
+# number (docs/calibration/anchors_staging.md §A12; NCCL GitHub issue
+# #1054): NCCL's `system->totalBw` at `ncclTopoSearchInit` is 240 GB/s on
+# the 8-GPU A100 server because `src/graph/topo.h` models an NVLink-3
+# link at 20 GB/s instead of the physical 25 GB/s — 12 x 20 = 240 B/ns
+# per GPU per direction (issue body, verified verbatim 2026-10-28 by two
+# independent fetches of the thread).
+#
+# SEMANTICS OF THE 240 (settled by the verified maintainer reply,
+# sjeaugey, quoted from the thread 2026-10-28): "The NVLink peak
+# bandwidth and the real application-level bandwidth are different,
+# since there is an overhead for NVLink packets." / "Roughly, the
+# app-level bandwidth is 80% of the peak bandwidth." So 20 GB/s per link
+# IS the ~80% app-level figure — ONE derating (exact 20/25 = 4/5, cause:
+# NVLink packet overhead), NOT a derating composed with a second one.
+# The staging doc's M-confidence caveat (reply text via search snippet,
+# "verify at integration") is thereby resolved by this stage; the reply
+# is a roughness statement ("roughly"), not a measured constant.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward any
+# measurement. 240 B/ns is NCCL's own internal model constant as staged
+# from the issue; it is a software-stack model, not our measurement and
+# not a physical rate. L = 200 ns is the A-L0X-LAT registry point.
+topology_id: crossbar8_a12_nccl240_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 240
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar8_a12_physical300_v1
+  (A-L0X-PORT, A-L0X-LAT, A-L0X-DIV); only the swept free parameter B
+  differs — here at NCCL's own topo-model rate 12 x 20 = 240 B/ns (the
+  issue's system->totalBw figure). The exact 4/5 = 240/300 ratio to the
+  physical twin IS the CAL-A12 derating bridge, here executed end-to-end
+  on the anchor's own fabric class instead of transferred to another
+  fabric's ceiling.

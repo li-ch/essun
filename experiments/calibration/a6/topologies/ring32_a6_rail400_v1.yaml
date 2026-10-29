@@ -1,0 +1,50 @@
+# Calibration-ladder A6 topology: unidirectional ring of 32 ranks (the
+# anchor's own rank count: 4 nodes x 8 H100 = 32 GPUs) at link bandwidth
+# B = 400 bytes/ns — the ANCHOR POINT of stage A6 (CAL-A6, the ladder's
+# NOISE-FLOOR anchor + secondary O-CCT target for hybrid rail topologies:
+# NCCL GitHub issue #1222, "Loss or Performance for NCCL test between
+# 2.19.3 and 2.20.3", 4x8 H100 allreduce over 16x200 Gbps RoCEv2;
+# docs/calibration/anchors_staging.md §A6).
+#
+# HYBRID-TO-UNIFORM PROJECTION (declared, never silent): the anchor's
+# fabric is hybrid — intra-node NVLink hops + inter-node RoCE legs — and
+# the L0 ring identity carries ONE uniform B for all 31 hops (A-L0-FD /
+# uniform-link class). In the anchor's bandwidth-bound regime (1-16 GiB)
+# the inter-node rail legs are the bottleneck, so this projection maps B
+# to the RAIL rate: under the single-ring crossing reading, the ring's
+# node-crossing link carries exactly the same per-collective bytes as
+# every other ring link (2(r-1)/r * M), so the identity's B IS the
+# crossing rate. The intra-node NVLink legs are FASTER than the rail in
+# the real system; the projection is a bottleneck-dominated reading, the
+# same declared-distortion discipline as stage A5's 3D->2D projection.
+# The torus2d twin reading (4x8 grid = the anchor's own node x GPU shape)
+# lives in torus2d32_a6_*; this ring file is the flat 32-ring NCCL runs.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward any
+# CAL-A6 measurement. 400 B/ns is fixed by the anchor's own SYSTEM
+# DESCRIPTION arithmetic, not by its measured times: the staged config
+# statement "16*200Gbps ROCEv2" per node, read under the Ethernet
+# convention that a 200 Gbps port rating is PER DIRECTION (full-duplex
+# port; decimal units, 200 Gbps = 25 GB/s per port), gives the per-node
+# per-direction rail 16 x 25 = 400 B/ns. This value is this stage's
+# ANCHOR POINT (the config ceiling — never an achieved value; the
+# measured series itself sits at 96.4-97.8% of it, which is a PLACEMENT
+# fact recorded in the calibration record, not a value moved here).
+# L = 200 ns is the A-L0-LAT registry point (KEEP; its CCT share at these
+# sizes is <= 0.24%, but the latency axis is the plan's weakest axis,
+# gap §4.2, and belongs to its own global stage).
+topology_id: ring32_a6_rail400_v1
+topology_class: unidirectional_ring
+ranks: 32
+link:
+  bytes_per_ns: 400
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  chunked ring AllReduce over 32 ranks (the anchor's 4x8 H100 count). No
+  congestion, no credits, no packetization, no per-hop heterogeneity (the
+  hybrid's NVLink/RoCE distinction is projected away — see header); L0
+  transport model only. Provenance: B = 400 B/ns = the anchor's staged
+  "16*200Gbps ROCEv2" per-node rail under the per-direction Ethernet port
+  convention (a config ceiling, never a measurement); L = 200 ns free
+  A-L0-LAT registry point.

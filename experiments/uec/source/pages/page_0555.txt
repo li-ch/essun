@@ -1,0 +1,41 @@
+ 555 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Function Name Direction Description and Parameters 
+rotate_key() SDME to TSS SDME updating the SDKDB 
+{sdi_idx, select_an, sdki} 
+tss_err() TSS to sys Generic error event in TSS, report to sys/mgmt 
+3.7.2.5.2 TSS—Link Interface 
+The following defines logical structures passed between the link layer and TSS. The associated example 
+function calls are listed in Table 3-131. 
+Table 3-131 - Example Functions between link layer and TSS 
+Function Name Direction Description and Parameters 
+pkt_to_link() TSS to Link Packet from TSS to link layer for transmission 
+{port_num, *pkt, pkt_len} 
+pkt_from_link() Link to TSS Packet from link layer to TSS from network 
+{port_num, *pkt, link_err, pkt_len} 
+link_err() Link to sys Generic error event in TSS, report to sys/mgmt 
+ 
+Implementation Note: 
+The TSS layer MAY drop frames based on misconfiguration or improper security parameters (e.g., 
+wrong SDK, which causes an authentication failure). These packets would be never delivered from 
+the PDS perspective and assumed dropped. This will cause the PDS to retransmit the packet, and if 
+configuration is not corrected it may eventually cause the PDC to time out and be torn down. If 
+multiple SDIs share the same PDC resources, this timeout may affect the other SDIs that are not 
+misconfigured. 
+ 
+3.7.3 Architecture 
+A central concept in TSS is a secure domain, which is a collection of FEPs that can communicate with 
+confidentiality and authenticity guarantees with a shared secret. The secure domain is explicitly 
+identified independently from the source FEP using separate fields in the packets. This allows for 
+independent scaling of sources and domains. 
+The secure domain spans from the TSS layer to all FEPs within the domain. Each FEP's TSS is deemed 
+trusted, meaning it is sufficiently segregated from the user parts of the system and attested according to 
+the system's security requirements. The process of establishing a trust relationship with the TSS varies 
+by implementation. Cryptographic operations and the storage of key materials occur exclusively within 
+the TSS. From the standpoint of an application, a “service” is initiated via Libfabric APIs and linked to 
+addressing details {JobID, PIDonFEP, Resource Index} along with security parameters (SDI, AN, etc.). 
+These resources are set up and authenticated within the FEP's privileged segment and the kernel driver 
+framework. A binding verification in the SES layer confirms that a service adheres to its designated 
+secure domain. Lastly, conventional kernel isolation methods (e.g., process ID) are employed to route 
+packets to the user space. 

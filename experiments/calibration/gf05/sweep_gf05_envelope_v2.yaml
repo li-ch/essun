@@ -1,0 +1,88 @@
+# Calibration-ladder GF-05 sweep #1: the R3
+# CONGESTION-EFFECTS ENVELOPE — where do the L0 crossbar rows sit on
+# the B axis at the anchor's own latency decomposition (GF-05:
+# SMaRTT+REPS, NSDI 2025, arXiv:2404.01630 — "the algorithm that forms
+# the basis of the UEC NSCC specification" and the UET 1.0 reference
+# load-balancing mechanism; docs/calibration/anchors_gapfill.md §GF-05)?
+# (v2 supersedes an identical-grid v1 preparation draft whose comment
+# carried an arithmetic slip — 2500/53 for the 6%-quote displacement,
+# correct value 5000/53; grid, topologies, and executed numbers are
+# unchanged, and the unreferenced v1 sweep dir remains in the
+# append-only results store)
+#
+# The anchor's outcome numbers are FCT deltas (per-flow), NEVER
+# collective CCTs, and its FCT tables are unstaged — NOTHING below is
+# compared to any anchor time. What is extractable and executed is the
+# envelope MAGNITUDES as effective-bandwidth displacements (stage A11's
+# technique): congestion control, load balancing, queueing, fairness,
+# and MTU/packetization have NO input key in the L0 loader surface and
+# BOTH backends declare "congestion" among explicitly_unsupported
+# capabilities — the mechanism is inexpressible; only the magnitude can
+# enter, as a free-scalar displacement.
+#
+# NOTHING IS TUNED: the B ladder was fixed by anchor/registry
+# arithmetic BEFORE any stage output was read —
+#   100 = THE ANCHOR POINT: the paper's staged sim config "800 Gbps
+#        network bandwidth" under the declared per-direction reading
+#        (800/8 = 100 B/ns; flagged bidirectional-aggregate alternative
+#        50 recorded) — the first staged anchor value ABOVE the plan
+#        §2.1 A-L0-BW candidate anchored span [20, 64];
+#   64  = A-L0X-BW / A-L0-BW registry point (placement; asymptotic CCT
+#        ratio exactly 100/64 = 25/16);
+#   50  = 2:1 oversubscription displacement (the anchor simulates
+#        "2:1/4:1/8:1 oversubscribed" fat trees; declared structural
+#        effective-B reading, first-order only) — numerically identical
+#        to the alt line reading AND to the alt "outperforms by 50%"
+#        reading where 50% means x2 (triple coincidence, recorded);
+#   25  = 4:1 oversubscription displacement;
+#   20  = the HW permutation envelope upper factor: "RoCE ... are 3-5
+#        times slower than optimal" applied to the sim point (100/5;
+#        dimensionless factor transferred from the DPDK testbed onto
+#        the sim config — declared reading; the x3 end 100/3 is
+#        non-representable, recorded in the stage record);
+#   12.5 = 8:1 oversubscription displacement (exact 25/2, the fairness
+#        quote's topology class; BELOW the plan's anchored span [20,64]
+#        — the oversubscribed UEC-class regime extends below it).
+# Asymptotic CCT ratios vs the anchor row are exactly {1, 25/16, 2, 4,
+# 5, 8} — pure 1/B arithmetic; the executed displacement signature is
+# the same class stage A11 demonstrated (ratio rises toward the
+# asymptote as the payload grows).
+#
+# Non-representable envelope rows RECORDED NOT EXECUTED (exact
+# fractions in the stage record): 200/3 ("outperforms ... by up to 50%"
+# primary reading, factor 3/2), 250/3 ("up to 20% better", factor 6/5),
+# 5000/53 ("only up to 6% behind the ideal time", factor 53/50),
+# 100/3 and 50/3 (RoCE x3 / alltoall x6), 2000/33 (the 65% slowest-flow
+# fairness spread, factor 33/20 — whose per-flow spread dimension is
+# exactly 0 in-model by construction).
+#
+# L fixed at the anchor's own per-hop decomposition 1000 ns (600 link +
+# 400 switch traversal) — unlike stage A11 (which fixed the registry
+# L=200 because its anchor staged no latency number), GF-05 stages
+# latency, so the envelope rides on the anchor's own L point; the
+# latency axis itself is swept by sweep_gf05_latency_v1.yaml.
+#
+# Payload grid: the same 12-size ladder 8*2^k (8 KiB -> 8 GiB) as
+# stages A1/A2/A7/A9/A11 (cross-stage comparability), which includes
+# the anchor's 2 MiB flow size (k-member 2097152); r=8 divides every
+# size, so the A-L0-DIV / A-L0X-DIV gates accept the exact ladder with
+# NO bracketing.
+sweep: cal_gf05_envelope_v2
+workload: experiments/calibration/gf05/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf05/topologies/crossbar8_gf05_line100_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_line100_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_reg64_l1000_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_sub2to1_50_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_sub4to1_25_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_roce5x_20_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar8_gf05_sub8to1_12_5_v1.yaml

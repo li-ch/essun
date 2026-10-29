@@ -1,0 +1,35 @@
+# Calibration-ladder GF-01 topology: fully-connected EXCHANGE fabric of 8
+# ranks at the raw aggregate point B = 448 B/ns — recursive-halving/
+# doubling AllReduce (backend analytical_l0_recursive_doubling), L = 200 ns.
+# Same provenance as crossbar8_gf01_agg448_v1 (GF-01 raw aggregate; the
+# CAL-A7 spec arithmetic). ROLE (same as the A7 record's third chain): the
+# three single-port L0 identities share the bandwidth term 2(r-1)/r*M/B
+# and differ ONLY in the latency chain — ring 14L, doubling 2*log2(8)L =
+# 6L, crossbar 2L — and GF-01's measured small-message band is exactly a
+# LATENCY-chain phenomenon (bandwidth term ~0.03-448 ns of 13.5-16.7 us
+# measured), so all three chains are executed at the reconciling small
+# sizes to bracket where the identities sit relative to the band.
+# r=8 is a power of two, so A-L0D-POW2 accepts natively; the doubling
+# backend is run-manifest-unreachable (the A7 record's gate finding) and is
+# executed through the sweep path only.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0D-BW), never tuned toward any
+# model output; 448 = 7 x 64 is the anchor's own raw arithmetic. L = 200
+# ns is the A-L0D-LAT registry point (KEEP). Same OUT-OF-DOMAIN
+# single-port caveat as the crossbar twin.
+topology_id: exchange8_gf01_agg448_v1
+topology_class: fully_connected_exchange
+ranks: 8
+nic:
+  injection_bytes_per_ns: 448
+link:
+  pair_latency_ns: 200
+notes: >
+  Partner-exchange steps over a fully-reachable fabric: one partner per
+  rank per step (XOR schedule), log2(r)=3 steps per phase, 6L latency
+  chain total. No congestion, no credits, no packetization — L0 transport
+  model only. Provenance: B = 448 B/ns from the GF-01 anchor's raw 7 x 64
+  B/ns per-direction arithmetic (measured per-link rates run lower —
+  sibling derated topologies carry those readings), L from the free
+  A-L0D-LAT registry point. Values are anchor arithmetic / free-registry
+  points, never our measurements, never tuned.

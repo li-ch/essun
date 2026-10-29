@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>essun — Executable Specifications for Scale-Up Networking</title>
+<meta name="description" content="essun is a specification-driven, multi-fidelity simulator for scale-up GPU fabrics (UEC, UnifiedBus, NVLink-class): one experiment manifest drives analytical and discrete-event backends, and every number traces to a content-addressed run record. MIT code, CC-BY-4.0 docs.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+
+    <div class="hero-grid">
+      <div>
+        <p class="kicker">Open-source simulator · scale-up GPU fabrics</p>
+        <h1>essun</h1>
+        <p class="expansion">Executable Specifications for Scale-Up Networking</p>
+        <p class="tagline">A specification-driven, multi-fidelity simulator for scale-up networks — the GPU-to-GPU fabrics behind LLM inference.</p>
+        <div class="badges" aria-label="The idea in three lines">
+          <span class="badge">one manifest → four simulation paths</span>
+          <span class="badge">every number → a run id</span>
+          <span class="badge">clean clone → whole story</span>
+        </div>
+        <div class="badges" aria-label="Project badges">
+          <span class="badge">License: MIT (code)</span>
+          <span class="badge"><a href="https://github.com/li-ch/essun/actions/workflows/ci.yml">CI · ci.yml</a></span>
+          <span class="badge">Python 3.10–3.13</span>
+          <span class="badge">Line coverage: 91%</span>
+        </div>
+        <p class="note">Documentation, figures, and this site are CC-BY-4.0.</p>
+      </div>
+
+      <div class="term" role="img" aria-label="Terminal session: clone the repository, bootstrap, and run the gate demo; the whole story reproduces from a clean clone.">
+        <div class="term-bar" aria-hidden="true">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="term-title">sh — clean clone</span>
+        </div>
+        <pre aria-hidden="true"><code><span class="p">$</span> git clone https://github.com/li-ch/essun &amp;&amp; cd essun
+<span class="p">$</span> make bootstrap
+<span class="p">$</span> make demo
+<span class="c"># the public-gate chain, end to end</span></code></pre>
+        <div class="term-foot">8 legs · any failing leg stops the chain · ~11 s with Docker · ~10 s without</div>
+      </div>
+    </div>
+
+    <div style="margin-top:2.6rem">
+      <div class="ladder-head">
+        <h2 style="font-size:1.15rem">The evidence ladder</h2>
+        <span class="ladder-sub">every capability carries one of five labels — the two upper rungs are unattained, and the site says so</span>
+      </div>
+      <div class="ladder" role="img" aria-label="Evidence ladder with five rising rungs: PROPOSED, IMPLEMENTED_UNVERIFIED, VERIFIED, CALIBRATED, EXTERNALLY_REPRODUCED. The repository ceiling today is IMPLEMENTED_UNVERIFIED; CALIBRATED and EXTERNALLY_REPRODUCED are not yet attained.">
+        <div class="rung r-proposed">
+          <div class="meter"></div>
+          <span class="rname">PROPOSED</span>
+          <span class="rgloss">design only, no result claimed</span>
+        </div>
+        <div class="rung r-unverified">
+          <div class="meter"></div>
+          <span class="ceiling">ceiling today ▾</span>
+          <span class="rname">IMPLEMENTED_<wbr>UNVERIFIED</span>
+          <span class="rgloss">code runs; semantic checks incomplete</span>
+        </div>
+        <div class="rung r-verified">
+          <div class="meter"></div>
+          <span class="rname">VERIFIED</span>
+          <span class="rgloss">checks pass in declared scope</span>
+        </div>
+        <div class="rung r-calibrated notyet">
+          <div class="meter"></div>
+          <span class="ny">not yet attained</span>
+          <span class="rname">CALIBRATED</span>
+          <span class="rgloss">held-out empirical validation, stated domain</span>
+        </div>
+        <div class="rung r-external notyet">
+          <div class="meter"></div>
+          <span class="ny">not yet attained</span>
+          <span class="rname">EXTERNALLY_<wbr>REPRODUCED</span>
+          <span class="rgloss">independent reproduction from artifacts</span>
+        </div>
+      </div>
+      <div class="ladder-axis" aria-hidden="true">
+        <span>weaker evidence</span><span class="arrow"></span><span>stronger evidence</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<main id="main">
+
+<section id="how">
+  <p class="kicker">How it works</p>
+  <h2>One manifest, four fidelities, one immutable record</h2>
+
+  <svg class="diagram" viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg" role="img"
+       aria-label="Pipeline: an experiment manifest drives four simulation paths (analytical L0 and L0.5, ASTRA-sim analytical pinned at 4ce9ecf, uet-htsim CMS pinned at 65ea315b, and csg-htsim which is built but has no adapter). Each execution stores a content-addressed run record under results/slash run id, holding run.json and observations.json, identified by a SHA-256 over its content. Registered figures, claim placeholders, and evidence labels are derived from that record.">
+    <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+
+      <!-- stage 1: manifest -->
+      <rect x="0" y="112" width="170" height="76" rx="6" fill="#ffffff" stroke="#c9d2dd"/>
+      <text x="85" y="142" text-anchor="middle" font-size="13" fill="#101a2e">experiment</text>
+      <text x="85" y="158" text-anchor="middle" font-size="13" fill="#101a2e">manifest</text>
+      <text x="85" y="177" text-anchor="middle" font-size="10.5" fill="#55627a">5 inputs · observables</text>
+      <path d="M174 150 H206" stroke="#c46f33" stroke-width="2" fill="none"/>
+      <path d="M210 150 l-8 -4.2 v8.4 z" fill="#c46f33"/>
+
+      <!-- stage 2: backends -->
+      <text x="214" y="64" font-size="11" fill="#c46f33">one manifest · four paths</text>
+      <rect x="214" y="76" width="260" height="44" rx="6" fill="#ffffff" stroke="#c9d2dd"/>
+      <text x="228" y="96" font-size="12.5" fill="#101a2e">analytical L0 · L0.5 family</text>
+      <text x="228" y="112" font-size="10.5" fill="#55627a">closed forms, exact-Fraction</text>
+
+      <rect x="214" y="126" width="260" height="44" rx="6" fill="#ffffff" stroke="#c9d2dd"/>
+      <text x="228" y="146" font-size="12.5" fill="#101a2e">ASTRA-sim analytical</text>
+      <text x="228" y="162" font-size="10.5" fill="#55627a">pinned commit 4ce9ecf</text>
+
+      <rect x="214" y="176" width="260" height="44" rx="6" fill="#ffffff" stroke="#c9d2dd"/>
+      <text x="228" y="196" font-size="12.5" fill="#101a2e">uet-htsim CMS</text>
+      <text x="228" y="212" font-size="10.5" fill="#55627a">pinned commit 65ea315b</text>
+
+      <rect x="214" y="226" width="260" height="34" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-dasharray="5 4"/>
+      <text x="228" y="247" font-size="11.5" fill="#55627a">csg-htsim — built, no adapter yet</text>
+      <path d="M478 150 H510" stroke="#c46f33" stroke-width="2" fill="none"/>
+      <path d="M514 150 l-8 -4.2 v8.4 z" fill="#c46f33"/>
+
+      <!-- stage 3: run record -->
+      <rect x="518" y="112" width="200" height="76" rx="6" fill="#f5f7fa" stroke="#3d5c99"/>
+      <text x="618" y="139" text-anchor="middle" font-size="13" fill="#101a2e">run record</text>
+      <text x="618" y="157" text-anchor="middle" font-size="10.5" fill="#55627a">results/&lt;run_id&gt;/</text>
+      <text x="618" y="172" text-anchor="middle" font-size="10.5" fill="#55627a">run.json + observations.json</text>
+      <text x="618" y="186" text-anchor="middle" font-size="10.5" fill="#55627a">id = sha256 over content</text>
+      <path d="M722 150 H754" stroke="#c46f33" stroke-width="2" fill="none"/>
+      <path d="M758 150 l-8 -4.2 v8.4 z" fill="#c46f33"/>
+
+      <!-- stage 4: what it feeds -->
+      <rect x="762" y="112" width="218" height="76" rx="6" fill="#ffffff" stroke="#c9d2dd"/>
+      <text x="871" y="139" text-anchor="middle" font-size="13" fill="#101a2e">figures · claims · labels</text>
+      <text x="871" y="157" text-anchor="middle" font-size="10.5" fill="#55627a">figures registered by hash</text>
+      <text x="871" y="172" text-anchor="middle" font-size="10.5" fill="#55627a">[RESULT: …] until a record</text>
+      <text x="871" y="186" text-anchor="middle" font-size="10.5" fill="#55627a">one label per claim</text>
+
+      <!-- footnotes -->
+      <text x="0" y="288" font-size="11" fill="#55627a">same manifest + inputs + code → same run id, byte-identical records</text>
+      <text x="980" y="288" text-anchor="end" font-size="11" fill="#55627a">evidence ceiling today: IMPLEMENTED_UNVERIFIED</text>
+    </g>
+  </svg>
+
+  <div class="cards" style="grid-template-columns:repeat(auto-fit, minmax(15rem,1fr))">
+    <div class="card">
+      <p class="card-kicker">Check it by hand</p>
+      <pre style="margin:0.4rem 0 0"><code>t(M) = (2(r−1)/r · M)/B + 2(r−1)L
+
+r=8  M=16384  B=64  L=200
+→ 448 ns + 2800 ns = 3248 ns</code></pre>
+      <p class="note" style="margin-top:0.4rem">Nothing is opaque in an analytical backend: if your arithmetic and the record disagree, that is a model bug. <a href="quickstart.html">Walkthrough</a></p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">The record it leaves</p>
+      <pre style="margin:0.4rem 0 0"><code>run_id      146ba565…
+run_dir     results/146ba565…/
+O-CCT       3248 ns per op
+O-CONSERVATION  0 violations</code></pre>
+      <p class="note" style="margin-top:0.4rem"><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> — replay-pinned, not calibrated, not externally reproduced. <a href="evidence.html">Evidence</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="figure">
+  <p class="kicker">The discipline, on one workload</p>
+  <h2>Two simulators disagree — the gap is explained, not tuned away</h2>
+  <figure>
+    <img src="assets/w1_smoke_occt_l0_vs_astra.svg" alt="Bar comparison of collective completion time per operation: analytical L0 model 3248 ns versus pinned ASTRA-sim analytical frontend 24048 ns on the same W1 smoke workload.">
+    <figcaption>
+      Same W1 Dense TP Decode workload (6 AllReduce ops of 16 KiB, 8-rank ring, B = 64 bytes/ns, L = 200 ns) through two backends: O-CCT 3248 ns vs 24048 ns per op — a 7.404x gap that decomposes with zero residual into 2 declared modeling differences (A-AS2-DELAY-POS, A-AS2-MEM-BW), no parameter tuned. Runs <code>146ba565…</code> and <code>c6dc87eb…</code>; figure <code>7c7928a4…</code>. Evidence label: <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span>.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="today">
+  <p class="kicker">State of the repository</p>
+  <h2>What runs today</h2>
+  <div class="stats">
+    <div class="stat"><span class="n">717 + 1</span><span class="d">tests pass / skipped</span></div>
+    <div class="stat"><span class="n">4</span><span class="d">simulation paths, one manifest</span></div>
+    <div class="stat"><span class="n">445</span><span class="d">typed UEC 1.1 requirements from 80 anchors</span></div>
+    <div class="stat"><span class="n">30</span><span class="d">atlas cells: 5 rank classes × 6 families</span></div>
+    <div class="stat"><span class="n">0</span><span class="d">observables calibrated against hardware</span></div>
+  </div>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Capability</th><th>Where</th><th>Label</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Test suite: 717 pass + 1 skip (schema, golden, negative, determinism, observables, evidence, backends, specir)</td><td><code>make test</code></td><td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td></tr>
+      <tr><td>Analytical L0 model family: ring, crossbar, 2D torus, recursive doubling, phase collectives, plus the L0.5 compute-term model — exact-<code>Fraction</code> identities with golden tests</td><td><code>src/essun/backends/analytical/</code></td><td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td></tr>
+      <tr><td>Discrete-event backends: ASTRA-sim analytical (pinned <code>4ce9ecf</code>) and uet-htsim CMS (pinned <code>65ea315b</code>, the third backend), both Docker-pinned and reachable via <code>make run</code>; csg-htsim built and runbooked, adapter not written</td><td><code>backends/</code></td><td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td></tr>
+      <tr><td>Workload generators: W1 dense TP decode, W2 dense TP prefill (both executable); W3 MoE dispatch/combine and W5 PD/KV (generators registered, execution gated until L1/L2 backends exist — rejected loudly today)</td><td><code>src/essun/workload/</code></td><td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td></tr>
+      <tr><td>UEC 1.1 semantic profile: 80 source anchors (page-hash and verbatim-quote verified), 445 typed requirement objects, 67 free parameters; reconciliation ladder complete</td><td><code>experiments/uec/</code>, <code>src/essun/specir/</code></td><td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td></tr>
+      <tr><td>UnifiedBus paper-derived profile (not normative): 53 anchors from 5 public sources, 54 typed parameters with mechanical evidence grades</td><td><code>experiments/unifiedbus/</code></td><td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td></tr>
+      <tr><td>Design-space atlas: 30 pages, five rank classes × six algorithm families, exact-fraction tables on a shared 12-size payload grid</td><td><code>docs/atlas/</code> — excerpts on the <a href="explorer.html">Explorer page</a></td><td><span class="label label-proposed">PROPOSED</span> (E0 content)</td></tr>
+      <tr><td>Calibration ladder: 23 public-measurement anchors integrated, 26 content-addressed records approved as E1 candidates; no observable calibrated</td><td><code>docs/calibration/</code>, <code>results/calibration/</code></td><td><span class="label label-proposed">PROPOSED</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Full tables: <a href="backends.html">Backends</a> and <a href="standards.html">Standards</a>.</p>
+</section>
+
+<section id="limits">
+  <p class="kicker">Read before deciding</p>
+  <h2>Honest limits</h2>
+  <ul class="chiprow">
+    <li><span class="chip">nothing calibrated against hardware</span></li>
+    <li><span class="chip">standards do not change L0 numbers yet</span></li>
+    <li><span class="chip">cross-standard delta is 0 by construction</span></li>
+    <li><span class="chip">MoE and PD/KV gated on L1/L2 backends</span></li>
+    <li><span class="chip">UALink and CXL never ingested</span></li>
+  </ul>
+  <p class="note">Each line, with the machinery behind it: <a href="evidence.html#limits">Evidence — what the demo does not show</a>.</p>
+</section>
+
+<section id="publications">
+  <p class="kicker">Papers</p>
+  <h2>Publications</h2>
+  <div class="prose">
+    <ul>
+      <li><a href="assets/essun-whitepaper.pdf">White paper: "ESSUN: A Specification-Driven, Multi-Fidelity Simulator for Scale-Up Networks"</a> (PDF, 5 pages; an unpublished manuscript draft — see the <a href="about.html#license">license note</a>).</li>
+      <li>Research manuscript: in progress. The repository carries a heading-only paper skeleton with <code>[RESULT: metric, experiment, status]</code> placeholders that fill in only from immutable run records (<code>make paper-check</code> enforces the discipline).</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<div class="band">
+  <div class="band-inner" style="padding-top:2rem; padding-bottom:2rem">
+    <p class="kicker">The whole story, from a clean clone</p>
+    <h2 style="font-size:1.6rem">Why essun exists</h2>
+    <p class="tagline" style="margin-bottom:0.9rem">Fabric decisions in AI infrastructure are still made from vendor slides and one-off simulators. We want to end that — with numbers anyone can re-derive.</p>
+    <div class="sectlinks">
+      <a href="why.html">Read the argument</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Vision and roadmap</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+ 300 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+    
+ 
+Table 3-34 - Summary of Function-Based PDS-SES Interface Example  
+Function Name Direction Description and Parameters 
+ 
+ses_pds_tx_req() 
+ 
+SES to PDS 
+at initiator 
+SES request for PDS Transmission  
+src_fep, dst_fep, jobid, mode, rod_context, next_hdr, tc, som, eom, 
+lock_pdc, tx_pkt_handle, pkt, pkt_len, msg_id, tss_context, 
+rsv_pdc_handle 
+• msg_id is used to keep all packets of a message on same PDC, e.g., 
+PDS maintains msg_id to pdcid mapping from som to eom, or longer 
+if lock_pdc = TRUE. 
+• lock_pdc prevents PDS from tearing down a PDC, see the description 
+in ses_pds_unlock() for more information. 
+• If rsv_pdc_handle is non-zero, the packet is directly mapped to a 
+reserved PDC. These PDCs are used for a dedicated service (e.g., 
+INC) where the PDC remains established until closed by software. 
+ 
+Figure 3-53 - Example PDS-SES Interface 
+ 

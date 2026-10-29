@@ -1,0 +1,39 @@
+# Calibration-ladder A7 sweep: where does the L0
+# single-port crossbar identity sit relative to CAL-A7's AGGREGATE reading
+# (per-GPU per-direction injection 448 B/ns = 7 links x 64 B/ns per
+# direction; docs/calibration/anchors_staging.md §A7)? Twin of
+# sweep_a7_link_v1.yaml (the per-link ring reading); together the two
+# sweeps bracket the anchor's full mesh inside the available L0 identity
+# family — the per-pair structure itself is inexpressible (A-L0X-PORT
+# OUT-OF-DOMAIN for this fabric class, plan §2.1; exact-equivalence and
+# 7x-loss arithmetic in the stage record).
+#
+# NOTHING IS TUNED: B values {64, 358.4, 448} B/ns were fixed by anchor
+# arithmetic BEFORE any stage output was read (448 = the CAL-A7 aggregate
+# anchor point; 64 = the per-pair rate as a shared single port, the
+# per-pair-cap conservative reading; 358.4 = 0.8 x 448, the CAL-A12 ~80%
+# software-derating bridge, cross-fabric transfer labeled); L stays at the
+# A-L0X-LAT registry point 200 ns. Every delta below is an arithmetic fact
+# of the identity t = 2(r-1)/r*M/B + 2L.
+#
+# Payload grid: the SAME 12-size ladder 8*2^k as sweep_a7_link_v1.yaml
+# (8 KiB -> 8 GiB) for cross-identity comparability; r=8 divides every
+# size (A-L0X-DIV accepts, no bracketing). Baseline = the CAL-A7
+# aggregate anchor-point topology (B=448), so the delta columns read
+# directly as placement vs the anchor's own aggregate arithmetic.
+sweep: cal_a7_agg_v1
+workload: experiments/calibration/a7/workloads/w1_dense_tp_decode_tp8_512mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a7/topologies/crossbar8_a7_agg448_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a7/topologies/crossbar8_a7_pair64_v1.yaml
+    - experiments/calibration/a7/topologies/crossbar8_a7_derated358_4_v1.yaml
+    - experiments/calibration/a7/topologies/crossbar8_a7_agg448_v1.yaml

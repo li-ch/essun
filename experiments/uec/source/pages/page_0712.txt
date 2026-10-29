@@ -1,0 +1,60 @@
+ 712 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ sender sets its intended packet overhead based on the 
+ receiver's packet overhead. The sender packet overhead 
+ is valid when s-vc-rts != 0, meaning some VC[x] flag(s) 
+ are true."; 
+    } 
+    leaf s-vc-rts { 
+      type uint32; 
+      config false; 
+      description 
+        "This port has enabled CBFC transmission for the VCs identified 
+        by these bit flags. The bit positions n=0-31 indicate VC[n]"; 
+    } 
+    leaf r-cell-size { 
+      type uint16 { 
+        range "1..4095"; 
+      } 
+      config false; 
+      description 
+        "The cell size used by the receiver. The receiver 
+        cell size is the receiver's cell/buffer size."; 
+    } 
+    leaf r-packet-overhead { 
+      type int8 { 
+        range "-127..127"; 
+      } 
+      config false; 
+      description 
+        "The packet overhead used by the receiver."; 
+    } 
+    leaf r-total-credits { 
+      type uint32 { 
+        range "1..16777215"; 
+      } 
+      description 
+        "The number of pooled receiver credits for all VCs."; 
+    } 
+    leaf r-num-vcs { 
+      type uint8  { 
+        range "1..32"; 
+      } 
+      description 
+        "The number of receive VC parameter lists following."; 
+    }     
+    list r-vcs { 
+      key r-vc-id; 
+      description 
+        "A 6-tuple of fields in the UE Link Neg CBFC TLV that 
+        provides the per VC receiver parameters needed to support 
+        Credit Based Flow Control on the VC identified by r-vcid."; 
+      leaf r-vc-want { 
+        type boolean; 
+        description 
+          "When FALSE indicates the receiver want to use best effort 
+   service on VC[r-vcid]. When TRUE indicates the receiver wants 
+          to use lossless service on VC[r-vc-id]."; 
+      } 
+      leaf r-vc-rtr { 

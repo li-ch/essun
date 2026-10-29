@@ -1,0 +1,16 @@
+ 107 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Each libfabric endpoint is of a single type, either FI_EP_DGRAM or type FI_EP_RDM. 
+The fi_ep_bind() API is used to associate resources with an endpoint, such as event queues, completion 
+queues, completion counters, address vectors, or shared transmit/receive contexts. 
+2.2.5.3.5.1 UET Address Assignment Architecture 
+The following bullets summarize the procedure for assigning UET address fields: 
+• The UET provider makes a request to a kernel mode driver that is relayed to a privileged user-
+mode process, which is part of the provisioning system responsible for UET address assignment. 
+• The request contains information about the endpoint being opened. 
+• The privileged entity returns the needed address information. 
+• Additional information MAY also be returned such as JobID and security domain bindings. 
+An architecture diagram depicting the UET address assignment procedure is shown in Figure 2-8. 
+ 
+Figure 2-8 - UET Address Assignment Architecture 

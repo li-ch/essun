@@ -1,0 +1,21 @@
+ 125 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Memory regions that are registered with the libfabric provider are like receive queues in that they 
+identify buffers used as the target network operations. Registered memory regions MAY be targeted by 
+remote RMA operations. 
+Figure 2-10 shows an example set of data structures for the receive queues and registered memory 
+regions associated with a libfabric endpoint. In the example: 
+• Separate receive queues are allocated for untagged messages and tagged messages. 
+• A table is used to manage the registered memory regions. The table contains descriptors that 
+identify the associated data buffer and attributes (such as access permissions). 
+ 
+ 
+Figure 2-10 - Example Receive Queue and Registered MR Data Structures 
+A UET provider that supports tagged messages SHOULD allocate independent receive queues for 
+untagged messages and tagged messages on a libfabric endpoint basis. 
+2.2.9 Security Protocol 
+This section is devoted to provider support for the optional UET security protocol. The security protocol 
+support is implemented by the kernel driver associated with the provider under the covers in a manner 
+that is transparent to the libfabric APIs. When a libfabric endpoint is opened, the security binding 
+parameters are received by the provider kernel driver as part of the UET address assignment procedure 

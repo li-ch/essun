@@ -1,0 +1,65 @@
+ 545 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+    ] 
+# ── Control outputs (sequence node) ── 
+control: 
+  name: <enum>            # Control name (see Table ZZZ) 
+  macro: <c-identifier>   # Control name in algorithm code (defined as macro) 
+  initial_value: <uint>   # Control value at (re)start of algorithm 
+ 
+# ── Algorithm-specific internal state variables (sequence node) ── 
+[variable]: 
+  macro: <c-identifier>   # Variable name in algorithm code (defined as macro) 
+  dtype: <uint|int|float> # datatype from C code 
+  initial_value: <scalar> # Variable value at (re)start of algorithm 
+ 
+# ── Algorithm-specific global state variables (sequence node) ── 
+[global_variable]: 
+  macro: <c-identifier>   # Variable name in algorithm code (defined as macro) 
+  dtype: <uint|int|float> # datatype from C code 
+  initial_value: <scalar> # Variable value at creation time 
+  accumulator: <enum>     # Variable accumulation (see Table YYY, also for default) 
+ 
+# ── Algorithm-specific parameters (sequence node) ── 
+[parameter]: 
+  macro: <c-identifier>   # Parameter name in algorithm code (defined as macro) 
+  dtype: <uint|int|float> # datatype from C code 
+  value: <scalar>         # Value  
+  description: <string>   # Parameter description 
+ 
+# ── Telegrams (sequence node) ── 
+[tgm]: 
+   macro: <c-identifier>     # Message name as referenced in algorithm code (macro) 
+   [collector: <IP-address>] # Address for telegram collector destination 
+ type_id: <uint8>            # Message type id; unique for every message type 
+   field:                    # This structure is repeated for every field 
+     macro: <c-identifier>   # Field name 
+     dtype: <uint|int|float> # Field type  
+     description: <string>   # Field description  
+ 
+# ── LB Algorithm metadata (mapping node) ── 
+lb_algorithm: 
+  op_model: ev-table | per-packet 
+  lb_entry: <string>              # PCM LB algorithm entry point (C symbol) 
+  hw_algo: <string>               # hardware LB algorithm name, e.g. "round_robin" 
+                                  # REQUIRED for op_model: ev-table 
+                                  # MUST NOT be present for op_model: per-packet 
+  hw_config:                      # hardware-specific configuration 
+    # algorithm-specific keys and structure 
+    # REQUIRED for op_model: ev-table 
+    # MUST NOT be present for op_model: per-packet 
+ 
+  ev_fields:                      # per-EV fields (EV-table model only) 
+    - name: <string> 
+      type: uint | int | float 
+      role: ev_value | null       # only known role is "ev_value"; can omit/set null 
+      sw_access: ro | rw | wo | none 
+      range: [min, max] | 
+             { enum: [v0, v1, ...] } 
+      init: cfg_provided | zero | hw_init | 
+            { explicit_value: <scalar> } 
+ 
+  ccc_fields:                     # per-CCC fields (EV-table model only) 
+    - name: <string> 
+      type: uint | int | float 

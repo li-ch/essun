@@ -1,0 +1,28 @@
+# Calibration-ladder GF-08 topology: crossbar r=8 at the FREE REGISTRY
+# DEFAULTS — B = 64 B/ns (A-L0X-BW), L = 200 ns (A-L0X-LAT). PLACEMENT
+# ROW: no GF-08 provenance.
+#
+# ROLE: the placement reference of the stage. GF-08's staged Falcon
+# endpoint peak (25 B/ns under the declared reading) lands INSIDE the
+# plan §2.1 anchored span [20, 64], in its lower half; the registry
+# point 64 sits at the span's upper edge, an asymptotic pure-B CCT ratio
+# exactly 64/25 = 2.56 above the anchor rate (the model at registry
+# defaults predicts bandwidth-bound CCTs 2.56x faster than the model at
+# the anchor's own endpoint rate — placement arithmetic, never a tuning
+# target). Executed in the envelope sweep and as the registry-twin store
+# run (run_gf08_registry_v1.yaml at the SAME payload as the Falcon run,
+# isolating the B axis exactly: both latency terms are exactly 400 ns).
+# HONESTY: swept free parameters at registry defaults; never tuned; no
+# anchor provenance claimed for these values.
+topology_id: crossbar8_gf08_reg64_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the free registry defaults B = 64, L = 200
+  (A-L0X-BW / A-L0X-LAT): the placement reference against which the
+  Falcon endpoint rate's position is measured. Values are free registry
+  defaults, never our measurements; never tuned.

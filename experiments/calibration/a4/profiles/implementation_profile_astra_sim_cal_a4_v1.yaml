@@ -1,0 +1,47 @@
+# Implementation profile for the calibration-ladder A4 runs on the pinned
+# ASTRA-sim analytical backend ( anchor CAL-A4 — the
+# ISPASS 2023 paper that validated this backend FAMILY against real V100
+# systems: 4/16 GPUs, ring, 150 GB/s NVLink, 64 MB-1.5 GB, mean simulation
+# error 5%). This stage runs the repo's pinned instantiation inside the
+# anchor's own validated regime for the first time — at the anchor point
+# B = 150 B/ns only (the B sweep is an L0-side free-parameter span).
+implementation_profile_id: astra_sim_analytical_cal_a4_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: astra_sim_analytical
+fidelity: DES (collective-level; congestion-unaware analytical transport)
+model: >
+  ASTRA-sim 2.0 analytical congestion-unaware frontend, native Ring
+  AllReduce on a single-dimension Ring logical topology
+  (src/essun/backends/astra_sim/adapter.py). HONESTY NOTE: the pinned
+  commit (4ce9ecf) is NOT the paper's build, and the recorded translation
+  conventions (A-AS1-SPLITS preferred-dataset-splits = ranks, A-AS1-
+  CHUNKS-1 active-chunks = 1, A-AS2-DELAY-POS endpoint-delay 10 ns,
+  A-AS2-MEM-BW local-mem-bw 1600 GB/s) are this repo's smoke-config
+  conventions — the paper's own system configuration is not staged. The
+  anchor's ~5% mean error band therefore belongs to the AUTHORS'
+  configuration; transplanting it onto these runs is an owner decision,
+  never a stage conclusion.
+pin:
+  astra_sim_commit: 4ce9ecfe746a3ee5fe47559a11d91644d641fa7f
+  docker_image: essun/astra-sim-analytical:s1
+  docker_image_id: sha256:bb02b612c0dcd13eaa388a0ba05616b1c89e83468702a54f523f7742b02c9c8b
+  binary_sha256: ecc3a52d44c7134ce353ed03b8cb0076e5bfdbf2659bcdbb0cc5f2d760749ea4
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+translation_assumptions_source: >
+  TRANSLATION_ASSUMPTIONS in src/essun/backends/astra_sim/adapter.py
+  (A-AS1-* / A-AS2-*; every ASTRA-sim-side knob carries an in-tree source
+  anchor). Chunk-count treatment declared explicitly per CALIBRATION_PLAN
+  §2.2 (the A-AS1-CHUNKS-1 flag): preferred-dataset-splits = ranks
+  (s = r). At this anchor's multi-MiB per-message chunk sizes the
+  local-mem processing term is ON the collective critical path (visible
+  whenever the per-message chunk >= 2048 B; difference report U-S3-1), so
+  the splits convention materially shapes the recorded comparison and is
+  declared, never tuned.
+measurement_source: >
+  CAL-A4 staged numbers (ASTRA-sim 2.0, ISPASS 2023, arXiv:2303.14006;
+  docs/calibration/anchors_staging.md §A4) — peer-reviewed
+  simulator-vs-hardware validation of the backend FAMILY; the staged text
+  carries no hardware (size -> time) series and no system-configuration
+  table, so what is recorded in results/calibration/ is PLACEMENT of the
+  pinned instantiation inside the validated regime (PROPOSED), never a
+  match claim.

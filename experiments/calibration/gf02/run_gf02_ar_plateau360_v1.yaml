@@ -1,0 +1,46 @@
+# Calibration-ladder GF-02 anchor-point RUN (gap-fill
+# anchor): the L0 single-port crossbar AllReduce identity at the anchor's
+# MEASURED PLATEAU reading — r=8 (the anchor's own 8-GPU H100 node), B=360
+# B/ns (the poster's "bandwidth is saturated at ~360 GB/s for busbw",
+# verified verbatim 2026-10-28; under the pinned busbw = B asymptotic
+# mapping this is the anchor's own number read as the identity parameter),
+# L=200 ns (A-L0X-LAT registry point), payload 17179869184 B = 2^34
+# (16 GiB): the top row of the anchor's command-line regime
+# (-b 128M -e 16384M -f 2 -g 8) and the size at which the body's
+# saturation statement is made ("fairly large data size (16GB)").
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF02-AR-PLATEAU360-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf02/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+infra_graph:
+  path: experiments/calibration/gf02/topologies/crossbar8_gf02_plateau360_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf02/profiles/implementation_profile_l0_crossbar_cal_gf02_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf02_plateau360_v1 (NVSwitch-class abstraction of the GF-02 8xH100 node at the anchor's measured busbw plateau read as B=360 B/ns, L=200 ns free)
+  workload: w1_dense_tp_decode tp8, payload 2^34 (16 GiB, the GF-02 plateau row of the 128 MiB-16 GiB command-line regime)
+  implementation: analytical L0 crossbar identity; GF-02 comparison is measured large-message O-CCT placement on the H100 NVSwitch class, allreduce side (gap-fill anchor, PROPOSED, not yet an integrated anchor row) — PROPOSED, review required
+evidence_level_requested: E0

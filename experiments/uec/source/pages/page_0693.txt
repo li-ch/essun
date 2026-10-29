@@ -1,0 +1,21 @@
+ 693 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• Allow the receiver to indicate to the sender when the receiver is ready to begin operation of the 
+wanted VC(s). 
+• Allow the receiver to modify the credit limit on each VC independently. 
+• Allow the receiver to stop CBFC on each VC and to re-activate each VC independently. 
+The CBFC clause provides a complete explanation of how the CBFC TLV exchange is used to configure 
+CBFC service on a link. The CBFC TLV contains all the parameters required to initialize CBFC for each 
+virtual channel. Configuration of VCs is performed independently for each direction on the link. The 
+initialization begins when the receiver sets R_VC_WANT = TRUE(1) for the VC(s) desiring CBFC service. 
+The sender seeing R_VC_WANT = TRUE in its remote database from the remote link partner configures 
+the requested VC(s), then acknowledges the configuration by setting S_VC_RTS = TRUE(1) for the 
+requested VC(s) in its local database. The receiver seeing S_VC_RTS = TRUE for its requested VC(s) in its 
+remote database from its remote link partner configures itself based on the parameters provided by the 
+sender, then indicates it is ready to receive by setting R_VC_RTR = TRUE(1) for the VC(s) in its local 
+database. From this point onward the sender uses CBFC for transmissions on the configured VCs. The 
+sender SHALL NOT set S_VC_RTS = TRUE for a VC unless the remote receiver has set R_VC_WANT = 
+TRUE for the VC. The receiver SHALL NOT set R_VC_RTR = TRUE for a VC unless the remote sender has 
+set S_VC_RTS = TRUE for the VC. The sender SHALL NOT use CBFC for a VC unless the remote receiver 
+has set R_VC_RTR = TRUE for the VC. 

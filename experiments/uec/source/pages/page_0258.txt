@@ -1,0 +1,42 @@
+ 258 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+In Figure 3-32, payload data is carried in the acknowledgement. Read request formation is the same as 
+in the flow used in Figure 3-31, but response data is carried in the acknowledgements. Because of this, 
+the read completion is delivered after all of the response packets are cleared. 
+The choice of protocol for reads impacts the mapping of the flows onto TCs. Acknowledgements are 
+mapped to the response TC (as illustrated in Figure 3-32). This is the primary reason that bulk data reads 
+are expected to typically use the sequence in Figure 3-31. It should be noted, however, that lossless 
+networks map the bulk data onto a response TC in both cases. In addition, deadlock-free operation on a 
+lossless network may require additional care with resource management for the sequence shown in 
+Figure 3-31. In both sequences, the initiator MUST guarantee that all response data can be accepted 
+without generating any wire transactions from initiator to target. 
+In Figure 3-31, each UET_READ is acknowledged by a PDS acknowledgement. That PDS 
+acknowledgement carries a semantic response of either UET_NO_RESPONSE, UET_DEFAULT_RESPONSE, 
+or UET_RESPONSE. SES failures can be carried by the UET_RESPONSE opcode. Errors detected later in 
+semantic processing are returned with the data. Read request packets that receive a non-RC_OK return 
+code as part of the PDS acknowledgement do not receive a UET_RESPONSE_W_DATA. In Figure 3-32, 
+the semantic response return code is returned as part of the UET_RESPONSE_W_DATA. 
+3.4.5.3 Rendezvous Transactions 
+Rendezvous transactions have two parts. The first part consists of the eager send (e.g., 
+UET_RENDEZVOUS_SEND). The eager send has 0 or more bytes of payload as indicated by the eager size 
+in the rendezvous header. The second part is a rendezvous read message (UET_READ) that completes 
+the transfer by pulling the data. The rendezvous read is an ordinary read transaction using the fields 
+provided in the rendezvous header. Figure 3-33 illustrates how this works in the expected message case. 
+A rendezvous send message (i.e., UET_RENDEZVOUS_SEND) is initiated and consists of one or more send 
+packets carrying eager payload (illustrated with UET_RENDEZVOUS_SEND MID1, Message Offset (MO) 0 
+through N). Notionally, the eager size is set to cover the round-trip bandwidth delay product, so that the 
+first packet of the read request arrives just in time to start the read payload transfer9. There are two 
+completion points at the initiator of the transaction: the completion of the rendezvous send and the 
+completion of the read. These are delivered as one completion queue entry to software (i.e., through 
+the libfabric API). Similarly, completion at the target is based on both the arrival of the eager part and 
+the arrival of the read payload. Due to variations in network timing, the completion of the eager send 
+and the completion of the read can happen in any order; thus, both points are illustrated here. 
+Nonetheless, both completion points must be reached before the message completion (e.g., completion 
+queue entry) can be returned through the libfabric API. 
+Note the interaction with PDS for read completion at the initiator of the rendezvous transaction. The 
+PDS provides reliability for read responses; thus, the completion of the read at the initiator of the 
+rendezvous occurs when all of the read response packets have been acknowledged. 
+ 
+9 There are a variety of reasons why the eager size may be set smaller. For example, the initial rendezvous send 
+may be ordered while the read response payload may be unordered. 

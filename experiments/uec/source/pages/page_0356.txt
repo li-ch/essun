@@ -1,0 +1,38 @@
+ 356 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.11.15 pds.ack_cc_state and pds.ack_ccx_state 
+The PDS ACK_CC and ACK_CCX packets carry congestion control state in the form of the 
+pds.ack_cc_state and pds.ack_ccx_state fields respectively. The format of the pds.ack_cc_state or 
+pds.ack_ccx_state fields is dependent on pds.cc_type or pds.ccx_type field, respectively. The formats 
+are described in the CMS Section 3.6.9.2. 
+3.5.11.16 pds.nack_ccx_state 
+The PDS NACK_CCX packet carries congestion control state in the pds.nack_ccx_state field. The 
+pds.nack_ccx_state format is dependent on the pds.nccx_type field. This field is currently undefined 
+and left for future use. 
+3.5.12 Requests and Acknowledgements 
+This section documents various forms of the Request, ACK, and NACK packets. 
+3.5.12.1 PDS Requests 
+PDS requests carry SES requests and SES responses with data (in the return direction). PDS requests use 
+PSNs or PKT_IDs assigned by the source to enable detection of packet loss and selective packet 
+retransmission. PDS requests are sent on both the forward and return directions. 
+PDS requests in the return direction are limited to read and atomic response data in response to SES 
+reads and atomics on RUD and ROD. The return direction uses an independent sequence number space 
+from the forward direction. Excluding RODL, a FEP MUST NOT use the return direction of a PDC to 
+support SES requests such as send, write, or read, and an SES Request carrying an RTR MUST use the 
+forward direction of another, independent PDC. 
+SES read responses are handled in one of two ways based on the configuration parameter 
+Max_ACK_Data_Size. Max_ACK_Data_Size refers to the size of the return data and does not include the 
+size of the SES Response header. This is configured to be the same value in each FEP across a fabric 
+domain. 
+• Read responses with data size  Max_ACK_Data_Size 
+o Read return data MUST be included in the ACK 
+• Read responses with data size > Max_ACK_Data_Size 
+o Read return data MUST be included in a PDS Request 
+o Read return data MUST use the target-to-initiator PSN space on the return direction 
+When Max_ACK_Data_Size is set to MTU or higher, all return direction read data is included in ACKs. 
+This configuration may be used for lossless networks or for applications that have few large read 
+transactions. Reads are limited to 1 MTU regardless of Max_ACK_Data_Size. 
+When supporting RODL PDCs, the Max_ACK_Data_Size field is not used. All responses, including read 
+and atomic response data, are carried in ACK packets. RODL is designed to operate over a lossless fabric 
+so requests and responses MUST be mapped to different traffic classes. 

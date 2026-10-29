@@ -1,0 +1,39 @@
+ 320 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A single SD may be shared by many peers. Because Initiator_Start_PSN and Target_Start_PSN are 
+maintained per‑FEP, and PDC_Start_PSN is per‑PDC, the design operates as follows. A target FEP 
+maintains one floor (Target_Start_PSN) plus the stored PDC_Start_PSN for each open PDC. The floor 
+only rises—each PDC close advances it beyond that PDC’s base—so a retired base is never accepted 
+again from any initiator. An initiator FEP maintains one base (Initiator_Start_PSN) that rises only by 
+adopting the largest floor returned by any peer. Establishment proceeds without an additional RTT 
+whenever the initiator’s base is at or above the target’s current floor. If the target’s floor has since been 
+raised by other initiators on the shared SD, the attempt is rejected, and the NACK re‑synchronizes the 
+base. 
+3.5.8.2.1.6 Protection Against Resource Exhaustion 
+A PENDING PDC reserves resources, so replayed packets can exhaust the PDC table with half‑open 
+entries. A timer MUST be used to bound how long the PDC waits for a valid Start_PSN. This timer is set 
+to New_PDC_Time when the first packet is sent. If the timer expires, the event MUST be counted by 
+incrementing NEW_PDC_TIMEOUT_CNT. When this count exceeds the configured threshold, 
+New_PDC_Timeout_Thresh, the error MUST be reported to the provider as NEW_PDC_TIMEOUT_ERR. 
+Informative Text: 
+UET errors are reported to the libfabric provider or management interface. Details on these will be 
+provided in a future version. 
+ 
+3.5.8.2.2 PDS Lifecycle with Encryption 
+In order to avoid potential replay attacks, when the PSN of a PDC reaches Start_PSN + 231, the PDC 
+MUST close. This allows a single PDC to carry over 2 billion packets before closing. A new PDC may then 
+be established using one of the methods in Section 3.5.8.2.1. 
+If Limit_PSN_Range is configured FALSE, the PDC is allowed to continue beyond Start_PSN + 231. 
+The close follows the same process of completing any in-process messages. 
+3.5.8.3 PDC Close 
+A PDC is closed for multiple reasons that include a resource shortage or remaining idle for a configured 
+amount of time. Closing a PDC is controlled by the initiator PDS but may be triggered by either the 
+initiator or the target. When the target PDS determines the PDC should be closed, the target sends 
+either a PDS ACK with the pds.flags.req field set or sends a Close Request CP. CPs are described in 
+Section 3.5.16. 
+The following covers the normal scenario. If either an initiator or target FEP fails to respond or if a NACK 
+with a fatal error is received, the peer FEP may close the PDC in error. At the initiator, failure to respond 
+is determined when the maximum number of retry attempts is reached for any packet. At the target, the 
+max retry attempts reached on the return direction or a local timer on the close processing may lead to 
+PDC close in error. 

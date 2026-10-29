@@ -1,0 +1,30 @@
+ 423 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+If two FEPs simultaneously create PDCs between each other, both PDCs may remain open. 
+3.5.22.1.3 ACK and NACK Generation 
+ACK packets MUST be supported, as they carry stateful responses including read data, fetching atomic 
+data, and error state. The generation of NACK packets MUST be supported. Accepting and processing 
+received ACK and NACK packets MUST be supported. 
+With bidirectional PDCs, reverse acknowledgements are included. The PDS request may carry the lower 
+bits of the cumulative acknowledgment PSN (CACK PSN) for the other direction in the 
+pds.rev_cack_psn_lsb field. 
+When write and non-fetching atomic operations are being performed without error on a bidirectional 
+PDC, all SES responses are UET_DEFAULT_RESPONSE with RC_OK return codes. These responses can be 
+messaged to the source with pds.rev_cack_psn_lsb, removing the need for ACK packets while traffic is 
+active in both directions. 
+Stateful responses MUST be transported in an ACK packet. 
+Both initiator and target maintain a full 32-bit CACK_PSN as in ROD with the pds.rev_cack_psn_lsb field 
+carrying the lower bits of the locally maintained CACK_PSN. The PDS receiving a RODL packet monitors 
+when the CACK_PSN field wraps and updates the local CACK_PSN accordingly by incrementing the upper 
+bits. 
+Similarly, both initiator and target MUST maintain full 32-bit PSN and CLEAR_PSN. 
+If there is no pending SES request or response and a PDC needs to update either CLEAR_PSN or 
+CACK_PSN, an implementation MUST send an ACK or a control packet to exchange this state. A subset of 
+the rules used for ROD PDCs applies for generating ACK packets when using ACK coalescing as defined in 
+Section 3.5.12.4. 
+3.5.22.2 Standard Sequences 
+The standard sequences for RODL are the same as for ROD. See Section 3.5.21.2. 
+ 
+Figure 3-109 - Bidirectional PDC 

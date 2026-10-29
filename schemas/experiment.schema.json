@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/scaleup/experiment.schema.json",
+  "title": "Experiment manifest",
+  "type": "object",
+  "required": [
+    "experiment_id",
+    "research_question",
+    "claim_id",
+    "workload_ir",
+    "infra_graph",
+    "standard_profile",
+    "implementation_profile",
+    "assumptions",
+    "backends",
+    "seed",
+    "observables",
+    "validity_domain",
+    "evidence_level_requested"
+  ],
+  "properties": {
+    "experiment_id": {
+      "type": "string"
+    },
+    "research_question": {
+      "type": "string"
+    },
+    "claim_id": {
+      "type": "string"
+    },
+    "baseline_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "workload_ir": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "infra_graph": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "standard_profile": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "implementation_profile": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "assumptions": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "backends": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "repetitions": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "observables": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "counterexample_policy": {
+      "type": "string"
+    },
+    "validity_domain": {
+      "type": "object",
+      "required": [
+        "topology",
+        "workload",
+        "implementation"
+      ],
+      "properties": {
+        "topology": {
+          "type": "string"
+        },
+        "workload": {
+          "type": "string"
+        },
+        "implementation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "evidence_level_requested": {
+      "enum": [
+        "E0",
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ]
+    },
+    "evidence_dimensions": {
+      "type": "object",
+      "description": "D3 orthogonal evidence dimensions (run-record schema v2): what checks passed and in what scope, calibration targets by anchor id (or none), held-out bool + scope, independent reproductions (none yet), known omissions. Declaring the block states ALL five — absent dimensions are UNKNOWN, never false; empty lists are the explicit none.",
+      "required": [
+        "verification",
+        "calibration_target",
+        "held_out",
+        "independent_reproduction",
+        "known_omissions"
+      ],
+      "properties": {
+        "verification": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "check",
+              "scope"
+            ],
+            "properties": {
+              "check": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "calibration_target": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "held_out": {
+          "type": "object",
+          "required": [
+            "held_out",
+            "scope"
+          ],
+          "properties": {
+            "held_out": {
+              "type": "boolean"
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "independent_reproduction": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "known_omissions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

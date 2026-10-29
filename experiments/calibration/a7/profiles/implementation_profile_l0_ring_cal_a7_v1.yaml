@@ -1,0 +1,37 @@
+# Implementation profile for the calibration-ladder A7 runs on the
+# analytical L0 ring backend ( anchor CAL-A7).
+implementation_profile_id: analytical_l0_ring_cal_a7_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml
+  (KEEP verdicts per docs/calibration/CALIBRATION_PLAN.md §2.1). At this
+  stage the ring is the ring ALGORITHM EMBEDDED in the anchor's full
+  mesh: every hop a dedicated 1-hop pair at the anchor's per-pair
+  per-direction rate, latency chain 14L = 7 hops x 2 phases.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) swept over {20, 50, 64} bytes/ns at r=8, fixed by
+  anchor arithmetic BEFORE any stage output was read: 64 = the CAL-A7
+  anchor point (per-link per-direction rate: 128 GB/s bidirectional per
+  dedicated link, split per the plan §2.1 unit convention; also exactly
+  the A-L0-BW registry point — a placement coincidence recorded, value
+  untouched); 50 = the CAL-A1 NVLink5 per-port / CAL-A5 ICI reading-1
+  cross-generation endpoint; 20 = the CAL-A12 NCCL per-link software
+  model (cross-fabric transfer, labeled). Message sizes: 12-size ladder
+  8*2^k (8 KiB - 8 GiB), every size divisible by 8 so the A-L0-DIV gate
+  accepts the exact ladder with no bracketing. L fixed at the registry
+  point 200 ns (latency axis deferred to its own global stage). NO
+  parameter was tuned toward any anchor output — CAL-A7 stages no time
+  series, so there is nothing to tune toward; the sweep measures WHERE
+  the identity sits relative to the anchor's per-link spec reading.
+measurement_source: >
+  CAL-A7 staged numbers (AMD Instinct MI300X Platform Data Sheet; AMD Hot
+  Chips 2024 MI300X presentation (A. Smith); Lenovo LP1943 confirmation
+  quote; docs/calibration/anchors_staging.md §A7; anchor PROPOSED in
+  the anchor registry; confidence H for transcription)
+  — a vendor SPECIFICATION, not a measurement; compared as PROPOSED
+  evidence in results/calibration/; not our testbed, no E3/E4 language.

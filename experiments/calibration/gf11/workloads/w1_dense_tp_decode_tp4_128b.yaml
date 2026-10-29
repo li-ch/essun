@@ -1,0 +1,29 @@
+# W1 Dense TP Decode — tp_size 4 at payload 128 B: the GF-11 BRACKET-point
+# payload (calibration ladder; gap-fill anchor GF-11 —
+# "Achieving Near Speed-of-Light Latency in GPU Collectives", arXiv:2607.16100;
+# docs/calibration/anchors_gapfill.md §GF-11; numbers AS STAGED, not
+# re-fetched).
+#
+# WHY THIS PAYLOAD AND RANK (anchor-pinned): the anchor's small-message
+# AllReduce bracket was measured ON 4 GB200s — "small-message AllReduce on
+# 4 GB200s: from 11.0 µs for NCCL ring to 2.37 µs" (LLBuffer one-shot;
+# software pins NCCL 2.29.1 / NVSHMEM 3.5.21 / MSCCL++ 0.8.0) — so r=4 is
+# the BRACKET system's own rank count and the [2370, 11000] ns pair is the
+# FIRST current-gen measured collective-CCT anchor in the corpus's
+# small-message regime (plan gap 3), executed as a CCT-vs-CCT comparison
+# (unlike GF-10, GF-11 DOES stage collective times). The 128-B payload is
+# the anchor's stated granularity ("128-B cache-line FP32") — the exact
+# per-size table is a figure, so the size reading is a DECLARED ambiguity
+# carried on every CCT row (the sweeps bracket it, incl. the exact 41216 B
+# cell where the crossbar identity at the derived L crosses the anchor's
+# near-optimal leg). 128 is divisible by 4 — A-L0X-DIV / A-L0-DIV /
+# A-L0D-DIV accept the exact size, no bracketing. Same workload shape as
+# every other W1 file (2 layers x 3 decode steps = 6 AllReduce ops per
+# config). Nothing measured or standard-normative here; integer byte
+# counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf11-tp4
+tp_size: 4
+layers: 2
+steps: 3
+allreduce_bytes: 128   # 128-B cache-line granularity — the anchor's declared small-message size reading (per-size table is a figure)

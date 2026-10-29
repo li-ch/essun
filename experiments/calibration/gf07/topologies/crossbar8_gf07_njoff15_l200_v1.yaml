@@ -1,0 +1,35 @@
+# Calibration-ladder GF-07 topology: crossbar r=8 NANJING NSLB-OFF
+# ABSOLUTE row — B = 15 B/ns, L = 200 ns (registry).
+#
+# Anchor quote (docs/calibration/anchors_gapfill.md §GF-07;
+# arXiv:2604.11432, AS STAGED): Nanjing: victim AllToAll "drops to
+# 120 Gb/s" with NSLB disabled (~33% loss vs the 180 Gb/s peak).
+# MEASURED ABSOLUTE: 120 Gb/s / 8 = 15 B/ns (finite decimal, EXECUTED);
+# the "~33%" is exact as 180/120 = 3/2 (CCT factor; the anchor's own
+# percentage rounding). The NSLB mechanism itself (NVIDIA/switch
+# load-balancing state) has NO L0 input key — this row executes the
+# disabled-state MAGNITUDE only. PAIR SEMANTICS: with the njpeak row
+# (22.5), this is the ONLY measured absolute PAIR in the staged set —
+# same fabric, same collective class, load-balancing on/off; their
+# exact CCT-ratio 22.5/15 = 3/2 is an anchor-backed envelope point on
+# its own, independent of any carrier choice. CLASS CAVEAT:
+# AllToAll-class proxy on the AllReduce identity's B axis (declared).
+# Everything else as in crossbar8_gf07_rate100_l200_v1.yaml (L=200
+# registry; r=8 smoke default; scale-out labeled-proxy). Asymptotic CCT
+# ratio vs the carrier row exactly 100/15 = 20/3 ~ 6.667 (cross-fabric
+# scale contrast, not a congestion factor). B fixed by anchor
+# arithmetic BEFORE any stage output was read; never tuned.
+topology_id: crossbar8_gf07_njoff15_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 15
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the GF-07 Nanjing ABSOLUTE NSLB-off value:
+  B = 15 = 120 Gb/s / 8 (victim AllToAll with NSLB disabled; exact
+  pair factor 180/120 = 3/2 vs the peak row), L = 200 ns registry.
+  AllToAll-class proxy (declared); the NSLB mechanism is inexpressible
+  at L0. Anchor quote / registry default, never our measurement; never
+  tuned.

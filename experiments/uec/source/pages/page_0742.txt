@@ -1,0 +1,42 @@
+ 742 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• FEC_codeword_error_bin_i (see [3], subclause 45.2.1.131a), where i takes a value from 1 to 15. 
+Each of these counters is a 32-bit counter that counts once for each codeword that contains 
+exactly i symbol errors. Note that these counters are defined as optional in the Ethernet 
+standard. 
+A UE PHY that supports the OPTIONAL MTBPE estimation SHALL include all of these counters and have 
+them accessible to software. 
+Reading these counters periodically can provide the probability of specific events by dividing the read 
+value by the total number of codewords since the previous readout, denoted Ntotal. Ntotal may be 
+obtained by reading FEC_cw_counter if that counter is available; alternatively, it can be estimated quite 
+accurately by the time since the previous reading. In this specification, it is assumed that the counters 
+are read regularly once per minute, and the approximate values of Ntotal for this period are provided in 
+Table 6-12. Other observation periods may be used instead, with calculations adjusted as appropriate. 
+Table 6-12 - Number of codewords received in one minute, Ntotal (approximate) 
+Ethernet link data rate Ntotal in one minute (approximate) 
+100 Gb/s 1.2e9 
+200 Gb/s 2.3e9 
+400 Gb/s 4.7e9 
+800 Gb/s 9.4e9 
+1.6 Tb/s 1.9e10 
+ 
+Methods of estimating the UCR of an active link using these registers are described in 6.3.2.1, 6.3.2.2, 
+and 6.3.2.3. 
+Informative Text: 
+The counters above are defined at the PCS decoder, and thus UCR estimates can be calculated only at 
+the receive side of the link. However, a high UCR could indicate issues unrelated to the receiver, such 
+as in the link partner’s transmitter or in the cabling. 
+ 
+6.3.2.1 Estimation of UCR using the uncorrected codewords counter 
+If only FEC_uncorrected_cw_counter is available, an estimate of UCR is simply:  
+𝑼𝑪𝑹𝒆𝒔𝒕𝟏 =
+𝑭𝑬𝑪𝒖𝒏𝒄𝒐𝒓𝒓𝒆𝒄𝒕𝒆𝒅𝒄𝒘𝒄𝒐𝒖𝒏𝒕𝒆𝒓
+𝑵𝒕𝒐𝒕𝒂𝒍
+ (Equation 3) 
+For an observation period of one minute, Ntotal is provided in Table 6-12. 
+For links in a large network, the UCR is expected to be lower than 1e-12 (and preferably much lower). 
+Therefore, when reading once per minute, the value of FEC_uncorrected_cw_counter should almost 
+always be 0. If the UCR needs to be estimated using only this counter, the calculated values of UCRest1 
+should be averaged over longer periods of time. Also, this estimate cannot be used proactively to 
+predict the MTBPE, since the estimated UCR can be calculated only after some PHY error events occur. 

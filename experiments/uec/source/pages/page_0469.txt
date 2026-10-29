@@ -1,0 +1,37 @@
+ 469 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The left shift is required, as pds.ack_cc_state.rcvd_bytesis in units of 256 bytes, whereas 
+newly_rcvd_bytes needs to be in bytes. As the pds.ack_cc_state.rcvd_bytes field can wrap, modular 
+arithmetic must be used for the comparisons and subtractions. Note that unlike most CCC states, 
+pdc.prev_rcvd_bytes is per-PDC state. 
+If NSCC is enabled, then the pds.ack_cc_state.rcvr_cwnd_pend and the pds.ack_cc_state.rc fields are 
+also extracted into the Rcv_Cwnd_Pend and Restore_Cwnd variables respectively. Otherwise, these 
+fields SHOULD be ignored. 
+If NSCC is enabled, the CCC needs to know the RTT sample measured from the ACK arrival time. This is 
+performed using a timestamp stored when a data packet is transmitted. This packet state is therefore 
+also passed to OnACK(). Whether a valid RTT can be calculated depends on whether the ACK 
+acknowledges a retransmitted data packet. Thus, the pds.flags.retx bit from the ACK packet  is also 
+passed to OnACK(). 
+On ACK arrival, the source must look up the state associated with the ACK_PSN from the ACK: 
+pkt_tx_state = pdc.find_packet(ACK_PSN) 
+The Service_Time is extracted from the pds.ack_cc_state.service_time field.  If the ACKed data packet 
+had the ip.ecn.ce bit set at the destination the ACK has the pds.flags.m bit set.  
+The OnACK() action is then performed: 
+OnACK(newly_rcvd_bytes, Entropy, pds.flags.m, pkt_tx_state,  
+ack_arrival_time, Service_Time, pds.flags.retx, Rcv_Cwnd_Pend, 
+Restore_Cwnd) 
+3.6.10.4 ACK CC_STATE Preprocessing for pds.cc_type=CC_CREDIT  
+An ACK arriving may carry credit provided by the destination in the ACK pds.ack_cc_state field. Credit is 
+allocated to the CCC rather than to a specific PDC. The Credit value is extracted from the 
+pds.ack_cc_state.credit field, and OnCreditUpdate(Credit) is performed. Note that Credit is in units 
+of 256 bytes. 
+3.6.10.5 NACK Preprocessing for CC 
+A NACK indicates one packet was not processed at the destination. Typically, it is sent because the 
+packet was trimmed in the network, but a NACK can also be sent for other reasons as indicated in the 
+pds.nack_code field of the NACK packet. Irrespective of the pds.nack_code, the NACK is processed by 
+the CCC to update the CCC’s inflight state, even if the pds.nack_code indicates to close the PDC. 
+However, only NACKs with the pds.nack_code field set to UET_TRIMMED or UET_TRIMMED_LASTHOP 
+will elicit a congestion response. 
+The source must look up the state associated with the NACKed packet using the pds.nack_psn field from 
+the NACK: 

@@ -1,0 +1,41 @@
+ 486 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+NSCC.AckRequest(): 
+#NSCC performs better if the destination generates an ACK whenever 
+#the source’s cwnd is full. If the cwnd is not large enough to trigger 
+#an ACK, request an ACK.  
+return (ccc.cwnd - ccc.inflight) < MTU  
+or ccc.cwnd < pds.ACK_Gen_Trigger 
+ 
+Implementation Note: 
+The use of the ACK_Gen_Trigger parameter in the test in NSCC.AckRequest() would require FEPs to 
+have symmetric configuration of this parameter. Other implementation methods are permitted, such 
+as device-specific configurations to provide the lowest value of ACK_Gen_Trigger in the system to 
+the transmit logic. 
+  
+Also, the NSCC.AckRequest() test assumes the packet size of this packet has been incorporated into 
+ccc.inflight before calling NSCC.AckRequest(). 
+ 
+3.6.13.6 NSCC Internal Functions 
+calculate_rtt(pkt_tx_state, ack_arrival_time, Service_Time, Retx_Flag): 
+rtt_sample = INVALID_RTT 
+#other algorithms are permitted to determine if the RTT is valid 
+#when a packet has been retransmitted. 
+if (pkt_tx_state.rtx_count == 0 and Retx_Flag == FALSE) 
+    or (pkt_tx_state.rtx_count == 1 and Retx_Flag == TRUE): 
+rtt_sample = ack_arrival_time – (pkt_tx_state.tx_timestamp  
+             + Service_Time) 
+return rtt_sample 
+ 
+fulfill_adjustment(): 
+ccc.cwnd += ccc.inc_bytes/ccc.cwnd 
+if（now - ccc.last_adjust_time) >= adjust_period_threshold: 
+ccc.last_adjust_time = now 
+ccc.cwnd += eta 
+ 
+if ccc.cwnd > ccc.max_wnd: 
+ccc.cwnd = ccc.max_wnd 
+ccc.inc_bytes = 0 
+ccc.received_bytes = 0 

@@ -1,0 +1,12 @@
+# Transport-agnostic analytical topology: unidirectional ring of 64 ranks.
+# Link values are explicit FREE PARAMETERS (A-L0-BW, A-L0-LAT) — not
+# standard-derived, not measured. See experiments/vertical_slice/assumptions_l0.yaml.
+topology_id: ring64_free_v1
+topology_class: unidirectional_ring
+ranks: 64
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently.
+  No congestion, no credits, no packetization — L0 transport model only.

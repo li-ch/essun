@@ -1,0 +1,39 @@
+ 286 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Informative Text: 
+Global observability can be implemented by issuing a flushing read on PCI Express after issuing a data 
+write. 
+ 
+While target completion delivery falls largely outside the scope of the semantic specification, libfabric 
+compliance suggests that target completions should consistently indicate global observability. For 
+example, in many PCI Express hierarchies, this can be accomplished merely by setting RO=0 for 
+completion notifications from the FEP. 
+ 
+3.4.9.4 Idempotency 
+Operations performed using the ROD or RUD protocol MUST appear in memory at the target and at the 
+initiator as if they were performed exactly once. This creates specific requirements for 
+FETCHING_ATOMIC operations, which return the “old” data value and then modify the memory at the 
+target. If a target implements FETCHING_ATOMIC operations, the target MUST buffer the old data to 
+handle the case where the response is lost. This is true for the ROD and RUD protocols. 
+3.4.9.5 Memory Model for the Unified Local Profile 
+Much like the libfabric semantics, the transport for the Unified Local profile is coupled to the semantics 
+of the transport layer. Transactions across the wire are ordered for ROD or RODL delivery modes and 
+unordered for the RUD delivery modes. The data ordering model is defined by the implementation. 
+The transport for the Unified Local profile follows the same consistency and atomicity guarantees 
+described in Section 3.4.9.2; however, the definition of concurrent operations is narrowed to two 
+operations targeting the same {FA, JobID, Offset}. Similarly, the global observability semantics leverage 
+the DC bit (delivery complete) to (optionally) offer a global observability guarantee. The transport for 
+the Unified Local profile is defined only over the RODL delivery mode; thus, it guarantees idempotency. 
+3.4.9.6 Synchronized Operation 
+Synchronized operations add only nominal ordering requirements beyond the ordering requirements 
+discussed in 3.4.9.1. Specifically, synchronized operations add no additional ordering expectations to the 
+delivery of payload between two UET_SYNC_WRITE messages—even if one of the two 
+UET_SYNC_WRITE messages is a synchronized completion operation (i.e., has ses.hd set). 
+Synchronized operations do not change the ordering of completion notifications with respect to other 
+completion notifications. The completion notification (if requested) for a UET_SYNC_WRITE with ses.hd 
+set MUST follow the payload delivery for every UET_SYNC_WRITE message in the ses.sync_group—
+including the payload included in the synchronized completing operation. That completion notification 
+has no defined ordering with respect to other completion notifications. 
+Synchronized completing operations leveraging UET_SYNC_ATOMIC MUST perform the atomic 
+operation after the payload delivery for every UET_SYNC_WRITE message in the sync group. 

@@ -1,0 +1,55 @@
+# Implementation profile for the calibration-ladder A6 runs on the
+# analytical L0 ring backend ( anchor CAL-A6 — NCCL
+# GitHub issue #1222: 4x8 H100 allreduce over 16x200 Gbps RoCEv2, NCCL
+# 2.19.3 vs 2.20.3, measured busbw 353.69-391.10 GB/s; the ladder's
+# NOISE-FLOOR anchor + secondary O-CCT target for hybrid rail topologies).
+implementation_profile_id: analytical_l0_ring_cal_a6_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked ring AllReduce over a unidirectional ring of r = 32 ranks:
+  t(M, r) = 2*(r-1)/r * M/B + 2*(r-1)*L (see
+  src/essun/backends/analytical/l0.py); modeling assumptions A-L0-BW /
+  A-L0-LAT / A-L0-FD / A-L0-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1). The anchor's hybrid fabric
+  (intra-node NVLink + inter-node RoCE rail) is PROJECTED onto the
+  uniform ring with B = the rail rate: in the anchor's bandwidth-bound
+  regime the rail legs dominate, and under the single-ring crossing
+  reading the node-crossing link carries the same per-collective bytes as
+  every ring link, so B maps to the crossing rate. The projection is
+  declared in every topology file (bottleneck-dominated reading; the
+  same discipline as stage A5's declared 3D->2D projection).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) swept over {25, 320, 400} bytes/ns at r = 32:
+  25 = one 200 Gbps RoCEv2 port per direction (the anchor's staged port
+  rating; per-port endpoint of the swept span, and the only anchor-
+  informed per-link reading inside the plan §2.1 A-L0-BW span [20, 64]);
+  320 = CAL-A12's ~80% software-effective derating x 400 (the plan's
+  MANDATORY spec-vs-measured normalization); 400 = the ANCHOR POINT,
+  the anchor's own staged config arithmetic "16*200Gbps ROCEv2" per node
+  under the per-direction Ethernet port convention (16 x 25 GB/s = 400
+  B/ns per node per direction) — a config CEILING, never an achieved
+  value. L fixed at the A-L0-LAT registry point 200 ns (its CCT share at
+  the anchor's sizes is <= 0.24%; the latency axis belongs to its own
+  global stage). Message sizes 2^30 and 2^34 = the anchor's staged 1 and
+  16 GiB, gate-accepted EXACTLY (32 divides both) — no bracketing. A
+  second sweep executes the 4x8 2D-torus twin (the anchor's own node x
+  GPU shape) under the same span to quantify the A-L0T-UNIF uniform-B
+  blindness of the hybrid's link heterogeneity. NO parameter was tuned
+  toward any CAL-A6 measurement; the B span is fixed by the anchor's
+  config statement and prior anchors' arithmetic, not by its times.
+measurement_source: >
+  CAL-A6 staged numbers (NCCL GitHub issue #1222, "Loss or Performance
+  for NCCL test between 2.19.3 and 2.20.3": 4 nodes x 8 H100 SXM,
+  inter-node 16x200Gbps ROCEv2, sizes 1-16 GiB; out-of-place 2.19.3:
+  1 GiB 5397.8 us / busbw 385.41 GB/s, 16 GiB 85110 us / 391.10; 2.20.3:
+  1 GiB 5692.2 us / 353.69, 16 GiB 86981 us / 370.33; maintainer root
+  cause: 16x200G ports treated as 8x400G ports, DGX H100 default tuning
+  using only 16 SMs; docs/calibration/anchors_staging.md §A6; anchor
+  PROPOSED in the anchor registry, confidence M-H — machine-pasted nccl-tests
+  output, community-reported, not peer-reviewed) — external published
+  measurement, recorded as PROPOSED evidence in results/calibration/;
+  not our testbed, no E3/E4 language.

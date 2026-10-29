@@ -1,0 +1,24 @@
+ 199 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+When the memory key namespace is the PIDonFEP, the memory key namespace is common for all 
+services within the PIDonFEP and referred to as an unrestricted memory region. Figure 3-8 illustrates an 
+unrestricted memory region. A provider uses a combination of FA, JobID, PIDonFEP, and memory key to 
+select and access a memory region. When the memory region is unrestricted, any Resource Index within 
+that PIDonFEP can access the memory region. 
+Both namespaces MUST comply with the memory key structure definition in Section 2.2.5.3.4.1 and the 
+binding requirements in Table 2-47. When memory region mapping is not found or unallowed, a 
+RC_BAD_MKEY error MUST be returned. 
+Implementation Note: 
+A memory region describes contiguous virtual memory space, sometimes called a buffer, at the target 
+FEP. The memory key is a handle given to the sender and used to select this buffer. The sender is 
+expected to use the allocated memory key when addressing the receiving FEP resource. Therefore, 
+the mapping of a memory key to a memory region is solely a receiving FEP function. An 
+implementation may choose to use PIDonFEP, Resource Index, or both namespaces. 
+ 
+Figure 3-9 illustrates the case where optimized headers (Figure 3-15) that do not include a memory key 
+can be used. Here, a single buffer is associated with a Resource Index. A Resource Index is one of many 
+associated with a service (e.g., SHMEM); thus, the Resource Index can directly select a buffer. 
+ 
+Figure 3-8 - Relative Addressing for RMA Operations using PIDonFEP Namespace 
+ 

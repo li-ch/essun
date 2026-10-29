@@ -1,0 +1,41 @@
+ 234 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Name Size  
+(in bits) 
+Description 
+Synchronized completing operations: The total number of messages in the 
+synchronized group. 
+ 
+ 
+3.4.3.7 Semantic Response Header Formats for Scale-out Networks 
+Standard semantic responses are carried in PDS acknowledgements and use the format shown in Figure 
+3-25. Semantic response headers are used for semantic acknowledgements (e.g., a semantic response to 
+a Send). The response header includes a field to indicate the modified length. The modified length in a 
+semantic response indicates the amount of payload that will be delivered as part of processing the 
+message. Some use cases require message truncation at the target (e.g., the MPI unexpected message 
+sequence). In other cases, the modified length is used as part of the rendezvous sequence as described 
+in Section 3.4.4.5. 
+Table 3-16 - Response Header Fields 
+Field Size Description Section Ref 
+list 2 Indicates if the payload was delivered to the 
+expected or unexpected list.  
+3.4.7.3 
+opcode 6 Indicates type of response (e.g., default response, 
+response with payload, etc.). Table 3-24. 
+3.4.7.2 
+version (ver) 2 Semantic protocol version: Set to 0 in the initial 
+version. 
+ 
+return_code 6 Indicates success conditions and some types of error 
+conditions detected at the semantic sublayer. 
+3.4.7.3 
+message_id 16 Message ID of the original request 3.4.2.14 
+ri_generation 8 Contains the new index generation on a generation 
+mismatch response. 
+ 
+ 
+Figure 3-25 - Semantic Response Header Format (UET_HDR_RESPONSE) 
+ 
+ 
+Figure 3-24 - Synchronized Operation Extension Header Format 

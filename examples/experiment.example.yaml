@@ -1,0 +1,33 @@
+experiment_id: EXP-W1-EXAMPLE-001
+research_question: RQ2
+claim_id: C2
+baseline_id: BASE-EXAMPLE-L0
+workload_ir:
+  path: examples/workload_ir.example.yaml
+infra_graph:
+  path: examples/infragraph.example.yaml
+standard_profile:
+  path: examples/specir.example.yaml
+implementation_profile:
+  path: examples/infragraph.example.yaml
+assumptions:
+  path: examples/assumptions.example.yaml
+backends:
+- analytical
+- example_des
+seed: 20261026
+repetitions: 2
+metrics:
+- cct_p50
+- cct_p99
+- tpot_p99
+observables:
+- O-CAUSAL
+- O-CREDIT
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: example_topology_only
+  workload: example_workload_only
+  implementation: example_implementation_only
+evidence_level_requested: E1

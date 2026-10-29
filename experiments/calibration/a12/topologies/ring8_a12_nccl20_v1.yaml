@@ -1,0 +1,38 @@
+# Calibration-ladder A12 topology: unidirectional ring of 8 ranks at the
+# per-link NCCL-MODEL point B = 20 bytes/ns. Provenance: CAL-A12's own
+# per-link figure — NCCL `src/graph/topo.h` models an NVLink-3 link at
+# 20 GB/s per link per direction (docs/calibration/anchors_staging.md
+# §A12; NCCL GitHub issue #1054, body verified verbatim 2026-10-28),
+# and the maintainer reply settles that this 20 IS the ~80% app-level
+# derating of the physical 25 (NVLink packet overhead; "roughly ... 80%"),
+# i.e. exactly 4/5, one derating.
+#
+# REGISTRY PLACEMENT (this stage owns it): the plan §2.1 A-L0-BW row's
+# candidate per-link anchor-informed span is [20, 64] B/ns and its LOWER
+# ENDPOINT 20 is precisely this value ("20 (CAL-A12 NCCL model)" — plan
+# §2.1 numeric-axes preamble). This topology executes that endpoint on
+# the anchor's own fabric class and rank count, so the span endpoint is
+# now backed by an executed artifact of the anchor it came from.
+#
+# GRANULARITY PROJECTION: same declared per-link reading as
+# ring8_a12_physical25_v1 (single NVLink per hop; NOT the 12-link
+# aggregate a real ring hop could use — that axis lives in the
+# crossbar8_a12_* twins at 240/300).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward any
+# measurement; 20 B/ns is NCCL's internal model constant as staged, a
+# software-stack figure. L = 200 ns is the A-L0-LAT registry point.
+topology_id: ring8_a12_nccl20_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 20
+  hop_latency_ns: 200
+notes: >
+  Same identity and assumptions as ring8_a12_physical25_v1; only the
+  swept free parameter B differs — here at NCCL's per-link topo-model
+  rate 20 B/ns (the plan §2.1 A-L0-BW candidate span's lower endpoint).
+  The exact 4/5 = 20/25 ratio to the physical twin is the CAL-A12
+  derating at link granularity (the aggregate-granularity execution is
+  the crossbar8 240/300 pair; 12 x 20 = 240, 12 x 25 = 300 — one
+  derating, two axes, both exact).

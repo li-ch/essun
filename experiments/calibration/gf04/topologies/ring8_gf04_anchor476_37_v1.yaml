@@ -1,0 +1,44 @@
+# Calibration-ladder GF-04 topology: unidirectional ring of 8 ranks at the
+# anchor's SINGLE-NODE leg — B = 476.37 B/ns is the Oracle OCI blog's own
+# summary figure "NCCL on single node with 8 GPUs | 476.37 GB/s" (busbw,
+# all_reduce_perf -b 32 -e 4G -f 2 -g 8; page fetched and verified
+# 2026-10-28, see the stage record's verification block). Under the pinned
+# nccl-tests convention (all_reduce: busbw = algbw x 2(r-1)/r, algbw = M/t;
+# pinned from NVIDIA/nccl-tests src/all_reduce.cu by stage GF-02's fetch of
+# 2026-10-28), the L0 allreduce identity's asymptotic busbw IS its B
+# parameter — the same reading stages A3/A6/GF-02 applied to their measured
+# series, never a tuned value.
+#
+# GF-02 CLASSIFICATION carried (stage GF-02's record): 476.37 EXCEEDS the
+# 450 B/ns physical per-direction NVLink aggregate by 5.86% — an
+# in-network-computing/NVLS algorithm-class figure the L0 backends declare
+# explicitly unsupported. THIS stage works the anchor's own 8->16 SCALING
+# claim (the ratio between this topology and its r=16 twin), not the
+# absolute figure's algorithm class; both readings stay PROPOSED.
+#
+# GRANULARITY PROJECTION (declared, never silent): the ring identity
+# carries ONE per-hop rate B, set to the anchor's aggregate-scale figure —
+# the uniform-bottleneck projection stage A6 established for hybrid
+# NVLink+RoCE fabrics (the r=16 twin crosses onto the RoCE rail). No
+# congestion, no credits, no packetization, no in-network computing
+# (explicitly unsupported); L0 transport model only.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward the
+# anchor; 476.37 is the anchor's own stated figure, fixed BEFORE any model
+# output was read. L = 200 ns is the A-L0-LAT registry point (KEEP).
+# docs/calibration/anchors_gapfill.md §GF-04 (gap-fill anchor, PROPOSED,
+# not yet an integrated anchor row). Decimal units, 1 GB/s = 1 B/ns.
+topology_id: ring8_gf04_anchor476_37_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 476.37
+  hop_latency_ns: 200
+notes: >
+  Chunked ring ReduceScatter/AllGather phases over 8 ranks (the anchor's
+  single-node GPU count); per-hop B = 476.37 B/ns = the GF-04 anchor's
+  measured single-node busbw summary figure read through the pinned
+  busbw = B asymptotic mapping (declared aggregate-scale projection, see
+  header; GF-02's above-ceiling classification recorded). Provenance:
+  anchor-staged figure verified by the 2026-10-28 page fetch; anchor-derived,
+  never our measurement. L = 200 ns free A-L0-LAT registry point.

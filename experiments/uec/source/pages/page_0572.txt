@@ -1,0 +1,44 @@
+ 572 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• Contextv4 = current_epoch||0x00000000||ipv4.dest_adddr:if pkt==IPv4 
+• Contextv6 = current_epoch||0x00000000||ipv6.dest_adddr:if pkt==IPv6  
+ 
+The KDF is invoked in the following manner: IVMask||SDKo = KDF(SDKi, context=Contextv4/6, 
+label=LabelSrv) 
+3.7.8.4 KDF Examples 
+The following are examples of the KDF’s calculations. The source code to generate these examples is 
+provided in a UEC git repository in the test_uec_kdf.c file <https://github.com/ultraethernet/uet-ref-
+prov/blob/main/crypto/test/test_uec_kdf.c>. These were verified using vectors from the NIST CAVP 
+program [43] for ”SP 800-108 Key Derivation Using Pseudorandom Functions (KBKDF)”. The specific 
+vectors are: [PRF=CMAC_AES256], [CTRLOCATION=BEFORE_FIXED], [RLEN=8_BITS] with L=352. 
+In all cases, the input key is: 
+• SDK  = 0x34448a064292601b11a0978f56a2d34cf3fc35ede1a6bc04f8db3e5243a2b0ca 
+• Rekey_Mask = 0x0000FFFF00000000 
+• Rekey_Shift = 32 
+ 
+Create the Rekey field by extracting the bits from the counter field from the TSC. 
+• TSC from packet  = 0x1DC074E500000023 
+• Rekey = 0x000074E5 
+• Epoch= 0x1DC0 
+For the IPv4 cluster KDF mode cases with ssi-mode=FALSE: 
+• Label = 0x5531 or ‘U1’ in ASCII 
+• IPv4 SIP = 0xC0A82A01 or 192.168.42.1 
+• Context4 = 0x1dc0000074e5c0a82a01  
+• Kdf_fixed4 = 0x5531001dc0000074e5c0a82a010160 
+• SDK = 0x151b4ddb30112971ddeff3213000ee74d8f18aac2135601f1e5215e505fed449 
+• IVMask = 0xa7c6992c26b0bd5dd5c20e0c 
+For the IPv6 cluster KDF mode cases with ssi-mode=FALSE: 
+• Label  = 0x5531 or ‘U1’ in ASCII 
+• IPv6 SIP = 0x20010cb0000000000fc0000000000abc or 
+               2001:0cb0:0000:0000:0fc0:0000:0000:0abc 
+• Context6 = 0x000000001dc0000074e520010cb0000000000fc0000000000abc 
+• Kdf_fixed6 = 0x553100000000001dc0000074e520010cb0000000000fc0000000000abc0160 
+• SDK = 0x55d1ee8647bd53fad0e5325795af18e7559b7d42a895edf70f9c170341e8f767 
+• IVMask = 0x9c96a5752fb5669ccd5ded3f 
+ 
+For IPv4 Client-server KDF mode with ssi-mode=FALSE 
+• Label = 0x5532 or ‘U2’ in ASCII 
+• IPv4 SIP = 0xC0A82A01 or 192.168.42.1 
+• Context4 = 0x1dc000000000c0a82a01 
+• Kdf_fixed4 = 0x5532001dc000000000c0a82a010160 

@@ -1,0 +1,17 @@
+ 289 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 3-48 - Tag-Based Sequence for *CCL Send and Receive 
+ 
+The sequence above illustrates the expected message sequence and does not distinguish the specific 
+type of tagged send message. The rendezvous tagged send (3.4.4.5) may also be used. Unexpected 
+messages can be particularly challenging in tagged environments; however, the use of an unordered 
+PDC (a RUD PDC) simplifies unexpected message handling. The implementation may use any of the 
+unexpected message handling mechanisms outlined in Section 3.4.4.6.1. 
+3.4.10.2 RMA-Based *CCL Mapping 
+The RMA-based mapping requires RMA write and RMA write with immediate functionality, both of 
+which are provided by UET. 
+The RMA-based mapping uses a rendezvous queue data structure that is illustrated in Figure 3-49. 
+ 
+Figure 3-49 - Rendezvous Queue Data Structure 

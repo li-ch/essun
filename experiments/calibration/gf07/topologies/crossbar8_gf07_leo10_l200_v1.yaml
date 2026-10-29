@@ -1,0 +1,34 @@
+# Calibration-ladder GF-07 topology: crossbar r=8 LEONARDO OWN-RATE
+# COLLAPSE row — B = 10 B/ns = 50 / 5, L = 200 ns (registry).
+#
+# ROLE: the anchor's Leonardo collapse quote (ratios "collapse to 0.2
+# (more than a 5x slowdown)" at 32–64 nodes, arXiv:2604.11432,
+# docs/calibration/anchors_gapfill.md §GF-07, AS STAGED) executed at
+# Leonardo's OWN staged per-node rate (400 Gb/s/node = 50 B/ns):
+# displacement 50/5 = 10 — finite decimal, EXECUTED. Together with
+# crossbar8_gf07_leo20_l200_v1.yaml (the SAME factor 5 at the LUMI
+# carrier 100/5 = 20) and the two carrier rows, this is the
+# cross-carrier transfer probe: a factor measured on Leonardo lands on
+# the B axis differently per fabric, and the OBSERVED CCT ratio at
+# finite size differs between the carriers by the latency-fraction term
+# — the executed demonstration that the anchor's dimensionless
+# envelope is carrier-relative at finite size and exact only in the
+# bandwidth-bound limit. CLASS CAVEAT: incast victims, no L0
+# counterpart; DECLARED dimensionless displacement. L = 200 ns registry
+# (no staged latency). r = 8 free smoke default (the quote's own 32–64
+# node range is executed by the scale sweep at r=64). Asymptotic CCT
+# ratio vs the Leonardo carrier row exactly 5. B fixed by anchor
+# arithmetic BEFORE any stage output was read; never tuned.
+topology_id: crossbar8_gf07_leo10_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 10
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the GF-07 Leonardo collapse factor 5 executed
+  on Leonardo's OWN staged rate: B = 10 = 50/5, L = 200 ns registry.
+  The cross-carrier twin of crossbar8_gf07_leo20_l200_v1.yaml (factor 5
+  at the LUMI carrier). Anchor quote / registry default, never our
+  measurement; never tuned.

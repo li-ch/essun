@@ -1,0 +1,42 @@
+ 61 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+1.4.3 Switch Software Stack 
+Figure 1-12 shows an example of a switch software stack supporting UE features. UE operates over 
+existing Ethernet switches, but additional capability may be obtained by supporting optional UE features 
+in switches. Switches in the UE environment are expected to run a variety of network operating systems 
+(e.g., SONiC, FBOSS, Junos OS, IOS, etc.). Optional UE functionality within the switch silicon can be 
+accessed through a switch chip abstraction interface (e.g., SAI) that has been suitably enhanced for UE. 
+No changes are required to the forwarding paradigm of the switch and its associated network operating 
+system (NOS). IP-based forwarding can remain unchanged; however, optional features are defined for 
+UE (e.g., packet trimming, CSIG and INC). 
+1.4.4 Network Operating System (NOS) Interface 
+The NOS provides essential services on switches for configuration and control. Some NOS components 
+may need to be updated to support UE features. The following are examples: 
+• UE organizationally specific TLVs for LLDP. 
+• Packet trimming. 
+• SAI support for CSIG, CBFC, and LLR. 
+• INC agent software support. 
+Figure 1-12 shows the layering of various switch modules. The layer above a switch abstraction interface 
+(SAI) is referred to as the NOS control plane, and functionality below the SAI is referred to as the NOS 
+data plane. 
+ 
+Figure 1-12 - Switch Module Layering 
+ 
+SDN Controller (NMaaS)
+Application Containers
+Switch State Service (SWSS)
+UE 
+Switch Abstraction Interface (SAI) UE
+Technology Provider ASIC SDK
+ASIC Drivers
+Switch Silicon UE
+e.g., Redis
+Management Space
+User Space
+Kernel Space
+Hardware
+Control Plane
+Data Plane
+INC Manager (IM)
+UE 

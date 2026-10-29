@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# essun — Executable Specifications for Scale-Up Networking.
+name = "essun"
+version = "0.1.0"
+description = "Executable Specifications for Scale-Up Networking"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=6.0",
+    "jsonschema>=4.23",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    # SpecIR source extraction (tools/uec_extract.py); recorded per-output in
+    # experiments/uec/source/source_manifest.yaml.
+    "pypdf>=6",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

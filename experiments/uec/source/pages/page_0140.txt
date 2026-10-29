@@ -1,0 +1,21 @@
+ 140 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-13 - UET Memory Region Access 
+Figure 2-14 provides a logical mapping to understand how existing and newly defined verbs objects map 
+to UET. With UET, a JobID can be viewed as a global network identifier. The verbs JobID maps that 
+identifier with a specific device. Finally, the job key (identified by a JKey) associates the JobID with a 
+protection domain (PD) and provides a secure way to identify a JobID as part of a work request. All three 
+conceptually capture the concept of a UET job. 
+A PD enables process-level isolation of hardware resources. It conceptually fulfills a similar role as 
+PIDonFEP, and a UET PD is associated with exactly one PIDonFEP. If an application requires multiple 
+PIDonFEP values, it must create one PD per value. Note that, if supported by a vendor, a single PIDonFEP 
+may be associated with multiple PDs. Such a situation is useful in supporting multiple libraries within the 
+same process space, with each library managing independent resources. 
+A QP represents a service at a Resource Index. A separate QP is needed for each Resource Index the 
+application requires under a PIDonFEP (i.e., PD). Note that if multiple PDs are allocated that are 
+associated with the same PIDonFEP, none of the QPs under those PDs may share the same Resource 
+Index. Depending on the addressing model, access to a QP (i.e., PIDonFEP + Resource Index) is defined 
+differently. For relative addressing it’s {JobID, PIDonFEP, Resource Index}. For absolute addressing it’s 
+simply {PIDonFEP, Resource Index}. 

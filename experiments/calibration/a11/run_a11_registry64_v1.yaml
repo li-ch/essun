@@ -1,0 +1,50 @@
+# Calibration-ladder A11 registry-point RUN: the L0
+# single-stage crossbar identity at the A-L0X-BW / A-L0-BW REGISTRY
+# POINT — r=8, B=64 B/ns (the free bandwidth axis's smoke default,
+# range [1, 1024]; the top of the plan §2.1 candidate anchored span
+# [20, 64]), L=200 ns (A-L0X-LAT registry point), payload 8*2^30 =
+# 8 GiB (the SAME size as the anchor-point twin run_a11_anchor50_v1.yaml,
+# so the pair of runs isolates the bandwidth axis exactly). PLACEMENT
+# FACT the pair executes: at this size the registry point's CCT sits at
+# ratio within 3e-7 of the asymptotic exact 25/32 = 0.78125 relative to
+# the anchor row (the registry default is 21.875% faster than the
+# anchor's 400G link class in the bandwidth-bound limit — a placement
+# fact, never a tuning target); the plan §2.1 A-L0-BW verdict (KEEP
+# point / NARROW range) is recorded as the plan states it and NO value
+# is changed by this stage.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A11-REG64-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a11/workloads/w1_dense_tp_decode_tp8_8gib.yaml
+infra_graph:
+  path: experiments/calibration/a11/topologies/crossbar8_a11_registry64_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a11/profiles/implementation_profile_l0_crossbar_cal_a11_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_a11_registry64_v1 (one non-blocking switch stage; r=8, B=64 B/ns = A-L0X-BW registry point placed against the CAL-A11 50 B/ns anchor line, L=200 ns free registry point)
+  workload: w1_dense_tp_decode tp8, payload 8*2^30 (8 GiB, the bandwidth-bound ladder member; same size as the anchor-point twin)
+  implementation: analytical L0 crossbar identity; CAL-A11 comparison is bandwidth-axis placement of the registry default vs the anchor link class — PROPOSED, review required
+evidence_level_requested: E0

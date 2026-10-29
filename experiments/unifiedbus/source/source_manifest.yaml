@@ -1,0 +1,205 @@
+registry_family: unifiedbus_public_papers
+honesty_note: Paper-derived design profile sources only (public papers and vendor posts); the UnifiedBus
+  specification track is license-gated (pending license review, ) and is never fetched
+sources:
+- source_id: PUB-UB-UBMESH-25
+  title: 'UB-Mesh: a Hierarchically Localized nD-FullMesh Datacenter Network Architecture (v3)'
+  url: https://arxiv.org/html/2503.20377v3
+  handoff_row: null
+  access: PUBLIC_READ
+  role: 'Primary public paper: Unified Bus (UB) technique, 4D-FullMesh topology, LRS/HRS, APR routing,
+    availability'
+  found_via: Public follow-up search for UnifiedBus; arXiv listing (v3 2025-05-17)
+  kind: arxiv_html
+  raw_format: html
+  doc_sha256: dd9bd4e0855a41b7e67d304983ac6edac87dbbb5950cb5560bb81f450a575f90
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 18
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-UBMESH-25
+  notes: arXiv HTML; raw bytes hashed at fetch time; not the UnifiedBus specification
+  pages:
+  - page: 1
+    file: pages/PUB-UB-UBMESH-25/page_0001.txt
+    sha256: d46c3f032c2934bc4fb67fa637b3b35575ee23e34472683e2da662316feea94c
+    chars: 4568
+  - page: 2
+    file: pages/PUB-UB-UBMESH-25/page_0002.txt
+    sha256: dc6d4f9b2b293a054387d4ca6ec59b039c6fa10ba659b64be22e30b6cc7b8652
+    chars: 4276
+  - page: 3
+    file: pages/PUB-UB-UBMESH-25/page_0003.txt
+    sha256: c3e1ec7500d95184644a8f55bef502571f41b8035c57e033d1c0d7cac66b9399
+    chars: 4046
+  - page: 4
+    file: pages/PUB-UB-UBMESH-25/page_0004.txt
+    sha256: 9220a83da7379d0862876b44e3b50177491599aeafa7ed38f076781806b40354
+    chars: 4443
+  - page: 5
+    file: pages/PUB-UB-UBMESH-25/page_0005.txt
+    sha256: 6d3d6bcba4c3b4c6b86ffdb8f086328f6207442ae82fef8658fc1b15573836a2
+    chars: 4531
+  - page: 6
+    file: pages/PUB-UB-UBMESH-25/page_0006.txt
+    sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+    chars: 4481
+  - page: 7
+    file: pages/PUB-UB-UBMESH-25/page_0007.txt
+    sha256: cfe9c36a24849aaeea6c326854c2c602196440db459b2812807332085342060c
+    chars: 4927
+  - page: 8
+    file: pages/PUB-UB-UBMESH-25/page_0008.txt
+    sha256: dfa415d629710700b2333ce4efb02d47dd0d8c3ae124db0e1149c0672d172185
+    chars: 4195
+  - page: 9
+    file: pages/PUB-UB-UBMESH-25/page_0009.txt
+    sha256: 26c31f8f8ff6fddb19f8d6900a254639c48fb28f6cd0ed891d7f35ff21a6378d
+    chars: 4493
+  - page: 10
+    file: pages/PUB-UB-UBMESH-25/page_0010.txt
+    sha256: 3c6fe3e10e83c709e964f402a4117368782b99a444d5f02e6a911ec38f66733f
+    chars: 4234
+  - page: 11
+    file: pages/PUB-UB-UBMESH-25/page_0011.txt
+    sha256: 2136dc2f33bbbccffca69b07fc5516f7f54851eae886729aa5070cc484ad93f2
+    chars: 4196
+  - page: 12
+    file: pages/PUB-UB-UBMESH-25/page_0012.txt
+    sha256: 6955ebdc83167ae6763be443363c2543b5f793488106a96e4c9806e8c7f0e7e5
+    chars: 4715
+  - page: 13
+    file: pages/PUB-UB-UBMESH-25/page_0013.txt
+    sha256: 73298968ec47953b34fc126b3efe92c6cf3852c8c51b14eb279a0a687032e3d0
+    chars: 4259
+  - page: 14
+    file: pages/PUB-UB-UBMESH-25/page_0014.txt
+    sha256: 6fd48d449a6369436d7b329fa2d6fb217be09c9b350aff8ffc50248f90f64cc8
+    chars: 5758
+  - page: 15
+    file: pages/PUB-UB-UBMESH-25/page_0015.txt
+    sha256: 0940457899283f73fa264398726822d322d41a97e19b3845c3527e23c2063947
+    chars: 4049
+  - page: 16
+    file: pages/PUB-UB-UBMESH-25/page_0016.txt
+    sha256: 4a35eb0ce1588c037b6665772da4d8a68a36cb4ed574d6a98dbf5fe1d98d3ed9
+    chars: 5343
+  - page: 17
+    file: pages/PUB-UB-UBMESH-25/page_0017.txt
+    sha256: b22ad68557e008d87196996ec043f46faff4033a511cbe1984bc996bc50689b1
+    chars: 5331
+  - page: 18
+    file: pages/PUB-UB-UBMESH-25/page_0018.txt
+    sha256: ee24b41086cb5d552628f17ad56a4e28df3a9304a1522447109ce21db91537c8
+    chars: 3676
+- source_id: PUB-UB-HUAWEI-HC26
+  title: Huawei Unveils New UnifiedBus Computing Architecture for SuperPoDs and Clusters (Huawei Connect
+    2026 news post)
+  url: https://www.huawei.com/en/news/2026/9/hc-lingqu-agent-ai
+  handoff_row: null
+  access: PUBLIC_READ
+  role: 'Vendor engineering post: SuperPoD scale, LinkBlade/LinkDevice/UBG numbers, RTT, memory semantics'
+  found_via: Public follow-up of the UnifiedBus ecosystem named via STD-UB-HOME; huawei.com newsroom
+  kind: vendor_post
+  raw_format: html
+  doc_sha256: 9cf10ae24480fc1e0ff008aae0e071fe66ffba80a087dd5c7648324b3dd37608
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 3
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-HUAWEI-HC26
+  notes: Marketing/announcement post; numbers are vendor-claimed, labeled as such in the profile
+  pages:
+  - page: 1
+    file: pages/PUB-UB-HUAWEI-HC26/page_0001.txt
+    sha256: 0d3a7337470bd885d0205f788b01b2c6a4670a49391e4b6aebac629031c5e2be
+    chars: 5361
+  - page: 2
+    file: pages/PUB-UB-HUAWEI-HC26/page_0002.txt
+    sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+    chars: 4109
+  - page: 3
+    file: pages/PUB-UB-HUAWEI-HC26/page_0003.txt
+    sha256: 0fba96c196de1fc2150e0eda96741362162d9958f7740f57eca9ae95995fa87f
+    chars: 3077
+- source_id: PUB-UB-OSCOMP
+  title: UnifiedBus OS component overview (UB OS 组件, unifiedbus.com)
+  url: https://www.unifiedbus.com/zh/software/ub-os-component
+  handoff_row: STD-UB-OS
+  access: PUBLIC_READ
+  role: 'Official public page: UB protocol software surface (URMA, CDMA, UMMU, OBMM, device management)'
+  found_via: Pre-cleared public row STD-UB-OS in sources.csv
+  kind: public_page
+  raw_format: html
+  doc_sha256: b0facdda32d1f5d7c257c62bf342605f3412adb5463f4fc69740bb2626a3ee04
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 1
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-OSCOMP
+  notes: Public component description page; NOT the license-gated specification
+  pages:
+  - page: 1
+    file: pages/PUB-UB-OSCOMP/page_0001.txt
+    sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+    chars: 1867
+- source_id: PUB-UB-DOCS-EN
+  title: UnifiedBus documentation index, English (unifiedbus.com/en)
+  url: https://www.unifiedbus.com/en
+  handoff_row: STD-UB-HOME
+  access: PUBLIC_READ
+  role: 'Official public docs index: spec-family structure, Base Spec 2.1 public highlights (224/256 Gbit/s),
+    SuperPoD architecture features'
+  found_via: Pre-cleared public row STD-UB-HOME (https://www.unifiedbus.com/) is a client-rendered shell
+    with no extractable text; /en is the same public site's server-rendered English docs index
+  kind: public_page
+  raw_format: html
+  doc_sha256: 287529528fb1ff12ecfca3f79646f81498fa11fa23f5f2f5cc9ff15ff0202818
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 2
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-DOCS-EN
+  notes: Only the public index text is used; the linked specification documents (Base/Firmware/Compatibility
+    Test specs, gated by STD-UB-LICENSE) are never fetched
+  pages:
+  - page: 1
+    file: pages/PUB-UB-DOCS-EN/page_0001.txt
+    sha256: b4da667b205473ab79eb0677dd7c2e9b45e9540a293e5c9c4c67eaf7ce182897
+    chars: 4180
+  - page: 2
+    file: pages/PUB-UB-DOCS-EN/page_0002.txt
+    sha256: 029bc1b83aa128a21a2a7656032a9ca364e1ac8f04ab6510e4038bd48b3b1d36
+    chars: 2702
+- source_id: PUB-UB-NESTEDVN-26
+  title: Nested Parallel von Neumann Architecture and Nested BSP (v1)
+  url: https://arxiv.org/html/2609.16787v1
+  handoff_row: null
+  access: PUBLIC_READ
+  role: 'Public paper (same lead author): Unified Bus as end-to-end memory-semantic interconnect, peer
+    equality'
+  found_via: Public follow-up search for UnifiedBus; arXiv listing (2026-09-15)
+  kind: arxiv_html
+  raw_format: html
+  doc_sha256: e580f09b7dd21f170703f2b713db397289c00c7da978dab259e045cda69d2421
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 6
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-NESTEDVN-26
+  notes: Architecture-concept source; no bus link numbers expected here
+  pages:
+  - page: 1
+    file: pages/PUB-UB-NESTEDVN-26/page_0001.txt
+    sha256: 740e9070f628876b4a61157bd9650a89c77ed941031c014c4ce09ad309c21d6f
+    chars: 4458
+  - page: 2
+    file: pages/PUB-UB-NESTEDVN-26/page_0002.txt
+    sha256: e41e18ea23c490b95f097c682493e502410438d7dd24ec6c5b3472993940fdfd
+    chars: 4145
+  - page: 3
+    file: pages/PUB-UB-NESTEDVN-26/page_0003.txt
+    sha256: 8bec5e811380b1e77ebdc7b3fafab6037876437fae69f5bf237d0ec6b851ed17
+    chars: 4775
+  - page: 4
+    file: pages/PUB-UB-NESTEDVN-26/page_0004.txt
+    sha256: d5f82b23dc07fc1cc1d7db0940843971a888a51556308f8f92c5b63c8563f71c
+    chars: 4410
+  - page: 5
+    file: pages/PUB-UB-NESTEDVN-26/page_0005.txt
+    sha256: 1b8ec9d8459ad8a2b9ea4b0b16263130110595e024045ee83ca15234d1b50f69
+    chars: 4055
+  - page: 6
+    file: pages/PUB-UB-NESTEDVN-26/page_0006.txt
+    sha256: c74916ee44cd57b7b6ec7bc0d7e5dced434d9e182d3cb16a9d0da9217b707fce
+    chars: 913

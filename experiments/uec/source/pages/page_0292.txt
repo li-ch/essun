@@ -1,0 +1,29 @@
+ 292 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5 Packet Delivery Sublayer (PDS) 
+The packet delivery sublayer is the part of the Ultra Ethernet Transport (UET) protocol responsible for 
+delivering packets over IP/Ethernet networks. The packet delivery sublayer offers reliability and ordering 
+capabilities. PDS exists as a sublayer in the UET, between the semantic sublayer (SES) and the congestion 
+management sublayer (CMS), as illustrated in Figure 3-51. 
+3.5.1 PDS Terminology 
+Table 3-32 contains a summary of PDS terminology. The terms defined here are used in this section and 
+other Transport layer sections. Some of these terms are previously defined in the UE Specification 
+frontmatter, Section 1.2.2, but are listed here again to provide additional context. 
+Table 3-32 - PDS Terminology 
+Term Description 
+ACK Acknowledgement 
+CC Congestion control (aka congestion management). 
+CCC Congestion control context 
+• Used to control traffic congestion in one direction for RUD/ROD. 
+Clear Use to acknowledge an acknowledgement (ACK) when the ACK requires 
+guaranteed delivery; that is, the ACK is carrying semantic state that must 
+be delivered—such as error information or return data. 
+CP A control packet type used for RUD, ROD, and RODL delivery modes. 
+Deferrable Send Send with option for the target to indicate the receive buffer is not yet 
+available with a NACK and later send a restart transmission request (RTR) 
+packet when the receive buffer is available. 
+  
+Figure 3-51 - PDS High-Level Architecture Diagram 
+ 
+ 

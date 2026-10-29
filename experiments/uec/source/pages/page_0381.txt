@@ -1,0 +1,54 @@
+ 381 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+      OOO_COUNT = OOO_COUNT – (Dest_Lowest_Not_Rcvd_PSN – PREV_LOW); 
+   } else { 
+      OOO_COUNT = OOO_COUNT + 1; 
+   } 
+} 
+ 
+Alternatively, OOO_COUNT can be calculated at the source using: 
+OOO_COUNT * avg_tx_pkt_size = ooo_rcvd_bytes = 
+ ((HPSN – Src_Lowest_Not_Rcvd_PSN) * avg_tx_pkt_size) – inflight_pdc_bytes 
+ 
+Refer to the informative text box at the end of this section for information on this calculation.  
+The count of inflight bytes per PDC and per CCC can be determined using the received 
+pds.ack_cc_state.rcvd_bytes field provided in the ACKs as shown in the ‘On packet transmission’ section 
+of pseudo-code below. The inflight_ccc_bytes is required by NSCC; inflight_pdc_bytes and 
+avg_tx_pkt_size are added for this OOO loss detection method. 
+On packet transmission { // Increment in flight by #bytes transmitted 
+   inflight_ccc_bytes = inflight_ccc_bytes + (tx_packet_size)   
+   inflight_pdc_bytes = inflight_pdc_bytes + (tx_packet_size) 
+   avg_tx_pkt_size = avg_tx_pkt_size * weight + tx_packet_size * (1-weight) 
+} 
+ 
+On PDS ACK received { // ACKs out-of-order, confirm Rcvd_Bytes increased 
+   if (ack.rcvd_bytes > prev_rcvd_pdc_bytes){ 
+       Calculate how many bytes destination received since last ACK, 
+      newly_rcvd_bytes   = (ack.rcvd_bytes – prev_rcvd_pdc_bytes) * 256; 
+      // Reduce number of bytes inflight by amount the destination received 
+      // Since there may be multiple PDCs per CCC, track each independently 
+      inflight_pdc_bytes = inflight_pdc_bytes – newly_rcvd_bytes 
+      inflight_ccc_bytes = inflight_ccc_bytes – newly_rcvd_bytes 
+      // Update tracker of how many bytes have been received at destination 
+      prev_rcvd_pdc_bytes    = ack.rcvd_bytes 
+     } 
+   if (SACK_bitmap.Src_Lowest_Not_Rcvd_PSN = 1) {  
+      // Track lowest not rcvd PSN based on SACK bitmap 
+      Src_Lowest_Not_Rcvd_PSN = determine_new_lowest_not_rcvd_psn()  
+       } 
+On PDS ACK arrival { 
+   if (loss_recovery_mode = FALSE) { 
+      // Update fields to latest state from ACK 
+      loss_threshold_bytes = max(loss_retx_factor * cwnd *  
+         inflight_pdc_bytes / inflight_ccc_bytes, min_retx_config) 
+      // if using OOO_COUNT from destination via ACK: 
+      loss_threshold_pkts = loss_threshold_bytes / avg_tx_pkt_size 
+      // if calculating OOO_COUNT at source: 
+      ooo_rcvd_bytes = ((HPSN – Src_Lowest_Not_Rcvd_PSN) * avg_tx_pkt_size) - 
+                         inflight_pdc_bytes 
+ 
+      cwnd_pkts = cwnd_bytes / avg_tx_pkt_size 
+   } 
+   // Check if criteria indicates loss recovery mode should be enabled 
+   // if using OOO_COUNT from destination via ACK: 

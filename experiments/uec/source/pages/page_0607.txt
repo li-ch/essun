@@ -1,0 +1,43 @@
+ 607 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+CSIG implementations SHOULD support configurable EtherType values for the compact tag and wide tag 
+(if supported) even after a permanent assignment has been obtained, subject to the same constraints as 
+above on configured values. 
+4.2.4.1.2 Signal Type (csig.t) 
+The signal type field identifies the type of signal information stored in the signal value csig.s field of the 
+CSIG tag. Each signal type’s definition in this specification includes an associated aggregation function. 
+When updating the signal value in a CSIG tag, the switch pipeline compares its local value for that signal 
+type to the signal value in the CSIG tag using this aggregation function. Table 4-4 and Table 4-5 shows 
+the supported signal types and associated aggregation functions. 
+Table 4-4 - Signal Types for the Compact Tag 
+t Signal  Profile Aggregation 
+ Function 
+Comments 
+0 ABW base min Available bandwidth per port 
+1 ABW/C base min Relative available bandwidth per port 
+2 Delay base max Per-hop delay 
+3 nQD extended max Queue depth normalized by port speed 
+7 Experimental extended [configured] Reserved for 
+experimental use 
+ 
+Table 4-5 - Signal Types for the Wide Tag 
+t Signal  Profile Aggregation 
+ Function 
+Comments 
+0 ABW base min Available bandwidth per port 
+1 ABW/C base min Relative available bandwidth per port 
+2 Delay base max Per-hop delay 
+3 nQD extended max Queue depth normalized by port speed 
+15 Experimental extended [configured] Reserved for experimental use 
+ 
+A single signal type (csig.t) is reserved for experimental use for each of the compact and wide CSIG tag 
+formats: 7 for the compact tag, and 15 for the wide tag. A UE fabric whose switches and endpoints 
+support CSIG MAY configure UE switches and endpoints to use the experimental signal type for the 
+compact and/or wide tags. The means of configuring the experimental signal types in UE switches and 
+endpoints is implementation-specific and outside the scope of this specification. 
+UE switches MUST support the set of signals defined in the CSIG base profile (see Section 4.2.7.1). 
+4.2.4.1.3 Signal Value (csig.s) 
+The signal value field carries a switch-measured value for the signal type encoded in the CSIG tag. It is 
+quantized into buckets with explicit, configured [min, max] ranges in the compact tag format, and 
+encoded in a base-relative, uniform bucket-size representation in the wide tag format. 

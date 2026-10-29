@@ -1,0 +1,19 @@
+# Calibration-ladder A12 topology: unidirectional ring of 8 ranks at the
+# per-link DOUBLE-APPLICATION HAZARD point B = 16 bytes/ns = 0.8 x 20 =
+# 0.8^2 x 25. Mirror of crossbar8_a12_hazard192_v1 at per-link
+# granularity (16 x 12 = 192): NOT an anchor value, never a bridge —
+# it quantifies in executed output what a misreading of CAL-A12 as TWO
+# composed deratings (NCCL model AND app-level) would do (the verified
+# thread forecloses it: they are one statement). Nothing is tuned; B is
+# a swept free parameter (A-L0-BW); L = 200 ns registry point.
+topology_id: ring8_a12_hazard16_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 16
+  hop_latency_ns: 200
+notes: >
+  Same identity and assumptions as ring8_a12_physical25_v1; only the
+  swept free parameter B differs — the hazard bracket 0.8^2 x 25 = 16
+  B/ns (reading-hazard quantification row, per-link granularity; the
+  aggregate twin is 192 B/ns).

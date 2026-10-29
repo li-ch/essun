@@ -1,0 +1,29 @@
+ 599 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+trimmed packet, a responder SHOULD send a signal (e.g., UET NACK) to the requestor indicating that the 
+request requires retransmission. 
+4.1.7 References 
+[1]  C. Guo, H. Wu, Z. Deng, G. Soni, J. Ye, J. Padhye and M. Lipshteyn, "RDMA over commodity ethernet 
+at scale," in Proceedings of the 2016 ACM SIGCOMM Conference, 2016. 
+[2]  M. Handley, C. Raiciu, A. Agache, A. Voinescu, A. W. Moore, G. Antichi and M. Wójcik, "Re-
+architecting datacenter networks and stacks for low latency and high performance," in Proceedings 
+of the Conference of the ACM Special Interest Group on Data Communication, 2017. 
+[3]  P. Cheng, F. Ren, R. Shu and C. Lin, "Catch the whole lot in an action: Rapid precise packet loss 
+notification in data center," in 11th USENIX Symposium on Networked Systems Design and 
+Implementation (NSDI 14), 2014. 
+[4]  D. Zats, A. P. Iyer, G. Ananthanarayanan, R. H. Katz, I. Stoica and A. Vahdat, "FastLane: Agile drop 
+notification for datacenter networks," Dept. EECS, Univ. California at Berkeley, Berkeley, CA, USA, 
+Rep. UCB/EECS-2013-173, 2013.  
+[5]  P. X. Gao, A. Narayan, G. Kumar, R. Agarwal, S. Ratnasamy and S. Shenker, "pHost: Distributed near-
+optimal datacenter transport over commodity network fabric," in Proceedings of the 11th ACM 
+Conference on Emerging Networking Experiments and Technologies, 2015. 
+[6]  B. Montazeri, Y. Li, M. Alizadeh and J. Ousterhout, "Homa: A receiver-driven low-latency transport 
+protocol using network priorities," in Proceedings of the 2018 Conference of the ACM Special 
+Interest Group on Data Communication, 2018. 
+[7]  IEEE P802.1Qdw, "Source Flow Control," 2022. [Online]. Available: https://1.ieee802.org/tsn/802-
+1qdw/.  
+[8]  IETF RFC 2119, "Key words for use in RFCs to Indicate Requirement Levels," 1997. [Online]. 
+Available: https://www.rfc-editor.org/rfc/rfc2119. 
+ 
+  

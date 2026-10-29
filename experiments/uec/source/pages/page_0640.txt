@@ -1,0 +1,55 @@
+ 640 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Variable name Description 
+outstanding_seq Contains the number of unacknowledged frames that have been 
+transmitted. The variable is determined as follows: 
+ 
+outstanding_seq = ((tx_seq – 1) – acked_seq) mod 1048576 
+ 
+A 20-bit variable with values: 0 to 524287 
+outstanding_data Contains the total amount of data (in bytes) for the unacknowledged frames.  
+nack_received Set to TRUE when an LLR_NACK is received. Set to FALSE when an LLR_ACK is 
+received. Also set to FALSE when in the LLR_OFF or INIT state or upon entry 
+to the REPLAY state. 
+replay_timer A timer used to initiate a replay in the event that an LLR_NACK is lost or a 
+replay is not successful. 
+The rules governing the operation of the replay_timer are as follows:  
+1) The replay_timer is set to zero and held at zero whenever 
+outstanding_seq is zero. 
+2) The replay_timer is activated (if not already) when the end of a new LLR 
+frame is transmitted. 
+3) The replay_timer is activated (if not already) when the end of a replay 
+frame is transmitted. 
+4) The replay_timer is set to zero when an LLR_ACK is received that is 
+acknowledging some frames held in the replay buffer. If the 
+outstanding_seq is non-zero after the LLR_ACK has been processed, the 
+replay timer is activated; otherwise it is held at zero (see rule 1). 
+5) The replay_timer is set to zero when an LLR_NACK is received. The 
+replay_timer is then held at zero until a replay commences (it will be 
+reactivated at the end of the first replay frame as described in rule 3). If 
+an LLR_ACK is received before the replay commences, then the replay 
+timer is activated again if the resulting outstanding_seq is non-zero (see 
+rule 4). 
+6) If the replay_timer reaches replay_timer_max, it has expired. It is then 
+set to zero and held at zero until a replay commences (it will be 
+reactivated at the end of the first replay frame as described in rule 3). If 
+an LLR_ACK is received before the replay commences, then that 
+LLR_ACK should be acknowledging some unacknowledged frames in the 
+replay buffer. The replay timer will then be activated again if the 
+resulting outstanding_seq is non-zero (see rule 4). 
+The replay timer SHOULD have a resolution better than 10 ns. The size of the 
+replay_timer should allow the timer to count 10x the expected LLR round 
+trip time for its intended use case. As an example, for links up to 500 m, a 
+16-bit nanosecond timer is sufficient. 
+replay_timer_expired Set to one when the replay_timer reaches replay_timer_max. 
+It is set to zero when the state machine enters the REPLAY or FLUSH states. 
+It is also set to zero if an LLR_ACK is received that is acknowledging some 
+unacknowledged frames in the replay buffer. 
+replay_ct A count of the number of times a replay has been performed without 
+receiving an LLR_ACK for some unacknowledged frames. 
+It is incremented by one each time that the REPLAY state is exited and 
+nack_received is zero. It SHOULD also be set to zero whenever an LLR_NACK 
+is received, since that will also acknowledge additional frames. 
+It is set to zero whenever an LLR_ACK is received for some unacknowledged 
+frames. 

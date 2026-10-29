@@ -1,0 +1,39 @@
+# Calibration-ladder GF-01 topology: fully-connected (crossbar) of 8 ranks
+# at the MEASURED-LINK-SUM aggregate B = 325.6 B/ns — GF-01's TransferBench
+# link measurement "Sum of Average Bandwidth Across All GPU Pairs:
+# 325.6 GB/s (average across all links: 45.8 GB/s)"
+# (docs/calibration/anchors_gapfill.md §GF-01). This is the anchor's own
+# MEASURED aggregate over its 7-link domain and therefore the closest
+# thing the anchor offers to an aggregate ANCHOR POINT; it is the baseline
+# of the large-message sweep (sweep_gf01_large_v1.yaml). Decimal units,
+# 1 GB/s = 1 B/ns; 325.6 = 1628/5 exactly in the Fraction arithmetic.
+#
+# RECORDED AMBIGUITY (not smoothed): the two halves of the quote tension
+# by 1.56% at r=8 — 7 x 45.8 = 320.6, not 325.6 (the sum would need an
+# average of 46.51 GB/s per link; per-link values observed span
+# 45.1-47.2). The SUM (325.6) is used here as staged; the 320.6
+# alternative is recorded in the calibration record as closed-form
+# arithmetic (all relations are 1/B-linear, so a reversal rescales by
+# closed form; nothing is re-run at 320.6).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-01 collective times; 325.6 is the anchor's own measured link-sum,
+# fixed BEFORE any model output was read. L = 200 ns is the A-L0X-LAT
+# registry point (KEEP).
+topology_id: crossbar8_gf01_sum325_6_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 325.6
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; single-port injection shared
+  across the 7 peers (A-L0X-PORT; OUT-OF-DOMAIN as a physical description
+  of the xGMI full mesh — exact for the symmetric collective per stage
+  A7's equivalence finding). Provenance: B = 325.6 B/ns is the anchor's
+  staged TransferBench sum of per-pair average bandwidths over its 7-link
+  domain (MEASURED link-level content; the 45.8-average companion quote
+  tensions with it by 1.56% — recorded); L = 200 ns free registry point.
+  Values are anchor measurements-as-staged / free-registry points, never
+  our measurements, never tuned.

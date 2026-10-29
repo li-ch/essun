@@ -1,0 +1,103 @@
+# Assumption registry for the L0.5 compute-term model (split from
+# assumptions_l0.yaml: per-model files so unrelated additions
+# cannot shift other models' run identities. Same house format.
+assumptions_id: assumptions_l05_v1
+status: PROPOSED
+assumptions:
+  - id: A-L05-BW
+    parameter: link.bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Free parameter for the analytical L0.5 serialized ring only (second
+      frontier F1). Equal to the L0 ring value (A-L0-BW) on purpose: the
+      bandwidth term is the same identity as L0's, and sharing B (with L,
+      A-L05-LAT) is what makes the L0.5-to-L0 convergence anchor meaningful.
+      Not standard-derived and not measured.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: l0-models
+    review: PROPOSED
+  - id: A-L05-LAT
+    parameter: link.hop_latency_ns
+    value: 200
+    unit: ns
+    range: [0, 2000]
+    rationale: >
+      Free parameter for the analytical L0.5 serialized ring only. Equal to
+      the L0 ring value (A-L0-LAT); L0.5 charges it per chunk transfer (one
+      hop per transfer), which at the injection limit reproduces the L0
+      latency chain 2*(r-1)*L exactly. Not standard-derived and not measured.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: l0-models
+    review: PROPOSED
+  - id: A-L05-INJ
+    parameter: nic.injection_bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Free parameter NEW in L0.5 (F1): the per-chunk serialization
+      (injection) rate I; each chunk transfer pays c/I at the transmitting
+      NIC. Round number; not standard-derived and not measured. The value
+      null (or omitting nic) encodes the I -> infinity limit where the
+      serialization term is exactly 0 and L0.5 evaluates to the landed L0
+      identity — the convergence anchor pinned by tests. Round number
+      matching the family convention (A-L0X-BW / A-L0D-BW use 64).
+    sensitivity: high for O-CCT (the whole L0-vs-L0.5 disagreement is
+      2*(r-1)/r*M/I), zero for O-CONSERVATION
+    owner: l0-models
+    review: PROPOSED
+  - id: A-L05-SER
+    parameter: model.per_transfer_service_time
+    value: serialize_push_latency_per_transfer
+    unit: none
+    range: [serialize_push_latency_per_transfer, relay_re_serialization,
+            overlapped_chunk_transfers]
+    rationale: >
+      Modeling assumption (F1): each of the (r-1) per-phase chunk transfers
+      is charged one service time s = c/I + c/B + L (serialize at the
+      transmitting NIC, occupy the link, one per-hop latency per transfer),
+      run in lockstep slots so a phase is (r-1)*s and AllReduce is 2*(r-1)*s.
+      Relay re-serialization beyond one serialization per transmitting NIC
+      per transfer and overlapped (fill+drain) transfer schedules are
+      different identities and are declared unsupported by the backend
+      capabilities; the relay reading's latency chain does not converge to
+      the L0 identity, so the pre-registered convergence bar itself rules
+      it out. Compute/reduce per-element terms are outside F1's scope and
+      are likewise declared unsupported.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: l0-models
+    review: PROPOSED
+  - id: A-L05-CHUNK
+    parameter: model.chunk_construction
+    value: ring_equal_chunks_M_over_r
+    unit: none
+    range: [ring_equal_chunks_M_over_r, free_pipelining_depth]
+    rationale: >
+      Modeling assumption (F1): the chunk size c = M/r is the landed
+      equal-chunk ring construction (r-1 chunks per phase), NOT an
+      independent free parameter — free pipelining depth (chunk size != M/r)
+      changes the number of transfers and the (r-1)*L latency chain and is a
+      different identity, declared unsupported by the backend capabilities.
+    sensitivity: high for O-CCT (sets the transfer count), zero for
+      O-CONSERVATION
+    owner: l0-models
+    review: PROPOSED
+  - id: A-L05-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Divisibility assumption (O1 pattern, F1): the L0.5 construction moves
+      chunks of M/r bytes, so it is physically realizable only when the rank
+      count r divides the payload M (integral chunk byte counts). The
+      Fraction arithmetic would stay exact for any M, but a non-divisible
+      payload has no equal-chunk construction behind it; the backend rejects
+      such ops at execution time instead of silently computing a
+      fractional-chunk schedule. Ragged or padded-chunk variants are
+      different identities and are not evaluated.
+    sensitivity: input gate only; zero for O-CONSERVATION and O-CCT on accepted inputs
+    owner: l0-models
+    review: PROPOSED

@@ -1,0 +1,26 @@
+# Calibration-ladder GF-11 topology: fully-connected crossbar of 4 ranks at
+# the REMOTE-STORE COMPONENT row — B = 64 B/ns, L = 792 ns.
+#
+# L = 792 ns is the anchor's measured remote-store latency on 2 GB200 GPUs
+# ("Lremote_store as ... 0.792 µs"), placed on the free L axis AS A
+# COMPONENT: the single dominant term of the SoL decomposition (792/306 =
+# exactly 44/17 above the LL2 RTT component — the remote store is the
+# bigger half of the speed-of-light bound). 792 sits inside the declared
+# free range [10, 2000]; it is the LARGEST of the anchor's bare components
+# and the main reason the derived per-phase reading is 702, not 306. Same
+# honesty rules as crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: crossbar4_gf11_b64_l792_v1
+topology_class: fully_connected_crossbar
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 792
+notes: >
+  Single non-blocking switch-stage abstraction carrying the GF-11 measured
+  remote-store component (0.792 µs on 2 GB200 GPUs, arXiv:2607.16100) as
+  the uniform per-pair latency L = 792 ns. Identity t = 3M/128 + 1584 at
+  r=4. Component-level placement row of the GF-11 L-axis sweep:
+  bare-hardware class, current generation. Values are anchor measurements
+  / free registry points, never ours, never tuned, never
+  standard-normative.

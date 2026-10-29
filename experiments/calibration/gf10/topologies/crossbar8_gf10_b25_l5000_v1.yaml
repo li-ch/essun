@@ -1,0 +1,33 @@
+# Calibration-ladder GF-10 latency row: NV-SLI LOCAL ACCESS — crossbar
+# r=8, B = 25 B/ns (the GF-10 carrier), L = 5000 ns.
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# the NV-SLI system shows local access latency "~5 µs". The lowest of the
+# anchor's measured app-level latency values — still 2.5x ABOVE the
+# A-L0X-LAT declared free-range upper bound of 2000 ns (recorded; the
+# range is untouched: the quantity classes differ — app-level includes
+# the software stack, L is a bare fabric parameter; a bound, not an
+# equality). Cross-anchor coincidence, recorded never cross-derived:
+# 5000 ns is numerically identical to GF-09's RTT-charged L row (the
+# "10 µs" target RTT charged as 2L) — a MEASURED app-level local access
+# on one axis, a CC design-reaction timescale on the other; different
+# provenance and quantity class, one number. NV-SLI is a 2-GPU direct
+# class (not the r=8 DGX-1 hybrid cube and not the DGX-2 switch fabric):
+# the row executes the value on the shared carrier for axis placement,
+# and the system-class difference is carried in the record.
+topology_id: crossbar8_gf10_b25_l5000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 5000
+notes: >
+  Single non-blocking switch-stage abstraction: uniform per-pair latency
+  L = 5000 ns (GF-10's staged NV-SLI local-access measurement, ~5 µs,
+  app-level) at the measured carrier B = 25 B/ns, charged once per phase
+  by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). Placement row on
+  the measured latency axis: the lowest measured value of the anchor, 25x
+  the registry point, 2.5x the declared free-range upper (bound not
+  equality — app-level quantity class). Value is an anchor measurement,
+  never our measurement.

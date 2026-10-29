@@ -1,0 +1,41 @@
+ 184 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Both RUDI and UUD traffic are not subject to UET congestion control and therefore it is not 
+recommended for their traffic to share the same traffic class with either ROD or RUD traffic. 
+Informative Text 
+UET does not use connections but defines various packet transport modes. UET first distinguishes 
+between reliable and unreliable packet transmission, then between ordered and unordered delivery. 
+The reliable unordered mode differentiates between idempotent (RUDI) and non-idempotent (RUD) 
+operations, where the former can be applied multiple times in the context of the same message 
+transmission (e.g., write or read). Examples for non-idempotent operations are atomic operations and 
+operations that have other side effects at the target (e.g., delivering header data to a completion 
+queue). The ability to apply a packet operation multiple times has implementation benefits. 
+Idempotent packet operations may not change the message transmission or matching state when 
+they are applied multiple times. 
+ 
+UET supports in-order message delivery while allowing the majority of the associated bulk data 
+placement to be out of order. This includes ordered buffer addressing. For example, many AI 
+applications rely on in-order buffer matching semantics in *CCL libraries. This can be implemented with 
+UET using user-level message sequence numbers as matching tags. This way, incoming multi-path RUD 
+messages can be matched at the receiver in the order they were issued at the sender. If wildcard 
+matching is required by the user code (e.g., in MPI), a combination of ROD and RUD can be used to 
+deliver rendezvous messages: The initial part of the message would be delivered in order through ROD, 
+and the remainder could be delivered as part of rendezvous or deferrable send through RUD. 
+Extreme scalability is also supported by using dynamically created packet delivery contexts (PDCs). This 
+means that reliability state is required only between peers with ongoing communications. PDCs can be 
+created as part of normal packet transmission without incurring additional round trips. Depending on 
+resource availability, PDCs can be kept alive for extended periods of time (up to 231 packets) as well, and 
+the mechanism supports cache-like PDC management. 
+3.2.3 Congestion Management Sublayer (CMS) 
+UET’s congestion management involves the combination of mechanisms for window-based congestion 
+control and load balancing that is performed at each FEP. UET defines various congestion-control 
+algorithms to enable interoperability between vendors. Specific load balancing techniques and 
+mechanisms to ensure fairness of congestion control in the presence of multiple FEPs are outside of the 
+scope of UET, as they are not required for FEP-FEP interoperability. By necessity, different vendor 
+solutions operating in the same fabric plane are required to co-exist. UET exemplifies various possible 
+algorithms. 
+CMS reacts to endpoint contention (e.g., incast) and network congestion (e.g., in oversubscribed 
+scenarios). CMS defines two fundamental congestion control algorithms: Network-signal based 
+congestion control (NSCC) that runs primarily at the sender and receiver-controlled congestion control 
+(RCCC) that runs primarily at the receiver. Either can be used in isolation, or deployments can combine 

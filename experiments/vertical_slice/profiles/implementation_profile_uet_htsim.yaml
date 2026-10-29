@@ -1,0 +1,27 @@
+# Implementation profile for the ultraethernet/uet-htsim CMS backend at
+# the pinned commit (OD-002 / Q3). Stage S1: translation-only; execution
+# wiring lands with S2. The simulator's own README declares it is NOT a
+# complete UEC transport implementation and NOT a standard — mirrored
+# loudly in the adapter's CAPABILITIES.
+implementation_profile_id: uet_htsim_cms_free_v1
+status: PROPOSED
+backend: uet_htsim_cms
+fidelity: DES (packet-level; UET CMS receiver-credit congestion control on a fat-tree fabric)
+model: >
+  uet-htsim htsim_uec (the UEC Congestion Management Group's HTSim-based
+  transport simulator) at pinned commit 65ea315b, Docker image
+  essun/uet-htsim:s1. Point-to-point message flows only: the W1 AllReduce
+  is translated by chunked-ring wire-pattern decomposition
+  (src/essun/backends/uet_htsim/adapter.py, A-UET1-WIRE); the manifest
+  ring is a logical traffic pattern on the smoke-verified auto 3-tier
+  fat-tree fabric (A-UET1-FABRIC), not a physical ring.
+pin:
+  uet_htsim_commit: 65ea315b25725df9791a5b93b61cbd6938cba0a8
+  docker_image: essun/uet-htsim:s1
+  docker_image_id: sha256:7eafbdd387fd521d5531050ae40ab97f0a3b81f3424c95619fbc5095da83d312
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+translation_assumptions_source: >
+  TRANSLATION_ASSUMPTIONS in src/essun/backends/uet_htsim/adapter.py
+  (A-UET1-*; every uet-htsim-side knob carries a runbook/pin source
+  anchor)
+measurement_source: none   # not calibrated; free parameters only

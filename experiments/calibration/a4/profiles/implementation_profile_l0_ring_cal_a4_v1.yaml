@@ -1,0 +1,45 @@
+# Implementation profile for the calibration-ladder A4 runs on the
+# analytical L0 ring backend ( anchor CAL-A4 — the
+# ASTRA-sim 2.0 ISPASS 2023 simulator-vs-hardware validation anchor:
+# 4/16 V100 GPUs, ring, 150 GB/s NVLink, 64 MB-1.5 GB All-Reduce, mean
+# simulation error 5%; the paper of one pinned backend of this repo).
+implementation_profile_id: analytical_l0_ring_cal_a4_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml
+  (KEEP verdicts per docs/calibration/CALIBRATION_PLAN.md §2.1; the
+  plan's A-L0P-ALGO note applies here too: ring-collective-on-ring-fabric
+  is exactly the algorithm/fabric pairing CAL-A4's NCCL ring runs
+  exercise).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) swept over {25, 50, 150} bytes/ns at r in {4, 16},
+  fixed by anchor arithmetic BEFORE any stage output was read: 150 = the
+  CAL-A4 anchor point (the paper's staged per-GPU per-direction NVLink
+  quote for the validated V100 systems, decimal units); 25 = the
+  per-link per-direction split 150/6 (V100 NVLink-2 6 links/GPU hardware
+  context, consistent with CAL-A12's 25 GB/s/link physical per-link
+  scale); 50 = the CAL-A1 NVLink5 per-port cross-generation endpoint.
+  Message sizes are CAL-A4's own 64 MiB-1.5 GiB regime as a 6-size ladder
+  (2^26, 2^27, 2^28, 2^29, 2^30, 3*2^29; binary reading declared); r = 4
+  and r = 16 divide every size exactly, so the A-L0-DIV gate accepts the
+  exact anchor regime with NO bracketing (the structural contrast with
+  stage A3, where r = 72 = 8*9 never divides a power of two). L fixed at
+  the registry point 200 ns. NO parameter was tuned toward any anchor
+  output — the anchor stages NO hardware completion-time series, so there
+  is nothing to tune toward: its extractable numbers are the regime, the
+  ~5% mean simulation error (a tolerance-shape precedent per plan §3.4,
+  NOT applied anywhere), and the validity-domain caveat (no congestion /
+  oversubscription modeled; <= 16 GPUs; NVLink-3 era).
+measurement_source: >
+  CAL-A4 staged numbers (ASTRA-sim 2.0: Modeling Hierarchical Networks and
+  Disaggregated Memory Systems for Distributed Deep Learning Training,
+  ISPASS 2023, arXiv:2303.14006; docs/calibration/anchors_staging.md §A4;
+  anchor PROPOSED in the anchor registry, confidence H) — a peer-reviewed
+  simulator-vs-hardware validation, NOT a hardware (size -> time) series;
+  compared as PROPOSED evidence in results/calibration/; not our testbed,
+  no E3/E4 language.

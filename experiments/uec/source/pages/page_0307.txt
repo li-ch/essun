@@ -1,0 +1,37 @@
+ 307 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Packets of a single SES message are sent on the same PDC. Some SES transactions—such as rendezvous 
+and deferrable send—may use multiple messages that may be placed on separate PDCs. Applications 
+that wish to allow distribution of large data transfers across multiple PDCs must split data transfers into 
+multiple messages above SES, as multiple messages may be mapped across different PDCs. When using 
+rendezvous, the eager portion of the message may use a different PDC than the rest of the message. 
+When using deferrable send, the RTR will use a different PDC (initiated by the target of the deferrable 
+send) and data transfer may use a different PDC than the original deferrable send. Handling of these two 
+cases is implementation specific. 
+Implementation Note: 
+Because there may be multiple PDCs between two FEPs, PDS needs to track the PDC on which the 
+first packet of a message is sent. Additional packets for the same message are mapped to the same 
+PDC. PDS tracks the ses.som and ses.eom fields to assure packets of the same message use the same 
+PDC and to assure a PDC is not closed in the middle of a message. 
+Once a deferrable send is deferred and restarted via RTR, it is considered a new message and may 
+use a different PDC. 
+ 
+Packets from different messages are not interleaved on a single PDC. Specifically, all packets of a 
+message are on the wire before a packet from another message is put on the wire. The entire message is 
+transmitted on a PDC and then the next message is transmitted. PDS may establish an additional PDC 
+between two FEPs to avoid delaying short messages. 
+PDS ACKs carrying SES Responses that are marked for guaranteed delivery are always delivered (see 
+Section 3.5.17). Specifically, when an SES Response on a RUD, ROD, or RODL PDC is marked as requiring 
+guaranteed delivery, PDS is responsible for assuring that response is delivered and cleared. Refer to the 
+Semantics Section 3.4.4.3 for details on which responses are guaranteed. More details on guaranteed 
+delivery and clear of ACKs are provided in Section 3.5.11. 
+There is no acknowledgement for the unreliable delivery mode. 
+3.5.7 Packet Delivery Modes Overview  
+3.5.7.1 Reliable Unordered Delivery (RUD) 
+The RUD delivery mode guarantees that each packet is delivered to the target SES once and only once. 
+Packets are delivered to the semantic sublayer in the order they arrive from the network. This mode 
+uses selective retransmission capabilities and enables semantic processing and direct data placement 
+out of order. Direct data placement refers to writing of data arriving at the Ethernet network port 
+directly into system memory without CPU intervention. RUD relies on sequence numbering to identify 
+lost and duplicate packets. 

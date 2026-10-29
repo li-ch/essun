@@ -1,0 +1,51 @@
+ 114 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+fi_msg() API Description Requirements SES Opcode 
+fi_senddata The fi_senddata() API is 
+like fi_send(), but allows 
+for the sending of remote 
+CQ data as part of the 
+transfer (the remote CQ 
+data is written into the 
+target endpoint CQ) 
+API MUST be supported 
+ 
+The remote CQ data is carried 
+in the ses.header_data field of 
+the SES header 
+Same as fi_sendv 
+fi_injectdata The fi_injectdata() API is 
+like fi_inject(), but allows 
+for the sending of remote 
+CQ data as part of the 
+transfer 
+API MUST be supported 
+ 
+The remote CQ data is carried 
+in the ses.header_data field of 
+the SES header 
+Same as fi_inject 
+ 
+2.2.5.4.1.1 Unexpected Messages 
+Unexpected messages MUST be supported using one of the approaches defined in the SES specification, 
+where the choice of which approach to use at the target is vendor specific. The initiator MUST respond 
+appropriately to all target behaviors. 
+2.2.5.4.1.2 Message Rendezvous 
+The SES specification currently defines two types of rendezvous protocols that are referred to as: 
+• Rendezvous, and 
+• Deferrable send. 
+The AI Full profile MUST support the deferrable send option, while the HPC profile MUST support the 
+rendezvous option. 
+Additionally, the SES specification describes two rendezvous approaches for mapping *CCL send and 
+receive APIs to the libfabric and UET semantics APIs. Both approaches utilize protocols implemented by 
+*CCL plugins that are layered on top of the libfabric APIs. One approach utilizes the fi_tagged() APIs, and 
+the other approach is based on the fi_rma() APIs.  
+For the AI Full profile, messages with sizes >= UET_PROVIDER_MSG_RENDEZVOUS_SIZE bytes SHOULD 
+be sent with the UET_DEFERRABLE_SEND semantic opcode. 
+For the HPC profile, messages SHOULD be sent with the UET_RENDEZVOUS_SEND semantic opcode 
+when the following criteria are met: 
+• Message size >= UET_PROVIDER_MSG_RENDEZVOUS_SIZE bytes, and 
+• The source buffer is associated with a local memory region registered for remote read access 
+The amount of eager data sent as part of a UET_RENDEZVOUS_SEND operation MUST be <= 
+UET_PROVIDER_MAX_EAGER_SIZE bytes. 

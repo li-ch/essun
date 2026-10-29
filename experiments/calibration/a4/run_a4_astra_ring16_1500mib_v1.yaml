@@ -1,0 +1,35 @@
+# Calibration-ladder A4 pinned-backend RUN: pinned
+# ASTRA-sim analytical inside CAL-A4's validated regime — anchor point
+# B = 150 B/ns, r = 16, payload 3*2^29 (the 1.5 GiB large endpoint, binary
+# reading). This is the pinned-backend TWIN of the L0 store run
+# EXP-CAL-A4-RING16-ANCHOR-001 at the identical configuration (named as
+# its baseline). See run_a4_astra_ring16_64mib_v1.yaml for the full stage
+# framing. claim_id deliberately EMPTY (PROPOSED candidate; zero claim
+# edits); O-CCT only.
+experiment_id: EXP-CAL-A4-ASTRA-RING16-1500MIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: EXP-CAL-A4-RING16-ANCHOR-001
+workload_ir:
+  path: experiments/calibration/a4/workloads/w1_dense_tp_decode_tp16_1500mib.yaml
+infra_graph:
+  path: experiments/calibration/a4/topologies/ring16_a4_b150_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a4/profiles/implementation_profile_astra_sim_cal_a4_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- astra_sim_analytical
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring16_a4_b150_v1 (unidirectional ring, r=16, B=150 B/ns CAL-A4 anchor point, L=200 ns free)
+  workload: w1_dense_tp_decode tp16, payload 3*2^29 (1.5 GiB endpoint of CAL-A4's 64 MB-1.5 GB regime, binary reading)
+  implementation: pinned ASTRA-sim analytical (commit 4ce9ecf) native Ring AllReduce; placement inside CAL-A4's validated regime under the recorded translation conventions — PROPOSED, review required
+evidence_level_requested: E0

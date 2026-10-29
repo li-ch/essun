@@ -1,0 +1,22 @@
+# W3 MoE Dispatch/Combine — smoke configuration (T030 / WS3 ladder, third rung).
+# All sizes are integer byte counts; deterministic by construction (no RNG
+# anywhere: routing is input, not learned — A-W3-ROUTE).
+# Layer 0: uniform shares (no skew). Layer 1: skew matrix (2,1,1,1) — expert 0
+# takes a 2/5 share of all visits (A-W3-SHARES).
+# HONEST SCOPE: no registered backend executes all-to-all; this workload is
+# rejected loudly by the capability gates and needs L1/L2 to EXECUTE (see
+# assumptions_w3.yaml notes and reports/p4_T030.md).
+schema_version: "1.0.0"  # first document on the w3-extended generator contract
+workload: w3_moe_dispatch_combine
+model_name: moe-dispatch-combine-smoke
+tp_size: 8
+layers: 2
+experts_per_layer: 4
+top_k: 2
+tokens_per_rank: 5
+token_bytes: 2048   # free parameter A-W3-SIZE, see assumptions_w3.yaml
+routing: shares
+expert_shares:
+  - [1, 1, 1, 1]    # uniform layer: every expert takes 20 of 80 visits
+  - [2, 1, 1, 1]    # skew layer: apportioned (32, 16, 16, 16) of 80 visits
+# expert_placement omitted: default deterministic round-robin e % 8 (A-W3-PLACE)

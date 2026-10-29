@@ -1,0 +1,139 @@
+ 85 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3. AI Full 
+4. HPC 
+ 
+Profiles specify the minimum required set of functionality and features for support of the profile. UET 
+vendors providing additional features beyond the profile specification MUST provide a means of 
+selectively enabling and disabling those features. 
+Libfabric provides flexibility by making a broad set of parameters available to applications. These 
+parameters are typically carried in libfabric structures. UET places constraints on the set of parameters 
+that MUST be supported. Table 2-4 summarizes the parameters that MUST be supported for each 
+profile. Parameters not shown have vendor-specific values. Unified Local is not targeted at libfabric 
+applications. 
+Table 2-4 - Per-Profile Libfabric Parameter Requirements 
+Structure Field Value(s) Required Notes 
+AI 
+BASE 
+AI 
+FULL 
+HPC 
+fi_info  
+ caps FI_LOCAL_COMM 
+FI_REMOTE_COMM 
+FI_MSG 
+FI_SEND 
+FI_RECV 
+FI_TAGGED (exact match)1 
+FI_TAGGED (wildcard)1 
+FI_DIRECTED_RECV2 
+FI_TAGGED_DIRECTED_RECV2 
+FI_SELECTIVE_COMPLETION  
+FI_SHARED_AV 
+FI_RMA 
+FI_WRITE 
+FI_REMOTE_WRITE 
+FI_READ 
+FI_REMOTE_READ 
+FI_RMA_EVENT 
+FI_ATOMIC (non-fetching)3 
+FI_ATOMIC (fetching)3 
+FI_HMEM 
+FI_FENCE 
+Y 
+Y 
+Y 
+Y 
+Y 
+ 
+ 
+ 
+ 
+Y 
+Y 
+Y 
+Y 
+Y 
+ 
+ 
+Y 
+Y 
+ 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+ 
+ 
+ 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+libfabric capabilities 
+ 
+ 
+ 
+ 
+See footnote 1 
+ 
+See footnote 2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+See footnote 3 
+ addr_format FI_ADDR_UET Y Y Y New for UET 
+fi_fabric_attr  
+ name UET Y Y Y  
+ prov_name Vendor specific     
+fi_domain_attr  
+ name Vendor specific    Usually in the form of 
+[vendor]_[instance] 
+ threading FI_THREAD_SAFE Y Y Y Support for other 
+values is vendor-
+specific 
+ mr_mode Provider MAY use 
+FI_MR_ENDPOINT  
+    
+ mr_key_size <= 6 
+ 
+Y Y Y See Section 2.2.5.3.4.1 

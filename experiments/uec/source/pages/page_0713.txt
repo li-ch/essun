@@ -1,0 +1,60 @@
+ 713 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+        type boolean; 
+        config false; 
+        description 
+          "When FALSE indicates this VC[r-vcid] has not completed 
+          configuration. When TRUE indicates this VC[r-vc-id] has 
+          completed configuration."; 
+      } 
+      leaf r-vc-id { 
+        type uint8  { 
+          range "0..31"; 
+        } 
+        description 
+          "The index for this receive VC."; 
+      } 
+   leaf r-vc-credit-limit { 
+        type uint32 { 
+          range "0..16777215"; 
+        } 
+        description 
+          "The credit limit for this VC[r-vc-id] receiver. 
+          If set to 0 there is no per VC credit limit used."; 
+      } 
+      leaf r-vc-pktid-sel { 
+        type identityref { 
+          base r-pktid-selector; 
+        } 
+        description 
+          "Indicates how packets are identified for this VC[r-vc-id]. 
+    The value 0 disables packet identification."; 
+      } 
+      choice paremeters { 
+        mandatory true; 
+        description 
+          "Three methods to verify or set the packets associated with 
+          the VC[r-vc-id]. These methods are selected by r-pktid-sel. 
+   Each of the three methods have a different set of parameters. 
+   The methods are: 
+          1)identification by priority / drop eligible, 2)identification 
+   by DSCP,3)identification by the exchange of an opaque handle 
+   which can be an IEEE mask-and-match stream handle as defined 
+   in 802.1CBdb or any other system handle."; 
+        container pcpdei-identification { 
+          description 
+            "Provides mask and match for the pcp/dei bits."; 
+          leaf r-mask-pcpdei { 
+            type binary { 
+              length '4'; 
+            } 
+            description 
+              "A 4-bit mask for the pri/dei bits."; 
+          } 
+          leaf r-pcpdei { 
+            type binary { 
+              length '4'; 
+            } 
+            description 
+              "The r-pcpdei value identifying the L2 packet 

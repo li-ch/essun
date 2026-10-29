@@ -1,0 +1,40 @@
+ 748 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+One node in the network, denoted endpoint A, has a PCS with only the FEC_corrected_cw_counter 
+available. The agent on node A reads this counter once per minute, and the average value is 
+approximately 1e9. 
+• From Table 6-12, for 800 Gb/s, the value of Ntotal is 9.4e9. 
+• Using the method in 6.3.2.2, the CCR is approximately 1e / .4e ≈0.1. 
+• Looking at Figure 6-1, this value of CCR corresponds to a UCR of about 1e-29 with uncorrelated 
+errors. Taking a guard band of four orders of magnitude, the estimated UCR is 1e-25. 
+• From 6.3.1.2, the MTBPE can be estimated as 6.4e-9/1e-25≈6.4e16 seconds, or more than 
+2 billion years. 
+• The software agent on node A can report this estimate or just that the link is not expected to 
+experience PHY errors. 
+• Note that there is no way to tell from the FEC_corrected_cw_counter alone whether errors are 
+correlated and thus whether this estimate is reliable. If PHY errors occur despite this estimate, it 
+is likely due to correlated errors. 
+Another node in the network, denoted node B, also has a PCS with only the FEC_corrected_cw_counter 
+available. If the agent on node B reads this counter once per minute, the counter is saturated at 2 32 ≈ 
+4.3e9. To enable estimation of the MTBPE, the agent has to read the counter more frequently to 
+prevent saturation. When reading the counter once per second, the average count turns out to be about 
+1.1e8. 
+• The value of Ntotal for an observation time of one second is  .4e /60≈1.5 e8. 
+• Using the method in 6.3.2.2, the CCR is 1.1e8/1.5 e8≈0.7. 
+• Looking at Figure 6-1, this value of CCR corresponds to a UCR higher than 1e-13. 
+• Even without applying any guard band, from Table 6-11, a UCR of 1e-13 corresponds to an 
+MTBPE of less than one day. Thus, node B is expected to experience frequent PHY errors. 
+• The software agent can report the estimated MTBPE to a network monitoring system so that the 
+specific link can be handled proactively. 
+Another node in the network, denoted node C, has a PCS with FEC_codeword_error_bin_i counters 
+available. The agent on node C reads these counters once per minute to obtain N6, N8, and N10. The 
+average values are approximately 90000, 440, and 1, respectively, where N10 is calculated by averaging 
+multiple readouts (the values are mostly between 0 and 2). 
+• From Table 6-12, for 800 Gb/s and 1-minute observation time, the value of Ntotal is 9.4e9, or 
+approximately 1e10. 
+• Dividing the average counter values by 1e10, we get that P6, P8, and P10 are about 9e-6, 4.4e-8, 
+and 1e-10, respectively. 
+• Looking at Figure 6-2, these values of P6, P8, and P10 correspond to UCR values of approximately 
+1.1e-19, 2.0e-19, and 1.7e-19, respectively. Taking the maximum of the three values, the UCR is 
+estimated as 2e-19. Since the values are close, the estimate can be considered accurate. 

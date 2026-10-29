@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/scaleup/specir.schema.json",
+  "title": "SpecIR",
+  "type": "object",
+  "required": [
+    "standard",
+    "requirements",
+    "messages",
+    "state_machines",
+    "semantics",
+    "observables",
+    "refinement",
+    "validity_domain",
+    "tests"
+  ],
+  "properties": {
+    "standard": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "document_sha256",
+        "license_review"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "document_sha256": {
+          "type": "string"
+        },
+        "license_review": {
+          "type": "object",
+          "required": [
+            "status",
+            "scope"
+          ],
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "scope": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "normativity",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "normativity": {
+            "enum": [
+              "MUST",
+              "SHALL",
+              "MAY",
+              "EXCLUDED"
+            ]
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "section"
+            ],
+            "properties": {
+              "source_id": {
+                "type": "string"
+              },
+              "section": {
+                "type": "string"
+              },
+              "page": {
+                "type": [
+                  "integer",
+                  "string"
+                ]
+              },
+              "table": {
+                "type": "string"
+              },
+              "figure": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "messages": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "bits"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "bits": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "source": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "state_machines": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "states",
+          "transitions"
+        ],
+        "properties": {
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "transitions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "from",
+                "event",
+                "to"
+              ],
+              "properties": {
+                "from": {
+                  "type": "string"
+                },
+                "event": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "preconditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ordering": {
+            "type": "string"
+          },
+          "visibility_before_completion": {
+            "type": "boolean"
+          },
+          "free_parameters": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "observables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "exact",
+              "invariant",
+              "logical_traffic",
+              "distribution",
+              "scalar_metric",
+              "diagnostic"
+            ]
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expr": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "refinement": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "pair"
+        ],
+        "properties": {
+          "pair": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "string"
+            }
+          },
+          "preserve_exactly": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bounded_in_validity_domain": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "validity_domain": {
+      "type": "object",
+      "required": [
+        "topology",
+        "workload",
+        "implementation"
+      ],
+      "properties": {
+        "topology": {
+          "type": "string"
+        },
+        "workload": {
+          "type": "string"
+        },
+        "implementation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

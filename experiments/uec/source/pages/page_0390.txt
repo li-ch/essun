@@ -1,0 +1,31 @@
+ 390 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.16.2.1 The ACK request control packet triggers an ACK with pds.next_hdr = UET_HDR_NONE. 
+3.5.16.3 Clear  
+The pds.clear_psn_offset field in the PDS Request header is used to calculate the CLEAR_PSN PCD state. 
+CLEAR_PSN is used to free the state associated with ACKs at the destination. The Clear Command CP and 
+Clear Request CP either request the cumulative CLEAR_PSN or carry a cumulative CLEAR_PSN. These are 
+generally used when resources are tight, as processing clear events frees up guaranteed delivery state. 
+The Clear Command and Clear Request CPs MUST have pds.flags.ar set to zero and pds.psn set to zero, 
+ensuring that no PDS ACK is generated. 
+3.5.16.3.1 Clear Command 
+The source sends a Clear Command CP to the destination when there is no PDS Request packet available 
+to carry a required CLEAR_PSN. For example, if there are no pending packets to send and no 
+outstanding, unacknowledged PSNs on the PDC and the pds.flags.req field in a received ACK indicates a 
+clear is needed. This is also sent in response to a Clear Request CP. Not all ACKs require a clear. 
+When generating this CP, the CP pds.payload field is set to the CLEAR_PSN. 
+3.5.16.3.2 Clear Request 
+The destination sends a Clear Request CP to the source when there are ACKs requiring a clear. In 
+general, the destination relies on the source to detect lost guaranteed delivery ACKs and generate an 
+ACK Request CP (or retransmit the original request packet). Therefore, this CP may be sent based on 
+local resource limitations (e.g., limited resources for storing guaranteed delivery responses) to free up 
+storage of non-default responses. 
+When generating this CP, the CP pds.payload field is set to the PSN requiring the clear. 
+3.5.16.4 PDC Close  
+Two CPs are defined for closing a PDC as specified in Section 3.5.8.3: Close Command CP and Close 
+Request CP. Only the initiator of the PDC can close a PDC. The target can request the PDC be closed. If 
+the target requests a close and the initiator fails to acknowledge the Close Request CP within a 
+configured time, the target MUST close the PDC in error. 
+The Close Command and Close Request CPs MUST be allocated a new PSN (the next PSN in the PDC PSN 
+space) and have pds.flags.ar set to one, ensuring that the destination generates an ACK. 

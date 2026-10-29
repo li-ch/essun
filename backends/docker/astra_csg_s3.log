@@ -1,0 +1,1113 @@
+# P3 / Stage S3 — csg-htsim runbook-source inspection in container
+# Date: 2026-10-27  Host: darwin arm64  Docker: 29.8.2
+# Image: essun/astra-csg-htsim:s1  Id: sha256:e18b4fd1061c924b354b455eea2e7108ca4cf7a752e2471a322ffb8e8e2e2900  (linux/arm64)
+#
+# Purpose: gather every fact cited by backends/docker/astra-csg-runbook.md from the
+# pinned in-image source tree (astra-sim 4ce9ecf + csg-htsim 67cbbbb, patched per
+# build/astra_htsim/htsim_astrasim.patch). Read-only inspection only (--rm containers,
+# no binary runs, no writes outside the container). Sections A-Z3.
+# Companion evidence: astra_csg_s2.log (executed smoke run + determinism probe),
+# astra_csg_s1.log (build). logout.dat record-count decode was executed on the host
+# against the exported S2 artifact (read-only python struct walk, results quoted in
+# the runbook §5).
+### SECTION A: htsim topology input (documented example)
+Nodes 8
+Tiers 3
+Podsize 4
+
+Tier 0
+Downlink_speed_Gbps 200
+Radix_Down 2
+Radix_Up 2
+Downlink_Latency_ns 1000
+
+Tier 1
+Downlink_speed_Gbps 200
+Radix_Down 2
+Radix_Up 4
+Downlink_Latency_ns 1000
+Bundle 1
+
+Tier 2
+Downlink_speed_Gbps 100
+Radix_Down 4
+Downlink_Latency_ns 1000
+Bundle 2
+
+### SECTION B: analytical network YAML still required by the htsim frontend
+topology: [ Ring ]
+npus_count: [ 8 ]
+bandwidth: [ 50.0 ]  # GB/s
+latency: [ 500.0 ]  # ns
+
+### SECTION C: system JSON
+{
+    "scheduling-policy": "LIFO",
+    "endpoint-delay": 10,
+    "active-chunks-per-dimension": 1,
+    "preferred-dataset-splits": 4,
+    "all-reduce-implementation": [
+        "ring"
+    ],
+    "all-gather-implementation": [
+        "ring"
+    ],
+    "reduce-scatter-implementation": [
+        "ring"
+    ],
+    "all-to-all-implementation": [
+        "ring"
+    ],
+    "collective-optimization": "localBWAware",
+    "local-mem-bw": 1600,
+    "boost-mode": 0,
+    "roofline-enabled": 0,
+    "peak-perf": 900
+}
+
+### SECTION D: remote-memory JSON
+{
+    "memory-type": "NO_MEMORY_EXPANSION"
+}
+### SECTION E: upstream run_htsim.sh (defect lines numbered)
+     1	#!/bin/bash
+     2	set -e
+     3	set -x
+     4	
+     5	# set paths
+     6	SCRIPT_DIR=$(dirname "$(realpath "$0")")
+     7	
+     8	# Absolute paths to useful directories
+     9	PROJECT_DIR="${SCRIPT_DIR:?}/../../.."
+    10	BUILD_DIR="${PROJECT_DIR:?}"/build/astra_htsim/build
+    11	
+    12	# Inputs - change as necessary.
+    13	WORKLOAD="${EXAMPLE_DIR:?}/workload/microbenchmarks/all_reduce/8npus_1MB/all_reduce"
+    14	SYSTEM="${EXAMPLE_DIR:?}/system/native_collectives/Ring_4chunks.json"
+    15	REMOTE_MEMORY="${EXAMPLE_DIR:?}/remote_memory/analytical/no_memory_expansion.json"
+    16	NETWORK="${EXAMPLE_DIR:?}/network/analytical/Ring_8npus.yml"
+    17	TOPO="${SCRIPT_DIR:?}"/network/htsim/8nodes.topo
+    18	
+    19	cd "${BUILD_DIR:?}" || exit
+    20	${PROJECT_DIR:?}/build/astra_htsim/build/bin/AstraSim_HTSim \
+    21	  --workload-configuration="${WORKLOAD}" \
+    22	  --system-configuration="${SYSTEM}" \
+    23	  --remote-memory-configuration="${REMOTE_MEMORY}" \
+    24	  --network-configuration="${NETWORK}" \
+    25	  --htsim_opts -topo ${TOPO}
+
+### SECTION F: workload files (8-NPU all_reduce prefix set)
+total 32
+-rw-r--r-- 1 root root 81 Oct 27 09:55 all_reduce.0.et
+-rw-r--r-- 1 root root 83 Oct 27 09:55 all_reduce.1.et
+-rw-r--r-- 1 root root 83 Oct 27 09:55 all_reduce.2.et
+-rw-r--r-- 1 root root 83 Oct 27 09:55 all_reduce.3.et
+-rw-r--r-- 1 root root 83 Oct 27 09:55 all_reduce.4.et
+-rw-r--r-- 1 root root 83 Oct 27 09:55 all_reduce.5.et
+-rw-r--r-- 1 root root 83 Oct 27 09:55 all_reduce.6.et
+-rw-r--r-- 1 root root 83 Oct 27 09:55 all_reduce.7.et
+
+### SECTION G: where --htsim_opts is parsed
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimMain.cc:84:        if (std::string(argv[i]) == "--htsim_opts") {
+### SECTION H: HTSimMain.cc (frontend main; CLI parsing)
+     1	/******************************************************************************
+     2	This source code is licensed under the MIT license found in the
+     3	LICENSE file in the root directory of this source tree.
+     4	*******************************************************************************/
+     5	
+     6	#include "HTSimNetworkApi.hh"
+     7	#include "astra-sim/common/Logging.hh"
+     8	#include "common/CmdLineParser.hh"
+     9	#include "HTSimSession.hh"
+    10	#include <astra-network-analytical/common/EventQueue.h>
+    11	#include <astra-network-analytical/common/NetworkParser.h>
+    12	#include <astra-network-analytical/congestion_unaware/Helper.h>
+    13	#include <remote_memory_backend/analytical/AnalyticalRemoteMemory.hh>
+    14	
+    15	using namespace HTSim;
+    16	
+    17	int main(int argc, char* argv[]) {
+    18	    // Parse command line arguments
+    19	    auto cmd_line_parser = CmdLineParser(argv[0]);
+    20	    cmd_line_parser.get_options().add_options()(
+    21	        "htsim-proto", "HTSim Network Protocol [tcp]",
+    22	        cxxopts::value<HTSimProto>()->default_value("tcp"));
+    23	    cmd_line_parser.parse(argc, argv);
+    24	
+    25	    // Get command line arguments
+    26	    const auto workload_configuration = cmd_line_parser.get<std::string>("workload-configuration");
+    27	    const auto comm_group_configuration =
+    28	        cmd_line_parser.get<std::string>("comm-group-configuration");
+    29	    const auto system_configuration = cmd_line_parser.get<std::string>("system-configuration");
+    30	    const auto remote_memory_configuration =
+    31	        cmd_line_parser.get<std::string>("remote-memory-configuration");
+    32	    const auto network_configuration = cmd_line_parser.get<std::string>("network-configuration");
+    33	    const auto logging_configuration = cmd_line_parser.get<std::string>("logging-configuration");
+    34	    const auto num_queues_per_dim = cmd_line_parser.get<int>("num-queues-per-dim");
+    35	    const auto comm_scale = cmd_line_parser.get<double>("comm-scale");
+    36	    const auto injection_scale = cmd_line_parser.get<double>("injection-scale");
+    37	    const auto rendezvous_protocol = cmd_line_parser.get<bool>("rendezvous-protocol");
+    38	    const auto proto = cmd_line_parser.get<HTSimProto>("htsim-proto");
+    39	
+    40	    AstraSim::LoggerFactory::init(logging_configuration);
+    41	
+    42	    // Generate topology
+    43	    const auto network_parser = NetworkParser(network_configuration);
+    44	    const auto topology = construct_topology(network_parser);
+    45	
+    46	    // Get topology information
+    47	    const auto npus_count = topology->get_npus_count();
+    48	    const auto npus_count_per_dim = topology->get_npus_count_per_dim();
+    49	    const auto dims_count = topology->get_dims_count();
+    50	
+    51	    // Set up Network API
+    52	    HTSimNetworkApi::set_topology(topology);
+    53	    auto completion_tracker = std::make_shared<CompletionTracker>(npus_count);
+    54	    HTSimNetworkApi::set_completion_tracker(completion_tracker);
+    55	
+    56	    // Create ASTRA-sim related resources
+    57	    auto network_apis = std::vector<std::unique_ptr<HTSimNetworkApi>>();
+    58	    const auto memory_api =
+    59	        std::make_unique<Analytical::AnalyticalRemoteMemory>(remote_memory_configuration);
+    60	    auto systems = std::vector<Sys*>();
+    61	
+    62	    auto queues_per_dim = std::vector<int>();
+    63	    for (auto i = 0; i < dims_count; i++) {
+    64	        queues_per_dim.push_back(num_queues_per_dim);
+    65	    }
+    66	
+    67	    for (int i = 0; i < npus_count; i++) {
+    68	        // create network and system
+    69	        auto network_api = std::make_unique<HTSimNetworkApi>(i);
+    70	        auto* const system =
+    71	            new Sys(i, workload_configuration, comm_group_configuration, system_configuration,
+    72	                    memory_api.get(), network_api.get(), npus_count_per_dim, queues_per_dim,
+    73	                    injection_scale, comm_scale, rendezvous_protocol);
+    74	
+    75	        // push back network and system
+    76	        network_apis.push_back(std::move(network_api));
+    77	        systems.push_back(system);
+    78	    }
+    79	
+    80	    // Get HTSim opts
+    81	    int htsim_argc = 0;
+    82	    char** htsim_argv = NULL;
+    83	    for (int i = 0; i < argc; i++) {
+    84	        if (std::string(argv[i]) == "--htsim_opts") {
+    85	            htsim_argc = argc - i;
+    86	            htsim_argv = argv + i;
+    87	        }
+    88	    }
+    89	
+    90	    // Report HTSim opts
+    91	    for (int i = 0; i < htsim_argc; i++) {
+    92	        std::cout << htsim_argv[i] << " ";
+    93	    }
+    94	    std::cout << std::endl;
+    95	
+    96	    // Initialize HTSim session
+    97	    HTSimNetworkApi::htsim_info.nodes = npus_count;
+    98	    // Choose protocol
+    99	    auto& ht = HTSimSession::init(&HTSimNetworkApi::htsim_info, htsim_argc, htsim_argv, proto);
+   100	
+   101	    // Initiate simulation
+   102	    for (int i = 0; i < npus_count; i++) {
+   103	        systems[i]->workload->fire();
+   104	    }
+   105	
+   106	    // run HTSim
+   107	    ht.run(&HTSimNetworkApi::htsim_info);
+   108	
+   109	    // check if terminated properly
+   110	    if (!completion_tracker.get()->all_finished()) {
+   111	        std::cout << "Warning: Simulation timed out." << std::endl;
+   112	    }
+   113	
+   114	    // terminate simulation
+   115	    AstraSim::LoggerFactory::shutdown();
+   116	
+   117	    ht.finish();
+   118	    return 0;
+   119	}
+
+### SECTION I: HTSimProtoTcp.cc option region (seeding at :102)
+    55	    eventlist.setEndtime(timeFromSec(4));
+    56	    c = std::make_unique<Clock>(timeFromSec(50 / 100.), eventlist);
+    57	    no_of_nodes = tm->nodes;
+    58	    linkspeed = speedFromMbps((double)HOST_NIC);
+    59	
+    60	    int i = 1;
+    61	    filename << "logout.dat";
+    62	
+    63	    while (i<argc) {
+    64	        if (!strcmp(argv[i],"-o")){
+    65	            filename.str(std::string());
+    66	            filename << argv[i+1];
+    67	            i++;
+    68	        }
+    69	        else if (!strcmp(argv[i],"-sub")){
+    70	            subflow_count = atoi(argv[i+1]);
+    71	            i++;
+    72	        } else if (!strcmp(argv[i],"-nodes")){
+    73	            no_of_nodes = atoi(argv[i+1]);
+    74	            std::cout << "no_of_nodes "<<no_of_nodes << std::endl;
+    75	            i++;
+    76	        } else if (!strcmp(argv[i], "-topo")) {
+    77	            topo_file = argv[i + 1];
+    78	            cout << "FatTree topology input file: " << topo_file << endl;
+    79	            i++;
+    80	        } else if (!strcmp(argv[i], "UNCOUPLED"))
+    81	            algo = UNCOUPLED;
+    82	        else if (!strcmp(argv[i], "COUPLED_INC"))
+    83	            algo = COUPLED_INC;
+    84	        else if (!strcmp(argv[i], "FULLY_COUPLED"))
+    85	            algo = FULLY_COUPLED;
+    86	        else if (!strcmp(argv[i], "COUPLED_TCP"))
+    87	            algo = COUPLED_TCP;
+    88	        else if (!strcmp(argv[i], "COUPLED_SCALABLE_TCP"))
+    89	            algo = COUPLED_SCALABLE_TCP;
+    90	        else if (!strcmp(argv[i], "COUPLED_EPSILON")) {
+    91	            algo = COUPLED_EPSILON;
+    92	            if (argc > i+1){
+    93	                epsilon = atof(argv[i+1]);
+    94	                i++;
+    95	            }
+    96	            printf("Using epsilon %f\n", epsilon);
+    97	        } else
+    98	            exit_error(argv[0]);
+    99	
+   100	        i++;
+   101	    }
+   102	    srand(time(NULL));
+   103	
+   104	    std::cout << "Using subflow count " << subflow_count << std::endl;
+   105	    std::cout << "requested nodes " << no_of_nodes << std::endl;
+   106	
+   107	
+   108	    std::cout <<  "Using algo="<<algo<< " epsilon=" << epsilon << std::endl;
+   109	    // prepare the loggers
+   110	
+   111	    std::cout << "Logging to " << filename.str() << std::endl;
+   112	    logfile = std::make_unique<Logfile>(filename.str(), eventlist);
+   113	
+   114	#if PRINT_PATHS
+   115	    filename << ".paths";
+   116	    std::cout << "Logging path choices to " << filename.str() << std::endl;
+   117	    std::ofstream paths(filename.str().c_str());
+   118	    if (!paths){
+   119	        std::cout << "Can't open for writing paths file!"<< std::endl;
+   120	        exit(1);
+   121	    }
+   122	#endif
+   123	
+   124	    logfile->setStartTime(timeFromSec(0));
+   125	    sinkLogger = std::make_unique<TcpSinkLoggerSampling>(timeFromMs(1000), eventlist);
+   126	    logfile->addLogger(*sinkLogger);
+   127	
+   128	    tcpRtxScanner = std::make_unique<TcpRtxTimerScanner>(timeFromMs(10), eventlist);
+   129	    qlf = std::make_unique<QueueLoggerFactory>(logfile.get(), QueueLoggerFactory::LOGGER_SAMPLING, eventlist);
+   130	    qlf->set_sample_period(timeFromUs(1000.0));
+   131	
+   132	#if USE_FIRST_FIT
+   133	    if (subflow_count==1){
+   134	        ff = new FirstFit(timeFromMs(FIRST_FIT_INTERVAL),eventlist);
+   135	    }
+   136	#endif
+   137	
+   138	#ifdef FAT_TREE
+   139	
+   140	if (topo_file) {
+   141	
+   142	    FatTreeTopology* top_ = FatTreeTopology::load(topo_file, qlf.get(), eventlist, memFromPkt(8),
+   143	    RANDOM, FAIR_PRIO);
+   144	    top = std::unique_ptr<FatTreeTopology>(top_);
+   145	
+   146	    if (top->no_of_nodes() != no_of_nodes) {
+   147	        std::cerr << "Mismatch between connection matrix (" << no_of_nodes
+   148	        << " nodes) and topology (" << top->no_of_nodes() << " nodes)" << endl;
+   149	        exit(1);
+   150	    }
+   151	} else {
+   152	        top = std::make_unique<FatTreeTopology>(no_of_nodes, linkspeed, memFromPkt(8), qlf.get(), &eventlist,ff,RANDOM,0);
+   153	    }
+   154	#endif
+   155	
+   156	#ifdef OV_FAT_TREE
+   157	    top = std::make_unique<OversubscribedFatTreeTopology>(logfile.get(), &eventlist,ff);
+   158	#endif
+   159	
+   160	#ifdef MH_FAT_TREE
+   161	    top = std::make_unique<MultihomedFatTreeTopology>(logfile.get(), &eventlist,ff);
+   162	#endif
+   163	
+   164	#ifdef STAR
+   165	    top = std::make_unique<StarTopology>(logfile.get(), &eventlist,ff);
+   166	#endif
+   167	
+   168	#ifdef BCUBE
+   169	    top = std::make_unique<BCubeTopology>(logfile.get(),&eventlist,ff);
+   170	    std::cout << "BCUBE " << K << std::endl;
+   171	#endif
+   172	
+   173	#ifdef VL2
+   174	    top = std::make_unique<VL2Topology>(logfile.get(),&eventlist,ff);
+   175	#endif
+### SECTION J: which CmdLineParser does the htsim frontend use
+--- diff vs analytical parser (empty = identical):
+diff: /opt/astra-sim/astra-sim/network_frontend/htsim/common/CmdLineParser.cc: No such file or directory
+
+### SECTION K: HTSimProto enum
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh:15:enum class HTSimProto {
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh:15:enum class HTSimProto {
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh-16-    None,
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh-17-    Tcp
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh-18-};
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh-19-
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh-20-std::stringstream& operator>> (std::stringstream& is, HTSimProto& proto);
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.hh-21-
+
+### SECTION L: which topology ifdef is compiled
+32:set(srcs_htsim_extern   ${HTSIM_DIR}/datacenter/connection_matrix.cpp
+33:                        ${HTSIM_DIR}/datacenter/fat_tree_switch.cpp
+34:                        ${HTSIM_DIR}/datacenter/fat_tree_topology.cpp
+35:                        ${HTSIM_DIR}/datacenter/firstfit.cpp
+61:target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/network_backend/csg-htsim/sim/datacenter/)
+
+### SECTION M: logout.dat / idmap.txt writers in csg-htsim
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/EXAMPLES/collateral/run_dctcp_collateral.sh
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/EXAMPLES/collateral/run_dctcp_collateral_lossless.sh
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/EXAMPLES/collateral/run_ndp_collateral.sh
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_eqds.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_hpcc.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_ndp.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_roce.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_swift.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_tcp.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_dctcp_incast_collateral.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_dctcp_incast_collateral_lossless.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_dctcp_permutation.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_hpcc.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp2.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_alltoall.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_camcube_permutation.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_dragonfly_permutation.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_in_out.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_incast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_incast2.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_incast2b.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_incast_collateral.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_incast_shortflows.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_incast_tor.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_outcast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_outcast_incast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_outcast_shortflows.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_oversubscribed.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_permutation.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_permutation_fail.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_permutation_incast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_permutation_lossless.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_permutation_tor.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_random.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndp_random_shortflows_tor.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndprts_alltoall.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndprts_outcast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndprts_outcast_incast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndprts_permutation_incast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndptunnel_incast_shortflows.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_ndptunnel_permutation.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_swift_incast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_swift_incast2.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_swift_incast2b.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_swift_incast3.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_tcp_dragonfly_permutation.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_tcp_outcast_incast.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_tcp_perm_shortflows.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/old_tests/main_tcp_permutation.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/bcube_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/connection_matrix.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/dragon_fly_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_switch.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/firstfit.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/generic_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/htsim_eqds
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/htsim_hpcc
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/htsim_ndp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/htsim_roce
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/htsim_swift
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/htsim_tcp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_eqds.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_hpcc.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_ndp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_roce.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_swift.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main_tcp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/multihomed_fat_tree_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/oversubscribed_fat_tree_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/shortflows.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/star_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/vl2_topology.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggers.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggertypes.h
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim-tests/dumbell_hpcc/test_config.json
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim-tests/dumbell_ndptunnel/test_config.json
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim-tests/dumbell_roce/test_config.json
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim-tests/dumbell_tcp/test_config.json
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim-tests/multihop_swift2/test_config.json
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim-tests/trigger_test/test_config.json
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_bidir_ndp.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_bidir_swift.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_hpcc.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_ndp.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_ndptunnel.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_roce.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_strack.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_swift.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_tcp.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_multihop_swift.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_multihop_swift2.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_multipath_swift.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_trigger_test.cpp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_bidir_ndp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_bidir_swift
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_dumbell_hpcc
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_dumbell_ndp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_dumbell_ndptunnel
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_dumbell_roce
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_dumbell_strack
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_dumbell_swift
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_dumbell_tcp
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_multihop_swift
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_multihop_swift2
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_multipath_swift
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/htsim_trigger_test
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_bidir_ndp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_bidir_swift.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_hpcc.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_ndp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_ndptunnel.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_roce.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_strack.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_swift.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_dumbell_tcp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_multihop_swift.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_multihop_swift2.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_multipath_swift.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tests/main_trigger_test.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/aeolusqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/callback_pipe.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/cbr.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/cbrpacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/clock.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/compositeprioqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/compositequeue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/config.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/cpqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/dctcp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/dctcp_transfer.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ecnprioqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ecnqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/eqds.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/eqds_logger.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/eqdspacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/eventlist.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/fairpullqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/hpcc.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/hpccpacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/logfile.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggers.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/meter.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/mtcp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndp_transfer.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndppacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndptunnel.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndptunnelpacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/network.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/pipe.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/priopullqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/prioqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/qcn.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/queue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/queue_lossless.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/queue_lossless_input.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/queue_lossless_output.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/randomqueue.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/roce.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/rocepacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/strack.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/strackpacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/swift.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/swift_scheduler.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/swiftpacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/switch.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp_periodic.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp_transfer.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tcppacket.o
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/trigger.o
+
+### SECTION N: Logfile/LoggerTool write path
+nl: /opt/astra-sim/extern/network_backend/csg-htsim/sim/loggertool.cpp: No such file or directory
+
+### SECTION O: tcp.cpp flow-finish print unit
+
+### SECTION P: RNG consumers (determinism anchors, re-confirmed at pin)
+102:    srand(time(NULL));
+246:        choice = rand()%net_paths[src][dst]->size();
+250:        choice = rand()%net_paths[src][dst]->size();
+257:            choice = rand()%net_paths[src][dst]->size();
+261:        choice = rand()%net_paths[src][dst]->size();
+286:            choice = rand()%net_paths[src][dst]->size();
+303:        extrastarttime = 0 * drand();
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/compositequeue.cpp:72:        if ((uint64_t)random() < p) {
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/aeolusqueue.cpp:81:        if ((uint64_t)random() < p) {
+9:double drand() {
+10:    int r=rand();
+18:    return (int)((double)xm/pow(drand(),oneoveralpha));
+22:    return -log(drand())/lambda;
+### SECTION Q: where common/CmdLineParser.hh resolves from (htsim CMakeLists includes)
+     1	# CMake Requirement
+     2	cmake_minimum_required(VERSION 3.15)
+     3	
+     4	set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+     5	
+     6	# C++ requirement
+     7	set(CMAKE_CXX_STANDARD 17)
+     8	set(CMAKE_CXX_STANDARD_REQUIRED ON)
+     9	
+    10	# Set the build type to Release if not specified
+    11	if (NOT CMAKE_BUILD_TYPE)
+    12	    set(CMAKE_BUILD_TYPE Release)
+    13	endif ()
+    14	
+    15	# Setup project
+    16	project(AstraSim_HTSim)
+    17	
+    18	# Compilation target
+    19	set(BUILDTARGET "all" CACHE STRING "Compilation target ([all])")
+    20	
+    21	# Include src files to compile
+    22	file(GLOB srcs_common
+    23	        ${CMAKE_CURRENT_SOURCE_DIR}/../analytical/common/*.cc
+    24	)
+    25	
+    26	file(GLOB srcs_htsim
+    27	        ${CMAKE_CURRENT_SOURCE_DIR}/*.cc
+    28	)
+    29	
+    30	set (HTSIM_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/network_backend/csg-htsim/sim)
+    31	
+    32	set(srcs_htsim_extern   ${HTSIM_DIR}/datacenter/connection_matrix.cpp
+    33	                        ${HTSIM_DIR}/datacenter/fat_tree_switch.cpp
+    34	                        ${HTSIM_DIR}/datacenter/fat_tree_topology.cpp
+    35	                        ${HTSIM_DIR}/datacenter/firstfit.cpp
+    36	)
+    37	
+    38	file(GLOB srcs_htsim_proto
+    39	        ${CMAKE_CURRENT_SOURCE_DIR}/proto/*.cc
+    40	)
+    41	
+    42	add_executable(AstraSim_HTSim ${srcs_htsim} ${srcs_common} ${srcs_htsim_extern} ${srcs_htsim_proto})
+    43	target_sources(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/HTSimMain.cc)
+    44	
+    45	# Link libraries
+    46	target_link_libraries(AstraSim_HTSim LINK_PRIVATE AstraSim)
+    47	target_link_libraries(AstraSim_HTSim LINK_PRIVATE Analytical_Congestion_Unaware)
+    48	
+    49	# Add HTSim library
+    50	add_custom_target(htsim COMMAND make WORKING_DIRECTORY ${HTSIM_DIR})
+    51	target_link_libraries(AstraSim_HTSim LINK_PRIVATE ${HTSIM_DIR}/libhtsim.a)
+    52	add_dependencies(AstraSim_HTSim htsim)
+    53	
+    54	# Include directories
+    55	target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    56	target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/proto)
+    57	target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../analytical/include/)
+    58	target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/)
+    59	target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/helper)
+    60	target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/network_backend/csg-htsim/sim/)
+    61	target_include_directories(AstraSim_HTSim PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/network_backend/csg-htsim/sim/datacenter/)
+    62	
+    63	# Properties
+    64	set_target_properties(AstraSim_HTSim PROPERTIES COMPILE_WARNING_AS_ERROR OFF)
+    65	set_target_properties(AstraSim_HTSim
+    66	        PROPERTIES
+    67	        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../bin/
+    68	        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../lib/
+    69	        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/../lib/
+    70	)
+
+### SECTION R: idmap writer
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggers.cpp:14:    _idmap.push_back(logged);
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggers.cpp:17:void LoggedManager::dump_idmap() {
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggers.cpp:18:    std::ofstream fout("idmap.txt");
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggers.cpp:19:    for (size_t i = 0; i < _idmap.size(); i++) {
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggers.cpp:20:        fout << _idmap[i]->get_id() << " " << _idmap[i]->_name << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output.cpp:50:        if (!strcmp(argv[i],"-idmap")){
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output.cpp:145:    FILE* idmapfile;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output.cpp:147:    idmapfile = fopen(filename.str().c_str(), "rbS");
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output.cpp:148:    if (idmapfile!=NULL) {
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/parse_output.cpp:151:            if(!fgets(line, 10000, idmapfile)) {
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggertypes.h:30:    void dump_idmap();
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggertypes.h:32:    vector<Logged*> _idmap;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/loggertypes.h:46:    static void dump_idmap() {_logged_manager.dump_idmap();}
+
+### SECTION S: Logfile (logout.dat) writer format
+     1	// -*- c-basic-offset: 4; indent-tabs-mode: nil -*-        
+     2	#define _CRT_SECURE_NO_DEPRECATE  // For Visual Studio: this allows the unsafe operation fopen() without issuing a warning
+     3	#include "logfile.h"
+     4	#include <iostream>
+     5	#include <sstream>
+     6	#include <iomanip>
+     7	#include <ios>
+     8	
+     9	RawLogEvent::RawLogEvent(double time, uint32_t type, uint32_t id, uint32_t ev, 
+    10	                         double val1, double val2, double val3, string name = "") :
+    11	    _time(time), _type(type), _id(id), _ev(ev - 100*type), _val1(val1), _val2(val2), _val3(val3),_name(name)
+    12	{
+    13	}
+    14	
+    15	
+    16	string RawLogEvent::str() {
+    17	    stringstream ss;
+    18	    ss << fixed << setprecision(6) << _time;
+    19	    ss << " Type=" << _type << " ID=" << _id  << " EV=" << _ev 
+    20	       << " VAL1=" << _val1 << " VAL2=" << _val2 << " VAL3=" << _val3;        
+    21	    return ss.str();
+    22	}
+    23	
+    24	
+    25	Logfile::Logfile(const string& filename, EventList& eventlist) 
+    26	: _starttime(0), _eventlist(eventlist), 
+    27	  _preamble(ios_base::out | ios_base::in), 
+    28	  _logfilename(filename), _numRecords(0)
+    29	{
+    30	    _logfile = fopen(_logfilename.c_str(), "wbS");
+    31	    if (_logfile==NULL) {
+    32	        cerr << "Failed to open logfile " << _logfilename << endl;
+    33	        exit(1);
+    34	    }
+    35	}
+    36	
+    37	Logfile::~Logfile() {
+    38	    if (_logfile != NULL) {
+    39	        fclose(_logfile);
+    40	        transposeLog();
+    41	    }
+    42	}
+    43	
+    44	void
+    45	Logfile::addLogger(Logger& logger) {
+    46	    logger.setLogfile(*this);
+    47	    _loggers.push_back(&logger);
+    48	}
+    49	
+    50	
+    51	void 
+    52	Logfile::write(const string& msg) {
+    53	    _preamble << msg << endl;
+    54	}
+    55	
+    56	void
+    57	Logfile::writeName(Logged& logged) {
+    58	    _preamble << ": " << logged.str() << "=" << logged.get_id() << endl;
+    59	}
+    60	
+    61	void
+    62	Logfile::setStartTime(simtime_picosec starttime) {
+    63	    _starttime=starttime;
+    64	}
+    65	
+    66	void
+    67	Logfile::writeRecord(uint32_t type, uint32_t id, uint32_t ev, 
+    68	                     double val1, double val2, double val3) {
+    69	    uint64_t time = _eventlist.now();
+    70	    if (time<_starttime) return;
+    71	    double time_sec = timeAsSec(time);
+    72	    fwrite(&time_sec, sizeof(double), 1, _logfile);
+    73	    fwrite(&type, sizeof(uint32_t), 1, _logfile);
+    74	    fwrite(&id, sizeof(uint32_t), 1, _logfile);
+    75	    fwrite(&ev, sizeof(uint32_t), 1, _logfile);
+    76	    fwrite(&val1, sizeof(double), 1, _logfile);
+    77	    fwrite(&val2, sizeof(double), 1, _logfile);
+    78	    fwrite(&val3, sizeof(double), 1, _logfile);
+    79	    _numRecords++;
+    80	}
+    81	
+    82	void
+    83	Logfile::transposeLog() {
+    84	    double* timeRec = new double[_numRecords];
+    85	    uint32_t* typeRec = new uint32_t[_numRecords];
+    86	    uint32_t* idRec = new uint32_t[_numRecords];
+    87	    uint32_t* evRec = new uint32_t[_numRecords];
+    88	    double* val1Rec = new double[_numRecords];
+    89	    double* val2Rec = new double[_numRecords];
+    90	    double *val3Rec = new double[_numRecords];
+    91	    FILE* logfile;
+    92	    logfile = fopen(_logfilename.c_str(),"rbS");
+    93	    if (logfile==NULL) {
+    94	        cerr << "Failed to open logfile " << _logfilename << endl;
+    95	        exit(1);
+    96	    }
+    97	    size_t read;
+    98	    double rd;
+    99	    uint32_t ri;
+   100	    int numread;
+   101	    for (numread=0; numread<_numRecords; numread++) {
+   102	        read = fread(&rd, sizeof(double), 1, logfile); if (read<1) break;
+   103	        timeRec[numread] = rd;
+   104	        read = fread(&ri, sizeof(uint32_t), 1, logfile); if (read<1) break;
+   105	        typeRec[numread] = ri;
+   106	        read = fread(&ri, sizeof(uint32_t), 1, logfile); if (read<1) break;
+   107	        idRec[numread] = ri;
+   108	        read = fread(&ri, sizeof(uint32_t), 1, logfile); if (read<1) break;
+   109	        evRec[numread] = ri + 100*typeRec[numread];
+   110	        read = fread(&rd, sizeof(double), 1, logfile); if (read<1) break;
+   111	        val1Rec[numread] = rd;
+   112	        read = fread(&rd, sizeof(double), 1, logfile); if (read<1) break;
+   113	        val2Rec[numread] = rd;
+   114	        read = fread(&rd, sizeof(double), 1, logfile); if (read<1) break;
+   115	        val3Rec[numread] = rd;
+   116	    }
+   117	    fclose(logfile);
+   118	    assert(numread==_numRecords);
+   119	    _preamble << "# numrecords=" << numread << endl;
+   120	    logfile = fopen(_logfilename.c_str(),"wbS");
+   121	    if (logfile==0) {
+   122	        cerr << "Failed to open logfile " << _logfilename << endl;
+   123	        exit(1);
+   124	    }
+   125	    while (true) {
+   126	        if (_preamble.peek()==-1) break;
+   127	        char thisLine[1000];
+   128	        _preamble.getline(&thisLine[0],1000);
+   129	        fputs(thisLine, logfile);
+   130	        fputs("\n", logfile);
+   131	    }
+   132	    fputs("# transpose=0\n",logfile);
+   133	    fputs("# TRACE\n",logfile);
+   134	    for (int i=0; i < numread; i++) {
+   135	        fwrite(&timeRec[i], sizeof(double), 1, logfile);
+   136	        fwrite(&typeRec[i], sizeof(uint32_t), 1, logfile);
+   137	        fwrite(&idRec[i],   sizeof(uint32_t), 1, logfile);
+   138	        fwrite(&evRec[i],   sizeof(uint32_t), 1, logfile);
+   139	        fwrite(&val1Rec[i], sizeof(double), 1, logfile);
+   140	        fwrite(&val2Rec[i], sizeof(double), 1, logfile);
+   141	        fwrite(&val3Rec[i], sizeof(double), 1, logfile);
+   142	    }
+   143	    fclose(logfile);
+   144	    delete[] timeRec;
+   145	    delete[] typeRec;
+   146	    delete[] idRec;
+   147	    delete[] evRec;
+   148	    delete[] val1Rec;
+   149	    delete[] val2Rec;
+   150	}
+
+### SECTION T: loggertypes.h (record types)
+     1	// -*- c-basic-offset: 4; indent-tabs-mode: nil -*-        
+     2	#ifndef LOGGERTYPES_H
+     3	#define LOGGERTYPES_H
+     4	#include <vector>
+     5	
+     6	class Packet;
+     7	class PacketFlow;
+     8	class TcpSrc;
+     9	class NdpSrc;
+    10	class SwiftSrc;
+    11	class SwiftSubflowSrc;
+    12	class STrackSrc;
+    13	class NdpTunnelSrc;
+    14	class NdpLiteSrc;
+    15	class BaseQueue;
+    16	class QcnReactor;
+    17	class RoceSrc;
+    18	class HPCCSrc;
+    19	class QcnQueue;
+    20	class MultipathTcpSrc;
+    21	class Logfile;
+    22	class RawLogEvent;
+    23	class Logged;
+    24	
+    25	// keep track of all logged items so we can do ID->Name mapping later
+    26	class LoggedManager {
+    27	public:
+    28	    LoggedManager();
+    29	    void add_logged(Logged* logged);
+    30	    void dump_idmap();
+    31	private:
+    32	    vector<Logged*> _idmap;
+    33	};
+    34	
+    35	class Logged {
+    36	 public:
+    37	    typedef uint32_t id_t;
+    38	    Logged(const string& name) {_name=name; _log_id=LASTIDNUM; Logged::LASTIDNUM++; _logged_manager.add_logged(this);}
+    39	    virtual ~Logged() {}
+    40	    virtual void setName(const string& name) { _name=name; }
+    41	    virtual const string& str() { return _name; };
+    42	    inline id_t get_id() const {return _log_id;}
+    43	    // usually things get their own IDs, but flows, for example, get associated with the sender ID
+    44	    void set_id(id_t id) {assert(id < LASTIDNUM); _log_id = id;}
+    45	    string _name;
+    46	    static void dump_idmap() {_logged_manager.dump_idmap();}
+    47	 private:
+    48	    id_t _log_id;
+    49	    static id_t LASTIDNUM;
+    50	    static LoggedManager _logged_manager;
+    51	};
+    52	
+    53	class Logger {
+    54	    friend class Logfile;
+    55	 public:
+    56	    enum EventType { QUEUE_EVENT=0, TCP_EVENT=1, TCP_STATE=2, TRAFFIC_EVENT=3, 
+    57	                     QUEUE_RECORD=4, QUEUE_APPROX=5, TCP_RECORD=6, 
+    58	                     QCN_EVENT=7, QCNQUEUE_EVENT=8, 
+    59	                     TCP_TRAFFIC=9, NDP_TRAFFIC=10, 
+    60	                     TCP_SINK = 11, MTCP = 12, ENERGY = 13, 
+    61	                     TCP_MEMORY = 14, NDP_EVENT=15, NDP_STATE=16, NDP_RECORD=17, 
+    62	                     NDP_SINK = 18, NDP_MEMORY = 19,
+    63	                     SWIFT_EVENT=20, SWIFT_STATE=21, SWIFT_TRAFFIC=22,
+    64	                     SWIFT_SINK=23, SWIFT_MEMORY=24,
+    65	                     ROCE_TRAFFIC=25,ROCE_SINK=26,
+    66	                     HPCC_TRAFFIC=27,HPCC_SINK=28,
+    67	                     STRACK_EVENT=29, STRACK_STATE=30, STRACK_TRAFFIC=31,
+    68	                     STRACK_SINK=32, STRACK_MEMORY=33,
+    69	                     EQDS_EVENT=38, EQDS_STATE=39, EQDS_RECORD=40,
+    70	                     EQDS_SINK = 41, EQDS_MEMORY = 42, EQDS_TRAFFIC = 43,
+    71	                     FLOW_EVENT = 44 };
+    72	    static string event_to_str(RawLogEvent& event);
+    73	    Logger() {};
+    74	    virtual ~Logger(){};
+    75	 protected:
+    76	    void setLogfile(Logfile& logfile) { _logfile=&logfile; }
+    77	    Logfile* _logfile;
+    78	};
+    79	
+    80	class FlowEventLogger: public Logger {
+    81	public:
+    82	    enum FlowEvent {START = 0, FINISH = 1};
+    83	    virtual void logEvent(PacketFlow& flow, Logged& location, FlowEvent ev, mem_b bytes, uint64_t pkts) =0;
+    84	    virtual ~FlowEventLogger(){};
+    85	};
+    86	
+    87	class TrafficLogger : public Logger {
+    88	 public:
+    89	    enum TrafficEvent { PKT_ARRIVE=0, PKT_DEPART=1, PKT_CREATESEND=2, PKT_DROP=3, PKT_RCVDESTROY=4, PKT_CREATE=5, PKT_SEND=6, PKT_TRIM=7, PKT_BOUNCE=8 };
+    90	    virtual void logTraffic(Packet& pkt, Logged& location, TrafficEvent ev) =0;
+    91	    virtual ~TrafficLogger(){};
+    92	};
+    93	
+    94	class QueueLogger : public Logger  {
+    95	 public:
+    96	    enum QueueEvent { PKT_ENQUEUE=0, PKT_DROP=1, PKT_SERVICE=2, PKT_TRIM=3, PKT_BOUNCE=4, PKT_UNQUEUE=5, PKT_ARRIVE=6 };
+    97	    enum QueueRecord { CUM_TRAFFIC=0 };
+    98	    enum QueueApprox { QUEUE_RANGE=0, QUEUE_OVERFLOW=1 };
+    99	    virtual void logQueue(BaseQueue& queue, QueueEvent ev, Packet& pkt) = 0;
+   100	    virtual ~QueueLogger(){};
+   101	};
+   102	
+   103	class MultipathTcpLogger  : public Logger {
+   104	 public:
+   105	    enum MultipathTcpEvent { CHANGE_A=0, RTT_UPDATE=1, WINDOW_UPDATE=2, RATE=3, MEMORY=4 };
+   106	
+   107	    virtual void logMultipathTcp(MultipathTcpSrc &src, MultipathTcpEvent ev) =0;
+   108	    virtual ~MultipathTcpLogger(){};
+   109	};
+   110	
+   111	class EnergyLogger  : public Logger {
+   112	 public:
+   113	    enum EnergyEvent { DRAW=0 };
+   114	
+   115	    virtual ~EnergyLogger(){};
+   116	};
+   117	
+   118	class TcpLogger  : public Logger {
+   119	 public:
+   120	    enum TcpEvent { TCP_RCV=0, TCP_RCV_FR_END=1, TCP_RCV_FR=2, TCP_RCV_DUP_FR=3, 
+   121	                    TCP_RCV_DUP=4, TCP_RCV_3DUPNOFR=5, 
+   122	                    TCP_RCV_DUP_FASTXMIT=6, TCP_TIMEOUT=7 };
+   123	    enum TcpState { TCPSTATE_CNTRL=0, TCPSTATE_SEQ=1 };
+   124	    enum TcpRecord { AVE_CWND=0 };
+   125	    enum TcpSinkRecord { RATE = 0 };
+   126	    enum TcpMemoryRecord  {MEMORY = 0};
+   127	
+   128	    virtual void logTcp(TcpSrc &src, TcpEvent ev) =0;
+   129	    virtual ~TcpLogger(){};
+   130	};
+   131	
+   132	class SwiftLogger  : public Logger {
+   133	 public:
+   134	    enum SwiftEvent { SWIFT_RCV=0, SWIFT_RCV_FR_END=1, SWIFT_RCV_FR=2, SWIFT_RCV_DUP_FR=3,
+   135	                    SWIFT_RCV_DUP=4, SWIFT_RCV_3DUPNOFR=5,
+   136	                    SWIFT_RCV_DUP_FASTXMIT=6, SWIFT_TIMEOUT=7 };
+   137	    enum SwiftState { SWIFTSTATE_CNTRL=0, SWIFTSTATE_SEQ=1 };
+   138	    enum SwiftRecord { AVE_CWND=0 };
+   139	    enum SwiftSinkRecord { RATE = 0 };
+   140	    enum SwiftMemoryRecord  {MEMORY = 0};
+   141	
+   142	    virtual void logSwift(SwiftSubflowSrc &src, SwiftEvent ev) =0;
+   143	    virtual ~SwiftLogger(){};
+   144	};
+   145	
+   146	class STrackLogger  : public Logger {
+   147	 public:
+   148	    enum STrackEvent { STRACK_RCV=0, STRACK_RCV_FR_END=1, STRACK_RCV_FR=2, STRACK_RCV_DUP_FR=3, 
+   149	                    STRACK_RCV_DUP=4, STRACK_RCV_3DUPNOFR=5, 
+   150	                    STRACK_RCV_DUP_FASTXMIT=6, STRACK_TIMEOUT=7 };
+   151	    enum STrackState { STRACKSTATE_CNTRL=0, STRACKSTATE_SEQ=1 };
+   152	    enum STrackRecord { AVE_CWND=0 };
+   153	    enum STrackSinkRecord { RATE = 0 };
+   154	    enum STrackMemoryRecord  {MEMORY = 0};
+   155	
+   156	    virtual void logSTrack(STrackSrc &src, STrackEvent ev) =0;
+   157	    virtual ~STrackLogger(){};
+   158	};
+   159	
+   160	class NdpLogger  : public Logger {
+   161	 public:
+   162	    enum NdpEvent { NDP_RCV=0, NDP_RCV_FR_END=1, NDP_RCV_FR=2, NDP_RCV_DUP_FR=3, 
+   163	                    NDP_RCV_DUP=4, NDP_RCV_3DUPNOFR=5, 
+   164	                    NDP_RCV_DUP_FASTXMIT=6, NDP_TIMEOUT=7 };
+   165	    enum NdpState { NDPSTATE_CNTRL=0, NDPSTATE_SEQ=1 };
+   166	    enum NdpRecord { AVE_CWND=0 };
+   167	    enum NdpSinkRecord { RATE = 0 };
+   168	    enum NdpMemoryRecord  {MEMORY = 0};
+   169	
+   170	    virtual void logNdp(NdpSrc &src, NdpEvent ev) =0;
+   171	    virtual ~NdpLogger(){};
+   172	};
+   173	
+   174	class RoceLogger  : public Logger {
+   175	 public:
+   176	    enum RoceEvent { ROCE_RCV=0, ROCE_TIMEOUT=1 };
+   177	    enum RoceState { ROCESTATE_ON=0, ROCESTATE_OFF=0 };
+   178	    enum RoceRecord { AVE_RATE=0 };
+   179	    enum RoceSinkRecord { RATE = 0 };
+   180	    enum RoceMemoryRecord  {MEMORY = 0};
+   181	
+   182	    virtual void logRoce(RoceSrc &src, RoceEvent ev) =0;
+   183	    virtual ~RoceLogger(){};
+   184	};
+   185	
+   186	class HPCCLogger  : public Logger {
+   187	 public:
+   188	    enum HPCCEvent { HPCC_RCV=0, HPCC_TIMEOUT=1 };
+   189	    enum HPCCState { HPCCSTATE_ON=1, HPCCSTATE_OFF=0 };
+   190	    enum HPCCRecord { AVE_RATE=0 };
+   191	    enum HPCCSinkRecord { RATE = 0 };
+   192	    enum HPCCMemoryRecord  {MEMORY = 0};
+   193	
+   194	    virtual void logHPCC(HPCCSrc &src, HPCCEvent ev) =0;
+   195	    virtual ~HPCCLogger(){};
+   196	};
+   197	
+   198	class NdpTunnelLogger  : public Logger {
+   199	 public:
+   200	    enum NdpEvent { NDP_RCV=0, NDP_RCV_FR_END=1, NDP_RCV_FR=2, NDP_RCV_DUP_FR=3, 
+   201	                    NDP_RCV_DUP=4, NDP_RCV_3DUPNOFR=5, 
+   202	                    NDP_RCV_DUP_FASTXMIT=6, NDP_TIMEOUT=7 };
+   203	    enum NdpState { NDPSTATE_CNTRL=0, NDPSTATE_SEQ=1 };
+   204	    enum NdpRecord { AVE_CWND=0 };
+   205	    enum NdpSinkRecord { RATE = 0 };
+   206	    enum NdpMemoryRecord  {MEMORY = 0};
+   207	
+   208	    virtual void logNdp(NdpTunnelSrc &src, NdpEvent ev) =0;
+   209	    virtual ~NdpTunnelLogger(){};
+   210	};
+   211	
+   212	class NdpLiteLogger  : public Logger {
+   213	 public:
+   214	    enum NdpLiteEvent { NDP_RCV=0, NDP_RCV_FR_END=1, NDP_RCV_FR=2, NDP_RCV_DUP_FR=3, 
+   215	                    NDP_RCV_DUP=4, NDP_RCV_3DUPNOFR=5, 
+   216	                    NDP_RCV_DUP_FASTXMIT=6, NDP_TIMEOUT=7 };
+   217	    enum NdpLiteState { NDPSTATE_CNTRL=0, NDPSTATE_SEQ=1 };
+   218	    enum NdpLiteRecord { AVE_CWND=0 };
+   219	    enum NdpLiteSinkRecord { RATE = 0 };
+   220	    enum NdpLiteMemoryRecord  {MEMORY = 0};
+   221	
+   222	    virtual void logNdpLite(NdpLiteSrc &src, NdpLiteEvent ev) =0;
+   223	    virtual ~NdpLiteLogger(){};
+   224	};
+   225	
+   226	class QcnLogger  : public Logger {
+   227	 public:
+   228	    enum QcnEvent { QCN_SEND=0, QCN_INC=1, QCN_DEC=2, QCN_INCD=3, QCN_DECD=4 };
+   229	    enum QcnQueueEvent { QCN_FB=0, QCN_NOFB=1 };
+   230	    virtual void logQcn(QcnReactor &src, QcnEvent ev, double var3) =0;
+   231	    virtual void logQcnQueue(QcnQueue &src, QcnQueueEvent ev, double var1, double var2, double var3) =0;
+   232	    virtual ~QcnLogger(){};
+   233	};
+   234	
+   235	class ReorderBufferLogger : public Logger {
+   236	public:
+   237	    enum BufferEvent {BUF_ENQUEUE=0, BUF_DEQUEUE};
+   238	    virtual void logBuffer(BufferEvent ev)=0;
+   239	};
+   240	
+   241	#endif
+
+### SECTION U: tcpsrc finished print + units
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/eqds.cpp:468:        cout << "Flow " << _name << " flowId " << flowId() << " " << _nodename << " finished at " << timeAsUs(eventlist().now()) << " total packets " << cum_ack << " RTS " << _rts_packets_sent << " total bytes " << ((mem_b)cum_ack - _rts_packets_sent) * _mss << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/hpcc.cpp:211:        cout << "Flow " << _name << " finished at " << timeAsUs(eventlist().now()) << " total bytes " << ackno << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/mpswift.cpp:328:	cout << "Flow " << _name << " finished at " << timeAsUs(eventlist().now()) << " total bytes " << ackno << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndp-orig.cpp:528:      cout << "Flow " << _name << " finished at " << timeAsUs(eventlist().now()) << " total bytes " << cum_ackno << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndp.cpp:661:        cout << "Flow " << _name << " flow_id " << flow_id() << " finished at " << timeAsUs(eventlist().now()) << " total bytes " << cum_ackno << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/ndptunnel.cpp:300:        cout << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/roce.cpp:203:        cout << "Flow " << _name << " " << get_id() << " finished at " << timeAsUs(eventlist().now()) << " total bytes " << ackno << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/swift.cpp:799:        cout << "Flow " << _name << " finished at " << timeAsUs(eventlist().now()) << " total bytes " << ds_ackno << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/swift_new.cpp:651:	cout << "Flow " << _name << " finished at " << timeAsUs(eventlist().now()) << " total bytes " << ackno << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp.cpp:187:        cout << "Flow " << nodename() << " finished at " << timeAsMs(eventlist().now()) << endl;        
+
+### SECTION V: HOST_NIC default link speed
+/opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc:58:    linkspeed = speedFromMbps((double)HOST_NIC);
+/opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc:340:    logfile->write("# corelinkrate = " + ntoa(HOST_NIC*CORE_TO_HOST) + " pkt/sec");
+### SECTION W: what HTSimNetworkApi consumes from the analytical topology
+37:     * Set the topology to be used.
+39:     * @param topology_ptr pointer to the to
+41:    static void set_topology(std::shared_ptr<Topology> topology_ptr) noexcept;
+79:    /// topology
+80:    static std::shared_ptr<Topology> topology;
+19:unsigned HTSimNetworkApi::flow_id;
+70:int HTSimNetworkApi::sim_send(void* const buffer,
+82:    flow_id++;
+83:    auto flow_info = FlowInfo(src, dst, count, tag);
+85:    // Trigger HTSim to schedule flow
+86:    HTSimSession::instance().send_flow(flow_info, flow_id, msg_handler,
+
+### SECTION X: sim time end / timeout warning sites
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimMain.cc:111:        std::cout << "Warning: Simulation timed out." << std::endl;
+/opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.cc:200:    eventlist.setEndtime(now);
+/opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc:55:    eventlist.setEndtime(timeFromSec(4));
+
+### SECTION Y: 12000-byte queue default + HOST_NIC define
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/main.h:9:#define HOST_NIC 100000 // host nic speed in Mbps
+### SECTION Z: stdout line-grammar anchors (htsim stream)
+---
+/opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc:105:    std::cout << "requested nodes " << no_of_nodes << std::endl;
+/opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc:177:    std::cout << "actual nodes " << no_of_nodes << std::endl;
+### SECTION Z2: broader anchor search for stdout flow lines
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/mpswift.cpp:566:	 << " CWND "<< _swift_cwnd/_mss << " FAST RECOVERY? " << 	_in_fast_recovery << " Flow ID " 
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/strack.cpp:458:         << " CWND "<< _strack_cwnd/mss() << " FAST RECOVERY? " <<         _in_fast_recovery << " Flow ID " 
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/swift.cpp:478:         << " CWND "<< _swift_cwnd/mss() << " FAST RECOVERY? " <<         _in_fast_recovery << " Flow ID " 
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/swift_new.cpp:381:	 << " CWND "<< _swift_cwnd/mss() << " FAST RECOVERY? " << 	_in_fast_recovery << " Flow ID " 
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp.cpp:550:         << " CWND "<< _cwnd/_mss << " FAST RECOVERY? " <<         _in_fast_recovery << " Flow ID " 
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp.cpp:700:        std::cout << "Finish receiving flow " << tag << " from " << src_id << " to " << dst_id << std::endl;
+### SECTION Z3: remaining stdout anchors
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_topology.cpp:1044:        //cout << "pathcount " << paths->size() << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_topology.cpp:1123:        cout << "pathcount " << paths->size() << endl;
+/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_topology.cpp:1239:        cout << "pathcount " << paths->size() << endl;
+   545	    if (_highest_sent == 0) 
+   546	        return;
+   547	
+   548	    cout <<"At " << now/(double)1000000000<< " RTO " << _rto/1000000000 << " MDEV " 
+   549	         << _mdev/1000000000 << " RTT "<< _rtt/1000000000 << " SEQ " << _last_acked / _mss << " HSENT "  << _highest_sent 
+   550	         << " CWND "<< _cwnd/_mss << " FAST RECOVERY? " <<         _in_fast_recovery << " Flow ID " 
+   551	         << str()  << endl;
+   552	

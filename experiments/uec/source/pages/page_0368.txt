@@ -1,0 +1,36 @@
+ 368 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-66 - Triggers for Generating a NACK 
+Event Requirement Description 
+Local packet drop MUST Valid packet is received and is dropped due to local 
+resource limitations (e.g., lack of receive packet buffer) 
+Trimmed packet is received MUST Trimmed packet is received 
+ACK Request CP is received MUST CP is received and the requested PSN has not been 
+received 
+Invalid UET header or unexpected 
+event 
+MUST If a UET header check or PSN state usage or other 
+unexpected event results in an error; see list in Table 
+3-68  
+Packet is received outside 
+Expected_PSN window 
+MUST NOT If a PSN is received outside the valid ACK window 
+described in Section 3.5.12.6, the packet MUST be 
+dropped and the event recorded 
+Invalid packet is received MUST NOT If any network header check fails (outside of UET 
+headers), the packet MUST NOT result in a NACK (e.g., 
+invalid IP header checksum)  
+ 
+Informative Text: 
+An implementation may support a limited NACK packet generation rate, in which case it may not be 
+possible to transmit NACKs at the same rate as received events shown in Table 3-66. In this scenario, 
+the packet may be dropped without generating a NACK. 
+ 
+When a valid NACK or NACK_CCX is received, the base NACK state (as illustrated in Figure 3-84) is always 
+processed. The pds.nack_ccx_state field SHOULD be processed if the NCCX_TYPE is supported. 
+ 
+Figure 3-83 - PDS NACK Format 
+ 
+ 

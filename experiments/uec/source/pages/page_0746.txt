@@ -1,0 +1,38 @@
+ 746 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+per Equation 8. These values can be used to find the SER values with the uncorrelated errors model, 
+from which corresponding UCR values can be found, denoted UCR6, UCR8, and UCR10, respectively. 
+ The relationship between P6, P8, and P10 and UCR (assuming uncorrelated error model) is listed in Table 
+6-14. Figure 6-2 shows this relationship on a log-log scale, on which it is close to a straight line for each 
+of the values. The linear trend equations shown in the figure can be used for numeric conversion. 
+ Table 6-14 - Mapping from UCR to P6, P8, and P10 assuming uncorrelated errors 
+UCR P6 P8 P10 
+1e-22 7.0e-7 1.1e-9 1.0e-12 
+1e-21 1.6e-6 3.3e-9 4.1e-12 
+1e-20 3.8e-6 1.0e-8 1.7e-11 
+1e-19 8.6e-6 3.1e-8 7.1e-11 
+1e-18 2.0e-5 9.6e-8 2.9e-10 
+1e-17 4.5e-5 2.9e-7 1.2e-9 
+1e-16 1.0e-4 8.9e-7 4.9e-9 
+1e-15 2.3e-4 2.7e-6 2.0e-8 
+1e-14 5.0e-4 8.0e-6 8.0e-8 
+1e-13 1.1e-3 2.4e-5 3.2e-7 
+1e-12 2.4e-3 7.0e-5 1.3e-6 
+ 
+UCRest3 is then determined by the highest UCR of the three: 
+𝑼𝑪𝑹𝒆𝒔𝒕𝟑 = 𝐦𝐚𝐱(𝑼𝑪𝑹𝟔, 𝑼𝑪𝑹𝟖, 𝑼𝑪𝑹𝟏𝟎) (Equation 12) 
+ 
+When the counters are read once per minute, the resolution of Pk will not be better than 1e-9, and for 
+some values of k, it may be estimated as 0; in that case, the corresponding UCR can be taken as the 
+minimum value in the table. Values of P10 corresponding to N10=1 may occur occasionally and may be 
+ignored. For better resolution, the value of N10 can be averaged over time. 
+With correlated errors, the calculations of Pk in Equation 10 and of UCR in Equation 11 would not be 
+valid. However, the relationship between Pk and UCR as shown in Table 6-14 is expected to hold for 
+mildly correlated errors (and the accuracy improves for larger values of k). 
+Informative Text: 
+Usage of P6, P8, and P10 is a specific choice that is considered suitable for estimating UCR down to 
+about 1e-20 when registers are read once per minute. Other values of k can be used instead, with 
+calculations adjusted as appropriate, to provide faster measurement or better resolution. Specifically, 
+if there are indications of correlated errors, higher values of k may provide better estimates. 

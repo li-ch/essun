@@ -1,0 +1,43 @@
+ 416 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+actively processing another NACK, the PDC stops transmitting and triggers GoBackN processing 
+starting at PSN = pds.payload = Expected_PSN. 
+a. Actively processing another NACK refers to a previous NACK arrived, and an ACK has not 
+yet arrived after that NACK 
+b. pds.nack_psn indicates the PSN that arrived out of order at the destination. 
+9. If an ACK arrives while processing a GoBackN event, the GoBackN processing for the NACK that 
+triggered the GoBackN event is complete. Transmission continues per normal ROD processing. 
+10. If additional NACKs arrive prior to an ACK and those NACKs have pds.nack_psn > Expected_PSN, 
+pds.payload = Expected_PSN and pds.retx = 0, these NACKs are part of the current GoBackN 
+processing and should not be used to trigger a new GoBackN event. 
+11. If additional NACKs arrive prior to an ACK and those NACKs have pds.payload > Expected_PSN 
+and pds.retx = 0, these NACKs indicate new packet loss and trigger a new GoBackN event. 
+a. Retransmission starts at Expected_PSN = pds.payload 
+12. If additional NACKs arrive prior to an ACK and those NACKs have pds.retx = 1 then one or more 
+of the retransmitted packets was lost 
+a. If this is the first NACK with pds.retx = 1, trigger a new GoBackN event with 
+retransmission starting at Expected_PSN = pds.payload 
+b. If this is not the first NACK with pds.retx = 1, a new GoBackN event with retransmission 
+starting at Expected_PSN = pds.payload may be triggered if pds.payload > 
+Expected_PSN 
+c. Else if not first NACK with with pds.retx = 1 and pds.payload = Expected_PSN, this NACK 
+is part of te current GoBackN processing and should not trigger a new GoBackN event. 
+13. Handling of scenarios where a packet requires transmission more than three times (i.e., initial 
+transmit, retransmit after a NACK with pds.retx = 0 and retransmit again after a NACK with 
+pds.retx = 1) is implementation specific. One option is to fallback to RTO. Alternatively, 
+additional state can be tracked to identify this scenario. 
+This processing is illustrated in Section 3.5.21.3. 
+ROD implementations use the following requirements for PDS ACKs (both forward and return direction): 
+• All ACKs for a ROD PDC MUST be sent in order using the entropy value of the request. 
+• When loss of an ACK with a non-guaranteed delivery SES Response is detected based on 
+CACK_PSN being equal to or higher than the PSN associated with the missing ACK, the PDC 
+MUST infer a UET_DEFAULT_RESPONSE-based CACK_PSN from the next arriving packet. 
+1. If the ACK for the last packet is lost and there is insufficient information to infer the 
+associated SES Response is non-guaranteed, either an RTO_TIMER will expire and an 
+ACK Request CP is sent, or the original PDS Request is retransmitted. 
+• When loss of an ACK with a guaranteed delivery SES Response is detected, one of three actions 
+MUST be taken: 
+1. The source generates an ACK Request CP. 
+▪ ROD PDCs SHOULD generate an ACK Request CP, unless the original packet was 
+a read request; refer to Section 3.5.16.2. 

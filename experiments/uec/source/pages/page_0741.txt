@@ -1,0 +1,42 @@
+ 741 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 6-11 - MTBPE to UCR conversion 
+MTBPE Uncorrectable codeword ratio 
+100 Gb/s 200 Gb/s 400 Gb/s 800 Gb/s 1.6 Tb/s 
+One minute 8.5e-10 4.3e-10 2.1e-10 1.1e-10 5.5e-11 
+One hour 1.4e-11 7.1e-12 3.6e-12 1.8e-12 9.0e-13 
+One day 5.9e-13 3.0e-13 1.5e-13 7.4e-14 3.7e-14 
+One week 8.5e-14 4.2e-14 2.1e-14 1.1e-14 5.5e-15 
+One month 2.0e-14 9.9e-15 4.9e-15 2.5e-15 1.2e-15 
+One year 1.6e-15 8.1e-16 4.1e-16 2.0e-16 1.0e-16 
+10 years 1.6e-16 8.1e-17 4.1e-17 2.0e-17 1.0e-17 
+ 
+Informative Text: 
+It is sometimes suggested that in a network comprising N Ethernet links of the same data rate, the 
+UCR of a single link should be multiplied by N or, equivalently, MTBPE should be divided by N. 
+However, this scaling assumes that all links have the same UCR. In large networks, it is often the case 
+that the UCR of most links is very low, but some links have much higher UCRs than the average. 
+Consequently, it can be expected that the MTBPE on the network depends on the UCR of good links 
+multiplied by N and on the UCR of a small number of the weakest links. The examples in 6.3.3 
+demonstrate this dependence. This provides motivation for identifying the weakest links in the 
+network (which can be done through the methods described in 6.3.2) and taking appropriate 
+measures suitable for the application, e.g., routing traffic away from such links or scheduling 
+replacement of parts. 
+ 
+6.3.2 Estimation of UCR from FEC statistics 
+Ethernet specifications include several RS-FEC counters that can be used to estimate the probability of 
+an RS-FEC codeword to be uncorrectable and thus provide an estimate of the UCR. From the UCR, the 
+MTBPE can be calculated by multiplication with the period of a single codeword. 
+The following counters are defined for Ethernet BASE-R PHY types that include RS-FEC functionality and 
+are mapped to MDIO registers. All registers are defined as clear-on-read and non-rollover. 
+Implementation of these counters and registers, and the method of accessing them, may depend on PCS 
+implementation. 
+• FEC_uncorrected_cw_counter (see [1], subclause 45.2.3.63) is a 32-bit counter that counts once 
+for each codeword that contains errors that were not corrected (i.e., contains more than t 
+symbol errors, where t=15 for the RS(544,514) FEC). 
+• FEC_corrected_cw_counter (see [1], subclause 45.2.3.62) is a 32-bit counter that counts once for 
+each codeword that contains errors that were corrected (i.e., contains between 1 and t symbol 
+errors). 
+• FEC_cw_counter (see [3], subclause 45.2.1.120a) is a 48-bit counter once for each FEC 
+codeword received. Note that this counter is defined as optional in the Ethernet standard. 

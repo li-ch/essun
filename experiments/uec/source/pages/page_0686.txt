@@ -1,0 +1,50 @@
+ 686 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+turn directs LLDP frames to the LLDP entity based on the Ethertype 0x88CC. The information distributed 
+and received in each LLDP protocol data unit (LLDPDU) is stored in one or more databases. Figure 5-17 
+illustrates LLDP and its relationship to its databases designed by the IETF, IEEE 802, UEC, OpenConfig, 
+and others. 
+Organizationally defined local 
+device LLDP YANG 
+extensions (optional)
+Organizationally defined local 
+device LLDP YANG 
+extensions (optional)
+LLDP local system 
+YANG
+LLDP remote systems 
+YANG
+Interface 
+Management
+Other YANG 
+Modules
+System 
+Management
+UEC defined local device 
+LLDP YANG extensions
+UEC defined remote device 
+LLDP YANG extensions
+LLDP Frames
+Remote device
+informaiton
+Local device
+informaiton
+( )
+LLDP
+LLDPDU Transmission and Reception
+Router 
+Management
+Switch 
+Management
+ 
+Figure 5-17 - LLDP Agent With the UE LLDP Databases 
+The UE LLDP database is defined under a UE organizationally defined YANG module. The information 
+within the UE LLDP database is used both by the network management system to discover the 
+capabilities and topology of the network and by the link partners to negotiate the operation of optional 
+UE link features. UE feature negotiation is performed by the local management procedures of each 
+individual feature using the local and remote UE LLDP database information. 
+The format of an LLDP frame is illustrated in Figure 5-18. The LLDPDU contains a series of TLVs 
+formatted as described in [1] . These include three mandatory TLVs—Chassis ID, Port ID, and Time To 
+Live — followed by a series of optional TLVs. The UE organizationally specific LLDP TLVs are included 
+among the optional TLVs. 

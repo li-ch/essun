@@ -1,0 +1,47 @@
+ 568 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+AES-256 [41] per NIST specification SP 800-38B [42]. The KDF input parameters MUST be supported and 
+are summarized in Table 3-134. 
+ 
+Table 3-134 - KDF Parameter Summary for AES-CMAC-256 
+Parameter Value Description 
+Mode Counter Family of KDF 
+MAC  CMAC PRF used in KDF 
+Block Cipher AES-256 128-bit block size 
+Length L 352 bits Length of derived key (Ko) key and IVMask in bits 
+Size of L  16 bits Size of L in bits 
+Size of i 8 bits Size of iteration counter in bits 
+LocationCounter BeforeFixedData Location of counter in the data 
+Counter Encoding Big-endian Both counters MUST be encoded as big-endian (MSB first) 
+binary strings when hashed  
+Label Length 16 bits Supported length of Label field (fixed) in bits 
+Context Length 80 bits/208 bits Supported lengths of Context fields (fixed) in bits 
+iterations (n) 3 Number of PRF calls (generates 384-bit fixed output) 
+Ki size 256 bits KDF input key: SDKi in this document 
+Ko size 256 bits Output or derived key: The SDK in this document 
+IVMask 96 (128 bits) Output of KDF used to hide nonce/IV before it is used in the 
+symmetric cipher. 
+The KDF is a function that derives a key, Ko, or an SDK from an input key Ki or SDKi, label and context. 
+The KDF is constructed from a fixed portion, a constant for all iterations, and a counter used to create 
+outputs larger than a single iteration. The fixed portion (KDF_fixed) consists of a Label, Delimiter (0x00), 
+Context, and Length (L) fields. The Label and Context fields MUST be set based on the kdf-mode and ssi-
+mode. The Length is the bit length of the derived key and MUST be 352 bits for AES-256+ IVMask. In 
+summary, the fixed portion MUST be:  
+ 
+KDF_fixed = Label||0x00||Context||L 
+ 
+Each iteration creates a 128 bit output with this construction. Therefore, three iterations are required. 
+The iteration counter, i, MUST be initialized to 1 and MUST be incremented for each iteration. Only the 
+first 12 bytes of the KDF output are used for the IVMask on the third iteration. The KDF output is used as 
+follows: 
+ 
+Ko(i) = PRF(Ki, 1||KDF_fixed) || PRF(Ki, 2||KDF_fixed) 
+IVMask = PRF(Ki, 3||KDF_fixed)[0-11] 
+ 
+Implementation Note: 
+The KDF implementation is a vital part of the security solution. Vendors are encouraged to implement 
+DPA or other techniques to reduce the attack surface of the cryptographic implementations. In 
+addition, cryptographic hardware SHOULD be implemented in accordance with industry best practices 
+and certified by third-party testing programs (e.g., NIST Cryptographic Algorithm Validation Program 
+(CAVP) for the KDF [43]). 

@@ -1,0 +1,23 @@
+ 630 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+5 UE Link Layer 
+The Link Layer Working Group is responsible for defining UE specifications that operate at and support 
+the link layer. These optional-to-implement specifications enhance performance and reliability of the 
+link layer while also simplifying configuration. The features defined by the UE link layer specifications 
+can operate with, and in some cases work as an alternative to, existing Ethernet link functionality. 
+The following sections describe the UE link layer specifications in detail: 
+1. Section 5.1 Link layer retry (LLR), which reduces the impact on latency when a packet is lost due 
+to imperfect links. LLR requires only a single-link round-trip time to determine loss and restart 
+the flow of packets. 
+2. Section 5.2 Credit-based flow control (CBFC) is an alternative mechanism to priority-based flow 
+control (PFC) flow control. Rather than sending PFC indications when a receive buffer is 
+approaching full, a CBFC receiver periodically sends buffer space updates (credits) to its link 
+partner. This allows the partner to preferentially send traffic on traffic classes with available 
+buffer space. 
+3. Section 5.3 Link negotiation allows UE devices supporting optional UE link layer features to 
+automatically determine if the link partner is capable of operating with the same mutually 
+supported UE link layer features. Link negotiation defines procedures and managed objects that 
+operate on top of existing IEEE Std 802.1AB (LLDP) implementations that are widely deployed. 
+  

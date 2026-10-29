@@ -1,0 +1,25 @@
+ 653 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The basic CBFC credit mechanism has two counters:  
+1. The number of credits “consumed” (CC) is incremented as packets are transmitted at the sender 
+and placed into the receiver’s data buffer. Both sender and receiver track the number of credits 
+consumed. 
+2. The number of credits “freed” (CF) by the receiver is incremented as packets are drained out of 
+its input buffer. As credits are freed by the receiver, the receiver must inform the sender of the 
+number of freed credits to allow the sender to transmit additional packets. 
+In addition to the CC and CF counters, the sender uses per-port and per-VC credit limits (CL) to limit the 
+packets on lossless VCs sent to the receiver to only the amount it can absorb into its buffer. The credit 
+limits are initialized to the number of credits available at the receiver before data transmission starts. 
+The credit limits are used only at the sender. 
+Both the sender and receiver track both credits consumed and credits freed in cyclic counters that are 
+periodically synchronized between the link partners. By always incrementing the counter values, a lost 
+credit freed message as well as lost packets, which can result in credit leakage, can be automatically 
+accounted for with the next synchronization message. 
+5.2.5 CBFC Operation 
+5.2.5.1 Overview 
+CBFC is a link-layer function defined only for a pair of full-duplex MACs connected by one point-to-point 
+link. shows an example of CBFC within a standard Ethernet Physical Layer model. Although CBFC is 
+defined mainly at the data link layer, it requires some modifications in the standard MAC, RS, and PCS 
+sublayers to correctly forward CBFC CtlOS messages between the link partners. See the UE PHY 
+specification for additional details regarding the changes needed to these sublayers. 

@@ -1,0 +1,44 @@
+# Atlas cell 32r-l05 (design-space atlas ladder, G2 / ):
+# rank class 32 x algorithm family L0.5 — the serialized-pipelined-ring
+# AllReduce identity (backend module essun.backends.analytical.l05),
+# executed over the atlas-wide shared 12-size payload ladder with the
+# ring AllReduce baseline carried in-grid (matched per payload size).
+# The rank-32 mirror of atlas_4r_l05_cell_v1.yaml,
+# atlas_8r_l05_cell_v1.yaml and atlas_16r_l05_cell_v1.yaml; it COMPLETES
+# rank class 32 (the last of its six families).
+#
+# E0 evidence only: closed-form L0.5 analytical identity under explicit
+# FREE PARAMETERS (B = 64 bytes/ns, L = 200 ns — shared with every other
+# atlas cell; I = 64 bytes/ns — the A-L05-INJ registered convention
+# value, equal to B as in this cell's own topology file
+# ring32_l05_free_params.yaml, the rank-32 mirror of the file the
+# convention was derived from). Nothing measured, nothing
+# standard-derived; no claim linkage.
+#
+# Execution vehicle note (structural finding, recorded on the atlas page
+# and in the index): the L0.5 module is deliberately unregistered in BOTH
+# run-path registries per its own scope fence. Re-exercised LIVE at
+# rank class 32 during this stage on the rank-32 configs (exact strings
+# on docs/atlas/32r-l05.md): the sweep runner rejects
+# allreduce_ring_l05 ("unknown algorithm(s)"), the run path
+# rejects analytical_l05 ("unknown backend(s)") — the same rejections
+# recorded at rank 4, rank 8 and rank 16, structural and
+# rank-independent. The vehicle is run_atlas_32r_l05_cell.py in this
+# directory, which mirrors the sweep runner's gates (module-own loaders,
+# tp_size == ranks, observable registry checks) and its
+# content-addressing discipline (cell_id = sha256(canonical manifest +
+# code version), idempotent byte-check on rerun). Classified, not fixed;
+# no src/ change.
+cell: atlas_32r_l05_v1
+workload: experiments/workloads/w1_dense_tp_decode_tp32.yaml
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring32_free_params.yaml
+algorithms:
+  - algorithm: allreduce_ring_l05
+    topology: experiments/topologies/ring32_l05_free_params.yaml
+grid:
+  payload_sizes_bytes: [4096, 8192, 16384, 65536, 131072, 262144,
+                        1048576, 2097152, 4194304, 16777216,
+                        33554432, 67108864]
+observables: [O-CONSERVATION, O-CCT]

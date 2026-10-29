@@ -1,0 +1,39 @@
+ 512 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+achieve by themselves. Most such networks will use a dynamic routing protocol to determine the ECMP 
+set for a destination address. When a failure occurs in such a network, it is expected that dynamic 
+routing will eventually remove failed paths from consideration, and so EVs that previously mapped to a 
+failed path will then be remapped to a working path. Such dynamic rerouting may take many round-trip 
+times, and all UET connections that spray across the failed path will suffer packet loss until rerouting has 
+taken place. 
+How UET-CC load balancing handles such transient failures is an implementation decision. For example, 
+if path-aware load balancing is being performed by UET-CC and packet trimming is enabled, then actual 
+packet loss should be relatively rare. In such circumstances, a UET-CC source might choose to avoid 
+reusing an EV that resulted in a timeout or SACK-based loss inference decision for some significant 
+period of time, long enough for routing to have reconverged. However, if trimming is not used, then 
+such inferred packet loss may be more common. An implementation would therefore need to take care 
+removing too many EVs from the entropy set it is using. 
+Some networks may have a static mapping of EVs to paths with no dynamic routing protocol used to 
+route around failures. UET-CC’s path-aware multipath spraying can be used in such networks to actively 
+route around failed paths by not reusing EVs that result in timeouts or SACK-based loss inference. In 
+such networks, such active path choice takes on greater importance, because routing will not remove 
+the paths from use. How to do this is again implementation dependent. 
+When a UET-CC endpoint does not perform path-aware multipath spraying, it is not a requirement for 
+the network to maintain a stable mapping between EVs and paths. In such networks, switches may 
+perform local load-balancing decisions on a per-packet basis. When this is being performed, UET-CC load 
+balancing SHOULD NOT attempt to remove from use any EVs corresponding to packet loss, as there will 
+not be a stable correspondence between an EV and a failed path. 
+3.6.16.6 Multi-port and Multi-plane Operation 
+UET supports multi-port NICs, and the CCC can spray traffic across multiple ports that are simultaneously 
+used for a single PDC. There are many ways multiple ports can be used, and not all of them are 
+supported by this specification. Among the possibilities are options numbered as follows: 
+1. Each port connects to a separate plane and uses the same FEP address. No inter-plane routing is 
+provided. 
+2. Each port connects to a separate plane and uses a different FEP address. 
+3. Each port connects to a single plane and uses the same FEP address. Anycast routing is used to 
+route packets to one of the destination ports with the same FEP address. 
+4. Each port connects to a single plane and uses a different FEP address. 
+Options 1 and 3 are supported by this specification. 
+In this specification, the CCC does not maintain addressing information, so multiple ports with different 
+addresses are not directly supported. 

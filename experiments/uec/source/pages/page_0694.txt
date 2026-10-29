@@ -1,0 +1,150 @@
+ 694 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+TLV header
+Bytes: 1 2 3 6
+TLV information stringTLV header
+resv4
+=0
+(1 bit)
+R_VC_CreditLimit
+(3 octets)
+R_VcID
+(5-bits)
+Bytes:
+Bits:
+1
+8
+22 23 n * 6 + 22
+2 6
+5 1 1
+R_PcpDei
+(4-bits)
+R_MaskPcpDei
+(4-bits)
+R_PktID_
+Sel
+4-bit
+R_PktID
+(12-bits)
+Resv5
+(2-bits)
+=0
+Resv6
+(2-bits)
+=0
+5
+R_DSCP
+(6-bits)
+R_MaskDSCP
+(6-bits)
+R_Handle
+(12-bits)
+5
+4 2 7 4 16
+If R_PktID_Sel = 1
+If R_PktID_Sel = 2
+If R_PktID_Sel = 3
+7 6
+R_VC_
+RTR
+(1-bit)
+7
+R_VC_
+Want
+(1-bit)
+6
+Bits: 8 2 1 8 1
+TLV type = 
+127
+(7 bits)
+TLV information
+string length = 
+n*6+18
+(9 bits)
+UEC
+CID
+(3 octets)
+Subtype
+= 1
+(5 bits)
+Vers
+= 0
+(3 bits)
+8 5
+R_VCn
+(6-octets/VC)
+R_NumVCs
+= n
+(6-bits)
+1 1
+Resv3=0
+(2 bits)
+1
+Bits:
+4 1
+4 1
+Bits:
+Bits:
+1198 10
+4
+S_VC_RTS
+(4 octets)
+18
+S_Credit
+Size
+(12-bits)
+S_Packet
+Overhead
+(8-bits)
+88 8
+Resv1
+=0
+8-bits
+Sender Information Receiver Information
+7 15 23
+Per VC Receiver Information
+n*6+22
+191715 18
+4
+R_TotalCredits
+(3 octets)
+18
+R_Cell
+Size
+(12-bits)
+R_Packet
+Overhead
+(8-bits)
+88 8
+R_VCn
+Length=
+6
+( 4 bits)
+14
+Error 
+Code
+(4-
+bits)
+8
+If R_PktID_Sel = 0 Disable Packet Identification
+8
+5
+7
+Resv2=0
+(8-bits)
+4 85 1
+16 21
+2214
+Bytes:
+Bits:
+Bytes:
+Bits:
+  
+Figure 5-20 - UE Link Negotiation CBFC TLV (CBFC TLV) 
+5.3.2.2.1 TLV Type 
+The 7-bit IEEE-assigned TLV type 127 indicating this TLV is encoded using an organizationally specific 
+identifier format and subtype [1] . 
+5.3.2.2.2 TLV Information String Length 
+The 9-bit TLV information string length indicates the number of bytes following the information string 
+length field. The CBFC TLV string length depends on the number of receive VCs desired. For 0 <= n <= 32 

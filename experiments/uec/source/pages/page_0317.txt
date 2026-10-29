@@ -1,0 +1,29 @@
+ 317 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The simplified PDC Establishment State Machine is shown in Figure 3-56. Refer to Section 3.5.9 for a 
+more detailed example of the processing sequence. 
+3.5.8.2.1 PDC Establishment with Encryption 
+When TSS is enabled, PDC establishment packets are subject to replay attack. When using TSS, the 
+Start_PSN MUST be validated—using either the RANDOM_1RTT_START or EXPECTED_0RTT_START 
+methods—before fully establishing an encrypted PDC. The two methods interoperate with one another, 
+falling back to target assignment of the Start_PSN at the cost of one additional RTT, when the two 
+endpoints are using different methods. The two methods are not independent options. The 
+RANDOM_1RTT_START method is a mandatory base capability and the EXPECTED_0RTT_START method 
+an optimization layered upon it. 
+Two methods are defined to establish a secure Start_PSN.  In this context, the term Start_PSN is used to 
+represent different values.  These values are further described as follows: 
+• Initiator_Start_PSN: The initiator’s per-SDI base value for the establishing the next PDC. This value is 
+stored in the SDKDB. 
+• Target_Start_PSN: The target’s per-SDI minimum Start_PSN the target will accept representing the 
+anti-replay floor.  This value is stored in the SDKDB. 
+• Random_Start_PSN: A random value selected by the target in the RANDOM_1RTT_START method. 
+• PDC_Start_PSN: The Start_PSN retained in per-PDC state by both ends once the PDC is established. 
+Both the Initiator_Start_PSN and Target_Start_PSN are initialized to zero when the key is installed.  The 
+PDC_Start_PSN is a snapshot of the current Initiator_Start_PSN when the new PDC is established.  Both 
+the initiator and target maintain a copy of the PDC_Start_PSN for the lifetime of the PDC. 
+ 
+ 
+Figure 3-56 - PDC Establishment State Machine 
+ 
+ 

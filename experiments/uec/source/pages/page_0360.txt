@@ -1,0 +1,40 @@
+ 360 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+If an ACK is lost, the SACK bitmap and CACK_PSN allow the source to determine if the lost ACK was a 
+default response or guaranteed delivery response, as described in Section 3.5.12.4.4. The 
+pds.sack_bitmap field alone cannot determine default responses. 
+Because an ACK is transmitted for every packet in the ACK per packet mode, the pds.sack_bitmap is 
+anchored using the PSN that triggered the ACK. The pds.sack_psn_offset field is then calculated relative 
+to CACK_PSN. See an example in Figure 3-81. 
+3.5.12.4 Coalesced ACKs 
+Support for coalesced ACKs is optional. If supported and Enb_ACK_Per_Pkt is not set, the source MUST 
+set the pds.flags.ar field based on the criteria list in Table 3-61. 
+Table 3-61 - Triggers for Setting pds.flags.ar in PDS Requests when Using Coalesced ACKs 
+Trigger Event Definition 
+CMS control CMS indicates AR is to be set on a packet 
+Retransmission If the packet is a retransmission 
+Last packet If the packet is the last packet on the PDC such that 
+there is no additional pending work on the PDC 
+ 
+When using coalesced ACKs on RUD and ROD PDCs, ACKs MUST be generated based on the criteria list in 
+Table 3-62, and the ACK_CC or ACK_CCX type MUST be used. Coalesced ACKs may acknowledge multiple 
+packets. The ACK_PSN indicates which PSN triggered the ACK. The SES Response carried in the packet 
+MUST be the SES Response for the ACK_PSN. All other PSNs acknowledged by the ACK are determined 
+to have a UET_DEFAULT_RESPONSE indicating success. 
+When using coalesced ACKs on RODL, ACKs MUST be generated according to the criteria in Table 3-62, 
+excluding packets marked with ECN when using RODL over the UFH_16 header (which does not include 
+the pds.flags.m flag) and excluding the “last packet before idle” condition (which applies only to RUD 
+out‑of‑order arrival). The packet/byte‑threshold trigger may be simplified to a packet‑count threshold. 
+RODL supports sending reverse ACK state, which can be used to replace the generation of an ACK packet 
+as described in section 3.5.12.4.4. 
+PDS infers that a UET_DEFAULT_RESPONSE has occurred when CACK_PSN is higher than the PSN of a 
+packet waiting for an SES response. The pds.sack_bitmap field may indicate a packet was received at 
+the destination. The pds.sack_bitmap MUST NOT be used to determine a UET_DEFAULT_RESPONSE.  
+Informative Text: 
+Inferred responses indicate success when all packets in a message have SES responses. PDS must not 
+pass SES an inferred response for a packet until CACK_PSN is higher than the packet’s PSN. Any PSN 
+higher than CACK may have an associated guaranteed response, and that guaranteed response must 
+be evaluated by SES before the message is considered completed. 
+ 
+ 

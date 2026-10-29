@@ -1,0 +1,39 @@
+ 439 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6 Congestion Management Sublayer (CMS) 
+UET defines an end-to-end congestion management solution, UET-CC (UET Congestion Control), for 
+packet buffer congestion in a best-effort (sometimes called ”lossy”) Ethernet network. The goal is to 
+achieve high network efficiency, reduce packet loss, and minimize latency, including tail latency, and to 
+ensure reasonable fairness between competing flows. 
+The target network (referred to as a backend network) is primarily carrying HPC and AI training and/or 
+inference workloads. To avoid unfairness, it is recommended that all traffic in the same traffic class as 
+UET-CC traffic runs UET congestion control. UET-CC is not intended for wide-area network traffic, as it 
+assumes a low-latency control loop: UET-CC aims at expected base RTTs that range from 1 µs to 20 µs. It 
+is recommended that network fabric control traffic such as BGP running over TCP, or other traffic not 
+using UET-CC, is run in a separate traffic class. UET-CC performs adaptive load balancing. Therefore, it 
+should be able to load balance around traffic in higher priority traffic classes, including non-UET traffic 
+classes, as long as that traffic does not itself congest the network. 
+The Unified Local profile and the RODL delivery mode do not require support for congestion 
+management. 
+Congestion management can be decomposed into the following components: 
+• Telemetry: Determining the congestion state of network paths, locally on the endpoint and 
+on the network; this information may be collected at and/or used by the initiator, switches 
+along the path, or target. 
+• Sender-based window: Controlling the maximum outstanding, unacknowledged data, as 
+measured in bytes. 
+• Receiver-credit congestion control: Controlling the rate at which data may be transmitted 
+to a specific destination to more directly control incast. 
+• Multipath path selection: Modifying the path packets take to minimize congestion using 
+adaptive packet spraying, with a granularity of spraying at the packet level. 
+3.6.1 UET CC Guidelines [Informational] 
+The design of UET-CC is based upon a number of core design decisions, listed below for background. 
+Although words typically associated with normative requirements are used, this section does not specify 
+requirements for compliance, which are provided when each feature is specified separately. 
+• UET-CC is designed to operate with existing network switches. This necessitates that UET-CC rely 
+only on basic features including: 
+o The ability of switches to classify traffic and provide independent queuing based on 
+traffic class (TC), where TC is assigned based on IP DSCP or VLAN priority code point 
+(PCP). 
+o The ability of switches to provide explicit congestion notification (ECN) marking as 
+specified by IETF RFC 3168 [14]. 

@@ -1,0 +1,843 @@
+# UnifiedBus paper-derived profile — essun-profile v0.1 artifact.
+# GENERATED FILE (ladder S5 of the dispositions/profile work, 2026-10-29);
+# regenerate with:
+#   .venv/bin/python experiments/unifiedbus/build_semantic_profile.py
+# PAPER-DERIVED, NOT NORMATIVE (stated here and in the artifact): UnifiedBus
+# is not an ingested standard — the spec track is license-gated and never
+# fetched; the profile interprets five PUBLIC_READ papers/pages only.
+# Dispositions are READ from the live specir registry (the S5 record);
+# this migration does not assign or change any disposition.  Anchor
+# citations are unchanged from the paper-profile module and resolve against
+# experiments/unifiedbus/anchor_registry.yaml.  Conformance gate:
+# tests/specir/test_unifiedbus_semantic_profile.py (loads, disposition
+# parity with the live registry, zero-binding honesty, corruption
+# rejection, byte-identical regeneration).
+format:
+  name: essun-profile
+  version: '0.1'
+profile_id: unifiedbus-paper-derived
+source:
+  name: UnifiedBus public papers and public pages (paper-derived design profile)
+  document_id: unifiedbus_public_papers
+  revision: bd22c764dda67defe6074882b185fb462b61c15d67de09e7c78ea396058468ab
+  normative: false
+  note: 'PAPER-DERIVED, NOT NORMATIVE: this is a design profile of the UnifiedBus-class architecture
+    AS REPORTED by five public papers and public pages — not a UnifiedBus standard profile. The specification
+    track stays license-gated and was never fetched. Every requirement carries its evidence grade;
+    a vendor-claimed number is never laundered as a neutral fact, and paper-derived values keep their
+    paper anchors while everything the sources do not state stays an explicit free parameter'
+provenance:
+  source_record: experiments/unifiedbus/source_record.yaml
+  access: PUBLIC_READ
+  paper_sources:
+  - source_id: PUB-UB-DOCS-EN
+    title: UnifiedBus documentation index, English (unifiedbus.com/en)
+    url: https://www.unifiedbus.com/en
+    access: PUBLIC_READ
+    doc_sha256: 287529528fb1ff12ecfca3f79646f81498fa11fa23f5f2f5cc9ff15ff0202818
+  - source_id: PUB-UB-HUAWEI-HC26
+    title: Huawei Unveils New UnifiedBus Computing Architecture for SuperPoDs and Clusters (Huawei
+      Connect 2026 news post)
+    url: https://www.huawei.com/en/news/2026/9/hc-lingqu-agent-ai
+    access: PUBLIC_READ
+    doc_sha256: 9cf10ae24480fc1e0ff008aae0e071fe66ffba80a087dd5c7648324b3dd37608
+  - source_id: PUB-UB-NESTEDVN-26
+    title: Nested Parallel von Neumann Architecture and Nested BSP (v1)
+    url: https://arxiv.org/html/2609.16787v1
+    access: PUBLIC_READ
+    doc_sha256: e580f09b7dd21f170703f2b713db397289c00c7da978dab259e045cda69d2421
+  - source_id: PUB-UB-OSCOMP
+    title: UnifiedBus OS component overview (UB OS 组件, unifiedbus.com)
+    url: https://www.unifiedbus.com/zh/software/ub-os-component
+    access: PUBLIC_READ
+    doc_sha256: b0facdda32d1f5d7c257c62bf342605f3412adb5463f4fc69740bb2626a3ee04
+  - source_id: PUB-UB-UBMESH-25
+    title: 'UB-Mesh: a Hierarchically Localized nD-FullMesh Datacenter Network Architecture (v3)'
+    url: https://arxiv.org/html/2503.20377v3
+    access: PUBLIC_READ
+    doc_sha256: dd9bd4e0855a41b7e67d304983ac6edac87dbbb5950cb5560bb81f450a575f90
+  anchor_registry: experiments/unifiedbus/anchor_registry.yaml
+  gated_specification_row: STD-UB-LICENSE (APPROVAL_REQUIRED, never fetched; the record keeps the
+    verbatim row)
+  evidence_grades_in_use:
+  - OFFICIAL_PUBLIC_PAGE
+  - PAPER_REPORTED
+  - VENDOR_CLAIMED
+  note: 'license review precedes ingestion: the repo source record carries the verbatim license-gate
+    rows, including the gated specification row, which was never fetched and is not interpreted here.
+    Raw fetched pages stay under experiments/unifiedbus/source/ with per-page sha256; quotes in the
+    anchor registry are citation-bounded and re-matched at load; requirement statements below are
+    paraphrases in essun''s own words with every number as the source states it'
+requirements:
+  objects:
+  - requirement_id: UBP-P01
+    anchor_ids:
+    - UBP-UBMESH-3.3.3-4D-FULLMESH
+    - UBP-UBMESH-0-ABSTRACT-TOPOLOGY
+    statement: '4D-FullMesh: a 2D-FullMesh within each rack plus another 2D-FullMesh across racks;
+      the paper calls this a hierarchically localized nD-FullMesh and stays at 4D this generation,
+      adopting Clos beyond.'
+    disposition: informational
+    name: pod_topology_class
+    category: topology
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+    notes: Page 7 states the not-5D-this-generation and Clos-beyond choice.
+  - requirement_id: UBP-P02
+    anchor_ids:
+    - UBP-UBMESH-3.3.1-LRS-PLANE
+    statement: 'One switch plane per rack: 18 fully-connected LRSes — two serve CPUs and backup NPUs,
+      eight regular NPUs, eight inter-rack; CPU boards are separate and attach through switches.'
+    disposition: informational
+    name: rack_switch_plane
+    category: topology
+    value_kind: DESIGN_CONSTANT
+    unit: LRSes
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P03
+    anchor_ids:
+    - UBP-UBMESH-3.1-HOPS
+    statement: Most transmissions, typically TP or SP, complete in 0-2 hops.
+    disposition: unsupported
+    name: hop_locality
+    category: topology
+    value_kind: REPORTED_MEASURE
+    unit: hops
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P04
+    anchor_ids:
+    - UBP-UBMESH-3.1-CABLE-MIX
+    statement: Short-range passive electrical cables account for 86.7% of consumed cables (XY dimension,
+      about 1 m).
+    disposition: unsupported
+    name: cable_mix
+    category: topology
+    value_kind: REPORTED_MEASURE
+    unit: '%'
+    evidence_grade: PAPER_REPORTED
+    notes: 'Same-page Table 2: Z active electrical 7.2% (~10 m); alpha optical 4.8% (~100 m); beta/gamma
+      optical 1.2% (~1000 m).'
+  - requirement_id: UBP-P05
+    anchor_ids:
+    - UBP-HC26-1-LINKBLADE
+    statement: 'LinkBlade: cable-free in-cabinet interconnect that eliminates circuit losses and cuts
+      about 196 kilometers of copper cabling within a 4,096-NPU SuperPoD.'
+    disposition: informational
+    name: linkblade_in_cabinet
+    category: topology
+    value_kind: DESIGN_CLASS
+    unit: km; NPUs
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P06
+    anchor_ids:
+    - UBP-HC26-1-ATLAS650E
+    statement: Two Atlas 650E air-cooled servers link directly through UnifiedBus for switch-free
+      interconnect across 16 NPUs; one-to-eight-NPU appliances also exist.
+    disposition: informational
+    name: atlas_650e_switch_free
+    category: topology
+    value_kind: DESIGN_CLASS
+    unit: NPUs
+    evidence_grade: VENDOR_CLAIMED
+    notes: Vendor says the pair scales toward a small SuperPoD.
+  - requirement_id: UBP-P07
+    anchor_ids:
+    - UBP-UBMESH-3.2.1-NPU-IO
+    statement: Each NPU has two UB IO controllers providing x72 UB lanes in total.
+    disposition: informational
+    name: npu_ub_lanes
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: UB lanes
+    evidence_grade: PAPER_REPORTED
+    notes: Per-lane rate is not public — see UBP-F01.
+  - requirement_id: UBP-P08
+    anchor_ids:
+    - UBP-UBMESH-3.2.1-CPU-IO
+    statement: Each CPU has one UB IO controller offering a UB x32 IO.
+    disposition: informational
+    name: cpu_ub_lanes
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: UB lanes
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P09
+    anchor_ids:
+    - UBP-UBMESH-3.2.1-LRS-DEF
+    statement: 'LRS: lightweight, low-radix, low-cost switches ensuring non-blocking communication;
+      Table 3 lists LRS IO capability as UB x72.'
+    disposition: informational
+    name: lrs_class_and_io
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: UB IO width
+    evidence_grade: PAPER_REPORTED
+    notes: 'Same section (3.2 span, pages 6-7): one reusable UB IO controller design covers CPU, NPU,
+      and LRS switch.'
+  - requirement_id: UBP-P10
+    anchor_ids:
+    - UBP-UBMESH-3.2.1-HRS-IO
+    statement: 'HRS: high-radix switches offering a UB x512 IO capacity for Pod-level switching.'
+    disposition: informational
+    name: hrs_io_capacity
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: UB IO width
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P11
+    anchor_ids:
+    - UBP-UBMESH-3.3.1-BACKPLANE-IO
+    statement: The rack's back-plane switches aggregately output four UB x256 IO.
+    disposition: informational
+    name: backplane_io
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: UB IO width
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P12
+    anchor_ids:
+    - UBP-UBMESH-3.3.3-INTERRACK-LINK
+    statement: Each inter-rack link in the 4D-FullMesh is a UB x128 IO.
+    disposition: informational
+    name: interrack_link_width
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: UB IO width
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P13
+    anchor_ids:
+    - UBP-UBMESH-6.3-INTERRACK-DEFAULT
+    - UBP-UBMESH-6.3-INTERRACK-EXPLORED
+    statement: 'Default inter-rack allocation: UB x16 IO per NPU for cost-performance balance; the
+      paper explores x4/x8/x16/x32 per NPU.'
+    disposition: informational
+    name: interrack_bw_per_npu
+    category: link_scale
+    value_kind: DESIGN_DEFAULT
+    unit: UB IO width per NPU
+    evidence_grade: PAPER_REPORTED
+    notes: Reported optimal x16 at sequence lengths 8K-32K and x32 at 64K-10M; measured gains 0.44%
+      (x8 to x16) and 1.85% (x16 to x32) at 8K SuperPod.
+  - requirement_id: UBP-P14
+    anchor_ids:
+    - UBP-HC26-1-BANDWIDTH-LEVEL
+    statement: Interconnect bandwidth increased from 100 GB/s level to TB/s level.
+    disposition: unsupported
+    name: hc26_bandwidth_level
+    category: link_scale
+    value_kind: REPORTED_MEASURE
+    unit: GB/s (level claim)
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P15
+    anchor_ids:
+    - UBP-HC26-1-LINKDEVICE
+    statement: 'LinkDevice: 176 ports at 1.6 Tbit/s per port, delivering 280 Tbit/s all-optical interconnection.'
+    disposition: informational
+    name: linkdevice_ports
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: ports; Tbit/s
+    evidence_grade: VENDOR_CLAIMED
+    notes: Only public per-port rate figure; per-lane rate remains UBP-F01.
+  - requirement_id: UBP-P16
+    anchor_ids:
+    - UBP-UBDOCS-1-SPEC21-RATES
+    statement: 'Base Spec 2.1 public highlight: new 224/256 Gbit/s rates, reliable rerouting, higher
+      system bandwidth efficiency, lower multi-path communication latency.'
+    disposition: informational
+    name: spec21_rate_highlight
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: Gbit/s
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+    notes: Highlight-grade figure off the public docs index; the rate scope (per-lane vs per-port)
+      is NOT stated — see UBP-F01, UBP-F08.
+  - requirement_id: UBP-P17
+    anchor_ids:
+    - UBP-UBMESH-3.3.1-RACK-64NPU
+    statement: 'Rack core: eight NPU boards with eight NPUs each, 64 NPUs total, in an intra-rack
+      2D full-mesh; UB IO controllers route, so each NPU is also a router enabling indirect routing.'
+    disposition: informational
+    name: npus_per_rack
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: NPUs
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P18
+    anchor_ids:
+    - UBP-UBMESH-3.3.3-POD-1024
+    statement: 'UB-Mesh-Pod: 16 racks, 1024 NPUs total.'
+    disposition: informational
+    name: pod_scale
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: racks; NPUs
+    evidence_grade: PAPER_REPORTED
+    notes: 'Same page: four adjacent racks per row form a 1D full-mesh; rack columns directly connected,
+      completing the inter-rack 2D full-mesh.'
+  - requirement_id: UBP-P19
+    anchor_ids:
+    - UBP-UBMESH-3.3.4-SUPERPOD-8K
+    statement: UB-Mesh-SuperPod connects each rack through HRS Pod-switches in a symmetrical Clos
+      at Pod level, scaling up to 8K NPUs.
+    disposition: informational
+    name: superpod_tier
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: NPUs
+    evidence_grade: PAPER_REPORTED
+    notes: Clos chosen beyond 4D-FullMesh for divisible full-bandwidth domains.
+  - requirement_id: UBP-P20
+    anchor_ids:
+    - UBP-UBMESH-3.3.4-DCN-100K
+    statement: 'DCN domain: Clos-organized switches scaling to 100K NPUs or more; racks attach via
+      UB switches or CPU-board NICs.'
+    disposition: informational
+    name: dcn_tier
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: NPUs
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P21
+    anchor_ids:
+    - UBP-HC26-1-UBG-RADIX
+    statement: 'UBG switch: radix fan-out capacity of up to 1,024.'
+    disposition: informational
+    name: ubg_radix
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: radix
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P22
+    anchor_ids:
+    - UBP-HC26-1-MILLION-SUPERCLUSTER
+    statement: A million-NPU SuperCluster is supported (TaiShan 950 and Atlas 960 SuperPoDs, OceanStor
+      M900, Xinghe UBG switch).
+    disposition: informational
+    name: supercluster_scale
+    category: scale
+    value_kind: DESIGN_CLASS
+    unit: NPUs
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P23
+    anchor_ids:
+    - UBP-HC26-1-GLOBAL-ADDRESSING
+    statement: Unified global memory addressing within SuperPoDs.
+    disposition: unsupported
+    name: global_addressing
+    category: memory_semantics
+    value_kind: BEHAVIOR
+    unit: ''
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P24
+    anchor_ids:
+    - UBP-UBMESH-3.2-UB-DEFINITION
+    statement: UB simultaneously supports synchronized operations (Load/Store/Atomic) and asynchronous
+      operations (Read/Write/Message).
+    disposition: unsupported
+    name: ub_operation_classes
+    category: memory_semantics
+    value_kind: BEHAVIOR
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+    notes: Section 3.2.2 text, within the anchored section 3.2 span (pages 6-7).
+  - requirement_id: UBP-P25
+    anchor_ids:
+    - UBP-UBOS-1-CDMA
+    statement: 'CDMA library: asynchronous memory read/write between hosts and between host and device,
+      for user-space applications.'
+    disposition: unsupported
+    name: cdma_service
+    category: memory_semantics
+    value_kind: BEHAVIOR
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - requirement_id: UBP-P26
+    anchor_ids:
+    - UBP-UBOS-1-UMMU
+    statement: 'UMMU: device registration, initialization, configuration-table, address-translation-table,
+      and permission-table management.'
+    disposition: unsupported
+    name: ummu_service
+    category: memory_semantics
+    value_kind: BEHAVIOR
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - requirement_id: UBP-P27
+    anchor_ids:
+    - UBP-UBOS-1-OBMM-EXPORT-IMPORT
+    statement: 'OBMM: memory-lending interfaces (EXPORT and IMPORT) plus coherence maintenance; the
+      coherence interface is used only in memory-sharing scenarios.'
+    disposition: unsupported
+    name: obmm_service
+    category: memory_semantics
+    value_kind: BEHAVIOR
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - requirement_id: UBP-P28
+    anchor_ids:
+    - UBP-NESTEDVN-1-MEMSEMANTIC-BUS
+    statement: Compute and memory are joined by one memory-semantic bus end to end, with full peer
+      equality.
+    disposition: informational
+    name: end_to_end_memory_bus
+    category: memory_semantics
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P29
+    anchor_ids:
+    - UBP-HC26-1-HETERO-PEER
+    statement: 'Hybrid-media resource pooling: DDR memory serves as alternative memory for NPUs (activation
+      caching), claimed to double vector-retrieval performance and reduce per-NPU HBM requirements.'
+    disposition: unsupported
+    name: tiered_memory_pooling
+    category: memory_semantics
+    value_kind: BEHAVIOR
+    unit: ''
+    evidence_grade: VENDOR_CLAIMED
+    notes: HC26 key feature 3, on the page every HC26 anchor pins; cited anchor is thematically the
+      closest HC26 row.
+  - requirement_id: UBP-P30
+    anchor_ids:
+    - UBP-HC26-1-HETERO-PEER
+    statement: UnifiedBus directly interconnects CPUs, NPUs, memory, and SSDs for decentralized peer-to-peer
+      access, flexible CPU-NPU mixing, and Attention-FFN disaggregation.
+    disposition: unsupported
+    name: hetero_peer_access
+    category: memory_semantics
+    value_kind: BEHAVIOR
+    unit: ''
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P31
+    anchor_ids:
+    - UBP-HC26-1-RTT
+    statement: RTT latency reduced from 7 microseconds to 2 microseconds.
+    disposition: unsupported
+    name: rtt_level_claim
+    category: latency
+    value_kind: REPORTED_MEASURE
+    unit: μs
+    evidence_grade: VENDOR_CLAIMED
+    notes: Protocol-level claim; no component breakdown — see UBP-F02.
+  - requirement_id: UBP-P32
+    anchor_ids:
+    - UBP-HC26-1-LINKDEVICE-RTT
+    statement: LinkDevice RTT latency as low as 2 microseconds.
+    disposition: unsupported
+    name: linkdevice_rtt_claim
+    category: latency
+    value_kind: REPORTED_MEASURE
+    unit: μs
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P33
+    anchor_ids:
+    - UBP-UBMESH-4.1.1-SR-HEADER
+    statement: APR adds an 8-byte source-routing header containing forwarding instructions to the
+      original packet header.
+    disposition: informational
+    name: sr_header
+    category: routing
+    value_kind: DESIGN_CONSTANT
+    unit: bytes
+    evidence_grade: PAPER_REPORTED
+    notes: Only public header-layout figure — see UBP-F03.
+  - requirement_id: UBP-P34
+    anchor_ids:
+    - UBP-UBMESH-4.1.3-TWO-VL
+    statement: All-path routing is deadlock-free using only 2 VL resources.
+    disposition: informational
+    name: apr_two_vl
+    category: routing
+    value_kind: DESIGN_CONSTANT
+    unit: VLs
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P35
+    anchor_ids:
+    - UBP-UBMESH-6.3-INTERRACK-EXPLORED
+    statement: 'In-Pod routing strategies: Shortest (baseline shortest path), Detour (all-path routing
+      uses additional paths), Borrow (racks borrow switch bandwidth).'
+    disposition: informational
+    name: pod_routing_strategies
+    category: routing
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+    notes: 'Section 6.3 text on the anchored page: GPT4-2T degradation vs Clos 0.73% naive, 0.46%
+      with Detour and Borrow.'
+  - requirement_id: UBP-P36
+    anchor_ids:
+    - UBP-UBMESH-3.3.2-64PLUS1
+    statement: 64 regular NPUs plus one backup NPU connected via LRS; on failure the backup takes
+      over, redirecting the failed NPU's direct links through the LRS as one-hop routing.
+    disposition: informational
+    name: backup_npu_64plus1
+    category: reliability
+    value_kind: DESIGN_CONSTANT
+    unit: NPUs
+    evidence_grade: PAPER_REPORTED
+    notes: Paper says the one-hop redirect slightly increases latency but beats masking the failed
+      NPU.
+  - requirement_id: UBP-P37
+    anchor_ids:
+    - UBP-UBMESH-6.6-MTBF
+    statement: '8K-NPU cluster MTBF: 98.5 hours for UB-Mesh vs 13.8 hours for the Clos baseline.'
+    disposition: unsupported
+    name: mtbf_8k
+    category: availability
+    value_kind: REPORTED_MEASURE
+    unit: hours
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P38
+    anchor_ids:
+    - UBP-UBMESH-6.6-AVAILABILITY
+    statement: UB-Mesh availability 98.8% under an assumed 75-minute MTTR.
+    disposition: unsupported
+    name: availability_claim
+    category: availability
+    value_kind: REPORTED_MEASURE
+    unit: '%'
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P39
+    anchor_ids:
+    - UBP-UBMESH-2.2-LOCALITY-97
+    statement: TP and SP account for approximately 97% of total traffic.
+    disposition: unsupported
+    name: tp_sp_traffic_share
+    category: workload_locality
+    value_kind: REPORTED_MEASURE
+    unit: '%'
+    evidence_grade: PAPER_REPORTED
+    notes: Locality basis for the 0-2-hop claim (UBP-P03).
+  - requirement_id: UBP-P40
+    anchor_ids:
+    - UBP-UBMESH-1-COST-CLAIM
+    statement: High-radix switch usage reduced 98% and optical module usage 93% versus the Clos baseline.
+    disposition: unsupported
+    name: switch_optical_reduction
+    category: performance
+    value_kind: REPORTED_MEASURE
+    unit: '%'
+    evidence_grade: PAPER_REPORTED
+    notes: 'Section 6.4 (page 12) adds: network-infrastructure cost share 67% to 20%; CapEx reductions
+      1.18x/1.26x/1.65x/2.46x vs alternative architectures.'
+  - requirement_id: UBP-P41
+    anchor_ids:
+    - UBP-UBMESH-6.5-LINEARITY
+    statement: Training linearity still above 95% at 64K NPUs.
+    disposition: unsupported
+    name: linearity_64k
+    category: performance
+    value_kind: REPORTED_MEASURE
+    unit: '%'
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P42
+    anchor_ids:
+    - UBP-UBMESH-3.2-UB-DEFINITION
+    statement: UB is the single interconnection mechanism joining the heterogeneous modules, replacing
+      hybrid PCIe + NVLink + InfiniBand/RoCE stacks.
+    disposition: informational
+    name: ub_interconnect_role
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+    notes: Section 3.2.2 (page 7, anchored span) states the detailed UB protocol specification is
+      'going to be released' — consistent with the license-gated spec track (HUM-02).
+  - requirement_id: UBP-P43
+    anchor_ids:
+    - UBP-UBMESH-0-ABSTRACT-UB
+    statement: 'UB enables flexible IO bandwidth allocation and hardware resource pooling: one link
+      pool adjustable between inter-NPU and CPU-NPU use; DDR/CPU/NPU/NIC pooled peer-to-peer; no protocol
+      conversions.'
+    disposition: informational
+    name: ub_flex_pooling_claims
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P44
+    anchor_ids:
+    - UBP-HC26-1-UNIFIED-PROTOCOL
+    statement: More than ten interconnect protocols combined under the UnifiedBus protocol.
+    disposition: informational
+    name: protocol_unification_claim
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: UBP-P45
+    anchor_ids:
+    - UBP-UBDOCS-1-LAYERS
+    statement: Public Compatibility Test Specification 2.0 title enumerates Volume 1 test cases for
+      physical, data-link, and network layers only.
+    disposition: informational
+    name: public_layer_titles
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+    notes: No public test-volume titles above the network layer — see UBP-F06.
+  - requirement_id: UBP-P46
+    anchor_ids:
+    - UBP-UBDOCS-1-SUPERPOD-ARCH
+    statement: 'SuperPoD reference architecture features: bus interconnect, unified protocol, peer-to-peer
+      coordination, all-resource pooling, large-scale networking, high availability.'
+    disposition: informational
+    name: superpod_ref_arch_features
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - requirement_id: UBP-P47
+    anchor_ids:
+    - UBP-NESTEDVN-2-LAYER-BOUNDARIES
+    statement: Every layer's split and join points line up so a command does not break at layer boundaries.
+    disposition: informational
+    name: layer_boundary_alignment
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P48
+    anchor_ids:
+    - UBP-NESTEDVN-2-PEERS-ON-ONE-BUS
+    statement: Concurrent units at every layer, from package to autonomous zone, are peers on one
+      bus.
+    disposition: informational
+    name: peers_on_one_bus
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P49
+    anchor_ids:
+    - UBP-NESTEDVN-3-HARDWARE-PROPERTIES
+    statement: One protocol end to end, memory semantics, full peer equality, copper near and optics
+      far.
+    disposition: informational
+    name: copper_near_optics_far
+    category: architecture
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: UBP-P50
+    anchor_ids:
+    - UBP-UBOS-1-URMA-DRIVER
+    statement: URMA communication device driver provided by hardware vendors, accessible in user state
+      via UMDK.
+    disposition: unsupported
+    name: urma_driver
+    category: software
+    value_kind: COMPONENT
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - requirement_id: UBP-P51
+    anchor_ids:
+    - UBP-UBOS-1-UMMUCORE-TOKENID
+    statement: 'ummu-core: basic TokenID management plus configuration and management of advanced
+      capabilities defined in UnifiedBus Base Specification 2.0.'
+    disposition: unsupported
+    name: ummu_core
+    category: software
+    value_kind: COMPONENT
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+    notes: The gated Base Specification is referenced by title only, through this public page; the
+      document itself was never fetched.
+  - requirement_id: UBP-P52
+    anchor_ids:
+    - UBP-UBOS-1-UBUS-SERVICES
+    statement: 'UBus base services: bus enumeration, UB device creation and management, error handling,
+      hot-plug, interrupts.'
+    disposition: unsupported
+    name: ubus_services
+    category: software
+    value_kind: COMPONENT
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - requirement_id: UBP-P53
+    anchor_ids:
+    - UBP-UBOS-1-UBUTILS-TOPO
+    statement: 'ubutils tools: UB topology query, configuration-space query, and configuration.'
+    disposition: unsupported
+    name: ubutils
+    category: software
+    value_kind: COMPONENT
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - requirement_id: UBP-P54
+    anchor_ids:
+    - UBP-UBOS-1-OSEULER
+    statement: 'Host OS: openEuler 24.03-LTS-based enhanced extension on the 6.6 kernel — the first
+      openEuler version supporting supernodes.'
+    disposition: unsupported
+    name: host_os
+    category: software
+    value_kind: COMPONENT
+    unit: ''
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  note: 'the requirement objects of this paper-derived family are its design parameters (UBP-P01..P54);
+    none is executed: paper-stated structure facts are informational, everything else is unsupported,
+    and a promotion requires a reviewed binding (none exists)'
+freedom:
+- parameter_id: UBP-F01
+  name: per_lane_line_rate
+  freedom: No public source states a per-lane UB line rate in Gbit/s; only lane counts are reported
+    (x72/x32/x512/x256/x128/x16). Neither public rate figure below is stated as per-lane.
+  anchor_ids:
+  - UBP-UBMESH-3.2.1-NPU-IO
+  - UBP-UBDOCS-1-SPEC21-RATES
+  - UBP-HC26-1-LINKDEVICE
+  domain: FREE
+  category: link_scale
+  candidates:
+  - label: 224/256 Gbit/s rates — Base Spec 2.1 public highlight, scope unstated
+    anchor_id: UBP-UBDOCS-1-SPEC21-RATES
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+  - label: 1.6 Tbit/s per LinkDevice port — per-port, not per-lane
+    anchor_id: UBP-HC26-1-LINKDEVICE
+    evidence_grade: VENDOR_CLAIMED
+- parameter_id: UBP-F02
+  name: component_latency_breakdown
+  freedom: Only end-to-end RTT figures are public (7 to 2 microseconds; LinkDevice as low as 2 microseconds).
+    No per-hop, per-link, per-switch, serialization, or propagation latency components are reported.
+  anchor_ids:
+  - UBP-HC26-1-RTT
+  - UBP-HC26-1-LINKDEVICE-RTT
+  domain: FREE
+  category: latency
+- parameter_id: UBP-F03
+  name: packet_flit_format
+  freedom: No public packet or FLIT format, MTU, or header layout beyond the 8-byte APR source-routing
+    header is reported.
+  anchor_ids:
+  - UBP-UBMESH-4.1.1-SR-HEADER
+  domain: FREE
+  category: routing
+- parameter_id: UBP-F04
+  name: congestion_control
+  freedom: None of the five public sources describes a congestion-control mechanism; only switch planes,
+    all-path routing, and 2-VL deadlock freedom appear. The flow-control scheme is unknown from public
+    text.
+  anchor_ids:
+  - UBP-UBMESH-3.2.1-LRS-DEF
+  - UBP-UBMESH-4.1.3-TWO-VL
+  domain: FREE
+  category: routing
+- parameter_id: UBP-F05
+  name: ordering_atomicity_detail
+  freedom: Ordering, atomicity, and memory-consistency semantics appear only as prose ('memory semantics',
+    coherence in shared scenes); no public consistency model or atomic-operation set exists.
+  anchor_ids:
+  - UBP-NESTEDVN-1-MEMSEMANTIC-BUS
+  - UBP-UBOS-1-OBMM-EXPORT-IMPORT
+  domain: FREE
+  category: memory_semantics
+- parameter_id: UBP-F06
+  name: layer_model_above_network
+  freedom: The public layer inventory stops at physical, data-link, and network test volumes; the
+    protocol's layer model above the network layer is not public.
+  anchor_ids:
+  - UBP-UBDOCS-1-LAYERS
+  domain: FREE
+  category: architecture
+- parameter_id: UBP-F07
+  name: lrs_plane_wiring
+  freedom: How the 18 LRSes' ports map onto the 64 NPUs and the four x256 backplane IOs is not spelled
+    out; only plane composition and per-LRS IO capability are reported.
+  anchor_ids:
+  - UBP-UBMESH-3.3.1-LRS-PLANE
+  - UBP-UBMESH-3.2.1-LRS-DEF
+  - UBP-UBMESH-3.3.1-BACKPLANE-IO
+  domain: FREE
+  category: link_scale
+- parameter_id: UBP-F08
+  name: rerouting_mechanism
+  freedom: Reliable rerouting is named as a Base Spec 2.1 highlight with no public mechanism; the
+    64+1 design covers NPU failure, not link-failure rerouting.
+  anchor_ids:
+  - UBP-UBDOCS-1-SPEC21-RATES
+  - UBP-UBMESH-3.3.2-64PLUS1
+  domain: FREE
+  category: reliability
+  candidates:
+  - label: Reliable rerouting — feature name only, no mechanism
+    anchor_id: UBP-UBDOCS-1-SPEC21-RATES
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+bindings: []
+checks:
+- check_id: UBP-CHK-01
+  kind: invariant
+  requirement_ids:
+  - UBP-P06
+  - UBP-P07
+  - UBP-P17
+  description: 'the cross-design L0 comparison''s UB flavor is anchored, not free: ranks=64 must equal
+    UBP-P17''s reported rack scale (tampering with the rank count is flagged naming UBP-P17), the
+    crossbar identity must be backed by the platform map''s L0_READY rows for UBP-P17/UBP-P06, bandwidth
+    B must enter only as 72 x per-lane rate with the rate FREE (UBP-F01), and the flavor files must
+    carry the paper-derived, not-normative marker plus the UBP-F01/UBP-F02 silence citations — drift
+    is a hard error, not silent'
+  location: tests/specir/test_unifiedbus_l0_flavors.py
+supported:
+  workloads:
+  - w1_dense_tp_decode
+  observables:
+  - O-CCT
+  - O-CONSERVATION
+calibration:
+  status: uncalibrated
+  targets: []
+  note: 'E0 evidence level: identity and determinism only; no UnifiedBus hardware measurements exist.
+    The reported figures (RTT 7->2 microseconds, MTBF, availability, linearity) are vendor/paper OUTCOME
+    claims carried with their grades, never calibration targets of this artifact; the free parameters
+    UBP-F01/UBP-F02 gate every numeric B/L'
+omissions:
+- what: 'zero backend capability bindings: the profile is executed by no backend, and its 54 requirements
+    carry no executed disposition (32 informational / 22 unsupported)'
+  reason: 'a binding is a reviewed act (essun.specir.bindings); none exists for the paper-derived
+    family. The platform map''s L0_READY rows (essun.specir.unifiedbus_platform_map) are mappings
+    to landed knobs, NOT bindings: they record which knobs UB structure facts could feed, and the
+    cross-design comparison consumes them under shared free parameters — no requirement''s execution
+    is claimed'
+- what: 'the UnifiedBus specification itself (Base Specification 2.x, Compatibility Test Specification,
+    Spec 2.1 highlights): not interpreted, not cited as a source'
+  reason: the specification track is license-gated (experiments/unifiedbus/source_record.yaml row
+    STD-UB-LICENSE, APPROVAL_REQUIRED, never fetched); this profile is built ONLY from the five PUBLIC_READ
+    papers/pages of the paper-anchor registry. The gated Base Specification is referenced by title
+    only, through one public page (UBP-P51)
+- what: '22 of 54 requirements carry disposition unsupported: reported outcome measures (MTBF, availability,
+    RTT claims, linearity), memory-semantic behaviors, host software components'
+  reason: 'honesty over coverage: per-disposition counts are computed live (tools/disposition_coverage.py)
+    and frozen in tests/specir/test_unifiedbus_paper_profile.py; a promotion is a reviewed act with
+    a registered binding'
+- what: 'no numeric bandwidth or latency value is derived from the profile: per-lane rate and per-component
+    latency are explicit free parameters (UBP-F01 / UBP-F02), so any run consumes them as recorded
+    free assumptions'
+  reason: no public source states a per-lane rate or a latency breakdown; inventing one is forbidden
+    (free-parameter rule). The anchored candidates (224/256 Gbit/s highlight, 1.6 Tbit/s per LinkDevice
+    port, 7->2 microsecond RTT) keep their own evidence grades and are never promoted to values
+- what: 'no golden or negative execution checks: the profile has no executable value semantics to
+    pin'
+  reason: checks exercise requirements through bindings; with zero bindings the only executable check
+    is the anchoring invariant UBP-CHK-01. Golden checks arrive only with the first reviewed binding
+versioning:
+  profile_version: 0.1.0
+  bump_rules:
+    major:
+    - dispositions
+    - bindings
+    - anchor_ids
+    - sources
+    minor:
+    - requirements
+    - freedom
+    - checks
+    - supported
+    patch:
+    - notes
+  note: the profile version tracks this ARTIFACT, not the source set (source.revision is the computed
+    digest of the five pinned documents and changes with any of them); anchor citations are immutable
+    — a changed citation is a new version, never a silent edit

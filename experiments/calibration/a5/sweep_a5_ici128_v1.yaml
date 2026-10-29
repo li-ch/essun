@@ -1,0 +1,55 @@
+# Calibration-ladder A5 sweep, slice 1: where does the
+# L0 2D-torus identity sit relative to CAL-A5's 4x4x8 slice (r=128) — Google
+# TPU v4, ISCA 2023 (docs/calibration/anchors_staging.md §A5)?
+#
+# Per CALIBRATION_PLAN.md §1.1 row CAL-A5 this anchor CANNOT calibrate O-CCT
+# directly (its measured quantity is all-to-all THROUGHPUT RATIOS between
+# twisted and regular tori, not a collective completion-time series); its
+# roles are the per-link BW anchor for a non-Ethernet, non-NVIDIA scale-up
+# fabric and the TOPOLOGY-SENSITIVITY FALSIFIER the plan's A-L0T-UNIF row
+# flags ("torus-class calibration should treat CAL-A5 as the first
+# falsifier of geometry abstractions >30%"). This sweep executes that
+# falsifier's model side and places the anchor's per-link readings inside
+# the plan §2.1 A-L0T-BW candidate span [20, 64] B/ns.
+#
+# NOTHING IS TUNED: B values {20, 25, 50, 64} B/ns are fixed by anchor
+# arithmetic and the plan's span (20: CAL-A12 NCCL per-link model; 25:
+# CAL-A5 reading-2 — the staged '6 links @ 50 GB/s' read per-link
+# bidirectional; 50: CAL-A5 reading-1 anchor point — the anchor's own §7.3
+# '400 vs. 200 Gbit/s' quote; 64: CAL-A7 per-direction endpoint and the
+# A-L0T-BW registry point). The staging doc flags the direction convention
+# UNVERIFIED — both readings are executed, neither is chosen. L stays at the
+# A-L0T-LAT registry point 200 ns. Every delta is an arithmetic fact of
+# t_2d = t_ring(M,r1) + t_ring(M,r2), t_ring = 2(k-1)/k*M/B + 2(k-1)*L.
+#
+# Shapes: 8x16 and 4x32 are the two partitions of the anchor's own
+# dimension lengths {4,4,8} (3D->2D projection, declared in each topology
+# file); 2x64 is NOT a partition — it is the latency-chain extreme bounding
+# the model's expressible shape space at r=128. Swapped shapes are
+# arithmetically identical (identity symmetric in dim1 x dim2) and are not
+# duplicated. Payload 4096 B = the anchor's individual all-to-all DMA size
+# (4 KiB); 4096 is divisible by every power-of-two dimension here, so the
+# A-L0T-DIV gate ACCEPTS the anchor's size exactly — no bracketing
+# (contrast stage A3, where 72 = 8*9 rejected every power of two).
+#
+# Baseline = the anchor point (8x16 at B=50): delta columns read directly
+# as placement vs the anchor's own arithmetic.
+sweep: cal_a5_ici128_v1
+workload: experiments/calibration/a5/workloads/w1_dense_tp_decode_tp128_4kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_torus2d
+  topology: experiments/calibration/a5/topologies/torus2d128_a5_8x16_b50_v1.yaml
+grid:
+  payload_sizes_bytes: [4096]   # CAL-A5's individual DMA size; exact, gate-accepted
+  algorithms:
+  - algorithm: allreduce_torus2d
+    topologies:
+    - experiments/calibration/a5/topologies/torus2d128_a5_8x16_b20_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_8x16_b25_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_8x16_b50_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_8x16_b64_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_4x32_b50_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_2x64_b50_v1.yaml

@@ -1,0 +1,64 @@
+# Calibration-ladder GF-05 sweep #3: the anchor's
+# STATED SCALE AND TOPOLOGY SERIES — r = 1,024 nodes at the anchor
+# sim-config point (B = 100 B/ns per direction from "800 Gbps", L =
+# 1000 ns per hop from 600 + 400). SMaRTT+REPS simulate "4 fat trees
+# incl. 1,024-node non-blocking and 2:1/4:1/8:1 oversubscribed"; this
+# sweep executes the structural content of that sentence the L0 family
+# can carry.
+#
+# THREE ROWS, THREE ROLES (all at equal B, L, r):
+# 1. crossbar1024_gf05_line100_v1 (BASELINE): the NON-BLOCKING
+#    single-stage CEILING abstraction of the paper's own 1,024-node
+#    non-blocking fat tree (the role CAL-A1/A2 spec ceilings play) —
+#    never a prediction of the fat tree. It executes the structural
+#    rank-count fact: the bandwidth coefficient 2(r-1)/r = 1023/512 is
+#    exactly (8/7)*(r-1)/r = 1023/896 ~ 1.1421 above the r=8 smoke
+#    default — at most +1/7 ~ +14.29% for ANY r (the same structural
+#    class stage A11 executed at r=24,576).
+# 2. crossbar1024_gf05_sub8to1_12_5_v1: the FAIRNESS-QUOTE
+#    CONFIGURATION — the anchor's stated "2 MiB permutation, 1,024
+#    nodes, 8:1 oversubscription" context displaced onto the B axis
+#    (100/8 = 12.5 B/ns; asymptotic CCT factor exactly 8 vs row 1). The
+#    quote itself (slowest flow 65% longer than fastest under Swift) is
+#    INEXPRESSIBLE at L0 — per-flow spread is exactly 0 by construction
+#    and no per-flow observable exists; the row locates the
+#    configuration's magnitude only.
+# 3. ring1024_gf05_line100_v1: the MULTI-HOP SCHEDULE contrast at the
+#    same scale/config — the ring charges the per-hop latency 2*(r-1) =
+#    2,046 times per AllReduce (latency chain exactly 2,046,000 ns)
+#    against the crossbar's 2; ring-minus-crossbar is exactly
+#    2*(r-2)*L = 2,044,000 ns at every size (identity, verified on
+#    executed rows). CONFOUNDER ORDERING from the anchor's own numbers:
+#    schedule structure (factors at the bracketing sizes below/above
+#    the ring regime boundary M* = L*B*r = 102,400,000 B) >
+#    oversubscription structure (x8) > rank-count structure (+14.2%) >
+#    the congestion-control envelope the paper measures (x1.06-1.5
+#    between schemes; x3-6 vs RoCE-class baselines) — the CC effect is
+#    the SMALLEST of four separable confounders, each above every noise
+#    floor in the anchor set (CAL-A4 ~5%, CAL-A6 5-8%).
+#
+# NOTHING IS TUNED: GF-05 stages no (size -> time) series in any
+# CCT-comparable metric class (its FCT tables are unstaged); no row is
+# compared to any anchor time. Payload grid: 18-size ladder 1024*2^k
+# (1 KiB -> 128 MiB) — every size divisible by r = 1024 = 2^10
+# (A-L0-DIV / A-L0X-DIV accept, no bracketing), including the anchor's
+# 2 MiB flow size (k=11) and executed rows bracketing M* = 102,400,000
+# B (64 MiB below, 128 MiB above).
+sweep: cal_gf05_scale1024_v1
+workload: experiments/calibration/gf05/workloads/w1_dense_tp_decode_tp1024_1kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf05/topologies/crossbar1024_gf05_line100_v1.yaml
+grid:
+  payload_sizes_bytes: [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf05/topologies/crossbar1024_gf05_line100_v1.yaml
+    - experiments/calibration/gf05/topologies/crossbar1024_gf05_sub8to1_12_5_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf05/topologies/ring1024_gf05_line100_v1.yaml

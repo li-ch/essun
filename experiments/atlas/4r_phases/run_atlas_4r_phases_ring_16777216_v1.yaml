@@ -1,0 +1,44 @@
+# Atlas cell 4r-phases (design-space atlas ladder): rank class 4 x algorithm family phase collectives, RING family (ReduceScatter/AllGather on the unidirectional-ring
+# fabric), one grid point M = 16777216 B of the atlas-wide shared 12-size
+# ladder.
+#
+# E0 evidence only: closed-form L0 analytical identity under explicit FREE
+# PARAMETERS (B = 64 bytes/ns, L = 200 ns, ranks = 4, shared with every
+# other atlas cell; payload below). Nothing measured, nothing
+# standard-derived; claim_id is deliberately EMPTY (zero claim edits).
+#
+# Execution vehicle note (the sweep-path structural finding, recorded on
+# the atlas page): the sweep runner registers only the four AllReduce
+# algorithm ids and expands W1 AllReduce ops, which this backend rejects
+# by capability contract, so no sweep manifest can carry a phase config;
+# the RUN path executes analytical_l0_phase_collectives
+# natively (topology_class selects the family), and this run manifest is
+# the execution vehicle for this grid point.
+experiment_id: EXP-ATLAS-4R-PHASES-RING-16777216-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w2_dense_tp_prefill_tp4_chunk16777216.yaml
+infra_graph:
+  path: experiments/topologies/ring4_free_params.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_l0_phase_collectives.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_phase_collectives
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring4_free_v1 unidirectional ring, B = 64 bytes/ns and L = 200 ns free parameters, shared with every atlas cell
+  workload: w2_dense_tp_prefill tp4, 3 layers x 1 chunk = 3 RS+AG pairs (6 phase ops) at chunk M = 16777216 B (A-L0P-MSG semantics)
+  implementation: analytical L0 phase-collectives ring family, ReduceScatter and AllGather each t = (r-1)/r*M/B + (r-1)*L (A-L0P-ALGO ring pairing); E0 identity execution, no standard semantics
+evidence_level_requested: E0

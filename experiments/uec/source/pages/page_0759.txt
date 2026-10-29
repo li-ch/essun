@@ -1,0 +1,27 @@
+ 759 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+and management systems. UE YANG model specifications will provide a reference model that can be 
+used for UE switch management. 
+7.6 Switch Abstraction Interface (SAI) for UE 
+SAI is a subproject under the OCP Networking Project. Figure 7-6 shows the architecture of SAI. 
+ 
+Figure 7-6 - SAI Architecture 
+7.6.1 SAI Enhancements for UE 
+SAI enhancements for UE leverage the SAI pipeline and SAI objects. SAI enhancements for LLR, CBFC, 
+and CSIG are specified. 
+7.6.1.1 SAI Enhancements for LLR 
+Link layer retry (LLR) is a hop-by-hop mechanism that provides the capability for local retransmission of 
+frames lost due to link errors, thereby avoiding the impact on application performance. LLR uses 
+sequence numbers and periodic acknowledgements to track Ethernet frames. LLR is a new feature in 
+SAI. To support LLR, new attributes and statistics are added to the SAI port object. Additionally, a new 
+object called a Port LLR profile is introduced to model the LLR parameters of a port. 
+7.6.1.2 SAI Enhancements for Credit-Based Flow Control (CBFC) 
+In CBFC, the sender ensures that the receiver has enough buffer before transmitting a frame. The 
+receiver advertises its buffer availability to the sender using credits that represent the amount of buffer 
+space available. The sender can transmit frames only if it has sufficient credits—ensuring that the 
+receiver has space to accept the incoming data. Periodically, the receiver sends back to the sender the 
+credits for the frames that have left the buffer. CBFC supports up to 32 virtual channels (VCs) per port. 
+Each VC can be configured as either lossless or best-effort, and this configuration can be changed 
+dynamically. 
+Create standardized C API to program ASICs 

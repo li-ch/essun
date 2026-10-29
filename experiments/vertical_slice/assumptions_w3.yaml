@@ -1,0 +1,121 @@
+# Assumption registry for the W3 MoE dispatch/combine workload.
+# Per-family file (like assumptions_l05.yaml): unrelated
+# additions cannot shift other families' run identities. Same house format:
+# every assumption has a range, rationale, sensitivity, owner and review status.
+assumptions_id: assumptions_w3_v1
+status: PROPOSED
+assumptions:
+  - id: A-W3-ROUTE
+    parameter: model.routing_input
+    value: deterministic_table_or_shares_apportioned
+    unit: none
+    range: [explicit_table, shares_apportioned_greedy_fill, learned_or_stochastic_routing]
+    rationale: >
+      Routing is INPUT, never learned and never random (scope):
+      either the fully explicit (layer, rank, token) -> top-k table, or the
+      per-layer integer expert-shares matrix apportioned over the
+      ranks*tokens_per_rank*top_k visits by exact-Fraction largest-remainder
+      and filled greedily (largest remaining budget first, ties by smallest
+      expert id, rank-major/token-minor). Routing skew is therefore a
+      free-parameter matrix, not an RNG outcome. Learned or stochastic
+      routers are a different identity and are not generated.
+    sensitivity: sets the per-pair byte matrix of every op (all routing-sensitive observables)
+    owner: workload
+    review: PROPOSED
+  - id: A-W3-SHARES
+    parameter: workload.expert_shares
+    value: "smoke: layer 0 uniform (1,1,1,1); layer 1 skew (2,1,1,1) -> (32,16,16,16) of 80 visits"
+    unit: integer weight per expert per layer
+    range: layers x experts nonnegative integer weights, nonzero per layer, feasible (apportioned visits <= tokens_per_rank*tp_size per expert)
+    rationale: >
+      Free parameter (the skew matrix). Integer weights keep apportionment
+      exact and deterministic; feasibility bounds follow from top-k
+      distinctness (each token visits an expert at most once). Not
+      standard-derived and not measured; a real deployment derives shares
+      from the router statistics of a specific model.
+    sensitivity: high for per-rank receive bytes and per-pair imbalance; zero for total payload (always ranks*tokens*top_k*token_bytes per phase)
+    owner: workload
+    review: PROPOSED
+  - id: A-W3-SIZE
+    parameter: workload.token_bytes
+    value: 2048
+    unit: bytes
+    range: [64, 1048576]
+    rationale: >
+      Free parameter: the activation slice of one token carried to ONE
+      expert visit, identically in dispatch and in combine (equal in/out
+      widths, A-W3-A2A). Model-derived in a real deployment (hidden slice x
+      dtype bytes); a free parameter here.
+    sensitivity: high for every byte count (all payloads scale linearly)
+    owner: workload
+    review: PROPOSED
+  - id: A-W3-A2A
+    parameter: model.phase_pattern
+    value: one_alltoall_per_phase_per_layer_combine_mirrors_dispatch
+    unit: none
+    range: [mirror_equal_payloads, asymmetric_phase_widths, per_pair_sends]
+    rationale: >
+      Dispatch and combine are each ONE all-to-all collective over the full
+      group per layer; combine carries the same bytes back (transpose of
+      dispatch's pair matrix). Per-op payload_bytes is the phase's total
+      bytes moved across the group; per-pair detail rides the op for the
+      L1/L2 executors. Decomposing one all-to-all into per-pair point-to-
+      point ops, or asymmetric dispatch/combine widths, are different
+      identities and are not generated.
+    sensitivity: high for op counts and every per-op byte field
+    owner: workload
+    review: PROPOSED
+  - id: A-W3-LOCAL
+    parameter: model.colocated_visits
+    value: diagonal_recorded_in_logical_totals
+    unit: none
+    range: [counted_on_diagonal, excluded_as_local]
+    rationale: >
+      Visits to experts co-located with the origin token are recorded in
+      per_pair[src][src] and included in the LOGICAL byte totals. Whether
+      co-located bytes consume fabric bandwidth is an executor (L1/L2)
+      modeling decision, deliberately not decided by the generator; an
+      executor that excludes them must say so and derive its own totals.
+    sensitivity: high for per-rank wire totals when experts are co-located (round-robin placement always co-locates expert 0)
+    owner: workload
+    review: PROPOSED
+  - id: A-W3-DAG
+    parameter: model.dependency_semantics
+    value: serialized_dispatch_combine_layer_chain
+    unit: none
+    range: [serialized_dispatch_combine_layer_chain, overlapped, pipelined_batches]
+    rationale: >
+      Direct dependencies only — combine(l) depends on dispatch(l) (experts
+      consume the dispatched activations before results return); dispatch
+      (l+1) depends on combine(l) (the next layer's input is the previous
+      layer's combined output). The DAG is a chain in the fixed emission
+      order (layer-major, dispatch before combine), which is a topological
+      order of it; the W3 analogue of W2's A-W2-DAG. Overlapped
+      dispatch/combine or pipelined multi-batch schedules are different
+      identities and are not generated.
+    sensitivity: high for any critical-path time once an executor exists; zero for byte accounting
+    owner: workload
+    review: PROPOSED
+  - id: A-W3-PLACE
+    parameter: workload.expert_placement
+    value: round_robin_expert_mod_ranks_or_explicit_table
+    unit: none
+    range: any expert -> rank table (length experts_per_layer, ranks in [0, tp_size))
+    rationale: >
+      Expert placement is INPUT: explicit per-expert rank table, or the
+      deterministic round-robin default (expert e on rank e mod tp_size).
+      Not standard-derived and not measured; a real deployment derives
+      placement from its EP sharding strategy.
+    sensitivity: high for which rank receives each skewed expert's traffic; zero for total payload
+    owner: workload
+    review: PROPOSED
+notes: >
+  HONEST SCOPE: W3 issues all-to-all ops and NO registered
+  backend executes all-to-all — the five L0 analytical models declare only
+  allreduce/reducescatter/allgather, and both Docker-pinned adapters
+  translate W1 only. A W3 manifest is rejected loudly by the run path's
+  collective capability gate (a tested behavior, not an accident). MoE
+  dispatch/combine traffic needs an L1 (flow/collective) or L2 (packet/FLIT)
+  backend to EXECUTE; until one lands, W3 is a generator + exact integer
+  byte identities, testable without execution. No normative values are used
+  anywhere in this registry.

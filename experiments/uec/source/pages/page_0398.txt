@@ -1,0 +1,55 @@
+ 398 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+CP Type CTL_TYPE PSN Usage Control Payload ACK 
+Credit 
+Request 
+0x08 0x0 Source to 
+Destination 
+Target_Credit pds.flags.ar is cleared. 
+Does not trigger ACK. 
+ 
+Negotiation 0x09 Unique, new 
+PSN 
+Either direction, 
+can open a PDC 
+0x0 
+(32 B) 
+pds.flags.ar is set.  
+Triggers an ACK. 
+Telegram 0x10 Unique, new 
+PSN 
+Either direction 2 B telegram 
+type_id + 30 B 
+telegram (32 B) 
+pds.flags.ar is set.  
+Triggers an ACK. 
+ 
+3.5.17 Semantic Responses 
+Every PDS Request triggers an associated SES Response. SES indicates to PDS if the semantic response 
+requires guaranteed delivery, meaning it contains unique information (e.g., SES NACK code or data). SES 
+always provides a guaranteed delivery semantic response for fetching atomics or reads if the result is 
+carried in the ACK. SES may provide a guaranteed delivery semantic response for other requests, 
+including when an error occurs. When SES indicates that an SES Response requires guaranteed delivery, 
+PDS MUST request a clear by setting pds.flags.req to REQ_CLEAR in the associated ACK, and— with the 
+exception of read response data—the FEP MUST maintain the state necessary to retransmit that ACK if 
+lost. 
+The target PDS MUST maintain state for guaranteed delivery semantic responses until a clear is 
+received, enabling retransmission of the response when a duplicate request packet is received. All other 
+responses to duplicate packets use the default SES Response shown in Section 3.5.13. The destination 
+MUST build the appropriate ACK if a duplicate request or ACK Request CP is received that is in the 
+supported ACK window (Section 3.5.12.6). 
+All fetching atomic responses MUST be returned in the associated ACK packet, regardless of the 
+Max_ACK_Data_Size. Fetching atomic responses up to 16 B MUST be supported when supporting 
+fetching atomics. Fetching atomic results MUST be stored at the target and retransmitted if the 
+associated ACK is lost. An implementation SHOULD NACK a fetching atomic operation if the response 
+exceeds the supported size. In this case a NACK code of UET_ATOMIC_RESP_TOO_LARGE is used. 
+If an ACK has associated data from a read request (i.e., the read size is  Max_ACK_Data_Size), the data 
+is not stored at the target. The target marks the PSN as required delivery and generate a NACK if an ACK 
+Request CP is received for that PSN. The initiator retransmits the original read request to recover the 
+missing ACK in this case. 
+3.5.18 Reserved PDCs 
+Support for reserved PDCs is optional. The must statements in this section apply only if reserved PDCs 
+are supported. 
+Reserved PDCs are intended to support use cases where handling a NACK due to lack of PDC or CCC 
+resources is challenging. PDS allows reserving a pool of PDC and CCC resources that are allocated and 

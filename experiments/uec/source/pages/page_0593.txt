@@ -1,0 +1,46 @@
+ 593 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+    PKT_TRIM_SIZE = IP payload size after trimming; must be at least 
+MIN_TRIM_SIZE. 
+    if (pkt.IP.version == 4)://IPv4 processing 
+        pkt.IP.payload = TRIM(pkt.IP.payload,PKT_TRIM_SIZE) 
+        pkt.IP.TotalLength = PKT_TRIM_SIZE + IP.HeaderLength * 4 
+        update(pkt.IP.HeaderChecksum) 
+    else if (pkt.IP.version == 6): //IPv6 processing 
+        pkt.IP.payload = TRIM(pkt.IP.payload,PKT_TRIM_SIZE)] 
+        pkt.IP.PayloadLength = PKT_TRIM_SIZE 
+ 
+    //the frame FCS must be recomputed to transmit after trimming. 
+    pkt.Ethernet.FCS = ... 
+ 
+The TTL processing of the trimmed packet is the exact same behavior of the non-trimmed packet. 
+The buffer admission thresholds for both trimmable and trimmed packets in the pseudocode above are 
+given as static thresholds for simplicity. However, dynamic buffer admission thresholds SHOULD also be 
+supported for both trimmable and trimmed packets. 
+While a packet with a DSCP_TRIMMED codepoint SHOULD follow the same path through the network as 
+the associated DSCP_TRIMMABLE packet, switches MAY select different paths for trimmed packets to 
+the same destination. 
+While packet trimming is very useful to ensure single RTT loss detection and thus to trigger fast 
+retransmission, there is no guarantee that for each packet failing buffer admission checks a trimmed 
+packet will be delivered to the destination. This is because trimmed packets are still subject to packet 
+loss at the trimming switch, at subsequent switches along the path, or at the destination. Thus, 
+transport protocols are required to implement loss detection mechanisms (e.g., timeouts) to use as a 
+backstop when a packet is lost and an associated drop notification is not delivered to the receiver. 
+Informative text: Rationale for Trimming Design 
+Packet trimming is a form of drop notification; packet switches have long had monitoring capabilities 
+to at least record packet drops, typically by sending the first 64B of the dropped packet to a 
+configured monitor. When a drop happens, the drop notification can be sent to the packet receiver or 
+sender instead, to speed up loss recovery. 
+An initial proposal that integrated drop notification as a part of the dataplane was the FastLane work 
+from Berkeley [4] . Here, when a packet fails buffer admission, a notification is sent to the packet’s 
+source. This approach, also called back-to-sender (BTS), delivers faster notification to the sender, but 
+it is more complex to implement especially when encapsulation (e.g., VXLAN) is used. Another 
+relevant work in this space is the IEEE draft on Source Flow Control (SFC, P802.1Qdw) that targets a 
+broader scope and includes back-to-sender and source flow control [7] . Standardizing the BTS mode 
+of operation is not addressed in this specification. 
+The Cut Payload paper is the first proposal that suggested sending the drop notification to the 
+receiver instead [3] . Sending the notification to the receiver is simpler to support in switches, as it 
+involves only editing the packet length and the DSCP field. It also has the advantage that it enables 
+near-optimal incast behavior via receiver credit scheduling as proposed by pHost [5] , NDP [2] , and 
+Homa [6] . 

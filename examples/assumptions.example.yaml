@@ -1,0 +1,19 @@
+schema_version: 0.1.0
+assumptions:
+- assumption_id: ASM-EXAMPLE-PIPELINE
+  related_requirement: REQ-0042
+  name: switch_pipeline_ns
+  kind: implementation_specific
+  allowed_range:
+  - 10
+  - 100
+  selected_values:
+  - 25
+  - 50
+  - 100
+  basis: Illustrative synthetic sweep only; not a measurement
+  sensitivity_priority: high
+  owner: V&V lead
+  review_status: PROPOSED
+  invalidates:
+  - absolute_latency_claims

@@ -1,0 +1,46 @@
+ 109 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+▪ Security bindings are assigned as specified in Section 2.2.4.1 
+o Start resource index 
+o Num resource indices 
+▪ Resource index bindings provided in the response SHOULD take precedence 
+over other methods of Index configuration. 
+• The kernel driver MUST program the JobID validation information and security bindings into the 
+NIC hardware. 
+• The kernel driver MUST relay the address assignment response, without the security bindings, to 
+the UET provider and SHOULD use a Netlink interface when relaying the response in Linux 
+implementations. 
+The parameters comprising the UET Control API address assignment request are specified in Table 2-18. 
+Table 2-18 - UET Control API Address Assignment Request Parameters 
+Parameter Name Size (bits) Description 
+Flags 8 Bit 0:0 Indicates FEP IP address type 
+          0 => IPv4 
+          1 => IPv6  
+Bits 1:7 Reserved, MUST be 0 
+FEP IP Address 128  
+OS Process ID 32  
+Service Name 136 NULL-terminated character string identifying service 
+ 
+The parameters comprising the UET Control API address assignment response are specified in Table 
+2-19. 
+Table 2-19 - UET Control API Address Assignment Response Parameters 
+Parameter Name Size (bits) Description 
+Flags 8 Bit 0:0 Indicates validity of JobID field 
+          0 => JobID field is NOT valid 
+          1 => JobID field is valid 
+Bit 1: 1 Indicates validity of Security Bindings Field  
+          0 => Security bindings field is NOT valid 
+          1 => Security bindings field is valid 
+Bits 2:7 Reserved, MUST be 0 
+JobID 24  
+UET Address See Table 
+2-10 
+The UET Address format is specified in Table 2-10 
+Security Bindings See Table 
+2-33 
+Security binding parameters are specified in Table 2-33 
+ 
+‘C’ structure representations of the UET Control API address assignment request and response are 
+shown below. 
+#define UET_CTRL_ADDR_REQ_FLAG_IPV4   (0 << 0) /* IPv4 fabric address type */ 

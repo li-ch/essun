@@ -1,0 +1,18 @@
+ 578 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+For networks that retain UDP encapsulation, destination UDP port 4793 indicates the packet is a UET 
+packet. Figure 3-148 depicts UET over UDP encapsulation. 
+For scale-up networks using UFH_32 encapsulation, EtherType 0xE790 indicates the packet is a UET 
+packet. Figure 3-149 depicts encrypted UET over UFH_32 encapsulation. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Figure 3-148 - TSS with UDP Encapsulation 
+ 

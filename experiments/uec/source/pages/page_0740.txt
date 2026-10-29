@@ -1,0 +1,50 @@
+ 740 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 6-9 - UCR to FLR conversion factors 
+Average 
+frame size 
+(octets) 
+FPC Conversion factor, FLR/UCR 
+100 Gb/s with RS-FEC 
+(Clause 91) 
+200 Gb/s and 400 Gb/s 
+(Clause 119), 
+100 Gb/s with RS-FEC-Int 
+(Clause 161) 
+800 Gb/s (Clause 
+172) and 1.6 Tb/s 
+(Clause 175) 
+64 8 1.125 2.125 4.125 
+1500 0.42 3.36875 4.36875 6.36875 
+9000 0.07 15.0875 16.0875 18.0875 
+ 
+Due to the dependence of FLR on traffic patterns (such as frame size), it is difficult to predict the link 
+performance using FLR measurement. It is thus preferable to use UCR as the performance metric and, if 
+necessary, convert it to FLR based on traffic characteristics. 
+Informative Text: 
+Error marking in the PCS may optionally be bypassed, and in that case, error detection is only 
+performed by the MAC using CRC. When this option is enabled, it is possible that some frames in an 
+uncorrectable codeword will reach the MAC without error, and the frame loss ratio will be somewhat 
+lower. The FLR analysis above is valid for the case where error marking is not bypassed. 
+ 
+6.3.1.2 Relationship between UCR and MTBPE 
+Unlike the relationship between UCR and FLR described in 6.3.1.1, which is dependent on many factors, 
+the relationship between UCR and MTBPE is simple. For each Ethernet data rate, MTBPE on a single link 
+is a deterministic function of the UCR on that link, which can be estimated from FEC statistics as 
+described in 6.3.2. 
+The number of codewords in a given period of time can be calculated from the period of a single 
+codeword (5440 bits), denoted TCW. Table 6-10 lists the value of TCW for different Ethernet rates. 
+Table 6-10 - Codeword times 
+Ethernet rate TCW [ns] 
+100 Gb/s 51.2 
+200 Gb/s 25.6 
+400 Gb/s 12.8 
+800 Gb/s 6.4 
+1.6 Tb/s 3.2 
+ 
+For a specific link, MTBPE can be calculated using Equation 2: 
+𝑴𝑻𝑩𝑷𝑬 = 𝑻𝑪𝑾
+𝑼𝑪𝑹 (Equation 2) 
+where TCW is provided in Table 6-10 and UCR is the uncorrectable codeword ratio on the link. 
+The UCR values corresponding to several values of MTBPE are provided in Table 6-11. 

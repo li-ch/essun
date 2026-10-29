@@ -1,0 +1,47 @@
+ 631 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.1 Link Layer Retry (LLR) 
+The impact of delay on efficiency becomes more significant as network link speeds, utilization, and scale 
+increase. Latency-sensitive workloads are negatively impacted by the delays created from the traditional 
+end-to-end approach of retransmitting lost packets. Local error handling at the link layer has proven 
+valuable in scale-out HPC networks, such as those used in exascale systems. The UE specification 
+provides a link layer retry (LLR) capability for Ethernet. 
+The LLR mechanism is frame-based. Each frame passed to the transmit LLR from the MAC client is 
+assessed for eligibility for LLR. If the MAC client does not desire LLR for the frame, or if it is otherwise 
+classified as LLR-ineligible, then the frame is sent as a standard Ethernet frame. If the frame is LLR-
+eligible, then the LLR TX assigns a sequence number and stores the frame in a replay buffer for possible 
+retransmission if the link partner does not receive the frame. 
+The sequence number for each LLR-eligible frame passed from the LLR to the MAC is placed into the 
+preamble prepended by the MAC. The link partner sends acknowledgements (LLR_ACKs) for LLR-eligible 
+frames that are successfully received, and these LLR_ACKs are used to free space in the replay buffer. 
+Negative acknowledgements (LLR_NACKs) are used to signal when a missing LLR-eligible frame is 
+detected (due to receipt of a subsequent LLR-eligible frame). Timeouts are used to guarantee that LLR-
+eligible frames will be replayed if an LLR_NACK is lost or if a replay is corrupted and there is no LLR_ACK 
+to indicate progress. 
+MEDIUM
+PRESENTATION
+APPLICATION
+SESSION
+TRANSPORT
+NETWORK
+DATA LINK
+PHYSICAL
+OSI
+REFERENCE
+MODEL
+LAYERS
+MDI
+PHY
+MAC – MEDIA ACCESS CONTROL
+MAC CONTROL (OPTIONAL)
+LLC (LOGICAL LINK CONTROL) OR OTHER MAC CLIENT
+HIGHER LAYERS
+ETHERNET
+LAYERS
+RECONCILIATION
+xGMII*
+LLR (LINK LAYER RETRY) (OPTIONAL)
+*xGMII includes CGMII/200GMII/400GMII/800GMII
+ 
+Figure 5-1 - Architectural position of LLR. 

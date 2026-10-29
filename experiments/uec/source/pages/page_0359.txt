@@ -1,0 +1,38 @@
+ 359 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+For diagnostic purposes, the arrival of an ACK_CC or ACK_CCX packet should be reported based on 
+pds.cc_type or pds.ccx_type, respectively. This state, provided as CC_TYPE_EVENT and 
+CCX_TYPE_EVENT, includes a 16-bit field where a set bit indicates a packet with that pds.cc_type or 
+pds.ccx_type arrived. For example, if pds.cc_type = 0 then bit 0 in the CC_TYPE_EVENT field is set. 
+PDS ACKs MUST use the entropy from the packet that triggered the ACK generation. If UET is running 
+over UDP, the udp.src_port field of the packet that triggered the ACK is used as the udp.src_port for the 
+ACK. If UET is running directly over IP, the 16-bit pds.entropy field in the UET entropy header from the 
+packet that triggered the ACK is copied to the pds.entropy field for an ACK of the associated PSN. 
+ACKs may be transmitted for every packet or using coalescing based on the configuration parameter, 
+Enb_ACK_Per_Pkt. The following two sections describe each of these two modes. ACK per packet MUST 
+be supported. 
+Destinations receiving PDS requests with pds.flags.ar set MUST transmit an ACK regardless of the 
+configuration of Enb_ACK_Per_Pkt. Destinations may transmit an ACK when pds.flags.ar is cleared. 
+The pds.next_hdr field MUST be set to UET_HDR_NONE when acknowledging CPs. 
+CACK and ACK processing is the same regardless of whether ACK per packet or ACK coalescing is in use. 
+If an ACK arrives with a PSN that is out of range, e.g., lower than CACK_PSN or higher than the highest 
+PSN sent, the ACK MUST NOT be used to update PDC state. 
+If an ACK Request CP or duplicate packet is received while PDS is still processing a packet with the same 
+PSN as the ACK Request CP or duplicate packet, the packet is NACK’d with pds.nack_code = 
+UET_RCVD_SES_PROCG. 
+Informative Text: 
+When running with RCCC or TFC congestion control, the base ACK may be used rather than ACK_CC or 
+ACK_CCX. This requires the use of credit CPs and ACK per packet. 
+ 
+3.5.12.3 ACK per Packet 
+When Enb_ACK_Per_Pkt is set, the pds.flags.ar MUST be set in every PDS request. 
+When an ACK is lost, the corresponding SES Response MUST be inferred to be the 
+UET_DEFAULT_RESPONSE if CACK_PSN is higher than the PSN that triggered the missing ACK.  
+3.5.12.3.1 SACK bitmap—ACK per Packet 
+The SACK bitmap is transmitted in the pds.sack_bitmap field and MUST be supported as follows. The 
+pds.sack_bitmap field is 64 bits in length. When a bit is set, it indicates the corresponding PSN was 
+received, passed to SES for processing, and SES provided a response. When a bit is not set (zero), there 
+is no information about the PSN. The purpose of the pds.sack_bitmap field is to provide a redundant 
+indication that packets have been received. A bit in the pds.sack_bitmap field MUST NOT be set until 
+the corresponding PSN is received at the destination. 

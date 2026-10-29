@@ -1,0 +1,33 @@
+ 89 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Parameter Data Type Description 
+UET_PROVIDER_FALLBACK_JOBID_SUPPORT boolean Configuration support for assigning endpoints to 
+a fallback JobID if one cannot be obtained from 
+the job provisioning system. See Section 2.2.4.2. 
+UET_PROVIDER_INITIATOR_ID uint32_t Environment variable containing the initiator ID 
+for endpoints configured through the fallback 
+JobID mechanism described in Section 2.2.4.2. 
+UET_IM_URL_PRIMARY string An environment variable specifying a URL that 
+can be used to communicate with the primary 
+INC manager. 
+UET_IM_URL_SECONDARY string An environment variable specifying a URL that 
+can be used to communicate with the secondary 
+INC manager. 
+ 
+2.2.4 JobIDs 
+The JobID is part of UET addressing, is carried in the SES header as the ses.JobID field, and is used for 
+authorization. The JobID MUST be assigned by a privileged entity. A privileged entity MUST provide the 
+assigned JobID to the provider kernel driver as described in either Section 2.2.4.1 or Section 2.2.5.3.5.1. 
+After assignment, the JobID MAY be passed to libfabric user-space software, but JobIDs presented to the 
+UET provider by libfabric user-space software MUST be validated within a hardware context. Multiple 
+methods for assigning JobIDs are specified: 
+1. JobID assignment at job initialization time 
+2. JobID assignment at libfabric endpoint creation time 
+3. Fallback JobID assignment 
+2.2.4.1 JobID Assignment at Job Initialization Time 
+A privileged entity, such as a job launcher, MAY assign JobIDs at job initialization time. When JobID 
+assignment is performed at job initialization time, the privileged entity MUST configure {OS Process ID, 
+Service Name} => {JobID} mappings via the UET Control API with the provider kernel driver, as illustrated 
+in Figure 2-4. The privileged entity MAY also configure components of the local UET address and security 
+bindings as part of the mapping. 

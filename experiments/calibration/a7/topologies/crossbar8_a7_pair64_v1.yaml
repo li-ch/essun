@@ -1,0 +1,32 @@
+# Calibration-ladder A7 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the PER-PAIR-CAP conservative reading — single shared
+# injection port of B = 64 B/ns, i.e. the anchor's per-pair per-direction
+# rate (CAL-A7: 128 GB/s bidirectional per dedicated link => 64 B/ns per
+# direction) used AS IF it were the whole per-rank injection capacity.
+#
+# ROLE: this row brackets the aggregate-reading family from below, inside
+# the single-port abstraction. It expresses the physical constraint "no
+# pair may exceed 64 B/ns per direction" in the only way the single-port
+# input space can (one shared port of 64) — which UNDERSTATES the mesh's
+# parallel injection capability by exactly 7x in this identity (7
+# dedicated pairs could carry 448 in aggregate). The true per-pair
+# structure lies BETWEEN this row and crossbar8_a7_agg448_v1 and is
+# inexpressible in the single-port input space (A-L0X-PORT
+# OUT-OF-DOMAIN, plan §2.1) — recorded, not smoothed.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), fixed by anchor
+# arithmetic BEFORE any stage output was read; never tuned. L = 200 ns is
+# the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_a7_pair64_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar8_a7_agg448_v1 (A-L0X-PORT,
+  A-L0X-LAT, A-L0X-DIV); only the swept free parameter B differs. B = 64
+  is CAL-A7's per-pair per-direction rate read as a shared single port
+  (per-pair-cap conservative reading of the same anchor). Anchor quote /
+  assumption, never our measurement.

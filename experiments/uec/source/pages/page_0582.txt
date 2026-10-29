@@ -1,0 +1,42 @@
+ 582 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+▪ If the tss.tsc.counter is greater than invokeWarnThreshold, then the SDME 
+SHOULD be informed. 
+• The packet is encrypted and ICV appended to frame according to the process in Section 3.7.11.1. 
+o The IV is determined according to construction rules in Table 3-136. 
+o The Aoff, Coff, and SDK fields are used in encryption. 
+• The SDKDB statistics are updated as follows: 
+o sdiXXOutAuthPkts is incremented when the packet is successfully encrypted and sent. 
+• For any condition where the packet cannot be sent (e.g., invalid SDI, invalid SDKDB parameters), 
+the secure transport MUST ensure that unencrypted plaintext is not sent on the wire, that the 
+packet is dropped, and the ifPPOutErroredPkts counter is incremented. 
+3.7.11.3 Packet Reception 
+• The packet is received from link layer with a valid FCS and with any additional link information. 
+• The UET TSS header is processed as follows: 
+o If the tss.type field is not UET_TSS, then the packet bypassed encryption and MUST be 
+sent to PDS without modification. The rx_auth flag MUST NOT be set and the 
+inPPRxEncryptionBypassPkts counter MUST be incremented. 
+o If the tss.type field is UET_TSS then packet is processed by TSS before being sent to PDS. 
+o The tss.sp field indicates if SSI is present. 
+o The tss.an and tss.sdi fields are extracted from packet to form the security association. 
+• An SDKDB look-up is performed using tss.an and tss.sdi from TSS header. 
+o If an SDKDB entry is not found, then the packet MUST be dropped and the 
+ifPPInErroredPkts counter MUST be incremented. 
+o RxActiveAN is retrieved from the SDKDB. 
+o Validation of the tss.an field against RxActiveAN is performed as follows:   
+▪ If RxActiveAN = 0b00 then the packet MUST be dropped. 
+▪ If RxActiveAN = 0b01 and tss.an = 0 then the packet MUST be dropped. 
+▪ If RxActiveAN = 0b10 and tss.an = 1 then the packet MUST be dropped. 
+▪ If RxActiveAN = 0b11 the then the packet is allowed to continue. 
+If the packet is dropped, then the sdiXXInInvalidSa counter MUST be incremented and a 
+lastAN error indication MUST be sent to PDS. 
+o Once tss.an has been processed, the SDKi is selected from the SDKDB (SDKiAN0 or 
+SDKiAN1). 
+o If SDKDB.encap-type does not match the encapsulation of the receive packet or if Aoff 
+or Coff are invalid, the packet MUST be dropped and the sdiXXInInvalid counter MUST 
+be incremented. 
+o Any other SDKDB errors (invalid key, etc.) detected MUST cause the packet to be 
+dropped and the sdiXXInInvalid counter MUST be incremented. 
+o If the SSI mode in the packet (tss.sp) does not match the SDKDB ssi-mode field,  then the 
+packet is dropped and sdiXXInInvalid counter incremented. 

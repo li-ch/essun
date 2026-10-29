@@ -1,0 +1,37 @@
+ 470 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+pkt_tx_state = pdc.find_packet(pds.nack_psn) 
+ 
+If the packet was previously SACKed or cumulatively acknowledged, this state lookup will fail. CMS takes 
+no further action in processing this NACK11. 
+The source then performs the following calculations in an implementation-defined way: 
+nominal_pktsize = calculate_nominalpktsize(pkt_tx_state) 
+The OnNACK() action is then performed using these values: 
+OnNACK(nominal_pktsize, pds.nack_psn, Entropy, pds.flags.m,  
+pkt_tx_state, nack_arrival_time, pds.nack_code, pds.flags.retx) 
+3.6.10.6 Retransmission Timeouts and Inferred Loss 
+The PDS can detect loss using a retransmission timeout or may infer loss from information returned in 
+the SACK bitmap of an ACK or in other implementation-defined ways. In either case, the source MUST 
+look up the state associated with the missing packet and compute the nominal packet size in an 
+implementation-defined way: 
+pkt_tx_state = pdc.find_packet(lost_psn) 
+nominal_pktsize = calculate_nominalpktsize(pkt_tx_state) 
+ 
+The OnInferredLoss() action is then performed: 
+OnInferredLoss(nominal_pktsize) 
+3.6.10.7 CSIG Reflection Header Preprocessing for CC 
+If CSIG is enabled, the returning ACK state contains reflected CSIG information in the csig_reflection_hdr. 
+If the ACK state is present, the implementation extracts the csig_reflection_hdr from pds.ack_ccx_state. 
+All fields except the signal value are copied unmodified into the csig_refl_data structure. 
+csig_refl_data.t = csig_reflection_hdr.t 
+csig_refl_data.lm = csig_reflection_hdr.lm 
+csig_refl_data.d = csig_reflection_hdr.d 
+ 
+The signal value is also de-quantized while being copied: 
+csig_refl_data.s = quant_reverse_lookup(csig_reflection_hdr.s) 
+ 
+The de-quantization is done by looking up the metric value and the bucket ranges provided by the 
+control plane using the inverse of the process described in Section 4.2.4.1.5 for the compact tag format 
+ 
+11 While this is expected to be rare, a severely delayed NACK could cause this behavior.  

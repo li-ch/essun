@@ -1,0 +1,60 @@
+ 714 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+    PCP/DEI value, after the r-mask-pcpdei mask is applied, 
+    which identifies the packets that are members of this VC."; 
+          } 
+        } 
+        container dscp-identification { 
+          description 
+            "Provides mask and match for the DSCP bits."; 
+          leaf r-mask-dscp { 
+            type binary { 
+              length '6'; 
+            } 
+            description 
+              "A 6 bit mask for the DSCP bits."; 
+          } 
+          leaf r-dscp { 
+            type binary { 
+              length '6'; 
+            } 
+            description 
+              "The r-dscp value identifying the L3 packet 
+    DSCP value, after the r-mask-dscp mask is applied, 
+    which identifies the packets that are members of this VC."; 
+          } 
+        } 
+        container handle-identification { 
+          description 
+            "Provides an opaque handle used to 
+            identifies the packets."; 
+          leaf r-handle { 
+            type uint16 { 
+              range "0..4095"; 
+            } 
+            description 
+              "A handle used to identify a stream handle or other packet 
+    identifier which identifies the packets that are members 
+    of this VC."; 
+          } 
+        } 
+      } 
+    } 
+  } 
+  augment "/lldp:lldp/lldp:port" { 
+    description 
+      "Augments the LLDP port's local data with UE Link CBFC TLV"; 
+    leaf tlvs-tx-org-uec-link-neg-cbfc-enable { 
+      type boolean; 
+      description 
+        "Enable for the UE Link CBFC TLV transmission"; 
+    } 
+    container uel-cbfc-tlv-extension { 
+   description 
+     "Holds the local UE LLDP CBFC TLV data"; 
+          uses uel-cbfc-tlv; 
+    } 
+  } 
+  augment "/lldp:lldp/lldp:port/lldp:remote-systems-data" { 
+    description 

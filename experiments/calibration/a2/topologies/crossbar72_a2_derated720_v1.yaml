@@ -1,0 +1,24 @@
+# Calibration-ladder A2 topology: crossbar72 at the SOFTWARE-DERATED
+# injection scale, B = 720 bytes/ns per rank per direction. Provenance is
+# a two-anchor derivation, not a direct quote: CAL-A2's per-GPU per-
+# direction ceiling 900 B/ns x CAL-A12's stated application-level derating
+# (~80% of peak: NCCL models NVLink at 20/25 GB/s per link; maintainer
+# guidance per anchors_staging.md §A12, confidence M). The calibration
+# plan §1.1 (row CAL-A12) makes this derating MANDATORY whenever spec
+# ceilings (CAL-A1/A2/A7) are compared with measured series, so the
+# derated point belongs inside the anchored injection scale this stage
+# sweeps. Free parameter; NOT tuned toward any output; the ~80% itself is
+# an M-confidence anchor figure pending owner re-verification.
+topology_id: crossbar72_a2_derated720_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 720
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar72_a2_ceiling900_v1 (A-L0X-PORT,
+  A-L0X-LAT, A-L0X-DIV); only the swept free parameter B differs, here at
+  the software-effective scale 0.8 x 900 (CAL-A2 ceiling x CAL-A12
+  derating — the bridge point between spec ceilings and NCCL-driven
+  measurements).

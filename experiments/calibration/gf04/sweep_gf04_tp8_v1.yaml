@@ -1,0 +1,41 @@
+# Calibration-ladder GF-04 sweep, SINGLE-NODE leg 
+# gap-fill anchor GF-04): where does the L0 identity family sit at the
+# anchor's r=8 leg — "NCCL on single node with 8 GPUs | 476.37 GB/s"
+# (all_reduce_perf -b 32 -e 4G -f 2 -g 8, fetched/verified 2026-10-28) —
+# across the family set and the ceiling axis?
+#
+# NOTHING IS TUNED: B values fixed by anchor/cross-anchor arithmetic
+# BEFORE any model output was read — 476.37 = the anchor's own single-node
+# figure (BASELINE: the anchor's own number read through the pinned
+# busbw = B mapping), 450 = 900/2 (GF-02's physical per-direction NVLink
+# ceiling axis point). L = 200 ns (registry point) everywhere. Three
+# families executed at the anchor point (ring = the A6-convention hybrid
+# projection; crossbar = the A-L0X-PORT registered NVSwitch abstraction;
+# recursive_doubling = the only rank-scaling latency chain) plus the
+# ring's ceiling twin.
+#
+# Payload grid: {2^30 = 1 GiB, 2^32 = 4 GiB} — members of the anchor's
+# own x2 ladder (32 B x 2^k), 2^32 being the single-node ladder top and
+# the largest size COMMON to both of the anchor's ladders (the two-node
+# run tops at 2^33); both divisible by 8 (gates ACCEPT, no bracketing).
+sweep: cal_gf04_tp8_v1
+workload: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp8_4gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/gf04/topologies/ring8_gf04_anchor476_37_v1.yaml
+grid:
+  payload_sizes_bytes: [1073741824, 4294967296]   # 1 GiB, 4 GiB (anchor ladder members; common size = top)
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf04/topologies/ring8_gf04_anchor476_37_v1.yaml
+    - experiments/calibration/gf04/topologies/ring8_gf04_perdir450_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf04/topologies/crossbar8_gf04_anchor476_37_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/gf04/topologies/rd8_gf04_anchor476_37_v1.yaml

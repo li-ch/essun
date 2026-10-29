@@ -1,0 +1,39 @@
+ 513 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Option 2 is not directly supported by the CCC, but once the CCC has chosen an EV and port, an 
+implementation could map the destination FEP/port to an appropriate IP address using an additional 
+mapping table for destination IP addresses. This specification does not cover this use case. 
+Load balancing for option 4 requires the CCC to choose an EV/port/FEP address combination, and load-
+balance between the different possible source ports and destination ports between the same pair of 
+FEPs. This specification does not cover this use case. 
+3.6.16.6.1 Multiple Separate Planes, One Shared FEP Address for All Ports.  
+This use case is option 1 listed above. UET RUD PDCs can be created between a pair of multi-port FEPs 
+configured in a multi-plane topology where each plane is logically or physically separate, such that a 
+packet sent from FEP A using its port on plane P will be received by the port at FEP B that is also on 
+plane P. In such cases, a single IP address is used by all the ports of each FEP. In such configurations, a 
+CCC can load-balance traffic between planes and within planes by spraying traffic across a range of 
+entropy values, where each EV is mapped to a specific outgoing port, and hence to a plane. Each EV for a 
+PDC is used on only one plane. UET ACK and NACK packets specify the EV from the respective data 
+packet, so it is unambiguous from the EV which path the feedback refers to. 
+Multi-port operation is supported via the GetSendParams() interface between the PDS scheduler and 
+the CCC. 
+GetSendParams(free_port_list) -> port, Entropy, Credit_Target 
+ 
+When GetSendParams() is called, the scheduler supplies a list of the ports that currently have spare 
+capacity to send a packet. There MUST be at least one free port in this list. 
+The CCC will choose an EV that is associated with one of the free ports in the free_port_list, performing 
+load balancing using ECN feedback to avoid congested paths, as in single-port operation. 
+3.6.16.6.2 Multi-port, Single Plane, One IP address for All Ports 
+This use case is option 3 above. In this case multi-port NICs are connected to a single plane, but all ports 
+of the same FEP share an IP address. Anycast routing can then ensure that all the ports can be part of 
+the ECMP set used to route packets. In such cases the CCC will choose the outgoing port (if more than 
+one free port is available), but the incoming port is determined by the switches hashing the EV from the 
+packets. From the point of view of the CCC, option 2 behaves in the same way as option 1, in that the 
+CCC MUST consistently map a chosen EV to a single outgoing port so that the EV in ACKs and NACKs 
+refer to an unambiguous path. 
+3.6.16.6.3 Single-port Spraying on a Multi-port NIC 
+An implementation MAY map a FEP to a single port on a multi-port NIC.  For this specification, options 2 
+and 4 SHOULD be handled in this manner. In such cases, each port is visible to the application as a 
+separate FEP, and it is then the application’s responsibility to load-balance traffic between FEPs and 
+hence between ports. In this case the PDS and hence CCC are unaware that other ports exist; the CCC 

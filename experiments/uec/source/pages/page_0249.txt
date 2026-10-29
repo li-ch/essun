@@ -1,0 +1,41 @@
+ 249 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+UET_TSEND) as well. A target can accept a deferrable send and treat it as a send by ignoring the initiator 
+and target restart tokens. When deferrable send is treated as a send, the target MUST respond with 
+either a ses.return_code of RC_NO_MATCH and a ses.modified_length of zero, or a ses.return_code of 
+RC_OK and a ses.modified_length that is equal to the requested length. This is used to cover the case of 
+unexpected messages and expected messages, respectively. 
+3.4.4.7 Unexpected Message Handling 
+In HPC, unexpected messages are common. Unexpected messages may also be encountered in *CCL 
+implementations. This section documents the unexpected message handling requirements when 
+implementing *CCL over unordered, tagged send/receive operations in libfabric. It also covers the more 
+challenging aspects related to the MPI ordered matching cases. As a preface, the traditional way to 
+handle unexpected messages is using two mechanisms: For short messages, the payload is captured as 
+eager payload in an unexpected message buffer at the target. For long messages, a rendezvous protocol 
+is used so that the payload can be retrieved when the receive is posted. Exact matching simplifies the 
+implementation of these traditional sequences. The objective of this section is to articulate the 
+requirements for implementations so that a range of implementations are possible (with different levels 
+of complexity), while still allowing for interoperability. 
+3.4.4.7.1 Unexpected Messages over RUD PDC 
+With unordered packet delivery in general, there is no guarantee of the ordering of resolving a message 
+to a buffer. This dramatically simplifies the handling of unexpected messages—even in the case of 
+wildcard tag matching. 
+Informative Text: 
+Properly mixing a RUD PDS and wildcard tag matching requires great care; however, it can be done. A 
+server may have an RPC queue, for example, where the order of arrival of RPCs does not matter. In 
+such a case, it may accept messages from any source or may use a subset of match bits to divide the 
+RPCs into types. As long as software has expressed FI_ORDER_NONE, the techniques in this section 
+can be used. 
+ 
+Three schemes are possible for unexpected message handling with unordered messaging: back-off and 
+retry (3.4.4.7.1.1), buffered headers (3.4.4.7.2.1), and buffered unexpected messages (3.4.4.7.2.2). 
+Buffered unexpected messages do not require any unique support at the initiator. Target FEPs MUST use 
+at least one of the three schemes and all three MAY be used in combination. For example, an 
+implementation can utilize buffered unexpected messages but degrade to buffered headers when the 
+unexpected message buffering is exhausted. Or an implementation can operate in either buffered 
+headers mode or buffered unexpected messages mode and degrade directly to back-off and retry. 
+Informative Text: 
+A combination mode of operation has been field tested on existing hardware that implements 
+semantics similar to Portals 4. The exact wire details are different from what is described here, but 
+the concepts have been deployed for unordered traffic with wildcard matching. 

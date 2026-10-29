@@ -1,0 +1,38 @@
+# Environment policy (local tooling, not project content)
+.ckignore
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+
+# macOS
+.DS_Store
+
+# Generated, content-addressed outputs — reproduce via the documented command; do not commit
+results/
+artifacts/
+
+# Backend checkouts are pinned by commit hash in manifests, not vendored
+backends/astra_htsim/src/
+backends/ns3/src/
+backends/astra-sim/
+backends/uet-htsim/
+
+# Local working material (kept on disk, never committed)
+.local-archive/
+Scale-up_Agent_Handoff/
+Scale-up网络公开标准仿真调研报告.md
+Scale-up仿真报告配图/
+AGENTS.md
+whitepaper/AGENTS.md
+docs/away/
+docs/plans/
+reports/
+whitepaper/
+docs/promo/

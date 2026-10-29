@@ -1,0 +1,46 @@
+# Calibration-ladder GF-09 topology: fully-connected crossbar of 8
+# ranks at the "SUB-MICROSECOND LATENCY" TARGET BOUNDARY — B = 50 B/ns
+# (the design-class carrier), L = 1000 ns.
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-09,
+# arXiv:2508.08906; numbers AS STAGED): local networks target
+# "sub-microsecond latency". A TARGET UPPER BOUND (< 1000 ns), never an
+# achieved value — A10's assumption-class discipline applies in full
+# (the anchor has zero falsification power against any model L; this
+# row places the target's BOUNDARY EDGE, "at" not "below", so the
+# placement arithmetic is exact).
+#
+# READING AMBIGUITY (A10's own declared-reading duty, recorded, never
+# adjudicated): "latency" for a local network is end-to-end or
+# per-hop/per-pair — the paper's phrasing does not settle it. Under a
+# per-pair reading the target bounds L itself; under an end-to-end
+# reading it bounds a path quantity of which L is one component. Both
+# readings recorded; the row executes the boundary value either way.
+#
+# Cross-anchor coincidences, recorded never cross-derived: 1000 ns is
+# numerically identical to GF-05's uet-htsim per-hop anchor point
+# (600 ns link + 400 ns switch traversal); CAL-A10's assumed 800 ns
+# sits at exactly 4/5 of this boundary (the same relation its own
+# "sub-us" justification carries); the registry point 200 is exactly
+# 1/5 of the boundary.
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS placed by anchor/registry
+# arithmetic BEFORE any stage output was read, never tuned. r = 8 free
+# smoke default. Design-target class — never achieved values.
+topology_id: crossbar8_gf09_uec50_l1000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 1000
+notes: >
+  Latency-target boundary row: B = 50 B/ns (the GF-09 design-class
+  floor, per-direction reading), L = 1000 ns — the edge of the staged
+  "sub-microsecond latency" design target for local networks (a target
+  upper bound; executed AT the boundary so the placement arithmetic is
+  exact; never an achieved value). Identity t = 2(r-1)/r*M/B + 2L; the
+  row differs from the L=200 registry row by exactly +1600 ns at every
+  payload. Placement only, never tuned; the end-to-end vs per-pair
+  reading ambiguity is recorded in the stage record, both readings
+  kept, neither adjudicated.

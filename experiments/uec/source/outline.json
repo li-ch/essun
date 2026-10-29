@@ -1,0 +1,4842 @@
+[
+  {
+    "title": "1 Introduction",
+    "page": 28,
+    "level": 0
+  },
+  {
+    "title": "1.1 Background",
+    "page": 28,
+    "level": 1
+  },
+  {
+    "title": "1.1.1 UEC Organization",
+    "page": 28,
+    "level": 2
+  },
+  {
+    "title": "1.1.2 UE Transport Profiles",
+    "page": 29,
+    "level": 2
+  },
+  {
+    "title": "1.2 UE Specification Conventions",
+    "page": 30,
+    "level": 1
+  },
+  {
+    "title": "1.2.1 Normative, Informative, and Implementation Statements",
+    "page": 30,
+    "level": 2
+  },
+  {
+    "title": "1.2.2 Terminology",
+    "page": 30,
+    "level": 2
+  },
+  {
+    "title": "1.2.2.1 Abbreviations",
+    "page": 30,
+    "level": 3
+  },
+  {
+    "title": "1.2.2.2 Terms",
+    "page": 34,
+    "level": 3
+  },
+  {
+    "title": "1.2.3 Formatting",
+    "page": 47,
+    "level": 2
+  },
+  {
+    "title": "1.2.3.1 Header Format Figures",
+    "page": 47,
+    "level": 3
+  },
+  {
+    "title": "1.2.3.2 Sequence Diagrams",
+    "page": 48,
+    "level": 3
+  },
+  {
+    "title": "1.2.4 References",
+    "page": 49,
+    "level": 2
+  },
+  {
+    "title": "1.3 System View and Nomenclature",
+    "page": 49,
+    "level": 1
+  },
+  {
+    "title": "1.3.1 Workloads [Informative]",
+    "page": 57,
+    "level": 2
+  },
+  {
+    "title": "1.3.1.1 AI Training Workloads",
+    "page": 57,
+    "level": 3
+  },
+  {
+    "title": "1.3.1.2 AI Inference Workloads",
+    "page": 58,
+    "level": 3
+  },
+  {
+    "title": "1.3.1.3 HPC Workloads",
+    "page": 59,
+    "level": 3
+  },
+  {
+    "title": "1.3.1.4 Client/Server (e.g., Storage Traffic)",
+    "page": 59,
+    "level": 3
+  },
+  {
+    "title": "1.3.1.5 Scale-up Workloads (aka Local Network Workloads)",
+    "page": 59,
+    "level": 3
+  },
+  {
+    "title": "1.4 Software",
+    "page": 60,
+    "level": 1
+  },
+  {
+    "title": "1.4.1 AI and HPC API Interface",
+    "page": 60,
+    "level": 2
+  },
+  {
+    "title": "1.4.2 Fabric Endpoint Software Stack",
+    "page": 60,
+    "level": 2
+  },
+  {
+    "title": "1.4.3 Switch Software Stack",
+    "page": 61,
+    "level": 2
+  },
+  {
+    "title": "1.4.4 Network Operating System (NOS) Interface",
+    "page": 61,
+    "level": 2
+  },
+  {
+    "title": "1.5 Networking",
+    "page": 62,
+    "level": 1
+  },
+  {
+    "title": "1.5.1 AI and HPC Network Taxonomy",
+    "page": 62,
+    "level": 2
+  },
+  {
+    "title": "1.5.1.1 Frontend Network",
+    "page": 62,
+    "level": 3
+  },
+  {
+    "title": "1.5.1.2 Backend Scale-out Network",
+    "page": 63,
+    "level": 3
+  },
+  {
+    "title": "1.5.1.3 Local Scale-up Network",
+    "page": 64,
+    "level": 3
+  },
+  {
+    "title": "1.5.2 UE Transport (UET) Objectives",
+    "page": 65,
+    "level": 2
+  },
+  {
+    "title": "1.5.3 Network Fabric",
+    "page": 66,
+    "level": 2
+  },
+  {
+    "title": "1.5.3.1 Elements",
+    "page": 66,
+    "level": 3
+  },
+  {
+    "title": "1.5.3.1.1 Control Plane",
+    "page": 66,
+    "level": 4
+  },
+  {
+    "title": "1.5.3.1.2 Data Plane",
+    "page": 66,
+    "level": 4
+  },
+  {
+    "title": "1.5.3.1.3 Management Plane",
+    "page": 67,
+    "level": 4
+  },
+  {
+    "title": "1.5.3.2 UE Switch Operation in Physical Networks",
+    "page": 67,
+    "level": 3
+  },
+  {
+    "title": "1.5.3.3 Topologies",
+    "page": 67,
+    "level": 3
+  },
+  {
+    "title": "1.5.3.4 In-Network Collectives (INC)",
+    "page": 68,
+    "level": 3
+  },
+  {
+    "title": "1.5.3.5 Network Constraints",
+    "page": 68,
+    "level": 3
+  },
+  {
+    "title": "1.6 UE Specification Overview: Layers",
+    "page": 71,
+    "level": 1
+  },
+  {
+    "title": "1.6.1 Software Layer",
+    "page": 71,
+    "level": 2
+  },
+  {
+    "title": "1.6.2 Transport Layer",
+    "page": 72,
+    "level": 2
+  },
+  {
+    "title": "1.6.3 Network Layer",
+    "page": 73,
+    "level": 2
+  },
+  {
+    "title": "1.6.4 Link Layer",
+    "page": 74,
+    "level": 2
+  },
+  {
+    "title": "1.6.5 Physical Layer",
+    "page": 75,
+    "level": 2
+  },
+  {
+    "title": "2  UE Software Layer",
+    "page": 77,
+    "level": 0
+  },
+  {
+    "title": "2.1 UE Software Overview",
+    "page": 77,
+    "level": 1
+  },
+  {
+    "title": "2.1.1 Software Specifications",
+    "page": 77,
+    "level": 2
+  },
+  {
+    "title": "2.1.1.1 Libfabric Mapping",
+    "page": 77,
+    "level": 3
+  },
+  {
+    "title": "2.1.1.2 Libibverbs Mapping",
+    "page": 77,
+    "level": 3
+  },
+  {
+    "title": "2.1.1.3 In-Network Collectives (INC)",
+    "page": 78,
+    "level": 3
+  },
+  {
+    "title": "2.1.2 Software Components and Interfaces",
+    "page": 78,
+    "level": 2
+  },
+  {
+    "title": "2.1.2.1 Integration Model of FEP",
+    "page": 79,
+    "level": 3
+  },
+  {
+    "title": "2.1.3 Reference Software Models and Supplementary Software",
+    "page": 79,
+    "level": 2
+  },
+  {
+    "title": "2.1.4 References",
+    "page": 80,
+    "level": 2
+  },
+  {
+    "title": "2.2 UE Libfabric Mapping",
+    "page": 81,
+    "level": 1
+  },
+  {
+    "title": "2.2.1 Application Use Cases",
+    "page": 84,
+    "level": 2
+  },
+  {
+    "title": "2.2.2 UET Profiles",
+    "page": 84,
+    "level": 2
+  },
+  {
+    "title": "2.2.2.1 Profile Negotiation and Inter-Profile Interoperability",
+    "page": 87,
+    "level": 3
+  },
+  {
+    "title": "2.2.3 Configuration Information",
+    "page": 88,
+    "level": 2
+  },
+  {
+    "title": "2.2.4 JobIDs",
+    "page": 89,
+    "level": 2
+  },
+  {
+    "title": "2.2.4.1 JobID Assignment at Job Initialization Time",
+    "page": 89,
+    "level": 3
+  },
+  {
+    "title": "2.2.4.2 Fallback JobID Assignment",
+    "page": 92,
+    "level": 3
+  },
+  {
+    "title": "2.2.4.3 Authorization",
+    "page": 93,
+    "level": 3
+  },
+  {
+    "title": "2.2.4.3.1 Untagged Message Buffer Authorization",
+    "page": 93,
+    "level": 4
+  },
+  {
+    "title": "2.2.4.3.2 Tagged Message Buffer Authorization",
+    "page": 94,
+    "level": 4
+  },
+  {
+    "title": "2.2.4.3.3 Memory Region Authorization",
+    "page": 94,
+    "level": 4
+  },
+  {
+    "title": "2.2.4.4 JobID Selection for Data Transmission Operations",
+    "page": 94,
+    "level": 3
+  },
+  {
+    "title": "2.2.5 Libfabric APIs",
+    "page": 94,
+    "level": 2
+  },
+  {
+    "title": "2.2.5.1 Libfabric Addressing",
+    "page": 97,
+    "level": 3
+  },
+  {
+    "title": "2.2.5.2 Discovery APIs",
+    "page": 100,
+    "level": 3
+  },
+  {
+    "title": "2.2.5.2.1 fi_version() API",
+    "page": 100,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.2.2 fi_getinfo() API",
+    "page": 100,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3 Communication and Completion APIs",
+    "page": 102,
+    "level": 3
+  },
+  {
+    "title": "2.2.5.3.1 fi_fabric() API",
+    "page": 103,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3.2 fi_eq_open() API",
+    "page": 103,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3.3 fi_domain() API",
+    "page": 103,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3.4 fi_mr_reg() and fi_mr_key() APIs",
+    "page": 103,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3.4.1 Memory Key Format",
+    "page": 104,
+    "level": 5
+  },
+  {
+    "title": "2.2.5.3.5 fi_endpoint() and fi_ep_bind() APIs",
+    "page": 106,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3.5.1 UET Address Assignment Architecture",
+    "page": 107,
+    "level": 5
+  },
+  {
+    "title": "2.2.5.3.6 fi_getname() API",
+    "page": 110,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3.7 fi_cq_open() and fi_cntr_open() APIs",
+    "page": 110,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.3.8 fi_av_open() and fi_av_insert() APIs",
+    "page": 111,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.4 OFI Data Transfer APIs",
+    "page": 111,
+    "level": 3
+  },
+  {
+    "title": "2.2.5.4.1 fi_msg() APIs",
+    "page": 112,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.4.1.1 Unexpected Messages",
+    "page": 114,
+    "level": 5
+  },
+  {
+    "title": "2.2.5.4.1.2 Message Rendezvous",
+    "page": 114,
+    "level": 5
+  },
+  {
+    "title": "2.2.5.4.2 fi_tagged() APIs",
+    "page": 115,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.4.2.1 Tagged Message Initiator ID Matching",
+    "page": 116,
+    "level": 5
+  },
+  {
+    "title": "2.2.5.4.2.2 Tagged Message Rendezvous",
+    "page": 116,
+    "level": 5
+  },
+  {
+    "title": "2.2.5.4.3 fi_rma() APIs",
+    "page": 117,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.4.4 fi_atomic() APIs",
+    "page": 118,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.4.5 Collective APIs",
+    "page": 120,
+    "level": 4
+  },
+  {
+    "title": "2.2.5.5 Other APIs",
+    "page": 120,
+    "level": 3
+  },
+  {
+    "title": "2.2.5.6 Libfabric API Error Codes",
+    "page": 121,
+    "level": 3
+  },
+  {
+    "title": "2.2.6 Packet Delivery Modes",
+    "page": 121,
+    "level": 2
+  },
+  {
+    "title": "2.2.7 Traffic Classes",
+    "page": 122,
+    "level": 2
+  },
+  {
+    "title": "2.2.8 Transmit and Receive Queues",
+    "page": 123,
+    "level": 2
+  },
+  {
+    "title": "2.2.8.1 Transmit Queues",
+    "page": 123,
+    "level": 3
+  },
+  {
+    "title": "2.2.8.2 Receive Queues and Registered Memory Regions",
+    "page": 124,
+    "level": 3
+  },
+  {
+    "title": "2.2.9 Security Protocol",
+    "page": 125,
+    "level": 2
+  },
+  {
+    "title": "2.2.10 Wire Protocol Mapping",
+    "page": 129,
+    "level": 2
+  },
+  {
+    "title": "2.2.10.1 IP Header Field Mappings",
+    "page": 129,
+    "level": 3
+  },
+  {
+    "title": "2.2.10.2 UET TSS Field Mappings",
+    "page": 129,
+    "level": 3
+  },
+  {
+    "title": "2.2.10.3 UET PDS Header Field Mappings",
+    "page": 130,
+    "level": 3
+  },
+  {
+    "title": "2.2.10.4 UET SES Header Field Mappings",
+    "page": 130,
+    "level": 3
+  },
+  {
+    "title": "2.2.11 Linux Implementation of UET Control API",
+    "page": 133,
+    "level": 2
+  },
+  {
+    "title": "2.2.12 References",
+    "page": 134,
+    "level": 2
+  },
+  {
+    "title": "2.3 UE Verbs Mapping",
+    "page": 135,
+    "level": 1
+  },
+  {
+    "title": "2.3.1 Verbs Terminology",
+    "page": 135,
+    "level": 2
+  },
+  {
+    "title": "2.3.2 Verbs Overview",
+    "page": 136,
+    "level": 2
+  },
+  {
+    "title": "2.3.3 UET Verbs Object Model",
+    "page": 139,
+    "level": 2
+  },
+  {
+    "title": "2.3.3.1 Absolute Addressing Model",
+    "page": 142,
+    "level": 3
+  },
+  {
+    "title": "2.3.3.2 Relative Addressing Model",
+    "page": 143,
+    "level": 3
+  },
+  {
+    "title": "2.3.3.3 Mapping UET SES Fields",
+    "page": 144,
+    "level": 3
+  },
+  {
+    "title": "2.3.4 Device Discovery",
+    "page": 145,
+    "level": 2
+  },
+  {
+    "title": "2.3.4.1 GID Type",
+    "page": 145,
+    "level": 3
+  },
+  {
+    "title": "2.3.5 UET Services",
+    "page": 145,
+    "level": 2
+  },
+  {
+    "title": "2.3.5.1 Queue Pairs (QPs)",
+    "page": 145,
+    "level": 3
+  },
+  {
+    "title": "2.3.5.1.1 QP Types",
+    "page": 145,
+    "level": 4
+  },
+  {
+    "title": "2.3.5.1.2 QP States",
+    "page": 146,
+    "level": 4
+  },
+  {
+    "title": "2.3.5.1.3 QP Numbers",
+    "page": 146,
+    "level": 4
+  },
+  {
+    "title": "2.3.5.1.4 Extended QP Attributes",
+    "page": 147,
+    "level": 4
+  },
+  {
+    "title": "2.3.5.2 Completion Queues (CQs)",
+    "page": 147,
+    "level": 3
+  },
+  {
+    "title": "2.3.5.3 Addressing",
+    "page": 148,
+    "level": 3
+  },
+  {
+    "title": "2.3.5.3.1 Extended Address Handles",
+    "page": 148,
+    "level": 4
+  },
+  {
+    "title": "2.3.5.4 Examples",
+    "page": 149,
+    "level": 3
+  },
+  {
+    "title": "2.3.6 JobIDs",
+    "page": 150,
+    "level": 2
+  },
+  {
+    "title": "2.3.6.1 Job Attributes",
+    "page": 150,
+    "level": 3
+  },
+  {
+    "title": "2.3.6.2 Address Table",
+    "page": 150,
+    "level": 3
+  },
+  {
+    "title": "2.3.7 Job Keys",
+    "page": 151,
+    "level": 2
+  },
+  {
+    "title": "2.3.7.1 JKey",
+    "page": 151,
+    "level": 3
+  },
+  {
+    "title": "2.3.8 Work Requests",
+    "page": 151,
+    "level": 2
+  },
+  {
+    "title": "2.3.9 Immediate Data Support",
+    "page": 151,
+    "level": 2
+  },
+  {
+    "title": "2.3.10 Work Completions",
+    "page": 151,
+    "level": 2
+  },
+  {
+    "title": "2.3.11 Memory Registration",
+    "page": 152,
+    "level": 2
+  },
+  {
+    "title": "2.3.11.1 Attach / Detach MR",
+    "page": 152,
+    "level": 3
+  },
+  {
+    "title": "2.3.11.2 Job Based MRs",
+    "page": 152,
+    "level": 3
+  },
+  {
+    "title": "2.3.11.3 Derived MRs",
+    "page": 152,
+    "level": 3
+  },
+  {
+    "title": "2.3.11.4 User RKeys",
+    "page": 153,
+    "level": 3
+  },
+  {
+    "title": "2.3.11.5 64-bit LKeys and RKeys",
+    "page": 153,
+    "level": 3
+  },
+  {
+    "title": "2.3.12 QP Semantics",
+    "page": 153,
+    "level": 2
+  },
+  {
+    "title": "2.3.13 References",
+    "page": 153,
+    "level": 2
+  },
+  {
+    "title": "2.4 In-Network Collectives (INC)",
+    "page": 154,
+    "level": 1
+  },
+  {
+    "title": "2.4.1 Assumptions",
+    "page": 154,
+    "level": 2
+  },
+  {
+    "title": "2.4.2 Theory of Operation",
+    "page": 155,
+    "level": 2
+  },
+  {
+    "title": "2.4.3 INC Operations",
+    "page": 156,
+    "level": 2
+  },
+  {
+    "title": "2.4.4 Datatypes",
+    "page": 157,
+    "level": 2
+  },
+  {
+    "title": "2.4.5 Reduction Operators",
+    "page": 157,
+    "level": 2
+  },
+  {
+    "title": "2.4.6 Operator Ordering Modes",
+    "page": 158,
+    "level": 2
+  },
+  {
+    "title": "2.4.7 Operator Rounding Modes",
+    "page": 158,
+    "level": 2
+  },
+  {
+    "title": "2.4.8 INC Libfabric",
+    "page": 159,
+    "level": 2
+  },
+  {
+    "title": "2.4.8.1 Composite Collective Operations",
+    "page": 161,
+    "level": 3
+  },
+  {
+    "title": "2.4.9 Libfabric Provider Extensions",
+    "page": 161,
+    "level": 2
+  },
+  {
+    "title": "2.4.10 INC Switch Required and Optional Capabilities",
+    "page": 161,
+    "level": 2
+  },
+  {
+    "title": "2.4.11 INC Transport",
+    "page": 162,
+    "level": 2
+  },
+  {
+    "title": "2.4.11.1 Semantic Operation",
+    "page": 162,
+    "level": 3
+  },
+  {
+    "title": "2.4.11.2 Packet Delivery and Congestion Management",
+    "page": 163,
+    "level": 3
+  },
+  {
+    "title": "2.4.11.3 Transport Security",
+    "page": 163,
+    "level": 3
+  },
+  {
+    "title": "2.4.12 INC Data Plane Overview",
+    "page": 164,
+    "level": 2
+  },
+  {
+    "title": "2.4.12.1 Data Plane Sequences",
+    "page": 164,
+    "level": 3
+  },
+  {
+    "title": "2.4.13 Error Handling",
+    "page": 166,
+    "level": 2
+  },
+  {
+    "title": "2.4.14 INC Manager",
+    "page": 166,
+    "level": 2
+  },
+  {
+    "title": "2.4.15 UET Libfabric Provider and IM",
+    "page": 166,
+    "level": 2
+  },
+  {
+    "title": "2.4.15.1 The gRPC API",
+    "page": 166,
+    "level": 3
+  },
+  {
+    "title": "2.4.15.2 Semantics of the Capabilities Fields for the CommunicatorJoin RPC",
+    "page": 171,
+    "level": 3
+  },
+  {
+    "title": "2.4.16 IM Management",
+    "page": 171,
+    "level": 2
+  },
+  {
+    "title": "2.4.16.1 The gRPC API [Informational]",
+    "page": 171,
+    "level": 3
+  },
+  {
+    "title": "2.4.17 IM and INC Switches",
+    "page": 172,
+    "level": 2
+  },
+  {
+    "title": "2.4.17.1 YANG Schema",
+    "page": 172,
+    "level": 3
+  },
+  {
+    "title": "2.4.17.2 Determining a Switch\u2019s Eligibility",
+    "page": 174,
+    "level": 3
+  },
+  {
+    "title": "2.4.17.3 Configuration of an INC Communicator",
+    "page": 175,
+    "level": 3
+  },
+  {
+    "title": "2.4.17.4 Monitoring INC Communicator Status",
+    "page": 177,
+    "level": 3
+  },
+  {
+    "title": "2.4.17.5 INC Communicator Destruction",
+    "page": 177,
+    "level": 3
+  },
+  {
+    "title": "2.4.18 References",
+    "page": 177,
+    "level": 2
+  },
+  {
+    "title": "3 UE Transport Layer",
+    "page": 178,
+    "level": 0
+  },
+  {
+    "title": "3.1 UET Scope, Scale, and Reach",
+    "page": 178,
+    "level": 1
+  },
+  {
+    "title": "3.1.1 Virtualization",
+    "page": 179,
+    "level": 2
+  },
+  {
+    "title": "3.2 UET Layers, Components, and Capabilities",
+    "page": 179,
+    "level": 1
+  },
+  {
+    "title": "3.2.1 Semantic Sublayer (SES)",
+    "page": 181,
+    "level": 2
+  },
+  {
+    "title": "3.2.2 Packet Delivery Sublayer (PDS)",
+    "page": 182,
+    "level": 2
+  },
+  {
+    "title": "3.2.3 Congestion Management Sublayer (CMS)",
+    "page": 184,
+    "level": 2
+  },
+  {
+    "title": "3.2.4 Transport Security Sublayer (TSS)",
+    "page": 185,
+    "level": 2
+  },
+  {
+    "title": "3.2.5 Layering Summary",
+    "page": 185,
+    "level": 2
+  },
+  {
+    "title": "3.2.6 Sublayer Interfaces",
+    "page": 186,
+    "level": 2
+  },
+  {
+    "title": "3.2.7 Error Handling",
+    "page": 187,
+    "level": 2
+  },
+  {
+    "title": "3.3 Profiles and Capabilities [normative]",
+    "page": 187,
+    "level": 1
+  },
+  {
+    "title": "3.3.1 SES Transactions",
+    "page": 188,
+    "level": 2
+  },
+  {
+    "title": "3.3.2 Buffer Addressing Mechanisms",
+    "page": 189,
+    "level": 2
+  },
+  {
+    "title": "3.3.3 Authorization",
+    "page": 189,
+    "level": 2
+  },
+  {
+    "title": "3.3.4 Buffer Behavior",
+    "page": 189,
+    "level": 2
+  },
+  {
+    "title": "3.3.5 Packet Formats",
+    "page": 190,
+    "level": 2
+  },
+  {
+    "title": "3.3.6 PDS Ordering Modes",
+    "page": 191,
+    "level": 2
+  },
+  {
+    "title": "3.3.7 CMS Congestion Control Algorithms",
+    "page": 191,
+    "level": 2
+  },
+  {
+    "title": "3.3.8 INC Support",
+    "page": 192,
+    "level": 2
+  },
+  {
+    "title": "3.3.9 Encapsulation",
+    "page": 192,
+    "level": 2
+  },
+  {
+    "title": "3.4 Semantics Sublayer (SES)",
+    "page": 193,
+    "level": 1
+  },
+  {
+    "title": "3.4.1 Semantic Use Cases",
+    "page": 193,
+    "level": 2
+  },
+  {
+    "title": "3.4.1.1 Support for the OFI libfabric API",
+    "page": 193,
+    "level": 3
+  },
+  {
+    "title": "3.4.1.2 Support for Local Scale-up Networking",
+    "page": 194,
+    "level": 3
+  },
+  {
+    "title": "3.4.2 Definition of Semantic Concepts",
+    "page": 194,
+    "level": 2
+  },
+  {
+    "title": "3.4.2.1 Operations, Messages, and Transactions",
+    "page": 194,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.2 Services and Resources",
+    "page": 195,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.3 Addressing",
+    "page": 195,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.3.1 Job Identifiers (JobID)",
+    "page": 201,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.3.2 Process Identification (PIDonFEP)",
+    "page": 201,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.3.3 Separation of Services within a Process (Resource Index)",
+    "page": 202,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.3.4 Initiator Identifiers",
+    "page": 203,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.3.5 Matching and Nonmatching Operations",
+    "page": 203,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.3.6 Memory Addressing",
+    "page": 204,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.3.7 Addressing Summarized",
+    "page": 204,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.3.8 Addressing and libfabric [Informative]",
+    "page": 205,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.4 Authorization",
+    "page": 206,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.4.1 Job Identifier (JobID) and Authorization",
+    "page": 206,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.4.2 Encryption and Authorization",
+    "page": 206,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5 Network Transaction Types",
+    "page": 207,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.5.1 Sends\u2014Tagged and Untagged",
+    "page": 208,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5.2 Writes",
+    "page": 208,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5.3 Reads",
+    "page": 208,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5.4 Atomic operations",
+    "page": 209,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5.4.1 Atomic Operations and Datatypes",
+    "page": 209,
+    "level": 5
+  },
+  {
+    "title": "3.4.2.5.4.2 Atomic Operation Control Fields",
+    "page": 209,
+    "level": 5
+  },
+  {
+    "title": "3.4.2.5.5 Synchronized Operations",
+    "page": 209,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5.6 Rendezvous Send Transactions",
+    "page": 210,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5.7 Deferrable Send Transactions",
+    "page": 210,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.5.8 Responses",
+    "page": 211,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.6 Target Operation Types: Supported Buffer Behavior for Scale-out Networks",
+    "page": 211,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.6.1 Use-Once Operation",
+    "page": 211,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.6.2 Multi-Receive",
+    "page": 211,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.6.3 Tagged Operations",
+    "page": 212,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.6.4 Memory Key Size and Range",
+    "page": 212,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.7 Ordering",
+    "page": 212,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.7.1 Libfabric Ordering",
+    "page": 212,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.7.1.1 Libfabric Message Ordering",
+    "page": 212,
+    "level": 5
+  },
+  {
+    "title": "3.4.2.7.1.2 Payload Ordering",
+    "page": 213,
+    "level": 5
+  },
+  {
+    "title": "3.4.2.7.1.3 Order of Generation of Packets Within a Message",
+    "page": 213,
+    "level": 5
+  },
+  {
+    "title": "3.4.2.7.1.4 Completion Ordering",
+    "page": 214,
+    "level": 5
+  },
+  {
+    "title": "3.4.2.7.2 Unified Local Ordering",
+    "page": 214,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.7.3 Ordering of Response Data",
+    "page": 215,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.7.4 Synchronized Completion Ordering",
+    "page": 215,
+    "level": 4
+  },
+  {
+    "title": "3.4.2.8 Protocol Isolation Mechanisms",
+    "page": 215,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.9 Header Data",
+    "page": 215,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.10 Additional Control Fields",
+    "page": 215,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.11 Packet Sizes Based on Payload MTU",
+    "page": 216,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.12 Zero-Byte Operations",
+    "page": 216,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.13 Interaction of Semantics with Reliability Modes",
+    "page": 216,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.14 Message Identifiers and Message Construction",
+    "page": 217,
+    "level": 3
+  },
+  {
+    "title": "3.4.2.15 Original Request PSN",
+    "page": 217,
+    "level": 3
+  },
+  {
+    "title": "3.4.3 Semantic Header Formats",
+    "page": 218,
+    "level": 2
+  },
+  {
+    "title": "3.4.3.1 Standard Header Format",
+    "page": 218,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.2 Optimized Header Formats for Scale-out",
+    "page": 224,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.3 Optimized Header Formats for the Unified Local Profile",
+    "page": 226,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.4 Rendezvous Extension Header Format",
+    "page": 231,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.5 Atomic Operation Extension Header Format",
+    "page": 232,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.6 Synchronized Operation Extension Header Format",
+    "page": 233,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.7 Semantic Response Header Formats for Scale-out Networks",
+    "page": 234,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.8 Semantic Response Header Formats for the Unified Local Profile",
+    "page": 237,
+    "level": 3
+  },
+  {
+    "title": "3.4.3.9 Header Parsing Guide",
+    "page": 238,
+    "level": 3
+  },
+  {
+    "title": "3.4.4 Semantic Processing",
+    "page": 240,
+    "level": 2
+  },
+  {
+    "title": "3.4.4.1 Buffer Selection",
+    "page": 241,
+    "level": 3
+  },
+  {
+    "title": "3.4.4.1.1 Send/Receive Operation",
+    "page": 241,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.1.2 RMA Operation",
+    "page": 241,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.1.3 Matching Operation",
+    "page": 242,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.1.4 Accesses with Direct Memory Addressing",
+    "page": 243,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.2 Buffer Authorization",
+    "page": 243,
+    "level": 3
+  },
+  {
+    "title": "3.4.4.3 Scale-out Response Generation",
+    "page": 243,
+    "level": 3
+  },
+  {
+    "title": "3.4.4.4 Unified Local Profile Response Generation",
+    "page": 246,
+    "level": 3
+  },
+  {
+    "title": "3.4.4.5 Rendezvous Processing",
+    "page": 246,
+    "level": 3
+  },
+  {
+    "title": "3.4.4.6 Deferrable Send Processing",
+    "page": 247,
+    "level": 3
+  },
+  {
+    "title": "3.4.4.6.1 Supporting Deferrable Send as Send",
+    "page": 248,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.7 Unexpected Message Handling",
+    "page": 249,
+    "level": 3
+  },
+  {
+    "title": "3.4.4.7.1 Unexpected Messages over RUD PDC",
+    "page": 249,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.7.1.1 Back-off and Retry",
+    "page": 250,
+    "level": 5
+  },
+  {
+    "title": "3.4.4.7.2 Unexpected Messages with Buffering",
+    "page": 250,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.7.2.1 Buffered Headers",
+    "page": 250,
+    "level": 5
+  },
+  {
+    "title": "3.4.4.7.2.2 Buffered Unexpected Messages",
+    "page": 250,
+    "level": 5
+  },
+  {
+    "title": "3.4.4.7.3 Unexpected Messages and Resource Exhaustion over ROD PDC",
+    "page": 251,
+    "level": 4
+  },
+  {
+    "title": "3.4.4.7.3.1 Scalable Parallel Application Deployments",
+    "page": 252,
+    "level": 5
+  },
+  {
+    "title": "3.4.4.7.3.2 Client/Server Buffer Exhaustion",
+    "page": 252,
+    "level": 5
+  },
+  {
+    "title": "3.4.4.8 Synchronized Operation Processing",
+    "page": 253,
+    "level": 3
+  },
+  {
+    "title": "3.4.5 Semantic Protocol Sequences",
+    "page": 254,
+    "level": 2
+  },
+  {
+    "title": "3.4.5.1 Requests with Payloads",
+    "page": 254,
+    "level": 3
+  },
+  {
+    "title": "3.4.5.1.1 Single-Packet Requests",
+    "page": 255,
+    "level": 4
+  },
+  {
+    "title": "3.4.5.1.2 Multi-Packet Requests",
+    "page": 255,
+    "level": 4
+  },
+  {
+    "title": "3.4.5.2 Requests with Responses That Have Payloads",
+    "page": 256,
+    "level": 3
+  },
+  {
+    "title": "3.4.5.3 Rendezvous Transactions",
+    "page": 258,
+    "level": 3
+  },
+  {
+    "title": "3.4.5.4 Deferrable Send Transactions",
+    "page": 260,
+    "level": 3
+  },
+  {
+    "title": "3.4.5.5 Synchronized Operation Sequences",
+    "page": 264,
+    "level": 3
+  },
+  {
+    "title": "3.4.5.6 Additional Unexpected Message Sequences",
+    "page": 266,
+    "level": 3
+  },
+  {
+    "title": "3.4.5.7 Errors Indicated by the Initiator",
+    "page": 269,
+    "level": 3
+  },
+  {
+    "title": "3.4.5.8 Unified Local Transactions",
+    "page": 270,
+    "level": 3
+  },
+  {
+    "title": "3.4.6 Error Handling",
+    "page": 271,
+    "level": 2
+  },
+  {
+    "title": "3.4.6.1 Error Precedence",
+    "page": 271,
+    "level": 3
+  },
+  {
+    "title": "3.4.6.2 Error Scopes",
+    "page": 272,
+    "level": 3
+  },
+  {
+    "title": "3.4.6.3 Recoverable Errors",
+    "page": 272,
+    "level": 3
+  },
+  {
+    "title": "3.4.6.3.1 Handling of Recoverable Errors Detected at the Initiator",
+    "page": 272,
+    "level": 4
+  },
+  {
+    "title": "3.4.6.3.2 Handling of Recoverable Errors Detected at the Target",
+    "page": 272,
+    "level": 4
+  },
+  {
+    "title": "3.4.6.4 Unrecoverable Errors",
+    "page": 273,
+    "level": 3
+  },
+  {
+    "title": "3.4.6.4.1 Handling of Unrecoverable Errors Detected at the Initiator",
+    "page": 273,
+    "level": 4
+  },
+  {
+    "title": "3.4.6.4.2 Handling of Unrecoverable Errors Detected at the Target",
+    "page": 274,
+    "level": 4
+  },
+  {
+    "title": "3.4.6.4.3 Unrecoverable Errors and Rendezvous",
+    "page": 274,
+    "level": 4
+  },
+  {
+    "title": "3.4.6.5 Informational Errors",
+    "page": 274,
+    "level": 3
+  },
+  {
+    "title": "3.4.6.6 Return Codes",
+    "page": 274,
+    "level": 3
+  },
+  {
+    "title": "3.4.7 Enumerated Types Used in Headers",
+    "page": 275,
+    "level": 2
+  },
+  {
+    "title": "3.4.7.1 PDS Next Header Enumerations",
+    "page": 275,
+    "level": 3
+  },
+  {
+    "title": "3.4.7.2 Opcode Enumerations",
+    "page": 275,
+    "level": 3
+  },
+  {
+    "title": "3.4.7.3 Return Codes",
+    "page": 277,
+    "level": 3
+  },
+  {
+    "title": "3.4.7.4 Atomic Memory Operations (AMO) Enumerations",
+    "page": 279,
+    "level": 3
+  },
+  {
+    "title": "3.4.8 Device Expectations",
+    "page": 282,
+    "level": 2
+  },
+  {
+    "title": "3.4.8.1 Header Field Integrity Enforcement",
+    "page": 282,
+    "level": 3
+  },
+  {
+    "title": "3.4.8.2 SDI Assignment to Applications",
+    "page": 283,
+    "level": 3
+  },
+  {
+    "title": "3.4.9 UE Transport Semantics: Memory Model",
+    "page": 283,
+    "level": 2
+  },
+  {
+    "title": "3.4.9.1 Ordering",
+    "page": 283,
+    "level": 3
+  },
+  {
+    "title": "3.4.9.1.1 Message Ordering",
+    "page": 283,
+    "level": 4
+  },
+  {
+    "title": "3.4.9.1.2 Completion Ordering",
+    "page": 283,
+    "level": 4
+  },
+  {
+    "title": "3.4.9.1.3 Data Ordering",
+    "page": 284,
+    "level": 4
+  },
+  {
+    "title": "3.4.9.2 Consistency and Atomicity",
+    "page": 284,
+    "level": 3
+  },
+  {
+    "title": "3.4.9.3 Global Observability",
+    "page": 285,
+    "level": 3
+  },
+  {
+    "title": "3.4.9.4 Idempotency",
+    "page": 286,
+    "level": 3
+  },
+  {
+    "title": "3.4.9.5 Memory Model for the Unified Local Profile",
+    "page": 286,
+    "level": 3
+  },
+  {
+    "title": "3.4.9.6 Synchronized Operation",
+    "page": 286,
+    "level": 3
+  },
+  {
+    "title": "3.4.9.6.1 Sync Group Error Cases",
+    "page": 287,
+    "level": 4
+  },
+  {
+    "title": "3.4.10 Mapping of *CCL Send/Receive to Proposed Semantics [Informative]",
+    "page": 287,
+    "level": 2
+  },
+  {
+    "title": "3.4.10.1 Tag-Based *CCL Mapping",
+    "page": 288,
+    "level": 3
+  },
+  {
+    "title": "3.4.10.2 RMA-Based *CCL Mapping",
+    "page": 289,
+    "level": 3
+  },
+  {
+    "title": "3.5 Packet Delivery Sublayer (PDS)",
+    "page": 292,
+    "level": 1
+  },
+  {
+    "title": "3.5.1 PDS Terminology",
+    "page": 292,
+    "level": 2
+  },
+  {
+    "title": "3.5.2 Illustration of PDS Terms",
+    "page": 295,
+    "level": 2
+  },
+  {
+    "title": "3.5.3 Packet Delivery Services",
+    "page": 297,
+    "level": 2
+  },
+  {
+    "title": "3.5.4 PDS-SES Logical Interface",
+    "page": 298,
+    "level": 2
+  },
+  {
+    "title": "3.5.5 PDS Configuration Parameters",
+    "page": 302,
+    "level": 2
+  },
+  {
+    "title": "3.5.6 Reliability and Ordering",
+    "page": 306,
+    "level": 2
+  },
+  {
+    "title": "3.5.7 Packet Delivery Modes Overview",
+    "page": 307,
+    "level": 2
+  },
+  {
+    "title": "3.5.7.1 Reliable Unordered Delivery (RUD)",
+    "page": 307,
+    "level": 3
+  },
+  {
+    "title": "3.5.7.2 Reliable Ordered Delivery (ROD)",
+    "page": 308,
+    "level": 3
+  },
+  {
+    "title": "3.5.7.3 Reliable Ordered Delivery for Local Networks (RODL)",
+    "page": 308,
+    "level": 3
+  },
+  {
+    "title": "3.5.7.4 Reliable Unordered Delivery for Idempotent Operations (RUDI)",
+    "page": 308,
+    "level": 3
+  },
+  {
+    "title": "3.5.7.5 Unreliable Unordered Delivery (UUD)",
+    "page": 309,
+    "level": 3
+  },
+  {
+    "title": "3.5.7.6 Ordered Packets vs. Ordered Messages",
+    "page": 309,
+    "level": 3
+  },
+  {
+    "title": "3.5.8 Packet Delivery Contexts (PDC)",
+    "page": 309,
+    "level": 2
+  },
+  {
+    "title": "3.5.8.1 PDC Selection and Sharing",
+    "page": 310,
+    "level": 3
+  },
+  {
+    "title": "3.5.8.2 PDC Establishment",
+    "page": 312,
+    "level": 3
+  },
+  {
+    "title": "3.5.8.2.1 PDC Establishment with Encryption",
+    "page": 317,
+    "level": 4
+  },
+  {
+    "title": "3.5.8.2.1.1 RANDOM_1RTT_START",
+    "page": 318,
+    "level": 5
+  },
+  {
+    "title": "3.5.8.2.1.2 EXPECTED_0RTT_START",
+    "page": 318,
+    "level": 5
+  },
+  {
+    "title": "3.5.8.2.1.3 Method Interoperability",
+    "page": 319,
+    "level": 5
+  },
+  {
+    "title": "3.5.8.2.1.4 Method Applicability",
+    "page": 319,
+    "level": 5
+  },
+  {
+    "title": "3.5.8.2.1.5 Anti-Replay Scope and Shared-SD Behavior",
+    "page": 319,
+    "level": 5
+  },
+  {
+    "title": "3.5.8.2.1.6 Protection Against Resource Exhaustion",
+    "page": 320,
+    "level": 5
+  },
+  {
+    "title": "3.5.8.2.2 PDS Lifecycle with Encryption",
+    "page": 320,
+    "level": 4
+  },
+  {
+    "title": "3.5.8.3 PDC Close",
+    "page": 320,
+    "level": 3
+  },
+  {
+    "title": "3.5.8.4 PDC Lifetime",
+    "page": 324,
+    "level": 3
+  },
+  {
+    "title": "3.5.9 PDS Event State Machine",
+    "page": 325,
+    "level": 2
+  },
+  {
+    "title": "3.5.9.1 PDS Top Level",
+    "page": 325,
+    "level": 3
+  },
+  {
+    "title": "3.5.9.2 PDS Manager",
+    "page": 326,
+    "level": 3
+  },
+  {
+    "title": "3.5.9.3 PDC Initiator State Machine",
+    "page": 329,
+    "level": 3
+  },
+  {
+    "title": "3.5.9.4 PDC Target State Machine",
+    "page": 331,
+    "level": 3
+  },
+  {
+    "title": "3.5.10 Header Formats",
+    "page": 332,
+    "level": 2
+  },
+  {
+    "title": "3.5.10.1 UET Entropy Header",
+    "page": 332,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.2 UET UFH Entropy Header",
+    "page": 333,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.3 PDS Prologue",
+    "page": 333,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.4 RUD/ROD Request",
+    "page": 334,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.5 RODL Request",
+    "page": 335,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.6 RUD/ROD Request with CC State",
+    "page": 338,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.7 ACK",
+    "page": 339,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.8 ACK_CC",
+    "page": 340,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.9 ACK_CCX",
+    "page": 340,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.10 Control Packet",
+    "page": 341,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.11 RUDI Request/Response",
+    "page": 343,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.12 NACK",
+    "page": 343,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.13 NACK_CCX",
+    "page": 345,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.14  UUD Request",
+    "page": 345,
+    "level": 3
+  },
+  {
+    "title": "3.5.10.15 RUD/ROD Default Response SES Header",
+    "page": 346,
+    "level": 3
+  },
+  {
+    "title": "3.5.11 Header Fields",
+    "page": 346,
+    "level": 2
+  },
+  {
+    "title": "3.5.11.1 pds.type",
+    "page": 347,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.2 pds.next_hdr",
+    "page": 347,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.3 pds.ctl_type",
+    "page": 347,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.4 Packet Sequence Numbers",
+    "page": 347,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.4.1 pds.psn",
+    "page": 348,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.4.2 pds.psn_offset",
+    "page": 348,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.4.3 CLEAR_PSN",
+    "page": 348,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.4.4 CACK_PSN",
+    "page": 349,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.4.5 ACK_PSN",
+    "page": 349,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.4.6 SACK_PSN",
+    "page": 349,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.4.7 New_Start_PSN",
+    "page": 350,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.4.8 pds.pkt_id",
+    "page": 350,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.5 PDC Identifiers",
+    "page": 350,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.6 pds.pdc_info",
+    "page": 350,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.7 pds.req_cc_state",
+    "page": 350,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.8 pds.flags",
+    "page": 351,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.8.1 pds.flags.pdc_type",
+    "page": 351,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.2 pds.flags.syn",
+    "page": 351,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.3 pds.flags.ar",
+    "page": 351,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.4 pds.flags.retx",
+    "page": 351,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.5 pds.flags.m",
+    "page": 351,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.6 pds.flags.req",
+    "page": 352,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.7 pds.flags.p",
+    "page": 352,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.8 pds.flags.nt",
+    "page": 352,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.9 pds.flags.cack",
+    "page": 352,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.10 Reserved Flags",
+    "page": 352,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.8.11 Mapping pds.flags Fields to pds.type",
+    "page": 352,
+    "level": 4
+  },
+  {
+    "title": "3.5.11.9 pds.entropy",
+    "page": 353,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.10 NACK pds.payload",
+    "page": 353,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.11  pds.cc_type and pds.ccx_type",
+    "page": 353,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.12  NCCX_TYPE",
+    "page": 354,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.13 pds.mpr (Maximum PSN Range)",
+    "page": 354,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.14 pds.sack_bitmap",
+    "page": 355,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.15 pds.ack_cc_state and pds.ack_ccx_state",
+    "page": 356,
+    "level": 3
+  },
+  {
+    "title": "3.5.11.16 pds.nack_ccx_state",
+    "page": 356,
+    "level": 3
+  },
+  {
+    "title": "3.5.12 Requests and Acknowledgements",
+    "page": 356,
+    "level": 2
+  },
+  {
+    "title": "3.5.12.1 PDS Requests",
+    "page": 356,
+    "level": 3
+  },
+  {
+    "title": "3.5.12.2 PDS Acknowledgements",
+    "page": 357,
+    "level": 3
+  },
+  {
+    "title": "3.5.12.3 ACK per Packet",
+    "page": 359,
+    "level": 3
+  },
+  {
+    "title": "3.5.12.3.1 SACK bitmap\u2014ACK per Packet",
+    "page": 359,
+    "level": 4
+  },
+  {
+    "title": "3.5.12.4 Coalesced ACKs",
+    "page": 360,
+    "level": 3
+  },
+  {
+    "title": "3.5.12.4.1 Packet/Byte Threshold ACK Trigger\u2014Coalesced ACKs",
+    "page": 361,
+    "level": 4
+  },
+  {
+    "title": "3.5.12.4.2 Last Packet ACK Trigger\u2014Coalesced ACKs",
+    "page": 362,
+    "level": 4
+  },
+  {
+    "title": "3.5.12.4.2.1 Example Method for Last Packet ACK Trigger",
+    "page": 362,
+    "level": 5
+  },
+  {
+    "title": "3.5.12.4.3 SACK Bitmap\u2014Coalesced ACKs",
+    "page": 362,
+    "level": 4
+  },
+  {
+    "title": "3.5.12.4.4 RODL Reverse ACK State",
+    "page": 364,
+    "level": 4
+  },
+  {
+    "title": "3.5.12.5 Cumulative ACK (CACK) Rules",
+    "page": 365,
+    "level": 3
+  },
+  {
+    "title": "3.5.12.6 ACK Window",
+    "page": 366,
+    "level": 3
+  },
+  {
+    "title": "3.5.12.7 PDS Negative Acknowledgements",
+    "page": 367,
+    "level": 3
+  },
+  {
+    "title": "3.5.13 Default SES Responses",
+    "page": 374,
+    "level": 2
+  },
+  {
+    "title": "3.5.14 Transmit Scheduling",
+    "page": 375,
+    "level": 2
+  },
+  {
+    "title": "3.5.15 Loss Detection and Recovery",
+    "page": 376,
+    "level": 2
+  },
+  {
+    "title": "3.5.15.1 Trimming",
+    "page": 376,
+    "level": 3
+  },
+  {
+    "title": "3.5.15.2 NACK Loss Detection",
+    "page": 377,
+    "level": 3
+  },
+  {
+    "title": "3.5.15.3 RTO Loss Detection",
+    "page": 377,
+    "level": 3
+  },
+  {
+    "title": "3.5.15.4 Early Loss Detection \u2014 Requests",
+    "page": 378,
+    "level": 3
+  },
+  {
+    "title": "3.5.15.4.1 OOO-based Loss Detection",
+    "page": 378,
+    "level": 4
+  },
+  {
+    "title": "3.5.15.4.2 EV-Based Loss Detection",
+    "page": 383,
+    "level": 4
+  },
+  {
+    "title": "3.5.15.4.3 Tail Loss Detection",
+    "page": 384,
+    "level": 4
+  },
+  {
+    "title": "3.5.15.4.4 Receiver Based Loss Detection",
+    "page": 385,
+    "level": 4
+  },
+  {
+    "title": "3.5.15.5 Early Loss Detection of ACKs",
+    "page": 385,
+    "level": 3
+  },
+  {
+    "title": "3.5.15.5.1 Loss Detection for Guaranteed Delivery ACKs",
+    "page": 386,
+    "level": 4
+  },
+  {
+    "title": "3.5.15.5.2 OOO-Based Loss Detection of ACKs",
+    "page": 386,
+    "level": 4
+  },
+  {
+    "title": "3.5.16 Control Packet (CP)",
+    "page": 386,
+    "level": 2
+  },
+  {
+    "title": "3.5.16.1 NOOP",
+    "page": 388,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.2 ACK Request",
+    "page": 388,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.2.1 The ACK request control packet triggers an ACK with pds.next_hdr = UET_HDR_NONE.",
+    "page": 390,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.3 Clear",
+    "page": 390,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.3.1 Clear Command",
+    "page": 390,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.3.2 Clear Request",
+    "page": 390,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.4 PDC Close",
+    "page": 390,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.4.1 Close Command",
+    "page": 391,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.4.2 Close Request",
+    "page": 391,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.5 Probe",
+    "page": 392,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.6 Credit",
+    "page": 392,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.6.1 Credit",
+    "page": 392,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.6.2 Credit Request",
+    "page": 393,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.7 Negotiation",
+    "page": 394,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.7.1 On Off Feature Negotiation",
+    "page": 395,
+    "level": 4
+  },
+  {
+    "title": "3.5.16.8 PCM Telegram",
+    "page": 397,
+    "level": 3
+  },
+  {
+    "title": "3.5.16.9 CP Summary Table",
+    "page": 397,
+    "level": 3
+  },
+  {
+    "title": "3.5.17 Semantic Responses",
+    "page": 398,
+    "level": 2
+  },
+  {
+    "title": "3.5.18 Reserved PDCs",
+    "page": 398,
+    "level": 2
+  },
+  {
+    "title": "3.5.19 Sequence Diagrams",
+    "page": 400,
+    "level": 2
+  },
+  {
+    "title": "3.5.20 Reliable Unordered Delivery",
+    "page": 401,
+    "level": 2
+  },
+  {
+    "title": "3.5.20.1 RUD Services",
+    "page": 401,
+    "level": 3
+  },
+  {
+    "title": "3.5.20.2 Standard Sequences",
+    "page": 402,
+    "level": 3
+  },
+  {
+    "title": "3.5.20.2.1 Single-Packet Send Sequence\u2014Non-Guaranteed Delivery",
+    "page": 402,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.2.2 Single-Packet Send Sequence\u2014Guaranteed Delivery",
+    "page": 403,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.2.3 Multi-Packet Send Sequence\u2014Non-Guaranteed Delivery",
+    "page": 404,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.2.4 Multi-Packet Send Sequence\u2014Guaranteed Delivery",
+    "page": 405,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.2.5 Single Packet Read Sequence\u2014SES Standard Header",
+    "page": 406,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.2.6 Single-Packet Read Sequence\u2014SES Medium and Small Headers",
+    "page": 408,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.2.7 Single-Packet Read Sequence Optimization",
+    "page": 410,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.2.8 Multi-Packet Read Sequence",
+    "page": 410,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.3 Negative Acknowledgements, Packet Drops, and Retries",
+    "page": 411,
+    "level": 3
+  },
+  {
+    "title": "3.5.20.3.1 Single-Packet PDS NACK Sequence",
+    "page": 411,
+    "level": 4
+  },
+  {
+    "title": "3.5.20.3.2 NACK Sequence for Lost PDS Requests and ACKs",
+    "page": 412,
+    "level": 4
+  },
+  {
+    "title": "3.5.21 Reliable Ordered Delivery",
+    "page": 415,
+    "level": 2
+  },
+  {
+    "title": "3.5.21.1 ROD Services",
+    "page": 415,
+    "level": 3
+  },
+  {
+    "title": "3.5.21.2 Standard Sequences",
+    "page": 417,
+    "level": 3
+  },
+  {
+    "title": "3.5.21.3 Error Sequences",
+    "page": 417,
+    "level": 3
+  },
+  {
+    "title": "3.5.22 Reliable Ordered Delivery for Local Networks",
+    "page": 420,
+    "level": 2
+  },
+  {
+    "title": "3.5.22.1 RODL Services",
+    "page": 421,
+    "level": 3
+  },
+  {
+    "title": "3.5.22.1.1 No PDS retransmission",
+    "page": 421,
+    "level": 4
+  },
+  {
+    "title": "3.5.22.1.2 Bidirectional PDCs and Reverse ACKs",
+    "page": 422,
+    "level": 4
+  },
+  {
+    "title": "3.5.22.1.3 ACK and NACK Generation",
+    "page": 423,
+    "level": 4
+  },
+  {
+    "title": "3.5.22.2 Standard Sequences",
+    "page": 423,
+    "level": 3
+  },
+  {
+    "title": "3.5.22.3 Error Sequences",
+    "page": 424,
+    "level": 3
+  },
+  {
+    "title": "3.5.23 RUDI",
+    "page": 424,
+    "level": 2
+  },
+  {
+    "title": "3.5.23.1 RUDI Services",
+    "page": 424,
+    "level": 3
+  },
+  {
+    "title": "3.5.23.2 Standard Sequences",
+    "page": 425,
+    "level": 3
+  },
+  {
+    "title": "3.5.23.3 Negative Acknowledgements, Packet Drops, and Retries",
+    "page": 426,
+    "level": 3
+  },
+  {
+    "title": "3.5.24 Error Model",
+    "page": 426,
+    "level": 2
+  },
+  {
+    "title": "3.5.24.1 PDC Normal Events",
+    "page": 427,
+    "level": 3
+  },
+  {
+    "title": "3.5.24.2 Unexpected Events",
+    "page": 427,
+    "level": 3
+  },
+  {
+    "title": "3.5.24.3 PDC Unrecoverable Events",
+    "page": 427,
+    "level": 3
+  },
+  {
+    "title": "3.5.25 Full Header Format",
+    "page": 427,
+    "level": 2
+  },
+  {
+    "title": "3.5.25.1 UET over UDP/IP, no UET CRC, no Encryption",
+    "page": 428,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.2 UET over UDP/IP Using UET CRC, no Encryption",
+    "page": 428,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.3 UET over UDP/IP using Encryption",
+    "page": 429,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.4 UET directly over IP no UET CRC, no Encryption",
+    "page": 430,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.5 UET directly over IP with UET CRC, no Encryption",
+    "page": 430,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.6 UET directly over IP using Encryption",
+    "page": 431,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.7 UET over UFH_32 Header",
+    "page": 431,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.8 UET RODL - General",
+    "page": 433,
+    "level": 3
+  },
+  {
+    "title": "3.5.25.9 UET RODL, ACK, NACK, and CP over the UFH_16 Header",
+    "page": 433,
+    "level": 3
+  },
+  {
+    "title": "3.5.26 UET CRC",
+    "page": 435,
+    "level": 2
+  },
+  {
+    "title": "3.5.26.1 UET CRC over UFH_16",
+    "page": 436,
+    "level": 3
+  },
+  {
+    "title": "3.5.27 Padding of Ethernet Packets",
+    "page": 437,
+    "level": 2
+  },
+  {
+    "title": "3.6 Congestion Management Sublayer (CMS)",
+    "page": 439,
+    "level": 1
+  },
+  {
+    "title": "3.6.1 UET CC Guidelines [Informational]",
+    "page": 439,
+    "level": 2
+  },
+  {
+    "title": "3.6.2 Congestion Control Algorithms",
+    "page": 440,
+    "level": 2
+  },
+  {
+    "title": "3.6.3 Congestion Control Algorithm Design Targets",
+    "page": 440,
+    "level": 2
+  },
+  {
+    "title": "3.6.4 Telemetry and Network Switch Services",
+    "page": 440,
+    "level": 2
+  },
+  {
+    "title": "3.6.4.1 Explicit Congestion Notification (ECN)",
+    "page": 441,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.2 Round-Trip Time (RTT)",
+    "page": 441,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.3 Endpoint Congestion State",
+    "page": 442,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.4 Packet Trimming",
+    "page": 442,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.5 Priority Flow Control",
+    "page": 444,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.6 Credit-based Flow Control",
+    "page": 444,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.7 Mapping UET to Traffic Classes and DSCP",
+    "page": 445,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.7.1 DSCP Mappings",
+    "page": 445,
+    "level": 4
+  },
+  {
+    "title": "3.6.4.7.2 Traffic Classes for Best Effort Networks",
+    "page": 447,
+    "level": 4
+  },
+  {
+    "title": "3.6.4.7.3 Traffic Classes for Lossless Networks",
+    "page": 448,
+    "level": 4
+  },
+  {
+    "title": "3.6.4.8 Congestion Signaling (CSIG)",
+    "page": 450,
+    "level": 3
+  },
+  {
+    "title": "3.6.4.8.1 Reflection Header in UET",
+    "page": 451,
+    "level": 4
+  },
+  {
+    "title": "3.6.5 UET CC Protocol Operation Overview",
+    "page": 451,
+    "level": 2
+  },
+  {
+    "title": "3.6.5.1 Types of Congestion [Informational]",
+    "page": 451,
+    "level": 3
+  },
+  {
+    "title": "3.6.5.2 Adoption of Multipath",
+    "page": 453,
+    "level": 3
+  },
+  {
+    "title": "3.6.5.3 Window Based Operation",
+    "page": 453,
+    "level": 3
+  },
+  {
+    "title": "3.6.5.4 UET CC Startup Behavior",
+    "page": 454,
+    "level": 3
+  },
+  {
+    "title": "3.6.6 Congestion Control Context (CCC)",
+    "page": 456,
+    "level": 2
+  },
+  {
+    "title": "3.6.7 CCC for ROD PDCs",
+    "page": 456,
+    "level": 2
+  },
+  {
+    "title": "3.6.7.1 CCC for RUDI & UUD",
+    "page": 457,
+    "level": 3
+  },
+  {
+    "title": "3.6.8 Source Context",
+    "page": 457,
+    "level": 2
+  },
+  {
+    "title": "3.6.8.1 Abstract interface between PDS and Congestion Control",
+    "page": 458,
+    "level": 3
+  },
+  {
+    "title": "3.6.8.1.1 Source API",
+    "page": 458,
+    "level": 4
+  },
+  {
+    "title": "3.6.9 UET-CC Header Formats and Fields",
+    "page": 461,
+    "level": 2
+  },
+  {
+    "title": "3.6.9.1 pds.req_cc_state\u2014RCCC and TFC",
+    "page": 461,
+    "level": 3
+  },
+  {
+    "title": "3.6.9.2 pds.ack_cc_state for NSCC",
+    "page": 462,
+    "level": 3
+  },
+  {
+    "title": "3.6.9.2.1 pds.ack_cc_state.rcvd_bytes for NSCC",
+    "page": 462,
+    "level": 4
+  },
+  {
+    "title": "3.6.9.2.2 pds.ack_cc_state.rcv_cwnd_pend and pds.ack_cc_state.rc for CC_NSCC",
+    "page": 463,
+    "level": 4
+  },
+  {
+    "title": "3.6.9.2.3 pds.ack_cc_state.ooo_count for NSCC",
+    "page": 463,
+    "level": 4
+  },
+  {
+    "title": "3.6.9.2.4 pds.ack_cc_state.service_time for NSCC",
+    "page": 463,
+    "level": 4
+  },
+  {
+    "title": "3.6.9.3 pds.ack_cc_state for TFC and RCCC",
+    "page": 464,
+    "level": 3
+  },
+  {
+    "title": "3.6.9.3.1 pds.ack_cc_state.credit for TFC and RCCC",
+    "page": 464,
+    "level": 4
+  },
+  {
+    "title": "3.6.9.3.2 pds.ack_cc_state.ooo_count for TFC and RCCC",
+    "page": 464,
+    "level": 4
+  },
+  {
+    "title": "3.6.9.4 CSIG Reflection Headers in pds.ack_ccx_state and pds.nack_ccx_state",
+    "page": 464,
+    "level": 3
+  },
+  {
+    "title": "3.6.9.5 pds.ack_ccx_state - NSCC_CSIG",
+    "page": 466,
+    "level": 3
+  },
+  {
+    "title": "3.6.9.6 pds.ack_ccx_state - RCCC_CSIG",
+    "page": 466,
+    "level": 3
+  },
+  {
+    "title": "3.6.9.6.1 pds.nack_ccx_state - CSIG",
+    "page": 467,
+    "level": 4
+  },
+  {
+    "title": "3.6.10 Common Congestion Control Event Processing",
+    "page": 467,
+    "level": 2
+  },
+  {
+    "title": "3.6.10.1 Extracting Entropy from packets",
+    "page": 468,
+    "level": 3
+  },
+  {
+    "title": "3.6.10.2 ACK Preprocessing for Congestion Control",
+    "page": 468,
+    "level": 3
+  },
+  {
+    "title": "3.6.10.3 ACK CC_STATE Preprocessing for pds.cc_type=CC_NSCC",
+    "page": 468,
+    "level": 3
+  },
+  {
+    "title": "3.6.10.4 ACK CC_STATE Preprocessing for pds.cc_type=CC_CREDIT",
+    "page": 469,
+    "level": 3
+  },
+  {
+    "title": "3.6.10.5 NACK Preprocessing for CC",
+    "page": 469,
+    "level": 3
+  },
+  {
+    "title": "3.6.10.6 Retransmission Timeouts and Inferred Loss",
+    "page": 470,
+    "level": 3
+  },
+  {
+    "title": "3.6.10.7 CSIG Reflection Header Preprocessing for CC",
+    "page": 470,
+    "level": 3
+  },
+  {
+    "title": "3.6.11 Congestion Control Modes",
+    "page": 471,
+    "level": 2
+  },
+  {
+    "title": "3.6.12 Overall CCC Pseudocode",
+    "page": 471,
+    "level": 2
+  },
+  {
+    "title": "3.6.12.1 Sender Algorithm",
+    "page": 471,
+    "level": 3
+  },
+  {
+    "title": "3.6.12.2 Nominal Packet Size",
+    "page": 472,
+    "level": 3
+  },
+  {
+    "title": "3.6.12.3 Overall CCC Pseudocode",
+    "page": 472,
+    "level": 3
+  },
+  {
+    "title": "3.6.12.4 Receiver Algorithm",
+    "page": 476,
+    "level": 3
+  },
+  {
+    "title": "3.6.13 Network Signal-based Congestion Control",
+    "page": 476,
+    "level": 2
+  },
+  {
+    "title": "3.6.13.1 Calculating RTT",
+    "page": 479,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.2 Destination Flow Control",
+    "page": 479,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.3 NSCC Configuration Parameters",
+    "page": 481,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.4 NSCC Source State",
+    "page": 482,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.5 NSCC Source Algorithm",
+    "page": 483,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.6 NSCC Internal Functions",
+    "page": 486,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.7 Initializing base_rtt",
+    "page": 489,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.8 NSCC Destination State",
+    "page": 489,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.9 NSCC Destination Algorithm",
+    "page": 490,
+    "level": 3
+  },
+  {
+    "title": "3.6.13.10 Using CSIG max(Delay)",
+    "page": 490,
+    "level": 3
+  },
+  {
+    "title": "3.6.14 UET Receiver-Credit Congestion Control",
+    "page": 491,
+    "level": 2
+  },
+  {
+    "title": "3.6.14.1 CCC Identifiers",
+    "page": 492,
+    "level": 3
+  },
+  {
+    "title": "3.6.14.2 RCCC Source State",
+    "page": 494,
+    "level": 3
+  },
+  {
+    "title": "3.6.14.3 RCCC Credit Timer",
+    "page": 495,
+    "level": 3
+  },
+  {
+    "title": "3.6.14.4 RCCC Source Algorithm",
+    "page": 495,
+    "level": 3
+  },
+  {
+    "title": "3.6.14.5 RCCC Destination State",
+    "page": 497,
+    "level": 3
+  },
+  {
+    "title": "3.6.14.5.1 RCCC Global Destination State",
+    "page": 497,
+    "level": 4
+  },
+  {
+    "title": "3.6.14.5.2 Per-Source Destination State",
+    "page": 498,
+    "level": 4
+  },
+  {
+    "title": "3.6.14.6 RCCC Destination Algorithm",
+    "page": 498,
+    "level": 3
+  },
+  {
+    "title": "3.6.14.7 Dynamic Credit Rate",
+    "page": 499,
+    "level": 3
+  },
+  {
+    "title": "3.6.14.7.1 RCCC Destination Flow Control",
+    "page": 500,
+    "level": 4
+  },
+  {
+    "title": "3.6.14.7.2 RCCC Aggregate Rate Control",
+    "page": 500,
+    "level": 4
+  },
+  {
+    "title": "3.6.14.7.2.1 Goals and Approach",
+    "page": 500,
+    "level": 5
+  },
+  {
+    "title": "3.6.14.7.2.2 RCCC Aggregate Rate Control Algorithm",
+    "page": 504,
+    "level": 5
+  },
+  {
+    "title": "3.6.15 Transport Flow Control (TFC)",
+    "page": 505,
+    "level": 2
+  },
+  {
+    "title": "3.6.15.1 Examples of credit_used calculation",
+    "page": 507,
+    "level": 3
+  },
+  {
+    "title": "3.6.15.2 TFC Credit Initialization",
+    "page": 507,
+    "level": 3
+  },
+  {
+    "title": "3.6.15.3 TFC CCC Shutdown",
+    "page": 508,
+    "level": 3
+  },
+  {
+    "title": "3.6.15.4 TFC CCC Credit Timer",
+    "page": 508,
+    "level": 3
+  },
+  {
+    "title": "3.6.16 Multipath Path Selection",
+    "page": 508,
+    "level": 2
+  },
+  {
+    "title": "3.6.16.1 Path Entropy",
+    "page": 509,
+    "level": 3
+  },
+  {
+    "title": "3.6.16.2 Single-Path Entropy",
+    "page": 509,
+    "level": 3
+  },
+  {
+    "title": "3.6.16.3 Oblivious Multipath Spraying",
+    "page": 510,
+    "level": 3
+  },
+  {
+    "title": "3.6.16.4 Path-aware Multipath Spraying",
+    "page": 510,
+    "level": 3
+  },
+  {
+    "title": "3.6.16.5 Detecting and Handling Path Failure",
+    "page": 511,
+    "level": 3
+  },
+  {
+    "title": "3.6.16.6 Multi-port and Multi-plane Operation",
+    "page": 512,
+    "level": 3
+  },
+  {
+    "title": "3.6.16.6.1 Multiple Separate Planes, One Shared FEP Address for All Ports.",
+    "page": 513,
+    "level": 4
+  },
+  {
+    "title": "3.6.16.6.2 Multi-port, Single Plane, One IP address for All Ports",
+    "page": 513,
+    "level": 4
+  },
+  {
+    "title": "3.6.16.6.3 Single-port Spraying on a Multi-port NIC",
+    "page": 513,
+    "level": 4
+  },
+  {
+    "title": "3.6.17 Switch Configuration for UET CC",
+    "page": 514,
+    "level": 2
+  },
+  {
+    "title": "3.6.17.1 CSIG Configuration",
+    "page": 515,
+    "level": 3
+  },
+  {
+    "title": "3.6.18 Programmable Congestion Management",
+    "page": 516,
+    "level": 2
+  },
+  {
+    "title": "3.6.18.1 PCM Architecture",
+    "page": 517,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.2 Congestion Management Algorithm Specification and Invocation",
+    "page": 519,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.3 Load Balancing Algorithm Specification and Invocation",
+    "page": 519,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.3.1 Per-Packet",
+    "page": 519,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.3.2 EV Table",
+    "page": 520,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.4 Congestion Signals",
+    "page": 522,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.4.1 Signal Accumulation Operators",
+    "page": 522,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.4.2 Accessing and Managing Signals",
+    "page": 523,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.4.3 Mandatory Signals",
+    "page": 524,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.4.4 Signal-Accumulation Function Combinations",
+    "page": 527,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.4.4.1 CC Signal-Accumulation Functions",
+    "page": 527,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.4.4.2 LB Signal-Accumulation Functions",
+    "page": 529,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.4.5 Optional Signals",
+    "page": 530,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.4.5.1 CSIG Signals",
+    "page": 530,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.4.6 Vendor-specific Signals",
+    "page": 531,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5 Triggers",
+    "page": 531,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.5.1 Trigger Definition",
+    "page": 531,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5.2 Trigger Field Resolution",
+    "page": 532,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5.3 Trigger Evaluation",
+    "page": 533,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5.4 Trigger Updates",
+    "page": 533,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5.5 Trigger Modification",
+    "page": 533,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5.6 Detecting and Recovering from Dropped Events",
+    "page": 534,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5.7 Load Balancing Support",
+    "page": 535,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.5.7.1 Per-EV Triggers",
+    "page": 535,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.5.7.2 Per-Packet Operation Mode",
+    "page": 535,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.6 Control Operations",
+    "page": 536,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.6.1 CCC Controls",
+    "page": 536,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.6.2 State Controls",
+    "page": 536,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.6.3 PCM Telegrams",
+    "page": 537,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.6.3.1 Processing Telegrams",
+    "page": 539,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.6.4 Control Packets",
+    "page": 540,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.6.5 Load Balancing",
+    "page": 540,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.7 Error Handling and Recovery",
+    "page": 541,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.7.1 Fatal error conditions and state transition",
+    "page": 541,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.7.1.1 Algorithm API",
+    "page": 541,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.7.2 ERROR state semantics",
+    "page": 542,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.7.2.1 Data path",
+    "page": 542,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.7.2.2 PCM subsystem behavior",
+    "page": 542,
+    "level": 5
+  },
+  {
+    "title": "3.6.18.7.3 Error reporting and observability",
+    "page": 542,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.7.4 Reset and reinitialization",
+    "page": 543,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.8 Algorithm Lifecycle Management",
+    "page": 543,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.8.1 Loading Algorithms",
+    "page": 543,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.8.2 Algorithm Instances",
+    "page": 543,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.8.3 Configuring Algorithm Instances",
+    "page": 544,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.8.4 Assigning Algorithm Instances to Network Traffic",
+    "page": 544,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.8.5 Load-time Algorithm Configuration YAML Format",
+    "page": 544,
+    "level": 4
+  },
+  {
+    "title": "3.6.18.9 Algorithm Runtime Model",
+    "page": 546,
+    "level": 3
+  },
+  {
+    "title": "3.6.18.10 eBPF Compliance",
+    "page": 547,
+    "level": 3
+  },
+  {
+    "title": "3.7 Transport Security Sublayer (TSS)",
+    "page": 548,
+    "level": 1
+  },
+  {
+    "title": "3.7.1 Introduction",
+    "page": 548,
+    "level": 2
+  },
+  {
+    "title": "3.7.2 Security Model",
+    "page": 548,
+    "level": 2
+  },
+  {
+    "title": "3.7.2.1 Trust Model",
+    "page": 548,
+    "level": 3
+  },
+  {
+    "title": "3.7.2.2 Threat Model",
+    "page": 548,
+    "level": 3
+  },
+  {
+    "title": "3.7.2.2.1 Security Assumptions",
+    "page": 550,
+    "level": 4
+  },
+  {
+    "title": "3.7.2.3 Endpoint Considerations",
+    "page": 552,
+    "level": 3
+  },
+  {
+    "title": "3.7.2.4 Switch Considerations",
+    "page": 552,
+    "level": 3
+  },
+  {
+    "title": "3.7.2.4.1 Quality of Service/Congestion Marking",
+    "page": 552,
+    "level": 4
+  },
+  {
+    "title": "3.7.2.4.2 Packet Trimming Congestion Signal",
+    "page": 552,
+    "level": 4
+  },
+  {
+    "title": "3.7.2.5 TSS Logical Interfaces [informative]",
+    "page": 553,
+    "level": 3
+  },
+  {
+    "title": "3.7.2.5.1 PDS\u2014TSS Interface",
+    "page": 554,
+    "level": 4
+  },
+  {
+    "title": "3.7.2.5.2 TSS\u2014Link Interface",
+    "page": 555,
+    "level": 4
+  },
+  {
+    "title": "3.7.3 Architecture",
+    "page": 555,
+    "level": 2
+  },
+  {
+    "title": "3.7.3.1 Use Cases",
+    "page": 556,
+    "level": 3
+  },
+  {
+    "title": "3.7.3.1.1 Single Job Within a Secure Domain",
+    "page": 556,
+    "level": 4
+  },
+  {
+    "title": "3.7.3.1.2 Multiple Jobs Within Secure Domain",
+    "page": 557,
+    "level": 4
+  },
+  {
+    "title": "3.7.3.1.3 Client-Server Model",
+    "page": 558,
+    "level": 4
+  },
+  {
+    "title": "3.7.3.1.4 FaaS (Function-as-a-Service)",
+    "page": 559,
+    "level": 4
+  },
+  {
+    "title": "3.7.4 Secure Domains",
+    "page": 559,
+    "level": 2
+  },
+  {
+    "title": "3.7.4.1 Joining a Secure Domain",
+    "page": 560,
+    "level": 3
+  },
+  {
+    "title": "3.7.4.2 Removing a FEP from a Secure Domain",
+    "page": 560,
+    "level": 3
+  },
+  {
+    "title": "3.7.4.3 Rejoining a Secure Domain",
+    "page": 560,
+    "level": 3
+  },
+  {
+    "title": "3.7.5 Key Lifetime and Security Considerations",
+    "page": 561,
+    "level": 2
+  },
+  {
+    "title": "3.7.5.1 Key Rotation",
+    "page": 561,
+    "level": 3
+  },
+  {
+    "title": "3.7.5.2 KDF Rekeying",
+    "page": 562,
+    "level": 3
+  },
+  {
+    "title": "3.7.5.3 KDF Algorithms",
+    "page": 563,
+    "level": 3
+  },
+  {
+    "title": "3.7.5.4 Symmetric Algorithms",
+    "page": 563,
+    "level": 3
+  },
+  {
+    "title": "3.7.5.5 IV Considerations",
+    "page": 564,
+    "level": 3
+  },
+  {
+    "title": "3.7.5.6 Time-stamp Counter (TSC)",
+    "page": 564,
+    "level": 3
+  },
+  {
+    "title": "3.7.6 Secure Domain Key Database (SDKDB)",
+    "page": 565,
+    "level": 2
+  },
+  {
+    "title": "3.7.7 KDF Modes",
+    "page": 566,
+    "level": 2
+  },
+  {
+    "title": "3.7.8 KDF Construction",
+    "page": 567,
+    "level": 2
+  },
+  {
+    "title": "3.7.8.1 Cluster KDF mode for IPv4 and Packets with Explicit SSI",
+    "page": 569,
+    "level": 3
+  },
+  {
+    "title": "3.7.8.2 Cluster KDF mode for IPv6 without explicit SSI",
+    "page": 570,
+    "level": 3
+  },
+  {
+    "title": "3.7.8.3 Server KDF Mode",
+    "page": 571,
+    "level": 3
+  },
+  {
+    "title": "3.7.8.4 KDF Examples",
+    "page": 572,
+    "level": 3
+  },
+  {
+    "title": "3.7.9 Replay Protection",
+    "page": 573,
+    "level": 2
+  },
+  {
+    "title": "3.7.10 Epoch-based packet rejection",
+    "page": 573,
+    "level": 2
+  },
+  {
+    "title": "3.7.11 TSS over the UFH_32 Header",
+    "page": 574,
+    "level": 2
+  },
+  {
+    "title": "3.7.11.1 Packet Encryption",
+    "page": 580,
+    "level": 3
+  },
+  {
+    "title": "3.7.11.1.1 Authentication and Confidentiality Offsets",
+    "page": 580,
+    "level": 4
+  },
+  {
+    "title": "3.7.11.1.2 IV Generation",
+    "page": 580,
+    "level": 4
+  },
+  {
+    "title": "3.7.11.1.3 ICV Calculation",
+    "page": 581,
+    "level": 4
+  },
+  {
+    "title": "3.7.11.2 Packet Transmission",
+    "page": 581,
+    "level": 3
+  },
+  {
+    "title": "3.7.11.3 Packet Reception",
+    "page": 582,
+    "level": 3
+  },
+  {
+    "title": "3.7.12 Statistics, Parameters, and Events",
+    "page": 584,
+    "level": 2
+  },
+  {
+    "title": "3.8 References",
+    "page": 585,
+    "level": 1
+  },
+  {
+    "title": "4 UE Network Layer",
+    "page": 590,
+    "level": 0
+  },
+  {
+    "title": "4.1 Packet Trimming",
+    "page": 590,
+    "level": 1
+  },
+  {
+    "title": "4.1.1 Interactions with explicit congestion notification",
+    "page": 594,
+    "level": 2
+  },
+  {
+    "title": "4.1.2 Where can trimming be enabled?",
+    "page": 594,
+    "level": 2
+  },
+  {
+    "title": "4.1.3 Interactions with upper protocols",
+    "page": 594,
+    "level": 2
+  },
+  {
+    "title": "4.1.4 Mapping DSCPs to traffic classes for Ultra Ethernet transport",
+    "page": 595,
+    "level": 2
+  },
+  {
+    "title": "4.1.4.1 Single instance of UET per network",
+    "page": 596,
+    "level": 3
+  },
+  {
+    "title": "4.1.4.2 Multiple instances of UET per network",
+    "page": 597,
+    "level": 3
+  },
+  {
+    "title": "4.1.5 Mapping DSCPs to traffic classes for other transports",
+    "page": 598,
+    "level": 2
+  },
+  {
+    "title": "4.1.6 Security considerations",
+    "page": 598,
+    "level": 2
+  },
+  {
+    "title": "4.1.7 References",
+    "page": 599,
+    "level": 2
+  },
+  {
+    "title": "4.2 Congestion Signaling (CSIG)",
+    "page": 600,
+    "level": 1
+  },
+  {
+    "title": "4.2.1 Terminology",
+    "page": 602,
+    "level": 2
+  },
+  {
+    "title": "4.2.2 Overview",
+    "page": 602,
+    "level": 2
+  },
+  {
+    "title": "4.2.3 Use Cases",
+    "page": 604,
+    "level": 2
+  },
+  {
+    "title": "4.2.3.1 End-to-End Congestion Control",
+    "page": 604,
+    "level": 3
+  },
+  {
+    "title": "4.2.3.2 Multi-Path Load Balancing",
+    "page": 604,
+    "level": 3
+  },
+  {
+    "title": "4.2.3.3 Telemetry",
+    "page": 604,
+    "level": 3
+  },
+  {
+    "title": "4.2.4 CSIG Tag Formats",
+    "page": 605,
+    "level": 2
+  },
+  {
+    "title": "4.2.4.1.1 CSIG Tag Protocol Identifier",
+    "page": 606,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.2 Signal Type (csig.t)",
+    "page": 607,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.3 Signal Value (csig.s)",
+    "page": 607,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.4 CSIG Tag Quantization Algorithm",
+    "page": 608,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.5 Compact CSIG Tag Quantization Algorithm",
+    "page": 608,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.6 Wide CSIG Tag Quantization Algorithm",
+    "page": 609,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.7 Locator Metadata (csig.lm)",
+    "page": 610,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.8 Do Not Modify (csig.d)",
+    "page": 611,
+    "level": 3
+  },
+  {
+    "title": "4.2.4.1.9 Reserved (csig.r)",
+    "page": 612,
+    "level": 3
+  },
+  {
+    "title": "4.2.5 Functionality Within the CSIG Domain",
+    "page": 612,
+    "level": 2
+  },
+  {
+    "title": "4.2.5.1 Capability Discovery",
+    "page": 612,
+    "level": 3
+  },
+  {
+    "title": "4.2.5.1.1 CSIG LLDP Transmit and Receive States",
+    "page": 612,
+    "level": 4
+  },
+  {
+    "title": "4.2.5.1.2 CSIG LLDP Example",
+    "page": 613,
+    "level": 4
+  },
+  {
+    "title": "4.2.5.2 Tag Initialization",
+    "page": 614,
+    "level": 3
+  },
+  {
+    "title": "4.2.5.3 Tag Transit",
+    "page": 615,
+    "level": 3
+  },
+  {
+    "title": "4.2.5.4 Strip and Forward",
+    "page": 615,
+    "level": 3
+  },
+  {
+    "title": "The CSIG-Strip-and-Forward() function at a switch strips the CSIG tag from a packet and forwards the packet without the tag. When a switch learns through LLDP that a peer switch on some link cannot process CSIG tags, that switch MUST invoke CSIG-Strip...",
+    "page": 615,
+    "level": 3
+  },
+  {
+    "title": "4.2.5.5 Tag Termination",
+    "page": 615,
+    "level": 3
+  },
+  {
+    "title": "4.2.5.5.1 Reflection",
+    "page": 616,
+    "level": 4
+  },
+  {
+    "title": "4.2.6 CSIG Tag Layout",
+    "page": 616,
+    "level": 2
+  },
+  {
+    "title": "4.2.7 CSIG Profiles",
+    "page": 619,
+    "level": 2
+  },
+  {
+    "title": "4.2.7.1 CSIG Base Profile",
+    "page": 619,
+    "level": 3
+  },
+  {
+    "title": "4.2.7.2 CSIG Extended Profile",
+    "page": 619,
+    "level": 3
+  },
+  {
+    "title": "4.2.8 CSIG Traffic Rate Measurement Interval",
+    "page": 620,
+    "level": 2
+  },
+  {
+    "title": "4.2.9 CSIG Signals",
+    "page": 621,
+    "level": 2
+  },
+  {
+    "title": "4.2.9.1 min(ABW)",
+    "page": 621,
+    "level": 3
+  },
+  {
+    "title": "4.2.9.1.1 Available Bandwidth Computation",
+    "page": 621,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.1.2 Load Accounting",
+    "page": 622,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.1.3 UET Congestion Control Use Cases",
+    "page": 622,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.2 min(ABW/C)",
+    "page": 622,
+    "level": 3
+  },
+  {
+    "title": "4.2.9.2.1 Available Bandwidth Computation",
+    "page": 622,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.2.2 Load Accounting",
+    "page": 623,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.2.3 UET Congestion Control Use Cases",
+    "page": 623,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.3 max(Delay)",
+    "page": 624,
+    "level": 3
+  },
+  {
+    "title": "4.2.9.3.1 Per-Hop Delay Measurement Method",
+    "page": 624,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.3.2 Timestamping Points in Switch Pipeline",
+    "page": 624,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.3.3 Point in Packet for Timestamping",
+    "page": 625,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.3.4 UET Congestion Control Use Cases",
+    "page": 625,
+    "level": 4
+  },
+  {
+    "title": "4.2.9.4 max(nQD)",
+    "page": 626,
+    "level": 3
+  },
+  {
+    "title": "4.2.9.4.1 Normalized Queue Depth Computation",
+    "page": 626,
+    "level": 4
+  },
+  {
+    "title": "4.2.10 CSIG Deployment Considerations",
+    "page": 627,
+    "level": 2
+  },
+  {
+    "title": "4.2.10.1 Deployment of New Signal Types",
+    "page": 628,
+    "level": 3
+  },
+  {
+    "title": "4.2.11 References",
+    "page": 629,
+    "level": 2
+  },
+  {
+    "title": "5 UE Link Layer",
+    "page": 630,
+    "level": 0
+  },
+  {
+    "title": "5.1 Link Layer Retry (LLR)",
+    "page": 631,
+    "level": 1
+  },
+  {
+    "title": "5.1.1 Frame structure",
+    "page": 633,
+    "level": 2
+  },
+  {
+    "title": "5.1.1.1 UE Link frame preamble",
+    "page": 633,
+    "level": 3
+  },
+  {
+    "title": "5.1.2 Interface modifications",
+    "page": 634,
+    "level": 2
+  },
+  {
+    "title": "5.1.3 LLR Operation",
+    "page": 635,
+    "level": 2
+  },
+  {
+    "title": "5.1.3.1.1 Control Ordered Set",
+    "page": 636,
+    "level": 3
+  },
+  {
+    "title": "5.1.4 LLR configuration",
+    "page": 637,
+    "level": 2
+  },
+  {
+    "title": "5.1.5 LLR transmit path operation",
+    "page": 638,
+    "level": 2
+  },
+  {
+    "title": "5.1.6 Transmission of LLR_ACKs/LLR_NACKs",
+    "page": 643,
+    "level": 2
+  },
+  {
+    "title": "5.1.7 LLR receive path operation",
+    "page": 644,
+    "level": 2
+  },
+  {
+    "title": "5.1.8 Received ACK/NACK processing",
+    "page": 645,
+    "level": 2
+  },
+  {
+    "title": "5.1.9 Control Ordered Set transmission and reception",
+    "page": 646,
+    "level": 2
+  },
+  {
+    "title": "5.1.9.1.1 LLR_INIT CtlOS",
+    "page": 646,
+    "level": 3
+  },
+  {
+    "title": "5.1.9.1.2 LLR_INIT_ECHO CtlOS",
+    "page": 646,
+    "level": 3
+  },
+  {
+    "title": "5.1.9.1.3 LLR_ACK CtlOS",
+    "page": 646,
+    "level": 3
+  },
+  {
+    "title": "5.1.9.1.4 LLR_NACK CtlOS",
+    "page": 647,
+    "level": 3
+  },
+  {
+    "title": "5.1.9.1.5 Control Ordered Set transmission priority",
+    "page": 647,
+    "level": 3
+  },
+  {
+    "title": "5.1.10 Error propagation",
+    "page": 647,
+    "level": 2
+  },
+  {
+    "title": "5.1.11 Counters",
+    "page": 648,
+    "level": 2
+  },
+  {
+    "title": "5.2 Credit-based Flow Control",
+    "page": 650,
+    "level": 1
+  },
+  {
+    "title": "5.2.1 Lossless Packet Delivery Use Cases",
+    "page": 650,
+    "level": 2
+  },
+  {
+    "title": "5.2.2 CBFC and PFC Relative Advantages",
+    "page": 651,
+    "level": 2
+  },
+  {
+    "title": "5.2.3 CBFC Feature List",
+    "page": 651,
+    "level": 2
+  },
+  {
+    "title": "5.2.4 CBFC Overview",
+    "page": 652,
+    "level": 2
+  },
+  {
+    "title": "5.2.4.1 General Overview",
+    "page": 652,
+    "level": 3
+  },
+  {
+    "title": "5.2.4.2 Cyclic Counters for Tracking Credits with Resiliency",
+    "page": 652,
+    "level": 3
+  },
+  {
+    "title": "5.2.5 CBFC Operation",
+    "page": 653,
+    "level": 2
+  },
+  {
+    "title": "5.2.5.1 Overview",
+    "page": 653,
+    "level": 3
+  },
+  {
+    "title": "5.2.5.2 Configuration Parameters and Initialization",
+    "page": 654,
+    "level": 3
+  },
+  {
+    "title": "5.2.5.3 CBFC Cyclic Counters and State Variables",
+    "page": 655,
+    "level": 3
+  },
+  {
+    "title": "5.2.5.4 CBFC Point-to-Point Messages",
+    "page": 657,
+    "level": 3
+  },
+  {
+    "title": "5.2.5.5 Packet and CBFC Message Sequence",
+    "page": 658,
+    "level": 3
+  },
+  {
+    "title": "5.2.5.6 Sender Operations",
+    "page": 658,
+    "level": 3
+  },
+  {
+    "title": "5.2.5.6.1 Packet Transmission Credit Check",
+    "page": 658,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.6.2 Packet Transmission Counter Updates",
+    "page": 659,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.6.3 CF_Update Message Reception",
+    "page": 659,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.6.4 CC_Update Message Generation",
+    "page": 659,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.7 Receiver Operations",
+    "page": 660,
+    "level": 3
+  },
+  {
+    "title": "5.2.5.7.1 Packet Reception Counter Updates",
+    "page": 660,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.7.2 Input Buffer Drain and Counter Updates",
+    "page": 660,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.7.3 CF_Update Message Generation",
+    "page": 660,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.7.4 CC_Update Message Reception",
+    "page": 661,
+    "level": 4
+  },
+  {
+    "title": "5.2.5.8 Handling Non-Ideal Credit Sizes (Informative)",
+    "page": 661,
+    "level": 3
+  },
+  {
+    "title": "5.2.6 CBFC Message Formats",
+    "page": 662,
+    "level": 2
+  },
+  {
+    "title": "5.2.6.1 CF_Update Message",
+    "page": 662,
+    "level": 3
+  },
+  {
+    "title": "5.2.6.2 CC_Update Messages",
+    "page": 663,
+    "level": 3
+  },
+  {
+    "title": "5.2.7 MAC and MAC Control Layer Interfaces to CBFC",
+    "page": 664,
+    "level": 2
+  },
+  {
+    "title": "5.2.7.1 MAC Service Interface Additions",
+    "page": 664,
+    "level": 3
+  },
+  {
+    "title": "5.2.7.2 MAC Insertion of CBFC Messages",
+    "page": 664,
+    "level": 3
+  },
+  {
+    "title": "5.2.7.3 MAC Reception of CBFC Messages",
+    "page": 664,
+    "level": 3
+  },
+  {
+    "title": "5.2.8 CBFC Initialization",
+    "page": 664,
+    "level": 2
+  },
+  {
+    "title": "5.2.8.1 Network-Level Configuration",
+    "page": 665,
+    "level": 3
+  },
+  {
+    "title": "5.2.8.2 Link-Level Configuration",
+    "page": 665,
+    "level": 3
+  },
+  {
+    "title": "5.2.8.3 CBFC Link Level Initialization Using UE Link Negotiation",
+    "page": 666,
+    "level": 3
+  },
+  {
+    "title": "5.2.8.3.1 CBFC Receiver TLV Fields",
+    "page": 667,
+    "level": 4
+  },
+  {
+    "title": "5.2.8.3.2 CBFC Sender TLV Fields",
+    "page": 668,
+    "level": 4
+  },
+  {
+    "title": "5.2.8.4 Lossless VC Initialization Process",
+    "page": 668,
+    "level": 3
+  },
+  {
+    "title": "5.2.8.5 Lossless VC Removal Process",
+    "page": 671,
+    "level": 3
+  },
+  {
+    "title": "5.2.9 Interactions Between CBFC, PFC, and LLR",
+    "page": 674,
+    "level": 2
+  },
+  {
+    "title": "5.2.10 Compliance Requirements",
+    "page": 678,
+    "level": 2
+  },
+  {
+    "title": "5.2.10.1 CreditSize Parameter",
+    "page": 678,
+    "level": 3
+  },
+  {
+    "title": "5.2.10.2 Packet Overhead",
+    "page": 678,
+    "level": 3
+  },
+  {
+    "title": "5.2.10.3 Compliance Requirements Summary",
+    "page": 679,
+    "level": 3
+  },
+  {
+    "title": "5.2.11 Control Ordered Sets (CtlOS) in UE Link Layer",
+    "page": 680,
+    "level": 2
+  },
+  {
+    "title": "5.2.11.1 Control Ordered Sets Format",
+    "page": 680,
+    "level": 3
+  },
+  {
+    "title": "5.2.11.2 Link Layer and MAC CtlOS Insertion Rules",
+    "page": 681,
+    "level": 3
+  },
+  {
+    "title": "5.2.12 CBFC Message Examples (Informative)",
+    "page": 682,
+    "level": 2
+  },
+  {
+    "title": "5.2.12.1 CBFC CF_Update Message",
+    "page": 682,
+    "level": 3
+  },
+  {
+    "title": "5.2.12.2 BFC CC_Update Message",
+    "page": 682,
+    "level": 3
+  },
+  {
+    "title": "5.2.13 References",
+    "page": 683,
+    "level": 2
+  },
+  {
+    "title": "5.3 UE Link Negotiation",
+    "page": 685,
+    "level": 1
+  },
+  {
+    "title": "5.3.1 LLDP Overview",
+    "page": 685,
+    "level": 2
+  },
+  {
+    "title": "5.3.2 UE Organizationally Specific LLDP TLVs",
+    "page": 687,
+    "level": 2
+  },
+  {
+    "title": "5.3.2.1 UE Link Negotiation Options TLV (Options TLV)",
+    "page": 687,
+    "level": 3
+  },
+  {
+    "title": "5.3.2.1.1 TLV Type",
+    "page": 688,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.1.2 TLV Information String Length",
+    "page": 688,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.1.3 Company ID (CID)",
+    "page": 688,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.1.4 Subtype",
+    "page": 689,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.1.5 Version",
+    "page": 689,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.1.6 UE Link Options",
+    "page": 689,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.1.6.1 LLR",
+    "page": 689,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.1.6.2 IPGR",
+    "page": 690,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.1.6.3 CSIG",
+    "page": 690,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.1.6.4 UFH",
+    "page": 691,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.1.6.5 RESV1",
+    "page": 692,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.1.6.6 RESV2",
+    "page": 692,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.1.6.7 RESV3",
+    "page": 692,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2 UE Link Negotiation CBFC TLV (CBFC TLV)",
+    "page": 692,
+    "level": 3
+  },
+  {
+    "title": "5.3.2.2.1 TLV Type",
+    "page": 694,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.2 TLV Information String Length",
+    "page": 694,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.3 Company ID (CID)",
+    "page": 695,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.4 Subtype",
+    "page": 695,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.5 Version",
+    "page": 695,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.6 Error_Code",
+    "page": 695,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.7 S_CreditSize",
+    "page": 695,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.8 S_PacketOverhead",
+    "page": 695,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.9 S_VC_RTS",
+    "page": 696,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.10 R_VCnLength",
+    "page": 696,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.11 R_CellSize",
+    "page": 696,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.12 R_PacketOverhead",
+    "page": 696,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.13 R_TotalCredits",
+    "page": 696,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.14 R_NumVCs",
+    "page": 696,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.15 R_VCn",
+    "page": 696,
+    "level": 4
+  },
+  {
+    "title": "5.3.2.2.15.1 R_VC_Want",
+    "page": 696,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.2 R_VC_RTR",
+    "page": 696,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.3 R_VcID",
+    "page": 696,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.4 R_PktID_Sel",
+    "page": 697,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.5 R_PktID",
+    "page": 697,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.6 R_MaskPcpDei",
+    "page": 697,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.7 R_PcpDei",
+    "page": 697,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.8 R_MaskDSCP",
+    "page": 697,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.9 R_DSCP",
+    "page": 698,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.10 R_Handle",
+    "page": 698,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.11 R_VC_CreditLimit",
+    "page": 698,
+    "level": 5
+  },
+  {
+    "title": "5.3.2.2.15.12 Resv",
+    "page": 698,
+    "level": 5
+  },
+  {
+    "title": "5.3.3 UE LLDP YANG",
+    "page": 698,
+    "level": 2
+  },
+  {
+    "title": "5.3.3.1 Models for UE LLDP Extension TLV YANG Modules",
+    "page": 699,
+    "level": 3
+  },
+  {
+    "title": "5.3.3.1.1 UE Link Negotiation Options TLV Model",
+    "page": 699,
+    "level": 4
+  },
+  {
+    "title": "5.3.3.1.2 UE Link Negotiation CBFC TLV Model",
+    "page": 700,
+    "level": 4
+  },
+  {
+    "title": "5.3.3.2 Security Considerations for UE LLDP Extension YANG Modules",
+    "page": 701,
+    "level": 3
+  },
+  {
+    "title": "5.3.3.3 Schema for UE LLDP Extension YANG Modules",
+    "page": 702,
+    "level": 3
+  },
+  {
+    "title": "5.3.3.3.1 UE Link Negotiation Options TLV Schema",
+    "page": 702,
+    "level": 4
+  },
+  {
+    "title": "5.3.3.3.2 UE Link Negotiation CBFC TLV Schema",
+    "page": 703,
+    "level": 4
+  },
+  {
+    "title": "5.3.3.4 UE Link Negotiation Extension YANG Modules",
+    "page": 704,
+    "level": 3
+  },
+  {
+    "title": "5.3.3.4.1 YANG Module uec-link-neg-options-tlv",
+    "page": 704,
+    "level": 4
+  },
+  {
+    "title": "5.3.3.4.2 YANG Module uec-link-neg-cbfc-tlv",
+    "page": 709,
+    "level": 4
+  },
+  {
+    "title": "5.3.4 References",
+    "page": 715,
+    "level": 2
+  },
+  {
+    "title": "5.3.4.1 Normative References",
+    "page": 715,
+    "level": 3
+  },
+  {
+    "title": "5.3.4.2 Informative References",
+    "page": 715,
+    "level": 3
+  },
+  {
+    "title": "5.4 Optimized Headers and Packet Rate Improvement",
+    "page": 716,
+    "level": 1
+  },
+  {
+    "title": "5.4.1 Requirements and Considerations",
+    "page": 716,
+    "level": 2
+  },
+  {
+    "title": "5.4.2 Header Optimization Approach",
+    "page": 717,
+    "level": 2
+  },
+  {
+    "title": "5.4.3 UFH Definition",
+    "page": 718,
+    "level": 2
+  },
+  {
+    "title": "5.4.4 UFH Variants",
+    "page": 720,
+    "level": 2
+  },
+  {
+    "title": "5.4.5 UFH and Header Stacking",
+    "page": 722,
+    "level": 2
+  },
+  {
+    "title": "5.4.6 UFH Termination and Forwarding",
+    "page": 723,
+    "level": 2
+  },
+  {
+    "title": "5.4.7 UFH and Queue Assignment",
+    "page": 724,
+    "level": 2
+  },
+  {
+    "title": "5.4.8 UFH and Packet Trimming",
+    "page": 724,
+    "level": 2
+  },
+  {
+    "title": "5.4.9 UFH and VLANs",
+    "page": 724,
+    "level": 2
+  },
+  {
+    "title": "5.4.10 UFH and Transport Layer Checksums",
+    "page": 725,
+    "level": 2
+  },
+  {
+    "title": "5.4.11 UFH Deployment Considerations",
+    "page": 725,
+    "level": 2
+  },
+  {
+    "title": "5.4.12 UFH Efficiency Calculations",
+    "page": 726,
+    "level": 2
+  },
+  {
+    "title": "5.4.13 References",
+    "page": 727,
+    "level": 2
+  },
+  {
+    "title": "5.5 Idle Reduction",
+    "page": 728,
+    "level": 1
+  },
+  {
+    "title": "5.5.1 Approach",
+    "page": 728,
+    "level": 2
+  },
+  {
+    "title": "5.5.2 Rate Control",
+    "page": 729,
+    "level": 2
+  },
+  {
+    "title": "5.5.3 Maximum Packet Rate",
+    "page": 729,
+    "level": 2
+  },
+  {
+    "title": "5.5.4 Requirements",
+    "page": 729,
+    "level": 2
+  },
+  {
+    "title": "5.5.5 Enabling Idle Reduction",
+    "page": 729,
+    "level": 2
+  },
+  {
+    "title": "6 UE Physical Layer",
+    "page": 730,
+    "level": 0
+  },
+  {
+    "title": "6.1 UE PHY Support",
+    "page": 730,
+    "level": 1
+  },
+  {
+    "title": "6.1.1 UE PHYs for 100 Gb/s per Lane Signaling",
+    "page": 730,
+    "level": 2
+  },
+  {
+    "title": "6.1.1.1 Media support",
+    "page": 730,
+    "level": 3
+  },
+  {
+    "title": "6.1.1.2  PHY rates and types supported",
+    "page": 731,
+    "level": 3
+  },
+  {
+    "title": "6.1.2 UE PHYS for 200 Gb/s per Lane Signaling",
+    "page": 731,
+    "level": 2
+  },
+  {
+    "title": "6.1.2.1 Media Support",
+    "page": 731,
+    "level": 3
+  },
+  {
+    "title": "6.1.2.2 PHY Rates and Types Supported",
+    "page": 731,
+    "level": 3
+  },
+  {
+    "title": "6.2 Control ordered sets",
+    "page": 732,
+    "level": 1
+  },
+  {
+    "title": "6.2.1 Sequence ordered sets and control ordered set background",
+    "page": 732,
+    "level": 2
+  },
+  {
+    "title": "6.2.2 Control ordered sets format",
+    "page": 733,
+    "level": 2
+  },
+  {
+    "title": "6.2.3 PCS required modifications",
+    "page": 733,
+    "level": 2
+  },
+  {
+    "title": "6.2.3.1 PCS 64B/66B Decoder",
+    "page": 734,
+    "level": 3
+  },
+  {
+    "title": "6.2.3.2 PCS 64B/66B Encoder",
+    "page": 735,
+    "level": 3
+  },
+  {
+    "title": "6.2.4 RS required modifications",
+    "page": 735,
+    "level": 2
+  },
+  {
+    "title": "6.2.4.1 MII transmit functional specifications",
+    "page": 735,
+    "level": 3
+  },
+  {
+    "title": "6.2.4.2 MII receive functional specifications",
+    "page": 736,
+    "level": 3
+  },
+  {
+    "title": "6.2.4.3 Link fault signaling",
+    "page": 736,
+    "level": 3
+  },
+  {
+    "title": "6.3 FEC statistics for prediction of link quality",
+    "page": 736,
+    "level": 1
+  },
+  {
+    "title": "6.3.1 Relationship between performance metrics",
+    "page": 738,
+    "level": 2
+  },
+  {
+    "title": "6.3.1.1 Relationship between UCR and FLR",
+    "page": 738,
+    "level": 3
+  },
+  {
+    "title": "6.3.1.2 Relationship between UCR and MTBPE",
+    "page": 740,
+    "level": 3
+  },
+  {
+    "title": "6.3.2 Estimation of UCR from FEC statistics",
+    "page": 741,
+    "level": 2
+  },
+  {
+    "title": "6.3.2.1 Estimation of UCR using the uncorrected codewords counter",
+    "page": 742,
+    "level": 3
+  },
+  {
+    "title": "6.3.2.2 Estimation of UCR using the corrected codewords counter",
+    "page": 743,
+    "level": 3
+  },
+  {
+    "title": "6.3.2.3 Estimation of UCR using the codeword error bin counters",
+    "page": 744,
+    "level": 3
+  },
+  {
+    "title": "6.3.3 Examples",
+    "page": 747,
+    "level": 2
+  },
+  {
+    "title": "6.3.3.1 MTBPE of a large network",
+    "page": 747,
+    "level": 3
+  },
+  {
+    "title": "6.3.3.2 Monitoring a network",
+    "page": 747,
+    "level": 3
+  },
+  {
+    "title": "6.3.3.3 Planning a large-scale network with reliability requirements",
+    "page": 749,
+    "level": 3
+  },
+  {
+    "title": "6.4 Recommendations",
+    "page": 749,
+    "level": 1
+  },
+  {
+    "title": "6.4.1 Low error rate",
+    "page": 750,
+    "level": 2
+  },
+  {
+    "title": "6.4.2 Low power",
+    "page": 750,
+    "level": 2
+  },
+  {
+    "title": "6.4.3 Low latency",
+    "page": 750,
+    "level": 2
+  },
+  {
+    "title": "6.5 References",
+    "page": 750,
+    "level": 1
+  },
+  {
+    "title": "7 UE Management",
+    "page": 752,
+    "level": 0
+  },
+  {
+    "title": "7.1 UE Management Scope",
+    "page": 752,
+    "level": 1
+  },
+  {
+    "title": "7.2 High-Level UE Management Architecture",
+    "page": 752,
+    "level": 1
+  },
+  {
+    "title": "7.3 UE Fabric Management",
+    "page": 754,
+    "level": 1
+  },
+  {
+    "title": "7.4 Redfish for UE Endpoint Manageability",
+    "page": 755,
+    "level": 1
+  },
+  {
+    "title": "7.5 YANG Model for UE Network Manageability",
+    "page": 756,
+    "level": 1
+  },
+  {
+    "title": "7.5.1 Network Switch Planes",
+    "page": 756,
+    "level": 2
+  },
+  {
+    "title": "7.5.2 UE Switch Manageability Architecture",
+    "page": 757,
+    "level": 2
+  },
+  {
+    "title": "7.5.3 YANG Model Extensions for UE",
+    "page": 758,
+    "level": 2
+  },
+  {
+    "title": "7.6 Switch Abstraction Interface (SAI) for UE",
+    "page": 759,
+    "level": 1
+  },
+  {
+    "title": "7.6.1 SAI Enhancements for UE",
+    "page": 759,
+    "level": 2
+  },
+  {
+    "title": "7.6.1.1 SAI Enhancements for LLR",
+    "page": 759,
+    "level": 3
+  },
+  {
+    "title": "7.6.1.2 SAI Enhancements for Credit-Based Flow Control (CBFC)",
+    "page": 759,
+    "level": 3
+  },
+  {
+    "title": "7.6.1.3 SAI Enhancements for CSIG",
+    "page": 760,
+    "level": 3
+  },
+  {
+    "title": "8 UE Compliance",
+    "page": 761,
+    "level": 0
+  },
+  {
+    "title": "8.1 Compliance Statement",
+    "page": 761,
+    "level": 1
+  },
+  {
+    "title": "8.1.1 UE Support Requirements",
+    "page": 762,
+    "level": 2
+  },
+  {
+    "title": "8.1.2 Declaration Format",
+    "page": 762,
+    "level": 2
+  },
+  {
+    "title": "8.1.3 Compliance verses Support Terminology",
+    "page": 762,
+    "level": 2
+  },
+  {
+    "title": "Release Notes",
+    "page": 763,
+    "level": 0
+  }
+]

@@ -1,0 +1,94 @@
+# Implementation profile for the calibration-ladder GF-10 runs/sweeps
+# on the analytical L0 crossbar backend (gap-fill
+# anchor GF-10 — Li et al., "Evaluating Modern GPU Interconnect: PCIe,
+# NVLink, NV-SLI, NVSwitch and GPUDirect", IEEE TPDS 32(1) 2020/2019,
+# arXiv:1903.04611; extracted from the public ar5iv HTML — license-clean
+# public paper; numbers AS STAGED, not re-fetched).
+implementation_profile_id: analytical_l0_crossbar_cal_gf10_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. ROLE per the gap-fill
+  doc §GF-10: the MEASURED hop/pair-latency axis (plan gap 2 — "the
+  weakest axis of the whole plan") plus the anchor's measured
+  per-link/per-pair bandwidth rates. GF-10 stages P2P/pair-level
+  microbenchmark measurements, NOT a collective (size -> time) series:
+  per the stage prompt's FAIL clause the collective CCT target is
+  recorded as inextractable and skipped honestly — no CCT-vs-CCT
+  comparison is attempted anywhere; what IS extractable (measured axis
+  placements) is executed. The latency rows execute the anchor's
+  app-level P2P measurements on the L axis at the measured per-link
+  per-direction NVLink-2 carrier B = 25 B/ns: 9000 = "around 9 µs"
+  NVLink direct pairs on DGX-1 (the headline), 18000/27000 = the
+  manual-routing pair classes ("about 2x"/"3x", the doc's own ~18/~27
+  µs derivation), 5000/8000/13000 = NV-SLI local / NV-SLI remote /
+  PCIe remote, plus 800 = CAL-A10's assumption-class 0.8 µs (the check
+  the gap-fill doc stages this anchor for: 9000/800 = exactly 45/4)
+  and 200 = the A-L0X-LAT registry reference. The bandwidth rows
+  execute the anchor's measured rates on the B axis at registry L:
+  25 = per-link per-direction (the carrier twin), 150 = the DGX-2
+  per-GPU-pair aggregate (6 switches x 25), 12 = SummitDev
+  GPUDirect-RDMA peak (at its staged 64 MB operating point), 14 =
+  PinnedMem-GPUDIRECT lower bound ("more than 14 GB/s"), 64 = the
+  registry reference. r = 8 is DGX-1's own GPU count (the 9 µs system)
+  — anchor-anchored rank, also the smoke default and the standard
+  ladder's rank; DGX-2's r=16 recorded not executed (its staged numbers
+  pin no rank-dependent quantity of the identity). QUANTITY-CLASS
+  CAVEAT carried on every latency row (the doc's own): app-level P2P
+  latency includes the software stack (CUDA API, driver) while L is a
+  bare per-pair fabric parameter — the rows BOUND, they do not equal;
+  interpretation duty at integration. Every measured latency row sits
+  ABOVE the A-L0X-LAT declared free-range upper 2000 ns (2.5x-13.5x) —
+  recorded, the range untouched.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) and L (link.pair_latency_ns) fixed by
+  anchor/registry arithmetic BEFORE any stage output was read. Latency
+  sweep (r=8, B=25 measured carrier): L in {200 (A-L0X-LAT registry
+  reference), 800 (CAL-A10 assumption-class check row), 5000 = NV-SLI
+  local ~5 µs, 8000 = NV-SLI remote ~8 µs, 9000 = NVLink direct-pair
+  "around 9 µs" (the measured headline), 13000 = PCIe remote ~13 µs,
+  18000 = manual-routing 2x (derived 2 x 9000, the doc's own ~18 µs),
+  27000 = manual-routing 3x (derived 3 x 9000, the doc's own ~27 µs)}.
+  Bandwidth sweep (r=8, L=200 registry): B in {25 = per-link
+  per-direction NVLink-2 (the carrier twin), 64 = A-L0X-BW registry
+  reference, 150 = DGX-2 per-GPU-pair per-direction aggregate
+  (6 x 25), 12 = SummitDev GPUDirect-RDMA peak at its 64 MB operating
+  point, 14 = PinnedMem-GPUDirect lower bound}. Payload ladder: the
+  standard 12-size ladder of stages A1/A2/A7/A9/A11/GF-05/GF-09 (8 KiB
+  -> 8 GiB) — DECLARED FREE PROBE grid (GF-10 stages no collective size
+  series; its latency-flat boundary 16/64 KiB and saturation point
+  2^22 = 4 MB are recorded as exact placement arithmetic against ladder
+  members). Run pair at 2 MiB (the cross-stage comparability payload):
+  anchor point (B=25, L=9000) vs registry twin (B=64, L=200 — exact
+  57744 ns, the GF-05/GF-09 determinism tie-in). NO parameter was tuned
+  toward any anchor output — the anchor stages no collective time
+  series to tune toward; the sweeps measure WHERE the identity sits
+  relative to the anchor's measured axes.
+measurement_source: >
+  GF-10 staged numbers (Li et al., IEEE TPDS 32(1) 2020/2019,
+  arXiv:1903.04611, Tartan-suite P2P microbenchmarks on P100/V100
+  DGX-1, NV-SLI, DGX-2, SummitDev; docs/calibration/
+  anchors_gapfill.md §GF-10; numbers AS STAGED, not re-fetched;
+  gap-fill anchor, NOT yet an integrated anchor row — the owner integrates
+  accepted rows; confidence M-H — prose numbers extracted verbatim from
+  the ar5iv HTML, the full per-pair matrices are heat-map figures, not
+  text-extractable). CAVEAT CLASSES carried by this profile:
+  MEASURED but APP-LEVEL (P2P latency includes the software stack —
+  bound, not equality; the doc's own interpretation duty);
+  one-way-vs-round-trip reading of the P2P latencies NOT staged (x2
+  ambiguity recorded); prose-approximate values ("around", "about");
+  18000 derived by applying the P100 2x multiplier to the V100 9 µs
+  baseline (the doc's own parenthetical; the P100 baseline is not
+  staged as a number); ">14 GB/s" is a strict lower bound; the DGX-2
+  homogeneity finding is qualitative (no number staged); mixed-system
+  provenance (latency numbers from DGX-1/NV-SLI/PCIe, rates from
+  DGX-2/SummitDev — every row's system is declared inline); V100-era
+  values, one generation older than CAL-A4's NVLink-3 domain; the RDMA
+  rows are host-path labeled proxies (never scale-up predictions);
+  compared as PROPOSED evidence in results/calibration/; not our
+  testbed, no E3/E4 language.

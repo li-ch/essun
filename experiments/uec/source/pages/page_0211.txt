@@ -1,0 +1,40 @@
+ 211 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.2.5.8 Responses 
+Two types of responses are defined. The first is a response to send, tagged send, write, read (for large 
+reads), and non-fetching atomic operations, which indicates the semantic result of that operation 
+(3.4.4.3). The second is a response with payload, which is returned as the result of a read or fetching 
+atomic operation. 
+3.4.2.6 Target Operation Types: Supported Buffer Behavior for Scale-out Networks 
+UET attempts to minimize the requirements placed on FEPs to maximize the flexibility afforded to 
+implementations. Nevertheless, it is important that FEPs—and their associated software stacks—
+implement certain behaviors. Minimum requirements for hardware are discussed in Section 3.4.8. FEPs 
+have expected behaviors for use-once, multi-receive, tagged, and RMA operations as described below. 
+Direct memory addressing does not leverage any of the buffer behavior described here. 
+3.4.2.6.1 Use-Once Operation 
+One important buffer behavior for implementing libfabric is use-once behavior. This behavior means 
+that once a single message has targeted the buffer, the buffer MUST NOT be accessible by other 
+messages. The buffer MUST continue to be available for the one operation that started on it. The buffer 
+MUST NOT be released back to the application (e.g., through a completion notification) until the 
+operation targeting it has completed. Target-side FEP implementations MUST support use-once 
+behavior, since this is the defined behavior for fi_send()/fi_recv(). If tagged messaging is supported, 
+target-side FEP implementations MUST support use-once behavior as part of the tagged API 
+implementation. 
+Target-side FEP Implementations of RMA (fi_read()/fi_write()) MAY implement a use-once semantic. 
+Use-once can be a useful feature for building more secure implementations, as it minimizes the 
+exposure window of a buffer. It can also be helpful for software to not have to explicitly tear down 
+exposed buffers. 
+ 
+3.4.2.6.2 Multi-Receive 
+Target-side FEP Implementations SHOULD implement support for a multi-receive capability (i.e., the 
+FI_MULTI_RECV option as specified for API calls such as fi_recv() in libfabric). Multi-receive allows a 
+Informative Text: 
+Use-once behavior for RMA operations requires libfabric extensions. This behavior can be an 
+important building block for secure protocols—especially in client/server operation. Many attack 
+surfaces for unencrypted protocols depend on “guessing” the value of fields such as the 
+ses.memory_key. Use-once behavior minimizes the lifetime of the exposure of the buffer, which 
+reduces the success probability of these attacks. Use-once behavior is also a useful (though not 
+strictly necessary) building block for the rendezvous protocol, since it eliminates the overhead of 
+tearing down the buffer that was exposed by software to enable the target to issue a rendezvous 
+read. 

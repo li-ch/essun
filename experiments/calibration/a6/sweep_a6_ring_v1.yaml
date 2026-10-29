@@ -1,0 +1,47 @@
+# Calibration-ladder A6 sweep, primary identity:
+# where does the L0 flat-ring identity sit relative to CAL-A6 — the
+# ladder's NOISE-FLOOR anchor + secondary O-CCT target for hybrid rail
+# topologies (NCCL GitHub issue #1222: 4 nodes x 8 H100 SXM, inter-node
+# 16x200Gbps ROCEv2, NCCL 2.19.3 vs 2.20.3, out-of-place, 1-16 GiB;
+# docs/calibration/anchors_staging.md §A6)? Per CALIBRATION_PLAN.md §1.1
+# row CAL-A6 this anchor is OUT OF THE PURE SCALE-UP DOMAIN (the
+# inter-node legs dominate) and its primary role is the software-version
+# noise floor any pass criterion must exceed; the O-CCT comparison is
+# secondary, CCT-vs-CCT per plan §3 (the anchor's quoted TIMES are the
+# targets; NCCL busbw carries the 2(r-1)/r = 62/32 factor, which the
+# model's wire identity carries on its own side, so it cancels — no mixed
+# metric).
+#
+# NOTHING IS TUNED: B values {25, 320, 400} B/ns are fixed by the
+# anchor's own staged config arithmetic and prior anchors (25 = one 200
+# Gbps RoCEv2 port per direction; 320 = CAL-A12 ~80% derating x 400; 400
+# = the anchor point, "16*200Gbps" per node under the per-direction
+# Ethernet port convention — a config ceiling, never a measurement). The
+# measured series itself (busbw 353.69-391.10) is NEVER a topology value.
+# L stays at the A-L0-LAT registry point 200 ns. Every delta below is an
+# arithmetic fact of t = 2(r-1)/r*M/B + 2(r-1)*L at r = 32.
+#
+# Payload grid: CAL-A6's two staged sizes per version, EXACT — 2^30 and
+# 2^34 are both divisible by 32 = 2^5, so the A-L0-DIV gate ACCEPTS the
+# anchor's sizes with NO bracketing (the mirror image of stage A3, where
+# 72 = 8*9 rejected every power of two; verified programmatically in the
+# stage's record builder).
+#
+# Baseline = the anchor point (B = 400 rail): delta columns read directly
+# as placement vs the anchor's own config arithmetic.
+sweep: cal_a6_ring_v1
+workload: experiments/calibration/a6/workloads/w1_dense_tp_decode_tp32_16gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/a6/topologies/ring32_a6_rail400_v1.yaml
+grid:
+  payload_sizes_bytes: [1073741824, 17179869184]   # CAL-A6's staged 1 GiB and 16 GiB, exact, gate-accepted
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a6/topologies/ring32_a6_port25_v1.yaml
+    - experiments/calibration/a6/topologies/ring32_a6_derated320_v1.yaml
+    - experiments/calibration/a6/topologies/ring32_a6_rail400_v1.yaml

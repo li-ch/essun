@@ -1,0 +1,33 @@
+5. Maximizing The Performance
+
+Figure 13. Multi-Ring Algorithm for AllReduce
+
+Figure 14. Multi-Path and Hierarchical All-to-All
+
+Although UB-Mesh’s hardware architecture design matches the traffic patterns of LLM training, running workloads on such a hierarchical AI cluster may suffer from low utilization if training tasks are not effectively distributed across computing resources. Additionally, the performance of collective communication is critical for overall training efficiency. To ensure optimal system performance during LLM training, we introduce several topology-aware optimization strategies to enhance system performance further.
+
+5.1. Topology-Aware Collective Communication
+
+To optimize collective communication on UB-Mesh and fully utilize the bandwidth of hierarchical direct interconnects, we present topology-aware collective communication algorithms leveraging the All-Path-Routing capability of UB-Mesh  (Sec. 4.1). We take All-Reduce and All-to-All examples to convey our concepts:
+
+All-Reduce: We propose a Multi-Ring algorithm for efficient AllReduce on UB-Mesh. We begin by modeling the network topology in a unified abstraction, accounting for factors such as node count, inter-node connections, link bandwidth, and latency. Next, we integrate collective communication with path mapping using a logical multi-ring algorithm, ensuring exclusive path usage without traffic conflicts. As depicted in Fig. 13-(a), the Original Paths represent default mappings. Idle links, excluded from these paths, are leveraged via the APR mechanism to enhance bandwidth. Finally, as shown in Fig. 13-(b), we optimize traffic partitioning across multiple paths to mitigate bottlenecks and maximize the benefits of borrowed bandwidth through APR.
+
+All-to-All: In the scenario of All-to-All communication, we consider two representative use cases:
+
+(1) General All-to-All: As shown in Fig. 14-(a), when the source node in UB-Mesh (we demonstrate a 2D mesh in the figure for simplicity. The proposed techniques can be extended to higher-dimensions) sends different data to different destination nodes, we adopt a Multi-Path All2All optimization. Specifically, each element (vector or tensor) is split into two partitions, which are transmitted simultaneously along the X-FullMesh and Y-FullMesh interconnects and use at most one-hop forwarding to arrive at the destination. Such a strategy guarantees a high bandwidth utilization in UB-Mesh’s nD-FullMesh architecture.
+
+(2) Broadcast + Reduce: For All-to-All operations involving token distribution and expert data collection (DeepSeek-AI et al., 2024b), the semantics are equivalent to overlapping multiple broadcast and reduce operations. As shown in Fig. 14-(b) and (c), we can adopt hierarchical broadcast/reduce to save bandwidth usage, fully leveraging UB-Mesh’s hierarchical topology.
+
+5.2. Topology-Aware Parallelization
+
+Figure 15. Topology-Aware Parallelization
+
+Given a training task and system, we determine optimal parallelization strategies to fully utilize the high-bandwidth local interconnects of UB-Mesh. We adopt a Topology-Aware Parallelization mechanism to optimize model and data splitting for LLM training. As shown in Fig. 15, our approach involves:
+
+Step ①: Generating feasible parallelism configurations and mapping them onto the UB-Mesh architecture.
+
+Step ②: Evaluating communication costs with the Topology-Aware Communication Cost Model.
+
+Step ③: Iteratively minimizing communication overhead to find the optimal configuration.
+
+This mechanism has two important requirements: (1) Constructing a proper search space to balance efficiency and performance. (2) Ensuring the cost model is as accurate as possible. For requirement (1), we prune the search space using a priority-based heuristic: TP and SP (or CP), which involve high communication volumes, are prioritized for high-bandwidth domains, while PP and DP, used during gradient updates, is the lowest priority. For MoE models requiring EP, we force SP*DP as an integer multiple of EP. For requirement (2), we accurately model the behavior of APR and Topology-Aware Collective Communication on UB-Mesh’s topology and use an accurate in-house simulation infrastructure to calibrate the model.

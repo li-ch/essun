@@ -1,0 +1,37 @@
+ 385 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+This section describes a method for using a Probe CP to detect tail loss by leveraging the loss recovery 
+mode described in both OOO-based solutions in sections 3.5.15.4.1 and 3.5.15.4.2. 
+A per PDC timer, Tail_Loss_Timer, may be used. This timer is enabled and set to Tail_Loss_Time when 
+there is any unacknowledged PDS requests on the PDC. The timer is restarted if any ACK or NACK packet 
+is received on the PDC. The timer is disabled if there are no unacknowledged packets. 
+When the Tail_Loss_Timer expires, a Probe CP is transmitted and the timer restarted. If the timer 
+expires again before the ACK is received, Tail_Loss_Retx_Cnt is incremented and the Probe CP is 
+retransmitted. If the maximum retry count, Max_Tail_Loss_Retx, is reached, no additional Probe CPs are 
+sent. RTO processing will handle the recovery or close the PDC if necessary. Alternatively, the retransmit 
+count can be excluded and the Probe CPs transmitted until the RTO_TIMER expires. 
+The tail loss Probe CP uses the PDS Request traffic class, so it can be used to measure the network RTT. 
+The payload is set to SRC_LOWEST_NOT_RCVD_PSN & 0xFFFFFFF8. The Probe CP carries a locally 
+generated value, PROBE_OPAQUE, that is echoed back in the ACK in the pds.probe_opaque field. The EV 
+is randomly selected. If the Probe CP is retransmitted, a different EV should be used. 
+When the ACK for the Probe CP is received, the RTT is compared to the target delay, ccc.target_qdelay 
+(see CMS Section 3.6.13.3). If the probe-measured RTT is less than or equal to the target delay, loss 
+recovery mode is triggered. If the probe-measured time is greater than the target delay, the timer is 
+reset, and another Probe CP is generated. The RTO retry counter is not incremented in this case. The 
+retry counter is cleared when any ACK is received. 
+If an ACK for another packet is received before the Probe CP ACK, the Probe CP ACK is ignored with 
+respect to triggering loss recovery mode, and the Tail_Loss_Timer is restarted. If there are still 
+unacknowledged PSNs, the timer remains enabled, otherwise the timer is disabled. 
+If there are no events pending other than waiting for ACKs to arrive to cause CACK_PSN to equal the 
+highest sent PSN, do not trigger this Probe CP. Refer to Section 3.5.15.5.1. 
+3.5.15.4.4 Receiver Based Loss Detection 
+Similar to EV-based loss detection (see Section 3.5.15.4.2) and OOO-based loss detection (see Section 
+3.5.15.4.1), the destination may monitor local state and determine a packet was lost. A NACK with 
+pds.nack_code = UET_RCVR_INFER_LOSS is transmitted that triggers the source to retransmit the 
+packet. 
+3.5.15.5 Early Loss Detection of ACKs 
+Often lost ACK packets can be recovered by monitoring CACK_PSN. The exceptions are guaranteed 
+delivery ACKs and the last ACKs when the PDC goes idle. Early loss detection for PDS ACKs refers to 
+determining if an ACK was lost before the RTO_TIMER expires. This capability SHOULD be supported. 
+The method(s) used are implementation specific. This section provides a number of example methods. 

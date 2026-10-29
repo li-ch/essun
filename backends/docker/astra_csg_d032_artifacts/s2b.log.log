@@ -1,0 +1,45 @@
+[2026-10-28 01:04:30.185] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+[2026-10-28 01:04:30.185] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+[2026-10-28 01:04:30.185] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+[2026-10-28 01:04:30.185] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+[2026-10-28 01:04:30.202] [workload] [info] sys[1] finished, 780323236 cycles, exposed communication 780323236 cycles.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[1]. Post statistics processing start.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[1]. Post statistics processing end.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[1], Wall time: 780323236
+[2026-10-28 01:04:30.202] [statistics] [info] sys[1], Comm time: 780323236
+[2026-10-28 01:04:30.202] [workload] [info] sys[3] finished, 780332616 cycles, exposed communication 780332616 cycles.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[3]. Post statistics processing start.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[3]. Post statistics processing end.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[3], Wall time: 780332616
+[2026-10-28 01:04:30.202] [statistics] [info] sys[3], Comm time: 780332616
+[2026-10-28 01:04:30.202] [workload] [info] sys[2] finished, 780335966 cycles, exposed communication 780335966 cycles.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[2]. Post statistics processing start.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[2]. Post statistics processing end.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[2], Wall time: 780335966
+[2026-10-28 01:04:30.202] [statistics] [info] sys[2], Comm time: 780335966
+[2026-10-28 01:04:30.202] [workload] [info] sys[5] finished, 780348416 cycles, exposed communication 780348416 cycles.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[5]. Post statistics processing start.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[5]. Post statistics processing end.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[5], Wall time: 780348416
+[2026-10-28 01:04:30.202] [statistics] [info] sys[5], Comm time: 780348416
+[2026-10-28 01:04:30.202] [workload] [info] sys[6] finished, 780349487 cycles, exposed communication 780349487 cycles.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[6]. Post statistics processing start.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[6]. Post statistics processing end.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[6], Wall time: 780349487
+[2026-10-28 01:04:30.202] [statistics] [info] sys[6], Comm time: 780349487
+[2026-10-28 01:04:30.202] [workload] [info] sys[7] finished, 780350857 cycles, exposed communication 780350857 cycles.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[7]. Post statistics processing start.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[7]. Post statistics processing end.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[7], Wall time: 780350857
+[2026-10-28 01:04:30.202] [statistics] [info] sys[7], Comm time: 780350857
+[2026-10-28 01:04:30.202] [workload] [info] sys[0] finished, 780366187 cycles, exposed communication 780366187 cycles.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[0]. Post statistics processing start.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[0]. Post statistics processing end.
+[2026-10-28 01:04:30.202] [statistics] [info] sys[0], Wall time: 780366187
+[2026-10-28 01:04:30.202] [statistics] [info] sys[0], Comm time: 780366187
+[2026-10-28 01:04:30.205] [workload] [info] sys[4] finished, 1040008079 cycles, exposed communication 1040008079 cycles.
+[2026-10-28 01:04:30.205] [statistics] [info] sys[4]. Post statistics processing start.
+[2026-10-28 01:04:30.205] [statistics] [info] sys[4]. Post statistics processing end.
+[2026-10-28 01:04:30.205] [statistics] [info] sys[4], Wall time: 1040008079
+[2026-10-28 01:04:30.205] [statistics] [info] sys[4], Comm time: 1040008079
+[2026-10-28 01:04:30.205] [network] [debug] All ranks have finished. Exiting simulation.

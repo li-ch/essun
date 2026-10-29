@@ -1,0 +1,41 @@
+ 467 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-95 - pds.ack_ccx_state for ACK_CCX with CCX_TYPE = RCCC_CSIG 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+credit 24 same as ACK_CC_STATE for CC_TYPE = CC_CREDIT 
+rsvd 24 Reserved 
+ooo_count 16 same as ACK_CC_STATE for CC_TYPE = CC_CREDIT 
+csig_reflection_hdr 64 Compact or wide-format CSIG Reflection Header 
+ 
+3.6.9.6.1 pds.nack_ccx_state - CSIG 
+UET TYPE = NACK_CCX and NCCX_TYPE = CSIG are defined for CSIG. The format of this 
+pds.nack_ccx_state variant is shown in Figure 3-134 and the field definitions are shown in Table 3-96. 
+Table 3-96 - pds.nack_ccx_state for NCXX_TYPE = CSIG 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+nccx_type 4 Defines the contents of the NACK_CCX_STATE.  Set 
+pds.nack_ccx_state.nccx_type = 0 for CSIG. 
+rsvd 60 Reserved 
+csig_reflection_hdr 64 Compact or wide-format CSIG Reflection Header 
+ 
+3.6.10 Common Congestion Control Event Processing 
+The pseudocode and associated descriptive text in the congestion management sections below use the 
+following conventions: raw fields extracted from packets are indicated with their header name (e.g., 
+pds.cc_type) and when referenced in text they are highlighted in bold font.  Variable names prefixed 
+ccc are state that is local to the CCC, and variable names prefixed pdc are state that is specific to that 
+PDC.  Working variables are highlighted in descriptive text using italic font (e.g., Entropy). Comments and 
+inline explanations are shown as “#comment” to distinguish them from English language pseudocode (in 
+fixed-width font), which is a part of the algorithm itself. 
+ 
+Figure 3-134 - pds.nack_ccx_state for NCCX_TYPE = CSIG 
+ 

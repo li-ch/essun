@@ -1,0 +1,40 @@
+ 285 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+tuple where one or more operations start concurrently with or after one or more other operations that 
+have not completed. Concurrent operations can be initiated from the same FEP or from more than one 
+FEP. This includes consistency between ATOMIC and FETCHING_ATOMIC operations. This includes 
+consistency between UET_AMO_ WRITE, UET_AMO_ READ, and other atomic operations. 
+Implementation Note: 
+Concurrent access is scoped to a {FA, JobID, PIDonFEP, Resource Index, Memory Key/Match Bits, 
+Offset} basis because aliasing to a single physical memory location behind those constructs may not 
+be detectable by the FEP (e.g., when a host is using an IOMMU). 
+ 
+If atomic operations are supported, implementations MAY support consistency between concurrent 
+send, write, read, and atomic operations; however, it is not required. Users needing write or read 
+semantics that are consistent with atomic operations MUST use the atomic versions of those operations. 
+Concurrent operations are defined as two operations that have not completed back to the initiator. 
+Informative Text: 
+The classical definition of consistency is used. That is, consistency is defined as having the operations 
+appear as if they executed in some order. It is a common limitation in network APIs that consistency 
+between send and an atomic to the same memory location is not guaranteed. The UET atomic 
+operations include atomic read and atomic write operations to allow upper-level APIs to achieve 
+consistency, where needed. 
+ 
+Implementations MAY support stronger atomicity. The UET_AMO_CPU_COHERENT semantic control 
+allows peers to request atomic operations that are coherent with (and atomic relative to) CPU accesses. 
+If the requested semantics cannot be provided, the target FEP returns RC_AMO_UNSUPPORTED_OP. 
+Implementation Note: 
+There are many ways to provide coherent atomics relative to the CPU. As an example, an 
+implementation could utilize PCI Express atomic operations to implement the corresponding 
+network atomic operations. 
+3.4.9.3 Global Observability 
+The default for global observability is that global observability is not guaranteed. A FEP MUST NOT 
+indicate that a message has completed until all the packets have been acknowledged by PDS. In 
+addition, the FEP MUST wait until a semantic response is received before indicating that the message is 
+complete. This is sufficient for implementing the “transmit complete” semantic in libfabric. 
+An implementation MAY support stronger global observability. If the DC (delivery complete) bit is set in 
+a message, an implementation MAY indicate with a semantic failure that the transaction is not 
+supported. If an implementation does not indicate that the transaction is not supported, then the 
+implementation MUST defer the semantic response until it can guarantee that the data is globally 
+observable at the target. 

@@ -1,0 +1,25 @@
+ 29 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 1-1 - Working Group Organization 
+UEC is incorporated under the Linux Foundation Joint Development Foundation (JDF) as an International 
+Standards Development Organization (SDO). UE specifications are OPEN for public download. Future 
+versions, once created and ratified, will also be publicly available for download. It is the intention of UEC 
+members to propose their work products to appropriate standards organizations and/or relevant open-
+source communities to encourage broad adoption and to contribute as appropriate to mainstream 
+industry standardization efforts for Ethernet, Internet Protocol (IP), software, and API development. 
+Potential relevant SDOs to consider include, but are not limited to, IEEE, IETF, OCP, OFA, SONiC/SAI, and 
+various storage and management SDOs. 
+1.1.2 UE Transport Profiles 
+UET specifies four profiles: Unified Local, AI Base, AI Full, and HPC. The Unified Local profile is optimized 
+for local networks (i.e., scale up) with an emphasis on wire efficiency and small write/read transactions. 
+The AI Base profile is designed to provide the functionality required by current and future AI applications 
+where high performance is required at the lowest cost. The AI Full profile adds additional features (e.g., 
+deferrable send, exact match, and support for atomic primitives). The HPC profile addresses the needs 
+of High Performance Computing applications and has all the features of the AI Full profile except 
+deferrable send. 
+Each profile lists the services provided and the distinct features required at the transport layer of a 
+compliant product. The profiles themselves are defined in Section 3.3. The details of the hardware 
+interface at the endpoint are out of scope for the UE specifications. Software APIs to the upper layers 
+are specified to provide interoperability with higher-layer software. The goal is that different vendors’ 

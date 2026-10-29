@@ -1,0 +1,62 @@
+ 188 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+make it also HPC and AI Full compliant). The following tables assume familiarity with the respective UET 
+subsections. All requirements apply to both best-effort and lossless deployments unless otherwise 
+specified. 
+3.3.1 SES Transactions 
+Table 3-1 defines the requirements for supporting various transactions to be compliant with each 
+profile. Multi-packet transactions such as UET_WRITE, UET_READ, and UET_SEND MUST use a consistent 
+Payload MTU size to transport the SES payload. Therefore, a deployment MUST use a consistent Payload 
+MTU size across all FEPs communicating in a fabric. 
+Table 3-1 - Profile Requirements for Supporting UET Transaction Types 
+Transaction Description AI 
+Base 
+AI 
+ Full 
+HPC Unified 
+Local 
+NO_OP Null message as defined by the UET_NO_OP 
+opcode in SES Section 3.4.7.2 
+MUST MUST MUST MUST 
+SEND  Send a message that uses the buffer at head 
+of the receive queue 
+MUST MUST  MUST   
+SEND size Required maximum msg size 1 MTU  4GB-1 4GB-1  
+DATAGRAM SEND Used for UUD MUST MUST MUST  
+TAGGED SEND 
+(EM) 
+Exact tag match  MUST MUST  
+TAGGED SEND 
+(WC) 
+Wildcard tag match   MUST  
+WRITE RMA write MUST MUST MUST MUST 
+WRITE IMM RMA write with immediate MUST MUST MUST  
+WRITE size Required maximum message size 4GB-1  4GB-1 4GB-1 16KB-1 
+READ RMA read  MUST MUST MUST  
+READ Required maximum message size 4GB-1  4GB-1 4GB-1 16KB-1 
+Non-fetching 
+ATOMIC 
+Atomics support MUST MUST MUST MUST 
+Fetching 
+ATOMIC (including 
+CAS) 
+Atomics support  MUST MUST MUST 
+Tagged Atomics Both fetching and  
+non-fetching 
+  MUST  
+DEFERRABLE 
+SEND 
+Send operations that can be deferred by the 
+target until the corresponding receive buffer 
+is posted 
+ MUST   
+DEFERRABLE 
+TSEND 
+Deferrable send with matching  MUST   
+RENDEZVOUS with unexpected msg support   MUST  
+SYNC WRITE 
+SYNC WRITE IMM 
+Non-Fetching 
+ATOMIC 
+Sync group support     

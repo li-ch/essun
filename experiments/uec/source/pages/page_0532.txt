@@ -1,0 +1,44 @@
+ 532 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• trigger_id: Unique identifier for the trigger within the CCC 
+• accumulator_value: Value of the accumulator being evaluated 
+• op: Comparison operator used to evaluate a predicate against an accumulator value. Allowed 
+operators are: ==,!=, >, >=, <, <=, * 
+Informative Text: 
+The ‘*’ operator is a “wildcard match,” used when the algorithm should always be triggered; it is the 
+logical equivalent of the compound operator: (==||!=) 
+• mode: Trigger evaluation mode. Only one mode is supported: COUNT_OR_TIME. In 
+COUNT_OR_TIME mode, the trigger may fire due to accumulated TRUE evaluations or due to 
+elapsed time since the trigger last fired. 
+• mode_ref_val: Tuple specifying count (mode_ref_count_val) and time (mode_ref_time_val) 
+thresholds for determining whether a trigger has fired. Predicates tests against this tuple of 
+reference values are defined as: 
+  time_predicate = accumulator_value (op) mode_ref_time_val 
+  count_preficate = accumulator_value (op) mode_ref_count_val  
+A true evaluation is any evaluation for which at least one predicate evaluates to true. 
+Semantics of mode_ref_val tuple are defined as follows: 
+mode_ref_count_val mode_ref_time_val Semantic Behavior 
+0 0 No evaluation: No evaluation is performed; trigger fires 
+immediately if armed 
+0 ≠0 Time-only mode: Trigger fires when elapsed time since the 
+trigger last fired is greater than or equal to mode_ref_time_val 
+≠0 0 Count-only mode: Trigger fires after mode_ref_count_val true 
+evaluations of the predicate 
+≠0 ≠0 Combined mode: Trigger fires after mode_ref_count_val true 
+evaluations of the predicate or when elapsed time since the 
+trigger last fired is greater than or equal to mode_ref_time_val, 
+whichever occurs first 
+• arm_mode: Controls trigger evaluation and behavior after firing. Allowed values: 
+o DISARMED: Trigger does not evaluate predicate and cannot fire 
+o ONCE: Trigger evaluates predicate; when it fires it automatically transitions to 
+DISARMED and MUST be explicitly re-armed to fire again 
+o CONTINUOUS: Trigger remains armed after each fire; after firing, the count of true 
+evaluations and elapsed time since last fire are reset and evaluation continues 
+• action: Action taken when trigger fires. Allowed values: 
+o INVOKE: Invoke the PCM algorithm 
+o RECORD: Record the trigger fired in the trigger bitmask; do not invoke algorithm 
+• invoke_deadline: Upper bound on how long an invoke action may be deferred after trigger fires. 
+Applies only if action is INVOKE 
+3.6.18.5.2 Trigger Field Resolution 
+Trigger field resolution is show in Table 3-113: 

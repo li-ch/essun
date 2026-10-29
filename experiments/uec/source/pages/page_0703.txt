@@ -1,0 +1,58 @@
+ 703 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  augment /lldp:lldp/lldp:port/lldp:remote-systems-data: 
+    +--ro uel-options-tlv-extension 
+       +--ro llr-want?          identityref 
+       +--ro llr-enable?        identityref 
+       +--ro ipgr-capable?      boolean 
+       +--ro csig-capable?      identityref 
+       +--ro ufh-capable?       identityref 
+       +--ro ufh-status?        identityref 
+       +--ro ufh-32-version?     identityref 
+       +--ro ufh-32-rr?          uint32 
+       +--ro ufh-32-addr-bits?   uint32 
+       +--ro ufh-16-version?     identityref 
+       +--ro ufh-16-rr?          uint32 
+       +--ro ufh-16-addr-bits?   uint32 
+5.3.3.3.2 UE Link Negotiation CBFC TLV Schema 
+ 
+ 
+module: uec-link-neg-cbfc-tlv 
+ 
+  augment /lldp:lldp/lldp:port: 
+    +--rw tlvs-tx-org-uec-link-neg-cbfc-enable?   boolean 
+    +--rw uel-cbfc-tlv-extension 
+       +--rw s-error-code?              identityref 
+       +--ro s-credit-size?             uint16 
+       +--ro s-packet-overhead?         int8 
+       +--ro s-vc-rts?                  uint32 
+       +--ro r-cell-size?               uint16 
+       +--ro r-packet-overhead?         int8 
+       +--rw r-total-credits?           uint32 
+       +--rw r-num-vcs?                 uint8 
+       +--rw r-vcs* [r-vc-id] 
+          +--rw r-vc-want?                      boolean 
+          +--ro r-vc-rtr?                       boolean 
+          +--rw r-vc-id                         uint8 
+          +--rw r-vc-credit-limit?              uint32 
+          +--rw r-vc-pktid-sel?                 identityref 
+          +--rw (paremeters) 
+             +--:(pcpdei-identification) 
+             |  +--rw pcpdei-identification 
+             |     +--rw r-mask-pcpdei?    binary 
+             |     +--rw r-pcpdei?         binary 
+             +--:(dscp-identification) 
+             |  +--rw dscp-identification 
+             |     +--rw r-mask-dscp?     binary 
+             |     +--rw r-dscp?          binary 
+             +--:(handle-identification) 
+                +--rw handle-identification 
+                   +--rw r-handle?     uint16 
+  augment /lldp:lldp/lldp:port/lldp:remote-systems-data: 
+    +--ro uel-cbfc-tlv-extension 
+       +--ro s-error-code?              identityref 
+       +--ro s-credit-size?             uint16 
+       +--ro s-packet-overhead?         int8 
+       +--ro s-vc-rts?                  uint32 
+       +--ro r-per-vc-field-length?     uint8 

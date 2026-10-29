@@ -1,0 +1,54 @@
+# Calibration-ladder A8 sweep, small-message regime:
+# where does the L0 ring identity's O-CCT sit along the LATENCY axis
+# A-L0-LAT in the regime where that axis is visible at all — and where do
+# CAL-A8's two emulated added-latency points (64/140 ns; Pond, ASPLOS 2023,
+# docs/calibration/anchors_staging.md §A8) sit on it?
+#
+# Per CALIBRATION_PLAN.md §1.1 row CAL-A8 this anchor CANNOT calibrate
+# O-CCT ("a workload-level latency-tolerance study ... not a collective
+# completion time. Locates the CXL-class point on the latency axis for L
+# parameters only"). This sweep therefore executes the LATENCY-AXIS
+# PLACEMENT: L over {10, 64, 140, 200, 800, 2000} ns at fixed B = 64 B/ns
+# (A-L0-BW registry point) on the r=8 ring at the 16 KiB registry smoke
+# size — the small-message latency-bound regime of plan §1.2 where the L
+# term is 66.7-86.2% of CCT at the anchor/registry points (23.8-98.4%
+# across the full swept span). The 16 MiB bandwidth-bound twin
+# (sweep_a8_laxis_large_v1.yaml) shows the opposite pole.
+#
+# NOTHING IS TUNED: the L values were fixed by registry/anchor/plan
+# arithmetic BEFORE any stage output was read (10 = A-L0-LAT registry
+# free-range lower endpoint; 64/140 = the CAL-A8 emulated points; 200 =
+# the A-L0-LAT registry point and this sweep's baseline; 800 = the plan
+# §2.1 anchored-axis upper endpoint context (CAL-A10 assumption-class 0.8
+# us, a different anchor's number); 2000 = the registry free-range upper
+# endpoint, executed to show the range's anchor-free upper half). B stays
+# at the registry point; r = 8 is the free smoke default (the anchor
+# stages no rank count). The anchor's MEASURED outputs (43%/37% of 158
+# workloads within performance goals) are population fractions —
+# inexpressible in the L0 input space; classified in the stage record.
+# Every delta below is an arithmetic fact of t = 2(r-1)/r*M/B + 2(r-1)*L.
+#
+# 16384 = 2^14 is divisible by r = 8, so the A-L0-DIV gate ACCEPTS the
+# size exactly — no bracketing.
+#
+# Baseline = the registry point (L = 200): delta columns read directly as
+# placement of every L setting against the repo-wide default latency.
+sweep: cal_a8_laxis_small_v1
+workload: experiments/calibration/a8/workloads/w1_dense_tp_decode_tp8_16kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/a8/topologies/ring8_a8_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [16384]   # 2^14 (16 KiB); registry smoke point; gate-accepted
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a8/topologies/ring8_a8_l10_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l64_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l140_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l200_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l800_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l2000_v1.yaml

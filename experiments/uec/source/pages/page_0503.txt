@@ -1,0 +1,56 @@
+ 503 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+high packet rates. To reduce computation costs, CC_INVOCATION_DELTA can be set to cover multiple 
+packet arrivals; however, to ensure stability it SHOULD NOT be set to more than the base RTT. The 
+suggested value for CC_INVOCATION_DELTA is 1 µs, which offers a good tradeoff between computation 
+and responsiveness. 
+On FEP initialization, the following state is initialized for oversubscribed congestion control. These values 
+are maintained once for all CCCs from all sources. They are not per CCC. 
+Table 3-103 - RCCC Global Destination State for Aggregate Rate Control 
+Name Type Default Description 
+reference_rate float 1 reference_rate is only updated periodically (at most once 
+per 1 RTT). 
+increment_stage unsigned int 0 A counter of the number of additive increase phases 
+performed since the last multiplicative increase. 
+average_delay unsigned int 0 Estimated queueing delay. 
+next_rate_change int 0 Time when the reference_rate will be updated. 
+last_cc_invocation int 0 Time when the CC was last invoked. 
+ 
+The oversubscribed CC algorithm uses the following configuration parameters. The default parameter 
+values listed in Table 3-104 are chosen assuming the network uses the recommended switch 
+configuration values in Section 3.6.17. 
+Table 3-104 - RCCC Aggregate Rate Control Parameters 
+Name Type Default Description 
+min_rate floating 
+point 
+0.05 The minimum credit rate. 
+min_thresh_delay int 0.2 * 
+base_rtt 
+Queueing delay experienced by a packet seeing a 
+queue_low.min_thresh queue. 
+max_thresh_delay int 0.8 * 
+base_rtt 
+Queueing delay experienced by a packet seeing a 
+queue_low.max_thresh queue. 
+trim_delay int 2 * 
+base_rtt 
+Maximum single-hop queueing delay for a data packet in the 
+network. 
+rai floating 
+point 
+0.025 Additive increase constant. 
+target_u floating 
+point 
+1.5 Target network utilization. 
+MAX_INCREMENT_STAGE int 0 Number of additive increase stages before multiplicative 
+increase. 
+CC_INVOCATION_DELTA int 1 us Time between two consecutive invocations of the CC 
+algorithm. 
+UPDATE_INTERVAL float 2.5 The length of time (as a multiplier of the base RTT) to wait 
+before updating the reference rate. 
+g float 1/8 EWMA gain used to track average queue delay. 
+f float 1/8 EWMA gain to track ECN marking rate. 1/8 used for linkspeed 
+< 400Gbps, 
+1/16 for BDPs >= 400Gbps (for 4k MTU). 
+ 

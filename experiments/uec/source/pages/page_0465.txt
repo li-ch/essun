@@ -1,0 +1,38 @@
+ 465 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-93. FEPs copy the tag data portion of the CSIG tag (2 B for the Compact and 6 B for the wide 
+CSIG tag, excluding the TPID) into the least significant bytes of the CSIG Reflection Header, and set the 
+most significant 4 bits of the CSIG Reflection Header to indicate the type. Type CSIG_COMPACT indicates 
+signal data from a compact CSIG tag and type CSIG_WIDE indicates data from a wide CSIG tag. 
+Table 3-92 - CSIG Reflection Header Fields for Compact CSIG Tag 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+st_type 4 Defines the contents of the CSIG reflection header. Set 
+csig.st_type = 0 for the CSIG_COMPACT format. 
+rsvd 44 Reserved 
+tag_data_compact 16 Tag data from Compact CSIG tag 
+ 
+Table 3-93 - CSIG Reflection Header Fields for Wide CSIG Tag 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+st_type 4 Defines the contents of the CSIG reflection header. Set 
+csig.st_type = 1 for the CSIG_WIDE format. 
+rsvd 12 Reserved. 
+tag_data_compact 48 Tag data from wide CSIG tag 
+ 
+ 
+Figure 3-130 - CSIG Reflection Header for Compact CSIG Tag 
+ 
+ 
+ 
+Figure 3-131 - CSIG Reflection Header for Wide Compact CSIG Tag 
+ 

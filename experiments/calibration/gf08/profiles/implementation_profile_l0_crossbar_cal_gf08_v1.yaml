@@ -1,0 +1,100 @@
+# Implementation profile for the calibration-ladder GF-08 runs/sweeps
+# on the analytical L0 crossbar backend (gap-fill
+# anchor GF-08, "Falcon: A Reliable, Low Latency Hardware Transport",
+# ACM SIGCOMM 2025, Singhvi et al. — Google's reliable low-latency
+# hardware transport on commodity lossy PFC-free Ethernet, multi-ULP
+# (RDMA, NVMe), delay-based HW congestion control + multipath packet
+# spraying + selective retransmission; implemented on the Intel IPU
+# E2000 per the OCP/Google blog; architecturally the closest shipped
+# relative of UEC's UET design points).
+implementation_profile_id: analytical_l0_crossbar_cal_gf08_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. ROLE per the
+  gap-fill doc §GF-08: R1 — UEC-class transport on REAL hardware, the
+  hardware bookend paired with GF-05 (sim) on the UEC-class transport
+  axis. The crossbar rows execute (a) the STAGED endpoint peak on the B
+  axis under BOTH direction readings (200 Gbps => 25 B/ns primary,
+  12.5 B/ns bidirectional-aggregate alternative — the reading ambiguity
+  is itself a factor exactly x2, larger than the anchor's lossy factor
+  33/20, recorded as a stage finding), (b) the two measured dimensionless
+  factors as exact-fraction effective-B displacements at the anchor's
+  OWN carrier rate (no declared-carrier choice needed — unlike GF-07):
+  8 ("operation completion times 8x lower than CX-7 RoCE under network
+  congestion") => 25/8 = 3.125 executed (and 12.5/8 = 1.5625 at the
+  alternative carrier); 33/20 ("up to 65% higher goodput under lossy
+  conditions", goodput ratio 1.65 = 33/20 exactly) => 500/33
+  non-representable as a finite decimal, RECORDED NOT EXECUTED, and (c)
+  the A-L0X-BW registry point 64 as the placement reference (asymptotic
+  pure-B ratio vs the anchor rate exactly 64/25 = 2.56). The per-op-rate
+  axis ("120 Mops/sec" => amortized 25/3 ~ 8.33 ns/op; implied per-op
+  payload 625/3 ~ 208.33 B) is recorded as IDENTITY ARITHMETIC in the
+  stage record: the L0 identity's per-op latency floor 2L = 400 ns is
+  EXACTLY 48x the anchor's amortized per-op time at the registry L, and
+  the L implied by matching the floor (25/6 ~ 4.17 ns) lies BELOW the
+  A-L0X-LAT declared free range [10, 2000] — recorded, the range is
+  untouched. THE TRANSPORT ITSELF — the anchor's subject (delay-based
+  HW congestion control, multipath packet spraying, selective
+  retransmission, PFC-free lossy operation, multi-ULP endpoint semantics,
+  Mops-rate operation) — is OUT of this input space by the backend's
+  capability declaration ("congestion" among explicitly_unsupported)
+  and by the loader surface (no transport/CC/retransmission/ULP key
+  exists). The stage's central expressiveness findings are recorded in
+  results/calibration/.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) and L (link.pair_latency_ns) fixed by
+  anchor/registry arithmetic BEFORE any stage output was read; L stays
+  at the A-L0X-LAT registry point 200 throughout — GF-08 stages NO
+  abstract-level latency number (A11/GF-07 precedent). Envelope sweep
+  (r=8): B in {25 Falcon peak primary reading (the carrier — the
+  anchor's OWN absolute rate, no declared-carrier choice needed),
+  12.5 = the bidirectional-aggregate alternative reading, 64 = A-L0X-BW
+  registry point (placement), 3.125 = 25/8 (the 8x congestion factor at
+  the primary carrier)}. Carrier-transfer sweep (r=8): the SAME factor
+  8 at BOTH direction readings — {25, 3.125 = 25/8, 12.5, 1.5625 =
+  12.5/8}. Payload ladder: 8*2^k (8 B -> 16 MiB, 22 sizes) for both
+  sweeps — declared FREE PROBE grid (GF-08 stages no size regime; the
+  ladder brackets the anchor's implied per-op size 625/3 ~ 208.33 B
+  between its 128 B and 256 B members and contains every in-range
+  member of the standard 12-size ladder of stages A1/A2/A7/A9/A11/
+  GF-05); the run pair executes the A-W1-SIZE registry point 16 KiB
+  (a ladder member). Non-representable displacements RECORDED NOT
+  EXECUTED (exact fractions in the stage record): 500/33 = 25/(33/20)
+  (the 65%-higher-goodput lossy factor at the primary carrier) and
+  250/33 = 12.5/(33/20) (the same at the alternative carrier). NO
+  parameter was tuned toward any anchor output — the anchor stages no
+  (size -> time) series (its outcomes are an endpoint rate, an
+  operation-rate headline, and dimensionless factors); the sweeps
+  measure WHERE the identity sits relative to the anchor's rate axis,
+  measured factors, and implied per-op scale.
+measurement_source: >
+  GF-08 staged numbers (Falcon: A Reliable, Low Latency Hardware
+  Transport, ACM SIGCOMM 2025; docs/calibration/anchors_gapfill.md
+  §GF-08; numbers AS STAGED, not re-fetched; gap-fill anchor, NOT yet a
+  integrated anchor row — accepted rows are integrated by explicit decision; confidence M-H —
+  headline numbers verified against the official abstract mirror
+  (MSR); full paper tables NOT extracted at staging: ACM 403 in the
+  sandbox, NetDev 0x18 slides PDF fetch failed URL validation —
+  extract at integration). CAVEAT CLASSES carried by this profile:
+  shipped HARDWARE transport measurements (the strongest hardware class
+  in the R1 set — the bookend GF-05's sim numbers lack), but an
+  ENDPOINT/NIC-class transport on SCALE-OUT Ethernet, not a GPU
+  scale-up fabric, not UEC silicon (labeled proxy); the staged numbers
+  are abstract-level headline rates and envelope-edge factors ("up to
+  65%", "8x"), NOT a (size -> time) series — NO comparison against any
+  anchor time is attempted; per-operation completion times and goodput
+  are endpoint-transport metrics (RDMA/NVMe-class ops), not collective
+  CCTs — the factor transfer onto the AllReduce identity's B axis is a
+  DECLARED dimensionless proxy (A11/GF-05/GF-07 technique); the 200 Gbps
+  direction convention is unstaged (both readings executed, the
+  ambiguity itself recorded); the staging doc's own "~6 ns/operation
+  amortized" gloss is mutually inconsistent with the exact arithmetic
+  1/120e6 s = 25/3 ~ 8.33 ns/op (both kept, never conflated; the exact
+  fraction used); compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

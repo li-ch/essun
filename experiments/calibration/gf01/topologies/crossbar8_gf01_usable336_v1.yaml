@@ -1,0 +1,34 @@
+# Calibration-ladder GF-01 topology: fully-connected (crossbar) of 8 ranks
+# at the USABLE-rate aggregate B = 336 B/ns = 7 x 48 — GF-01's own
+# protocol-overhead derating of its raw link rate ("only about 48 GB/s (or
+# 75%) is usable for data transfer" of the 64 GB/s raw unidirectional xGMI
+# rate; the blog attributes the gap to CRC flits and packet-protocol
+# overhead; docs/calibration/anchors_gapfill.md §GF-01, which flags the
+# blog's percentage arithmetic for re-verification at integration — the
+# 48 GB/s usable figure itself is used here as staged). Decimal units,
+# 1 GB/s = 1 B/ns.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-01 measured times; 336 = 7 x 48 is the anchor's own usable-rate
+# arithmetic, fixed BEFORE any model output was read. Together with
+# worst315 / sum325_6 / agg448 this is one of four anchor-arithmetic
+# aggregate points that BRACKET the measured 16 GiB plateau row; which
+# one the measurement supports is a recorded comparison outcome, not a
+# topology choice. L = 200 ns is the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_gf01_usable336_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 336
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; single-port injection shared
+  across the 7 peers (A-L0X-PORT; OUT-OF-DOMAIN as a physical description
+  of the xGMI full mesh — exact for the symmetric collective per stage
+  A7's equivalence finding). Provenance: B = 336 B/ns = 7 x 48 GB/s, the
+  anchor's staged USABLE per-link rate aggregated over its 7 links
+  (protocol-overhead derating of the raw 64; the blog's own percentage
+  accounting is flagged in the staging doc — recorded, not reconciled
+  here); L = 200 ns free registry point. Values are anchor arithmetic /
+  free-registry points, never our measurements, never tuned.

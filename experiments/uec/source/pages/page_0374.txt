@@ -1,0 +1,41 @@
+ 374 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.13 Default SES Responses 
+As described in the previous section, guaranteed delivery SES responses are used to reduce the required 
+state stored by a RUD/ROD/RODL PDC. When SES indicates its response does not require guaranteed 
+delivery, PDS sends the response and then deletes it. If a duplicate packet or an ACK Request CP is 
+received for a PSN that has no stored SES Response state, PDS generates an ‘inferred’ SES Response. 
+PDS MUST generate a UET_DEFAULT_RESPONSE when inferring an SES Response. Generating a 
+UET_NO_RESPONSE may be supported. This requires maintaining state to differentiate between that 
+and a successful default response. 
+Implementation Note: 
+The RTO_TIMER should be started when the packet being transmitted is as close to being on the 
+network as practical. For example, as the packet reaches the Ethernet MAC or when the packet is 
+enqueued in the transmit packet buffer. 
+ 
+Informative Text: 
+Tracking of PSN state varies by implementation. Two example implementations are shown within this 
+information note.  
+ 
+The ACK state including SACK bitmap should not be updated until SES has provided a response. In 
+implementation #1, the PSN state is not updated until SES returns a response—in this case duplicate 
+packets are filtered using another mechanism until the SES response is provided. This allows 
+distinguishing between UET_NO_RESPONSE and UET_DEFAULT_RESPONSE when a duplicate packet 
+or ACK Request CP is received. 
+ 
+Alternatively, an implementation may choose to use a model closer to implementation #2. This option 
+cannot distinguish UET_DEFAULT_RESPONSE versus UET_NO_RESPONSE when creating an ACK for 
+duplicate packets and ACK Request CPs. It always generates UET_DEFAULT_RESPONSE in those cases. 
+ 
+The scenario when a duplicate packet or ACK Request CP is received while #2 is still in ‘Received—SES 
+processing state’ may happen. If it does, the received packet is NACK’d with pds.nack_code = 
+UET_RCVD_SES_PROCG. 
+ 
+Packets marked as UET_NO_RESPONSE may be acknowledged using a cumulative ACK in which case 
+the source of the request will assume success for the packet. The source of the request cannot 
+assume success for the message. 
+ 
+SES may NACK a packet (e.g., if out of message tracking state, in which case the packet is treated as 
+not received). 
+ 

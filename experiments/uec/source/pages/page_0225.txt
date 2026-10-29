@@ -1,0 +1,35 @@
+ 225 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-11 - Optimized Header Format Fields  
+Field Size  Description  Section Ref 
+rsvd 2 Table 3-9  
+opcode 6 Table 3-9 3.4.7.2 
+version (ver) 2 Table 3-9  
+delivery complete (dc) 1 Table 3-9 3.4.9.3 
+initiator error (ie) 1 Table 3-9 3.4.6.4.1 
+relative (rel) 1 Table 3-9 3.4.2.3 
+rsvd 1   
+end of msg (eom) 1 Table 3-9  
+start of msg (som) 1 Table 3-9  
+rsvd 2   
+request_length 14 Table 3-9  
+ri_generation 8 Table 3-9 3.4.4.7.3 
+JobID 24 Table 3-9 0 
+rsvd 4 Table 3-9  
+PIDonFEP 12 Table 3-9 3.4.2.3.2 
+rsvd 4 Table 3-9  
+resource_index 12 Table 3-9 3.4.2.3.3 
+buffer_offset 64 Table 3-9  
+ 
+A second use case for an optimized transfer is a single-packet message with matching criteria. Most 
+implementations of this scenario still utilize header data but do not need an offset. A third use case for 
+an optimized transfer is a single-packet RMA operation with immediate data or extended (memory key) 
+addressing. Both use cases carry an abbreviated (14-bit) request length and share the format shown in 
+Figure 3-16. In this format, ses.som and ses.eom must be set. 
+ 
+Informative Text: 
+The 14-bit abbreviated ses.request_length field is focused on the purpose of the optimized header 
+formats:  efficiency at small transfer sizes. The overhead of UET_HDR_REQUEST_STD (relative to an 
+optimized header) for messages larger than 8 KB is nominal.  

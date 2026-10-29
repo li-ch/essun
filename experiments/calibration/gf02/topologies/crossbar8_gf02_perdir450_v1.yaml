@@ -1,0 +1,39 @@
+# Calibration-ladder GF-02 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the PER-DIRECTION PHYSICAL point B = 450 B/ns — the
+# anchor's own ceiling arithmetic: the poster states "NVLink's peak
+# bi-directional bandwidth is 900 GB/s" (verified verbatim 2026-10-28) and
+# the poster's own gloss invokes the bidirectional->per-direction split
+# ("the measured 360 GB/s suggests I am only achieving uni-directional
+# bandwidth"; 900/2 = 450 per direction). This file isolates the physical
+# per-direction reading; the measured plateau (360) has its own topology
+# (crossbar8_gf02_plateau360_v1). NO LINK-COUNT CLAIM is load-bearing here:
+# 450 = 900/2 is pure anchor arithmetic on the poster's own figure.
+# docs/calibration/anchors_gapfill.md §GF-02 (gap-fill anchor, PROPOSED,
+# not yet an integrated anchor row). Decimal bandwidth units, 1 GB/s = 1 B/ns.
+#
+# THE EXECUTED BRIDGE: 360/450 = 4/5 exactly (to the anchor's "~"
+# precision) — the GF-02 measured plateau sits AT the CAL-A12 derating
+# bridge value on this NVLink-4 generation's ceiling (one generation after
+# CAL-A12's NVLink-3 20/25). The store-run pair (plateau360 vs perdir450
+# at identical r, M, L) executes that 4/5 through the identity; nothing
+# about it is tuned here.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward any
+# measurement; 450 is anchor arithmetic fixed BEFORE any model output was
+# read. L = 200 ns is the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_gf02_perdir450_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 450
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT; NVSwitch-class abstraction, the KEEP domain of plan §2.1).
+  Provenance: B = 450 B/ns = 900/2, the per-direction split of the
+  anchor's own stated "peak bi-directional bandwidth is 900 GB/s" figure;
+  no link-count or vendor-datasheet value is load-bearing. L from the free
+  A-L0X-LAT registry point. Values are anchor arithmetic / free-registry
+  points, never our measurements, never tuned.

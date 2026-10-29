@@ -1,0 +1,24 @@
+# UEC-flavor stand-in for the cross-design L0 comparison (Q6 stage S4).
+#
+# HONESTY: no UEC-derived numeric value exists at L0 today — UEC 1.1
+# (STD-UEC-11, public read; Q1 ladder S2–S4) anchors transport, reliability
+# and congestion SEMANTICS, and fixes no line rate, hop latency, or rank
+# count usable as an L0 input. Every value below is an explicit FREE
+# parameter from the shared record
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml (A-XDUO-BW,
+# A-XDUO-LAT, A-XDUO-TP), equal by construction to the UnifiedBus-flavor
+# files in the same sweep. The identity (unidirectional ring) is a free
+# transport-agnostic stand-in (A-XDUO-IDUEC), not a UEC topology claim:
+# UEC 1.1 §1.5.3.3 (anchor UEC11-S1.5.3.3-TOPOLOGIES) is informative and
+# mandates no fabric class.
+topology_id: uec_free_ring64_v1
+topology_class: unidirectional_ring
+ranks: 64
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  Same ring identity and modeling assumptions as ring8_free_v1
+  (A-L0-FD, A-L0-DIV), scaled to the shared comparison rank count 64.
+  No congestion, no credits, no packetization, no UEC semantics (LLR,
+  delivery modes, CMS are all above L0) — transport model only.

@@ -1,0 +1,52 @@
+ 537 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Function Name  Description 
+int uet_get_variable_uint(unsigned int 
+variable_index, uet_uint_t *value) 
+Get the unsigned integer variable at the specified index. 
+int uet_get_variable_float(unsigned int 
+variable_index, uet_float_t *value) 
+Get the floating-point variable at the specified index. 
+int uet_set_variable_int(unsigned int 
+variable_index, uet_int_t value) 
+Set the integer local variable at the specified index. 
+int uet_set_variable_uint(unsigned int 
+variable_index, uet_uint_t value) 
+Set the unsigned integer local variable at the specified 
+index. 
+int uet_set_variable_float(unsigned int 
+variable_index, uet_float_t value) 
+Set the floating-point local variable at the specified index. 
+int uet_update_variable_int(unsigned int 
+variable_index, uet_int_t value) 
+Update the integer global variable at the specified index 
+using the operation defined in the YAML. 
+int uet_update_variable_uint(unsigned int 
+variable_index, uet_uint_t value) 
+Update the unsigned integer global variable at the 
+specified index using the operation defined in the YAML. 
+int uet_update_variable_float(unsigned int 
+variable_index, uet_float_t value) 
+Update the floating-point global variable at the specified 
+index using the operation defined in the YAML. 
+ 
+Informative Text: 
+Indexes into the local state do not necessarily map directly to memory offsets due to the varying size 
+of the elements. The details are implementation-dependent and not defined here. 
+ 
+3.6.18.6.3 PCM Telegrams 
+PCM algorithms can exchange out-of-band messages with software running on the local node as well as 
+the peer CCC using optional telegrams. The structure and use of telegrams is algorithm-specific; they 
+may be used in any situation in which coordination or information exchange between the algorithm and 
+the host or remote peer is required. 
+Telegrams are fixed-size structures of up to 30 bytes in length, composed of one or more fields. An 
+algorithm can define multiple types of telegrams. There is no definition-level distinction between 
+telegrams exchanged locally or with peers, although support is provided for an algorithm to distinguish 
+between the source of received telegrams. Telegrams are defined using the YAML schema provided in 
+Section 3.6.18.8.5. Telegrams of different types are uniquely identified both locally and remotely by the 
+value of the structure type_id field. 
+ 
+Informative Text: 
+The 30-byte length constraint for telegrams results from specific design decisions: telegrams are 
+transmitted as control packets, the total payload is limited to 32 bytes, ensuring the complete 

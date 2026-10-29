@@ -1,0 +1,42 @@
+ 355 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-60 - PSN Tracking Resources per PSN Range 
+pds.mpr Maximum PSN tracking resources 
+(MP_Range in packets) 
+0 if (Override_MPR_Zero_Value == 0) Ignore MP_Range; else MP_Range = 
+Override_MPR_Zero_Value 
+1 128 
+2 256 
+3 384 
+…  
+255 32640 
+ 
+When Override_MPR_Zero_value is zero and pds.mpr is zero, the MP_range is ignored. When 
+Override_MPR_Zero_value is non-zero and pds.mpr is zero, the MP_Range is set to 
+Override_MPR_Zero_value. When pds.mpr is non-zero, the source MUST accept the received pds.mpr, 
+multiply the received value by 128 and update the local MP_Range.  This limits the range of outstanding 
+PSNs such that packets with a PSN greater than CACK_PSN + MP_Range are not transmitted. If the 
+current outstanding PSN range exceeds this, the PDC does not transmit packets outside of the new 
+range. For example, if MP_Range = 1024 and a new pds.mpr = 512 arrives: 
+• If CACK_PSN = 1000 and highest PSN sent = 1600, when MP_Range gets changed to 512, the 
+PDC stops sending new PSNs until CACK_PSN reaches 1089; at this point PSN = 1601 can be sent. 
+• If a packet with PSN greater than 1512 (CACK_PSN   512) is NACK’d or times out, the 
+retransmission should wait until the PSN is within CACK_PSN + MP_Range. 
+The source MUST NOT accept a pds.mpr from a packet with a CACK_PSN that is lower than or equal to 
+the CACK_PSN of the packet that last updated the MPR, to account for ACK packets arriving out of order. 
+When Override_MPR_Zero_Value is non-zero, all encodings of pdc.mpr are valid. If 
+Override_MPR_Zero_Value is zero, a destination that sets pdc.mpr on a PDC to a non-zero value MUST 
+set pds.mpr to a non-zero value on that PDC for all following packets. There are no restrictions on how 
+often MPR is updated; however, an implementation should constrain the rate of change. 
+3.5.11.14 pds.sack_bitmap 
+The ACK Extension header contains a 64-bit selective ACK bitmap field (pds.sack_bitmap). Each bit in 
+this bitmap indicates reception state about the packet with the corresponding PSN. When a bit is 
+cleared (i.e., zero), it MUST NOT be interpreted that the corresponding PSN has not been received at the 
+destination. 
+For example, if one pds.sack_bitmap has the bit for PSN 729 set to one (indicating PSN 729 has been 
+received and an SES response has been generated) and the next pds.sack_bitmap sets the bit for PSN 
+729 to zero, the resulting state indicates that PSN 729 was received. In this case the newly received 
+SACK bitmap uses an ‘or’ function to update the existing PSN bitmap state.  
+A received pds.sack_bitmap of all zeros is valid and indicates no update in received PSN state. Refer to 
+Section 3.5.12.3.1 for more information on the SACK bitmap. 

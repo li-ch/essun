@@ -1,0 +1,80 @@
+ 400 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.19 Sequence Diagrams 
+The following four sections on RUD, ROD, RODL, and RUDI use packet sequence diagrams to illustrate 
+how the protocols work. All sequence diagrams use the following key: 
+Table 3-84 - Sequence Diagram Key 
+Function Description Example 
+PDS requests Solid line  
+PDS ACKs Dashed line  
+SES headers Fields in brackets are SES generated, and are 
+carried in PDS Request/ACK; these are 
+shown to provide context on the sequence, 
+but are not used by PDS 
+[MID=1, RESP] 
+Colors  All requests/ACK in a direction are shown in 
+the same color; a single PDC may use up to 
+four colors: 
+#1 Forward direction Request 
+#2 Forward direction ACK 
+#3 Return direction Request (Read Resp) 
+#4 Return direction ACK 
+ 
+ 
+#1 
+#2 
+#3 
+#4 
+ 
+ 
+Figure 3-96 shows a sequence with text pointing out the meaning of each field and arrow. All sequence 
+examples are informative. 
+ 
+ 
+Figure 3-96 - Example Sequence with Key 
+              
+        
+       
+ Read Resp, MID , MID1, DATA
+orig_pdcid_val = 0 
+ MID , MID1, DATA 
+333 RESP,  gtd_del
+            
+PacketsMessages Packets MessagesPackets
+333  Read, MID1,
+ orig_pdcid, orig_psn = 333 
+    
+    
+          
+Seman c 
+processing  
+ Read, MID1 
+ MID1, RESP 
+Forward direc on 
+PDS Request
+          
+ MID , RESP ,  gtd_del
+ MID , RESP 
+Read COMPLETION
+(libfabric op on)
+CLEAR = 48
+        
+        
+       
+        
+          
+SES headers
+Forward direc on 
+PDS ACK
+SES headers
+Return direc on 
+PDS ACK SES headers
+Return direc on 
+PDS Request
+SES headers
+SES opcode   not 
+used by PDS, 
+shown as this 
+a ects the overall 
+sequence

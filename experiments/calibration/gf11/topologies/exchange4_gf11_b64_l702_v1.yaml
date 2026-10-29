@@ -1,0 +1,29 @@
+# Calibration-ladder GF-11 topology: fully-connected EXCHANGE fabric of 4
+# ranks at the GF-11 anchor point — B = 64 B/ns, L = 702 ns (backend
+# analytical_l0_recursive_doubling; sweep-path only — the run path does not
+# reach this backend, the A7 record's gate finding, re-exercised at stage A8).
+#
+# ROLE: the third latency chain of the family at the SAME (B, L) as the
+# ring/crossbar twins: t = 2(r-1)/r*M/B + 2*log2(r)*L = 3M/128 + 4L =
+# 3M/128 + 2808 at r=4 (log2(4) = 2 steps per phase). The anchor's
+# near-optimal measured leg (2.37 µs one-shot) lands BETWEEN this chain
+# (2811 ns at M=128, 937/790 ABOVE the measurement) and the crossbar chain
+# (1407 ns, 790/469 below): the bare identity family BRACKETS the
+# near-optimal kernel — no single L0 identity reaches it. r=4 is a power
+# of two so A-L0D-POW2 accepts natively. Same honesty rules as
+# crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: exchange4_gf11_b64_l702_v1
+topology_class: fully_connected_exchange
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 702
+notes: >
+  Partner-exchange steps over a fully-reachable fabric: one partner per
+  rank per step (XOR schedule), log2(4) = 2 steps per phase, 4L = 2808 ns
+  latency chain total. GF-11 bracket leg: the near-optimal measured leg
+  sits between this chain and the crossbar chain. Provenance: L = 702 from
+  the GF-11 measured decomposition (derived reading SoL/2), B = 64 the
+  free A-L0D-BW registry point. Values are anchor arithmetic / free
+  registry points, never ours, never tuned, never standard-normative.

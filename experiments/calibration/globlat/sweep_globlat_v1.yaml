@@ -1,0 +1,68 @@
+# Calibration-ladder GLOBAL stage GLOB-LAT sweep (the
+# second of the four global parameter-class stages): sensitivity of the
+# model's own outputs to the hop-latency free parameter A-L0-LAT
+# (link.hop_latency_ns) across its REGISTERED range [10, 2000] ns, on the
+# W1 smoke config exactly as shipped .
+#
+# W1 smoke config, verbatim: workload experiments/workloads/
+# w1_dense_tp_decode_small.yaml (W1 Dense TP Decode, tp8, 2 layers x 3
+# steps = 6 AllReduce ops), payload 16384 B (16 KiB, the A-W1-SIZE smoke
+# value; 8 divides it so the A-L0-DIV gate accepts every row), fabric the
+# smoke ring (unidirectional_ring, r=8), B fixed at the A-L0-BW registry
+# point 64 B/ns (KEEP per plan section 2.1; the BW axis was the FIRST
+# global stage's). Only L moves.
+#
+# Swept L ladder (14 points, every value a FREE PARAMETER, nothing tuned):
+#   the registered ENDPOINTS 10 and 2000, the powers of two inside the
+#   range 16, 32, 64, 128, 256, 512, 1024 (200 = the registry point and
+#   smoke value, the BASELINE) plus four anchor-informed axis CONTEXT
+#   markers 70, 80, 140, 800 (plan section 2.1 A-L0-LAT anchored axis
+#   ~10-800 ns: 70 = CAL-A9 switch-stage floor alone, 80 = CAL-A9
+#   one-stage pair sum (the plan's stated sum), 140 = CAL-A8 emulated
+#   added-latency upper, 800 = CAL-A10 assumption-class GPU-fabric
+#   end-to-end = the anchored-axis upper; context only, the anchor
+#   comparisons themselves were the per-anchor stages' job). Numerical
+#   coincidences noted, not markers: 10 = CAL-A9's ~10 ns/link, 64 =
+#   CAL-A8's emulated lower value.
+#
+# Expected identity under sweep (E0 arithmetic fact, cross-checked by the
+# stage record builder on every row): t(L) = 2(r-1)/r*M/B + 2(r-1)L =
+# 448 + 14L ns - a STRAIGHT LINE in L with slope 2(r-1) = 14 (no
+# saturation anywhere on the axis; the mirror of the first global
+# stage's hyperbola); per-rank wire 28672 B constant in L; O-CONSERVATION
+# exact at every L. The balance point of the axis is L* = M/(r*B) = 32 ns
+# - EXACTLY ON this grid (14*32 = 448 = 28672/64): below it the
+# bandwidth term dominates, above it the latency term dominates, so the
+# smoke config sits deep on the latency-dominated side at L = 200
+# (200/32 = 25/4 above L*, the same exact ratio the B axis places 64
+# above B* = 256/25 - the two axes are duals at the registry pair).
+#
+# claim linkage: none - a PROPOSED global sensitivity candidate must not
+# link to any claim (the sweep runner records no claims by construction).
+sweep: cal_globlat_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/globlat/topologies/ring8_globlat_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [16384]   # the W1 smoke payload (A-W1-SIZE), unchanged
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/globlat/topologies/ring8_globlat_l10_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l16_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l32_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l64_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l70_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l80_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l128_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l140_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l200_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l256_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l512_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l800_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l1024_v1.yaml
+    - experiments/calibration/globlat/topologies/ring8_globlat_l2000_v1.yaml

@@ -1,0 +1,29 @@
+# Transport-agnostic analytical topology: 2D torus (ring x ring) of 4 ranks
+# as a 2 x 2 grid. Atlas cell 4r-torus (design-space atlas ladder, G2 /
+# decision D-025).
+#
+# Same shape and the SAME free parameters as torus2d_8_free_params.yaml and
+# ring4_free_params.yaml (B = 64 bytes/ns, L = 200 ns) so every atlas cell
+# compares under shared free parameters (the atlas fairness rule). Values are
+# explicit FREE PARAMETERS (A-L0T-BW, A-L0T-LAT) and the sequential-dimension,
+# uniform-link, and shape models are MODELING ASSUMPTIONS (A-L0T-SEQ,
+# A-L0T-UNIF, A-L0T-SHAPE) — not standard-derived, not measured. See
+# experiments/vertical_slice/assumptions_l0.yaml.
+topology_id: torus2d4_free_v1
+topology_class: torus2d_ring_x_ring
+ranks: 4
+grid:
+  dim1_ranks: 2
+  dim2_ranks: 2
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  Two wrapped dimensions of 2 ranks each (2 rings of 2 per dimension); the
+  2 x 2 grid is the ONLY non-degenerate torus factorization of 4 ranks —
+  the 1 x 4 factorization is rejected by the backend's shape guard (a torus
+  dimension must wrap >= 2 ranks) and is recorded as a skip in the atlas
+  index, never forced. Dimensions execute sequentially over the full
+  message, so each dimension's links are used exclusively (no
+  cross-dimension contention). Both dimensions share B and L. No congestion,
+  no credits, no packetization — L0 transport model only.

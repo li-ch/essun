@@ -1,0 +1,26 @@
+ 129 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.2.10 Wire Protocol Mapping 
+This section specifies how the libfabric APIs and associated data structures are mapped to fields in the 
+following wire protocol headers: 
+• IP header 
+• UET TSS header 
+• UET PDS header 
+• UET SES headers 
+Figure 2-12 contains a high-level depiction of the libfabric mapping to UET wire protocol headers. 
+ 
+Figure 2-12 - Libfabric Mapping to UET Wire Protocol Headers 
+2.2.10.1 IP Header Field Mappings 
+The libfabric to IP header field mappings are shown in Table 2-36. 
+Table 2-36 - Libfabric to IP Header Mapping 
+IP Header Field Libfabric Source 
+source_ip_address IP address component of UET address assigned to source libfabric endpoint  
+destination_ip_address IP address component of UET address assigned to destination libfabric endpoint  
+dscp tclass field of struct fi_domain_attr associated with source libfabric endpoint 
+ 
+2.2.10.2 UET TSS Field Mappings 
+The TSS header field generation is based on security bindings from the provider kernel driver and per-
+packet information from libfabric. The security bindings are initialized when the libfabric endpoint is 
+opened and are refreshed when rekeying occurs. The per-packet information from libfabric includes a 
+libfabric domain identifier and the source IP address of the FEP. The domain identifier is used to find the 

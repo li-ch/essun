@@ -1,0 +1,31 @@
+# Calibration-ladder GF-09 topology: fully-connected crossbar of 8
+# ranks at the A-L0X-BW / A-L0-BW REGISTRY POINT — B = 64 B/ns,
+# L = 200 ns (registry).
+#
+# ROLE: registry-placement twin of the design-target envelope (NO GF-09
+# provenance on this row): the registry default B = 64 sits exactly
+# 64/50 = 32/25 = 1.28x ABOVE the UEC design-class floor of 50 B/ns —
+# the repo-wide default is 28% faster than the class UEC transport is
+# designed for (a placement fact about the free registry default,
+# never a tuning target; the registry is untouched by this stage). The
+# observed CCT ratio vs the carrier row falls strictly monotonically
+# toward 50/64 = 25/32 from 1 as payload grows.
+#
+# HONESTY: B and L are free registry defaults (A-L0X-BW / A-L0X-LAT),
+# placed BEFORE any stage output was read, never tuned. r = 8 free
+# smoke default. The row carries no anchor provenance — it exists so
+# the design-class floor is placed RELATIVE to the registry default by
+# executed runs, not by assertion.
+topology_id: crossbar8_gf09_reg64_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Registry-placement row: B = 64 B/ns (A-L0X-BW point), L = 200 ns
+  (A-L0X-LAT point). Identity t = 2(r-1)/r*M/B + 2L; asymptotic CCT
+  ratio vs the 50 B/ns GF-09 design-class carrier exactly 32/25 = 1.28
+  (the carrier is 1.28x SLOWER bandwidth-bound). No anchor provenance
+  on this row — free registry defaults only, never tuned.

@@ -1,0 +1,37 @@
+ 427 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o These events SHOULD be counted and available as statistics (i.e., a counter for each 
+NACK code; the counter may be a single bit wide). 
+• Unrecoverable errors requiring the PDC to be closed (i.e., NACK error type of PDC_FATAL). 
+Refer to the NACK codes listed in Section 3.5.12.7. 
+3.5.24.1 PDC Normal Events 
+These errors are expected and are handled gracefully. For example, if the necessary resources to 
+establish a PDC are unavailable, the target responds to the establishment packet—where the 
+pds.flags.syn bit is set—with a PDS NACK packet. This NACK packet includes a pds.nack_code field that 
+specifies unavailable resources (i.e., PDS_NACK_PDC). 
+The source retries the configured number of times (Max_RTO_Retx_Cnt) to recover from normal 
+operating events and then report an error if the establishment fails. All packets associated with the 
+failed PDC are dropped, and an error is reported to SES. 
+3.5.24.2 Unexpected Events 
+NACK error types of PDC_ERR are unexpected. The events are handled gracefully to minimize the impact 
+of implementation errors and potential denial of service attacks. These events MUST be counted at the 
+source and SHOULD be counted at the destination. The counter may be a single bit. 
+If a request or CP cannot be delivered, the destination FEP MUST respond with a PDS NACK packet 
+identifying the reason for the packet delivery failure (e.g., unknown PDCID with pds.flags.syn set to 0). 
+At the destination, all packets with unexpected events are dropped. At the source, if a NACK is received 
+with pds.nack_code of type ‘unexpected’, the associated PDC is closed and the event reported. All 
+packets associated with the closed PDC are dropped and reported to SES. 
+3.5.24.3 PDC Unrecoverable Events 
+If an unrecoverable PDC event occurs (i.e., NACK error type = PDC_FATAL), PDS MUST close the PDC with 
+a Close Command CP or Close Request CP, release the PDC resources, and report the error. An example 
+of a fatal PDC event is exhaustion of a retry counter. All packets associated with a failed PDC are 
+dropped, and a failure event is provided to SES. 
+These events MUST be counted at the source and SHOULD be counted at the destination. 
+3.5.25 Full Header Format 
+This section shows the overall header stack, up to and including UET headers. All headers are expressed 
+in a conventional network byte order that is consistent with IETF RFC 1700. Numbers are expressed as 
+decimal or hexadecimal and are pictured in "big-endian" order. This convention is consistent with IETF 
+RFC 1700. 
+UET provides an optional 32-bit CRC that can be used when encryption is not used. The UET CRC 
+calculation is defined in Section 3.5.25.7. 

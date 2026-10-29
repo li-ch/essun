@@ -1,0 +1,17 @@
+ 433 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.25.8 UET RODL - General 
+Figure 3-119 shows UET RODL over the UFH_32 header. UET RODL also runs over a traditional Ethernet 
+header using the same format.  The RODL header, beginning at header start byte 16 in Figure 3-119, 
+remains 12 bytes whether carried over Ethernet or over UDP/IP/Ethernet, consistent with the behavior 
+of RUD and ROD. The pds.entropy field is always immediately after the UET EtherType. 
+3.5.25.9 UET RODL, ACK, NACK, and CP over the UFH_16 Header 
+Figure 3-120 illustrates UET over the UFH_16 header, which is optimized for a single tier of switching. 
+Only PDS types RODL, ACK, NACK, and control packets are defined for the UFH_16 header. The 
+illustration shows how these PDS headers are mapped into available bytes in the unified forwarding 
+header with remaining fields following the EtherType.  
+TSS is not supported with the UFH_16 header. 
+ 
+Figure 3-119 - Header Stack for UET RODL 
+ 

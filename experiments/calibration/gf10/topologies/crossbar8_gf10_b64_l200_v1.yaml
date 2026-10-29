@@ -1,0 +1,31 @@
+# Calibration-ladder GF-10 topology: the REGISTRY TWIN — fully-connected
+# (crossbar) abstraction of 8 ranks at the repo-wide free-parameter
+# defaults, B = 64 B/ns and L = 200 ns (A-L0X-BW / A-L0X-LAT registry
+# points; no GF-10 provenance on either value).
+#
+# ROLE: the placement reference for the run pair and the bandwidth sweep
+# (experiments/calibration/gf10/run_gf10_registry_v1.yaml pins it at the
+# same 2 MiB payload as the anchor-point run, isolating BOTH axes
+# together: at 2 MiB the exact CCT is 57744 ns — numerically IDENTICAL to
+# the registry twins of stages GF-05 and GF-09 at the same free-parameter
+# point, the intended cross-stage determinism tie-in of the R-axis
+# comparability payload). Placement facts against GF-10's measured point:
+# the registry L=200 sits exactly 45x below the measured 9000 ns; the
+# registry B=64 sits 64/25 = 2.56x above the measured per-link
+# per-direction 25 B/ns. Registry defaults are free parameters, never
+# tuned toward any anchor.
+topology_id: crossbar8_gf10_b64_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction at the registry free
+  defaults (injection B = 64 B/ns, pair latency L = 200 ns), charged once
+  per phase by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). No
+  GF-10 provenance: this row exists to place the anchor-point row
+  relative to where the model sits at its own defaults (the run pair at
+  2 MiB: ratio exactly 257501/90225 ~ 2.8534, delta exactly 2676416/25 =
+  107056.64 ns). Values are free registry defaults, never measurements.

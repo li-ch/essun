@@ -1,0 +1,23 @@
+According to Yang, Huawei's solution to this bottleneck is its new computing architecture, powered by the interconnect technology called UnifiedBus, which facilitates collaboration between clusters and SuperPoDs. This architecture has been designed to support the boom in compute demand that is emerging as new agentic applications hit the market. UnifiedBus-powered computing systems have four key features:
+
+Unified protocol and memory semantics: More than ten interconnect protocols have been combined under the UnifiedBus protocol, which increases interconnect bandwidth from 100 GB/s level to TB/s level and reduces round-trip time (RTT) latency from 7 microseconds to 2 microseconds. This protocol also enables unified global memory addressing within SuperPoDs.
+
+Heterogeneous compute collaboration: UnifiedBus directly interconnects CPUs, NPUs, memory, and solid-state drives (SSDs) to enable decentralized, peer-to-peer access between them and flexible CPU-NPU mixing. In addition, tiered hardware acceleration for Transformer enables Attention-FFN disaggregation (AFD).
+
+Tiered storage with global pooling: UnifiedBus uses hybrid-media resource pooling to support the caching of activations. Double Data Rate (DDR) memory serves as the alternative memory for NPUs, reducing latency for search, recommendation, and advertising services, and doubling the performance of vector retrieval for 100 billion-level data items with thousands of dimensions. This also reduces the per-NPU HBM capacity requirements for the training of 10 trillion-parameter models, and improves cluster model FLOPs utilization (MFU).
+
+Optoelectronic interconnect and flexible networking: UnifiedBus serves as a global ultra-high bandwidth, ultra-low latency "data highway", enabling flexible scaling of compute.
+
+Yang then moved on to unveil Huawei's newest UnifiedBus interconnect products that cover interconnection within cabinets, between cabinets, and across clusters. This enables elastic scaling from a single cabinet to a million-NPU cluster.
+
+Within cabinets, the UnifiedBus LinkBlade eliminates circuit losses with a cable-free design, which reduces copper cabling within a 4,096-NPU SuperPoD by about 196 kilometers.
+
+Between cabinets, the UnifiedBus LinkDevice supports 176 ports, with 1.6 Tbit/s bandwidth per port, delivering 280 Tbit/s all-optical interconnection. This is the industry's highest-bandwidth, highest-port-count high-speed bus-protocol interconnect device, with an RTT latency as low as 2 microseconds.
+
+Across clusters, the UnifiedBus UBG switch provides a massive radix fan-out capacity of up to 1,024, meaning it can support a million-NPU SuperCluster and evolution towards supporting tens of trillions of model parameters.
+
+Yang also launched Huawei's UnifiedBus-powered agentic AI SuperCluster, which is comprised of TaiShan 950 and Atlas 960 SuperPoDs, OceanStor M900 memory storage, and a Xinghe UBG switch. This cluster enables diverse compute collaboration and tiered resource pooling.
+
+Beyond SuperPoDs, Huawei has also applied the UnifiedBus technology to its compute appliances. The company has developed a new series of UnifiedBus-based appliances (supporting one to eight NPUs) and Kunpeng and Ascend modules. Two Atlas 650E air-cooled servers can be directly linked through UnifiedBus to enable switch-free interconnect across 16 NPUs, so they work seamlessly as a single unit. They can also smoothly scale to form a small-scale SuperPoD that enables small and medium-sized enterprises to run trillion-parameter models locally.
+
+On the related ecosystem front, Yang said that Ascend is collaborating with open-source frameworks like DeepSeek Harness, OpenCode, and openJiuwen to develop fully open-source intelligent management, inference acceleration, and security framework agent plugins. Ascend has also worked with more than 50 customers, partners, and universities to create 26 industry-specific operator libraries, and has collaborated with over 90 mainstream open-source communities to help partners quickly develop industry-specific agents and integrate them with IT systems.

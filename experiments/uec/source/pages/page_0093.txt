@@ -1,0 +1,40 @@
+ 93 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.2.4.3 Authorization 
+The authorization procedures described in this section MUST be implemented for absolute addressing 
+mode. The procedures are not required for relative addressing mode because the JobID is a component 
+of the addressing information that is used to locate the buffer and memory region. Please refer to the 
+SES specification for a description of the absolute and relative addressing modes. 
+ 
+Authorization allows access to receive buffers and registered memory regions to be controlled. The 
+JobID is used for authorization of access to receive buffers and registered memory regions. The specific 
+requirements defined in the SES specification are: 
+• Implementations MUST allow an option for buffers and memory regions to be exposed for 
+exactly one JobID. 
+• Implementations MUST allow an option for buffers and memory regions to be exposed for “any” 
+JobID. 
+ 
+The JobID associated with a receive buffer is determined when the buffer is posted using one of the 
+fi_msg() APIs. The JobID associated with a memory region is determined when the memory region is 
+registered using the fi_mr APIs. The procedures for determining the JobID that is associated with a 
+posted receive buffer or registered memory region are specified in the following subsections. 
+ 
+Authorization is performed by checking that the ses.JobID field in the SES header is allowed to access 
+the targeted receive buffer or registered memory region. 
+2.2.4.3.1 Untagged Message Buffer Authorization 
+This section covers how the authorization requirements are managed for untagged message buffers. 
+The JobID for buffer authorization is obtained differently based on whether the JobID method used is 
+the indirect, direct, or AV JobID method. 
+With the indirect JobID method, the UET provider supplies the assigned JobID, and untagged message 
+buffer access MUST be authorized only for operations carrying that ses.JobID field in the SES header. 
+With the direct JobID method, the JobID for untagged message buffer authorization is taken directly 
+from the auth_key attribute of the libfabric endpoint, and buffer access MUST be authorized only for 
+operations carrying that ses.JobID field in the SES header. 
+With the AV JobID method, the JobID for untagged message buffer authorization is determined using 
+the src_addr parameter of the fi_recvmsg() API when the FI_AV_AUTH_KEY flag is set. In this case, the 
+src_addr is treated as a source authorization key returned by the fi_av_insert_auth_key() API when the 
+JobID was inserted into the address vector bound to the libfabric endpoint. Buffer access MUST be 
+authorized only for operations carrying this ses.JobID field in the SES header. In all other cases (e.g., 
+fi_recv() API used, fi_recvv() API used, FI_AV_AUTH_KEY not set): 
+• The posted buffer MUST be for any JobID, and 

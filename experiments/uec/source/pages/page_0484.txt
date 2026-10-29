@@ -1,0 +1,41 @@
+ 484 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+delay = rtt_sample – ccc.base_rtt 
+update_delay(delay) 
+else: 
+return 
+ else: 
+ if csig_refl_data and csig_refl_data.t == “max(Delay)”: 
+  delay = csig_refl_data.s 
+  update_delay(delay) 
+ else: 
+  ccc.csig_missing_cnt += 1 
+  return 
+ 
+if quick_adapt(is_loss=FALSE, M_Flag, delay): 
+return; 
+ 
+#The pds.flags.m bit in the ACK indicates ECN was marked in the 
+#request. There are four core cases (3 with actions): 
+if M_Flag == 0 and delay >= target_qdelay and not rcv_limit_mode: 
+fair_increase(newly_rcvd_bytes) 
+else if M_Flag == 0 and delay < target_qdelay and not rcv_limit_mode:  
+proportional_increase(newly_rcvd_bytes, delay)  
+else if M_Flag == 1 and delay >= target_qdelay:  
+multiplicative_decrease() 
+ 
+#we’ve accumulated window changes for long enough, now apply them 
+if (now - ccc.last_adjust_time) >= adjust_period_threshold  
+    or ccc.received_bytes > adjust_bytes_threshold: 
+#This is potentially done per packet or at a lower frequency 
+#(RTT/4, RTT/2 and so on). 
+fulfill_adjustment() 
+ 
+NSCC.OnInferredLoss(nominal_pktsize): 
+cwnd = max(cwnd - nominal_pktsize, MTU) 
+ccc.bytes_ignored += nominal_pktsize 
+ccc.inflight -= nominal_pktsize 
+ 
+ 
+NSCC.OnNACK(nominal_pktsize, pkt_tx_state, nack_arrival_time, Retx_Flag,  

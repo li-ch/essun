@@ -1,0 +1,20 @@
+ 82 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-2 - Libfabric Software Architecture 
+The libfabric APIs are partitioned into four main categories: 
+• Control (discovery) 
+o Used to determine the types of communication services available 
+• Communication (connection management, address vectors) 
+o Used to set up communication between endpoints 
+• Completion (event queues, completion queues, counters) 
+o Used to report data transfer operation results, connection setup status, collective 
+joining results, and other asynchronous events 
+• Data Transfer (messages, tag matching, RMA, atomics, collectives) 
+o Used to transfer data between endpoints, supporting different communication 
+paradigms 
+o Four of the data transfer paradigms shown in Figure 2-2 (messages, tagged messages, 
+RMA, and atomics) target point-to-point communication. Collectives are a fifth data 
+transfer paradigm targeting coordinated atomic operations among a large set of peers. 
+Each of these API categories is covered in this specification. 

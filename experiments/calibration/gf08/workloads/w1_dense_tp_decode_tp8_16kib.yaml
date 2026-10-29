@@ -1,0 +1,31 @@
+# W1 Dense TP Decode — tp_size 8 at payload 16384 B = 16 KiB: the
+# A-W1-SIZE REGISTRY POINT (the free smoke default), executed as the
+# GF-08 run-pair payload (calibration ladder; gap-fill
+# anchor GF-08 — "Falcon: A Reliable, Low Latency Hardware Transport",
+# ACM SIGCOMM 2025; docs/calibration/anchors_gapfill.md §GF-08; numbers
+# AS STAGED, not re-fetched).
+#
+# WHY THIS PAYLOAD (declared free probe): GF-08 stages NO message-size
+# regime — its staged numbers are abstract-level headline rates (peak
+# 200 Gbps / 120 Mops/sec) and dimensionless factors; the full paper
+# tables (latency µs, message-rate curves) were NOT extracted at staging
+# (ACM 403 in the staging sandbox; NetDev slides fetch failed URL
+# validation). The run pair therefore pins the two store runs at the
+# registry's own default payload so the pair isolates the B axis exactly
+# (identical workloads, both latency terms exactly 400 ns). 16384 is
+# also a member of the sweeps' 8*2^k ladder (8 B -> 16 MiB, 22 sizes),
+# which was chosen because it brackets the anchor's implied per-op size
+# (625/3 ~ 208.33 B, between the 128 B and 256 B members) through the
+# bandwidth-bound regime, and contains every in-range member of the
+# standard 12-size ladder of stages A1/A2/A7/A9/A11/GF-05 (8 KiB,
+# 32 KiB, 128 KiB, 512 KiB, 2 MiB, 8 MiB). 2^14 is divisible by 8 so
+# the A-L0-DIV / A-L0X-DIV gates ACCEPT the exact size — no bracketing.
+# Same workload shape as every other W1 file (2 layers x 3 decode steps
+# = 6 AllReduce ops per config). Nothing here is measured or
+# standard-normative; integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf08-tp8
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # 16 KiB — the A-W1-SIZE registry point; free parameter, declared free probe (GF-08 stages no size)

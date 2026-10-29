@@ -1,0 +1,40 @@
+ 216 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+utilizing address compression. An additional control field (ses.ehl) allows up to 16 bytes of 
+implementation specific fields per message. 
+3.4.2.11 Packet Sizes Based on Payload MTU 
+Packets for SES utilize a programmable Payload MTU. The Payload MTU is the amount of payload (in 
+bytes) that can be carried in a maximum-sized packet. The Payload MTU is configured (out-of-band) to a 
+value of 1024, 2048, 4096, or 8192. FEP implementations MUST support a Payload MTU of 4096 bytes. 
+FEP implementations SHOULD support Payload MTU of 1024 bytes, 2048 bytes, and 8192 bytes. The 
+default for Payload MTU is 4096 bytes, and this size is used for various architectural decisions. 
+The Payload MTU MUST be set such that the resulting packet fits within the limits defined by the 
+Ethernet MTU along the entire path. The “don’t fragment” bit MUST be set in the IPv4 header when 
+running over IPv4. The source of a message MUST put exactly Payload MTU bytes into every packet of 
+the message—except the final packet. A generated packet MUST NOT be further fragmented by the FEP. 
+For packets leveraging the ses.mm control bit, the total payload length must not exceed the Payload 
+MTU. 
+3.4.2.12 Zero-Byte Operations 
+Zero-byte operations are supported for read, write, send, tagged send, and the atomic put and atomic 
+get operations. Zero-byte reads and atomic gets issue a memory read at the target using the specified 
+offset. Zero-byte writes, sends, tagged sends, and atomic puts do not write memory but can generate a 
+completion at the target. Zero-byte writes, sends, tagged sends, and atomic puts also perform whatever 
+operation is necessary to honor the delivery complete setting for the message. Zero-byte operations 
+undergo the same checks (e.g., whether the buffer being written is writeable, whether the address is 
+valid, etc.) and generate the same return codes as all other operations. Similarly, a zero-byte send or 
+tagged send consumes the corresponding buffer at the target—using the same target-side controls as a 
+one-byte send or tagged send would. A zero-byte send or tagged send resolving to a multi-receive buffer 
+consumes no space in the buffer. Zero-byte operations use the same header formats—both PDS and 
+semantic headers—as a corresponding one-byte operation would use. The only difference is that the 
+length field is set to 0. Because the payload length of a zero-byte response is 0, it inherently passes the 
+PDS test of “payload_len <= PDS_MAX_ACK_DATA”. 
+3.4.2.13 Interaction of Semantics with Reliability Modes 
+The packet delivery sublayer (PDS) has five delivery modes. Throughout the semantic specification, 
+differences in behavior between reliable ordered delivery (ROD) and reliable unordered delivery (RUD) 
+are specifically enumerated. Unless otherwise stated, all functionality is available for both ROD and RUD 
+delivery modes. PDS also supports an unreliable unordered datagram (UUD) mode. The only semantic 
+provided with UUD is the opcode UET_DATAGRAM_SEND. UUD is provided to enable applications to use 
+a datagram transport (e.g., like UDP) without having to use a different communication library. 
+UET_DATAGRAM_SEND utilizes the same addressing mechanisms as ROD and RUD. As an untagged 
+send, it does not utilize matching. UET_DATAGRAM_SEND supports only single-packet messages. 

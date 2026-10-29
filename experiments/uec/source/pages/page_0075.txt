@@ -1,0 +1,37 @@
+ 75 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+speed environments where maximizing packet processing rates and reducing transmission overhead are 
+important. 
+Link Layer Retry (LLR): With speeds and scale increasing, and with the extreme bandwidth densities 
+common in accelerator networks, the traditional approach of relying only on end-to-end retry to address 
+packet drops is increasingly burdensome for latency-sensitive workloads. Local error handling at the Link 
+Layer has proven valuable in scale-out HPC networks, such as those used in exascale systems. The UE 
+specification provides this capability for Ethernet. 
+Credit-Based Flow Control (CBFC): Traditionally Ethernet networks refrain from using credit-based links, 
+which are common in fabric technologies. However, some recently introduced products support it with 
+optional improvements for some workloads. CBFC is an optional feature of the UE link layer. 
+Unified Forwarding Header (UFH): Unified Forwarding Header (UFH) is a new Ethernet-compatible 
+header format that improves network efficiency and throughput for AI, HPC, and other performance-
+sensitive workloads by significantly reducing packet overhead. UFH achieves this by compressing and 
+simplifying traditional Ethernet and IP header information, eliminating redundancies and unnecessary 
+fields while preserving coexistence with standard Ethernet traffic and management protocols. By 
+increasing packet rates and improving bandwidth utilization—particularly for small-message 
+communications that dominate many scale-up and scale-out deployments—UFH delivers the efficiency 
+benefits of specialized high-performance fabrics while retaining compatibility with the broader Ethernet 
+ecosystem. 
+UE Link Negotiation: UE specifications support “existing Ethernet switches” but introduce multiple 
+optional new features that benefit from discovery and feature negotiation capabilities. While it is an 
+objective of UE to operate on a dedicated backend network for inter-accelerator communication, the 
+objective does not mitigate the need to support discovery and feature negotiation amongst all entities 
+(endpoints as well as switches) on the network. UE promotes the notion of “profiles” that describe 
+required and optional features. It is necessary to detect, discover, and reach consensus among all 
+network entities to interoperate with profile-supported features. UE assumes that standard negotiation 
+mechanisms like LLDP are prevalent in the industry and are extensible for the aforementioned purposes. 
+1.6.5 Physical Layer 
+UE physical layer specifications are provided in Section 6. UE is specified for physical layers using 100G 
+per lane signaling as defined by IEEE Std 802.3.  
+Figure 1-18 shows the areas of focus for the UE physical layer specifications with respect to IEEE 802.3 
+PHY architecture. UEC’s optional recommendations for the Physical Layer relate to the shaded areas. 
+IEEE 802.3 100G and 200G Per-Lane Signaling: The UE physical layer section lists the IEEE 802.3 
+specifications that are within the scope of UE. 

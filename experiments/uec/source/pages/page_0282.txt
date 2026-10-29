@@ -1,0 +1,63 @@
+ 282 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Min 
+Max 
+Sum 
+Diff 
+Prod 
+LOR 
+LAND 
+BOR 
+BAND 
+LXOR 
+BXOR 
+READ 
+WRITE 
+CSWAP 
+CSWAP_NE 
+CSWAP_LE 
+CSWAP_LT 
+CSWAP_GE 
+CSWAP_GT 
+MSWAP 
+UET_TYPE_FLOAT_CO
+MPLEX 
+                    
+UET_TYPE_DOUBLE_
+COMPLEX 
+                    
+UET_TYPE_LONG_DO
+UBLE 
+                    
+UET_TYPE_LONG_DO
+UBLE_COMPLEX 
+                    
+UET_TYPE_BF16                     
+UET_TYPE_FP16                     
+ 
+Informative Text: 
+Datatype use in AI applications is a rapidly evolving field. Many modern types (e.g., int4 and smaller, 
+FP4 and FP6, etc.) are not useful for summation across multiple nodes due to the limited range of the 
+representation. Similarly, some formats (e.g. MX formats) have variable definitions that are harder to 
+map well into meaningful network transactions. 
+ 
+3.4.8 Device Expectations 
+To help ensure high-performance interoperability and a consistent level of isolation between processes 
+and users, this section provides guidelines for device implementors. 
+3.4.8.1 Header Field Integrity Enforcement 
+The JobID MUST be protected within a privileged context that is at the highest level of privilege within 
+the reachable network. This MAY be achieved by having the privileged context insert the JobID or by 
+having the privileged context check the JobID at the initiator to confirm that the initiating process is 
+allowed to use that JobID. One initiating process MAY be part of more than one JobID, and the number 
+of JobIDs it is allowed to utilize is implementation-defined (a number greater than or equal to 1). 
+The source FA MUST be protected within a privileged context that is at the highest level of privilege 
+withing the reachable network. This MAY be achieved by having the privileged context insert the source 
+FA or by having the privileged context check the FA. 
+Implementation Note: 
+It may be difficult to achieve a high-performance implementation if the privileged context 
+performing JobID and FA validation for each message is privileged software running on the host. 
+ 
+In virtualized environments, the JobID and source FA MUST be protected within a configuration state 
+that is controllable only by the HyperVisor/VMM. In configurations that support out-of-band 

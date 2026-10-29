@@ -1,0 +1,39 @@
+ 655 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• The receiver sets a single value for the total credit limit (TotalCredits). It is then up to the sender 
+to distribute these credits among the lossless VCs. 
+• The receiver sets each VC’s credit limit (VC_CreditLimit x ), and the sender must adhere to these 
+limits on a per-VC basis. 
+Mixing the two methods is not allowed; for example, if the receiver sets the VC_CreditLimit[x] for some 
+lossless VCs, then it must set the VC_CreditLimit[x] for all lossless VCs and leave the TotalCredits 
+parameter at zero. When the receiver sets the TotalCredits parameter instead of individual VC limits, the 
+sender should distribute the total number of credits across the lossless VCs in an implementation-
+specific manner. This allows a variety of per-VC credit limit implementations with combinations of 
+dedicated and shared VC credit limits. Note that per-VC credit limits are required to guarantee non-
+blocking behavior between lossless VCs. 
+In addition to the configuration parameters listed in Table 5-14, a mapping of packet header fields to VC 
+number must be configured at the sender and receiver so that they assign the same VC number to any 
+given packet. At a minimum, a mapping to VC numbers from the mac.vlan.pcp_dei and ip.dscp header 
+fields as well as any subset of these fields MUST be supported. The mapping from packet header values 
+to VC number may be configured by upper-layer network management software or through the CBFC 
+lossless VC initialization process (see Section 5.2.8). 
+Implementation Note: 
+When both mac.vlan.pcp_dei and ip.dscp header fields are being used to map to a VC, a consistent 
+configuration of which header fields take precedence is required. 
+ 
+Virtual channels and PFC traffic classes must be mapped consistently with respect to lossless traffic 
+classes at the network level. The exact mapping mechanisms are an implementation-specific feature and 
+beyond the scope of this specification. 
+5.2.5.3 CBFC Cyclic Counters and State Variables 
+Sender cyclic counters (required) are shown in Table 5-15. 
+Table 5-15 - Sender Cyclic Counters 
+Counter  Description 
+S_VC_CC[x] Sender credits consumed by VC[x], where x = 0 to (NumVCs -1). An S_VC_CC counter is 
+incremented by the number of credits required for a packet when the packet is 
+transmitted by the sender. 
+S_VC_CF[x] Sender credits freed by VC[x], where x = 0 to (NumVCs -1). An S_VC_CF counter is updated 
+when a CBFC CF_Update message is received from the link partner.  
+ 
+Receiver cyclic counters (required) are shown in Table 5-16. 
+Table 5-16 - Receiver Cyclic Counters 

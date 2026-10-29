@@ -1,0 +1,21 @@
+# W1 Dense TP Decode — tp_size 8 (the GF-04 anchor's single-node rank
+# count) at 4294967296 B = 2^32 (4 GiB): the TOP row of the anchor's own
+# single-node command-line regime (verified verbatim 2026-10-28:
+# "./nccl-tests/build/all_reduce_perf -b 32 -e 4G -f 2 -g 8" — sizes
+# 32 B x 2^k up to 4 GiB, and 32 = 2^5 makes 2^32 an EXACT ladder member).
+# The anchor's per-size result tables are images (not text-extractable),
+# so the ladder endpoints + summary figures are the extractable targets;
+# 2^32 is additionally the largest size COMMON to both of the anchor's
+# ladders (the two-node run tops at 8 GiB = 2^33), which makes it the
+# same-size comparison point of the 8->16 scaling pair. 2^32 divisible by
+# 8 (A-L0-DIV / A-L0X-DIV / A-L0D-DIV accept the exact size, no
+# bracketing). Same workload shape as every W1 file (2 layers x 3 decode
+# steps = 6 AllReduce ops per config). Nothing measured or
+# standard-normative here; integer byte counts; deterministic by
+# construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-gf04
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 4294967296   # 2^32 (4 GiB); GF-04 single-node ladder top; free parameter A-W1-SIZE

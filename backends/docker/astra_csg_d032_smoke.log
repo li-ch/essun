@@ -1,0 +1,117 @@
+=== D-032/4a seeded-image determinism smoke v2 2026-10-28 01:04:28Z ===
+image ID: sha256:6cc48e30efa8b6829a7d7da62e30e49678c7c8b7ee0f995af5fe397e4702aa2f
+created: 2026-10-28T09:04:19.951218452+08:00
+=== RUN run1 (fresh container, extra docker args: ) ===
+docker run exit: 0
+ASTRA_EXIT=0
+ELAPSED_SECONDS=0
+timeout warnings: 0
+-- result lines (Wall/Comm) --
+ [statistics] [info] sys[6], Wall time: 520223565
+ [statistics] [info] sys[7], Wall time: 520229815
+ [statistics] [info] sys[2], Wall time: 520231236
+ [statistics] [info] sys[3], Wall time: 520237406
+ [statistics] [info] sys[5], Wall time: 520263887
+ [statistics] [info] sys[0], Wall time: 780007024
+ [statistics] [info] sys[4], Wall time: 780007745
+ [statistics] [info] sys[1], Wall time: 780013678
+b574d88ce1470a349d9a50b5b2c5cda0572c941718e12b5e6ad73f2509c9a293  run1.stdout.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  run1.stderr
+eba7715dcdd6350e0667a7d9e9f0eb642d0d4d6d3ac5d3ea10cae1ef8add9b40  run1.logout.dat
+2b791fa6f8313bdc4ebb81bc0f2501326e12b800c198f08b9644b64898dc598a  run1.idmap.txt
+b2ce034a27bad8ed74bd9b463cca1884ccbfd10547dddcaf4d82cfedcabba227  run1.log.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  run1.err.log
+=== RUN run2 (fresh container, extra docker args: ) ===
+docker run exit: 0
+ASTRA_EXIT=0
+ELAPSED_SECONDS=0
+timeout warnings: 0
+-- result lines (Wall/Comm) --
+ [statistics] [info] sys[6], Wall time: 520223565
+ [statistics] [info] sys[7], Wall time: 520229815
+ [statistics] [info] sys[2], Wall time: 520231236
+ [statistics] [info] sys[3], Wall time: 520237406
+ [statistics] [info] sys[5], Wall time: 520263887
+ [statistics] [info] sys[0], Wall time: 780007024
+ [statistics] [info] sys[4], Wall time: 780007745
+ [statistics] [info] sys[1], Wall time: 780013678
+2bfcf7e0c58985fbab9e606d680fb9c99861fb2123dd681fe815a91ffaf3806f  run2.stdout.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  run2.stderr
+eba7715dcdd6350e0667a7d9e9f0eb642d0d4d6d3ac5d3ea10cae1ef8add9b40  run2.logout.dat
+2b791fa6f8313bdc4ebb81bc0f2501326e12b800c198f08b9644b64898dc598a  run2.idmap.txt
+b2ce034a27bad8ed74bd9b463cca1884ccbfd10547dddcaf4d82cfedcabba227  run2.log.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  run2.err.log
+=== RUN s2a (fresh container, extra docker args: -e ESSUN_SEED=2) ===
+docker run exit: 0
+ASTRA_EXIT=0
+ELAPSED_SECONDS=0
+timeout warnings: 0
+-- result lines (Wall/Comm) --
+Finish receiving flow [2026-10-28 01:04:29.808] [statistics] [info] sys[1], Wall time: 780323236
+ [statistics] [info] sys[3], Wall time: 780332616
+Finish sending flow [2026-10-28 01:04:29.808] [statistics] [info] sys[2], Wall time: 780335966
+ [statistics] [info] sys[5], Wall time: 780348416
+ [statistics] [info] sys[6], Wall time: 780349487
+ [statistics] [info] sys[7], Wall time: 780350857
+ [statistics] [info] sys[0], Wall time: 780366187
+ [statistics] [info] sys[4], Wall time: 1040008079
+4e37575b2b1241e12adfce5ad14fd827446a9356769b3b633226342ee122a84f  s2a.stdout.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  s2a.stderr
+1d22c2eefe6f891c29dd9dbe06059afd31ad3528a68a70a71cd98780c164c885  s2a.logout.dat
+2b791fa6f8313bdc4ebb81bc0f2501326e12b800c198f08b9644b64898dc598a  s2a.idmap.txt
+3abf8eefcc09f25d051742c351d3579156a6bd321d827961fe3ce5b5b7129893  s2a.log.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  s2a.err.log
+=== RUN s2b (fresh container, extra docker args: -e ESSUN_SEED=2) ===
+docker run exit: 0
+ASTRA_EXIT=0
+ELAPSED_SECONDS=0
+timeout warnings: 0
+-- result lines (Wall/Comm) --
+ [statistics] [info] sys[1], Wall time: 780323236
+ [statistics] [info] sys[3], Wall time: 780332616
+ [statistics] [info] sys[2], Wall time: 780335966
+ [statistics] [info] sys[5], Wall time: 780348416
+ [statistics] [info] sys[6], Wall time: 780349487
+ [statistics] [info] sys[7], Wall time: 780350857
+ [statistics] [info] sys[0], Wall time: 780366187
+ [statistics] [info] sys[4], Wall time: 1040008079
+9f8593d489e5cd9f8509c0febd3d2540424d1f968671a3ab14d511992502e985  s2b.stdout.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  s2b.stderr
+1d22c2eefe6f891c29dd9dbe06059afd31ad3528a68a70a71cd98780c164c885  s2b.logout.dat
+2b791fa6f8313bdc4ebb81bc0f2501326e12b800c198f08b9644b64898dc598a  s2b.idmap.txt
+3abf8eefcc09f25d051742c351d3579156a6bd321d827961fe3ce5b5b7129893  s2b.log.norm
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  s2b.err.log
+=== BYTE-COMPARE run1 vs run2 (default seed 1) ===
+DIFFER: run1.stdout.norm vs run2.stdout.norm
+backends/docker/astra_csg_d032_artifacts/run1.stdout.norm backends/docker/astra_csg_d032_artifacts/run2.stdout.norm differ: char 67905, line 1812
+IDENTICAL: run1.stderr == run2.stderr (       0 bytes, cmp exit 0)
+IDENTICAL: run1.logout.dat == run2.logout.dat ( 6500032 bytes, cmp exit 0)
+IDENTICAL: run1.idmap.txt == run2.idmap.txt (    4185 bytes, cmp exit 0)
+IDENTICAL: run1.log.norm == run2.log.norm (    3220 bytes, cmp exit 0)
+IDENTICAL: run1.err.log == run2.err.log (       0 bytes, cmp exit 0)
+=== BYTE-COMPARE s2a vs s2b (ESSUN_SEED=2) ===
+DIFFER: s2a.stdout.norm vs s2b.stdout.norm
+backends/docker/astra_csg_d032_artifacts/s2a.stdout.norm backends/docker/astra_csg_d032_artifacts/s2b.stdout.norm differ: char 66207, line 1776
+IDENTICAL: s2a.stderr == s2b.stderr (       0 bytes, cmp exit 0)
+IDENTICAL: s2a.logout.dat == s2b.logout.dat ( 8701616 bytes, cmp exit 0)
+IDENTICAL: s2a.idmap.txt == s2b.idmap.txt (    4185 bytes, cmp exit 0)
+IDENTICAL: s2a.log.norm == s2b.log.norm (    3224 bytes, cmp exit 0)
+IDENTICAL: s2a.err.log == s2b.err.log (       0 bytes, cmp exit 0)
+=== SEED PROBES (1 run each; crash frequency note) ===
+seed 0 -> ASTRA_EXIT=134, Wall-time lines: 0
+-- probe0 stderr (crash evidence) --
+Cannot find send_event in sent_hash. Something is wrong.src_id, dst_id: 3 4 : 500000001 - 197
+AstraSim_HTSim: /opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.cc:143: static void HTSim::HTSimSession::notify_sender_sending_finished(int, int, int, int, int): Assertion `0 && "notify_sender_sending_finished failed"' failed.
+bash: line 8:     6 Aborted                 /opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim --workload-configuration=/opt/astra-sim/examples/workload/microbenchmarks/all_reduce/8npus_1MB/all_reduce --system-configuration=/opt/astra-sim/examples/system/native_collectives/Ring_4chunks.json --remote-memory-configuration=/opt/astra-sim/examples/remote_memory/analytical/no_memory_expansion.json --network-configuration=/opt/astra-sim/examples/network/analytical/Ring_8npus.yml --htsim_opts -topo /opt/astra-sim/examples/network/htsim/8nodes.topo
+seed 13 -> ASTRA_EXIT=0, Wall-time lines: 8
+seed 42 -> ASTRA_EXIT=134, Wall-time lines: 0
+-- probe42 stderr (crash evidence) --
+Cannot find send_event in sent_hash. Something is wrong.src_id, dst_id: 3 4 : 500000001 - 164
+AstraSim_HTSim: /opt/astra-sim/astra-sim/network_frontend/htsim/HTSimSession.cc:143: static void HTSim::HTSimSession::notify_sender_sending_finished(int, int, int, int, int): Assertion `0 && "notify_sender_sending_finished failed"' failed.
+bash: line 8:     6 Aborted                 /opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim --workload-configuration=/opt/astra-sim/examples/workload/microbenchmarks/all_reduce/8npus_1MB/all_reduce --system-configuration=/opt/astra-sim/examples/system/native_collectives/Ring_4chunks.json --remote-memory-configuration=/opt/astra-sim/examples/remote_memory/analytical/no_memory_expansion.json --network-configuration=/opt/astra-sim/examples/network/analytical/Ring_8npus.yml --htsim_opts -topo /opt/astra-sim/examples/network/htsim/8nodes.topo
+seed 2026 -> ASTRA_EXIT=134, Wall-time lines: 0
+-- probe2026 stderr (crash evidence) --
+AstraSim_HTSim: eventlist.cpp:69: static void EventList::sourceIsPending(EventSource&, simtime_picosec): Assertion `when>=now()' failed.
+bash: line 8:     6 Aborted                 /opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim --workload-configuration=/opt/astra-sim/examples/workload/microbenchmarks/all_reduce/8npus_1MB/all_reduce --system-configuration=/opt/astra-sim/examples/system/native_collectives/Ring_4chunks.json --remote-memory-configuration=/opt/astra-sim/examples/remote_memory/analytical/no_memory_expansion.json --network-configuration=/opt/astra-sim/examples/network/analytical/Ring_8npus.yml --htsim_opts -topo /opt/astra-sim/examples/network/htsim/8nodes.topo
+=== raw (un-normalized) hash note: stdout/log.log differ ONLY in [YYYY-mm-dd HH:MM:SS.mmm] spdlog prefixes ===
+=== DONE 2026-10-28 01:04:31Z ===

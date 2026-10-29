@@ -1,0 +1,53 @@
+# Implementation profile for the calibration-ladder GF-04 runs on the
+# analytical L0 flat-ring backend (gap-fill anchor
+# GF-04; docs/calibration/anchors_gapfill.md §GF-04).
+implementation_profile_id: analytical_l0_ring_cal_gf04_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-DIV / A-L0-FD from experiments/vertical_slice/assumptions_l0.yaml.
+  The hybrid NVSwitch+RoCE fabric of the anchor's r=16 leg is projected
+  onto the UNIFORM ring at the executed B reading — the same declared
+  uniform-bottleneck projection stage A6 established for hybrid
+  NVLink+RoCE anchors (the L0 input space has no per-leg asymmetry
+  parameter; nonuniform fabrics and congestion are explicitly
+  unsupported). The anchor's metric is nccl-tests busbw; the pinned
+  mapping (busbw = algbw x 2(r-1)/r with algbw = M/t, from
+  NVIDIA/nccl-tests src/all_reduce.cu as fetched 2026-10-28 by stage
+  GF-02) makes the identity's asymptotic busbw exactly its B, so every
+  CCT-vs-CCT comparison in this stage goes through that written-down
+  algebraic mapping (plan §3 targets rule), never mixed metrics.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) at anchor/arithmetic points fixed BEFORE any
+  model output was read: 476.37 = the anchor's measured single-node busbw
+  (its own summary figure; the GF-02-bracketed above-ceiling class —
+  executed as the scaling-null at r=16 and as the anchor point at r=8),
+  469.67 = the anchor's measured two-node busbw (its own figure),
+  450 = 900/2 (GF-02's physical per-direction NVLink ceiling, both rank
+  counts), 400 = the anchor's own per-node rail arithmetic (16x200 Gbps
+  RoCEv2 per node under the per-direction port convention; a config
+  ceiling, never a measurement), 320 = CAL-A12's ~80% derating x 400 (the
+  A6-convention derated rail). L fixed at the A-L0-LAT registry point
+  200 ns. NOTHING was tuned toward the GF-04 measurements; every swept
+  value was fixed by anchor/staging/cross-anchor arithmetic BEFORE any
+  model output was read, and every delta in the stage record is a
+  recorded comparison outcome, not a parameter choice.
+measurement_source: >
+  GF-04 staged numbers (Oracle blog "Zettascale in Practice: OSU and NCCL
+  Benchmark on H100 Clusters for HPC and AI Workloads", Leo Li & Rik
+  Kisnah, published 2025-11-06 per page metadata — the staging doc's
+  "(2026)" corrected by this stage's fetch; OCI H100.8 shapes, 2 nodes,
+  16x200 Gbps RoCEv2 NIC per node, all_reduce_perf -b 32 -e 4G -f 2 -g 8
+  single node and -b 32 -e 10G -f 2 -g 8 x2 nodes; page fetched and
+  verified 2026-10-28 — see the stage record's verification block,
+  including the staging corrections: the NIC config is 16x200 Gbps
+  (staging said "8x400-Gbps"), no NCCL version pin exists (the "NCCL
+  2.27" text is a cited blog-post title, not a version statement), and
+  the staging doc's 187.03 / 437.85 / 228.76 GB/s figures appear NOWHERE
+  in the fetched page text — quarantined as unverified, not executed).
+  Vendor blog, not peer-reviewed. Compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

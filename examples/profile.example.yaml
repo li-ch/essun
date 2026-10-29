@@ -1,0 +1,115 @@
+# Example essun profile artifact (schemas/profile.schema.json; loader
+# essun.specir.profile_format) — design doc D2, ladder S3.
+#
+# This is the FORMAT's conformance example: a small, obviously fictional
+# profile ("widgynet") that exercises every element, so a third implementer
+# can see the shape without reading the validator.  It is NOT a migrated
+# UEC or UnifiedBus profile — those migrations are ladder S4/S5 and carry
+# the real anchors, license records, and dispositions.
+#
+# YAML note: version-looking values MUST be quoted ("0.1", "0.1.0");
+# unquoted 0.1 parses as a float and is rejected by the loader.
+format:
+  name: essun-profile
+  version: "0.1"
+profile_id: example-widgynet-profile
+# Element 1 — source identity/revision.
+source:
+  name: Widgynet Link Specification (EXAMPLE)
+  document_id: STD-EXAMPLE-WIDGENET
+  revision: "1.0"
+  url: https://example.invalid/widgynet-1.0
+# Element 2 — provenance and permissions (license-gate vocabulary).
+provenance:
+  source_record: experiments/example/source_record.yaml
+  access: PUBLIC_READ
+  note: >-
+    example record; a real profile copies this row verbatim from the
+    license-gate source registry and never ingests restricted text.
+# Element 3 — interpreted requirements WITH dispositions (D1).
+requirements:
+  objects:
+    - requirement_id: EX-R01
+      anchor_ids: [EX-S2.1-CREDITS]
+      keyword: MUST
+      subject: LINK
+      statement: >-
+        The link layer MUST account a credit before emitting a frame on a
+        granted channel (example statement, own words).
+      disposition: simulated_behavior
+    - requirement_id: EX-R02
+      anchor_ids: [EX-S3.1-RETRY]
+      keyword: SHOULD
+      subject: LLR
+      statement: >-
+        The retry engine SHOULD coalesce duplicate NACKs observed within a
+        replay window before retransmitting (example).
+      disposition: unsupported
+    - requirement_id: EX-R03
+      anchor_ids: [EX-S2.1-CREDITS]
+      keyword: DEFINITIONAL
+      subject: LINK
+      statement: >-
+        A credit is a per-link token authorizing one maximum-size frame
+        (example).
+      disposition: informational
+    - requirement_id: EX-R04
+      anchor_ids: [EX-S5.1-MTU]
+      keyword: MUST NOT
+      subject: PACKETIZATION
+      statement: >-
+        An egress frame MUST NOT exceed the negotiated MTU (example).
+      disposition: conformance_test
+# Element 4 — declared implementation freedom.
+freedom:
+  - parameter_id: EX-F01
+    name: arbitration quantum
+    freedom: >-
+      the specification leaves the arbitration quantum of the credit
+      scheduler to the implementation (example)
+    anchor_ids: [EX-S4-ARBITRATION]
+    domain: FREE
+# Element 5 — backend capability bindings (simulated_behavior only).
+bindings:
+  - requirement_id: EX-R01
+    backend: example_backend
+    capability: credit_accounting
+    note: credit tokens decremented per emitted frame (example binding)
+# Element 6 — executable checks.
+checks:
+  - check_id: EX-C01
+    kind: golden
+    requirement_ids: [EX-R01]
+    description: >-
+      golden run pins the credit-accounted completion time of the example
+      W1 decode workload (example check)
+    location: tests/example/test_ex_c01.py
+  - check_id: EX-C02
+    kind: negative
+    requirement_ids: [EX-R04]
+    description: >-
+      an over-MTU frame is rejected loudly at admission (example check)
+    location: tests/example/test_ex_c02.py
+# Element 7 — supported workloads/observables.
+supported:
+  workloads: [W1]
+  observables: [O-CCT]
+# Element 8 — calibration scope (verification != calibration).
+calibration:
+  status: uncalibrated
+  targets: []
+  note: no calibration anchor exists for this example profile
+# Element 9 — known omissions.
+omissions:
+  - what: multicast credit semantics
+    reason: the example profile interprets only unicast credits
+# Element 10 — versioning rules.
+versioning:
+  profile_version: "0.1.0"
+  bump_rules:
+    major: [dispositions, bindings, calibration]
+    minor: [requirements, freedom, checks]
+    patch: [notes]
+  note: >-
+    anchor citations are immutable; a changed citation is a new version,
+    never a silent edit (example policy).

@@ -1,0 +1,57 @@
+ 704 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+       +--ro r-cell-size?               uint16 
+       +--ro r-packet-overhead?         int8 
+       +--ro r-total-credits?           uint32 
+       +--ro r-num-vcs?                 uint8 
+       +--ro r-vcs* [r-vc-id] 
+          +--ro r-vc-want?                      boolean 
+          +--ro r-vc-rtr?                       boolean 
+          +--ro r-vc-id                         uint8 
+          +--ro r-vc-credit-limit?              uint32 
+          +--ro r-vc-pktid-sel?                 identityref 
+          +--ro (paremeters) 
+             +--:(pcpdei-identification) 
+             |  +--ro pcpdei-identification 
+             |     +--ro r-mask-pcpdei?    binary 
+             |     +--ro r-pcpdei?         binary 
+             +--:(dscp-identification) 
+             |  +--ro dscp-identification 
+             |     +--ro r-mask-dscp?    binary 
+             |     +--ro r-dscp?         binary 
+             +--:(handle-identification) 
+                +--ro handle-identification 
+                   +--ro r-handle?     uint16 
+5.3.3.4 UE Link Negotiation Extension YANG Modules  
+5.3.3.4.1 YANG Module uec-link-neg-options-tlv 
+ 
+module uec-link-neg-options-tlv { 
+  yang-version "1.1"; 
+  namespace "http://ultraethernet.org/yang/uec-link-neg-options-tlv"; 
+  prefix uel-options-tlv; 
+  import ieee802-dot1ab-lldp { 
+    prefix lldp; 
+  } 
+  organization 
+    "Ultra Ethernet Consortium"; 
+  contact 
+    "UEC-URL: https://ultraethernet.org/ 
+    Contact: UEC Link Layer Working Group Chair"; 
+  description 
+    "UEC LLDP extension TLV for the LLR, IPGR, CSIG, and UFH 
+    features  
+     
+    Copyright @ UEC (2026). 
+ 
+    This version of this YANG module is part of UE Specification v1.1, 
+        see the specification itself for full legal notices."; 
+  revision 2026-04-08 { 
+    description 
+      "LLDP extension TLV for UEC link negotiation options. 
+      Included options are Link Layer Retry (LLR), Interpacket Gap 
+      Reduction (IPGR), Congestion Signaling (CSIG), 
+      and Unified Forwarding Header (UFH). 
+      Published as part of UEC 1.1"; 
+    reference   
+      "UEC 1.1"; 

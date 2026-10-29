@@ -1,0 +1,32 @@
+# Calibration-ladder GF-07 topology: crossbar r=64 ENVELOPE CEILING row
+# — B = 4 B/ns = carrier 100 / 25, L = 200 ns (registry).
+#
+# ROLE: the anchor's WORST measured congestion factor (CRESCO8 steady
+# incast, AllToAll victims, "slowdowns up to 25x"; arXiv:2604.11432;
+# docs/calibration/anchors_gapfill.md §GF-07, AS STAGED) executed at
+# the anchor's own 64-node scale (the bursty-incast configuration): the
+# non-blocking ceiling displaced by exactly 25. This row pairs with
+# crossbar64_gf07_rate100_l200_v1.yaml in the scale sweep to show the
+# ceiling-vs-worst contrast at the anchor's scale on the 64*2^k ladder
+# (64 B -> 16 MiB): asymptotic CCT ratio exactly 25, with the
+# displacement signature rising toward it as payload grows. CLASS
+# CAVEAT: AllToAll victims under steady incast on a 1.67:1-blocking
+# NDR fat tree — the blocking itself (first-order effective-B
+# displacement 100/1.67 = 10000/167, non-representable, RECORDED NOT
+# EXECUTED in the stage record) and the incast mechanism are
+# inexpressible at L0; only the measured magnitude enters. L = 200 ns
+# registry (no staged latency). B fixed by anchor arithmetic BEFORE any
+# stage output was read; never tuned.
+topology_id: crossbar64_gf07_worst4_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 64
+nic:
+  injection_bytes_per_ns: 4
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at 64 ranks with the GF-07 envelope CEILING
+  displacement: B = 4 = 100/25 (CRESCO8 AllToAll victims "up to 25x"),
+  L = 200 ns registry. The ceiling row's displaced twin at the anchor's
+  own 64-node scale; magnitude only, mechanism inexpressible. Anchor
+  quote / registry default, never our measurement; never tuned.

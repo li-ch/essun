@@ -1,0 +1,25 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 100 B/ns, L =
+# 400 ns — the SWITCH-TRAVERSAL COMPONENT row of the latency sweep:
+# the anchor's own "400ns switch traversal latency" (sim-config
+# provenance, verbatim staged number) read alone as the per-pair
+# latency of the single-stage abstraction (declared component reading:
+# one switch stage, no link term). This row exists to land the anchor's
+# latency DECOMPOSITION on the free L axis — the plan's weakest axis
+# (gap §4.2: no measured current-gen scale-up latency existed in
+# CAL-A1..A12; GF-05 stages the first UEC-class sim-config latency
+# numbers: 400 switch + 600 link per hop). Placement arithmetic only,
+# never tuning. See crossbar8_gf05_line100_v1.yaml for full provenance.
+topology_id: crossbar8_gf05_line100_l400_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 400
+notes: >
+  Switch-traversal component row (L = 400 ns = GF-05's staged
+  "400ns switch traversal latency", verbatim) at GF-05's fixed sim
+  line rate B = 100 B/ns. Identity t = 2(r-1)/r*M/B + 2L. Sim-config
+  provenance class (a simulator input, not a silicon measurement).
+  Provenance: anchor-staged sim config; never our measurements, never
+  tuned.

@@ -1,0 +1,13 @@
+ 669 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 5-11 - Lossless VC Initialization Process 
+The lossless VC initialization process follows these steps as shown in Figure 5-11: 
+1. CBFC receiver Initialization: 
+The CBFC management entity at the receiver initializes the receiver port for one or more lossless 
+VCs and initializes the TLV values in the local CBFC LLDP database. 
+• Local.R_NumVCs = total number of VCs supported on the link. 
+• Local.R_TotalCredits = (buffer size ÷ cell size) or 0 if setting individual VC credit limits. 
+• Local.R_CellSize = cell size of the receiver’s input buffer (receiver’s preferred CreditSize). 
+• Local.R_PktOvhd = per-packet buffer overhead (-16 to +127) 

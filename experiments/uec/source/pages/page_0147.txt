@@ -1,0 +1,24 @@
+ 147 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+provisioning process during endpoint address assignment, as described in the UE libfabric specification 
+(see Section 2.2). The provider kernel driver MUST reject QP creation requests that specify PIDonFEP 
+and Resource Index values already allocated or not authorized for the requesting process. 
+2.3.5.1.4 Extended QP Attributes 
+UET verbs extends RDMA QP attributes. To create a UET QP, applications specify all required QP 
+attributes at the time of QP allocation. The returned QP is in the RTS state and is able to accept posted 
+send and receive work requests. 
+UET QPs require additional attributes beyond those defined for RDMA QPs. The following extensions are 
+identified: 
+• Source QPN – Allows the application to specify the QPN value required for the QP being created. 
+• Source Identifier – QP attributes are extended with an identifier field that maps directly to the 
+SES initiator field. 
+• QP Semantics – Further refine message and data ordering semantics if different from the 
+defaults as supported by the QP type. 
+2.3.5.2 Completion Queues (CQs) 
+Applications retain all the existing flexibility in verbs regarding QP+CQ allocation and management for 
+UET verbs. QPs can be created as send only or receive only, specify separate CQs for the RQ/SQ, share a 
+CQ between the RQ/SQ or even across QPs, etc. 
+When an application requires multiple Resource Indexes on a PIDonFEP be available, it must create a 
+separate QP for each Resource Index. 
+Figure 2-19 shows examples of possible QP configurations. 

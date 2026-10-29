@@ -1,0 +1,43 @@
+ 377 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The PDS requirements are summarized below. Refer to the UE packet trimming Section 4.1 for more 
+information. 
+• A trimmed packet MUST be identified by the value of its ip.dscp field. 
+• The IP length of a trimmed packet MUST NOT be verified. 
+• The UDP length of a trimmed packet MUST NOT be verified. 
+• The UET CRC may be validated if present. 
+• The packet may be decrypted and authenticated when the ip.dscp field indicates the packet was 
+trimmed but the packet is fully intact (e.g., ICV is present). 
+• The packet may be partially decrypted (i.e., the portion of the packet that is received can be 
+decrypted) and not authenticated (when the ICV is not present). In this case use of the packet is 
+limited as described in the next paragraph. 
+If a trimmed packet is received which cannot be validated or authenticated, the rules for NACK 
+generation described in Table 3-71 MUST be used or the packet may be dropped. The PDS header fields 
+in trimmed packets are not used for any purpose beyond generating a NACK or, in the specific case of a 
+RUDI request, the original packet is retransmitted. The NACK code depends on the PDS packet type. 
+Trimmed CPs are dropped. 
+Table 3-71 - Rules for NACK Generation with Trimmed Packets 
+Trimmed 
+PDS Packet Type 
+Generate a 
+NACK 
+NACK code / Description 
+RUD Request Yes UET_TRIMMED or UET_TRIMMED_LASTHOP 
+RUD ACK No Retransmit original RUD Request 
+ROD Request Yes UET_TRIMMED or UET_TRIMMED_LASTHOP 
+RODL Request Yes UET_TRIMMED or UET_TRIMMED_LASTHOP 
+ROD ACK No Retransmit original ROD Request 
+RUDI Request Yes UET_TRIMMED or UET_TRIMMED_LASTHOP 
+RUDI Response No Retransmit the original RUDI Request 
+CP No All CP are small and SHOULD NOT use a DSCP that allows trimming. CPs 
+that are assigned unique PSNs and are trimmed require retransmission 
+and would need loss detection mechanism (e.g., RTO) to be recovered.  
+ 
+3.5.15.2 NACK Loss Detection 
+A destination PDC may generate a NACK for the reasons listed in Section 3.5.12.7. When a NACK is 
+received at a source, the associated packet is considered lost. 
+3.5.15.3 RTO Loss Detection 
+A PDC MUST maintain a timer, RTO_TIMER, and retransmit all associated packets that have not been 
+acknowledged when the timer expires (i.e., one timer per PDC). This timer is set to RTO_INIT_TIME 
+when the packet is transmitted.  See RTO_INIT_TIME in the PDS configuration parameters Section 3.5.5. 

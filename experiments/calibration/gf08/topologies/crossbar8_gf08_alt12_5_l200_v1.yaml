@@ -1,0 +1,35 @@
+# Calibration-ladder GF-08 topology: crossbar r=8 at the ALTERNATIVE
+# DIRECTION READING of Falcon's staged peak — B = 12.5 B/ns, L = 200 ns
+# (registry).
+#
+# AMBIGUITY ROW (recorded, executed): GF-08's abstract stages "peak
+# performance of 200 Gbps" with NO direction split. The PRIMARY reading
+# (crossbar8_gf08_falcon25_l200_v1.yaml) maps the 200 Gbps peak onto the
+# per-endpoint per-direction single-port B directly (=> 25 B/ns). The
+# flagged ALTERNATIVE reading treats 200 Gbps as a BIDIRECTIONAL
+# aggregate (=> 100 Gbps = 12.5 B/ns per direction, the convention under
+# which CAL-A2's "1.8 TB/s bidirectional" becomes 900 B/ns per direction
+# in the plan). The displacement between the two readings is exactly
+# x2 — LARGER than the anchor's own lossy-conditions factor 33/20, a
+# recorded finding of the stage: pinning the direction convention
+# matters more than the second-largest measured effect. Cross-anchor
+# coincidence, recorded never cross-derived: 12.5 B/ns is numerically
+# identical to GF-05's uet-htsim 8:1-oversubscription displacement value
+# (100/8). L = 200 ns = A-L0X-LAT registry point (GF-08 stages no
+# abstract-level latency number). HONESTY: swept free parameter fixed by
+# anchor arithmetic BEFORE any stage output was read; never tuned; the
+# crossbar is a placement vehicle, never a prediction of Falcon.
+topology_id: crossbar8_gf08_alt12_5_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the alternative (bidirectional-aggregate)
+  reading of GF-08's staged 200 Gbps peak: B = 12.5 = 200/2/8 B/ns,
+  L = 200 ns registry. Carrier of the GF-08 carrier-transfer sweep
+  (the same measured factor 8 executed at BOTH direction readings);
+  displacement vs the primary reading exactly x2. Values are anchor
+  quotes / free registry defaults, never our measurements.

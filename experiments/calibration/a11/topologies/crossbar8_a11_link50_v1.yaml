@@ -1,0 +1,72 @@
+# Calibration-ladder A11 topology: fully-connected (crossbar / single
+# non-blocking switch stage) abstraction of 8 ranks at the CAL-A11 ANCHOR
+# POINT link bandwidth B = 50 B/ns per direction per link. Source number
+# (docs/calibration/anchors_staging.md §A11, Gangidi et al., "RDMA over
+# Ethernet for Distributed AI Training at Meta Scale", ACM SIGCOMM 2024):
+# "400G single-mode optics between RTSWs and CTSWs". Under the declared
+# DECIMAL + IEEE per-direction reading, 400 Gbps = 50 GB/s = 50 B/ns per
+# direction per link (Ethernet 400G ports are full-duplex per-direction
+# line rate by IEEE 802.3 convention). FLAGGED ALTERNATIVE READING,
+# recorded not swept: if the quote were a bidirectional aggregate, the
+# per-direction figure would be 25 B/ns — every CCT relation below then
+# rescales by the closed form (t is proportional to 1/B in the
+# bandwidth term); the owner adjudicates at integration.
+#
+# MAPPING DECLARED (model-side reading, not an anchor statement): the
+# crossbar identity's B is PER-RANK single-port injection
+# (nic.injection_bytes_per_ns, A-L0X-BW), while the anchor's 400G quote
+# is a SWITCH-SWITCH (RTSW-CTSW) link rate; the anchor stages NO
+# per-GPU NIC bandwidth. The row identifies the two under the
+# "one rank = one rail" reading of rail-optimized designs (each GPU's
+# egress rides its rail's 400G links); recorded as a declared
+# interpretation, never a derivation.
+#
+# DOMAIN HONESTY (plan §1.1 row CAL-A11): Meta's fabric is a SCALE-OUT
+# rail-optimized RoCE spine-leaf, NOT a GPU-to-GPU scale-up fabric — it
+# "cannot calibrate O-CCT for scale-up" and is staged as SECONDARY
+# SANITY CONTEXT for exactly the effects L0 declares out of scope
+# (congestion, load balancing). The anchor's per-collective throughput
+# tables live in the paper PDF and are NOT staged, so this row compares
+# against no anchor CCT; it places the identity AT the anchor's link
+# class on the free B axis.
+#
+# CROSS-ANCHOR COINCIDENCE, recorded never cross-derived: 50 B/ns per
+# direction is numerically identical to CAL-A1's DERIVED NVLink5
+# per-port per-direction rate (57.6 Tbps / 72 ports / 2 directions) and
+# to CAL-A5's staged TPU v4 ICI per-link 50 GB/s (direction convention
+# flagged in the staging doc) — three fabric classes (scale-out optics,
+# scale-up NVSwitch port, torus ICI) at the same per-direction byte
+# rate; all sit inside the plan §2.1 A-L0-BW anchored span [20, 64]
+# B/ns.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward
+# any anchor output; 50 is where the sweep's anchor-point row sits,
+# chosen BY THE ANCHOR's own staged number and unit convention. L = 200
+# ns is the A-L0X-LAT registry point, kept FIXED and free: CAL-A11
+# stages NO latency number, so the latency axis is anchor-free for this
+# stage (the exact mirror of stage A9: that swept L at fixed B, this
+# sweeps B at fixed L). r = 8 is the free smoke-default rank count for
+# the B-axis sweep (the anchor's stated cluster scale 24,576 is executed
+# by this stage's scale sweep); 8 divides every 8*2^k ladder size.
+topology_id: crossbar8_a11_link50_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 200 ns (registry point;
+  anchor-free axis), per-rank single-port injection B = 50 B/ns (CAL-A11
+  400 Gbps optics per direction, declared reading), charged once per
+  phase (reduce-scatter, allgather) by the L0 crossbar identity
+  (t = 2(r-1)/r*M/B + 2L). No congestion, no credits, no ECMP, no
+  packetization — L0 transport model only; the backend declares
+  "congestion" among its explicitly_unsupported capabilities, which is
+  exactly why CAL-A11's role is sanity context, not calibration.
+  Provenance: B = 50 B/ns from CAL-A11's staged "400G single-mode optics
+  between RTSWs and CTSWs" (anchor PROPOSED in the anchor registry; numbers
+  verified from the public blog + abstract, confidence M-H; per-table
+  series unstaged). Values are anchor quotes / free registry defaults,
+  never our measurements.

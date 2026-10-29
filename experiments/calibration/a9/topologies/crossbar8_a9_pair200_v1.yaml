@@ -1,0 +1,33 @@
+# Calibration-ladder A9 topology: crossbar of 8 ranks at L = 200 ns —
+# the A-L0X-LAT REGISTRY POINT (assumptions_l0.yaml value 200, range
+# [10, 2000]; the smoke default of the free pair-latency axis). This row
+# measures WHERE THE MODEL CURRENTLY SITS on the CAL-A9 latency axis:
+# 120 ns ABOVE the anchor-derived one-stage CXL-class pair sum 80 (ratio
+# 5/2), i.e. consistent-with the anchor's one-sided floor (">= 80") but
+# nowhere selected by it. The plan §2.1 verdict for A-L0X-LAT is KEEP
+# (point) with a NARROW (range upper) candidate (no anchor supports >=
+# ~1 us) — both recorded as proposals in the stage's calibration record,
+# the registry value is NOT changed by this stage.
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0X-LAT), never tuned; 200 ns
+# is the registry point, included as a PLACEMENT row exactly like stage
+# A7 included the registry point as its per-link span member. CAL-A9 is
+# a design-estimate budget breakdown, not a silicon measurement, and
+# says nothing that could select 200 over any other value >= 80. B = 64
+# B/ns is the fixed free A-L0X-BW registry point; r = 8 the free
+# smoke-default rank count.
+topology_id: crossbar8_a9_pair200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction of 8 ranks at the free
+  A-L0X-LAT registry point. Placement row: locates the model's smoke
+  default on the CAL-A9 latency axis (200 = anchor one-stage pair sum
+  80 + 120; ratio exactly 5/2). L0 transport model only. Provenance:
+  L = 200 ns is the free registry point (not anchor-derived; the anchor
+  only floors it). B = 64 B/ns free A-L0X-BW registry point. Values are
+  registry defaults, never our measurements.

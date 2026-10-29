@@ -1,0 +1,39 @@
+ 156 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+the root node can also receive the output data if forced output is requested in the INC operation. INC 
+communicator ranks MAY post a receive buffer that is identified using a tag with the inc_info format 
+(see Section 2.4.11.1) before sending their input data. Ranks asynchronously issue their operations, and 
+a switch will block an operation until all ranks have contributed their data. 
+The maximum number of outstanding collective operations (i.e., operations that a rank may initiate 
+without waiting for a completion) is subject to the SEP’s capabilities and MUST NOT exceed the size of 
+the CSN space (i.e., 4096 total outstanding collective operations). 
+Informative Text: 
+While this specification does not define how to implement a logical INC switch with multiple smaller 
+switches, one could use simple tree topologies and a similar protocol to achieve this. The fact that the 
+collective root is carried in the matching bits simplifies that implementation. 
+ 
+2.4.3 INC Operations 
+Table 2-49 defines the operations for INC. 
+Table 2-49 - INC Collective Operations 
+Name Opcode Req Description 
+UET_INC_REDUCE 0x00 MUST Reduces values to the root rank 
+UET_INC_ALLREDUCE 0x01 MUST Reduces values to all ranks 
+UET_INC_BCAST 0x02 Note1 Distributes values to all ranks 
+UET_INC_BARRIER 0x03 MUST Synchronizes all ranks 
+UET_INC_EXSCAN 0x04  Exclusive scan  
+UET_INC_SYNCBCAST 0x05 Note1 Synchronizes all ranks and distributes values to all ranks 
+Reserved 0x06-0xEF  Reserved 
+Vendor defined 0xF0-0xFF  Vendor-specific operations 
+Note: 
+1. An implementation MUST support at least one broadcast implementation, either UET_INC_BCAST (where 
+non-root FEPs do not synchronize with the SEP, enabling pipelining of multiple BCAST operations) or 
+UET_INC_SYNCBCAST (where non-root FEPs synchronize with the SEP using a zero-sized message before 
+starting the operation). 
+ 
+Informative Text: 
+The UET_INC_SYNCBCAST operation may lend itself to a simpler switch implementation because FEPs 
+typically post receive buffers before the broadcast arrives, eliminating the need for the deferrable 
+send to be deferred.  In contrast, the UET_INC_BCAST operation allows more flexible use of the 
+operation by not forcing a synchronization point.  
+ 

@@ -1,0 +1,40 @@
+ 185 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+both. NSCC is designed as a generic stand-alone algorithm supporting arbitrary deployments and traffic 
+patterns. It relies only on round-trip time and ECN, while RCCC explicitly monitors incoming flows at the 
+receiver. RCCC is expected to work best on fully provisioned (nonblocking) fat trees and can be 
+complemented with NSCC in oversubscribed fat trees. UET also specifies optional packet trimming 
+support for more rapid congestion information provided to both algorithms. 
+Both algorithms limit the amount of pending data (in unacknowledged packets) in the network. UET 
+defines a congestion control context (CCC) that contains the state required to implement the congestion 
+control algorithm(s). The CCC state controls the window size that limits the number of data packets in 
+the network for the one or more PDCs associated with the CCC. This efficient scheme supports multiple 
+PDCs between the same two FEPs that share the same traffic class (TC). CCCs may be helpful to 
+coordinate multiple PIDonFEP endpoints, for example, or different logical types of traffic sharing the 
+same TC. Such a set of PDCs is called a PDC group and is matched to a single CCC such that all traffic on 
+the same TC between the same pair of FEPs is coordinated. Multiple CCCs may exist between the same 
+FEPs to enable co-existing RUD and ROD flows. 
+Path load balancing algorithms choose which path to utilize for a specific packet. UET does not mandate 
+any path selection or load balancing algorithm to enable vendor differentiation. It provides examples 
+where path selection is implemented using equal-cost multi-pathing (ECMP) and is controlled through 
+changing the entropy in the packet headers. Those example algorithms aim to reduce hash collisions and 
+congestion and improve performance. The UDP source port is used as the common field in the packet 
+headers to specify entropy. ECMP forwarding behavior of switches is assumed to guarantee (in the 
+absence of failures) that packets with the same entropy use the same path. 
+Ultra Ethernet offers programmable congestion management (3.6.18) allowing administrators to define 
+their own congestion control and load balancing algorithms in software. 
+3.2.4 Transport Security Sublayer (TSS) 
+Security is a first-class citizen in UET and designed in from the start. UET’s security solution provides the 
+option to encrypt and authenticate all data payload and most of the transport headers while being 
+designed to enable packet spraying. The security solution provides a scalable solution using a single key 
+across an entire parallel application and no per-peer security state for large parallel jobs. It also provides 
+a scalable mechanism to secure many clients that communicate with a server using key derivation. The 
+PDS is designed in conjunction with the TSS to enable the detection of replays. TSS is robust against 
+known attacks on other low-level transport schemes, such as various exhaustion attacks [3]. 
+3.2.5 Layering Summary 
+UET can run on top of IP/UDP or experimentally on top of IP directly; implementations may be 
+configured with a protocol number as described in IETF RFC 3962 [4]. When wire efficiency is important, 
+UET can run directly over UFH. Detailed packet header formats can be found in the SES, PDS, CMS, and 
+TSS sections of this specification. Packet formats include an entropy value field in the UDP source port to 
+enable compatibility with existing switches and common ECMP path selection approaches. 

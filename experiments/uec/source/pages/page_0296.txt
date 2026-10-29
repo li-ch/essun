@@ -1,0 +1,25 @@
+ 296 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+this creates a path from target to initiator where congestion control is applied. Smaller read response 
+data may be carried in a PDS ACK as described in Section 3.5.12.1. 
+Note that larger read response data is carried in a PDS Request in the return direction. These packets, 
+labeled ‘SES Return Data’ in Figure 3-52, are technically SES responses and use a pds.next_hdr field (e.g., 
+UET_HDR_RESPONSE_DATA or UET_HDR_RESPONSE_DATA_SMALL). PDS requests carry both SES 
+Requests (in forward direction) and SES responses with data (in return direction). PDS ACKs carry only 
+SES responses. Throughout this section the term ‘SES request’ refers to a request by SES to transmit a 
+packet using a PDS Request. The term ‘SES response’ refers to a response from SES to be relayed using a 
+PDS ACK. The lower case is used to indicate the PDS function and not the SES next header type. 
+Certain PDCs enable bidirectional traffic, meaning both the initiator and target can transmit messages 
+(e.g., send or write operations). This is limited to the RODL delivery mode described in Section 3.5.21. 
+Informative Text: 
+PDCIDs are referred to using two different perspectives. Every PDC has an initiator FEP and a target 
+FEP. These are fixed during the life of the PDC. There is also a source FEP and destination FEP. These 
+are relative to the FEP that transmitted the packet. That is: 
+• IPDCID refers to the PDCID assigned by the initiating FEP 
+• TPDCID refers to the PDCID assigned by the target FEP 
+• SPDCID refers to the PDCID assigned by the FEP that generated and is transmitting a packet 
+• DPDCID refers to the PDCID assigned by the FEP that is the destination of a packet 
+• SPDCID and DPDCID are carried in the PDS headers as pds.spdcid and pds.dpdcid respectively 
+ 
+ 

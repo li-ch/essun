@@ -1,0 +1,41 @@
+ 182 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+target. The target waits (“rendezvous”) until the receiving process has posted a matching receive and 
+then triggers a read from the source. The deferrable send protocol simply sends messages of any size, 
+and a target that cannot receive it yet sends a message to stop the sender. Later, once the buffer is 
+posted, the target sends a resume message to continue the transaction. The main difference is that with 
+the rendezvous protocol, a sender decides before sending the message whether it is sending it using an 
+eager or a rendezvous transaction, while the deferrable send behaves the same at the sender, and the 
+receiver reacts dynamically and defers the send if the receive has not been posted and the message 
+cannot be buffered. 
+SES supports two fundamental addressing types: relative addressing for peer-to-peer communication in 
+large compute jobs and absolute addressing for client-server connections. Once a message endpoint is 
+identified, a buffer is selected with optional matching criteria (based on a packet-carried initiator ID, 
+e.g., an MPI rank and additional match bits). 
+OFI libfabric is an open-source ecosystem with wide adoption—from ISV-certified MPI implementations 
+to ML communication libraries like *CCL. UEC does not specify how user-facing libraries use libfabric, but 
+many mappings are natural. For example, *CCL semantics map naturally to fi_tagged(send/recv) with 
+exact matching semantics, MPI-1 semantics map to fi_tagged(send/recv), and MPI-3 RMA as well as 
+OpenSHMEM semantics map to fi_rma(read/write) in libfabric. Collective operations can map to 
+fi_collective() for acceleration. Of course, it is always possible to implement any messaging semantics 
+(e.g., *CCL) over any lower-layer semantics (e.g., fi_rma()), but this may add additional software 
+overhead and prevent full offload. 
+3.2.2 Packet Delivery Sublayer (PDS) 
+PDS implements reliable packet transmission for the SES. It receives packets from the SES at the initiator 
+and delivers packets to the SES at the target, which the SES resolves to messages that may update target 
+memory. It also delivers SES return codes and return data (read and atomics) back to the initiator. The 
+PDS offers various ordering modes for packet delivery. All packets of a UET message, excluding the last 
+packet, are of size MTU. 
+Achieving a scalable reliability solution requires that the state retained in the NIC be based on the 
+number of simultaneously active (concurrent) communications—not the total number of endpoints in 
+the application. The reliability layer is designed to cover three key requirements: 
+1. Extreme scalability 
+2. Ordered delivery of some packets 
+3. Unordered delivery of some packets—particularly of bulk payload 
+Those requirements enable efficient support for packet spraying. PDS defines three packet types: 
+request, response (aka ACK/NACK), and control packets. PDS request packets flow from the initiator of a 
+message to the target (reads are an exception). PDS responses flow in the opposite direction. Request 
+packets usually carry data; ACKs carry SES codes to complete the message or defer it. As an 
+optimization, PDS responses may also carry small read data directly. Larger reads are handled 
+differently. The SES response code for a read request indicates “read accepted,” and a separate SES 

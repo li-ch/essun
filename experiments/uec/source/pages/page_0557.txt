@@ -1,0 +1,53 @@
+ 557 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Informative Text: 
+An administrator can maintain state across job runs to reduce initialization time. Figure 3-138 shows 
+two jobs with separate domains. 
+ 
+ 
+Figure 3-138 - Single Job in a Secure Domain  
+3.7.3.1.2 Multiple Jobs Within Secure Domain  
+This use case has multiple jobs with several processes, each across multiple nodes. The jobs in this 
+example do not require isolation between FEPs. 
+A secure domain is created and assigned an SDI and used by all associated jobs within the domain. All 
+KDF modes MAY be used with this use case. Relative addressing SES mode is typically used in this use 
+case. 
+ 
+Figure 3-139 - Multiple Jobs in a Single SD 
+Node0 Node1 Node2
+SD1
+SD0
+FEP 0
+Job0 (SSI0)
+Process0
+Process1
+FEP 1
+Job1 (SSI1)
+Process0
+Process1
+FEP 2
+Job0 (SSI2)
+Process0
+Process1
+FEP 3
+Job1 (SSI3)
+Process0
+Process1
+FEP 0 FEP 1 FEP 2
+SD0
+Job1 (SSI0)
+Process0
+Process1
+Job1 (SSI1)
+Process0
+Process1
+Job1 (SSI4)
+Process0
+Process1
+Job0 (SSI0)
+Process0
+Process1
+Job0 (SSI2)
+Process0
+Process1

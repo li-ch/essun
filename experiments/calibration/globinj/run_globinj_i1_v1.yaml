@@ -1,0 +1,57 @@
+# Calibration-ladder GLOBAL stage GLOB-INJ endpoint RUN 1 of 2 : the W1 smoke config with the injection-BW free
+# parameter A-L05-INJ at the REGISTERED RANGE LOWER ENDPOINT I = 1 B/ns
+# - the extreme serialization-poor corner of the registered axis,
+# backed by an append-only store run so both endpoints of the
+# registered range are run-record artifacts, not only sweep rows. Same
+# workload file and observable set as the W1 smoke manifest
+# (experiments/vertical_slice/w1_decode_smoke.yaml); the topology is
+# the L0.5 smoke ring with only I moved (64 -> 1; B = 64 B/ns, L = 200
+# ns unchanged). Assumptions: the L0.5 registry assumptions_l05.yaml
+# (A-L05-*), not the L0 one - the executed backend is analytical_l05.
+#
+# EXECUTION VEHICLE (structural, the 4r/8r/16r-l05 atlas pattern): the
+# run path (python -m essun.orchestrator.runs) REJECTS this
+# manifest live - analytical_l05 is deliberately unregistered in
+# essun/orchestrator/runs.py BACKENDS per the module's own scope fence -
+# so the run is executed and persisted by the cell-local vehicle
+# experiments/calibration/globinj/run_globinj_endpoints.py (module-direct
+# l05.execute, the run path's own gates mirrored, the run record
+# written through the SAME EvidenceStore with the SAME payload shape
+# plus an execution-provenance block; no src/ change). Classified, not
+# fixed.
+#
+# claim_id is deliberately EMPTY: a PROPOSED global sensitivity candidate
+# must not be linked to any claim (p1 stage boundary: zero claim edits);
+# the schema requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# sensitivity comparison itself is recorded as PROPOSED in
+# results/calibration/ - no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GLOBINJ-I1-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/globinj/topologies/ring8_globinj_i1_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/globinj/profiles/implementation_profile_l05_ring_cal_globinj_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l05.yaml
+backends:
+- analytical_l05
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_globinj_i1_v1 (the W1 smoke L0.5 serialized ring with A-L05-INJ at its registered range lower endpoint 1 B/ns, B = 64 B/ns and L = 200 ns registry points)
+  workload: w1_dense_tp_decode smoke configuration (tp8, 2 layers x 3 steps, 16384 B) — unchanged
+  implementation: analytical L0.5 free-parameter identity; global injection-BW sensitivity stage GLOB-INJ — PROPOSED, review required
+evidence_level_requested: E0

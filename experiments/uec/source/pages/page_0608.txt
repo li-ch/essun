@@ -1,0 +1,50 @@
+ 608 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The switch computes the signal’s local value and quantizes it. The entity within the switch that computes 
+a signal’s local value may vary with the signal type; the definitions of individual signals in this 
+specification discuss the entity(ies) that compute a signal’s local value. The pre-quantization locally 
+computed value and quantized value MUST both be integers; this constraint simplifies implementation 
+by avoiding the complexity of floating-point arithmetic, both in the computation of local signal values 
+and in their quantization. Individual signal type definitions can straightforwardly enforce this integer-
+value constraint by specifying units accordingly. The switch pipeline compares the quantized local signal 
+value with the incoming CSIG tag’s quantized signal value according to the aggregation function 
+associated with the CSIG tag’s signal type. 
+4.2.4.1.4 CSIG Tag Quantization Algorithm 
+Figure 4-5 illustrates how a switch’s hardware might maintain signals’ local values and quantize them. In 
+accordance with the signal type in an arriving packet’s CSIG tag, the switch pipeline compares the 
+quantized signal value in the packet’s CSIG tag with the quantized local value for the signal of the same 
+type and, as appropriate, updates the signal value in the packet. The use of a background thread to 
+compute a signal’s local value in Figure 4-5 is a non-normative example; other implementations, such as 
+ones based on per-packet updates, are possible. The details of local signal computation, within the 
+confines of the per-signal definitions in this specification, are implementation-specific. An 
+implementation will compute a local signal value, quantize it, and perform CSIG-Compare-and-Update() 
+of the quantized value per the compact or wide tag. 
+ 
+4.2.4.1.5 Compact CSIG Tag Quantization Algorithm 
+The quantization applied to values stored in compact CSIG tags is a simple mapping of the raw, 
+unquantized value into one of several buckets. Each bucket is parameterized by minimum and maximum 
+ 
+Figure 4-5 - Example Local Signal Quantization and Packet Signal Compare-and-Update 
+ 
+Per Egress 
+Port Byte 
+Counter
+Per Port 
+ABW 
+Register
+Per Port 
+ABW/C 
+Register
+ABW 
+Quantize
+ABW/C 
+Quantize
+Quantization 
+Algorithm
+Packet->ABW
+Compare-
+and-Update() Packet->ABW
+t: Time
+Window
+Background Thread

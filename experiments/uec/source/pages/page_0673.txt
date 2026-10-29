@@ -1,0 +1,41 @@
+ 673 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o Stop enqueue of packets to VC[x] queues. 
+o Wait for VC[x] queues to drain. 
+• Set up CBFC sender configuration and parameters. 
+o Redistribute new TotalCredits to remaining lossless VCs or update all VC limits based 
+on new Remote.R_VC_CreditLimit[x]. 
+• Ensure observance of any new credit limits. 
+o If the receiver has set credit limits using port-based TotalCredits: 
+▪ Wait until S_P_CU ≤ S_P_CL. 
+▪ Any additional implementation-specific credit limits must also be followed 
+accordingly. 
+o If the receiver has set credit limits using per-VC credit limits: 
+▪ Wait until S_VC_CU i  ≤ S_VC_CL i , for all lossless VC i . 
+• Update local sender LLDP database: 
+o Local.S_VC_RTS[x]=0 (for all VC[x] with Remote.R_VC_Want[x] = 0) 
+4. LLDP packet is sent from sender to receiver with the sender’s new TLV values and is used to 
+update the remote LLDP database at the receiver. 
+5. CBFC receiver credit return 
+CBFC management entity performs the following actions: 
+• For each VC[x] with remote.S_VC_RTS[x] == 0 and local.R_VC_RTR[x] == 1: 
+o Wait for all VC x  packets to drain from receiver’s buffer and all VC[x] credits to be 
+freed and returned using CF_Update CtlOS to the sender. 
+o Update the Local receiver LLDP database: 
+▪ Local.R_VC_RTR[x]=0. 
+6. LLDP packet is sent from receiver to sender with the receiver’s updated TLV values and is used 
+to update the remote LLDP database at the sender. 
+7. Remove lossless VC 
+CBFC management entity performs the following actions: 
+• For each VC[x] that has remote.R_VC_RTR[x] changed from 1 to 0, lossless VC[x] is now 
+removed and may be left unused or start operating as a best-effort VC, including 
+enqueue and dequeue of packets on a best-effort basis. 
+The receiver per-port TLV values R_CellSize and R_PktOvhd must not be changed when performing the 
+lossless VC removal process while other lossless VCs remain active, but it may be desirable to reduce the 
+R_TotalCredits value. A new R_TotalCredits value can be set by the receiver (shown as optional in step 
+#1 above), which propagates to the sender through the LLDP database update. Because the new lossless 
+VC credit limits are not immediately applied when set in step #1, the receiver must maintain the original 
+buffer space (and honor the previous TotalCredits limit) until the receiver sees the sender’s LLDP 
+database update as indicated by remote.S_VC_RTS[x]==0 in step #5. After this, the receiver can be sure 
+that the sender is using the new credit limits for any packets received. 

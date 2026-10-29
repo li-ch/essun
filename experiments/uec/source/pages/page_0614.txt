@@ -1,0 +1,26 @@
+ 614 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 4-6 - CSIG LLDP Example 
+4.2.5.2 Tag Initialization 
+CSIG tag initialization occurs when a UE FEP inserts a CSIG tag (compact or wide) into a packet. The FEP’s 
+policy governs generation of CSIG tags in packets.  
+Informative Text: 
+UE fabric switches do not insert CSIG tags in packets that do not already carry them; thus, they also 
+do not initialize CSIG tags. 
+ 
+Depending on the design and implementation of the CC algorithm and telemetry software in use at the 
+FEP, the FEP’s policy may: 
+• Insert CSIG tags in all of an application’s packets (i.e., CSIG does not generate additional packets and 
+gathers telemetry in a pre-existing application’s packet stream). 
+• Insert CSIG tags in 1 in N of an application’s packets (i.e., CSIG does not generate additional packets 
+and gathers telemetry in a pre-existing application’s packet stream). 
+• Insert CSIG tags in probe packets. A telemetry application generates probe packets for the express 
+purpose of signal collection from UE fabric elements. 
+A FEP that inserts a tag in a packet MUST also initialize that CSIG tag’s csig.t (type) and csig.s (signal) 
+values (as specified in Table 4-8), and it MUST set the csig.d and csig.r (reserved) bit(s) to zero. 
+Table 4-8 - Signal Initial Values 
+T Signal  Math Function Initial Value 
+0 ABW min All ‘1b’ 
+1 ABW/C min All ‘1b’ 

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparison — essun</title>
+<meta name="description" content="A factual comparison of essun with ASTRA-sim, ns-3, OMNeT++, HTSim, and Batfish: primary domain, fidelity levels, standards-semantic content, cross-fabric same-workload comparison, byte-identical reproducibility, evidence labels, and target workloads. Peers described charitably from public material; essun's gaps stated plainly.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html" aria-current="page">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">Related work</p>
+    <h1>essun among network simulators</h1>
+    <p class="tagline">A comparison only earns trust if it is fair to everyone in the table. The peer columns below are written from each project's public documentation and papers, charitably and without marketing vocabulary; the essun column includes what essun does not attempt. Every peer entry is a compression — follow the project links for the real thing.</p>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="table">
+  <p class="kicker">Seven questions, six tools</p>
+  <h2>The comparison table</h2>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>essun</th>
+        <th><a href="https://astra-sim.github.io/">ASTRA-sim</a></th>
+        <th><a href="https://www.nsnam.org/">ns-3</a></th>
+        <th><a href="https://omnetpp.org/">OMNeT++</a></th>
+        <th><a href="https://github.com/spcl/htsim">HTSim</a></th>
+        <th><a href="https://batfish.org/">Batfish</a></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Primary domain</strong></td>
+        <td>Scale-up GPU fabrics — the GPU-to-GPU interconnects behind LLM inference (UEC-class, NVLink-class)</td>
+        <td>Deep-learning system simulation: collective layers across compute, network, and memory</td>
+        <td>General networking research: protocols, wired and wireless, at large scale</td>
+        <td>General discrete-event simulation framework with a large model ecosystem</td>
+        <td>Data-center fabric transport: congestion control, scheduling, topology studies</td>
+        <td>Network configuration analysis: control-plane verification of device configurations</td>
+      </tr>
+      <tr>
+        <td><strong>Fidelity levels offered</strong></td>
+        <td>Analytical closed-form (L0/L0.5) + collective-level discrete-event + packet-level through pinned external engines</td>
+        <td>Analytical and packet-level network backends, coupled to compute and memory models</td>
+        <td>Detailed packet-level simulation of full protocol stacks</td>
+        <td>Chosen per model — INET supplies packet-level protocol stacks; other models abstract as they choose</td>
+        <td>Packet/flow-level simulation</td>
+        <td>None — static analysis computing forwarding state from configurations; no traffic simulation</td>
+      </tr>
+      <tr>
+        <td><strong>Standards-semantic content</strong></td>
+        <td>UEC 1.1 anchored profile (80 page-hash-verified anchors, 445 typed requirements, 67 free parameters) plus a paper-derived UnifiedBus profile; license review precedes ingestion; restricted texts (UALink, CXL) never ingested</td>
+        <td>Collective algorithms and system models from published research; no standard-text anchor registries</td>
+        <td>Protocol models track RFC and IEEE specifications — the TCP family, 802.11, LTE, and more</td>
+        <td>INET and other models implement protocol specifications; the framework itself is standard-agnostic</td>
+        <td>Implements published transport and congestion-control designs and their evaluation setups</td>
+        <td>Formalized vendor configuration languages: ACL and routing-protocol semantics across many platforms</td>
+      </tr>
+      <tr>
+        <td><strong>Cross-fabric same-workload comparison</strong></td>
+        <td>One manifest drives every backend; the comparison gate requires matching workload and topology hashes; disagreements are classified before any tuning</td>
+        <td>One workload definition across pluggable network backends (analytical, ns-3, and others)</td>
+        <td>Scenarios are built per study; cross-simulator comparison is not built in</td>
+        <td>Many models share one framework; cross-model comparison is left to each study</td>
+        <td>One engine; comparisons stay within its transport and topology space</td>
+        <td>The same questions answered across vendors' configuration languages — a core strength</td>
+      </tr>
+      <tr>
+        <td><strong>Byte-identical reproducibility discipline</strong></td>
+        <td>Content-addressed run ids; byte-identical replay enforced by goldens and <code>make demo</code>; integer arithmetic and fixed seeds throughout</td>
+        <td>Deterministic per version and seed; no content-addressed record scheme documented</td>
+        <td>Deterministic with fixed seeds; record-keeping is left to the study</td>
+        <td>Deterministic with fixed seeds; built-in result recording, without content addressing</td>
+        <td>Seeded runs; determinism depends on each study's seed discipline</td>
+        <td>Deterministic static analysis; answers tied to tool versions</td>
+      </tr>
+      <tr>
+        <td><strong>Evidence labels on every result</strong></td>
+        <td>Yes — the five-label ladder on every site and README result, with a mechanically checked claim vocabulary</td>
+        <td>No per-result label convention documented</td>
+        <td>No per-result label convention documented</td>
+        <td>No per-result label convention documented</td>
+        <td>No per-result label convention documented</td>
+        <td>No per-result label convention documented</td>
+      </tr>
+      <tr>
+        <td><strong>Target workloads</strong></td>
+        <td>LLM inference collectives: dense TP decode and prefill executable today; MoE and PD/KV gated until L1/L2 backends exist</td>
+        <td>Deep-learning training and inference workloads — transformers, recommendation, generative runs</td>
+        <td>Whatever the model libraries cover: TCP behavior, wireless, mobility, QoS</td>
+        <td>Whatever the ecosystem covers: protocols, wireless, vehicular, queueing</td>
+        <td>Data-center studies: incast, load balancing, transport comparisons</td>
+        <td>Configuration questions — reachability, ACL audits, routing policy — not workload simulation</td>
+      </tr>
+      <tr>
+        <td><strong>What essun does not attempt</strong></td>
+        <td>Two executable workload families today; no GUI; no wireless or general-protocol models; nothing calibrated against hardware</td>
+        <td>Peers ahead: compute and memory modeled in depth (essun's L0.5 compute term is one serialization term)</td>
+        <td>Peers ahead: protocol breadth far beyond scale-up fabrics</td>
+        <td>Peers ahead: a mature GUI/IDE and a large third-party model catalog</td>
+        <td>Peers ahead: a long publication record in transport research</td>
+        <td>Peers ahead: answers questions about real operating networks, which essun does not touch</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Peer columns summarize public documentation and papers as of 2026-10 and are compressions, not claims about internal goals. Corrections welcome via <a href="https://github.com/li-ch/essun/issues">GitHub issues</a>.</p>
+</section>
+
+<section id="placement">
+  <p class="kicker">Placement</p>
+  <h2>Where essun sits</h2>
+  <div class="prose">
+    <p>essun occupies a narrow crossing: it targets scale-up GPU fabrics for LLM inference, and it treats the specification, the multi-fidelity comparison, and the evidence discipline as the product itself. General-purpose simulators — ns-3, OMNeT++, the HTSim lineage — model far more of networking than essun attempts, and essun does not replace them; two of its discrete-event backends are pinned, credited external simulators executed under one manifest and one comparison gate. What essun adds around those engines is a discipline layer: anchored standard profiles, free parameters that stay visibly free, content-addressed run ids, byte-identical replay, and an evidence label on every claim.</p>
+    <p>If the question is whole-network behavior, production configuration correctness, or protocol breadth, the tools above are the right ones. If the question is comparing scale-up fabric options for inference collectives — with every emitted number traceable to a run record — that is the space essun works in, as a complement to the general-purpose simulators rather than a replacement.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

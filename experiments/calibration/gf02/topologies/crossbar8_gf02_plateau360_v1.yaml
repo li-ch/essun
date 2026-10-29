@@ -1,0 +1,45 @@
+# Calibration-ladder GF-02 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the anchor's MEASURED PLATEAU point B = 360 B/ns per rank
+# per direction — the anchor's own headline number ("bandwidth is saturated
+# at ~360 GB/s for busbw", verified verbatim from the issue body 2026-10-28;
+# NVIDIA/nccl-tests issue #326, 8 H100 GPUs, NVLink; maintainer: "360 GB/s
+# is exactly what we'd expect on H100"). Under the pinned nccl-tests
+# conventions (all_reduce_perf: busbw = algbw x 2(r-1)/r with algbw = M/t,
+# verified from src/all_reduce.cu fetched 2026-10-28), the L0 allreduce
+# identity's asymptotic busbw IS its B parameter, so the plateau reads
+# directly as B = 360 — the same reading stages A3/A6 applied to their
+# measured series, never a tuned value.
+# docs/calibration/anchors_gapfill.md §GF-02 (gap-fill anchor, PROPOSED,
+# not yet an integrated anchor row). Decimal bandwidth units, 1 GB/s = 1 B/ns.
+#
+# DOMAIN NOTE: 8xH100 SXM is an NVSwitch fabric; the single-port crossbar is
+# the registered abstraction for that class (per-GPU aggregate injection cap,
+# plan §2.1 A-L0X-PORT KEEP-for-NVSwitch-class), unlike the full-mesh
+# out-of-domain case of stages A7/GF-01. No congestion, no credits, no
+# packetization, no in-network computing (all explicitly unsupported by the
+# backend) — L0 transport model only.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# anchor; 360 is the anchor's own stated figure, fixed BEFORE any model
+# output was read (sibling topologies isolate the other readings: perdir450
+# = the poster's own 900 GB/s bidirectional figure split per direction,
+# gf04_476_37 = the GF-04 open-discrepancy bracket, bidir900 = the
+# bidirectional-misread hazard). L = 200 ns is the A-L0X-LAT registry
+# point (KEEP).
+topology_id: crossbar8_gf02_plateau360_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 360
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT). Provenance: B = 360 B/ns = the GF-02 anchor's measured
+  busbw plateau ("~360 GB/s", both allreduce and allgather, 128 MiB-16 GiB
+  regime, 8 H100 + NVLink; issue body verified by two independent fetch
+  methods 2026-10-28; maintainer confirms 360 is the expected H100 figure),
+  read as the identity's B through the pinned busbw = B asymptotic mapping;
+  L from the free A-L0X-LAT registry point. Values are anchor-stated /
+  free-registry points, never our measurements, never tuned.

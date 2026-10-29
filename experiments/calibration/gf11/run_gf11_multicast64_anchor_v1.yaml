@@ -1,0 +1,57 @@
+# Calibration-ladder GF-11 anchor-point RUN #4 (gap-fill
+# anchor): the L0 single-stage crossbar identity at the 64-GPU SCALING
+# endpoint — r=64, B=64 B/ns (registry), L=702 ns (derived per-phase
+# reading), payload 128 B (the anchor's declared size reading; 128 is
+# divisible by 64 so A-L0X-DIV accepts the exact size).
+#
+# ROLE: the anchor's multi-rank datum is "Even at 64 GPUs, multicast
+# one-shot variants stay within roughly 70% overhead of the SoL bound"
+# (vs "about 7% at 2 GPUs"). This run lands the multicast-mapped model
+# point: exact CCT 22527/16 = 1407.9375 ns = 63/16 + 1404 — the identity's
+# latency term is RANK-FLAT, so over the anchor's 32x rank span (2 -> 64)
+# the model grows only by the wire coefficient (63/16 vs 2 ns at M=128),
+# while the measured overhead fraction grows 7% -> ~70% (under the
+# constant-SoL reading a ~1.59x total-time growth, envelope ~1.7*1404 =
+# 2386.8 ns at r=64). The identity sits BELOW the envelope (consistent —
+# a bound, not an equality); the growth itself is the rank-dependent
+# kernel/multicast overhead the rank-flat identity cannot express. The
+# ring (126L = 63x growth) and doubling (12L = 6x) chains bracket it from
+# above in the tp64 sweep. NVL72's own r=72 recorded NOT executed (not a
+# power of two — the exchange fabric rejects it; the anchor stages no
+# r=72 collective number).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF11-MCAST64-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp64_128b.yaml
+infra_graph:
+  path: experiments/calibration/gf11/topologies/crossbar64_gf11_b64_l702_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf11/profiles/implementation_profile_l0_crossbar_cal_gf11_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar64_gf11_b64_l702_v1 (one non-blocking switch stage; r=64 = the anchor's scaling endpoint ("Even at 64 GPUs, multicast one-shot variants stay within roughly 70% overhead"); B=64 B/ns = free registry; L=702 ns = derived reading of the measured SoL; rank-flat latency term by construction)
+  workload: w1_dense_tp_decode tp64, payload 128 B (the anchor's declared small-message size reading; the 64-GPU overhead datum is small-message class)
+  implementation: analytical L0 crossbar identity at the multicast-mapped scaling endpoint (exact CCT 22527/16 = 1407.9375 ns); GF-11 comparison is the measured overhead-envelope placement (7% -> ~70% growth vs the identity's rank-flatness) — PROPOSED, review required
+evidence_level_requested: E0

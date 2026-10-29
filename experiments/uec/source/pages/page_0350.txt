@@ -1,0 +1,37 @@
+ 350 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+SACK_PSN is indirectly carried in the RUD/ROD ACK_CC and ACK_CCX headers using the 
+pds.sack_psn_offset field. The pds.sack_psn_offset field is a 16-bit signed integer in twos-complement 
+format that is added to CACK_PSN to determine SACK_PSN. See the examples in the ACK_PSN 
+description in Table 3-52. 
+3.5.11.4.7 New_Start_PSN 
+New_Start_PSN is used by the target to send the initiator a valid starting PSN (Start_PSN). It is used with 
+encryption to negotiate a Start_PSN during creation of a new PDC. Refer to Section 3.5.8.2. 
+3.5.11.4.8 pds.pkt_id 
+The RUDI delivery mode uses a unique identifier in the PDS header called pds.pkd_id that is not required 
+to be monotonically increasing and may be assigned in any order. This field is assigned to each RUDI 
+request by the source and is reflected back in the RUDI response. 
+3.5.11.5 PDC Identifiers 
+Both the initiator and target allocate PDC Identifiers. Refer to the PDS terminology in Section 3.5.2 and 
+the informative text box at the end of that section for additional information on PDCIDs. 
+• Initiator PDC Identifier (IPDCID): Allocated by initiator 
+• Target PDC Identifier (TPDCID): Allocated by target 
+• Source PDC Identifier (SPDCID): Carried in the pds.spdcid field. This is IPDCID or TPDCID 
+depending on which FEP was source and which is destination for the packet 
+• Destination PDC Identifier (DPDCID): Carried in the pds.dpdcid field. This is IPDCID or TPDCID 
+depending on which FEP was source and which is destination for the packet 
+A PDCID is intended to be locally unique for each FEP. A source FEP can reuse the same PDCID for 
+different destination FEPs. A source FEP does not simultaneously use the same PDCID to the same 
+destination FEP even if the delivery mode or traffic class is different. 
+3.5.11.6 pds.pdc_info 
+When a PDC is first created and until it reaches the ESTABLISHED state (see Section 3.5.8.2), the 
+pds.dpdcid field is overloaded with {pds.pdc_info, pds.psn_offset}. The pds.pdc_info field is used to 
+allow the target to determine the properties of the PDC. This 4-bit field is defined as follows: 
+ pds.pdc_info = [rsvd, rsvd, rsvd, use_rsvd_pdc] 
+• rsvd (3)  Reserved for future use 
+• use_rsvd_pdc       when this bit is set, the PDC resources are taken from the reserved pool; 
+                              when this bit is zero, the PDC resources are taken from the general pool 
+The reserved pool is described in Section 3.5.18. The pds.pdc_info field is reduced to two bits in RODL. 
+3.5.11.7 pds.req_cc_state  
+Refer to the CMS Section 3.6.9.1 for a description of the pds.req_cc_state field. 

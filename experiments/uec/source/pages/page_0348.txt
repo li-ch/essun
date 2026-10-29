@@ -1,0 +1,37 @@
+ 348 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.11.4.1 pds.psn 
+The pds.psn field refers to the packet sequence number assigned to RUD/ROD/RODL PDS Request 
+packets and certain CPs. The pds.psn field is monotonically increased by one for each packet on each 
+PDC direction except for specific CPs (as described in Section 3.5.16). The PSN increases independently 
+on the forward and return directions. 
+3.5.11.4.2 pds.psn_offset 
+The pds.psn_offset field is present during PDC creation, when the pds.flags.syn bit is set. This field 
+allows the destination to determine the Start_PSN of the PDC as described in Section 3.5.8.2. 
+3.5.11.4.3 CLEAR_PSN 
+The clear sequence number, CLEAR_PSN, MUST be supported when using RUD/ROD/RODL. CLEAR_PSN 
+indicates that all PSNs up to and including this PSN have been cleared. Clearing a PSN involves 
+confirming the receipt of the PDS ACK for a packet. A CLEAR_PSN of X indicates that acknowledgements 
+for the packet with PSN = X and all packets with earlier PSNs have been received. 
+The purpose of CLEAR_PSN is to enable guaranteed delivery of certain SES responses. When SES 
+indicates that an SES Response requires reliable delivery, PDS stores the response until a clear is 
+received. This is done to support retransmitting the associated ACK if necessary. When PDS receives a 
+clear, any SES Response state associated with a PSN equal to or lower than CLEAR_PSN is deleted. 
+CLEAR_PSN is indirectly carried in the RUD/ROD Request header using the pds.clear_psn_offset field. 
+The pds.clear_psn_offset field is a 16-bit signed integer in twos-complement format that is added to 
+pds.psn to determine CLEAR_PSN. The msb of pds.clear_psn_offset is extended to create the 32-bit 
+signed value added to pds.psn. See the examples below in the description for ACK_PSN. This offset is 
+used to reduce the size of the field from 32 bits to 16 bits. 
+CLEAR_PSN is reduced in size for RODL over the UFH_16 header. Refer to Section 3.5.10.5 and Section 
+3.5.22.1.  
+CLEAR_PSN is directly carried in PDS CPs as part of the pds.payload field. Refer to Section 3.5.16.3 
+CLEAR_PSN MUST be initialized to the Start_PSN minus 1 on the forward and return directions. 
+Informative Text: 
+The pds.clear_psn_offset field will never be a positive number, as CLEAR_PSN is never higher than 
+PSN. The 16-bit signed integer format is used to align the processing of this field with other sequence 
+numbers that are carried as offsets. 
+ 
+When an SES response includes data (e.g., a small read response carried in a PDS ACK), the data is not 
+stored. A lost PDS ACK that carried read response data is handled by retransmitting the original read 
+request packet. 

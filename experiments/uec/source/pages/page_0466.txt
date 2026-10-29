@@ -1,0 +1,33 @@
+ 466 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.9.5 pds.ack_ccx_state - NSCC_CSIG 
+UET TYPE = ACK_CCX and CCX_TYPE = NSCC_CSIG are defined for NSCC with CSIG enabled. The format of 
+this variant of ACK_CCX_STATE is shown in Figure 3-132 and the field definitions are shown in Table 
+3-94. 
+Table 3-94 - pds.ack_ccx_state for ACK_CCX and CCX_TYPE = NCSS_CSIG 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+service_time 16 same as ACK_CC_STATE for CC_TYPE = CC_NCSS 
+restore cwnd (rc) 1 same as ACK_CC_STATE for CC_TYPE = CC_NCSS 
+rcv_cwnd_pend 7 same as ACK_CC_STATE for CC_TYPE = CC_NCSS 
+rcvd_bytes 24 same as ACK_CC_STATE for CC_TYPE = CC_NCSS 
+ooo_count 16 same as ACK_CC_STATE for CC_TYPE = CC_NCSS 
+csig_reflection_hdr 64 Compact or wide-format CSIG Reflection Header 
+ 
+3.6.9.6 pds.ack_ccx_state - RCCC_CSIG 
+UET TYPE = ACK_CCX and CCX_TYPE = RCCC_CSIG are defined for RCCC with CSIG enabled. The format of 
+this variant of ACK_CCX_STATE is shown in Figure 3-133 and the field definitions are shown in Table 
+3-95. 
+ 
+ 
+ 
+Figure 3-132 - pds.ack_ccx_state for UET_TYPE = ACK_CCX and CCX_TYPE = NSCC_CSIG 
+ 
+ 
+Figure 3-133 - pds.ack_ccx_state for ACK_CCX and CCX_TYPE = RCCC_CSIG 
+ 

@@ -1,0 +1,32 @@
+ 528 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Signal/Accumulation uet_op_sum uet_op_max uet_op_min uet_op_last 
+uet_rx_ev N/A N/A N/A MAY 
+uet_rx_nack MUST N/A N/A MAY 
+uet_rx_nack_ecn MAY N/A N/A MUST 
+uet_rx_nack_last_hop_trim MAY N/A N/A MUST 
+uet_rx_nack_rtt MUST MUST MUST MUST 
+uet_rx_nack_trim MUST N/A N/A MAY 
+uet_rx_probe MAY N/A N/A MAY 
+uet_rx_probe_id N/A N/A N/A MUST 
+uet_rx_req MUST N/A N/A MAY 
+uet_rx_req_bytes MUST N/A N/A MUST 
+uet_rx_req_ecn MAY N/A N/A MAY 
+ uet_rx_req_last_hop_trim MAY N/A N/A MAY 
+uet_rx_req_trim MAY N/A N/A MAY 
+uet_rx_telegram_local N/A N/A N/A MUST 
+uet_rx_telegram_peer N/A N/A N/A MAY 
+uet_rx_telegram_type N/A N/A N/A MUST 
+uet_time_current N/A N/A N/A MUST 
+uet_time_last_update N/A N/A N/A MUST 
+uet_tx_ack_per_packet N/A N/A N/A MAY 
+uet_tx_backlog_bytes N/A N/A N/A MUST 
+uet_tx_cookie N/A N/A N/A MUST 
+uet_tx_cwnd N/A N/A N/A MUST 
+uet_tx_fep_credit_rate N/A N/A N/A MAY 
+uet_tx_inflight_bytes N/A N/A N/A MUST 
+uet_tx_remote_ack_per_packet N/A N/A N/A MAY 
+uet_tx_req MAY N/A N/A MAY 
+uet_tx_req_bytes MUST N/A N/A MUST 
+uet_tx_rto MAY N/A N/A MUST 

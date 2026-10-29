@@ -1,0 +1,60 @@
+ 409 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+1. The PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 
+332. 
+2. SES receives the read request from the provider and generates an SES Request without a valid 
+message ID. 
+3. The initiator transmits the SES read to the target as a PDS Request with PSN = 333. 
+4. The target transmits an ACK for PSN = 333. 
+a. The ACK carries the SES Response 
+5. The target SES processes the read and generates a request to PDS to send a packet back to FEP-
+A. 
+a. This request carries an SES UET_HDR_RESPONSE_DATA header and includes the data; 
+the SES header carries the original PSN in the ses.original_request_psn field (orig_psn = 
+333 in this example) assigned by FEP-A to associate the data with the original request 
+(since a small SES header doesn’t have an ses.message_id field). 
+6. The target transmits a PDS Request using PSN = 48.  
+a. This packet carries the requested read data and uses the return direction of the same 
+PDC on which the associated request arrived; see Section 3.5.8.1. 
+b. The SES Response with data header carries the original PSN in the 
+ses.original_request_psn field (orig_psn—in this example 333) to associate the data 
+with the original request.  
+7. After receiving PSN = 48, FEP-A transmits an ACK for PSN = 48. 
+a. The read response transaction operates in the same manner as other transactions; 
+when successful, the ACKs do not require a clear. 
+ 
+   
+ 
+Figure 3-102 - Standard RUD Sequence for Single-Packet Read–Medium & Small SES header 
+ 
+ 
+ 
+              
+        
+       
+ Read Resp, DATA, orig_psn  = 333 
+pkt_id,  DATA 
+333 RESP,  gtd_del
+            
+PacketsMessages Packets MessagesPackets
+333  Read,
+ orig_pdcid, orig_psn = 333 
+    
+    
+          
+Seman c 
+processing  
+pkt_id,  Read 
+pkt_id,  RESP 
+          
+ RESP ,  gtd_del
+ RESP 
+Read COMPLETION
+(libfabric op on)
+CLEAR = 48
+Forward 
+direc on
+Return 
+direc on
+          

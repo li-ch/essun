@@ -1,0 +1,38 @@
+ 506 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+allocate buffers in cells, whereby the arrival of a smaller packet will consume fewer cells than the arrival 
+of a larger packet. 
+To accommodate different buffer allocation strategies, the approach taken by TFC is to allow the 
+destination to manage a receive buffer as a number of “cells,” where each cell is of size 
+tfc_dest_cell_size. As credit is allocated in units of 256 bytes, a range of cell sizes from 256 bytes to 9 KB, 
+in multiples of 256 bytes, MUST be supported. The tfc_dest_cell_size variable defaults to 256 bytes, the 
+same as a unit of credit. When the source transmits a packet, the number of cells required to store the 
+packet is calculated, and hence the number of bytes of credit consumed, credit_used, is calculated. 
+A TFC source can send if TFC.CanSend() returns TRUE: 
+TFC.CanSend(rtx): 
+if rtx or ccc.credit > 0: 
+return TRUE 
+ else  
+return FALSE 
+Sending a packet reduces ccc.credit as follows: 
+TFC.OnSend(credit_used, rtx): 
+if rtx == FALSE: 
+ccc.credit –= credit_used 
+In CanSend() and OnSend(), rtx indicates whether the packet is a retransmission. Retransmissions do 
+not require credit to send and do not consume credit when sending. 
+Because it may be possible for packet sizes to change in transit, and as destinations may wish to store 
+additional data along with an arriving packet, tfc_pkt_size is defined as the UET payload size + 
+tfc_pkt_overhead bytes. The source and destination must use the same value of the constant 
+tfc_pkt_overhead. Constant tfc_pkt_overhead defaults to 256 bytes, the same as one unit of credit. It is 
+RECOMMENDED that tfc_pkt_overhead is configurable between 0 and 256 bytes, but an 
+implementation MAY use a constant size of 256 bytes — in which case a destination may need to 
+allocate additional buffering if larger encapsulations are used. 
+The tfc_pkt_overhead parameter is intended to cover any additional memory required at the destination 
+to store the arriving packet. This may include space to store the Ethernet, IP, UDP, and SES headers; FCS; 
+and any additional metadata the destination may store along with the packet. The destination MUST be 
+able to store any valid arriving packet for which it has allocated credit. 
+TFC manages a unidirectional flow of data from a sending FEP to a receiving FEP. As the requirements 
+for tfc_dest_cell_size and tfc_pkt_overhead are primarily determined by the destination FEP, when 
+PDCs are established in both directions between a pair of FEPs, the values of tfc_dest_cell_size and 
+tfc_pkt_overhead may be different in one direction from the other. 

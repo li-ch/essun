@@ -1,0 +1,41 @@
+ 581 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+In direct KDF mode the IVMask is chosen from IVMask0 or IVMask1 of the SDKDB based upon the 
+enabled AN. 
+3.7.11.1.3 ICV Calculation 
+The integrity check value (ICV) MUST be calculated over the AAD and ciphertext. The ICV MUST be 
+appended to the end of the packet. For AES-GCM the ICV length MUST be 16 bytes. Packets that fail 
+authentication MUST be dropped and the sdiXXInAuthFailPkts counter MUST be incremented. Trimmed 
+packets will fail authentication, but MAY be used as a congestion signal per the limitations described in 
+Section 3.7.2.4.2. 
+When calculating the ICV for UDP packets the udp.checksum field is set to zero before the ICV 
+calculation is made. 
+3.7.11.2 Packet Transmission 
+• Packets are received from the PDS with security and link information. 
+• Packets that bypass the TSS are assumed to be UE packets that are not using TSS services and 
+MUST be passed to the link unmodified. The outPPRxEncryptionBypassPkts packet counter 
+MUST be incremented. 
+• SDKDB information is retrieved using the SDI. 
+o If the SDKDB is not valid the packet is dropped and the ifPPOutErroredPkts counter is 
+incremented. 
+• Direct KDF mode. 
+o The SDK from SDKDB is used directly to encrypt packet. 
+• Client-server KDF mode. 
+o DestSSI or destination IP addresses is used in the KDF to construct the SDK using client-
+server KDF mode. 
+o The epoch from SDKDB.current_epoch is used in KDF. 
+• Cluster KDF mode. 
+o SrcSSI or ip.src_addr is used in KDF to construct the SDK based on SDKDB ssi-mode field. 
+o Rekey is calculated and used in KDF (see Section 3.7.5.2). 
+o The epoch from SDKDB.current_epoch is used in KDF. 
+• UET TSS header is added. 
+o The tss.type field is set to UET_TSS. 
+o tss.sdi and tss.an are set to SDKDB.SDI and SDKDB.TxActiveAN. 
+o The tss.ssi field is populated based on the SDKDB.ssi-mode. If the ssi-mode is TRUE then 
+the tss.ssi field is populated in the packet with SrcSSI and the tss.sp field is set to 0b1. 
+Otherwise, the tss.ssi field is not populated, and the tss.sp field is set to 0. 
+o TSC is generated. 
+▪ The tss.tsc.epoch portion is copied from SDKDB.current_epoch. 
+▪ If the tss.tsc.counter wrapped or is greater than invokeFatalTheshold the packet 
+MUST be dropped and the sdiXXOutInvokeFail counter is incremented. 

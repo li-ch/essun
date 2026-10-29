@@ -1,0 +1,46 @@
+ 745 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The UCR can be estimated based on the probability of having k or more symbol errors in a codeword, 
+defined by: 
+𝑷𝒌 = 𝑷𝒓𝒐𝒃(𝒄𝒐𝒅𝒆𝒘𝒐𝒓𝒅 𝒉𝒂𝒔 ≥ 𝒌 𝒔𝒚𝒎𝒃𝒐𝒍 𝒆𝒓𝒓𝒐𝒓𝒔) = 𝑵𝒌𝑵𝒕𝒐𝒕𝒂𝒍 (Equation 8) 
+where Nk is the sum of the values read from counters k and up: 
+𝑵𝒌 = ∑ 𝑭𝑬𝑪𝒄𝒐𝒅𝒆𝒘𝒐𝒓𝒅𝒆𝒓𝒓𝒐𝒓𝒃𝒊𝒏𝒊
+𝟏𝟓
+𝒊=𝒌
+ (Equation 9) 
+For an observation period of one minute, Ntotal is provided in Table 6-12. 
+If the errors are uncorrelated, then Pk depends on the RS-FEC SER as follows: 
+𝑷𝒌 = ∑ (𝟓𝟒𝟒𝒊 ) 𝑺𝑬𝑹𝒊(𝟏 − 𝑺𝑬𝑹)𝟓𝟒𝟒−𝒊
+𝟓𝟒𝟒
+𝒊=𝒌
+≈ ∑ (𝟓𝟒𝟒𝒊 ) 𝑺𝑬𝑹𝒊(𝟏 − 𝑺𝑬𝑹)𝟓𝟒𝟒−𝒊
+𝟏𝟓
+𝒊=𝒌
+ (Equation 10) 
+And the UCR for uncorrelated errors is: 
+𝑼𝑪𝑹 = ∑ (𝟓𝟒𝟒𝒊 ) 𝑺𝑬𝑹𝒊(𝟏 − 𝑺𝑬𝑹)𝟓𝟒𝟒−𝒊
+𝟓𝟒𝟒
+𝒊=𝟏𝟔
+ (Equation 11) 
+It is thus possible to create a mapping between Pk and UCR for each value of k, using SER as a parameter. 
+Informative Text: 
+Calculation of Pk and UCR as in equations 10 and 11 is susceptible to numerical errors. These 
+calculations can be performed by various mathematical tools that provide binomial distribution 
+functions. As an example, the Excel function BINOM.DIST can be used to calculate Pk using the 
+formula “=BINOM.DIST(544-k, 544, 1-SER, TRUE)”. 
+ 
+Correlated errors can create different statistics than uncorrelated errors. In this method, the effect of 
+correlated errors is accounted for by calculating the UCR using Pk for several values of k and taking the 
+worst of the results as the estimate. If the estimates obtained with different values of k do not 
+significantly deviate from each other, it is an indication that the errors are uncorrelated. 
+Informative Text: 
+A specific example of correlated errors results from using 1/(1+D) precoding in the PHY. Precoding 
+typically results in errors occurring in pairs, and thus the statistics of errors with precoding is different 
+than it is without precoding, because even-numbered bins represent single-error events. Inspecting 
+several even values of k enables detection of poor links whether precoding is used or not. 
+ 
+Assuming an observation period of one minute, the Ntotal values provided in Table 6-12 are between 1e9 
+and 1e10, and probabilities of 1e-8 and higher can be verified with a reasonable level of confidence. For 
+a probability of 1e-8, the values of P6, P8, and P10 can be calculated by periodically reading the set of 
+counters FEC_codeword_error_bin_i, calculating the cumulative counts Nk, and dividing them by Ntotal,  

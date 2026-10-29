@@ -1,0 +1,42 @@
+# Calibration-ladder GF-04 RAIL-BOUND RUN (gap-fill
+# anchor): the L0 flat-ring identity at r=16 with B pinned to the
+# inter-node rail aggregate 400 B/ns — the anchor's own fetched config
+# statement ("H100.8 Shape with 16x200 Gbps RoCEv2 NIC" per node) under
+# the per-direction port convention (16 x 25 = 400 B/ns; the A6-convention
+# rail arithmetic, a config ceiling, never a measurement). This is the
+# physically-projected lower bracket of the 8->16 scaling claim: a uniform
+# ring at the rail rate predicts an asymptotic busbw(16) of 400, i.e. a
+# 16.03% drop from 476.37 — 11.4x the anchor's measured 1.41%; the
+# measured configuration therefore did NOT saturate the per-node rail
+# (per-cut-demand arithmetic in the stage record).
+#
+# claim_id is deliberately EMPTY (p1 stage boundary: zero claim edits).
+# Evidence level E0; comparison PROPOSED in results/calibration/.
+experiment_id: EXP-CAL-GF04-RING16-RAIL400-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp16_4gib.yaml
+infra_graph:
+  path: experiments/calibration/gf04/topologies/ring16_gf04_rail400_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf04/profiles/implementation_profile_l0_ring_cal_gf04_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring16_gf04_rail400_v1 (unidirectional ring, r=16, B=400 B/ns = the anchor's own 16x200 Gbps per-node rail arithmetic; the rail-bound lower bracket of the 8->16 pair; L=200 ns free)
+  workload: w1_dense_tp_decode tp16, payload 2^32 (common size of the 8->16 pair; gate-accepted)
+  implementation: analytical L0 free-parameter identity; the rail-bound bracket of the GF-04 scaling comparison — PROPOSED, review required
+evidence_level_requested: E0

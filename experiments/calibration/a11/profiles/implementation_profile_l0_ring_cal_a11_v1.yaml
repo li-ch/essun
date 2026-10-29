@@ -1,0 +1,52 @@
+# Implementation profile for the calibration-ladder A11 multi-hop
+# schedule contrast on the analytical L0 ring backend step
+# 3; anchor CAL-A11). Used by the ring topology of
+# sweep_a11_scale24576_v1.yaml only (the two store runs of this stage
+# are crossbar runs).
+implementation_profile_id: analytical_l0_ring_cal_a11_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT
+  / A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml.
+  ROLE for anchor CAL-A11: the ring is the multi-hop SCHEDULE contrast
+  at the anchor's own stated scale (r = 24,576) and link class (B = 50
+  B/ns per direction, the 400 Gbps optics reading): every hop one link
+  traversal at the registry latency L = 200 ns, so the identity charges
+  the per-hop latency 2*(r-1) = 49,150 times per AllReduce (latency
+  chain exactly 9,830,000 ns) against the crossbar ceiling row's 2; at
+  equal B the ring-minus-crossbar difference is exactly 2*(r-2)*L =
+  9,829,600 ns at every size (identity, verified on executed rows).
+  The row quantifies that SCHEDULE STRUCTURE ALONE — an in-model
+  choice, no congestion — moves CCT by factors (~2.22 at 192 MiB,
+  ~1.61 at 384 MiB, exact values in the record; flip at the exact
+  crossover M* = L*B*r = 245,760,000 B) far beyond the anchor's
+  30-40% congestion envelope: schedule, scale, and congestion state
+  are three separable confounders of comparable-or-larger magnitude
+  than every noise floor in the anchor set (CAL-A4 ~5%, CAL-A6 5-8%).
+  No schedule is claimed to be THE Meta behavior (the anchor's
+  per-collective tables are unstaged).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) placed at the CAL-A11 anchor link class 50
+  B/ns (declared per-direction reading of the staged 400 Gbps optics);
+  L (link.hop_latency_ns) at the A-L0-LAT registry point 200 ns
+  (CAL-A11 stages no latency number); r = 24,576 = the anchor's STATED
+  cluster scale (largest rank count any anchor pins); message sizes:
+  15-size ladder 24576*2^k (24 KiB - 384 MiB), every size divisible by
+  r (A-L0-DIV accepts, no bracketing), chosen to BRACKET the exact
+  ring crossover M* = 245,760,000 B with executed rows (192 MiB below,
+  384 MiB above). NO parameter was tuned toward any anchor output —
+  CAL-A11 stages no time series; the row exists to execute the
+  schedule-structure contrast, and its deltas vs the crossbar baseline
+  are arithmetic facts of the two identities at equal B and r.
+measurement_source: >
+  CAL-A11 staged numbers (Gangidi et al., ACM SIGCOMM 2024;
+  docs/calibration/anchors_staging.md §A11; anchor PROPOSED in
+  the anchor registry; confidence M-H — production
+  measurements verified from the public blog + abstract; per-collective
+  tables unstaged) — a SCALE-OUT fabric used as SECONDARY SANITY
+  CONTEXT exactly as plan §1.1 assigns; compared as PROPOSED evidence
+  in results/calibration/; not our testbed, no E3/E4 language.

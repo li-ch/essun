@@ -1,0 +1,37 @@
+ 596 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+packet and whether the network is best-effort or lossless. Implementations are free to map DSCPs to 
+additional traffic classes; however, the mapping is intended to maintain the independent queuing and 
+processing of the different packet types as specified in Section 3.6.4.7 of the congestion management 
+sublayer chapter. 
+4.1.4.1 Single instance of UET per network 
+As specified in the congestion management Section 3.6.4.7, UET RECOMMENDS the use of three traffic 
+classes for each UET PDC: low priority for UET data traffic (TC_low), medium priority for trimmed data 
+packets (TC_med), and high priority for UET control traffic (TC_high). Optionally, trimmed data packets 
+can use the TC_high traffic class if only two traffic classes are available. The priorities of the traffic 
+classes described here are relative to one another and not necessarily relative to other traffic classes 
+used by non-UET traffic. 
+UET requires at least two DSCPs, one for data packets called DSCP_ TRIMMABLE and one for control 
+packets called DSCP_CONTROL. Switches MUST be configured to map packets with DSCP_TRIMMABLE to 
+the TC_low traffic class and DSCP_ CONTROL to the TC_high traffic class (see 3.6.4.7of CMS). 
+If trimming is enabled, UET data packets SHOULD be marked as trimmable by setting the DSCP field to a 
+value from the trimmable category (e.g., see Section 4.1 with respect to DSCP_TRIMMABLE). 
+Switches MUST place trimmed packets into a different traffic class than untrimmed data packets to 
+ensure rapid delivery to the destination. Trimmed and control packets SHOULD be placed in separate 
+traffic classes, TC_med and TC_high respectively. 
+The codepoint configured for DSCP_TRIMMED MUST be distinct from DSCP_TRIMMABLE. 
+The codepoint configured for DSCP_TRIMMED MUST be different from DSCP _CONTROL. This enables 
+the receiver to easily detect trimmed packets and allows the implementation of different drop 
+thresholds in the switches for the TC_med traffic class, thus protecting the control traffic from excessive 
+trimmed traffic. 
+For DSCPs from the trimmed category (see Section 4.1), it is also useful if the receiver can distinguish 
+between incast (last hop) trims and non-last hop trims. 
+A unique DSCP called DSCP_TRIMMED_LAST_HOP SHOULD be set on packets that are trimmed at the 
+last hop switch (e.g. top-of-rack (TOR)) and are destined to directly connected hosts (e.g., TOR 
+downlinks). In such cases, packets with DSCP_TRIMMED_LAST_HOP are mapped to the TC_med or the 
+TC_high traffic class if only two TCs are available. 
+In summary, for a single UET instance, three traffic classes are RECOMMENDED and between three and 
+four DSCPs are used, depending on DSCP availability. The recommended number of DSCPs is four: 
+DSCP_TRIMMABLE for data and trimmable packets, DSCP_CONTROL for control packets, 
+DSCP_TRIMMED for trimmed packets, and DSCP_TRIM_LASTHOP for last hop trimmed packets. 

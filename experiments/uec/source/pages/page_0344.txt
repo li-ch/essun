@@ -1,0 +1,71 @@
+ 344 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-49 - Header Fields for NACK 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = PDS NACK 
+next_hdr 4 Encoding identifying UET Semantic type (Refer to SES 
+Section 3.4.3.8) 
+• Always set to UET_HDR_NONE for NACKs 
+flags(7 bits) 
+• rsvd 
+• m 
+• retx 
+ 
+• nt 
+• rsvd 
+ 
+1 
+1 
+1 
+ 
+1 
+3 
+pds.flags = [rsvd, m, retx, nt, rsvd] 
+• Reserved 
+• 1 => Associated request packet was ECN marked 
+• 1 => The NACK’d packet was a retransmit  
+         (Refer to Section 3.5.11.8.4) 
+• 0 => RUD/ROD, 1 = RUDI [NACK TYPE] 
+• Reserved 
+nack_code 8 Field indicating why the NACK was transmitted 
+Enumerated in Section 3.5.12.7 
+vendor_code 8 Vendor-specific field, no processing requirements and 
+no interop required—intended to allow vendors to 
+collect statistics on event types, etc. This field may be 
+ignored. 
+Interpretation of this field is outside the scope of this 
+document. 
+nack_psn 
+ 
+or 
+ 
+nack_pkt_id 
+32 Packet sequence number associated with the received 
+packet that triggered the generation of the NACK 
+packet. 
+ 
+If pds.flags.nt is set, this field is pds.nack_pkt_id—the 
+NACK’d packet was a RUDI packet. The pds.spdcid and 
+pds.dpdcid fields are not valid. 
+spdcid 16 Source PDCID assigned by FEP that is the source of the 
+packet 
+• If pds.nack_code indicates PDC establishment 
+failure (e.g., out of PDC resources), this field is 
+cleared to 0 and is not valid. 
+Cleared to 0x0 if pds.flags.nt is set. 
+ 
+dpdcid 
+ 
+16 
+Destination PDCID assigned by the FEP that is the 
+destination of the packet. Cleared to 0x0 if pds.flags.nt 
+is set. 
+ 
+Figure 3-75 - NACK Header Format 

@@ -1,0 +1,19 @@
+ 579 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-135 defines the UET TSS header fields and the default field values. 
+Table 3-135 - TSS Headers Fields 
+Field Size (bits) Note 
+type 5 Header type, this MUST be set to UET_TSS 
+sp 1 Set if SSI header present in packet 
+r 1 reserved 
+an 1 Association number 
+sdi 24 Secure Domain Identifier 
+ssi 32 Source identifier within an SC (optional) based on SP=1 
+tsc 64 Time-stamp counter (16-bit epoch, 48-bit counter) 
+UET entropy header, TSS header, PDS header, SES header, UET payload, and ICV MUST fit completely 
+within a maximum payload defined by the transport (Payload MTU). This implies all the listed 
+components MUST be completely contained within a single packet. 
+ 
+Figure 3-149 - TSS with UFH_32 Encapsulation 
+ 

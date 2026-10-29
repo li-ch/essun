@@ -1,0 +1,53 @@
+# Calibration-ladder A11 sweep #1: where does the
+# L0 crossbar identity sit on the CAL-A11 LINK-BANDWIDTH axis (Gangidi
+# et al., "RDMA over Ethernet for Distributed AI Training at Meta
+# Scale", ACM SIGCOMM 2024: 400G single-mode optics between RTSWs and
+# CTSWs; path-pinning degraded training "up to more than 30%";
+# E-ECN + QP scaling "up to 40% improvement for the AllReduce
+# collective"; docs/calibration/anchors_staging.md §A11)?
+#
+# CAL-A11 is a SCALE-OUT rail-optimized RoCE fabric, not a
+# GPU-to-GPU scale-up fabric: per docs/calibration/CALIBRATION_PLAN.md
+# §1.1 it CANNOT calibrate O-CCT for scale-up and its staged role is
+# SECONDARY SANITY CONTEXT for exactly the effects L0 declares out of
+# scope (congestion, load balancing). Its per-collective throughput
+# tables live in the paper PDF and are NOT staged, so NOTHING below is
+# compared to any anchor CCT. NOTHING IS TUNED: the B ladder {35, 50,
+# 64} was fixed by anchor/registry arithmetic BEFORE any stage output
+# was read — 50 = the anchor point (400 Gbps optics per direction per
+# link under the declared decimal + IEEE per-direction reading) and
+# this sweep's BASELINE; 35 = 0.7 x 50, the ">30% path-pinning
+# degradation" mapped onto the free B axis as an effective-bandwidth
+# envelope row (the MECHANISM — congestion/ECMP/QP state — is out of
+# the L0 input space by the backend's own capability declaration; the
+# row locates the envelope's MAGNITUDE, asymptotic CCT ratio exactly
+# 50/35 = 10/7, and demonstrates the only in-model signature such a
+# swing can have: a free-scalar displacement); 64 = the A-L0X-BW /
+# A-L0-BW registry point (placement row; asymptotic CCT ratio exactly
+# 25/32). L fixed at the A-L0X-LAT registry point 200 ns (CAL-A11
+# stages NO latency number; the exact mirror of stage A9, which swept
+# L at fixed B). Every completion time below is an arithmetic fact of
+# t = 2(r-1)/r*M/B + 2L at r=8.
+#
+# Payload grid: the same 12-size ladder 8*2^k (8 KiB -> 8 GiB) as
+# stages A1/A2/A7/A9 (cross-stage comparability); r=8 divides every
+# size, so the A-L0-DIV / A-L0X-DIV gates accept the exact ladder with
+# NO bracketing. The ladder spans both regimes so the record can state
+# the exact B-axis displacement signature (ratio -> 1/B-proportional
+# asymptote at large M, latency-constant at small M).
+sweep: cal_a11_link_bw_v1
+workload: experiments/calibration/a11/workloads/w1_dense_tp_decode_tp8_8gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a11/topologies/crossbar8_a11_link50_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a11/topologies/crossbar8_a11_degraded35_v1.yaml
+    - experiments/calibration/a11/topologies/crossbar8_a11_link50_v1.yaml
+    - experiments/calibration/a11/topologies/crossbar8_a11_registry64_v1.yaml

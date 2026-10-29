@@ -1,0 +1,45 @@
+ 126 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+that is described in Section 2.2.5.3.5.1. The security Binding Parameters are specified in Table 2-33. A 
+UET provider that implements the UET security protocol MUST support the security binding parameters 
+specified in Table 2-33. 
+Table 2-33 - UET Security Binding Parameters 
+Parameter Name Size (bits) Description 
+Alg 4 Cipher Algorithm 
+0x00: AES-GCM-256 
+0x01-0x0F: Reserved 
+Rekey 4 Rekey Mode 
+Bit   0:0 0 => not AN, 1 => AN 
+Bit   1:1 0 => not Automatic, 1 => Automatic 
+Bits 2:3 Reserved, MUST be 0 
+Mode 4 Crypto Mode 
+0x00: Direct 
+0x01: Cluster 
+0x02: Client-server 
+0x03-0x0F: Reserved 
+Rekey Shift 6 Shift for automatic rekeying operation 
+Rekey Mask 64 Mask for automatic rekeying operation 
+Encap-type 2 0b00: Native IPv4 
+0b01: Native IPv6 
+0b10: UDP over IPv4 
+0b11: UDP over IPv6 
+Coff 12 Crypto Offset (in units of 4B) 
+Aoff 12 Authentication offset  
+AN 1 Association Number (i.e., Key Generation ID) 
+SDI 31 Secure Domain Identifier 
+SSI 32 Secure Source Identifier 
+ 
+A kernel driver that implements the UET security protocol MUST also support rekeying using the rekey 
+parameters specified in Table 2-34. 
+Table 2-34 - UET Rekey Parameters 
+Parameter Name Size (bits) Description 
+AN 1 Association Number (i.e., Key Generation ID) 
+SDI 31 Secure Domain Identifier 
+SSI 32 Secure Source Identifier 
+current_epoch 16 Current key epoch 
+IVMASK 96 IVMASK 
+Key Type 8 Type of Key: Raw or Wrapped 
+Key Length 16 Length of Key (in bytes) 
+Key 512 Key / Wrapped Key 
+ 

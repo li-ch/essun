@@ -1,0 +1,31 @@
+ 367 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+else if PSN was already received 
+  // transmit ACK – either guaranteed or default SES Response 
+else pass to SES for processing 
+ 
+ 
+3.5.12.7 PDS Negative Acknowledgements 
+NACK packets are used to provide explicit indications that a packet was dropped. The format is 
+illustrated in Figure 3-83. NACKs MUST be generated according to the events and requirements 
+described in Table 3-66. If a PDS Request with the pds.flags.retx flag set is received and a NACK is 
+transmitted in response, the NACK MUST set the pds.flags.retx flag. NACKs MUST use the EV from the 
+packet that triggered the NACK. 
+ 
+ 
+Figure 3-82 - PDS_MPR Concept 
+         
+           
+Source must not transmit 
+beyond this PSN
+                 
+In  ight packets    ACKs
+        
+         
+         
+ACK duplicate packetsDrop duplicate packets without ACK  
+Expected PSN Range
+          may be lower than 
+                    
+temporarily when MPR is reduced

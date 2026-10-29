@@ -1,0 +1,37 @@
+ 687 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+DA SA EtherType=0x88CC ChassisID TLV Port IDTLV Time ToLive TLV Optional TLV Optional TLV End Of LLDPDU TLV FCS
+LLDPDU
+ 
+Figure 5-18 - Ethernet Frame Containing an LLDPDU 
+The destination address of the LLDPDUs carrying the UE organizationally specific LLDP TLVs SHALL use 
+the nearest bridge group address listed in Table 5-32: 
+Table 5-32 - LLDP Database Group Addresses 
+IEEE 802.1 Group Address Name Group Address 
+Nearest bridge group address 01:80:c2:00:00:0e 
+Nearest customer bridge group address 01:80:c2:00:00:00 
+Nearest non-TPMR bridge group address 01:80:c2:00:00:03 
+ 
+5.3.2 UE Organizationally Specific LLDP TLVs 
+The UE organizationally specific LLDP TLVs are used to: 
+i) Advertise capabilities available at a UE Link. 
+ii) Negotiate and activate common link capabilities. 
+The UEC defines the UE Link Negotiation Options TLV and the UE Link CBFC TLV for configuration of UE 
+link features. The UE Link Negotiation Options TLV is used to discover and configure advanced UE link 
+capabilities. The UE Link Negotiation CBFC TLV is used to discover and configure UE link credit-based 
+flow control (CBFC). 
+5.3.2.1 UE Link Negotiation Options TLV (Options TLV) 
+The UE Link Negotiation Options TLV is exchanged via LLDP and conforms to the LLDP TLV specification 
+[1] for organizationally specific TLVs. The UE Link Negotiation Options TLV is also called the Options TLV 
+within this specification. 
+The Options TLV is used to advertise the following UE link features: 
+• Link layer retry (LLR): Provides link-level re-transmissions for packets with errors. 
+• Inter-packet gap reduction (IPGR): Also known as idle reduction. Reduces the number of idle 
+bytes between frames. 
+• Congestion signaling (CSIG): L2 tag used to providing telemetry. 
+• Unified forwarding header (UFH): Provides a compressed L2/L3 header. 
+The Options TLV contains flags for each feature that use a suffix naming convention to designate their 
+definition and use.  Flags that do not require negotiation use the suffix “-C” to indicate the feature is 
+available and enabled (i.e., “capable”).  For “-C” flagged features, a companion “-S” flag may be provided 
+to indicate the current operating state of the feature.  Flags use the suffix “-E” to indicate the feature is 

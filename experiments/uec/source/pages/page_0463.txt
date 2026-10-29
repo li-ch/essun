@@ -1,0 +1,32 @@
+ 463 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+For use of pds.ack_cc_state.rcvd_bytes at the source, refer to Section 3.6.10.3. 
+3.6.9.2.2 pds.ack_cc_state.rcv_cwnd_pend and pds.ack_cc_state.rc for CC_NSCC 
+The pds.ack_cc_state.rcv_cwnd_pend field is used by the destination to request that the source 
+reduces its congestion window because the destination is becoming backlogged. The 
+pds.ack_cc_state.rc field indicates whether the source should restore the original value of the 
+congestion window when flow control ends. Use is described in Section 3.6.13.2. 
+3.6.9.2.3 pds.ack_cc_state.ooo_count for NSCC 
+The pds.ack_cc_state.ooo_count field MAY be used to trigger an early loss detection event at the 
+source as described in the PDS Section 3.5.15.4.1. The pds.ack_cc_state.ooo_count field is an 
+instantaneous estimate of the number of out-of-order packets, and its value goes up and down. It is not 
+cumulative, and the field does not wrap. While pds.ack_cc_state.ooo_count is carried in the 
+pds.ack_cc_state field, its value is not used by the congestion management algorithms. 
+The pds.ack_cc_state.ooo_count field is a count of all packets received on each PDC that are out of 
+order, meaning at least one packet with a lower PSN has not yet been received. If out-of-order count is 
+implemented on a PDC, a 16-bit pds.ack_cc_state.ooo_count for that PDC MUST be supported. This 
+covers the maximum range of active PSNs on a PDC, which is –32640 as defined in 3.5.11.13 
+Support for setting pds.ack_cc_state.ooo_count is optional; if a destination does not calculate the out-
+of-order count, then pds.ack_cc_state.ooo_count MUST be set to 0xFFFF to indicate the field is invalid. 
+3.6.9.2.4 pds.ack_cc_state.service_time for NSCC 
+This field is carried in the ACK_CC when pds.cc_type = CC_NSCC. The pds.ack_cc_state.service_time 
+field is used to adjust the RTT calculation in NSCC, ensuring it accounts for processing delays at the 
+destination FEP. Refer to Section 3.6.4.2 for usage of this field. 
+Service time is defined as the time when the first byte of the associated ACK is transmitted by the 
+destination’s MAC minus the time the first byte of a packet triggering the ACK arrived at the 
+destination’s MAC. This time may be estimated, e.g., the packet may be buffered after the transmit time 
+is captured, with a goal of providing ~500 nsec accuracy. The pds.ack_cc_state.service_time field is 
+represented using 128 nsec granularity such that the least significant bit represents 128 nsec. 
+When set to 0x0, pds.ack_cc_state.service_time is not valid and MUST be ignored. The encoding of 0x0 
+simplifies the process of ignoring service time for many of the calculations. 

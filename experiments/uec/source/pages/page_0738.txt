@@ -1,0 +1,39 @@
+ 738 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 6-7 - Ethernet-specified FLR and resulting MTBPE 
+Ethernet link data rate Specified maximum FLR 
+(for 64-octet frames with minimum 
+interpacket gap) 
+Worst-case MTBPE (approx.) 
+100 Gb/s 6.2e-10 1.5 minutes 
+200 Gb/s 6.2e-11 14.6 minutes 
+400 Gb/s 6.2e-11 7.3 minutes 
+800 Gb/s 6.2e-11 7.1 minutes 
+1.6 Tb/s 6.2e-11 3.6 minutes 
+ 
+Informative Text: 
+The worst-case MTBPE would occur for borderline-compliant links. In typical networks, most 
+components are expected to have margins, and the MTBPE on most links can be expected to be 
+higher by several orders of magnitude. 
+6.3.1 Relationship between performance metrics 
+6.3.1.1 Relationship between UCR and FLR 
+UCR can be considered a fundamental quality metric of an Ethernet link. It is a function of lower-level 
+metrics that are not observable and thus are beyond the scope of this specification. 
+Ethernet uses RS-FEC with a technique called codeword interleaving, in which traffic can be spread 
+across multiple codewords that are interleaved in time. The number of codewords interleaved together 
+is referred to as the codeword interleaving ratio (CIR) and is either 4, 2, or 1, where 1 is equivalent to no 
+interleaving. A higher CIR generally improves the RS-FEC’s ability to handle correlated errors and 
+reduces the link UCR while increasing the FLR for a given value of UCR. 
+Informative Text: 
+The reduction of UCR due to the increased CIR can be orders of magnitude. In comparison, the 
+increase of FLR for a given UCR is up to a factor of 4, so the net effect is beneficial. 
+ 
+Codeword interleaving varies between data rates and PHY types: 
+• For 100 Gb/s Ethernet, 2-way interleaving (CIR=2) is defined as OPTIONAL for backplane and 
+copper cable PHYs (100GBASE-KR1 and 100GBASE-CR1). If this option is not selected, then 
+CIR=1. For all other PHY types (specifically optical PHYs), interleaving is not available (CIR=1). 
+• For 200 Gb/s and 400 Gb/s Ethernet, 2-way interleaving (CIR=2) is used for PHY types using 
+up to 100 Gb/s signaling, and 4-way interleaving (CIR=4) is used for PHY types using 200 Gb/s 
+per lane signaling. 
+• For 800 Gb/s and 1.6 Tb/s Ethernet, 4-way interleaving (CIR=4) is used for all PHY types. 

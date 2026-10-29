@@ -1,0 +1,35 @@
+ 375 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  
+ 
+PDS MUST build a UET_DEFAULT_RESPONSE when a duplicate PSN or ACK Request CP is received—or 
+send a NACK if SES is still processing the packet. UET_DEFAULT_RESPONSE is constructed as described in 
+Table 3-69. 
+Table 3-69 - Rules for Constructing UET_DEFAULT_RESPONSE 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+PDS Processing 
+list 2 Set to: UET_EXPECTED 
+opcode 6 Set to: UET_DEF_RESPONSE or UET_NO_RESPONSE 
+ver 2 Clear to zero 
+return_code 6 Set to: RC_OK or RC_NULL 
+message_id 16 If duplicate PSN and SES header includes ses.message_id, copy 
+that field. If CP, copy from pds.payload (Section 3.5.16). 
+ri_generation 8 If present in the packet that triggered the ACK, then use that 
+value otherwise set to zero 
+JobID 24 If duplicate PSN, copy ses.JobID. 
+If CP, set to zero. 
+modified_length 32 If duplicate PSN, copy ses.request_length. 
+If CP, set to zero. 
+   
+3.5.14 Transmit Scheduling  
+PDS should avoid starving any PDCs sharing a traffic class for an extended period of time while servicing 
+other PDCs. PDS may provide hierarchical scheduling where some PDCs are given higher priority than 
+other PDCs in the same traffic class. This applies to PDS requests, CPs, and acknowledgements. 
+Higher priority SHOULD be done as weighted fair queuing (WFQ) rather than strict priority (SP), as SP 
+scheduling may lead to blocking or starvation. 
+Figure 3-85 illustrates a potential transmit scheduling architecture that is well aligned with UET. 

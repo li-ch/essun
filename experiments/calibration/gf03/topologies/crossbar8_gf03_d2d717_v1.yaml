@@ -1,0 +1,35 @@
+# Calibration-ladder GF-03 topology: fully-connected (crossbar) of 8 ranks
+# at the MEASURED nvbandwidth D2D reading B = 717 B/ns — GF-03's
+# "`nvbandwidth` device-to-device: unidirectional 782 / 717 GB/s (per
+# direction)" (docs/calibration/anchors_gapfill.md §GF-03), second of the
+# two quoted unidirectional per-pair readings. Same recorded pairing
+# ambiguity as crossbar8_gf03_d2d782_v1 (uni/bi pairing unstated; 2x each
+# unidirectional exceeds both bidirectional quotes). Decimal units,
+# 1 GB/s = 1 B/ns.
+#
+# ROLE: the PESSIMISTIC single-pair reading — the lower bracket of the
+# plateau-placement sweep. The measured collective peak 837 exceeds it by
+# 16.7% (recorded finding: the per-pair microbenchmark underpredicts the
+# collective; see crossbar8_gf03_d2d782_v1 and the calibration record).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-03 collective numbers; 717 is the anchor's own staged D2D quote,
+# fixed BEFORE any model output was read. L = 200 ns is the A-L0X-LAT
+# registry point (KEEP).
+topology_id: crossbar8_gf03_d2d717_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 717
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; single-port injection shared
+  across the 7 peers (A-L0X-PORT; in-domain for the NVSwitch class).
+  Provenance: B = 717 B/ns is the anchor's staged nvbandwidth
+  device-to-device UNIDIRECTIONAL per-direction reading (lower of the two
+  quoted; confidence M; gap-fill anchor, PROPOSED, not yet an integrated anchor
+  row); executed as the pessimistic aggregate reading of the fabric the
+  837 collective peak measures. L = 200 ns free registry point. Values
+  are anchor measurements-as-staged / free-registry points, never our
+  measurements, never tuned.

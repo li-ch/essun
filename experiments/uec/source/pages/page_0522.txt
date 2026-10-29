@@ -1,0 +1,40 @@
+ 522 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.18.4 Congestion Signals  
+Congestion signals are key metrics gathered either from the network or directly at the endpoint to 
+inform congestion management decisions. These signals provide critical information regarding current 
+network conditions and performance. For instance, incoming acknowledgment (ACK) packets contain 
+service time information and an indication that the associated request was explicit congestion 
+notification (ECN) marked. Additionally, endpoint time measurements can be utilized to measure round-
+trip time (RTT) for each packet, offering insight into latency variations and network responsiveness. 
+Updates to such congestion signals often occur at a higher frequency than the invocation of the CC or LB 
+algorithm itself. As a result, signals may undergo multiple updates before being processed, with 
+accumulated values maintained according to predefined rules such as summation or maximum 
+aggregation. This ensures that the CC and LB algorithms operate on an appropriately synthesized set of 
+data, allowing for accurate congestion control adjustments while maintaining computational efficiency. 
+Ultra Ethernet categorizes congestion signals into three distinct types: mandatory signals, optional 
+signals, and vendor-specific signals. Mandatory signals form the core set that all PCM implementations 
+MUST support to ensure baseline compatibility and functionality across deployments. Optional signals 
+provide additional capabilities that MAY be implemented selectively based on specific requirements, 
+allowing flexibility in adapting congestion management behavior to different use cases. Vendor-specific 
+signals MAY be used to enable further extensibility, permitting individual vendors to introduce 
+customized metrics tailored to proprietary networking solutions. While the mandatory signals ensure 
+interoperability across all UE implementations, optional and vendor-specific signals offer adaptability to 
+specialized workloads and infrastructure configurations. Any UE PCM implementation MUST support the 
+default signal set, MAY include any subset of the optional signals, and vendors MAY extend the available 
+signal set with their own enhancements. 
+Signals are configured through a YAML definition specified at algorithm load time as outlined in Section 
+3.6.18.8.5. 
+3.6.18.4.1 Signal Accumulation Operators 
+PCM defines a set of accumulation operations for processing congestion signals. These operations 
+determine how multiple signal updates are combined over time. The specific accumulation functions 
+used in UE are formally specified in Table 3-106, providing a structured approach to handling signal 
+updates within the congestion management framework. Any implementation MUST support all defined 
+accumulation operations. Table 3-110 lists mandatory and default accumulators for all signals. 
+Table 3-106 - Mandatory Signal and Global Variable Accumulation Operators 
+Accumulation Operation Description 
+uet_op_sum Running sum 
+uet_op_max Running maximum 
+uet_op_min Running minimum 
+uet_op_last Simply store last update (overwrite) 

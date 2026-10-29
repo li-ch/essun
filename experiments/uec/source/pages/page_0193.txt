@@ -1,0 +1,40 @@
+ 193 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4 Semantics Sublayer (SES) 
+UET specifies a semantic sublayer (SES) with support for a range of use cases. The first use case is 
+traditional scale-out networking for AI and HPC using the AI Base, AI Full, and HPC profiles. A subset of 
+these semantics is adapted and extended to support local scale-up use cases as part of the Unified Local 
+profile. 
+3.4.1 Semantic Use Cases 
+The UET SES supports multiple use cases.  These include: 
+• The OFI libfabric API 
+• Networks using the Unified Local profile. 
+3.4.1.1 Support for the OFI libfabric API 
+UET specifies a semantic sublayer (SES) that supports the OFI libfabric API. To support libfabric, the 
+semantic sublayer uses concepts that have been deployed in HPC networking products as part of 
+libfabric implementations. This specification defines optimized profiles for AI and HPC deployments that 
+allow seamless interoperability between the common features of the profiles. Mappings of the popular 
+send/receive semantics in *CCL to the proposed AI semantics are discussed in Section 3.4.10. 
+The products that have seeded this initial effort are inspired (to varying degrees) by the semantics 
+exposed through the Portals 4.x API [5]. In particular, various pieces of nomenclature are similar to what 
+is found in Portals 4, as is much of the addressing and authorization model. Portals 4 is mentioned here 
+as a resource for additional insight into some of the concepts. 
+ 
+Because libfabric was modeled after Portals 4, a strong semantic match remains between the two. 
+However, libfabric does not define how to handle various challenges for a wire protocol that lie beneath 
+the API (e.g., unexpected messages). Portals does not define a wire protocol either, and many of the 
+Portals semantics relate to NIC or software behavior that is beyond the scope of UET (e.g., event 
+delivery). By necessity, UET defines some behaviors of network hardware and software, but only to the 
+extent necessary to build compatible devices. The UET on the wire protocol does not intend to achieve 
+compliance with any existing semantics (neither IBTA nor Portals 4) and interoperates only with a peer 
+UET device. 
+SES defines the behavior of processing the wire protocol only to the extent that is necessary to achieve 
+interoperability between implementations of the libfabric API over the wire. FEP semantics and 
+implementation details are left to individual implementation choices, and the split of the 
+Informative Text: 
+SES uses the terms “initiator” and “target” in various places. Whereas many implementations use 
+“sender” and “receiver” respectively, those terms are often difficult when talking about transactions 
+like “read” or even more complex transactions like rendezvous. For example, in a rendezvous 
+transaction, an initial request is sent from the initiator to the target. The target then issues a “read” to 
+pull the data from the initiator. 

@@ -1,0 +1,86 @@
+ 190 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Transaction Type Notes AI 
+Base 
+AI 
+ Full 
+HPC Unified 
+Local 
+Direct Memory 
+Addressing 
+Applies to RODL operations using 
+UET_HDR_REQUEST_LCL 
+   MUST 
+Tagged Operations:  
+Exact Match 
+Applicable to tagged send and  
+deferrable tagged send and rendezvous 
+tagged send (if supported) 
+ MUST MUST  
+Tagged Operations:  
+Wild Card Match 
+Applicable to tagged send and rendezvous 
+tagged send 
+  MUST  
+Multi receive Support FI_MULTI_RECV     
+Sync groups Sync group support for writes with header 
+data and non-fetching atomic completing 
+actions 
+    
+3.3.5 Packet Formats 
+Table 3-4 lists the SES header formats (SES Section 3.4.3) that implementations of each profile MUST 
+support. All fields and flags in the headers MUST be supported unless specifically called out as an 
+exception in the table. 
+Table 3-4 - Profile Summary—SES header formats 
+Header 
+Format 
+Description AI 
+Base 
+AI 
+ Full 
+HPC Unified 
+Local 
+Standard 44 B full header MUST MUST MUST  
+Deferrable 
+Send 
+44 B header with restart token  MUST   
+Deferrable 
+Send RTR 
+44 B header with restart token  MUST   
+Deferrable 
+Send as 
+Send 
+Target should treat arriving deferrable sends as send  MUST MUST MUST  
+Optimized 
+Non-
+matching 
+20 B header without match, initiator ID, header data, and  
+message ID fields (single packet) 
+  MUST  
+Optimized 
+Small 
+Message 
+32 B header without message ID and with either header data 
+OR offset (single packet) 
+  MUST  
+Optimized 
+Local 
+Transaction 
+12 B header without message ID, with support for packing 
+messages. 
+8 B header using addressing relative to the previous 
+message’s address 
+[UET_HDR_REQUEST_LCL] 
+   MUST 
+Rendezvous 
+Extension 
+24 B header with eager length and address information for 
+read 
+  MUST  
+Atomic 
+Extension 
+4 B header with opcode, datatype, control MUST MUST MUST MUST 
+Compare-
+and-Swap 
+Two operand header format  MUST MUST MUST 

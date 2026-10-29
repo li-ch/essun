@@ -1,0 +1,38 @@
+ 351 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.11.8 pds.flags 
+This field is pds.type specific and includes control bits that indicate the start of a PDC, the presence of 
+optional fields such as congestion control information, etc. UET implementations parse associated 
+header fields based on the state of these flag bits. 
+3.5.11.8.1 pds.flags.pdc_type 
+This field is used in the NOOP CP and Negotiation CPs to indicate if the associated PDC is RUD, ROD, or 
+RODL. This field is ignored in all other CPs. 
+• ’b00 RUD 
+• ’b01 ROD 
+• ’b10 RODL 
+• ’b11 reserved 
+This flag is ignored in all other CPs. 
+3.5.11.8.2 pds.flags.syn 
+This flag in the RUD/ROD/RODL Request header is set during PDC establishment. Refer to Section 
+3.5.8.2. Once a PDC is established, the target PDCID is learned by the initiator. This flag is cleared once 
+the target PDCID is learned. 
+3.5.11.8.3 pds.flags.ar 
+If the ACK Request CP field (pds.flags.ar) is set in the RUD/ROD/RODL Request header, the source 
+requests the destination to transmit a PDS ACK. Upon receiving a PDS header with the pds.flags.ar bit 
+set, the destination transmits a PDS ACK with the pds.ack_psn field set to the pds.psn field in the 
+received packet. 
+The pds.flags.ar bit SHOULD be set on the last packet transmitted when the PDC has no additional work 
+(i.e., no packets pending for transmission). The congestion control algorithm determines other 
+conditions for setting the pds.flags.ar bit. 
+3.5.11.8.4 pds.flags.retx 
+The pds.flags.retx flag MUST be set in the RUD/ROD/RODL Request header of a retransmitted packet. 
+This flag triggers the generation of a PDS ACK. A destination should prioritize accepting retransmitted 
+packets. 
+The pds.flags.retx flag is used by congestion control algorithms. Refer to the CMS sections 3.6.12.3 and 
+3.6.13.5 for more information. 
+3.5.11.8.5 pds.flags.m 
+The pds.flags.m flag MUST be set if and only if the packet that triggered the response was ECN‑marked. 
+This indicates that the triggering packet experienced congestion. Refer to the CMS sections 3.6.10.3 and 
+3.6.16.4 for details on how the M flag is used at a source for congestion control and path-aware 
+multipath spraying. 

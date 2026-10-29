@@ -1,0 +1,39 @@
+ 479 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+allowed rate while the network delay appears to be low to NSCC. 
+3.6.13.1 Calculating RTT 
+NSCC needs to know the RTT sample measured from the ACK arrival. The PDC SHOULD store the 
+transmit timestamp for each packet sent and update this timestamp each time the packet is 
+retransmitted. Generally, the source will subtract the stored transmit timestamp from the time of the 
+ACK arrival and subtract off the destination’s Service_Time to calculate the RTT. However, care must be 
+taken with retransmitted packets, where there is a potential ambiguity as to whether the ACK is for the 
+original or the retransmitted packet. To resolve this ambiguity, a source SHOULD store whether a packet 
+has been retransmitted. Data packets carry the pds.flags.retx bit indicating that a packet is a 
+retransmission. This pds.flags.retx flag is echoed in the ACK message. Thus, if the pds.flags.retx bit in 
+the ACK is not set, and the packet has been retransmitted, the ACK MUST NOT be used to update the 
+RTT measures. 
+An implementation MAY choose to not update RTT measures when the pds.flags.retx bit in an ACK is 
+set. It is preferable, however, to update RTT based on ACKs of retransmissions, but again care must be 
+taken to avoid any potential ambiguity when a packet is retransmitted a second time. It is 
+RECOMMENDED that a source records if a packet is retransmitted a second (or subsequent) time. If a 
+packet has been retransmitted only once, and the pds.flags.retx bit is set in the corresponding ACK, then 
+it is safe to update RTT. Otherwise, it is unsafe, and the RTT should not be updated. One way to 
+implement this is to maintain a two-bit rtx_count, which records whether a packet has been 
+retransmitted a) never, b) once, or c) more than once. For clarity, the pseudocode in Section 3.6.13.6 
+assumes such an implementation, but other implementations are permitted. 
+3.6.13.2 Destination Flow Control 
+The destination can modulate the source’s transmit rate using a receiver window penalty, 
+Rcv_Cwnd_Pend. This flow control is intended to be used if the destination is itself congested and is 
+not keeping up with the arrival rate of traffic. The pds.ack_cc_state.rcvr_cwnd_pend field is returned in 
+the ACK and MUST be set to a value between 0 and 127. For example: 
+• Setting pds.ack_cc_state.rcvr_cwnd_pend to 0 does not flow control sources, i.e., this field has 
+no effect. 
+• Setting pds.ack_cc_state.rcvr_cwnd_pend to 127 slows all the sources by the maximum 
+amount, down to a window of one packet per RTT. 
+• Setting pds.ack_cc_state.rcvr_cwnd_pend to 64 in all SACKs sent for an RTT halves all source 
+windows (cwnd), thus reducing the bandwidth to the receiver. 
+ 
+The pds.ack_cc_state.rc flag in the ACK indicates whether the source should save the current value of 
+cwnd when Rcv_Cwnd_Pend indicates a period of receiver flow control has started, and restore the 
+original cwnd value when receiver flow control ends. 

@@ -1,0 +1,25 @@
+ 418 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o Because CACK_PSN = maximum PSN transmitted, there are no clears required. That is, if 
+pds.ack_psn_offset = 0 then all PSN are cleared. 
+ 
+If an ACK is dropped in transit from the destination to the source, three scenarios are possible: 
+1. Cumulative ACKs are in use and the dropped ACK was not guaranteed delivery. 
+o In this case, the next ACK to arrive will carry a pds.sack_bitmap field and pds.cack_psn 
+field indicating the packet did arrive at the destination, and there is no stateful 
+response. 
+o No further action is needed, as the source can infer the needed information. 
+2. Cumulative ACKs are in use and the dropped ACK was guaranteed delivery. 
+o In this case, the next ACK to arrive will carry a pds.sack_bitmap field indicating the 
+packet arrived at the destination; the pds.cack_psn field allows the source to infer that 
+the ACK requires guaranteed delivery. 
+▪ In the ROD case, there is no need to track the highest acknowledged PSN; since 
+ACKs arrive in order, the source can immediately infer the ACK was lost—then 
+check CACK_PSN to determine if the lost ACK was guaranteed delivery or not. 
+o The source should generate an ACK Request CP if required, or it may use GoBackN. 
+3. Cumulative ACKs are not in use and an ACK was dropped. 
+ 
+Figure 3-107 - ROD Send Sequence for Dropped PDS Request Packet 
+ 
+ 

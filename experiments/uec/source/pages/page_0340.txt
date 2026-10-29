@@ -1,0 +1,41 @@
+ 340 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.10.8 ACK_CC   
+The ACK with congestion control format is used to carry information for the congestion management 
+sublayer. When NSCC is used, the ACK_CC and/or ACK_CCX are used. 
+The ACK_CC format is shown in Figure 3-71. The ACK_CCX fields are described in Table 3-45. 
+ 
+Table 3-45 - Header Fields for ACK_CC 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+First 12 bytes 96 Identical to PDS ACK header but with pds.type set to ACK_CC 
+cc_type  4 This field defines the contents of pds.ack_cc_state field that is used to 
+support CC algorithms; defined in CMS Section 3.6.9 
+cc_flags 
+• rsvd 
+ 
+4 
+pds.cc_flags = [rsvd] 
+• Reserved 
+mpr 8 Maximum PSN range—used to set a maximum window on source PDC; 
+defines the maximum number of outstanding (not yet cleared) packets 
+tracked at destination 
+sack_psn_offset 16 Signed representation of the offset from CACK_PSN to SACK_PSN. Done 
+to reduce the size of the field from 32 bits to 16 bits.  
+Base SACK_PSN defines the lowest PSN in the SACK bitmap. 
+sack_bitmap 64 Selective ACK Bitmap, 1 => ACK, each bit in the map represents one PSN 
+in the range: [SACK_PSN … SACK_PSN+63]. 
+ack_cc_state (64b) 64 Congestion control state generated at the destination and carried to the 
+source; content defined by pds.cc_type field. 
+ 
+3.5.10.9 ACK_CCX 
+The extended congestion control ACK format is one of the tools used to enable flexibility in the 
+congestion management schemes as those schemes evolve in the future. When NSCC is used, at least 
+one of ACK_CC or ACK_CCX is used. 
+ 
+Figure 3-71 - ACK_CC Format 

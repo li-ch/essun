@@ -1,0 +1,11 @@
+# Honesty artifact: NO standard semantics have been ingested yet.
+standard_profile_id: none_v1
+status: PROPOSED
+statement: >
+  The analytical L0 backend models a transport-agnostic bandwidth-latency
+  ring. No UEC, UALink, UnifiedBus, CXL or NVLink normative behavior is
+  claimed, represented, or derived anywhere in this increment. This file
+  exists so the experiment manifest is explicit about that absence instead of
+  silently implying a standard profile.
+normative_values: none
+source_anchors: none

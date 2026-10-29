@@ -1,0 +1,49 @@
+ 744 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+CCR (measured) UCRest2 (calculated) 
+Assuming uncorrelated errors 
+0.344 1e-18 
+0.439 1e-16 
+0.549 1e-14 
+0.668 1e-12 
+0.728 1e-11 
+0.820 4.3e-10 
+0.836 8.5e-10 
+ 
+ 
+Figure 6-1 - UCRest2 as a function of CCR, assuming uncorrelated errors 
+The uncorrelated error model is not accurate in many practical cases. Correlated errors increase the 
+UCR, so this estimate is biased and can predict a higher MTBPE than the true value. The effect of 
+correlated errors can increase the actual UCR by an unknown factor, and therefore UCRest2 should be 
+considered inaccurate and not be used to predict the MTBPE of a link. Despite this possible inaccuracy, 
+this estimate can be useful for identifying outliers in the statistics of links in a large network. 
+6.3.2.3 Estimation of UCR using the codeword error bin counters 
+If FEC_codeword_error_bin_i are available, the UCR may be estimated based on these counters. This 
+estimate is more reliable than the one based on FEC_corrected_cw_counter (see 6.3.2.2) because it 
+accounts for correlated errors, too. 
+1E 30
+1E 2 
+1E 28
+1E 2 
+1E 26
+1E 25
+1E 24
+1E 23
+1E 22
+1E 21
+1E 20
+1E 1 
+1E 18
+1E 1 
+1E 16
+1E 15
+1E 14
+1E 13
+1E 12
+1E 11
+1E 10
+1E 0 
+0 0.2 0.4 0.6 0.8 1
+UCR2est
+CCR (measured)

@@ -1,0 +1,41 @@
+ 273 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+the initiator MAY terminate the message early using the UET_MSG_ERROR mechanism as described in 
+Section 3.4.6.4.1. 
+3.4.6.4 Unrecoverable Errors 
+Unrecoverable errors are reported as failed messages. Message-level failures are not fatal to the 
+connection and are not fatal to the device. Device-fatal errors are beyond the scope of this specification. 
+Errors that tear down a connection are defined as part of the PDS specification. 
+3.4.6.4.1 Handling of Unrecoverable Errors Detected at the Initiator 
+A variety of errors may be detected at the initiator that are fatal to the message. Such errors range from 
+hardware failures (e.g., a PCI Express read completion timeout) to programming errors (e.g., a user 
+process initiates a message with an address that cannot be translated) to other errors that make data 
+unavailable (e.g., a process terminates after starting a message). Each of these cases is unrecoverable 
+and may occur while a message is in flight. Two mechanisms are provided for signaling of uncorrectable 
+initiator errors to the target. 
+The initiator error (ses.ie) bit in the semantic header is used to indicate that the header was properly 
+constructed, but that the payload cannot be used. Implementations MAY use the ses.ie bit to indicate 
+errors encountered at the initiator, but implementations are not required to have any class of error that 
+causes the ses.ie bit to be set. Packets with the ses.ie bit set MUST NOT access memory at the target. 
+Messages containing packets with the ses.ie bit set MUST use a non-RC_OK ses.return_code. If the 
+initiator error is the first error, the return code MUST be RC_INITIATOR_ERROR. Messages containing 
+packets with the ses.ie bit set MUST indicate an error at the target if a completion queue entry is 
+provided or if a counter is used to indicate completion. Because the ses.ie bit indicates that the header 
+was properly constructed, any completion delivered at the target MUST include the completion queue 
+data (i.e., header data from the wire) if the ses.hd bit was set to indicate that such data is available. 
+The UET_MSG_ERROR opcode is used to terminate messages without transmitting all of the constituent 
+packets. This mechanism MAY be used when an unrecoverable error is detected at the initiator, or as a 
+general mechanism for early termination when the initiator receives a recoverable error indication from 
+the target. The UET_MSG_ERROR opcode MAY be sent at any time—including the packet with ses.som 
+set. When using a RUD PDC, the initiator MAY wait for all outstanding packets of the message to 
+complete, then issue the final packet of the message with the UET_MSG_ERROR opcode; however, this 
+is not required, and target implementations MUST NOT depend on it. All header fields within a 
+UET_MSG_ERROR MUST be set to the value that the packet would have used if it had not been in 
+error—except for the payload length. The payload length MAY use any size between 0 and the size the 
+original packet would have taken. Only one packet per message may indicate UET_MSG_ERROR. A 
+UET_MSG_ERROR packet MUST set ses.eom. Packets with the UET_MSG_ERROR opcode MUST NOT 
+access memory at the target. Messages terminating with the UET_MSG_ERROR opcode MUST use a 
+non-RC_OK return code. If UET_MSG_ERROR is the first error indication, the return code MUST be 
+RC_INITIATOR_ERROR. Messages terminating with the UET_MSG_ERROR opcode MUST indicate an 
+error at the target if a completion queue entry is provided or if a counter is used to indicate completion. 

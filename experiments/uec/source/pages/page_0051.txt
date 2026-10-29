@@ -1,0 +1,82 @@
+ 51 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A node is a computing device with one or more FEPs. A cluster is a set of such nodes connected by a 
+fabric (Note that the simplified diagram in Figure 1-5 is for illustration purposes and shows only a single 
+node in the cluster.  A typical UE deployment can have hundreds of thousands of nodes). An accelerator 
+is a computing module or device designed for the efficient execution of specific functions. A CPU is a 
+generic processor for arbitrary computation. CPUs and accelerators have memory attached, and a FEP 
+has access to that memory through virtual addressing. A node may have local storage and contain one 
+or more CPUs and/or one or more accelerators. 
+A user is an entity with access privileges to nodes of a cluster. A user can execute processes. A process is 
+an instance of a program executing on an OSI owned by a specific user and having a private virtual 
+address space (VAS) in the memory. A process is identified by a process ID (PID) unique to the OSI it runs 
+in. A process address space ID (PASID) is a unique identifier for a VAS within each OSI. 
+Clusters can be used in two fundamentally different ways that can potentially co-exist: 
+1. Executing in a parallel job model (e.g., MPI/*CCL ,or SHMEM).  
+2. Executing in a client/server model in which clients can connect to servers (e.g., storage or a 
+Function as a Service (FaaS)). 
+Each packet carries an identifier indicating which model it is participating in. The parallel job execution is 
+characterized by a “run to completion” model, while the client/server execution typically runs the server 
+for an indefinite time, serving an indefinite number of clients (often with complex reliability and 
+availability guarantees). 
+ 
+Figure 1-5 - System Overview 
+ 
+OS
+Process
+PASID=X
+Process
+PASID=Y
+Fabric Plane 1
+Fabric
+Fabric Plane N
+Cluster
+FI (Fabric Interface)
+FEP             
+FA=
+x.x.x.x
+FI (Fabric Interface)
+User
+Node
+CPU
+ Memory
+FEP
+FA=
+y.y.y.y
+Accelerator
+Port
+FEP
+FA
+=
+w.w.w.w
+Port
+Switch
+Port
+Path
+Port
+Switch
+Port
+Port
+Port
+pdc
+ccc
+ pdc
+ccc
+ pdc
+ccc
+pdc
+ccc
+ pdc
+ccc
+ pdc
+ccc
+Port
+pdcccc
+ pdcccc
+ pdc
+ccc
+pdcccc
+ pdcccc
+ pdcccc
+Storage

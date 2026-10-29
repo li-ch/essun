@@ -1,0 +1,57 @@
+ 36 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+Folded Clos Type of multistage network 
+topology composed of crossbar 
+switches. Also known as a fat tree. 
+Frame A unit of data transmission on an 
+Ethernet network using layer 2 
+encapsulation, starting with the 
+MAC address and ending with the 
+CRC. 
+Initiator  The FEP that initiates the creation 
+of a PDC for RUD and ROD modes. 
+Link A physical connection between 
+two ports. 
+Local network A network interconnecting a 
+limited number of accelerators, 
+typically with very high bandwidth 
+and optimized for small read and 
+write operations. Also referred to 
+as ‘scale-up’. 
+Lossless network A network in which all network 
+devices (switches and endpoints) 
+avoid packet loss due to buffer 
+overflow by transmitting a packet 
+only when it is known that the link 
+peer has available buffers to 
+receive and store the packet. 
+Packet loss avoidance is applied to 
+all links in the network. 
+Message One or more packets with the 
+same message ID. A message is 
+split into a spatially (with respect 
+to memory addressing) ordered 
+set of packets at the source. One 
+or more messages (and supporting 
+packets) make up a transaction.  
+Negative acknowledgement packet 
+(NACK) 
+A packet used by the UET to 
+implement reliability. NACKs are 
+transmitted by the destination PDC 
+to the source PDC to provide an 
+explicit indication of packet loss. 
+Node A computing device with one or 
+more FEPs. A node may contain 
+one or more CPUs and/or one or 
+more accelerators. 
+Packet  An IPv4 or IPv6 datagram or UFH 
+packet transferred across the 
+network. Packets are routed 
+through the network along paths. 
+Packets of the same PDC traversing 
+different paths may arrive in a 
+different order than how they 
+were sent. 

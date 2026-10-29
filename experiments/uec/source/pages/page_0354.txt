@@ -1,0 +1,42 @@
+ 354 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-57 - CC_TYPE Format 
+ACK Type CC_TYPE MNEMONIC Usage 
+ACK_CC 0 CC_NSCC NSCC 
+ACK_CC 1 CC_CREDIT TFC, RCCC 
+ACK_CC 2—13 - Reserved for future use 
+ACK_CC 14—15  - Reserved for proprietary extensions 
+ 
+Table 3-58 - CCX_TYPE Format 
+ACK Type CCX_TYPE MNEMONIC Usage 
+ACK_CCX 0 NSCC_CSIG NSCC with CSIG 
+ACK_CCX 1 RCCC_CSIG RCCC with CSIG 
+ACK_CCX 2—13 - Reserved for future use 
+ACK_CCX 14—15  - Reserved for proprietary extensions 
+ 
+Refer to the CMS Section 3.6.9 for details on the defined formats. 
+3.5.11.12  NCCX_TYPE 
+The NCCX_TYPE field is used to define the contents of the pds.nack_ccx_state field in the NACK_CCX 
+packet. 
+Table 3-59 - NCCX_TYPE Contents 
+NACK Type NCCX_TYPE MNEMONIC Usage 
+NACK_CCX 0 CSIG CSIG Reflection Header (common format for both 
+NSCC and RCCC) 
+NACK_CCX 0—13 - Reserved for future use 
+NACK_CCX 14—15 - Reserved for proprietary extensions 
+ 
+3.5.11.13 pds.mpr (Maximum PSN Range) 
+The pds.mpr field specifies the available PSN tracking state at a destination given its currently available 
+resources. It is set to a default value of Default_MPR when a PDC is created. The maximum PSN range 
+supported is 255, which specifies the maximum MP_Range of 32640 (see Table 3-60). The destination 
+may update this value via the ACK_CC pds.mpr field based on locally available resources. 
+The pds.mpr field specifies the MP_Range by using the following formula: 
+if (pds.mpr == 0)  
+    MP_RANGE = Override_MPR_Zero_Value 
+else  
+    MP_RANGE = pds.mpr *128 packets 
+ 
+ 
+ 
+ 

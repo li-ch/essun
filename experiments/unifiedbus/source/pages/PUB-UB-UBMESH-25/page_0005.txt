@@ -1,0 +1,27 @@
+Figure 3. Traditional Datacenter Network Architectures
+
+2.3. Datacenter Network Architectures
+
+Designing a large-scale LLM training cluster involves one of the most critical considerations: how to organize numerous NPU resources into a cohesive distributed system? This involves determining the appropriate datacenter network architecture. Traditional data centers and supercomputing systems have explored lots of topologies, but these may not be well-suited for large-scale LLM training. Fig. 3 illustrates some popular topologies:
+
+Clos: Traditional datacenters usually adopt the Clos architecture, which employs two or three tiers of switches to symmetrically connect NPUs/CPUs, offering high performance and adaptability to various traffic patterns. However, its high cost is a drawback, primarily due to the extensive use of high-performance switches and optical modules.
+
+3D Torus: Unlike Clos, which relies on switch-based interconnects, the 3D Torus connects adjacent NPUs directly. While reducing costs, the 3D Torus offers lower NPU-to-NPU bandwidth and is less accommodating to complex communication patterns such as All-to-All communication, which is prevalent in MoE models (Rajbhandari et al., 2022).
+
+Dragon-Fly: The Dragon-Fly topology (Kim et al., 2008) organizes switches into interconnected groups, where each switch within a group is directly connected to every other switch. These groups are further linked via long-range cables, allowing packets to be routed indirectly. This architecture offers reduced dimensionality in traditional datacenter and HPC environments. DF is cheaper than Clos but still costly due to full NPU-switch bandwidth requirements, and its architecture performs poorly for LLM training traffic, especially in P2P/AllReduce scenarios.
+
+Fugaku Tofu: Fugaku Tofu (Ajima et al., 2009) proposes a unique 6D Torus topology for HPC applications. However, similar to 3D Torus, it offers lower NPU-to-NPU bandwidth and is less accommodating to complex communication patterns.
+
+In summary, how to design a high performance and cost-efficient datacenter network architecture for large-scale LLM training is still an open problem.
+
+3. UB-Mesh Architecture
+
+To meet requirements R1-R4 and adhere to principles P1-P3 in Section 1, we propose UB-Mesh architecture. UB-Mesh  adopts a novel nD-FullMesh topology that maximizes the use of direct electrical-cable interconnects, thereby reducing the need for expensive high-bandwidth switches and optical modules. We then present a series of hardware modules specifically designed to construct UB-Mesh. Finally, we will discuss the detailed architecture design of the UB-Mesh-Pod, the concret 4D-FullMesh implementation of UB-Mesh, with several engineering constraints and tradeoffs fully considered.
+
+3.1. The nD-FullMesh Topology
+
+Figure 4. UB-Mesh’s nD-FullMesh Topology and Possible Physical Mapping
+
+As illustrated in Fig. 4, UB-Mesh introduces a novel nD-FullMesh topology that emphasizes direct interconnects across all network tiers. This topology begins with adjacent nodes forming a 1-D full-mesh, where each node is connected to every other node in the same tier. Extending this concept, nodes within adjacent 1-D full-meshes are then directly interconnected, creating a 2-D full-mesh. This process continues recursively, with adjacent 2-D full-meshes forming a 3-D full-mesh, and so on, ultimately scaling to an n-D full-mesh as needed. This flexible virtual topology can be seamlessly mapped to various physical NPU organizations: 1-D full-meshes on individual boards, 2-D full-meshes within racks, 3-D full-meshes across rack rows, 4-D full-meshes within a floor’s rack groups, and even 5-D full-meshes spanning entire buildings, and beyond.
+
+Such a hierarchically localized topology has several advantages in building next-generation LLM training datacenters. First, since nD-FullMesh forms tightly-coupled direct-connection domain in each network dimension and can provide tier-over-tier oversubscribed bandwidth, it fully leverages the data locality and dense-to-sparse traffic patterns inherent in LLM training (Sec.2.2). Also, we can flexibly adjust the per-node bandwidth allocation for each dimension to meet the specific requirements from future LLM training tasks. For instance, as shown in Fig. 3-(a), assuming that there is a 6D-FullMesh topology, we can adjust the bandwidth in X​Y​ZXYZ and α​β​γ\alpha\beta\gamma dimensions by allocating different number of interconnect links in NPUs’ IO modules, as illustrated in Fig. 3-(b).

@@ -1,0 +1,537 @@
+source:
+  source_id: STD-UEC-11
+  title: Ultra Ethernet Specification 1.1
+  url: https://ultraethernet.org/wp-content/uploads/sites/20/2026/10/UE-Specification-1.1.pdf
+  access: PUBLIC_READ
+  pdf_sha256: 4c8436ec7daa627ad6cce0680bea66cfac496dfe4e217631064e68acafe04531
+  page_count: 764
+  extractor: pypdf 6.21.2
+  notes: 'PDF kept out of git (.cache/); CC BY-ND scope: quotes in the anchor registry are <= 30 words
+    with attribution, no redistribution of the document itself'
+  pages_dir: experiments/uec/source/pages
+anchors:
+- id: UEC11-S1-INTRODUCTION
+  section: '1'
+  title: Introduction
+  page: 28
+  quote: with a mission to enhance Ethernet for use in AI and HPC.
+  page_sha256: 7b67557680daac50714e246cbffdabce839e9d162888f19d40e00b144f2e7358
+- id: UEC11-S1.1-BACKGROUND
+  section: '1.1'
+  title: Background
+  page: 28
+  quote: The Ultra Ethernet Consortium (UEC) is an industry effort
+  page_sha256: 7b67557680daac50714e246cbffdabce839e9d162888f19d40e00b144f2e7358
+- id: UEC11-S1.2-CONVENTIONS
+  section: '1.2'
+  title: UE Specification Conventions
+  page: 30
+  quote: devices supporting a given profile exhibit interoperability and functionality as described in
+    these specifications
+  page_sha256: 78f9aceaf723f6e11b3455f7116b628455ed455b6e6cb8e9f25374447b9f2ad5
+- id: UEC11-S1.3-SYSTEM-VIEW
+  section: '1.3'
+  title: System View and Nomenclature
+  page: 49
+  quote: The field of AI and HPC is evolving at a very fast pace.
+  page_sha256: b619cbfd00290b6447509eefd1fbffcbeac925aaae6671299da79240a09cb7e0
+- id: UEC11-S1.4-SOFTWARE
+  section: '1.4'
+  title: Software
+  page: 60
+  quote: AI inference is often run only in scale-up networks because it does not require more than 100
+    endpoints.
+  page_sha256: b37f32b28e2863e3b9561ab0775cfbdf554df177afbb5ce8aa7559e2ed4a3976
+- id: UEC11-S1.5-NETWORKING
+  section: '1.5'
+  title: Networking
+  page: 62
+  quote: The control plane software interacts with data plane functionality through an abstract API.
+  page_sha256: 249d45d1ef8ed17eff2d7baad708cbfa376a5d3113088f62b62164d40eb5a83a
+- id: UEC11-S1.5.1.3-LOCAL-SCALE-UP
+  section: 1.5.1.3
+  title: Local Scale-up Network
+  page: 64
+  quote: Scale-up networks are typically very specialized short-range interconnects that often come with
+    only a single or limited tier of switches or possibly no switch at all.
+  page_sha256: b71191a5db94645d9f22609ee6187f13e85fac30e9dc41a265f9d708eda2c0c4
+- id: UEC11-S1.5.2-UET-OBJECTIVES
+  section: 1.5.2
+  title: UE Transport (UET) Objectives
+  page: 65
+  quote: UET mainly targets RDMA service and attempts to provide the best, modernized, and highly optimized
+    transport service for carrying RDMA in AI and HPC workloads.
+  page_sha256: 823f32a49428e2074514cbb841b1ffa6e10161622053354be5c533ded247e7e2
+- id: UEC11-S1.5.3.3-TOPOLOGIES
+  section: 1.5.3.3
+  title: Topologies
+  page: 67
+  quote: Topology is a critical part of an AI and HPC fabric as it sets the performance bounds by establishing
+    the network diameter and bisection bandwidth.
+  page_sha256: b27353675c5794990fbe659d6f588280096f67b40d4d0a14d9c84749ee9f25cf
+- id: UEC11-S1.6-LAYERS-OVERVIEW
+  section: '1.6'
+  title: 'UE Specification Overview: Layers'
+  page: 71
+  quote: The UE specification spans multiple layers from software down through the physical layer.
+  page_sha256: a33de0b7b0213456e571948b5dcf6a0ac0200ee7d7975019e25b1dd0818f7ef0
+- id: UEC11-S2-SOFTWARE-LAYER
+  section: '2'
+  title: UE Software Layer
+  page: 77
+  quote: The UEC develops specifications, software APIs, and open-source code for various AI/HPC use cases/applications.
+  page_sha256: 327003ec48b605b627fc92fa734c0db6e6a03ff624ed4126d717e246d5f52928
+- id: UEC11-S2.1-SOFTWARE-OVERVIEW
+  section: '2.1'
+  title: UE Software Overview
+  page: 77
+  quote: Support of UE transports and API within the OFI ecosystem (libfabric).
+  page_sha256: 327003ec48b605b627fc92fa734c0db6e6a03ff624ed4126d717e246d5f52928
+- id: UEC11-S2.2-LIBFABRIC-MAPPING
+  section: '2.2'
+  title: UE Libfabric Mapping
+  page: 81
+  quote: This document specifies the mapping between libfabric v2.0, also known as Open Fabrics Interfaces
+    (OFI), and the Ultra Ethernet Transport (UET v1.0)
+  page_sha256: d4dd9031cdd21e7b549c1e7703fdb30e621d418685dd59b3c2e800feaf953b78
+- id: UEC11-S2.3-VERBS-MAPPING
+  section: '2.3'
+  title: UE Verbs Mapping
+  page: 135
+  quote: UET verbs are device and transport primitive operations for accessing hardware devices supporting
+    the Ultra Ethernet Transport.
+  page_sha256: 41addf0b05a1f34bc74866c584e9bd5211b71551107205d069add0337dbd5534
+- id: UEC11-S2.4-INC
+  section: '2.4'
+  title: In-Network Collectives (INC)
+  page: 154
+  quote: High-performance computing (HPC) and artificial intelligence (AI) workloads frequently require
+    multiple accelerators to coordinate as groups of cooperating processes
+  page_sha256: a06df4da95370952f0828ac34ba4761d7457c83341f5853518be6434ec6dfdf7
+- id: UEC11-S2.4.1-INC-ASSUMPTIONS
+  section: 2.4.1
+  title: Assumptions
+  page: 154
+  quote: UE INC MUST operate over a lossless fabric (using PFC or CBFC) over the UET ROD transport between
+    the FEP and the SEP.
+  page_sha256: a06df4da95370952f0828ac34ba4761d7457c83341f5853518be6434ec6dfdf7
+- id: UEC11-S2.4.3-INC-OPERATIONS
+  section: 2.4.3
+  title: INC Operations
+  page: 156
+  quote: An implementation MUST support at least one broadcast implementation, either UET_INC_BCAST (where
+    non-root FEPs do not synchronize with the SEP, enabling pipelining of multiple BCAST operations)
+  page_sha256: c94d4a48db9b4c4c7f0bcb370ae86adaf67529fa38ad79671b4a0ecd930fe2ce
+- id: UEC11-S2.4.6-INC-ORDERING-MODES
+  section: 2.4.6
+  title: Operator Ordering Modes
+  page: 158
+  quote: 'INC implementations MUST support at least one of the following operator ordering modes when
+    configured through the IM:'
+  page_sha256: 709be077f1b8853330ffcc187a007a87d956090d272f6f7a36fb8c9690e24864
+- id: UEC11-S2.4.10-INC-SWITCH-CAPS
+  section: 2.4.10
+  title: INC Switch Required and Optional Capabilities
+  page: 161
+  quote: 'A switch MUST support the following capabilities to be INC switch compliant:'
+  page_sha256: b28bf3a0c1e499aa05aaa41fda7425f4f2d5de821dde7ef78c03b689dda3d853
+- id: UEC11-S2.4.11-INC-TRANSPORT
+  section: 2.4.11
+  title: INC Transport
+  page: 162
+  quote: INC leverages existing UET services and introduces a compact extension field to a semantic sublayer
+    header
+  page_sha256: 96b5fa4c87cbab0bbf36cc0381ec174a0c4a8a03ccd71c7b92d251fdf575c27e
+- id: UEC11-S3-TRANSPORT-LAYER
+  section: '3'
+  title: UE Transport Layer
+  page: 178
+  quote: Its goals are minimal tail latency and highest network utilization.
+  page_sha256: cead1e69e22ed9d89fc7346324e2c74232885a9d904d693133a42a8eae17039b
+- id: UEC11-S3.1-UET-SCOPE
+  section: '3.1'
+  title: UET Scope, Scale, and Reach
+  page: 178
+  quote: The transport supports up to millions of endpoints (NIC ports) with the ability to address up
+    to billions of processes.
+  page_sha256: cead1e69e22ed9d89fc7346324e2c74232885a9d904d693133a42a8eae17039b
+- id: UEC11-S3.2-UET-COMPONENTS
+  section: '3.2'
+  title: UET Layers, Components, and Capabilities
+  page: 179
+  quote: The objective of UET is to serve the breadth of all those use cases with a single transport.
+  page_sha256: f065408569743c66bb107ed803ba782ef9294b26be8d8373f1f8e968bc3c45bb
+- id: UEC11-S3.3-PROFILES
+  section: '3.3'
+  title: Profiles and Capabilities [normative]
+  page: 187
+  quote: PDS is responsible for delivering packets from sender to receiver.
+  page_sha256: 9f3956e1c0f6912594af8ca41d7ffae6780ffbee23c7385464c0657a2e37af4f
+- id: UEC11-S3.4-SES
+  section: '3.4'
+  title: Semantics Sublayer (SES)
+  page: 193
+  quote: UET specifies a semantic sublayer (SES) with support for a range of use cases.
+  page_sha256: e21e06ae5dbd3b41e2eaf6900d3035082362669536d033d0f94ac3e2677c634b
+- id: UEC11-S3.4.2-SEMANTIC-CONCEPTS
+  section: 3.4.2
+  title: Definition of Semantic Concepts
+  page: 194
+  quote: This section articulates the semantics provided by the UET to support AI and HPC applications.
+  page_sha256: 29ad970f875b20fa9a34cee3d23b167c12287b7c2e5d1537c86e5b8b121869a1
+- id: UEC11-S3.4.9-MEMORY-MODEL
+  section: 3.4.9
+  title: 'UE Transport Semantics: Memory Model'
+  page: 283
+  quote: The AI Base, AI Full, and HPC profiles provide a memory model that is consistent with options
+    that are available through the libfabric API.
+  page_sha256: adadeb3883c2bd95fb07c7e998ef20f02fb513f67af43386cff745acfb45aed2
+- id: UEC11-S3.4.9.5-UNIFIED-LOCAL-MEMORY
+  section: 3.4.9.5
+  title: Memory Model for the Unified Local Profile
+  page: 286
+  quote: The transport for the Unified Local profile is defined only over the RODL delivery mode; thus,
+    it guarantees idempotency.
+  page_sha256: 197ccd56cdab6e8f487ad9f07fbeef5d41d3749dca9ed975673b6ae72b0bdcf1
+- id: UEC11-S3.5-PDS
+  section: '3.5'
+  title: Packet Delivery Sublayer (PDS)
+  page: 292
+  quote: The packet delivery sublayer is the part of the Ultra Ethernet Transport (UET) protocol responsible
+    for delivering packets over IP/Ethernet networks.
+  page_sha256: 3c4ee3b2a22bfa08f7376a03305481e07ffec3c3d90aabdbef86985186b9b447
+- id: UEC11-S3.5.3-PDS-SERVICES
+  section: 3.5.3
+  title: Packet Delivery Services
+  page: 297
+  quote: SES requests PDS to deliver a packet with specified ordering and reliability.
+  page_sha256: f73628dc7787ef708f821d7ee4ec31f1248c5ee1e94bcfb86013ced791cc55ab
+- id: UEC11-S3.5.6-RELIABILITY-ORDERING
+  section: 3.5.6
+  title: Reliability and Ordering
+  page: 306
+  quote: Five combinations of reliability and ordering define the packet delivery modes.
+  page_sha256: 250e380c5204ad00ad0013b70f4027bd7d863d236ad17b6a210a1bf4b861c160
+- id: UEC11-S3.5.15-LOSS-DETECTION
+  section: 3.5.15
+  title: Loss Detection and Recovery
+  page: 376
+  quote: PDS MUST detect the loss of packets using the methods listed in Table 3-70.
+  page_sha256: 1aad0515973f3e6d2e1a2192411776b369845271951f1214ee0cdb4e713d2e74
+- id: UEC11-S3.5.20-RUD
+  section: 3.5.20
+  title: Reliable Unordered Delivery
+  page: 401
+  quote: A RUD PDC is a reliable PDC established between a single initiating FEP and a single target FEP
+    that guarantees packets are delivered once and only once.
+  page_sha256: e7ac892de03c2d1eed4f91b88ef6c98d08cd7193795ecc27daaec3e7a6ad7018
+- id: UEC11-S3.5.21-ROD
+  section: 3.5.21
+  title: Reliable Ordered Delivery
+  page: 415
+  quote: A ROD PDC is a reliable PDC established between a single initiating FEP and a single target FEP
+    that guarantees packets are delivered at most once.
+  page_sha256: 53168c55dbd02d4fd84bb6d6ec5c2bd4a82215386dab4bd592615be8c614d09b
+- id: UEC11-S3.5.22-RODL
+  section: 3.5.22
+  title: Reliable Ordered Delivery for Local Networks
+  page: 420
+  quote: RODL is a variation of ROD that is optimized for scale-up networks.
+  page_sha256: bc6c563463c6bbf36be3fb6b14ceaa37943fb7f756fe856c8643d0e908cbf182
+- id: UEC11-S3.5.23-RUDI
+  section: 3.5.23
+  title: RUDI
+  page: 424
+  quote: RUDI provides reliable delivery for idempotent operations. It does not use PDCs.
+  page_sha256: 33f67bbedaaa40570f85b3915d426230114b5839f3fa51250fa57cf2cdfec048
+- id: UEC11-S3.6-CMS
+  section: '3.6'
+  title: Congestion Management Sublayer (CMS)
+  page: 439
+  quote: UET defines an end-to-end congestion management solution, UET-CC (UET Congestion Control), for
+    packet buffer congestion in a best-effort (sometimes called ”lossy”) Ethernet network.
+  page_sha256: 4d14188d99908125e480599fcc9ca26ae7a83aee9dded9b78e593c87ddd80b95
+- id: UEC11-S3.6.13-NSCC
+  section: 3.6.13
+  title: Network Signal-based Congestion Control
+  page: 476
+  quote: NSCC uses a congestion window, ccc.cwnd, that limits the amount of outstanding in-flight data.
+  page_sha256: fd3193b58b2503b563035c5fb7f2c3136d10a0bbd5da8beb7b8879ca29b28e60
+- id: UEC11-S3.6.14-RCCC
+  section: 3.6.14
+  title: UET Receiver-Credit Congestion Control
+  page: 491
+  quote: The UET receiver-credit congestion control (RCCC) service is derived from EQDS[11].
+  page_sha256: 08b0c6bc944a61776f40a8f9f6b3d683d8824abfa2c357dd81fc2f2e54a7304e
+- id: UEC11-S3.6.15-TFC
+  section: 3.6.15
+  title: Transport Flow Control (TFC)
+  page: 505
+  quote: A source MUST NOT transmit a packet if it does not have credit
+  page_sha256: 288f1855223344370e6cd779b411b237327a8c86d177c442372917fb64c30fe4
+- id: UEC11-S3.6.16-MULTIPATH
+  section: 3.6.16
+  title: Multipath Path Selection
+  page: 508
+  quote: It is RECOMMENDED that a UET endpoint performs multipath load balancing for RUD and RUDI traffic,
+    but the choice of precise implementation is left to implementations.
+  page_sha256: 8f67e6de286dfd106eed37419badd90a34dbe6a4bc9632115c87a7e5f27812c1
+- id: UEC11-S3.7-TSS
+  section: '3.7'
+  title: Transport Security Sublayer (TSS)
+  page: 548
+  quote: This section defines an optional method of end-to-end confidentiality, integrity, and basic service
+    protection for UET.
+  page_sha256: 239e2563ad1ea40f37b74fc630fbeb1220142d42c1f5ab6b4cb07fbaabe54425
+- id: UEC11-S3.8-REFERENCES
+  section: '3.8'
+  title: References
+  page: 585
+  quote: Tunnelling of Explicit Congestion Notification
+  page_sha256: c44549ea7e18e87091cca4d5976de9c108f3474073e3c2d4cc17143b4b7f7d2e
+- id: UEC11-S4-NETWORK-LAYER
+  section: '4'
+  title: UE Network Layer
+  page: 590
+  quote: If the buffer is unable to accommodate an arriving packet, a switch either drops the packet or
+    signals the upstream port to pause the flow of traffic.
+  page_sha256: 44b3f53102a280897f3d868158c006ef9ad5f30faa2025be7933fc82c2bb9774
+- id: UEC11-S4.1-PACKET-TRIMMING
+  section: '4.1'
+  title: Packet Trimming
+  page: 590
+  quote: Network switches store packets in buffers prior to forwarding them on busy egress ports.
+  page_sha256: 44b3f53102a280897f3d868158c006ef9ad5f30faa2025be7933fc82c2bb9774
+- id: UEC11-S4.2-CSIG
+  section: '4.2'
+  title: Congestion Signaling (CSIG)
+  page: 600
+  quote: Contemporary machine learning (ML) training and high-performance computing (HPC) workloads compute
+    across a switched network fabric in closely coupled, synchronous fashion.
+  page_sha256: 6db1208746f49d053799c9e82463c5174d0804abb79bca0c6f6857a14bca800a
+- id: UEC11-S4.2.7-CSIG-PROFILES
+  section: 4.2.7
+  title: CSIG Profiles
+  page: 619
+  quote: 'We define two CSIG configuration profiles: a base profile, which describes the set of signals
+    that all CSIG- capable devices MUST support'
+  page_sha256: 37faa836d1120bb00aaab7b70e458cdb112cce1d8c51b278f828d65cea2e3df0
+- id: UEC11-S4.2.9-CSIG-SIGNALS
+  section: 4.2.9
+  title: CSIG Signals
+  page: 621
+  quote: This section describes each signal, the algorithm for any associated computation, boundary conditions,
+    and the signal’s applicability in example use cases.
+  page_sha256: 9fd87b4c5c0a6a07a8f76eb7f5146de8b3891737a78f1c58794e30dae8eb49da
+- id: UEC11-S5-LINK-LAYER
+  section: '5'
+  title: UE Link Layer
+  page: 630
+  quote: These optional-to-implement specifications enhance performance and reliability of the link layer
+    while also simplifying configuration.
+  page_sha256: 3f65020c3e320194010cad371eeffed324fddc61ce31fe592650721f0a700967
+- id: UEC11-S5.1-LLR
+  section: '5.1'
+  title: Link Layer Retry (LLR)
+  page: 631
+  quote: The impact of delay on efficiency becomes more significant as network link speeds, utilization,
+    and scale increase.
+  page_sha256: bb58779c6b3c879304a7455091059a2ff75ac3376a4d9dee86fa1aa1b86f1e46
+- id: UEC11-S5.1.3-LLR-OPERATION
+  section: 5.1.3
+  title: LLR Operation
+  page: 635
+  quote: The ON mode of operation enables the LLR mechanism and provides lossless link-level behavior
+    for LLR-eligible frames
+  page_sha256: fde8640b94c8e3d8a51a0edbc39e6b47faaef4cfa2abc6ff624493ac2af932a6
+- id: UEC11-S5.2-CBFC
+  section: '5.2'
+  title: Credit-based Flow Control
+  page: 650
+  quote: This specification defines the protocols, procedures, and message formats that enable credit-based
+    flow control (CBFC) on a per-priority basis on a UE full duplex link
+  page_sha256: d01951e4b1fa01ebd31ac0d104197263898b9bd805543ff1940abbc113f13ebd
+- id: UEC11-S5.2.4-CBFC-OVERVIEW
+  section: 5.2.4
+  title: CBFC Overview
+  page: 652
+  quote: The sender keeps track of the available buffer space at the receiver in units of credits
+  page_sha256: 35f8aa9aa23afdcc124a51ac518c1a739d9229f7a83d8fe8dccc60622bebaee7
+- id: UEC11-S5.2.5-CBFC-OPERATION
+  section: 5.2.5
+  title: CBFC Operation
+  page: 653
+  quote: CBFC is a link-layer function defined only for a pair of full-duplex MACs connected by one point-to-point
+    link.
+  page_sha256: fd1ab56cf53d6b875c05e5cbddeefe7f0f9fb3a9794d2713190add86462625d3
+- id: UEC11-S5.2.10-CBFC-COMPLIANCE
+  section: 5.2.10
+  title: CBFC Compliance Requirements
+  page: 678
+  quote: The receiver’s input buffer is typically divided into cells, and the cell size (in bytes) is
+    the input buffer allocation unit.
+  page_sha256: 051ac984cd04fea054e8c4cacd69d40591cbebfa7b36e847d766a121cec5fe45
+- id: UEC11-S5.3-LINK-NEGOTIATION
+  section: '5.3'
+  title: UE Link Negotiation
+  page: 685
+  quote: defines the negotiation of optional link local features for the UE link layer
+  page_sha256: 104ac424af64660a5a9fdc1978c149f557620529468e14fc9936d09705e9e090
+- id: UEC11-S5.3.2.2-CBFC-TLV
+  section: 5.3.2.2
+  title: UE Link Negotiation CBFC TLV (CBFC TLV)
+  page: 692
+  quote: Determine if CBFC is supported by the presence or absence of the CBFC TLV in both the local and
+    remote LLDP databases.
+  page_sha256: fc8b753137dea952dc095befb968ae8b7e5a220090d93c34ba9483d3f1c85baa
+- id: UEC11-S5.3.2.2-CBFC-TLV-HANDSHAKE
+  section: 5.3.2.2
+  title: UE Link Negotiation CBFC TLV (CBFC TLV)
+  page: 693
+  quote: The sender SHALL NOT use CBFC for a VC unless the remote receiver has set R_VC_RTR = TRUE for
+    the VC.
+  page_sha256: 0281a3176daf561bc4f9444136c609048dc4c26b5ab95861ab9d39ffb9d27a66
+- id: UEC11-S5.4-OPTIMIZED-HEADERS
+  section: '5.4'
+  title: Optimized Headers and Packet Rate Improvement
+  page: 716
+  quote: This flexibility comes at the cost of larger packet overheads.
+  page_sha256: 1b75838ed1a5ea8bce5b475767c9573d129d0a23ec97f8754da154656ef4161f
+- id: UEC11-S5.5-IDLE-REDUCTION
+  section: '5.5'
+  title: Idle Reduction
+  page: 728
+  quote: This standard specifies an optional feature that reduces the number of idle bytes inserted between
+    frames.
+  page_sha256: 9d5e0b5dbc49acf6fdfc39216bece6d9b75eb14e070a85715c9cb8ee5b20ded6
+- id: UEC11-S6-PHYSICAL-LAYER
+  section: '6'
+  title: UE Physical Layer
+  page: 730
+  quote: Ultra Ethernet (UE) applications, such as AI and HPC systems, require physical layers that support
+    a variety of electrical and optical channels
+  page_sha256: 1684405a332c25e7e83258559ca9897acfcb6bc7d677fa433ed055e60a94f7f4
+- id: UEC11-S6.1-PHY-SUPPORT
+  section: '6.1'
+  title: UE PHY Support
+  page: 730
+  quote: provide low frame loss ratio, low latency, power efficiency, and reliability at scale; and leverage
+    existing ecosystems and standards that enable seamless interoperability
+  page_sha256: 1684405a332c25e7e83258559ca9897acfcb6bc7d677fa433ed055e60a94f7f4
+- id: UEC11-S6.1.1.1-PHY-MEDIA-100G
+  section: 6.1.1.1
+  title: Media support
+  page: 730
+  quote: 'The following physical media are supported for 100 Gb/s per lane signaling, with relevant clause
+    numbers in the Ethernet standard:'
+  page_sha256: 1684405a332c25e7e83258559ca9897acfcb6bc7d677fa433ed055e60a94f7f4
+- id: UEC11-S6.1.1.2-PHY-RATES-100G
+  section: 6.1.1.2
+  title: PHY rates and types supported
+  page: 731
+  quote: 'The following Ethernet PHY rates and types are in scope for UE:'
+  page_sha256: a6cdfb7b2b8025ba50f10d4bad3ed3cf0215efaf15162ce8e4893f9ef384d015
+- id: UEC11-S6.1.2.1-PHY-MEDIA-200G
+  section: 6.1.2.1
+  title: Media Support
+  page: 731
+  quote: 'The following physical media are supported for 200 Gb/s per lane signaling, with relevant clause
+    numbers in the Ethernet standard:'
+  page_sha256: a6cdfb7b2b8025ba50f10d4bad3ed3cf0215efaf15162ce8e4893f9ef384d015
+- id: UEC11-S6.1.2.2-PHY-RATES-200G
+  section: 6.1.2.2
+  title: PHY Rates and Types Supported
+  page: 731
+  quote: Note that the PHYs for the media above all use the same RS-FEC (544,514) with interleaving of
+    10-bit symbols from four RS-FEC codewords.
+  page_sha256: a6cdfb7b2b8025ba50f10d4bad3ed3cf0215efaf15162ce8e4893f9ef384d015
+- id: UEC11-S6.2-CONTROL-ORDERED-SETS
+  section: '6.2'
+  title: Control ordered sets
+  page: 732
+  quote: UE control ordered sets are an OPTIONAL UE feature. A PHY that supports this feature SHALL comply
+    with the requirements in this section.
+  page_sha256: 0acf113627686c969ffdbbb88158c8bf000540f1b585e4e0659c0c7a2e198d1e
+- id: UEC11-S6.3-FEC-STATISTICS
+  section: '6.3'
+  title: FEC statistics for prediction of link quality
+  page: 736
+  quote: FEC statistics for prediction of link quality is an OPTIONAL UE feature.
+  page_sha256: d800704b0534db04350ecc6e812455d99f29732e7e84648964c1e378eae8d185
+- id: UEC11-S6.4-RECOMMENDATIONS
+  section: '6.4'
+  title: Recommendations
+  page: 749
+  quote: the MTBPE can be estimated as 6.4e-9/2e-19=3.2e10 seconds, or about 1000 years
+  page_sha256: 653d4f5a5dd26d9e763f5797b666a8694343e81d288295c7c1c65e103b42c7c8
+- id: UEC11-S6.5-REFERENCES
+  section: '6.5'
+  title: References
+  page: 750
+  quote: IEEE Std 802.3-2022, "IEEE Standard for Ethernet," 2022.
+  page_sha256: 6456057f08a88b778ac44141079731ead1628c38802d7bb10d35cb9fa90e67b7
+- id: UEC11-S7-MANAGEMENT
+  section: '7'
+  title: UE Management
+  page: 752
+  quote: Other brands, names, or logos contained herein are the property of their respective owners.
+  page_sha256: 82460e036ed2d5fd835deaa2fc312e68451c8cb29163ef12455d6f77af191be7
+- id: UEC11-S7.1-MGMT-SCOPE
+  section: '7.1'
+  title: UE Management Scope
+  page: 752
+  quote: The UE specification covers the layers between the UE PHY and UE software.
+  page_sha256: 82460e036ed2d5fd835deaa2fc312e68451c8cb29163ef12455d6f77af191be7
+- id: UEC11-S7.2-MGMT-ARCH
+  section: '7.2'
+  title: High-Level UE Management Architecture
+  page: 752
+  quote: The initial focus of UE management is to define management specifications for the UE link layer
+    and the UE PHY layer.
+  page_sha256: 82460e036ed2d5fd835deaa2fc312e68451c8cb29163ef12455d6f77af191be7
+- id: UEC11-S7.3-FABRIC-MGMT
+  section: '7.3'
+  title: UE Fabric Management
+  page: 754
+  quote: Switch Abstraction Interface (SAI) is widely supported by switch vendors as the abstraction layer
+    to program switch hardware.
+  page_sha256: 9802c3c76e6225eceea88de5880b1c94c496f93f50a48d6bf180c3b1bd3df9f8
+- id: UEC11-S7.4-REDFISH
+  section: '7.4'
+  title: Redfish for UE Endpoint Manageability
+  page: 755
+  quote: 'Remote management of the server can be done via two manageability paths, as shown in Figure
+    7-3:'
+  page_sha256: c641a8861c586559df283b41965cedf23bb11bbd0f7a43795d8d0ffb2a8ff524
+- id: UEC11-S7.5-YANG
+  section: '7.5'
+  title: YANG Model for UE Network Manageability
+  page: 756
+  quote: UE NIC endpoint manageability shall be prescribed by extending the OCP Ethernet NIC profile.
+  page_sha256: fbd7c5e3a1a14057ad637fe55f614a7625f91d26296afabd654a41e7a932a50b
+- id: UEC11-S7.6-SAI
+  section: '7.6'
+  title: Switch Abstraction Interface (SAI) for UE
+  page: 759
+  quote: SAI is a subproject under the OCP Networking Project.
+  page_sha256: 1cded83af7046cc6959e7fa0a3e46a15aec98b0a65272ea6192003967ce62d47
+- id: UEC11-S8-COMPLIANCE
+  section: '8'
+  title: UE Compliance
+  page: 761
+  quote: To assist implementors in efforts to comply to this UE specification, the UEC provides test collateral
+    including profile matrices, compliance checklists, and a best practices document
+  page_sha256: dc69a5e04e9b05261e210f3db52c8737a9968003ceb1d4b91b598108666e2ab5
+- id: UEC11-S8.1-COMPLIANCE-STATEMENT
+  section: '8.1'
+  title: Compliance Statement
+  page: 761
+  quote: The profile matrix and compliance checklist should be used by implementors to self-attest for
+    compliance.
+  page_sha256: dc69a5e04e9b05261e210f3db52c8737a9968003ceb1d4b91b598108666e2ab5
+- id: UEC11-RELNOTES
+  section: Release Notes
+  title: Release Notes
+  page: 763
+  quote: This release includes significant new functionality and normative requirements.
+  page_sha256: d965e0a6873863eecb9092f76b5abda3caec46af262b048fd6e2928e06c48e7d

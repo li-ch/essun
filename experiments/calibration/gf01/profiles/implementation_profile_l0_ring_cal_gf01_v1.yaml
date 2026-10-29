@@ -1,0 +1,42 @@
+# Implementation profile for the calibration-ladder GF-01 small-message
+# anchor-point run on the analytical L0 ring backend 
+# gap-fill anchor GF-01; docs/calibration/anchors_gapfill.md §GF-01).
+implementation_profile_id: analytical_l0_ring_cal_gf01_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-FD /
+  A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml. DOMAIN
+  LABELING per the A7 record: the fabric is a NON-SWITCHED FULL MESH (7
+  dedicated per-pair xGMI links); the ring is the ring ALGORITHM EMBEDDED
+  in the mesh (every hop a dedicated 1-hop pair at the RAW 64 B/ns
+  per-direction link rate), the conservative per-link reading that
+  exercises 1 of 7 outgoing links — the algorithm choice on a real MI300X
+  stack belongs to RCCL, not to this stage.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) fixed at 64 B/ns — the anchor's RAW unidirectional
+  xGMI link rate (also exactly the A-L0-BW registry point; the A7 record's
+  anchor point) — and L (link.hop_latency_ns) fixed at the A-L0-LAT
+  registry point 200 ns. NOTHING was tuned toward the GF-01 measurements:
+  both values were fixed by the anchor's own staged numbers / the free
+  registry BEFORE any model output was read. The sweep companion
+  (sweep_gf01_small_v1.yaml) executes the same fixed points across the
+  anchor's reconciling small sizes {8, 32, 64, 16384, 65536} B and the
+  crossbar/doubling aggregate readings at 448; the comparison records
+  where each identity sits relative to the measured eager/graph band
+  (13.54-16.74 us eager; 6.32-16.38 us graph), including implied-effective-L
+  diagnostics computed FROM the measurements — recorded placement, never
+  parameter values.
+measurement_source: >
+  GF-01 staged numbers (AMD ROCm blog "Understanding RCCL Bandwidth and
+  xGMI Performance on AMD Instinct MI300X", RCCL 2.22.3-develop:f5b15f2 /
+  ROCm 6.3.0.0, all_reduce_perf + TransferBench on 8 MI300X GPUs;
+  docs/calibration/anchors_gapfill.md §GF-01; gap-fill anchor, PROPOSED,
+  deliberately NOT integrated into the calibration anchor registry
+  — accepted rows are integrated by explicit decision; confidence M-H, vendor blog not
+  peer-reviewed, mid-table rows flagged for re-verification) — external
+  MEASURED numbers, compared as PROPOSED evidence in results/calibration/;
+  not our testbed, no E3/E4 language.

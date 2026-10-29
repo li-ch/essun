@@ -1,0 +1,15 @@
+# UEC 1.1 license-gate source record (repo level).
+# The row below is the VERBATIM registry row STD-UEC-11 (2026-10-28).
+# The registry row remains the writable master: changes there must be
+# re-copied here, never paraphrased (verbatim provenance; source anchor).
+source_id: STD-UEC-11
+category: standard
+title: Ultra Ethernet Specification 1.1
+version: "1.1"
+url: https://ultraethernet.org/wp-content/uploads/sites/20/2026/10/UE-Specification-1.1.pdf
+access: PUBLIC_READ
+role: Primary UEC normative input
+notes: "764 pages; sha256 4c8436ec7daa627ad6cce0680bea66cfac496dfe4e217631064e68acafe04531; two spec-text defects found during anchored extraction (recorded in the UEC anchor registry and p1 stage reports, not silently corrected)"
+# pdf_sha256 restates the hash from the verbatim notes field as a
+# structured value (extraction tooling and the license-gate test read it).
+pdf_sha256: 4c8436ec7daa627ad6cce0680bea66cfac496dfe4e217631064e68acafe04531

@@ -1,0 +1,21 @@
+# Calibration-ladder GF-04 topology: fully-connected exchange fabric of 16
+# ranks at the SCALING-NULL reading B = 476.37 B/ns (the anchor's
+# single-node figure carried unchanged to the two-node rank count) for the
+# recursive-doubling identity — the r=16 leg of the doubling scaling-null
+# pair (its 2*log2(r)*L chain grows 6L -> 8L, the strongest in-family
+# rank-count structure; see rd8_gf04_anchor476_37_v1 header). Declared
+# counterfactual bracket, not a physical reading (same status as
+# ring16_gf04_anchor476_37_v1). HONESTY: B swept free (A-L0D-BW),
+# anchor-stated, fixed BEFORE any model output was read; L = 200 ns
+# A-L0D-LAT registry point (KEEP); r=16 power of two (A-L0D-POW2).
+topology_id: rd16_gf04_anchor476_37_v1
+topology_class: fully_connected_exchange
+ranks: 16
+nic:
+  injection_bytes_per_ns: 476.37
+link:
+  pair_latency_ns: 200
+notes: >
+  Fully-connected exchange fabric of the two-node rank count carrying the
+  anchor's single-node 476.37 B/ns unchanged — the doubling-family
+  scaling-null leg (declared bracket). Never tuned.

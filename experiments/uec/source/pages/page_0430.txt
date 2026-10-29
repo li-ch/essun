@@ -1,0 +1,19 @@
+ 430 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.25.4 UET directly over IP no UET CRC, no Encryption 
+Figure 3-115 shows the full header stack, depicting important fields necessary for parsing when using 
+UET directly over IP and UET CRC and UET encryption are not in use. 
+ 
+3.5.25.5 UET directly over IP with UET CRC, no Encryption 
+Figure 3-116 shows the full header stack, depicting important fields necessary for parsing when using 
+UET directly over IP with the UET CRC and UET encryption is not in use. 
+ 
+ 
+Figure 3-115 - Full Header: UET/IP no UET CRC, no TSS 
+ 
+ 
+ 
+Figure 3-116 - Full Header: UET/IP with UET CRC, no TSS 
+ 
+ 

@@ -1,0 +1,43 @@
+ 462 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+pds.req_cc_state.credit_target field increases (as opposed to setting pds.req_cc_state.credit_target 
+directly to the total amount of data to be transmitted) to avoid excessive credit being sent to a source 
+that cannot immediately use it. 
+The pds.req_cc_state.credit_target field is defined in Section 3.6.14 
+3.6.9.2 pds.ack_cc_state for NSCC 
+NSCC uses the pds.ack_cc_state field when pds.type = ACK_CC and pds.cc_type = CC_NSCC. The format 
+is shown in Figure 3-128. 
+Table 3-90 - pds.ack_cc_state for ACK_CC with CC_TYPE = CC_NSCC 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+service_time 16 Service time at destination, measured 
+from the time the PDS request packet 
+arrives at the Ethernet MAC to the time a 
+PDS ACK packet is transmitted by the 
+Ethernet MAC 
+• Units: 128 nsec 
+• Accuracy target: ~500 nsec 
+0xFFFF indicates service time exceeded 
+8.38848 ms 
+restore cwnd (rc) 1 Indicates cwnd should be restored after 
+destination congestion ends 
+rcv_cwnd_pend 7 This field indicates the congestion level at 
+the destination 
+rcvd_bytes 24 Per PDC received byte count, maintained 
+at the destination and incremented when 
+a network packet is accepted 
+• Units: 256 bytes 
+• Wraps to 0x0 at 0xFFFFFF 
+ooo_count 16 Count of out of order packets 
+ 
+3.6.9.2.1 pds.ack_cc_state.rcvd_bytes for NSCC 
+This field represents the number of bytes the destination has accepted on the PDC in 256 B units. It is a 
+24-bit field that wraps. 
+The algorithm to calculate pds.ack_cc_state.rcvd_bytes at the destination is in Section 3.6.13.9. 
+ 
+Figure 3-128 - pds.ack_cc_state for UET TYPE = ACK_CC and CC_TYPE = CC_NSCC 

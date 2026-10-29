@@ -1,0 +1,32 @@
+# Vertical-slice smoke experiment: W1 Dense TP Decode on the analytical L0
+# 2D-torus model (2x4 grid, sequential dimensions) — a NON-RING topology
+# reachable from the normal run path (run-path wiring).
+# Evidence level E0 only: identities and determinism, no empirical claim.
+experiment_id: EXP-VS-W1-TORUS2D-001
+research_question: RQ2
+claim_id: C2
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/topologies/torus2d_8_free_params.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_l0_torus2d.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_torus2d
+seed: 20261027
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: torus2d8_free_v1 (2x4 ring x ring, free parameters)
+  workload: w1_dense_tp_decode smoke configuration
+  implementation: analytical L0 2D-torus free-parameter model, no standard semantics
+evidence_level_requested: E0

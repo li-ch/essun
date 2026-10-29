@@ -1,0 +1,56 @@
+ 278 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Mnemonic Constant Scope/ 
+Recover 
+Description 
+RC_AMO_FP_OVERFLOW 0x15 Msg/I An AMO operation generated an overflow 
+and signaling is enabled. 
+RC_AMO_FP_INEXACT 0x16 Msg/I An AMO operation generated an inexact 
+exception and signaling is enabled. 
+RC_PERM_VIOLATION 0x17 Msg/U Message processing encountered a 
+permissions violation (e.g., a mismatch in the 
+JobID). 
+RC_OP_VIOLATION 0x18 Msg/U An operation violation occurred. This includes 
+a read attempting to access a buffered 
+configured as write only, a write attempting 
+to access a buffered configured as read only, 
+or an atomic attempting to access a buffer 
+that does not have both read and write 
+permissions. 
+RC_BAD_INDEX 0x19 Msg/U An unconfigured index was encountered. 
+RC_BAD_PID 0x1A Msg/U PID was not found at the target node (within 
+the JobID for relative addressing, or at all for 
+absolute addressing). 
+RC_BAD_JOB_ID 0x1B Msg/U JobID was not found at the target node. 
+RC_BAD_MKEY 0x1C Msg/U The specified memory key does not map to a 
+buffer. 
+RC_BAD_ADDR 0x1D Msg/U Invalid address (not covered elsewhere) (e.g., 
+an offset that extends beyond the length of 
+the configured memory region). 
+RC_CANCELLED 0x1E Msg/U Response indicating the target cancelled an 
+in-flight message. 
+RC_UNDELIVERABLE 0x1F Msg/U Message could not be delivered.  
+RC_UNCOR 0x20 Msg/U An uncorrectable error was detected. The 
+error is not likely to be rectified without 
+corrective action. 
+RC_UNCOR_TRNSNT 0x21 Msg/R An uncorrectable error was detected. The 
+error is likely to be transient. 
+RC_TOO_LONG 0x22 Msg/U The message was longer than the buffer it 
+addressed. The target was configured to 
+reject a message that was too long rather 
+than truncate it.  
+RC_INITIATOR_ERROR 0x23 Msg/U This RC echoes back the initiator error field 
+from the incoming packet.  
+RC_DROPPED 0x24 Msg/R Message dropped at the target for reasons 
+other than those enumerated elsewhere. 
+RC_RESERVED 0x25-0x2F   
+RC_VENDOR_DEFINED[0-7] 0x30-0x37 Vendor/ 
+Vendor 
+ 
+RC_RESERVED_WITH_DATA 0x38-0x3D  This opcode space is reserved for use with 
+response-with-data messages. Responses 
+without data MUST NOT infringe on this 
+space, since they can easily define an 
+extended RC space using the reserved bits in 
+the header. 

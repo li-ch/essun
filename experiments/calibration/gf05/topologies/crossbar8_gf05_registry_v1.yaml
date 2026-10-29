@@ -1,0 +1,26 @@
+# Calibration-ladder GF-05 registry-twin topology: crossbar at r=8 at
+# BOTH registry points — B = 64 B/ns (A-L0X-BW), L = 200 ns (A-L0X-LAT)
+# — the twin of run_gf05_anchor_sim_v1's crossbar8_gf05_line100_v1 for
+# the stage's store run pair: same payload (the anchor's 2 MiB flow
+# size), both axes displaced from the anchor sim-config point to the
+# free registry defaults. The pair isolates the COMBINED-axis
+# placement: at 2 MiB the registry twin sits at t = 57,744 ns vs the
+# anchor row's 967504/25 = 38,700.16 ns — ratio exactly 90225/60469
+# (~1.492, i.e. the registry defaults predict ~49% slower than the
+# anchor's own sim config at the anchor's flow size); the pure-B
+# asymptotic component is exactly 25/16 = 1.5625 and the pure-L
+# component 400 vs 2000 ns. Placement arithmetic only, never tuning;
+# the registry values and ranges are untouched by this stage.
+topology_id: crossbar8_gf05_registry_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Registry twin (B = 64 B/ns, L = 200 ns — both free registry defaults)
+  of the GF-05 anchor sim-config point. Identity t = 2(r-1)/r*M/B + 2L.
+  No congestion/credits/ECMP/packetization. Provenance: free registry
+  points (A-L0X-BW / A-L0X-LAT); values are registry defaults, never
+  our measurements, never tuned.

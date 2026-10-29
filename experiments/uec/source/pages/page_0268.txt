@@ -1,0 +1,19 @@
+ 268 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+message using the RUD transport would be allowed to initiate an SES retransmit on a different PDC from 
+the initial transmission. This allows for the PDC to be torn down and re-established between the first 
+(unsuccessful) transmit of the message and the retransmit of the message. It also allows for both the 
+original message and the retransmit of the message to be in progress concurrently. 
+For simplicity, one additional feature of the back-off and retry sequence is not illustrated. In the figure, a 
+single back-off is shown with a successful retry. In practice, a back-off and retry sequence could have 
+many failed attempts with successive retries of the message. 
+Like Figure 3-40, Figure 3-41 uses single-packet messages to illustrate the mechanics of a different 
+unexpected message approach that applies specifically to ROD PDCs and uses the concept of a Resource 
+Index generation (see Section 3.4.4.7.3.2). Because ROD PDCs require that ordering be maintained, a 
+message that encounters resource exhaustion creates a challenge. If resources were replenished while 
+subsequent messages were in flight, ordering could be violated if care was not taken. To preserve the 
+ephemeral nature of PDCs, this resource exhaustion scenario is handled at the semantic sublayer rather 
+than injecting state into the PDC itself to recover. 
+ 
+Figure 3-41 - Messages using Resource Index Generation 

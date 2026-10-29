@@ -1,0 +1,21 @@
+ 198 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+only as part of authorization to access a buffer (3.4.2.4.1). Buffer authorization in this scenario is 
+expected to occur on a per-buffer basis (e.g., per memory region or per receive buffer). 
+RMA operations (e.g., fi_read() and fi_write()) use a Resource Index space independent from 
+send/receive (and tagged send/receive) operations. Target memory regions are identified using a 
+memory key. The namespace for a memory key is scoped by the Resource Index within a PIDonFEP or 
+within the PIDonFEP independent of the Resource Index. A memory region that uses a Resource Index 
+namespace within a PIDonFEP is referred to as an RI restricted memory region. Figure 3-7 illustrates this 
+concept. A given Resource Index (e.g., RI 0) selects a service (e.g., SHMEM). Within the selected service, 
+a memory key is mapped to a descriptor of a memory region using a vendor-defined mechanism. A 
+provider uses a combination of FA, JobID , PIDonFEP, Resource Index, and memory key to select and 
+access a memory region. 
+ 
+Figure 3-6 – Simplified Absolute Addressing 
+ 
+ 
+Figure 3-7 - Relative Addressing for RMA Operations using Resource Index Namespace 
+ 
+ 

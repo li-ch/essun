@@ -1,0 +1,40 @@
+ 729 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.5.2 Rate Control   
+Per the standard, link speeds may deviate from nominal by +/- 50 ppm. When a fast sender sends traffic 
+to a slow receiver, overrun has to be considered. The standard IPG of 12 bytes allows the receiver some 
+slack to retime the incoming data to its slower clock by eliding some idle bytes. Rather than imposing 
+the idle overhead per packet, this feature requires internal flow control in the link logic to provide any 
+necessary compensation. 
+Modern high-performance Ethernet devices often have a core clock that runs faster than even the 
+fastest legal incoming data rate. Such a clock allows incoming data to transit through a clock domain 
+crossing FIFO without needing to drop any bytes. In this environment, the egress path requires flow 
+control; otherwise, the higher-speed core would overrun the output link. 
+Besides clock rate issues, forming the proper Ethernet stream on the wire requires inserting control 
+data, such as alignment markers. These markers are infrequent and are properly inserted in the data 
+stream without data loss. 
+5.5.3 Maximum Packet Rate 
+With standard idle formatting, the minimum spacing from one frame start to the next frame start 
+averages at least 84 bytes. Because of the 8-byte boundary requirement, the actual spacing might toggle 
+between 80 bytes and 88 bytes. With a 100 GB/s Ethernet link, the frame rate could average as fast as 
+1.19 G frames/sec. With idle reduction, the 80-byte spacing may be constantly achieved, potentially 
+saving an average of 4 bytes per packet. This raises the peak frame rate possible to 1.25 G frames/sec, 
+realizing the maximum possible benefit from idle reduction. 
+5.5.4 Requirements 
+Devices supporting the idle reduction feature SHOULD report this capability to the management 
+software. To ensure seamless interoperability, any link advertising support MUST be capable of receiving 
+and processing frames with the idle reduction defined by this feature, regardless of whether the feature 
+is currently enabled. The enabled capability specifically controls the transmission logic, determining 
+whether the MAC will actively insert reduced-width idle counts during outgoing data streams. 
+5.5.5 Enabling Idle Reduction 
+The idle reduction enhancement is optional. Cost-optimized devices might not easily support idle 
+reduction due to their internal architecture. Further, idle reduction on some but not all links in a 
+heterogeneous network could easily be a source of congestion. Consequently, management software 
+may elect not to enable this feature on links that support it, in order to prevent congestion in a network 
+that also contain links without this capability. 
+To accommodate these limitations, each link SHOULD advertise whether it supports this feature. Using 
+UE link negotiation, capable devices SHOULD advertise IPGR-C (inter-packet gap reduction “capable”). 
+Management software MAY determine, after interrogating each end of all links, to enable this feature. 
+Once enabled, links will no longer be required to ensure that the standard number of idle bytes are 
+transmitted. 

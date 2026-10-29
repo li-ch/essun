@@ -1,0 +1,58 @@
+ 679 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2.10.3 Compliance Requirements Summary 
+ 
+Table 5-27 - Conformance Requirements 
+Item Requirement Required Value(s) 
+Configuration Parameters 
+Minimum number of VCs MUST be able to support at least this number of VCs. 2 (one lossless VC and  one best-effort VC) 
+Maximum number of VCs CBFC does not support more than 32 VCs (2 ≤ NumVCs ≤ 32) The maximum number of VCs supported is implementation-specific up to 32 lossless VCs. 
+Number of lossless VCs MUST support a configurable number of lossless VCs up to NumVCs. 1 ≤ n ≤ NumVCs 
+VC mapping All VCs must be configurable as either lossless or best effort.  
+CreditSize 
+MUST support a configurable 
+CreditSize, in bytes. More granularity 
+than the required values is suggested 
+(see Section 5.2.10.1). 
+CreditSize  {32, 64, 128, 256, 512, 
+1024, 2048} 
+TotalCredits 
+MUST support a configurable total 
+number of credits 
+ (determined by receiver). 
+1 ≤ TotalCredits ≤ (219-1) 
+VC_CreditLimit[x] MUST support a configurable credit limit for each lossless VC[x]. 1 ≤ VC_CreditLimit x  ≤ TotalCredits 
+PktOvhd 
+MUST be able to support a 
+configurable size of packet overhead in 
+bytes. 
+-16 ≤ PktOvhd ≤ 12  
+Link-Level Messages 
+CF_Update format MUST support CF_Update CtlOS format as defined in Section 5.2.6.1.  
+CF_min_timer 
+Receiver MUST support a configurable 
+minimum time (bytes) between 
+CF_Update CtlOS (applied to updated 
+R_VC_CF[x] values). 
+CF_min_timer ≥ 800 B of wire time 
+CF_max_timer1 
+Receiver MUST support this timer or 
+the per-VC timer. This timer is a 
+configurable average maximum time 
+(bytes) between CF_Update CtlOS (for 
+all R_VC_CF[x] values). 
+16 KB to 1 MB with minimum 
+granularity between 1 byte and 16384 
+bytes 
+CF_max_timer[x]1 
+Receiver MUST support this per-VC 
+timer or a single timer for all VCs. This 
+timer is a configurable average 
+maximum time (bytes) between 
+CF_Update CtlOS for corresponding 
+R_VC_CF[x] value. 
+16 KB to 1 MB with minimum 
+granularity between 1 byte and 16384 
+bytes 
+CC_Update format MUST support CC_Update packet format as defined in Section 5.2.6.2.  

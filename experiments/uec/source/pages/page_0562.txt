@@ -1,0 +1,36 @@
+ 562 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The SDME controls when the key rotation occurs, and it MAY occur at any time. An example of when the 
+SDME MAY update the association is when one of the FEPs in the domain indicates it is approaching the 
+invocation limit (invokeWarnThreshold). When rotating keys, the following steps MUST be performed: 
+1. The SDME informs all FEPs in the SD to transition to a new AN. 
+a. The SDME MAY provide a new SDK or instructions on how to obtain/derive a new SDK 
+for the association. 
+b. The key epoch is set to 0. 
+2. All FEPs MUST update the SDKDB for the SDI with the new SDKi in the correct key slot (SDKiAN0 
+or SDKiAN1), update TxActiveAN, and set RxActiveAN to accept both keys. 
+3. All FEPs MUST start using the new security association (AN) for all traffic sent within the SDI. 
+a. The counter portion of the TSC is reset to zero when the first packet is sent using the 
+new security association. 
+b. Packets received during this interval MAY have the new or old AN. 
+4. After a transition period, the old AN MUST be deactivated by updating RxActiveAN to only 
+accept the new association (key). This transition period MUST be less than the key lifetime. 
+a. Packets received with the non-active security association (AN) after this period MUST 
+be silently dropped and counted (sdiXXInInvalidSa). 
+b. Clearing the sdixxInAuthFailPkts counter. 
+5. All FEPs are now using the new AN. 
+3.7.5.2 KDF Rekeying 
+Implicit rekeying SHOULD be implemented by using the counter portion of the TSC in the key derivation 
+function when using cluster KDF mode. Rekeying reduces the number of cryptographic operations of the 
+derived key but does not improve replay protection as described in Section 3.7.5. 
+The rekey interval is defined by how many bits are used from the counter field of the TSC. The Rekey 
+field is created using the Rekey_Mask and Rekey_Shift from the counter portion of the TSC. This allows 
+extraction up to 32 bits from the tss.tsc.counter field:  
+ 
+Rekey = (pkt.tss.tsc.counter & Rekey_Mask) >> Rekey_Shift 
+ 
+Rekey MAY be disabled by setting the Rekey_Mask to zero. Once the selected portion (Rekey) of the 
+counter changes, the output SDK will change since it is an input to the context field of the KDF. 
+For example, if the Rekey_Mask = 0xFFFF_0000_0000 and the Rekey_Shift=32, every (232 -1) packets a 
+new key will be derived. Figure 3-141 depicts the sequence of events.  

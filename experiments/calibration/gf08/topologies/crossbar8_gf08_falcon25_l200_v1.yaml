@@ -1,0 +1,70 @@
+# Calibration-ladder GF-08 topology: fully-connected (crossbar / single
+# non-blocking switch stage) abstraction of 8 ranks at the FALCON
+# ENDPOINT RATE — B = 25 B/ns, L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-08; "Falcon: A
+# Reliable, Low Latency Hardware Transport", ACM SIGCOMM 2025, Singhvi
+# et al.; numbers AS STAGED from the official abstract mirror, not
+# re-fetched): "peak performance of 200 Gbps, 120 Mops/sec". Under the
+# DECLARED reading (decimal units, the plan's convention 1 GB/s = 1 B/ns;
+# the 200 Gbps endpoint peak mapped onto the per-rank single-port
+# injection B — A-L0X-PORT first-order; the abstract stages NO direction
+# split, flagged): 200 Gb/s / 8 = 25 B/ns.
+#
+# ROLE: GF-08 is the R1 HARDWARE BOOKEND — Google's shipped reliable
+# hardware transport on commodity (lossy, PFC-free) Ethernet with
+# delay-based HW congestion control, multipath packet spraying and
+# selective retransmission, architecturally the closest shipped relative
+# of UEC's UET design points (implemented on the Intel IPU E2000 per the
+# OCP/Google blog). The gap-fill doc pairs it with GF-05 (sim) as the
+# measured hardware pole of the UEC-class transport axis. 25 B/ns is the
+# FIRST staged UEC-class hardware endpoint rate: it lands INSIDE the
+# plan §2.1 A-L0-BW anchored span [20, 64] (between CAL-A12's NCCL-model
+# 20 and CAL-A7's per-direction 64), unlike GF-05's sim line rate 100
+# which sat above it. L = 200 ns = the A-L0X-LAT registry point — GF-08
+# stages NO latency number in the abstract (the paper's latency µs
+# tables were NOT extracted at staging: ACM 403 in the staging sandbox).
+#
+# DOMAIN HONESTY: Falcon is an ENDPOINT transport (NIC/DPU-class, multi-ULP
+# RDMA/NVMe) on SCALE-OUT Ethernet — NOT a GPU scale-up fabric; the
+# crossbar row is the standard non-blocking ceiling abstraction used by
+# every calibration stage, a placement vehicle, never a prediction of
+# Falcon. The transport MECHANISM (delay-based HW CC, packet spraying,
+# selective retransmission, PFC-free lossy operation) has NO input key in
+# the L0 loader surface and "congestion" is declared explicitly_unsupported
+# by the backend — only the RATE and the dimensionless FACTORS (executed
+# by the displacement rows) can enter.
+#
+# Cross-anchor coincidences, recorded never cross-derived: 25 B/ns is
+# numerically identical to GF-05's uet-htsim 4:1-oversubscription
+# displacement value (100/4); the registry point 64 sits 2.56x above it
+# (asymptotic CCT ratio exactly 64/25).
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS (A-L0X-BW / A-L0X-LAT),
+# placed at the anchor's staged peak rate / the registry default BEFORE
+# any stage output was read, never tuned toward any anchor output. r = 8
+# is the free smoke-default rank count (GF-08 stages NO rank count); 8
+# divides every 8*2^k ladder size. Values are anchor quotes / free
+# registry defaults, never our measurements.
+topology_id: crossbar8_gf08_falcon25_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 200 ns (the A-L0X-LAT
+  registry point; GF-08 stages no abstract-level latency number), per-rank
+  single-port injection B = 25 B/ns (Falcon's staged 200 Gbps peak under
+  the declared decimal + endpoint reading), charged once per phase
+  (reduce-scatter, allgather) by the L0 crossbar identity
+  (t = 2(r-1)/r*M/B + 2L). No congestion control, no packet spraying, no
+  retransmission, no multi-ULP semantics — the transport mechanism the
+  anchor describes is inexpressible here by capability declaration; only
+  the endpoint rate enters. Provenance: B from GF-08's staged peak
+  (gap-fill anchor PROPOSED, not yet an integrated anchor row; confidence M-H —
+  headline numbers verified against the official abstract mirror; full
+  paper tables not extracted at staging); L = registry default. Values
+  are anchor quotes / free registry defaults, never our measurements.

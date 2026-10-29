@@ -1,0 +1,57 @@
+ 613 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 4-7 - LLDP Port Configuration for CSIG 
+    ’                
+csig-capable object 
+    ’              
+DB 
+csig-capable object 
+    ’                
+Log/Forward/Discard 
+    ’                   
+Strip/Forward 
+NULL or CSIG-NO Any No CSIG Functions No CSIG Functions 
+CSIG-COMPACT NULL or CSIG-NO  Log CSIG tag error count 
+Forward compact 
+Discard wide tag packets 
+Strip compact CSIG tag if present 
+and forward the packet 
+CSIG-COMPACT CSIG-COMPACT Log wide tag error count 
+Forward compact 
+Discard wide tag packets 
+Forward the packet with a 
+compact CSIG tag 
+CSIG-COMPACT CSIG-COMPACT-WIDE Log wide tag error count 
+Forward compact 
+Discard wide tag packets 
+Forward the packet with a 
+compact CSIG tag 
+CSIG-COMPACT-WIDE NULL or CSIG-NO Log CSIG tag error count 
+Forward all 
+Strip any CSIG tag if present and 
+forward the packet 
+CSIG-COMPACT-WIDE CSIG-COMPACT Log wide tag error count 
+Forward all 
+Strip any wide CSIG tag if 
+present and forward the packet 
+Forward the packet with a 
+compact CSIG tag 
+CSIG-COMPACT-WIDE CSIG-COMPACT-WIDE Forward all Forward the packet with any 
+CSIG tag 
+ 
+If the local port does not support CSIG but does support the UE Link Options LLDP TLV csig-capable 
+object, then it MUST set the local UE Link Option LLDP TLV csig-capable object to CSIG-NO. If the local 
+port supports only compact CSIG tags and also supports the csig-capable object, then it MUST set the 
+local UE Link Option LLDP TLV csig-capable object to CSIG-COMPACT. If the local port supports both 
+compact and wide CSIG tags and the csig-capable object, then it MUST set the local UE Link Option LLDP 
+TLV csig-capable object to CSIG-COMPACT-WIDE. 
+Provided the system has enabled the use of LLDP for CSIG configuration, a port MUST perform the 
+operations described in Table 4-7. A system MAY provide capabilities to override the LLDP configuration 
+for CSIG on a port or switch; however, if the UE Link Option LLDP TLV csig-capable object is supported it 
+MUST still be set consistent with the system configuration (i.e., if CSIG is disabled by a local system 
+configuration then csig-capable is set to CSIG-NO even if the switch is capable of processing CSIG tags). 
+4.2.5.1.2 CSIG LLDP Example 
+When LLDP is enabled on a peering link, the devices at the link’s endpoints MUST perform steps to 
+reconcile their capabilities. Figure 4-6 depicts an example of state transitions for devices D1 and D2, 
+both of which support the CSIG compact tag, connected by a peering link. 

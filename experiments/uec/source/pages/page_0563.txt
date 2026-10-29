@@ -1,0 +1,50 @@
+ 563 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.7.5.3 KDF Algorithms 
+The KDF construction is described in Section 3.7.8. The implementation of the KDF relies on a PRF 
+(pseudo random function), which can be implemented using several algorithms (e.g., HMAC, AES-CMAC, 
+etc.). There are several trade-offs with respect to implementation complexity and security strength. The 
+default algorithm that MUST be supported is AES-CMAC-256 in counter mode. Implementations are free 
+to use other algorithms within the framework of the existing construction. The assumption in this 
+specification is that the security strength of the input key is preserved via the KDF. 
+Implementation Note: 
+This specification defines only the AES-CMAC-256 algorithm for the kdf-algo field.  Identifying other 
+algorithms and constructions is not currently specified and if used by implementations requires a 
+consistent global configuration. 
+ 
+3.7.5.4 Symmetric Algorithms 
+TSS MUST use an authenticated encryption with associated data (AEAD) cryptographic algorithm, which 
+combines both encryption and authentication. A portion of the plaintext, referred to as additional 
+authentication data (AAD), is authenticated but not encrypted. An integrity check value (ICV) is carried 
+with the data and used as part of the authentication. 
+Implementation Note: 
+The AES-GCM with 256-bit key size consistent with CNSA 2.0 [37] post-quantum resistant parameters.  
+Other standards may use different assumptions for post-quantum resistance (e.g., NIST SP 800-131A 
+[38]) 
+ 
+Figure 3-141 - KDF Rekeying Example 
+ 
+KDF
+SDK
+rekey=1
+pkt (counter=0)
+pkt (counter=1)
+pkt (counter=2)
+pkt (counter=max-1)
+SDKo(1)
+pkt (counter=0)
+pkt (counter=1)
+pkt (counter=2)
+pkt (counter=max-1)
+KDFrekey=2
+SDKo(2)
+KDFrekey=3
+SDKo(3)
+epoch=1
+epoch=1
+epoch=1
+pkt (counter=0)
+pkt (counter=1)
+pkt (counter=2)
+pkt (counter=max-1)

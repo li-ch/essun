@@ -1,0 +1,40 @@
+ 274 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+UET_MSG_ERROR is not used with UET_HDR_REQUEST_LCL or UET_HDR_RESPONSE_DATA_LCL as part 
+of the Unified Local profile. 
+Informative Text: 
+The PDS treats a packet using the UET_MSG_ERROR opcode just like any other packet.  
+UET_MSG_ERROR does not change any packet reliability guarantees. 
+ 
+3.4.6.4.2 Handling of Unrecoverable Errors Detected at the Target 
+A broad set of unrecoverable errors may be detected at the target of a message. These errors range 
+from programming exceptions (intentional or deliberate) such as permission violations 
+(RC_PERM_VIOLATION) to uncorrectable hardware errors of an unspecified type (RC_UNCOR). 
+Unrecoverable semantic errors are still limited in scope to a single transaction and do not impact the 
+state of a PDC, for example. Uncorrectable errors deliver an appropriate return code using a first error 
+model of error precedence, and that return code MUST be marked for guaranteed delivery. 
+Responses with data that return with an RC indicating an error MUST NOT write to memory at the 
+initiator. 
+3.4.6.4.3 Unrecoverable Errors and Rendezvous 
+Rendezvous transactions are relatively unique in their composition within UET. There is a eager portion 
+of the transaction originating from the initiator of the rendezvous using a UET_RENDEZVOUS_SEND (or 
+TSEND) message and a read portion of the transaction originating from the target of the rendezvous. 
+Unrecoverable errors in each sub-transaction are delivered with the completion notifications for those 
+sub-transactions. For example, the eager portion of a rendezvous transaction delivers errors as if it were 
+a send (or tagged send). The read portion of the rendezvous transaction delivers errors as if it were a 
+read transaction. These errors are aggregated through the provider to be delivered to software. 
+3.4.6.5 Informational Errors 
+A handful of return codes are marked as informational. These errors (e.g., a floating-point underflow) 
+may be safely ignored by some applications in some use cases. Like other errors, these errors MUST be 
+provided back to the application (if requested). Informational errors deliver an appropriate return code 
+using a first error model of error precedence among informational errors. Uncorrectable errors have a 
+higher error precedence. An implementation that encounters an informational error and then a 
+subsequent uncorrectable error MUST deliver the uncorrectable error. The return code MUST be 
+marked for guaranteed delivery. 
+3.4.6.6 Return Codes 
+Return codes are defined for a variety of recoverable, unrecoverable, and informational errors. These 
+codes are standardized for certain well-established error scenarios to provide additional information for 
+debugging purposes. In addition, portions of the return code space are available for vendor-specific 
+return codes. The return codes are enumerated in Table 3-25 along with a designation for their scope 
+and whether they are recoverable (R), unrecoverable (U), or informational (I). 

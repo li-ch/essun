@@ -1,0 +1,53 @@
+ 98 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Name Size (bits) Description 
+Flags 16  Valid flags, see footnote 1 
+Bit 0:0 Indicates validity of fabric endpoint capabilities field 
+          0 => Fabric endpoint capabilities field is NOT valid  
+          1 => Fabric endpoint capabilities field is valid 
+Bit 1:1 Indicates validity of fabric address fields (fabric address 
+type and fabric address) 
+ 
+          0 => Fabric address fields are NOT valid  
+          1 => Fabric address fields are valid 
+Bit 2:2 Indicates validity of PIDonFEP field 
+          0 => PIDonFEP field is NOT valid  
+          1 => PIDonFEP field is valid 
+Bit 3:3 Indicates validity of index fields (start resource index and 
+num resource indices) 
+          0 => Resource Index fields are NOT valid  
+          1 => Resource Index fields are valid 
+Bit 4:4 Indicates validity of Initiator ID field  
+          0 => Initiator ID field is NOT valid  
+          1 => Initiator ID field is valid 
+Other Flags 
+Bit 5:5 Indicates whether relative or absolute address mode is 
+used 
+          0 => Relative addressing 
+          1 => Absolute addressing 
+Bit 6:6 Fabric address type, IPv4 or IPv6 
+          0 => IPv4 
+          1 => IPv6 
+Bit 7:7 Indicates if maximum message size is limited to MTU 
+          0 => Maximum message size not limited to MTU 
+          1 => Maximum message size = MTU 
+Bits 8:15 Reserved, MUST be 0 
+Fabric Endpoint Capabilities 16 Bit 0:0 Indicates support for AI Base profile 
+          0 => AI Base profile NOT supported 
+          1 => AI Base profile supported 
+Bit 1:1 Indicates support for AI Full profile 
+          0 => AI Full profile NOT supported 
+          1 => AI Full profile supported 
+Bit 2:2 Indicates support for HPC profile 
+          0 => HPC profile NOT supported 
+          1 => HPC profile supported 
+Bits 3:6 Reserved, MUST be 0 
+Bit 7: 7 Indicates support for optimized non-matching SES header 
+          0 => Optimized non-matching SES header NOT supported 
+          1 => Optimized non-matching SES header supported 
+Bits 8:15 Reserved, MUST be 0 
+PIDonFEP 16 Process ID in context of fabric endpoint 
+Meaning depends on the address mode 
+Fabric Address 128 IP address 
+Start Resource Index 12 Service Identifier 

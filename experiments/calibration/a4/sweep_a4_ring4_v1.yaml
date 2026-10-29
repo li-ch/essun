@@ -1,0 +1,41 @@
+# Calibration-ladder A4 sweep: where does the L0 ring
+# identity sit inside CAL-A4's validated regime (4/16 V100 GPUs, ring,
+# 150 GB/s NVLink, 64 MB-1.5 GB All-Reduce; docs/calibration/
+# anchors_staging.md §A4)? This sweep covers r = 4; the r = 16 twin is
+# sweep_a4_ring16_v1.yaml.
+#
+# NOTHING IS TUNED: the anchor stages NO hardware completion-time series
+# (its extractable numbers are the regime, the ~5% mean simulation error
+# as a tolerance-shape precedent, and the validity-domain caveat), so
+# there is nothing to tune toward. B values {25, 50, 150} B/ns were fixed
+# by anchor arithmetic BEFORE any stage output was read (150 = the CAL-A4
+# anchor point; 25 = per-link split 150/6 over the V100 NVLink-2 6-link
+# structure; 50 = the CAL-A1 NVLink5 per-port endpoint); L stays at the
+# A-L0-LAT registry point 200 ns. Every delta below is an arithmetic fact
+# of the identity t = 2(r-1)/r*M/B + 2(r-1)*L.
+#
+# Payload grid: CAL-A4's 64 MB-1.5 GB regime endpoints as a 6-size ladder
+# (2^26, 2^27, 2^28, 2^29, 2^30, 3*2^29; binary reading declared in the
+# stage record). r = 4 divides every size, so the A-L0-DIV input gate
+# accepts the exact anchor regime with NO bracketing (the structural
+# contrast with stage A3, where r = 72 = 8*9 never divides a power of
+# two).
+#
+# Baseline = the CAL-A4 anchor-point topology (B = 150), so the delta
+# columns read directly as placement vs the anchor's own NVLink quote.
+sweep: cal_a4_ring4_v1
+workload: experiments/calibration/a4/workloads/w1_dense_tp_decode_tp4_64mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/a4/topologies/ring4_a4_b150_v1.yaml
+grid:
+  payload_sizes_bytes: [67108864, 134217728, 268435456, 536870912, 1073741824, 1610612736]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a4/topologies/ring4_a4_b25_v1.yaml
+    - experiments/calibration/a4/topologies/ring4_a4_b50_v1.yaml
+    - experiments/calibration/a4/topologies/ring4_a4_b150_v1.yaml

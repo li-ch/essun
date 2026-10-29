@@ -1,0 +1,56 @@
+ 408 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+a. The return data is passed to the initiator SES. 
+i. An example implementation option at the initiator is to maintain a packet 
+counter for the original message ID; when the appropriate number of packets 
+with return data arrives, the message is complete at SES; the transaction is 
+complete when all packets are ACK’d at the target as well. 
+b. The read response transaction operates in the same manner as other transactions; 
+when successful, the ACKs do not require a clear. 
+ 
+Figure 3-101 shows how the original message identifier, MID = 1, is echoed back by SES, allowing the 
+initiator SES to associate the data with the request. 
+3.5.20.2.6 Single-Packet Read Sequence—SES Medium and Small Headers 
+When SES uses the medium (UET_HDR_REQUEST_MEDIUM) or small (UET_HDR_REQUEST_SMALL) 
+headers, there is no ses.message_id field. This leads to differences in how reads are processed. Instead 
+of using message ID to associate the read response with the read request, the PSN of the request is 
+carried in the SES Response header (ses.original_request_psn). These sequences are similar to the 
+example in Section 3.5.20.2.5. 
+The standard RUD sequence for a single-packet read using SES medium and small headers on a best-
+effort network is shown in Figure 3-102. This shows a read with return data larger than 
+Max_ACK_Data_Size so the return direction is used to send return data. 
+The sequence in the figure proceeds in the same manner as Figure 3-101: 
+ 
+Figure 3-101 - Standard RUD Sequence for Single-Packet Read–Standard SES Header 
+ 
+              
+        
+       
+ Read Resp, MID , MID1, DATA 
+ MID , MID1, DATA 
+333 RESP,  gtd_del
+            
+PacketsMessages Packets MessagesPackets
+333  Read, MID1,
+ orig_pdcid, orig_psn = 333 
+    
+    
+          
+Seman c 
+processing  
+ Read, MID1 
+ MID1, RESP 
+Read request 
+accepted
+          
+ MID , RESP ,  gtd_del
+ MID , RESP 
+Read COMPLETION
+(libfabric op on)
+CLEAR = 48
+        
+        
+       
+        
+          

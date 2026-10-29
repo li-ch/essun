@@ -1,0 +1,41 @@
+ 451 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+acknowledgement, the PDS MUST transmit a NACK_CCX packet. PDS and CMS populate the ACK_CCX or 
+NACK_CCX packet with all the fields for a given CC algorithm. For ACKs, these are all the fields up to and 
+including the pds.sack_bitmap field. If NSCC is enabled, the pds.ccx_type field is set to NSCC_CSIG and 
+PDS/CMS populate the pds.ack_ccx_state.rcvd_bytes, pds.ack_ccx_state.ooo_count, 
+pds.ack_ccx_state.rc and pds.ack_ccx_state.rcvr_cwnd_pend fields. When only RCCC is enabled, 
+pds.ccx_type is set to RCCC_CSIG and PDS/CMS optionally populate the pds.ack_ccx_state.credit and 
+pds.ack_ccx_state.ooo_count fields. CMS then takes the CSIG Reflection Header from the CSIG-Reflect() 
+function and writes it into the lower 64 bits of the pds.ack_ccx_state field as shown in Figure 3-132 and 
+Figure 3-133. For NACKs, PDS/CMS populate all the fields up to and including the NACK payload. They 
+then take the CSIG Reflection Header from the CSIG-Reflect() function to construct the 
+pds.nack_ccx_state field as shown in Figure 3-134. 
+When a packet without a CSIG tag arrives at a destination FEP whose CSIG-Reflect() function is enabled, 
+processing and generation of ACKs and NACKs follows the procedures specified in 3.6.9.4. The types of 
+ACKs and NACKs generated are as determined by PDS configuration and processing and can be ACK, 
+ACK_CC, or NACK without extended CC state. 
+If pds.flags.ar is not set on the CSIG-tagged packet, the destination FEP may employ other 
+implementation-specific policies to determine when to reflect CSIG information. For example, the FEP’s 
+policy may reflect only when the received signal value is over or under some configured threshold. 
+Determining when to reflect CSIG information when CSIG-tagged packets arrive without pds.flags.ar set, 
+or when ACKs are coalesced, is outside the scope of this specification. 
+3.6.4.8.1 Reflection Header in UET 
+The 64-bit CSIG Reflection Header is carried in the pds.ack_ccx_state and pds.nack_ccx_state fields of 
+ACK_CCX and NACK_CCX packets, respectively. FEPs copy the tag data portion of the CSIG tag (2 B for 
+the compact and 6 B for the wide CSIG tag, excluding the TPID) into the least-significant bytes of the 
+CSIG Reflection Header, and they set the most significant 4 bits of the CSIG Reflection Header to indicate 
+the CSIG tag type. Refer to CMS Section 3.6.9.4 for a description of the CSIG Reflection Header fields. 
+3.6.5 UET CC Protocol Operation Overview 
+The UET Congestion Control protocol, UET-CC, as defined in this specification, provides congestion 
+management on a best-effort Ethernet network. 
+3.6.5.1 Types of Congestion [Informational] 
+Congestion control is a key component required to enable best-effort network operation in large 
+datacenter networks. While PFC is useful for certain use cases, large-scale PFC deployments suffer from 
+various pathologies that are well documented in the literature [15], [1]. UET can operate with both 
+lossless and best-effort networks; this specification refers to best-effort networks, so avoids these issues 
+by design. 
+As congestion has different causes, congestion control requires different mechanisms that work in 
+conjunction to ensure predictable high network performance. Compared to the internet, back-end 
+datacenter networks have much lower and more predictable latency, higher bandwidth for end hosts, 

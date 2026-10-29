@@ -1,0 +1,80 @@
+ 117 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.2.5.4.3 fi_rma() APIs 
+The fi_rma() APIs are used to perform remote memory access operations. There are APIs for read and 
+write operations.  
+The fi_rma() APIs are NOT supported for FI_EP_DGRAM endpoints. 
+Table 2-25 summarizes the fi_rma() API requirements and shows the mapping of the APIs to the UET SES 
+opcodes. 
+Table 2-25 - fi_rma() API Requirements 
+fi_rma() API Description Requirements SES Opcode 
+fi_read The fi_read() API requests that the 
+remote endpoint transfer data from 
+the remote memory region into the 
+local data buffer 
+API MUST be supported by 
+AI Full and HPC profiles 
+UET_READ 
+fi_readv The fi_readv() API adds support for a 
+scatter-gather list to fi_read() 
+Same as fi_read() 
+ 
+Maximum size of scatter-gather 
+list is vendor specific 
+UET_READ 
+fi_readmsg The fi_readmsg() API supports more 
+granular control of the read operation 
+per call using flag parameters 
+Same as fi_read() 
+ 
+The following flags MUST be 
+supported:  
+• FI_COMPLETION 
+UET_READ 
+fi_write The fi_write() API transfers the data 
+contained in the user-specified data 
+buffer to a remote memory region 
+API MUST be supported by AI 
+Base, AI Full, and HPC profiles 
+UET_WRITE 
+fi_writev The fi_writev() API adds support for a 
+scatter-gather list to fi_write() 
+Same as fi_write() 
+ 
+Maximum size of scatter-gather 
+list is vendor specific 
+UET_WRITE 
+fi_writemsg The fi_writemsg() API supports more 
+granular control of the write 
+operation per call using flag 
+parameters 
+Same as fi_write() 
+The following flags MUST be 
+supported: 
+• FI_REMOTE_CQ_DATA 
+• FI_COMPLETION 
+• FI_INJECT 
+• FI_INJECT_COMPLETE 
+• FI_TRANSMIT_COMPLETE 
+• FI_DELIVERY_COMPLETE 
+• FI_FENCE 
+UET_WRITE 
+fi_inject_write The fi_inject_write() API is an 
+optimized version of fi_write() that 
+provides similar completion semantics 
+as fi_inject() 
+Same as fi_write() 
+ 
+The message size used with 
+fi_inject_write() is limited by the 
+inject_size attribute of the 
+transmit context, which is vendor 
+specific 
+UET_WRITE 
+fi_writedata The fi_writedata() API is like fi_write(), 
+but allows for the sending of remote 
+Same as fi_write() 
+ 
+UET_WRITE 
+ 

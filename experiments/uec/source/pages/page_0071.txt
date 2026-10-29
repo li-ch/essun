@@ -1,0 +1,17 @@
+ 71 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+1.6 UE Specification Overview: Layers 
+The UE specification spans multiple layers from software down through the physical layer. Figure 1-16 
+shows the required and optional components of the UE specification by layers. An overview of each 
+layer is provided in the following sections: 
+1.6.1 Software Layer 
+UE Software specifications are provided in Section 2. This includes a mapping to the libfabric API, a 
+mapping to libibverbs, and the specification of UE INC. 
+libfabric mapping: UE-compliant implementations support the Open Fabrics Interface–libfabric API 
+<https://ofiwg.github.io/libfabric/>. Libfabric v2.0 denotes the baseline API for UE-compliant endpoints. 
+Libfabric is the northbound API where the UE API is defined and compliance is checked. UE specifications 
+are expected to maintain alignment with the libfabric community. Libfabric is chosen because it 
+supports many workloads over RDMA-based fabrics and is implemented by many vendors building 
+ 
+Figure 1-16 - UE Specifications by Layers 

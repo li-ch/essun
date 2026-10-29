@@ -1,0 +1,45 @@
+# Calibration-ladder GF-01 LARGE-MESSAGE sweep (gap-fill
+# anchor GF-01): where does the L0 aggregate-reading identity sit relative
+# to the anchor's measured 16 GiB plateau row (eager t = 94,254.55 us,
+# busbw 318.98 GB/s; graph busbw 319.22) on this non-NVIDIA scale-up
+# fabric, across the FOUR anchor-arithmetic aggregate points plus the
+# per-link ring reading?
+#
+# NOTHING IS TUNED: the swept B values were fixed by the anchor's own
+# staged numbers BEFORE any model output was read — 448 = 7 x 64 (raw spec
+# ceiling, the CAL-A7 arithmetic), 336 = 7 x 48 (the blog's usable-rate
+# aggregate), 325.6 (the blog's measured TransferBench link-sum, the
+# closest thing to an aggregate anchor point — the BASELINE), 315 = 7 x 45
+# (the blog's worst-link expectation), ring 64 (raw per-link rate, the
+# per-link reading) — L = 200 ns (registry point) everywhere. Which
+# reading the measured plateau supports is a recorded comparison OUTCOME
+# (it lands between 315 and 325.6), not a parameter choice; no topology
+# or manifest value changed anywhere.
+#
+# Payload grid: the anchor's reconciling/latency sizes
+# {8, 32, 64, 16384, 65536, 2^34} B (all divisible by r=8, gates ACCEPT —
+# no bracketing); 2^34 = 16 GiB is the only bandwidth-bound target row
+# (the mid rows 128 KiB..1 GiB do not reconcile — staging-doc flag,
+# excluded per the FAIL clause, recorded in the stage record). Baseline =
+# the measured link-sum aggregate, so the delta column reads directly as
+# placement vs the anchor's own measured aggregate arithmetic.
+sweep: cal_gf01_large_v1
+workload: experiments/calibration/gf01/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf01/topologies/crossbar8_gf01_sum325_6_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 32, 64, 16384, 65536, 17179869184]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf01/topologies/ring8_gf01_link64_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf01/topologies/crossbar8_gf01_worst315_v1.yaml
+    - experiments/calibration/gf01/topologies/crossbar8_gf01_sum325_6_v1.yaml
+    - experiments/calibration/gf01/topologies/crossbar8_gf01_usable336_v1.yaml
+    - experiments/calibration/gf01/topologies/crossbar8_gf01_agg448_v1.yaml

@@ -1,0 +1,49 @@
+ 259 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 3-34 illustrates the unexpected message variation for the rendezvous transaction. The difference 
+between the two sequences is limited to two features. First, the modified length in the response is 
+intended to truncate the eager portion of the message to the part that is buffered at the target. In the 
+figure, it is assumed that the target buffer is matched to the size of the eager portion; however, a 
+modified length could be shorter (often 0 bytes). In that case, the UET_RENDEZVOUS_SEND can be 
+completed with a single additional packet—just like the deferrable send transaction. Second, the start 
+location of the read transaction differs from the expected case. When the message is unexpected, the 
+read starts from the point in the message that has been buffered at the target. 
+ 
+   
+Figure 3-33 - Rendezvous Transaction, Expected Message Case 
+When implementing a rendezvous transaction, a target MAY read more data than is strictly necessary. 
+Any offset within the bounds of the original message is a legal starting point for the read that is part of 
+the overall rendezvous transaction. 
+Informative Text: 
+Reads of more data than strictly necessary can enable implementation optimizations (e.g., for 
+performance). 
+ 
+Implementation Note: 
+Rendezvous transactions have two completion points. One is when the eager 
+send(UET_RENDEZVOUS_SEND) has completed, and the other is when the read (UET_READ) has 
+completed. The eager send and read are two independent messages. As such, for a variety of reasons, 
+Initiator Target
+SEND
+REQUEST
+Buffer Found
+SES PDSPDS SES
+Msgs + PacketsMessages Msgs + PacketsPackets Messages
+Send MID 1, Offset 0
+Send MID = 1, Off = 0
+Send MID = 1, Off = N
+Eager size 
+Read MID 7, 
+Off=N+MTU
+Send MID 1, Offset N
+Read MID 7, Off = N+M
+Read 
+COMPLETION
+MSG 
+COMPLETION
+SEND 
+COMPLETION
+Payload, Off=N+MTU
+...
+...
+Payload, Off=N+M

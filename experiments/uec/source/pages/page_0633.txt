@@ -1,0 +1,55 @@
+ 633 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+layer directly from the LLC/MAC client and are made irrespective of the LLR’s current state. Similarly, 
+received pause frame indications are passed around the LLR to the LLC/MAC client and do not affect the 
+LLR operation. 
+Because received pause frames stop only new MAC client data being passed to the LLR and do not stop 
+LLR replay data, it is important that the maximum amount of data held in the replay buffer not be much 
+greater than the bandwidth-delay product for the link. If the LLR replay buffer were to contain 
+significantly more data than the bandwidth-delay product, then pause would not operate as expected. A 
+configuration is provided in the LLR to limit the maximum amount of data held in the replay buffer. 
+Informative Text: 
+The process for buffer sizing, accounting for the link bandwidth-delay product, is outside the scope of 
+this specification and should be performed by the implementer. 
+ 
+5.1.1 Frame structure 
+The UE LLR specification introduces a new modified frame preamble, usable with both IPv4 and IPv6 
+addressing to support link layer retry (LLR). When UE features such as LLR are not in use, UE link frames 
+are indistinguishable from standard IEEE 802.3 Ethernet frames. 
+All frames MUST begin with the 8-byte UE link frame preamble defined in Section 5.1.1.1. 
+5.1.1.1 UE Link frame preamble 
+The UE link frame preamble is shown in Table 5-1. LLR-ineligible frames carry the standard preamble. 
+LLR-eligible frames are indicated by the 0x7 in Byte 1. For those frames, the LLR sequence number is 
+placed in bytes 1-3, using a 20-bit sequence number. With minimum 64-byte frames at 800 Gbit/sec, this 
+allows for a round-trip time of over 500 µs. The longest RTT is expected to be much less than 5 µsec, but 
+this field width allows for link speed increases in the future. 
+The remaining bytes (4-6) match those of LLR-ineligible frames. 
+Table 5-1 - MII Format for UE Link Frame Preamble 
+Frame type Byte 
+0 
+Byte 
+1 
+Byte 
+2 
+Byte 
+3 
+Byte 
+4 
+Byte 
+5 
+Byte 
+6 
+Byte 
+7 
+LLR-
+ineligible 
+0xFB 0x55 0x55 0x55 0x55 0x55 0x55 0xD5 
+LLR-eligible 0xFB [3:0] = 0x7 
+[7:4] = 
+frame_seq[19:16] 
+frame_seq[15:8] frame_seq[7:0] 0x55 0x55 0x55 0xD5 
+ 
+The UE link frame preamble (start block) uses the same block type field as specified in IEEE Std 802.3-
+2022, clause 82.2.3.3, with sync header set to 2’b10 and control block field of 0x 8, as shown in Table 
+5-2. Both the block type field and octets D1 through D7 are transmitted from least-significant bit to most-

@@ -1,0 +1,517 @@
+registry_family: unifiedbus_public_papers
+honesty_note: Paper-derived design profile anchors from PUBLIC papers and vendor posts only; NOT a normative
+  UnifiedBus specification profile. The UnifiedBus specification track is license-gated (pending license review, )
+  and was never fetched.
+sources:
+- source_id: PUB-UB-UBMESH-25
+  title: 'UB-Mesh: a Hierarchically Localized nD-FullMesh Datacenter Network Architecture (v3)'
+  url: https://arxiv.org/html/2503.20377v3
+  handoff_row: null
+  access: PUBLIC_READ
+  role: 'Primary public paper: Unified Bus (UB) technique, 4D-FullMesh topology, LRS/HRS, APR routing,
+    availability'
+  found_via: Public follow-up search for UnifiedBus; arXiv listing (v3 2025-05-17)
+  kind: arxiv_html
+  raw_format: html
+  doc_sha256: dd9bd4e0855a41b7e67d304983ac6edac87dbbb5950cb5560bb81f450a575f90
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 18
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-UBMESH-25
+  notes: arXiv HTML; raw bytes hashed at fetch time; not the UnifiedBus specification
+- source_id: PUB-UB-HUAWEI-HC26
+  title: Huawei Unveils New UnifiedBus Computing Architecture for SuperPoDs and Clusters (Huawei Connect
+    2026 news post)
+  url: https://www.huawei.com/en/news/2026/9/hc-lingqu-agent-ai
+  handoff_row: null
+  access: PUBLIC_READ
+  role: 'Vendor engineering post: SuperPoD scale, LinkBlade/LinkDevice/UBG numbers, RTT, memory semantics'
+  found_via: Public follow-up of the UnifiedBus ecosystem named via STD-UB-HOME; huawei.com newsroom
+  kind: vendor_post
+  raw_format: html
+  doc_sha256: 9cf10ae24480fc1e0ff008aae0e071fe66ffba80a087dd5c7648324b3dd37608
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 3
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-HUAWEI-HC26
+  notes: Marketing/announcement post; numbers are vendor-claimed, labeled as such in the profile
+- source_id: PUB-UB-OSCOMP
+  title: UnifiedBus OS component overview (UB OS 组件, unifiedbus.com)
+  url: https://www.unifiedbus.com/zh/software/ub-os-component
+  handoff_row: STD-UB-OS
+  access: PUBLIC_READ
+  role: 'Official public page: UB protocol software surface (URMA, CDMA, UMMU, OBMM, device management)'
+  found_via: Pre-cleared public row STD-UB-OS in sources.csv
+  kind: public_page
+  raw_format: html
+  doc_sha256: b0facdda32d1f5d7c257c62bf342605f3412adb5463f4fc69740bb2626a3ee04
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 1
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-OSCOMP
+  notes: Public component description page; NOT the license-gated specification
+- source_id: PUB-UB-DOCS-EN
+  title: UnifiedBus documentation index, English (unifiedbus.com/en)
+  url: https://www.unifiedbus.com/en
+  handoff_row: STD-UB-HOME
+  access: PUBLIC_READ
+  role: 'Official public docs index: spec-family structure, Base Spec 2.1 public highlights (224/256 Gbit/s),
+    SuperPoD architecture features'
+  found_via: Pre-cleared public row STD-UB-HOME (https://www.unifiedbus.com/) is a client-rendered shell
+    with no extractable text; /en is the same public site's server-rendered English docs index
+  kind: public_page
+  raw_format: html
+  doc_sha256: 287529528fb1ff12ecfca3f79646f81498fa11fa23f5f2f5cc9ff15ff0202818
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 2
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-DOCS-EN
+  notes: Only the public index text is used; the linked specification documents (Base/Firmware/Compatibility
+    Test specs, gated by STD-UB-LICENSE) are never fetched
+- source_id: PUB-UB-NESTEDVN-26
+  title: Nested Parallel von Neumann Architecture and Nested BSP (v1)
+  url: https://arxiv.org/html/2609.16787v1
+  handoff_row: null
+  access: PUBLIC_READ
+  role: 'Public paper (same lead author): Unified Bus as end-to-end memory-semantic interconnect, peer
+    equality'
+  found_via: Public follow-up search for UnifiedBus; arXiv listing (2026-09-15)
+  kind: arxiv_html
+  raw_format: html
+  doc_sha256: e580f09b7dd21f170703f2b713db397289c00c7da978dab259e045cda69d2421
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 6
+  pages_dir: experiments/unifiedbus/source/pages/PUB-UB-NESTEDVN-26
+  notes: Architecture-concept source; no bus link numbers expected here
+anchors:
+- id: UBP-UBMESH-0-ABSTRACT-UB
+  source_id: PUB-UB-UBMESH-25
+  section: '0'
+  title: 'Abstract: the Unified Bus technique'
+  category: architecture
+  page: 1
+  quote: These components are interconnected via a novel Unified Bus (UB) technique, which enables flexible
+    IO bandwidth allocation and hardware resource pooling.
+  page_sha256: d46c3f032c2934bc4fb67fa637b3b35575ee23e34472683e2da662316feea94c
+- id: UBP-UBMESH-0-ABSTRACT-TOPOLOGY
+  source_id: PUB-UB-UBMESH-25
+  section: '0'
+  title: 'Abstract: hierarchically localized nD-FullMesh'
+  category: topology
+  page: 1
+  quote: UB-Mesh employs a hierarchically localized nD-FullMesh network topology.
+  page_sha256: d46c3f032c2934bc4fb67fa637b3b35575ee23e34472683e2da662316feea94c
+- id: UBP-UBMESH-1-COST-CLAIM
+  source_id: PUB-UB-UBMESH-25
+  section: '1'
+  title: 'Introduction: switch/optical reduction claims'
+  category: performance
+  page: 3
+  quote: UB-Mesh reduces high-radix switch usage by 98% and optical module usage by 93%
+  page_sha256: c3e1ec7500d95184644a8f55bef502571f41b8035c57e033d1c0d7cac66b9399
+- id: UBP-UBMESH-3.2-UB-DEFINITION
+  source_id: PUB-UB-UBMESH-25
+  section: '3.2'
+  title: Unified Bus as the interconnection mechanism
+  category: architecture
+  page: 6
+  quote: These modules are interconnected through a novel interconnection mechanism called Unified Bus
+    (UB).
+  page_sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+- id: UBP-UBMESH-3.2.1-NPU-IO
+  source_id: PUB-UB-UBMESH-25
+  section: 3.2.1
+  title: 'NPU IO: two controllers, x72 UB lanes'
+  category: link_scale
+  page: 6
+  quote: The NPU equips two UB IO controllers, which collectively provide x72 UB lanes.
+  page_sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+- id: UBP-UBMESH-3.2.1-CPU-IO
+  source_id: PUB-UB-UBMESH-25
+  section: 3.2.1
+  title: 'CPU IO: one controller, x32 IO'
+  category: link_scale
+  page: 6
+  quote: The CPU, responsible for executing host programs, is also equipped with one UB IO controller,
+    offering a UB x32 IO.
+  page_sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+- id: UBP-UBMESH-3.2.1-LRS-DEF
+  source_id: PUB-UB-UBMESH-25
+  section: 3.2.1
+  title: 'LRS: lightweight low-radix switch'
+  category: link_scale
+  page: 6
+  quote: we develop LRS, which are lightweight, low-radix switches.
+  page_sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+- id: UBP-UBMESH-3.2.1-HRS-IO
+  source_id: PUB-UB-UBMESH-25
+  section: 3.2.1
+  title: 'HRS: UB x512 IO capacity for Pod-level switching'
+  category: link_scale
+  page: 6
+  quote: UB-Mesh also includes high-radix switches (HRS) that offer a UB x512 IO capacity for Pod-level
+    switching.
+  page_sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+- id: UBP-UBMESH-2.2-LOCALITY-97
+  source_id: PUB-UB-UBMESH-25
+  section: '2.2'
+  title: TP+SP ~97% of total traffic (locality basis)
+  category: workload_locality
+  page: 4
+  quote: TP and SP account for approximately 97% of the total traffic
+  page_sha256: 9220a83da7379d0862876b44e3b50177491599aeafa7ed38f076781806b40354
+- id: UBP-UBMESH-3.1-HOPS
+  source_id: PUB-UB-UBMESH-25
+  section: '3.1'
+  title: Most transmissions complete in 0-2 hops
+  category: topology
+  page: 6
+  quote: most transmissions (typically involving TP or SP as per Table 1) can be completed in 0-2 hops
+  page_sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+- id: UBP-UBMESH-3.1-CABLE-MIX
+  source_id: PUB-UB-UBMESH-25
+  section: '3.1'
+  title: 86.7% of cables are short-range passive electrical
+  category: topology
+  page: 6
+  quote: short-range passive electrical cables account for 86.7% of the total consumed cables
+  page_sha256: 172c7ed2c82b5b37ebe7b627e26525a9e8df5d2660aec0ff19ebf0e3993ead57
+- id: UBP-UBMESH-3.3.1-RACK-64NPU
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.1
+  title: 'Rack: 8 NPU boards x 8 NPUs'
+  category: scale
+  page: 7
+  quote: The core of the rack consists of eight NPU boards, each containing eight NPUs
+  page_sha256: cfe9c36a24849aaeea6c326854c2c602196440db459b2812807332085342060c
+- id: UBP-UBMESH-3.3.1-LRS-PLANE
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.1
+  title: 18-LRS fully-connected switch plane
+  category: topology
+  page: 7
+  quote: 18 LRSes are fully-connected to form one switch plane, where two LRSes are used for CPUs and
+    backup NPUs, eight for regular NPUs and eight for inter-rack connection.
+  page_sha256: cfe9c36a24849aaeea6c326854c2c602196440db459b2812807332085342060c
+- id: UBP-UBMESH-3.3.1-BACKPLANE-IO
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.1
+  title: Backplane switches output four UB x256 IO
+  category: link_scale
+  page: 7
+  quote: Aggregately, these back-plane switches output four UB x256 IO.
+  page_sha256: cfe9c36a24849aaeea6c326854c2c602196440db459b2812807332085342060c
+- id: UBP-UBMESH-3.3.2-64PLUS1
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.2
+  title: 64+1 backup NPU design
+  category: reliability
+  page: 7
+  quote: the system comprises 64 regular NPUs along with an additional backup NPU.
+  page_sha256: cfe9c36a24849aaeea6c326854c2c602196440db459b2812807332085342060c
+- id: UBP-UBMESH-3.3.3-4D-FULLMESH
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.3
+  title: 4D-FullMesh = intra-rack 2D + inter-rack 2D
+  category: topology
+  page: 7
+  quote: we create a 2D-FullMesh within each rack and extend this to another 2D-FullMesh beyond the rack,
+    resulting in a 4D-FullMesh.
+  page_sha256: cfe9c36a24849aaeea6c326854c2c602196440db459b2812807332085342060c
+- id: UBP-UBMESH-3.3.3-INTERRACK-LINK
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.3
+  title: Inter-rack link = UB x128 IO
+  category: link_scale
+  page: 8
+  quote: Each link in this configuration represents a UB x128 IO
+  page_sha256: dfa415d629710700b2333ce4efb02d47dd0d8c3ae124db0e1149c0672d172185
+- id: UBP-UBMESH-3.3.3-POD-1024
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.3
+  title: 'Pod: 16 racks, 1024 NPUs'
+  category: scale
+  page: 8
+  quote: Since each rack has 64 NPUs and each pod has 16 racks, a 4D-FullMesh UB-Mesh-Pod contains 1024
+    NPUs in total.
+  page_sha256: dfa415d629710700b2333ce4efb02d47dd0d8c3ae124db0e1149c0672d172185
+- id: UBP-UBMESH-3.3.4-SUPERPOD-8K
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.4
+  title: 'SuperPod: HRS-connected racks, up to 8K NPUs'
+  category: scale
+  page: 8
+  quote: we use high-radix Pod-switches (HRS) to connect each rack in the SuperPod, scaling up to 8K NPUs.
+  page_sha256: dfa415d629710700b2333ce4efb02d47dd0d8c3ae124db0e1149c0672d172185
+- id: UBP-UBMESH-3.3.4-DCN-100K
+  source_id: PUB-UB-UBMESH-25
+  section: 3.3.4
+  title: DCN domain scales to 100K+ NPUs (Clos)
+  category: scale
+  page: 8
+  quote: The DCN domain can scale to 100K NPUs or more.
+  page_sha256: dfa415d629710700b2333ce4efb02d47dd0d8c3ae124db0e1149c0672d172185
+- id: UBP-UBMESH-4.1.1-SR-HEADER
+  source_id: PUB-UB-UBMESH-25
+  section: 4.1.1
+  title: 'APR source routing: 8-byte SR header'
+  category: routing
+  page: 9
+  quote: an 8-byte SR header, containing the forwarding instructions, is added to original packet header.
+  page_sha256: 26c31f8f8ff6fddb19f8d6900a254639c48fb28f6cd0ed891d7f35ff21a6378d
+- id: UBP-UBMESH-4.1.3-TWO-VL
+  source_id: PUB-UB-UBMESH-25
+  section: 4.1.3
+  title: Deadlock-free all-path routing with 2 VLs
+  category: routing
+  page: 9
+  quote: enabling deadlock-free all-path routing with only 2 VL resources.
+  page_sha256: 26c31f8f8ff6fddb19f8d6900a254639c48fb28f6cd0ed891d7f35ff21a6378d
+- id: UBP-UBMESH-6.3-INTERRACK-DEFAULT
+  source_id: PUB-UB-UBMESH-25
+  section: '6.3'
+  title: 'Default inter-rack allocation: UB x16 per NPU'
+  category: link_scale
+  page: 12
+  quote: UB-Mesh assigns a UB x16 IO per NPU for inter-rack communication by default
+  page_sha256: 6955ebdc83167ae6763be443363c2543b5f793488106a96e4c9806e8c7f0e7e5
+- id: UBP-UBMESH-6.3-INTERRACK-EXPLORED
+  source_id: PUB-UB-UBMESH-25
+  section: '6.3'
+  title: 'Inter-rack bandwidths explored: x4/x8/x16/x32'
+  category: link_scale
+  page: 12
+  quote: The inter-rack bandwidths evaluated are x4, x8, x16, and x32 UB IO per NPU.
+  page_sha256: 6955ebdc83167ae6763be443363c2543b5f793488106a96e4c9806e8c7f0e7e5
+- id: UBP-UBMESH-6.5-LINEARITY
+  source_id: PUB-UB-UBMESH-25
+  section: '6.5'
+  title: Linearity still above 95% at 64K NPUs
+  category: performance
+  page: 13
+  quote: the linearity is still above 95%.
+  page_sha256: 73298968ec47953b34fc126b3efe92c6cf3852c8c51b14eb279a0a687032e3d0
+- id: UBP-UBMESH-6.6-MTBF
+  source_id: PUB-UB-UBMESH-25
+  section: '6.6'
+  title: MTBF 98.5h (UB-Mesh) vs 13.8h (Clos) at 8K NPUs
+  category: availability
+  page: 13
+  quote: the baseline Clos is 13.8 hours for a 8K-NPU cluster, while UB-Mesh achieves 98.5 hours
+  page_sha256: 73298968ec47953b34fc126b3efe92c6cf3852c8c51b14eb279a0a687032e3d0
+- id: UBP-UBMESH-6.6-AVAILABILITY
+  source_id: PUB-UB-UBMESH-25
+  section: '6.6'
+  title: Availability 98.8% with 75-minute MTTR assumption
+  category: availability
+  page: 13
+  quote: the availability of UB-Mesh is 98.8% according to Eq.3 (We assume a 75-minute MTTR
+  page_sha256: 73298968ec47953b34fc126b3efe92c6cf3852c8c51b14eb279a0a687032e3d0
+- id: UBP-HC26-1-UNIFIED-PROTOCOL
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: 10+ protocols combined under UnifiedBus
+  category: architecture
+  page: 2
+  quote: More than ten interconnect protocols have been combined under the UnifiedBus protocol
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-BANDWIDTH-LEVEL
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: Interconnect bandwidth from 100 GB/s level to TB/s level
+  category: link_scale
+  page: 2
+  quote: increases interconnect bandwidth from 100 GB/s level to TB/s level
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-RTT
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: RTT latency from 7 microseconds to 2 microseconds
+  category: latency
+  page: 2
+  quote: reduces round-trip time (RTT) latency from 7 microseconds to 2 microseconds
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-GLOBAL-ADDRESSING
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: Unified global memory addressing within SuperPoDs
+  category: memory_semantics
+  page: 2
+  quote: This protocol also enables unified global memory addressing within SuperPoDs.
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-HETERO-PEER
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: Direct interconnect of CPUs, NPUs, memory, SSDs
+  category: architecture
+  page: 2
+  quote: UnifiedBus directly interconnects CPUs, NPUs, memory, and solid-state drives (SSDs)
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-LINKBLADE
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: 'LinkBlade: cable-free in-cabinet, 4096-NPU SuperPoD'
+  category: topology
+  page: 2
+  quote: the UnifiedBus LinkBlade eliminates circuit losses with a cable-free design, which reduces copper
+    cabling within a 4,096-NPU SuperPoD by about 196 kilometers.
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-LINKDEVICE
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: 'LinkDevice: 176 ports x 1.6 Tbit/s, 280 Tbit/s'
+  category: link_scale
+  page: 2
+  quote: the UnifiedBus LinkDevice supports 176 ports, with 1.6 Tbit/s bandwidth per port, delivering
+    280 Tbit/s all-optical interconnection.
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-LINKDEVICE-RTT
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: LinkDevice RTT as low as 2 microseconds
+  category: latency
+  page: 2
+  quote: with an RTT latency as low as 2 microseconds.
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-UBG-RADIX
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: UBG switch radix fan-out up to 1,024
+  category: scale
+  page: 2
+  quote: the UnifiedBus UBG switch provides a massive radix fan-out capacity of up to 1,024
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-MILLION-SUPERCLUSTER
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: Million-NPU SuperCluster support
+  category: scale
+  page: 2
+  quote: it can support a million-NPU SuperCluster
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-HC26-1-ATLAS650E
+  source_id: PUB-UB-HUAWEI-HC26
+  section: '1'
+  title: 'Two Atlas 650E servers: 16-NPU switch-free'
+  category: topology
+  page: 2
+  quote: Two Atlas 650E air-cooled servers can be directly linked through UnifiedBus to enable switch-free
+    interconnect across 16 NPUs
+  page_sha256: 5f757eafeb6945891f337fdf83f70fbd7d8c1960e606d0a0e6a77cdca4982a54
+- id: UBP-UBOS-1-URMA-DRIVER
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: URMA communication device driver, user-state UMDK
+  category: software
+  page: 1
+  quote: 由硬件供应商提供的URMA通信设备驱动，可在用户态接入UMDK。
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBOS-1-CDMA
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: 'CDMA: async memory read/write host-host and host-device'
+  category: memory_semantics
+  page: 1
+  quote: CDMA库为用户空间应用程序提供了CDMA功能，支持主机之间或主机与设备之间异步的内存读写操作。
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBOS-1-UMMU
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: 'UMMU: address translation and permission tables'
+  category: memory_semantics
+  page: 1
+  quote: 提供UMMU设备注册、初始化、配置表管理、地址转换表管理及权限表管理等功能。
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBOS-1-OBMM-EXPORT-IMPORT
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: 'OBMM: memory lending EXPORT/IMPORT + coherence'
+  category: memory_semantics
+  page: 1
+  quote: 提供内存拆借接口（EXPORT和IMPORT）、一致性维护接口（一致性维护接口仅在内存共享场景使用）。
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBOS-1-UMMUCORE-TOKENID
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: 'ummu-core: TokenID management, spec-2.0 advanced capabilities'
+  category: software
+  page: 1
+  quote: 提供基础的TokenID管理和《灵衢基础规范2.0》中定义的高级能力的配置和管理。
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBOS-1-UBUS-SERVICES
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: 'UBus: enumeration, device mgmt, error handling, hot-plug'
+  category: software
+  page: 1
+  quote: 提供UB总线的枚举、UB设备创建、UB设备管理、错误处理、热拔插、中断等和设备相关的基础服务。
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBOS-1-UBUTILS-TOPO
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: 'ubutils: UB topology query and configuration'
+  category: software
+  page: 1
+  quote: 提供UB设备管理的工具，实现UB拓扑查询、配置空间查询及配置等功能。
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBOS-1-OSEULER
+  source_id: PUB-UB-OSCOMP
+  section: '1'
+  title: openEuler 24.03 LTS SP3 (6.6 kernel) host OS
+  category: software
+  page: 1
+  quote: openEuler首个支持超节点的版本，基于6.6内核的24.03-LTS版本增强扩展版本
+  page_sha256: e7c8fc6f2107af0b4d6166da09744f3603929575f5a094ae59843dba6a910473
+- id: UBP-UBDOCS-1-SPEC21-RATES
+  source_id: PUB-UB-DOCS-EN
+  section: '1'
+  title: 'Base Spec 2.1 public highlight: 224/256 Gbit/s rates'
+  category: link_scale
+  page: 1
+  quote: 'New: 224/256 Gbit/s rates | Reliable rerouting | Higher system bandwidth efficiency'
+  page_sha256: b4da667b205473ab79eb0677dd7c2e9b45e9540a293e5c9c4c67eaf7ce182897
+- id: UBP-UBDOCS-1-LAYERS
+  source_id: PUB-UB-DOCS-EN
+  section: '1'
+  title: 'Layer family: physical, data link, network test cases'
+  category: architecture
+  page: 1
+  quote: 'Volume 1: Physical layer, data link layer, and network layer test cases'
+  page_sha256: b4da667b205473ab79eb0677dd7c2e9b45e9540a293e5c9c4c67eaf7ce182897
+- id: UBP-UBDOCS-1-SUPERPOD-ARCH
+  source_id: PUB-UB-DOCS-EN
+  section: '1'
+  title: SuperPoD reference architecture features
+  category: architecture
+  page: 1
+  quote: The reference architecture features bus interconnect, unified protocol, peer-to-peer coordination,
+    all-resource pooling, large-scale networking, and high availability.
+  page_sha256: b4da667b205473ab79eb0677dd7c2e9b45e9540a293e5c9c4c67eaf7ce182897
+- id: UBP-NESTEDVN-1-MEMSEMANTIC-BUS
+  source_id: PUB-UB-NESTEDVN-26
+  section: '1'
+  title: One memory-semantic bus end to end, full peer equality
+  category: memory_semantics
+  page: 1
+  quote: joined by one memory-semantic bus end to end, with full peer equality
+  page_sha256: 740e9070f628876b4a61157bd9650a89c77ed941031c014c4ce09ad309c21d6f
+- id: UBP-NESTEDVN-2-LAYER-BOUNDARIES
+  source_id: PUB-UB-NESTEDVN-26
+  section: '2'
+  title: Command does not break at layer boundaries
+  category: architecture
+  page: 2
+  quote: it makes the split and join of every layer line up, so that command does not break at the boundaries
+  page_sha256: e41e18ea23c490b95f097c682493e502410438d7dd24ec6c5b3472993940fdfd
+- id: UBP-NESTEDVN-2-PEERS-ON-ONE-BUS
+  source_id: PUB-UB-NESTEDVN-26
+  section: '2'
+  title: Package to autonomous zone, peers on one bus
+  category: architecture
+  page: 2
+  quote: from package to autonomous zone, concurrent units at every layer, peers on one bus.
+  page_sha256: e41e18ea23c490b95f097c682493e502410438d7dd24ec6c5b3472993940fdfd
+- id: UBP-NESTEDVN-3-HARDWARE-PROPERTIES
+  source_id: PUB-UB-NESTEDVN-26
+  section: '3'
+  title: One protocol end to end; copper near, optics far
+  category: architecture
+  page: 2
+  quote: one protocol end to end, memory semantics, full peer equality, copper near and optics far
+  page_sha256: e41e18ea23c490b95f097c682493e502410438d7dd24ec6c5b3472993940fdfd

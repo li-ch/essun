@@ -1,0 +1,21 @@
+ 428 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Refer to the TSS Section 3.7.11 for the full header format when using encryption. The examples 
+including encryption in Figure 3-114 and Figure 3-117 are simplified header formats showing only 
+header fields that are important for packet parsing. 
+Not all combinations are shown in the following examples. The provided set of full-stack headers is 
+sufficient for the implementor to visualize any missing combinations. IPv4 and IPv6 are shown using 
+common figures, with IPv4 and IPv6 using Protocol and Next Header, respectively, to identify the next 
+header. 
+3.5.25.1 UET over UDP/IP, no UET CRC, no Encryption 
+Figure 3-112 shows the full header stack, depicting important fields necessary for parsing when using 
+UDP, no UET CRC and no UET encryption. 
+  
+3.5.25.2 UET over UDP/IP Using UET CRC, no Encryption 
+Figure 3-113 shows the full header stack, depicting important fields necessary for parsing when UDP and 
+UET CRC without UET encryption. 
+ 
+Figure 3-112 - Full Header: UET/UDP/IP – no UET CRC, no TSS 
+ 
+ 

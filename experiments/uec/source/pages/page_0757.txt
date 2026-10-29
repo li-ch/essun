@@ -1,0 +1,14 @@
+ 757 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 7-4 - Network Switch Planes 
+• Management plane runs management protocols (e.g., OpenConfig) and manages configuration 
+of routing protocols. The management plane is also responsible for IP and interface 
+management. 
+• Control plane runs routing protocols (e.g., OSPF) and manages routing and forwarding tables. 
+The control plane uses SAI to interface with switch ASIC. 
+• Data plane handles forwarding or routing of data traffic and maintains routing and forwarding 
+tables. The data plane is responsible for performing per-packet functions (e.g., NAT, stat, ACLs). 
+7.5.2 UE Switch Manageability Architecture 
+The UE switch manageability architecture builds on top of a switch management plane. 

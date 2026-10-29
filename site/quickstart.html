@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quickstart — essun</title>
+<meta name="description" content="Install essun, run the reference experiment, read a run record, and write your own experiment. Requirements (Python 3.10+, optional Docker), all make targets, and a walkthrough with real outputs.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html" aria-current="page">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">Quickstart</p>
+    <h1>From clone to a reproduced run record</h1>
+    <p class="tagline">Three commands to install and replay the public-gate chain; then a walkthrough of your opening experiment — run a committed workload, read the record, check it by hand, and change one free parameter.</p>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="requirements">
+  <p class="kicker">Before you start</p>
+  <h2>Requirements</h2>
+  <div class="prose">
+    <ul>
+      <li><strong>Python 3.10 or newer</strong> (<code>pyproject.toml</code> <code>requires-python</code>; the CI matrix runs 3.10–3.13). Needed by <code>make bootstrap</code>.</li>
+      <li><strong>Docker — optional.</strong> Docker is needed only by the two discrete-event legs of <code>make demo</code> (the ASTRA-sim container run and the figure registration that renders from its record). Any recent Docker Engine with bind-mount support works; verified with Docker CLI/Engine 29.8.2 (OrbStack) on macOS arm64. When the <code>docker</code> CLI is absent or the daemon is unreachable, <code>make demo</code> runs in <strong>no-Docker mode</strong>: every L0-only leg runs unchanged, the two Docker-dependent legs are skipped with exactly what was skipped and the requirement printed, and the command exits 0. A present-but-missing pinned image is not skipped — the run stops there naming the rebuild step.</li>
+      <li><strong>The pinned image</strong> <code>essun/astra-sim-analytical:s1</code> (id <code>sha256:bb02b612…</code>, ~1.3 GB, linux/arm64, local-only — never pushed): build it from <code>backends/docker/astra-sim.Dockerfile</code> per the runbook. The recorded build log sums to about five minutes of step time on the reference Apple-silicon Mac; on x86-64 hosts, rebuild from the same Dockerfile (the pinned <code>ubuntu:22.04</code> base is multi-arch).</li>
+      <li><strong>Disk:</strong> repo export ~48 MB of tracked blobs (the <code>git archive</code> zip is ~8 MB) + venv ~36 MB + content-addressed <code>results/</code> &lt; 1 MB after a gate run + the ~1.3 GB image when built.</li>
+      <li><strong>Time (reference machine, 2026-10-28):</strong> a cold-tree <code>make demo</code> completes in ~11 s with Docker, ~10 s in no-Docker mode.</li>
+    </ul>
+    <p class="note">Requirements above carry the evidence label <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> — measured on the reference machine, warm pip cache; a fresh machine adds package download time.</p>
+  </div>
+</section>
+
+<section id="install">
+  <p class="kicker">Three commands</p>
+  <h2>Install</h2>
+  <div class="term" style="max-width:44rem">
+    <div class="term-bar" aria-hidden="true">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="term-title">sh</span>
+    </div>
+    <pre><code><span class="p">$</span> git clone https://github.com/li-ch/essun &amp;&amp; cd essun
+<span class="p">$</span> make bootstrap    <span class="c"># creates .venv, installs the package + dev deps</span>
+<span class="p">$</span> make test         <span class="c"># 717 passed, 1 skipped on the reference machine</span></code></pre>
+  </div>
+  <p class="prose"><code>make bootstrap</code> creates a local virtual environment and installs the package in editable mode with dev extras (pytest). Nothing is installed globally and no compiler toolchain is needed for the analytical backends — they run in-process, in Python.</p>
+</section>
+
+<section id="targets">
+  <p class="kicker">The levers</p>
+  <h2>Make targets</h2>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Target</th><th>What it does</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="n">make help</td><td>Print all targets (the default goal — a bare <code>make</code> prints this list)</td></tr>
+      <tr><td class="n">make bootstrap</td><td>Create <code>.venv</code> and install the package + dev extras</td></tr>
+      <tr><td class="n">make validate-schemas</td><td>Run the draft-schema and example tests</td></tr>
+      <tr><td class="n">make test</td><td>Full pytest suite: schema, golden, negative, determinism, observables, evidence, backends, specir</td></tr>
+      <tr><td class="n">make run EXP=&lt;manifest&gt;</td><td>Run one experiment manifest; stores a content-addressed run record under <code>results/&lt;run_id&gt;/</code></td></tr>
+      <tr><td class="n">make sweep EXP=&lt;grid&gt;</td><td>Run a sweep grid; emits <code>results/sweeps/&lt;id&gt;/table.{json,md}</code> (byte-identical replay)</td></tr>
+      <tr><td class="n">make paper-check</td><td>Placeholder-discipline check over <code>paper/</code> and the README gate section</td></tr>
+      <tr><td class="n">make demo</td><td>The public-gate story end-to-end (8 legs; no-Docker mode skips the two Docker legs)</td></tr>
+      <tr><td class="n">make ci-local</td><td>The exact sequence of <code>.github/workflows/ci.yml</code>, runnable before any remote exists</td></tr>
+      <tr><td class="n">make clean</td><td>Remove regenerable Python build/test caches (never touches <code>results/</code>)</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="walkthrough">
+  <p class="kicker">Your opening experiment</p>
+  <h2>Walkthrough — run a committed experiment</h2>
+  <p class="prose">One experiment = one YAML manifest referencing five input files by repo-relative path (workload, fabric topology, standard profile, implementation profile, assumptions registry), naming one backend, and listing the observables to emit. <code>make run</code> validates the manifest against <code>schemas/experiment.schema.json</code>, gates capabilities, executes, and stores a content-addressed record.</p>
+
+  <ol class="steps">
+    <li>
+      <span class="stepno" aria-hidden="true">1</span>
+      <h3>Run the golden smoke experiment</h3>
+      <pre><code>make run EXP=experiments/vertical_slice/w1_decode_smoke.yaml</code></pre>
+      <p>Output (the run id is pinned in <code>experiments/vertical_slice/w1_decode_smoke.GOLDEN.md</code>):</p>
+      <pre><code>{
+  "run_id": "146ba565d2cac8e613435e548caba4f606e0abbb149beaf6404935d4f92199a1",
+  "run_dir": "results/146ba565d2cac8e613435e548caba4f606e0abbb149beaf6404935d4f92199a1"
+}</code></pre>
+      <p>This is the W1 Dense TP Decode workload (6 AllReduce ops of 16 KiB) on the committed 8-rank ring (<code>bytes_per_ns: 64</code>, <code>hop_latency_ns: 200</code>).</p>
+    </li>
+    <li>
+      <span class="stepno" aria-hidden="true">2</span>
+      <h3>Read the record</h3>
+      <pre><code>python3 -m json.tool results/&lt;run_id&gt;/observations.json</code></pre>
+      <p>The interesting parts: <code>O-CCT</code> completion time is 3248 ns per op (exact fields ride alongside every float — <code>completion_time_ns_mean_exact: "3248"</code>), and <code>O-CONSERVATION</code> reports 0 violations over the wire-byte accounting.</p>
+    </li>
+    <li>
+      <span class="stepno" aria-hidden="true">3</span>
+      <h3>Check it by hand</h3>
+      <p>The whole point of an analytical backend is that nothing is opaque. The L0 ring closed form:</p>
+      <pre><code>t(M) = (2·(r−1)/r · M) / B  +  2·(r−1) · L
+       └── transfer term ──┘    └─ latency ─┘
+
+r=8, M=16384, B=64, L=200:
+  28672 B / 64 B/ns + 2800 ns = 448 + 2800 = 3248 ns</code></pre>
+      <p>28672 = 2·7/8 · 16384 bytes of per-rank ring traffic; 2800 = 2·7·200 ns. If your arithmetic and the record ever disagree, that is a model bug, not a tuning knob — conservation violations raise instead of degrading.</p>
+    </li>
+    <li>
+      <span class="stepno" aria-hidden="true">4</span>
+      <h3>Prove it is deterministic</h3>
+      <p>Run step 1 again: the output is byte-identical, the same <code>run_id</code>. Reruns are replays, not new measurements. Change any input byte (say <code>hop_latency_ns: 201</code>) and the id changes — content addressing means a run record can never silently refer to inputs it did not have.</p>
+    </li>
+    <li>
+      <span class="stepno" aria-hidden="true">5</span>
+      <h3>Make it yours</h3>
+      <p>Copy the topology file, change one free parameter (e.g. halve <code>bytes_per_ns: 64</code> → <code>32</code>), point a copied manifest at it, rerun: the completion time moves to exactly the value the closed form predicts (3696 ns at B=32), wire bytes unchanged, because bandwidth changes time, not traffic. The full two-example guide — run your own topology, then write your own workload and manifest field by field, with every command's real output pasted — is <code>docs/usage.md</code> in the repository.</p>
+    </li>
+  </ol>
+</section>
+
+<section id="gates">
+  <p class="kicker">Safety rails</p>
+  <h2>What the capability gates catch for you</h2>
+  <div class="prose">
+    <p>Gates fire <strong>before</strong> any model executes; a bypass is treated as a bug, never a feature. Two you are likely to meet:</p>
+    <ul>
+      <li><strong>Rank mismatch</strong> — a topology of 9 ranks with a <code>tp_size: 8</code> workload fails loudly: <code>workload tp_size 8 != topology ranks 9</code>.</li>
+      <li><strong>Non-integral chunking</strong> — L0 models require the rank count to divide every payload (<code>A-L0-DIV</code>); a 7-rank ring with a 16384-byte op is rejected with the assumption id and the reason.</li>
+    </ul>
+    <p>Undeclared (model, topology_class) pairings, unknown backends, workloads issuing collectives the model does not declare, and unsupported observables all fail the same way: named gap, non-zero exit.</p>
+  </div>
+</section>
+
+<section id="next">
+  <p class="kicker">Keep going</p>
+  <h2>Where to go next</h2>
+  <div class="prose">
+    <ul>
+      <li><a href="backends.html">Backends</a> — the four simulation paths and their honest capability tables.</li>
+      <li><code>make sweep EXP=experiments/sweeps/l0_allreduce_design_space_v1.yaml</code> — many runs over a parameter grid, one comparison table, byte-identical replay. Excerpts on the <a href="explorer.html">Explorer page</a>.</li>
+      <li><code>make demo</code> — the whole public-gate chain end-to-end, no-Docker mode included.</li>
+      <li><code>docs/usage.md</code> and <code>docs/atlas/README.md</code> in the repository — the full usage guide and the design-space atlas index.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

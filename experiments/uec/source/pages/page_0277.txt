@@ -1,0 +1,52 @@
+ 277 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.7.3 Return Codes 
+SES can encounter a variety of errors—ranging from errors that may be only informational (I) (e.g., 
+RC_AMO_FP_UNDERFLOW) to recoverable errors (R) (e.g., RC_BAD_GENERATION) to errors that are 
+fatal to the message (U) (e.g., RC_AMO_UNSUPPORTED_OP) to errors that may require more drastic 
+actions to correct (U) (e.g., RC_UNCOR). SES return codes are listed in Table 3-25. 
+Table 3-25 - Defined Semantic Return Codes 
+Mnemonic Constant Scope/ 
+Recover 
+Description 
+RC_NULL 0x00 NA/NA The RC status of this transaction is unknown.  
+RC_OK 0x01 Msg/NA The transaction completed successfully at the 
+target. 
+RC_BAD_GENERATION 0x02 Msg/R The generation in the request did not match 
+the generation at the target index. 
+RC_DISABLED 0x03 Msg/R The targeted resource is disabled. Disabled 
+resource has precedence over 
+RC_NO_MATCH. 
+RC_DISABLED_GEN 0x04 Msg/R The targeted resource is disabled and 
+supports the index generation. Disabled 
+resource has precedence over 
+RC_NO_MATCH. 
+RC_NO_MATCH 0x05 Msg/R The message could not be matched at the 
+target and was dropped. This is returned for 
+matching, nonmatching, and RMA 
+transactions that fail to find a buffer. 
+RC_UNSUPPORTED_OP 0x06 Msg/U Unsupported network message type. 
+RC_UNSUPPORTED_SIZE 0x07 Msg/U The message was larger than the supported 
+size. 
+RC_AT_INVALID 0x08 Msg/U Invalid address translation context. 
+RC_AT_PERM 0x09 Msg/U Address translation permission failure. 
+RC_AT_ATS_ERROR 0x0A Msg/U ATS translation request resulted in either 
+unsupported request or completer abort. 
+RC_AT_NO_TRANS 0x0B Msg/U Unable to obtain a translation. 
+RC_AT_OUT_OF_RANGE 0x0C Msg/U Virtual address is out of range and unable to 
+attempt translation. 
+RC_HOST_POISONED 0x0D Msg/U The host read (e.g. PCIe) indicated the access 
+was poisoned. 
+RC_HOST_UNSUCCESS_CMPL 0x0E Msg/U The host read (e.g. PCIe) indicated an 
+unsuccessful completion. 
+RC_AMO_UNSUPPORTED_OP 0x0F Msg/U Unsupported AMO message type. 
+RC_AMO_UNSUPPORTED_DT 0x10 Msg/U Invalid datatype at the target. 
+RC_AMO_UNSUPPORTED_SIZE 0x11 Msg/U The AMO operation was not an integral 
+multiple of the datatype size. 
+RC_AMO_UNALIGNED 0x12 Msg/U The AMO operation address was not natively 
+aligned to the datatype size. 
+RC_AMO_FP_NAN 0x13 Msg/I An AMO operation generated a NaN and 
+signaling is enabled. 
+RC_AMO_FP_UNDERFLOW 0x14 Msg/I An AMO operation generated an underflow 
+and signaling is enabled. 

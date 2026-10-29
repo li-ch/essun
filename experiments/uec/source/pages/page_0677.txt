@@ -1,0 +1,24 @@
+ 677 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 5-14 - Example CC_Update Packet Triggers the LLR Discard Window 
+For correct operation when both LLR and CBFC are enabled, the following rules are applied: 
+1. During the LLR replay window, the S_VC_CC[x] and S_P_CU counters must not be updated when 
+retransmitting packets, because they were already counted when first transmitted. 
+2. During the LLR discard window, the R_VC_CC[x] counters must not be updated for LLR-eligible 
+packets that are discarded. They will be counted when they are retransmitted and accepted at 
+the receiver. 
+3. CC_Update packets must be LLR-eligible and carry a valid sequence number. During the LLR 
+discard window, any received CC_Update packet must be discarded along with all other LLR-
+eligible packets. This prevents incorrect updates to the R_VC_CC[x] counters, because previously 
+discarded LLR-eligible packets make the CC counter checks invalid. 
+4. During the LLR discard window, any correctly received CF_Update CtlOS must still be used to 
+update the S_VC_CF[x] counters. 
+5. PFC control packets must be LLR-ineligible.  
+6. PFC control packets must belong to a best-effort VC. 
+7. During the LLR discard window, any correctly received PFC packet must still be acted upon. PFC 
+control packets do not affect retransmission of LLR-eligible packets during the LLR replay 
+window (see LLR specification) and affect only subsequent initial packet transmissions. 
+8. All CC_Update packets SHALL be configured as CBFC best effort. CC_Update packets do not use 
+credits. 

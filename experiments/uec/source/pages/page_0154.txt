@@ -1,0 +1,39 @@
+ 154 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.4 In-Network Collectives (INC) 
+High-performance computing (HPC) and artificial intelligence (AI) workloads frequently require multiple 
+accelerators to coordinate as groups of cooperating processes that accomplish computational 
+objectives. In the message-passing interface (MPI) and most collective communication libraries (CCLs), 
+we refer to these groups as communicators, with each process in a group called a rank. Each rank 
+receives an integer ID, ranging from 0 to r-1 for a group of r ranks. Ultra Ethernet (UE) adopts the same 
+abstraction for the purpose of facilitating collective operations. 
+Ultra Ethernet In-Network Collectives (INC) enables network switches to perform computational tasks 
+directly for a range of group operations. These switches can accelerate key collective operations defined 
+by the MPI and various CCLs. While this overview does not comprehensively list all such operations, the 
+MPI specification has additional details. This INC specification focuses on a subset of collective 
+operations from MPI and CCLs, demonstrating the adaptability and extensibility of the INC framework 
+for high-performance computing environments. 
+INC can reduce the bandwidth required for large-message reduction operations by a factor of two, as 
+established in the literature [1]. This reduction in data movement immediately decreases energy 
+consumption at the endpoints. By executing computations within the network, INC also lessens the 
+computational burden and alleviates memory load on accelerators located at the endpoints. 
+Additionally, INC can significantly reduce latencies for small operations, further enhancing performance 
+and efficiency in high-performance computing environments. 
+Collective operations are initiated by application software on a communicator. They are considered 
+active from when the first call issues by a rank in the communicator until the final completion 
+notification is received by a rank in the communicator. 
+INC offers support to accelerate the following collective operations in switches: 
+• Barrier 
+• Broadcast 
+• Allreduce 
+• Reduce 
+These basic operations can be used to accelerate more complex operations such as reduce-scatter. 
+2.4.1 Assumptions 
+UE makes several assumptions about the definition and deployment of INC operations: 
+1. UE INC operates on a single logical switch with a single switch endpoint (SEP) in the network. 
+Vendors may offer solutions where this single logical switch consists of a distributed set of 
+switches, provided it adheres to the behavior specified herein. 
+2. UE INC MUST operate over a lossless fabric (using PFC or CBFC) over the UET ROD transport 
+between the FEP and the SEP. Each FEP MUST be directly connected to a port associated with a 
+SEP. 

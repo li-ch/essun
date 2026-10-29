@@ -1,0 +1,38 @@
+ 730 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+6 UE Physical Layer 
+Ultra Ethernet (UE) applications, such as AI and HPC systems, require physical layers that support a 
+variety of electrical and optical channels; provide low frame loss ratio, low latency, power efficiency, and 
+reliability at scale; and leverage existing ecosystems and standards that enable seamless 
+interoperability. 
+Informative Text: 
+The UE Physical Layer specification strives to maintain consistency with terminology defined by IEEE 
+Std 802.3. However, the 802.3 definition of the term “packet” is inconsistent with other portions of 
+the UE specification. When used in this Physical Layer specification, the 802.3 term “packet” is 
+replaced with “802.3 packet.” 
+ 
+6.1 UE PHY Support 
+UE PHYs include a subset of Ethernet PHYs with 100 Gb/s  or 200 Gb/s per lane signaling, defined in IEEE 
+Std 802.3™-2022 [1], IEEE Std 802.3db™ 2022 [2], IEEE Std 802.3ck™ 2022 [3], IEEE Std 802.3df™ 2024 
+[4], and P802.3dj [5] (henceforth referred to collectively as the Ethernet standard). 
+A device compliant with the UE PHY specifications SHALL conform to one of the specifications of PHY 
+types listed in either 6.1.1.2or 6.1.2.2. 
+Informative Text: 
+Other Ethernet PHYs may be able to support some of the UE specifications but are not considered 
+compliant with the UE specification. 
+6.1.1 UE PHYs for 100 Gb/s per Lane Signaling 
+UE PHYs include a subset of Ethernet PHYs with 100 Gb/s per lane signaling, as defined in this section. 
+6.1.1.1 Media support 
+The following physical media are supported for 100 Gb/s per lane signaling, with relevant clause 
+numbers in the Ethernet standard: 
+● Backplane (KR, clause 163) 
+● Copper cable (CR, clause 162) 
+● MMF up to 50 m (VR, clause 167) 
+● MMF up to 100 m (SR, clause 167) 
+● Parallel SMF up to 500 m (DR, clauses 124, 140) 
+● WDM SMF up to 2 km (FR, clauses 140, 151) 
+The following PHY families are considered beyond the scope of UE: 
+● Parallel SMF up to 2 km (DR-2, clause 124) 
+● WDM SMF up to 10 km (LR, clauses 124, 140, 151) 
+● WDM SMF, coherent (ZR, clause 154) 

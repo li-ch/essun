@@ -1,0 +1,29 @@
+4.1. All-Path Routing (APR)
+
+Figure 10. Shortest-Path-Routing VS. All Path Routing
+
+UB-Mesh’s full-mesh network architecture provides multiple paths between any two NPUs. Traditional routing strategies like Shortest-Path First routing (SPF), as illustrated in Fig. 10-(a), often underutilizes network bandwidth and is susceptible to link failures. To enhance network efficiency and resilience, we propose the All-Path Routing (APR) mechanism in UB-Mesh.
+
+As shown in Fig. 10-(b), APR leverages all available paths between source and destination nodes. This flexibility allows for dynamic path switching, which responds to failures or congestion, thereby improving network robustness. To achieve this goal efficiently, APR leverages three underline mechanisms:(1) Source Routing (SR) mechanism to realize adaptive routing. (2) Structured Addressing&Linear Table Lookup technique for minimize the routing-table lookup and forwarding overheads. (3) Topology-Aware Deadlock-free Flow Control for deadlock avoidance.
+
+4.1.1. Source Routing.
+
+Figure 11. Source Routing Header Format
+
+In order to fully utilize the paths provided by APR, one practical way is leveraging the Source Routing (SR) mechanism. As shown in Fig. 11, an 8-byte SR header, containing the forwarding instructions, is added to original packet header. Each router uses a 4-bit ptr to indicate a bit offset in the 12-bit bitmap field. The value of the ii-th bit specifies the way of forwarding in the ii-th hop (i.e., bit = 1 indicates SR forwarding in this hop, 0 for traditional forwarding). In case of SR forwarding, Bitmap field is also used to locate one of the six instruction fields, which tells how to forward this packet. The SR information is highly compacted and then of low overhead.
+
+4.1.2. Structured Addressing&Linear Table Lookup.
+
+To minimize the routing-table lookup and forwarding overheads in each NPU’s UB IO controller, the APR routing system leverages the structure of UB-Mesh’s topology and employs a structured addressing and linear table lookup mechanism. Specifically, the addressing space is divided into segments based on the physical location of network elements, such as Pods, racks, and boards. Since NPUs within a segment share the same prefix, only the short segment address needs to be stored, and NPUs can be addressed via linear offsets relative to the segment address. This design significantly reduces table space, expedites route table generation and distribution, accelerates convergence, and enables swift response to state changes, such as in failure recovery operations.
+
+4.1.3. Topology-Aware Deadlock-free Flow Control.
+
+Given that UB-Mesh’s nD-FullMesh topology contains complex ring structures and the APR mechanism also enables multi-hop routing, it is challenging to realize deadlock-free flow control with limited VL (Virtual Lane) resources. To overcome this challenge, we propose the TFC (Topology-Aware Deadlock-Free Flow Control) algorithm. This algorithm minimizes VL resource usage while enabling deadlock-free all-path routing with only 2 VL resources.
+
+The TFC algorithm models deadlocks using the Channel Dependency Graph (CDG) and partitions UB-Mesh’s topology into subgraphs. Within each subgraph, topology steering rules and VL constraints are unified into a single set. It applies an N-dimensional cross-dimensional loop-breaking principle to decompose the set into single-VL acyclic subsets, followed by a same-dimensional loop-breaking principle to compute permutations and Cartesian products of power set elements. This generates all-path combinations and VL mappings, ensuring deadlock-free operation. Due to page limits, detailed explanations are omitted.
+
+Figure 12. From Hop-by-hop to Direct Notification
+
+4.2. Fast Fault Recovery via Direct Notification
+
+When link failures occur in a network, traditional routing system usually adopt hop-by-hop notification. As illustrated by the left figure in Fig. 12, when link 1-3 has a failure, such an information is propagated by node 1 and 3 hop-by-hop, which usually consumes a long latency. In UB-Mesh, since each node has a deterministic set of communication target, we can accelerate the routing convergence by directly notifying those nodes upon link failures. As shown by the right figure, when link 1-3 has failure, such information is directly sent to node 6 according to pre-computed routing relationships. With such a topology-aware direct notification, the control plane overhead can be greatly reduced.

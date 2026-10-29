@@ -1,0 +1,39 @@
+ 227 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-12 - Unified Local Semantic Header with ac=0 (UET_HDR_REQUEST_LCL) 
+Field Size Description Section Ref 
+Address compression (ac) 1 When set, utilizes a compressed 
+address format that is an offset from 
+the prior operation. 
+3.4.1.10 
+More messages (mm) 1 When set, indicates additional semantic 
+headers follow the payload associated 
+with this one. 
+3.4.1.10 
+opcode 6 See Table 3-8  
+Version (ver) 2 See Table 3-8  
+Delivery Complete (dc) 1 See Table 3-8  
+Initiator Error (ie) 1 See Table 3-8  
+JobID 8 JobID used for direct memory 
+addressing and authorization 
+3.4.1.3.1 
+request_length 12 Length of the payload to be transferred 
+(in bytes). 0 is a legal transfer size. 
+Concatenated with ses.rle to achieve a 
+maximum size of 16KB-1 bytes but the 
+transfer size is limited by the configured 
+Payload MTU. 
+ 
+Request length extension (rle) 2 most significant bits of 
+ses.request_length 
+ 
+Extension header length (ehl) 2 Extension header length 
+• 0 = 0 B 
+• 1 = 4 B 
+• 2 = 8 B 
+• 3 = 16 B 
+ 
+ 
+Figure 3-17 - Unified Local Semantic Header with ac=0 (UET_HDR_REQUEST_LCL) 

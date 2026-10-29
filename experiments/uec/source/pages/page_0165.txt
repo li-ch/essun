@@ -1,0 +1,24 @@
+ 165 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 2-53 describes how ranks participate in the data plane of each collective. When 
+UET_DEFERRABLE_SEND packets carrying data are expected, the cell reads “Data”. When an empty 
+UET_DEFERRABLE_SEND is expected, the cell reads "Empty”. When no UET_DEFERRABLE_SEND is to be 
+performed, the cell reads “Nothing”. 
+Table 2-53 - Dataplane Participation 
+Collective Input, root Input, non-root Output, root Output, non-root 
+UET_INC_REDUCE Data Data Data Empty 
+UET_INC_ALLREDUCE N/A Data N/A Data 
+UET_INC_BCAST Data Nothing Empty, if fo = 0 
+Data, if fo = 1 
+Data 
+UET_INC_BARRIER N/A Empty N/A Empty 
+UET_INC_SYNCBCAST Data Empty  Empty, if fo = 0 
+Data, if fo = 1 
+ 
+Data 
+UET_INC_EXSCAN N/A Data N/A Data 
+ 
+ 
+ 
+Figure 2-26 - Deferrable RTR Sequence 

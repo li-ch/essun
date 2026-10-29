@@ -1,0 +1,23 @@
+# Calibration-ladder GF-04 topology: unidirectional ring of 8 ranks at the
+# PHYSICAL per-direction reading B = 450 B/ns (= 900/2, the H100 NVLink
+# bidirectional peak split per direction — the ceiling axis point stage
+# GF-02 established from its own anchor's poster figure and used to
+# classify GF-04's 476.37 as 5.86% ABOVE the ceiling). Executed here as the
+# r=8 physical-bracket row: anchor-anchor arithmetic from staged anchors
+# (GF-02's 450), never a tuned value, never a bridge.
+#
+# Same projection and honesty statements as ring8_gf04_anchor476_37_v1
+# (inherited verbatim): uniform-bottleneck aggregate-scale per-hop B; free
+# parameter A-L0-BW; L = 200 ns A-L0-LAT registry point (KEEP).
+# docs/calibration/anchors_gapfill.md §GF-04; GF-02 axis point.
+topology_id: ring8_gf04_perdir450_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 450
+  hop_latency_ns: 200
+notes: >
+  Unidirectional ring of 8 ranks at the physical per-direction NVLink
+  aggregate 450 B/ns (GF-02's axis point = 900/2; the ceiling GF-04's own
+  476.37 exceeds by 5.86%). Anchor-anchor arithmetic, fixed before any
+  model output was read; never our measurement.

@@ -1,0 +1,44 @@
+ 753 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+UE Management Controller (UEMC)
+Generic
+Management Protocol
+Management Transport
+UE Management Server (UEMS)
+External Facing Data Model(s)
+Internal Facing Data Model(s)
+Example 1: Server
+Redfish REST API
+HTTP(S)
+UE Management Server (UEMS)
+Redfish Data Model
+NC-SI, PLDM, SPDM
+Example 2: Switch
+OpenConfig
+gNMI/gRPC
+UE Management Server (UEMS)
+YANG Data Model
+SAI
+ 
+Figure 7-1 - UE Management Architecture 
+The UE management stack is supported by a variety of industry management standards. To drive 
+interoperability and common management functionality, UE management specifications leverage 
+industry standards, Redfish (internationally recognized by the IEC), YANG, and SAI that is prescribed by 
+the OCP, to cover server and fabric components of Ultra Ethernet. 
+The Redfish standard specifies an HTTP RESTful interface for exposing system manageability. The Redfish 
+standard consists of an interface specification and a data model specification. The model primarily 
+covers managing the physical and logical aspects of multiple systems. The Redfish data model is 
+described by a schema that is available in OpenAPI, JSON schema, and CSDL formats. The Redfish data 
+model has been extended by other standards to use Redfish in their management domains. Redfish has 
+data models for network endpoints and network fabric. The Redfish data models are extended to 
+manage UE endpoints at the server. 
+Redfish maps well onto internal facing data models specified by standards Network Controller Sideband 
+Interface (NC-SI), Platform Level Data Model (PLDM), and Security Protocol Data Model (SPDM). These 
+internal-facing data models may be extended for the UE. 
+YANG defines vendor-neutral common data models for switch configuration and management. YANG 
+supports vendor-neutral automation that can be leveraged for testing and compliance. Any applicable 
+configuration of a UE fabric switch including LLDP, LLR, UET, or INC can be specified using YANG data 
+models. Reference YANG models are specified for the UE. UE reference YANG models can be leveraged 
+by other organizations to create domain-specific YANG models for managing UE fabric switches (e.g., 
+OpenConfig). 

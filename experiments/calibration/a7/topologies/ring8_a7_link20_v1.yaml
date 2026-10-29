@@ -1,0 +1,26 @@
+# Calibration-ladder A7 topology: unidirectional ring of 8 ranks at the
+# LOWER endpoint of the anchor-informed per-link span, B = 20 B/ns per
+# direction. Provenance: CAL-A12's NCCL internal NVLink model
+# (20 GB/s per link — the software-stack-effective rate NCCL assumes on
+# NVLink-3, below the 25 GB/s physical; docs/calibration/
+# anchors_staging.md §A12, M-confidence pending owner verification).
+# This row places the ring reading at the bottom of the candidate span
+# [20, 64] B/ns (plan §2.1 A-L0-BW NARROW range).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), fixed by anchor
+# arithmetic BEFORE any stage output was read; never tuned. CAL-A12's
+# model is an A100/NVLink-3 software figure — a CROSS-FABRIC transfer
+# when read against an Infinity Fabric link, recorded as such, not
+# smoothed. L = 200 ns is the A-L0-LAT registry point (KEEP).
+topology_id: ring8_a7_link20_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 20
+  hop_latency_ns: 200
+notes: >
+  Same identity and assumptions as ring8_a7_link64_v1 (A-L0-BW, A-L0-LAT,
+  A-L0-FD, A-L0-DIV); only the swept free parameter B differs. Provenance
+  of this B value: CAL-A12 NCCL per-link software model, 20 B/ns per
+  direction (cross-fabric transfer, labeled). Anchor quote / assumption,
+  never our measurement.

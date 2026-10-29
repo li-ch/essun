@@ -1,0 +1,20 @@
+ 149 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o Source GID (source network address) 
+o Destination GID (destination network address) 
+o Traffic class 
+• Transport information 
+o Addressing mode (absolute vs relative) 
+o PIDonFEP 
+o Resource Index 
+The transport information is specified in the extended address handle as a single remote QPN value. As 
+previously described with the QPN encoding, the QPN contains addressing mode, PIDonFEP, and 
+Resource Index. 
+2.3.5.4 Examples 
+Figure 2-20 and Figure 2-21 provide a more concrete example of the UET verbs object model and how 
+multiple services can be managed by an application. Colors are used for identifying resources bound 
+together via a JobID or job key. 
+ 
+Figure 2-20 - Verbs Example Absolute Addressing 
+ 

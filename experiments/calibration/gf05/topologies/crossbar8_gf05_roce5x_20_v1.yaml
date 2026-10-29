@@ -1,0 +1,34 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 20 B/ns, L =
+# 1000 ns — the HW-TESTBED ENVELOPE row: the anchor's DPDK hardware
+# evaluation quotes large-flow permutation with RoCE-class baselines
+# "3-5 times slower than optimal" (while SMaRTT is "within 20% of
+# optimal"). DECLARED READING (dimensionless factor transfer): the 3-5x
+# factors are RATIOS measured on the hardware testbed (2 Broadcom
+# Trident 4 switches, Thor 2x100 Gbps NICs at 50 Gbps); this row
+# applies the upper factor 5 to the SIM line-rate point 100 (100/5 =
+# 20 B/ns) — the factor is dimensionless, its carrier here is the sim
+# config, and the transfer is declared, not derived (the HW-rate
+# variants 50 Gbps = 6.25 B/ns and 6.25/5 = 1.25 B/ns are recorded as
+# arithmetic only, not executed). The lower factor 3 gives 100/3 B/ns —
+# non-representable as a finite decimal, recorded in the stage record.
+# Asymptotic CCT ratio vs the anchor row exactly 5 — by construction
+# the displacement REPRODUCES the anchor's own factor, which is the
+# A11 envelope-mapping consistency property executed on GF-05's
+# numbers. Nothing tuned.
+topology_id: crossbar8_gf05_roce5x_20_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 20
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the x5 envelope displacement
+  of GF-05's sim line rate (100/5 = 20 B/ns; the HW permutation quote
+  "RoCE ... 3-5 times slower than optimal", upper end, dimensionless
+  transfer onto the sim point — declared reading). Identity
+  t = 2(r-1)/r*M/B + 2L with L = 1000 ns (GF-05 per-hop decomposition).
+  No congestion control — the row locates the envelope's MAGNITUDE
+  (asymptotic CCT factor exactly 5), never the CC mechanism. Provenance:
+  anchor-staged HW ratios applied to the anchor-staged sim line rate;
+  never our measurements, never tuned.

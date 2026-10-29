@@ -1,0 +1,19 @@
+# W1 Dense TP Decode — tp_size 8 at 17179869184 B = 2^34 (16 GiB): the
+# PLATEAU PROBE size for GF-03's large-message regime. DOMAIN HONESTY:
+# GF-03 stages NO size for its peak ("~837 GB/s" carries no message size),
+# so unlike GF-01 (whose 16 GiB row was its anchor's own largest measured
+# size) this payload is a DECLARED FREE EXECUTION CHOICE, not an
+# anchor-derived value: 2^34 is chosen to cross-reference stage GF-01's
+# plateau row on the other fabric class, is divisible by 8 (all gates
+# ACCEPT), and the plateau comparison itself is size-independent to
+# 1/B-linear closed form (the latency term is <= 2,800 ns <= 0.008% of
+# every executed plateau time — recorded per-size in the sweep table).
+# Same workload shape as every W1 file (2 layers x 3 decode steps = 6
+# AllReduce ops per config). Nothing measured or standard-normative here;
+# integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-gf03
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 17179869184   # 2^34 (16 GiB); DECLARED plateau probe size (GF-03 stages none); free parameter A-W1-SIZE

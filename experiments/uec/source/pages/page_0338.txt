@@ -1,0 +1,48 @@
+ 338 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+with psn_state_low incrementing with every new 
+PSN 
+(refer to Section 3.5.25.9) 
+ 
+3.5.10.6 RUD/ROD Request with CC State 
+The PDS header format for a RUD or ROD Request packet with congestion control state is shown in 
+Figure 3-69. The header fields are described in Table 3-43. 
+ 
+ 
+Table 3-43 - Header Fields for RUD/ROD Request with CC State 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = ROD Request or 
+RUD Request with CC state 
+next_hdr 4 Same as RUD or ROD Request 
+flags (7 bits) 
+ 
+7 pds.flags = [rsvd, retx, ar, syn, 
+rsvd] 
+• Same as RUD or ROD Request 
+clear_psn_offset 16 Same as RUD or ROD Request 
+psn 32 Same as RUD or ROD Request 
+spdcid 16 Same as RUD or ROD Request 
+{dpdcid}  
+or 
+{pdc_info,psn_offset} 
+ 
+16 
+ 
+Same as RUD or ROD Request 
+req_cc_state 32 The contents of this field are 
+defined in the Section 3.6.9.1. 
+ 
+ 
+Figure 3-69 - RUD/ROD Request Header with CC State Format 

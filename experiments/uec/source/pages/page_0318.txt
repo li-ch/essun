@@ -1,0 +1,39 @@
+ 318 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.8.2.1.1 RANDOM_1RTT_START 
+The RANDOM_1RTT_START method on the target ignores the initiator's start PSN and always assigns a 
+random value. This method always incurs one additional RTT.  The following sequence describes the use 
+of the RANDOM_1RTT_START method: 
+1. An initiator begins the process of opening a PDC with a target.  The initiator sends a data packet 
+with pds.flags.syn = 1 and pds.psn = N (see Section 3.5.8.2).  Alternatively, the initiator uses a 
+NOOP CP to open the PDC (see Section 3.5.16.1). 
+2. The target allocates a PDC and puts it in the PENDING state.  The target generates a 
+Random_Start_PSN and sends a NACK with pds.nack_code = UET_NEW_START_PSN, pds.spdcid 
+= 0, and pds.payload.start_psn = Random_Start_PSN. 
+3.  The initiator re-initiates the PDC open process using the pds.payload.start_psn value received 
+in the NACK. 
+4. The target accepts the PDC and moves the PDC state to ESTABLISHED. 
+Because this method uses a random Start_PSN supplied by the target, the closing ACK does not include a 
+new Start_PSN when the PDC is closed. 
+3.5.8.2.1.2 EXPECTED_0RTT_START 
+The EXPECTED_0RTT_START method on the initiator uses a known value for the Start_PSN with the 
+expectation of avoiding the extra RTT incurred by the RANDOM_1RTT_START method. The following 
+sequence describes the use of the EXPECTED_0RTT_START method: 
+1. The initiator sends a data packet with pds.flags.syn = 1 and pds.psn = Initiator_Start_PSN. 
+2. A target using the EXPECTED_0RTT_START method will perform either of the following actions: 
+a. Accept the opening of the PDC if pds.psn >= Target_Start_PSN 
+b. Fallback to the RANDOM_1RTT_START method by allocating a PDC in the PENDING 
+state and transmitting a NACK with pds.nack_code = UET_NEW_START_PSN, pds.spdcid 
+= 0, and pds.payload_start_psn = Target_Start_PSN. 
+When the PDC is closed, the following actions are taken at the target and initiator 
+• Target: if the closing PDC’s PDC_Start_PSN >= Target_Start_PSN, then the targets updates 
+Target_Start_PSN to PDC_Start_PSN + 1 and returns a new Start_PSN value in the CP ACK 
+payload field of the ACK to the Close Command CP (see Section 3.5.16.4.1 and Figure 3-90). The 
+new Start_PSN value returned is greater than or equal to the new anti-replay floor, which is 
+either the Target_Start_PSN or the highest PDC_Start_PSN across all open PDCs in the same SDI. 
+• Initiator: If the returned Start_PSN value from the CP ACK payload field (Figure 3-90) of the 
+closing CP ACK is greater than Initiator_Start_PSN, then the initiator updates Initiator_Start_PSN 
+to the received Start_PSN.  The initiator MAY update Initiator_Start_PSN with any value greater 
+than the received Start_PSN. 
+ 

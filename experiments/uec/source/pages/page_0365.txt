@@ -1,0 +1,38 @@
+ 365 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Both initiator and target RODL FEPs MUST maintain a full 32-bit CACK_PSN, as in ROD. The 
+rev_cack_psn_lsb field carries the 12 or 16 lowest bits of the locally maintained CACK_PSN. The PDS 
+receiving a RODL packet is required to monitor when the CACK_PSN field wraps and update the local 
+CACK_PSN accordingly by incrementing the upper 20 bits. 
+Similarly, both initiator and target MUST maintain full 32-bit PSN and CLEAR_PSN. 
+If there is no pending SES request or response and a PDS needs to update either CLEAR_PSN or 
+CACK_PSN, an implementation MUST send an ACK or control packet to exchange this state. The rules 
+used to trigger generating ACK packets when using coalescing on a RODL PDC are described in Section 
+3.5.12.4. 
+3.5.12.5 Cumulative ACK (CACK) Rules 
+CACK_PSN is defined such that:  
+1. All earlier PSNs up to and including CACK_PSN have been successfully received.  
+2. All corresponding guaranteed delivery SES Response results have been sent and cleared by the 
+peer PDC. 
+When a guaranteed delivery SES Response is transmitted, the CACK_PSN MUST NOT advance up to or 
+past the PSN associated with the guaranteed delivery SES Response until that response is cleared. To 
+enable efficient PDS implementations, specifically in the per-PDC state, two optimizations are used: 
+• Default SES responses are defined, allowing the destination PSN to not store/hold the common 
+SES Response of RC_OK. 
+• The SACK bitmap acknowledges that a PSN has arrived successfully at the destination (i.e., the 
+packet was not trimmed and was accepted, passed to the SES, and SES generated a response), 
+allowing the source PDC to discard state required to retransmit a packet (except in the case of a 
+read request of size  Max_ACK_Data_Size—see Section 3.5.16.2). 
+CACK_PSN plays a role in enabling these optimizations. When an ACK is received, CACK_PSN is used to 
+determine which PSNs have been delivered and successfully processed. The processing order is 
+important. 
+• If the pds.next_hdr field is not set to UET_HDR_NONE, the ACK is carrying an SES Response for 
+PSN = ACK_PSN. This is processed by passing the SES Response to the local SES and marking the 
+PSN as done. 
+• When processing acknowledgment state in an ACK packet, the ACK_PSN MUST be processed 
+first, as it may carry a non-default response. Then, for each PSN indicated in the SACK bitmap 
+that is less than or equal to CACK_PSN and not yet marked as done, a UET_DEFAULT_RESPONSE 
+is sent to SES and the PSN marked as done. 
+• Done indicates that all required processing for that PSN is complete 
+ 

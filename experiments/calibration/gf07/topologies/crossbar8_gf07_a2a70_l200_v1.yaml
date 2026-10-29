@@ -1,0 +1,30 @@
+# Calibration-ladder GF-07 topology: crossbar r=8 BURSTY-ALLTOALL row —
+# B = 70 B/ns = carrier 100 x 7/10, L = 200 ns (registry).
+#
+# Anchor quote (docs/calibration/anchors_gapfill.md §GF-07;
+# arXiv:2604.11432, AS STAGED): bursty alltoall "drops to 70% of its
+# uncongested baseline". Exact factor: congested bandwidth = 7/10 x
+# uncongested => CCT factor = 10/7 exactly. Effective-B displacement at
+# the carrier: 100 x 7/10 = 70 — finite decimal, EXECUTED. CLASS
+# CAVEAT: AllToAll victims have no L0 collective counterpart (allreduce
+# only); the magnitude transfers onto the AllReduce identity's B axis as
+# a DECLARED dimensionless displacement (A11/GF-05 technique). "up
+# to"-class quote: an envelope EDGE, not a mean. Everything else as in
+# crossbar8_gf07_rate100_l200_v1.yaml (L=200 registry, no staged
+# latency; r=8 smoke default; scale-out labeled-proxy). Asymptotic CCT
+# ratio vs the carrier row exactly 10/7 ~ 1.4286. B fixed by anchor
+# arithmetic BEFORE any stage output was read; never tuned.
+topology_id: crossbar8_gf07_a2a70_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 70
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the GF-07 bursty-alltoall displacement:
+  B = 70 = 100 x 7/10 (the "drops to 70% of its uncongested baseline"
+  quote => CCT factor exactly 10/7), L = 200 ns registry. AllToAll has
+  no L0 counterpart; the magnitude only enters as a free-scalar
+  displacement. Anchor quote / registry default, never our measurement;
+  never tuned.

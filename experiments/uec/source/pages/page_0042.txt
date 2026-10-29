@@ -1,0 +1,53 @@
+ 42 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+Key derivation function (KDF) A process to derive a new 
+symmetric key (Ko) from an input 
+key (Ki) using a pseudo random 
+function (PRF). A KDF uses a 
+derivation key (Ki), label and 
+context input parameters to 
+generate an output key (Ko).  In 
+pseudo code form, (Ko = KDF(Ki, 
+label=x, context=y)). 
+SDK database (SDKDB) An SD database indexed by SDI and 
+used to store/retrieve security 
+parameters for an SD. The SDI, AN, 
+and possibly SSI are used to obtain 
+the key for the packet.  
+Secure domain (SD) A set of FEPs that communicate 
+using the security services 
+(confidentiality and encryption) of 
+TSS. Members of an SD share a 
+common set of security 
+parameters (keys, confidentiality 
+offset, etc.). The SD is represented 
+in the packet as using an SDI. 
+Secure domain management entity 
+(SDME) 
+Abstract secure domain 
+administrator. 
+Secure domain identifier (SDI) An identifier of the SD, carried 
+within the packet. The SDI in 
+conjunction with the association 
+number (AN) identifies the SDKDB 
+key slot. This is used for rekeying. 
+Secure domain key (SDK) A symmetric key used for packet 
+AEAD cipher or KDF operation. SDK 
+is a cryptographic key per NIST 
+security definition. 
+Secure source identifier (SSI) A unique identifier of the source of 
+the packets. This identifier can be 
+explicitly carried within the packet 
+(SSI) or the source IP header 
+address. 
+Timestamp counter (TSC) A monotonic counter (different for 
+each packet sent). 
+Transport Security Sublayer (TSS) The UE Transport Security Sublayer 
+defined by this specification 
+Libfabric mapping Application binary interface (ABI) An interface between two binary 
+program modules (e.g., user 
+program and a library or operating 
+system). The interface defines how 
+data structures and computational 

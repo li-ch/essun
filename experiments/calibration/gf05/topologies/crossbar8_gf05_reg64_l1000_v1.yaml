@@ -1,0 +1,27 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 64 B/ns (the
+# A-L0X-BW / A-L0-BW REGISTRY POINT — placement row), L = 1000 ns (the
+# anchor's per-hop decomposition, held FIXED so this row isolates the
+# B axis against crossbar8_gf05_line100_v1). Asymptotic CCT ratio vs
+# the anchor sim-config row exactly 100/64 = 25/16 = 1.5625 (the
+# registry default predicts 56.25% slower in the bandwidth-bound limit
+# at the UEC-class sim line rate — a placement fact, never a tuning
+# target); the registry point 64 sits 36% BELOW the anchor's 100 B/ns,
+# i.e. the GF-05 sim-config point is the FIRST staged anchor value
+# OUTSIDE (above) the plan §2.1 A-L0-BW candidate anchored span
+# [20, 64]. Nothing tuned; see crossbar8_gf05_line100_v1.yaml for the
+# full GF-05 provenance and domain honesty.
+topology_id: crossbar8_gf05_reg64_l1000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 1000
+notes: >
+  Registry-point placement row (B = 64 B/ns free registry default,
+  A-L0X-BW) at the anchor's fixed per-hop latency L = 1000 ns
+  (600 link + 400 switch traversal). Identity
+  t = 2(r-1)/r*M/B + 2L. No congestion/credits/ECMP/packetization (L0
+  transport model only). Provenance: B = free registry point; L =
+  GF-05 staged sim-config decomposition; values are registry defaults /
+  anchor quotes, never our measurements, never tuned.

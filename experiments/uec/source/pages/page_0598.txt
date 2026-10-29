@@ -1,0 +1,36 @@
+ 598 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4.1.5 Mapping DSCPs to traffic classes for other transports 
+The DSCPs used in packet trimming can be mapped to traffic classes in multiple ways, depending on the 
+availability of traffic classes, the requirements of the host transport and applications that utilize the 
+trimming information, and the operator’s requirements.  
+To implement cut payload [3] -style behavior, both DSCP_TRIMMABLE and DSCP_TRIMMED codepoints 
+SHOULD be mapped to the same traffic class in the network. The drop threshold for packets with 
+DSCP_TRIMMABLE SHOULD be set to a lower value than the drop threshold for packets with 
+DSCP_TRIMMED, as shown in Figure 4-1; otherwise, all trimmed packets may be dropped. 
+To implement NDP [2] -style behavior, DSCP_TRIMMABLE and DSCP_TRIMMED codepoints SHOULD be 
+mapped to two traffic classes (DSCP_TRIMMABLE to the TC_low traffic class and DSCP_TRIMMED to the 
+TC_high traffic class). The two traffic classes SHOULD be configured to share capacity in a weighted 
+deficit round-robin manner (e.g., fair queueing or 2:1 WDRR for class B). The result of this mapping is 
+that data packets from transports that support packet trimming are carried on the TC_low traffic class, 
+while the resulting headers (trimmed packets) are carried on the TC_high traffic class from the point 
+they are trimmed to their destination. This approach enables, at the cost of using two traffic classes 
+instead of one, faster delivery of trimmed packets and, with appropriate queue scheduling, can bound 
+the total bandwidth used by trimmed packets to a fraction of the link capacity. This removes the 
+possibility of congestion collapse. 
+4.1.6 Security considerations 
+In a zero-trust security model, networking infrastructure is not considered a trusted entity from the 
+endpoint’s perspective. A trimmed packet MAY allow the receiver to gain additional information from 
+the trimmed packet and affords rapid handling of the congestion information. 
+In the context of UET, trimming a packet prevents authentication, because portions of the packet are 
+removed including the authentication tag (the ICV). However, it MAY be possible to decrypt the trimmed 
+packet under some circumstances (for instance when the cipher used is AES in counter mode).  
+In the context of the receiver, processing of unauthenticated encrypted trims MUST NOT: (a) cause a 
+change of state of the connection, beyond what an attacker can achieve via ECN marking or dropping 
+packets, or (b) cause data from the trimmed packet to be accepted or subsequent data to be rejected. In 
+particular, the arrival of a trimmed packet MUST NOT cause a congestion response or retransmission to 
+take place beyond what would have happened if the packet was dropped. In response to receiving a 
+ 
+Figure 4-1 - Drop Threshold Settings 
+ 

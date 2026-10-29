@@ -1,0 +1,117 @@
+UB-Mesh: a Hierarchically Localized nD-FullMesh Datacenter Network Architecture
+
+Report GitHub Issue
+
+×
+
+Title:
+
+Content selection saved. Describe the issue below:
+
+Description:
+
+Submit without GitHubSubmit in GitHub
+
+arXiv is now an independent nonprofit!Learn more×
+
+Back to arXiv
+
+Why HTML?Report IssueBack to AbstractDownload PDF
+
+Abstract.
+
+1 Introduction
+
+2 Background & Motivation
+
+2.1 "Communication Wall" in LLM Training
+
+2.2 Locality of Data Traffic in LLM Training
+
+2.3 Datacenter Network Architectures
+
+3 UB-Mesh Architecture
+
+3.1 The nD-FullMesh Topology
+
+3.2 Building Blocks of UB-Mesh
+
+3.2.1 Hardware Modules.
+
+3.2.2 The Unified Bus (UB) Interconnects.
+
+3.3 Architecture Overview
+
+3.3.1 Implementing 2D-FullMesh in Racks.
+
+3.3.2 The 64+1 High Availability Design.
+
+3.3.3 Scaling to 4D-FullMesh in UB-Mesh-Pod.
+
+3.3.4 UB-Mesh-SuperPod and Beyond.
+
+4 Enabling The Architecture
+
+4.1 All-Path Routing (APR)
+
+4.1.1 Source Routing.
+
+4.1.2 Structured Addressing&Linear Table Lookup.
+
+4.1.3 Topology-Aware Deadlock-free Flow Control.
+
+4.2 Fast Fault Recovery via Direct Notification
+
+5 Maximizing The Performance
+
+5.1 Topology-Aware Collective Communication
+
+5.2 Topology-Aware Parallelization
+
+6 Evaluation
+
+6.1 Experiments Setup
+
+6.2 Intra-Rack Architecture Exploration
+
+6.3 Inter-Rack Architecture Exploration
+
+6.4 Cost-Efficiency Comparison
+
+6.5 Linearity Evaluation
+
+6.6 Network Reliability Analysis
+
+7 Discussion
+
+8 Conclusion
+
+References
+
+License: arXiv.org perpetual non-exclusive license
+
+arXiv:2503.20377v3 [cs.AR] 17 May 2025
+
+UB-Mesh: a Hierarchically Localized nD-FullMesh Datacenter Network Architecture
+
+Heng Liao✉, Bingyang Liu✉, Xianping Chen, Zhigang Guo, Chuanning Cheng, Jianbing Wang,
+
+Xiangyu Chen, Peng Dong, Rui Meng, Wenjie Liu, Zhe Zhou*, Ziyang Zhang, Yuhang Gai,
+
+Cunle Qian, Yi Xiong, Zhongwu Cheng, Jing Xia, Yuli Ma, Xi Chen, Wenhua Du, Shizhong Xiao, Chungang Li, Yong Qin,Liudong Xiong, Zhou Yu, Lv Chen, Lei Chen, Buyun Wang, Pei Wu,
+
+Junen Gao,Xiaochu Li, Jian He, Shizhuan Yan, Bill McCOLL
+
+Huawei
+
+Abstract.
+
+As the Large-scale Language Models (LLMs) continue to scale, the requisite computational power and bandwidth escalate. To address this, we introduce UB-Mesh, a novel AI datacenter network architecture designed to enhance scalability, performance, cost-efficiency and availability. Unlike traditional datacenters that provide symmetrical node-to-node bandwidth, UB-Mesh employs a hierarchically localized nD-FullMesh network topology. This design fully leverages the data locality of LLM training, prioritizing short-range, direct interconnects to minimize data movement distance and reduce switch usage.
+
+Although UB-Mesh’s nD-FullMesh topology offers several theoretical advantages, its concrete architecture design, physical implementation and networking system optimization present new challenges. For the actual construction of UB-Mesh, we first design the UB-Mesh-Pod architecture, which is based on a 4D-FullMesh topology. UB-Mesh-Pod is implemented via a suite of hardware components that serve as the foundational building blocks, including specifically-designed NPU, CPU, Low-Radix-Switch (LRS), High-Radix-Switch (HRS), NICs and others. These components are interconnected via a novel Unified Bus (UB) technique, which enables flexible IO bandwidth allocation and hardware resource pooling. For networking system optimization, we propose advanced routing mechanism named All-Path-Routing (APR) to efficiently manage data traffic. These optimizations, combined with topology-aware performance enhancements and robust reliability measures like 64+1 backup design, result in 2.042.04×\times higher cost-efficiency, 7.2% higher network availability compared to traditional Clos architecture and 95%+ linearity in various LLM training tasks.
+
+1. Introduction
+
+††✉ Corresponding authors.††* Drafted the paper.
+
+The emerging Large Language Models (LLMs) (OpenAI et al., 2024; Dubey et al., 2024; Ren et al., 2023; Touvron et al., 2023; Zeng et al., 2023; Team et al., 2024; Bai et al., 2023; Yang et al., 2023; AI et al., 2024; Guo et al., 2024; DeepSeek-AI et al., 2024a) are transforming the AI industry and human society. Following the Scaling Laws (Kaplan et al., 2020; Clark et al., 2022), LLMs continue to enhance their understanding, generation, and reasoning capabilities by expanding model parameters and training data. This trend, however, presents increasing challenges to the underlying training systems and infrastructures, forcing next-generation AI datacenters to meet the following requirements:

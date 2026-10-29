@@ -1,0 +1,42 @@
+ 362 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Informative Text: 
+ACK_Gen_Min_Pkt_Add defaults to 1 KB and ACK_Gen_Trigger defaults to 16 KB. This will trigger an 
+ACK at least every 16 KB or 16 packets. If 4 KB packets are used, an ACK is transmitted every 4 packets 
+(16 KB/4 KB = 4). 
+This is not required to be particularly accurate. The UET payload may be truncated to a convenient 
+precision to minimize processing requirements. 
+ 
+3.5.12.4.2 Last Packet ACK Trigger—Coalesced ACKs 
+When coalesced ACKs are used, it is important to trigger an acknowledgment of the last packet received 
+once the PDC goes idle. Therefore, the last packet in the message that leaves the sending PDC empty has 
+the pds.flags.ar field set to request an acknowledgement of the packet. 
+Because there are out-of-order arrivals, packets may arrive after the packet with pds.flags.ar set. This 
+may lead to spurious retransmissions, as there may be no trigger to transmit an ACK. Generation of an 
+ACK for this scenario is implementation specific. An example method is provided in Section 3.5.12.4.2.1. 
+3.5.12.4.2.1 Example Method for Last Packet ACK Trigger 
+The variables in Table 3-64 may be used to identify this scenario and transmit an ACK. 
+Table 3-64 - Local Variables for Last Packet ACK Trigger - Coalesced ACKs 
+Local Variables (per PDC) Definition 
+Prev_AR_PSN Highest PSN that arrived with pds.flags.ar set 
+Max_Rcvd_PSN Highest PSN that arrived (also used in SACK bitmap processing) 
+ 
+Last Packet ACK Trigger Method: 
+if (pds.flags.ar is set) { 
+    Prev_AR_PSN = max(Prev_AR_PSN, rcvd_pkt.pds.psn) 
+} 
+if (Prev_AR_PSN == Max_Rcvd_PSN) { 
+    Transmit an ACK 
+} 
+ 
+Alternatively, an implementation may generate an ACK whenever a packet arrives and updates the 
+received PSN state such that there are no missing packets. Another option is to use a GEN_ACK_TIMER 
+timer. This timer is reset every time an ACK is transmitted and triggers ACK generation if it expires. 
+3.5.12.4.3 SACK Bitmap—Coalesced ACKs 
+The SACK bitmap is transmitted in the pds.sack_bitmap field and MUST be supported in all profiles. The 
+pds.sack_bitmap field is 64 bits in length. When a bit is set, it indicates the PSN was received and passed 
+to SES for processing. When a bit is not set (zero), there is no information about the PSN. Zero does not 
+indicate the packet was not received. The intent of the pds.sack_bitmap field is to efficiently indicate 
+which packets have been received with redundancy. If an ACK is lost, the SACK bitmap and CACK_PSN 
+will allow the source to infer if the lost ACK was a default response or guaranteed delivery response. 

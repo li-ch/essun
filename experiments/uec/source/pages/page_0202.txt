@@ -1,0 +1,36 @@
+ 202 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+to an OS process. A PIDonFEP MUST have either a scope that is relative to a JobID (relative addressing) 
+or a scope that is relative to a Fabric Address (absolute addressing). 
+ 
+3.4.2.3.3 Separation of Services within a Process (Resource Index) 
+Within a process, it is often necessary to separate different usages of the network stack. For example, a 
+user-level networking stack—such as MPI or *CCL—would want a separate set of communication 
+resources from a user-level object storage system (e.g., Distributed Asynchronous Object Storage 
+(DAOS) [7]). A specific set of resources within a process is a libfabric endpoint. A libfabric endpoint may 
+acquire more than one Resource Index—as defined by the service that was used to open the endpoint. A 
+communication context within that endpoint (e.g., a receive queue) is selected by the Resource Index. 
+Different operation types (e.g., UET_SEND, UET_READ, and UET_TAGGED_SEND) have different 
+Resource Index spaces. When used with a tagged operation on the wire, a Resource Index refers to a set 
+of buffers using tag matching for buffer resolution (accessed using TSEND opcodes). The same numerical 
+value of Resource Index used with a SEND opcode accesses a nonmatching queue. One or more RMA 
+resources (accessed using UET_READ, UET_WRITE, UET_ATOMIC, and others) can be associated with a 
+Resource Index. An RMA operation using an optimized header (Figure 3-15) MUST select exactly one 
+RMA resource using the Resource Index. An RMA operation using UET_HDR_REQUEST_STD (Figure 3-11) 
+MAY target a Resource Index that has exactly one RMA resource. This configuration is part of the 
+Resource Index configuration at the target FEP. 
+Informative Text: 
+A PIDonFEP used in relative addressing mode can be thought of as a “rank on node.” Relative 
+addressing mode is designed to allow hierarchical, algorithmic addressing so that a “rank”—such as 
+for MPI or *CCL – can be expressed as a logical node and rank on that node. Thus, a CCL or MPI rank 
+would be decomposed into “node X and PIDonFEP Y”—such as an application with 8 ranks per node 
+translating Rank 33 into node 4 and PIDonFEP 1. In this case, PIDonFEP 1 says that Rank 33 is the 
+second rank on node 4. 
+Informative Text: 
+Multiple PIDonFEPs have been bound to a single OS process in historical implementations to expand 
+the flexibility of resource management. In most hardware architectures, this is “harmless” since the 
+hardware must map PIDonFEP to some address translation context and typically uses structures that 
+are agnostic to N:1 mappings. For example, if the Resource Index space proves to be too small for 
+multi-programming model applications, it may be possible to map a service to an alternate PID to give 
+it the full range of Resource Index values.   

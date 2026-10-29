@@ -1,0 +1,48 @@
+ 364 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+In general, this logic is intended to prioritize acknowledging lower PSNs when they arrive. If a lower PSN 
+is received, update SACK_Base to that PSN. If a higher PSN arrives, rather than jumping to it directly, 
+constrain SACK_Base so it increases by 64 — so that the SACK bitmap gradually covers all PSNs from 
+CACK_PSN up to Max_Rcv_PSN. 
+SACK_Base represents the PSN of the least significant bit in the SACK bitmap. The bitmap is always 
+started from a PSN that has the three least significant bits equal to zero. This is done to reduce the shift 
+logic needed to generate the pds.sack_bitmap field. 
+The pds.sack_psn_offset field is calculated as: 
+pds.sack_psn_offset = SACK_Base - CACK_PSN 
+ 
+Figure 3-81 provides an example SACK bitmap: 
+3.5.12.4.4 RODL Reverse ACK State 
+RODL uses bidirectional PDCs, which allow the acknowledgment state to be carried in reverse direction 
+PDS requests. When using RODL over the UFH_16 header, each PDS Request includes the lower 12 bits 
+of the cumulative acknowledgment PSN (CACK_PSN) for the opposite direction in the 
+pds.rev_cack_psn_lsb field. Otherwise, RODL carries the pds.rev_cack_psn_lsb as a 16-bit field. 
+RODL (excluding over the UFH_16 header) alternates sending the pds.clear_psn_offset and 
+pds.rev_cack_psn_lsb. If one of these has not advanced but the other has, the same field may be sent 
+multiple times. 
+When write and non-fetching atomic operations are being performed without error on a bidirectional 
+PDC, all SES responses are of type UET_DEFAULT_RESPONSE and carry RC_OK return codes. These 
+responses can be messaged to the source with pds.rev_cack_psn_lsb, removing the need for ACK 
+packets while traffic is active in both directions. 
+Stateful responses MUST be transported in an ACK packet. 
+ 
+Figure 3-81 - SACK Bitmap 
+0 8 16 24 31
+5
+6
+3
+2
+4
+0
+4
+8
+6
+3
+Example :
+         =  1 21   (0x000006B ) 
+          = 1842  (0x00000 32)  
+                                            =  121              
+PSN = 1842
+PSN = 1 05
+                   

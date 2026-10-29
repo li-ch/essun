@@ -1,0 +1,33 @@
+# Calibration-ladder A1 topology: fully-connected crossbar of 72 ranks at
+# the anchor-point per-port bandwidth B = 50 bytes/ns (CAL-A1 derived:
+# 57.6 Tbps full duplex per NVLink5 switch chip = 7200 GB/s both
+# directions = 3600 GB/s per direction over 72 ports => 50 GB/s = 50 B/ns
+# per port per direction; derivation stated in docs/calibration/
+# CALIBRATION_PLAN.md §2.1 and anchors_staging.md A1).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), not a value taken from
+# any standard; 50 B/ns is where the sweep's anchor-point row sits, chosen
+# BY THE ANCHOR's own arithmetic, never tuned toward any model output. The
+# single-port model (one shared injection port per rank, A-L0X-PORT) is a
+# modeling assumption consistent with the plan's KEEP verdict for
+# NVSwitch-class fabrics. L = 200 ns is the registry point of A-L0X-LAT
+# (KEEP; the latency axis is swept by a later global stage, not here).
+#
+# Fan-in note (the anchor's radix check): at r = 72 every rank occupies
+# exactly one of the 72 switch ports; the model-implied per-direction
+# fabric aggregate 72 * 50 = 3600 B/ns equals the anchor's per-chip
+# per-direction capacity — the per-port mapping of the chip-level view.
+topology_id: crossbar72_a1_port50_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency; single-port injection shared across the 71 peers. No congestion,
+  no credits, no packetization — L0 transport model only. Labeled provenance
+  for every number: B from CAL-A1's port arithmetic (anchor PROPOSED in
+  the anchor registry; spec ceiling, never an achieved value), L from the free
+  A-L0X-LAT registry point.

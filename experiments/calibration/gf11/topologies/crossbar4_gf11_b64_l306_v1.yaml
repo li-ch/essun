@@ -1,0 +1,28 @@
+# Calibration-ladder GF-11 topology: fully-connected crossbar of 4 ranks at
+# the LL2-RTT COMPONENT row — B = 64 B/ns, L = 306 ns.
+#
+# L = 306 ns is the anchor's measured LL2 round-trip time on 2 GB200 GPUs
+# ("we measured the LL2_RTT and Lremote_store as 0.306 µs and 0.792 µs"),
+# placed on the free L axis AS A COMPONENT (not as the per-phase reading —
+# that is the derived 702-row): the bare round-trip-to-LL2 component
+# charged uniformly per pair. First MEASURED current-gen sub-µs component
+# on the corpus L axis (vs registry 200, CAL-A10 assumption 800, GF-10
+# app-level 5000-27000). 306/200 = 153/100; 306 sits inside the declared
+# free range [10, 2000] at 153/1000 of its upper. Same honesty rules as
+# crossbar4_gf11_b64_l702_v1.yaml (measured component placed, never a
+# tuning target; the identity mapping ambiguity recorded).
+topology_id: crossbar4_gf11_b64_l306_v1
+topology_class: fully_connected_crossbar
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 306
+notes: >
+  Single non-blocking switch-stage abstraction carrying the GF-11 measured
+  LL2 RTT component (0.306 µs on 2 GB200 GPUs, arXiv:2607.16100) as the
+  uniform per-pair latency L = 306 ns. Identity t = 3M/128 + 612 at r=4.
+  Component-level placement row of the GF-11 L-axis sweep: bare-hardware
+  class (no software stack), current generation (NVLink5-class GB200).
+  Values are anchor measurements / free registry points, never ours, never
+  tuned, never standard-normative.

@@ -1,0 +1,36 @@
+ 94 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• Components of the UET address referenced by the src_addr parameter MAY be used to direct 
+received messages to specific buffers according to the FI_DIRECTED_RECV semantics. 
+2.2.4.3.2 Tagged Message Buffer Authorization 
+The tagged message buffer authorization requirements are the same as specified for untagged message 
+buffers in Section 2.2.4.3.1. 
+2.2.4.3.3 Memory Region Authorization 
+This section covers how the authorization requirements are managed for registered memory regions. 
+To associate a registered memory region with a JobID, the fi_mr_regattr() API MUST be used. 
+When the auth_key_size field of the attr parameter to fi_mr_regattr() is 0, the memory region MUST be 
+for any JobID. 
+When the auth_key_size field of the attr parameter to fi_mr_regattr() is 3, the memory region MUST be 
+associated with the JobID carried in the auth_key attribute of the libfabric endpoint. 
+When the auth_key_size field of the attr parameter to fi_mr_regattr() is set to FI_AV_AUTH_KEY: 
+• The auth_key field of the attr parameter to fi_mr_regattr() MUST point to a user-defined struct 
+fi_mr_auth_key that specifies: 
+o An address vector, and 
+o An address that has been inserted into the address vector. 
+• The memory region MUST be associated with the JobID represented by the authorization key of 
+the address specified in the fi_mr_auth_key struct. 
+In all other cases (e.g., use of fi_mr() registration APIs other than fi_mr_regattr()), the memory region 
+MUST be for any JobID. 
+When a registered memory region is associated with a JobID, access MUST be authorized only for 
+operations carrying that ses.JobID field in the SES header. 
+2.2.4.4 JobID Selection for Data Transmission Operations 
+Using the indirect JobID method, the provider references the assigned ses.JobID field within the SES 
+header to facilitate data transfer operations. 
+In the direct JobID method, the ses.JobID field within the SES header of data transfer operations MUST 
+be taken directly from the auth_key attribute of the libfabric endpoint. 
+With the AV JobID method, the ses.JobID field within the SES header of data transfer operations MUST 
+be determined from the fi_addr_t dest_addr parameter of the libfabric API (i.e., the authorization key 
+associated with the destination address when it was inserted into the address vector). 
+2.2.5 Libfabric APIs  
+This specification targets the libfabric v2.0 release.  

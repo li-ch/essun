@@ -1,0 +1,32 @@
+ 123 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 2-32 - Default Traffic Classes 
+Traffic Class Default 
+Data Traffic Class Default Forwarding (DF) PHB 
+DSCP Codepoint = ‘000000’ 
+See RFC 2474 [1] 
+ 
+The default traffic classes can be overridden by setting the UET_PROVIDER_DEF_DATA_TC configuration 
+parameters defined in Table 2-7. 
+The libfabric application controls the data traffic class using the tclass field of struct fi_domain_attr. The 
+value of the tclass field indicates whether the default traffic class or a specific DSCP should be used for 
+the data traffic class as specified in Table 2-4. 
+2.2.8 Transmit and Receive Queues 
+The libfabric data transfer operations are typically implemented with a set of transmit and receive 
+queues that are accessed by the NIC hardware. This section provides requirements and guidance 
+regarding the operational characteristics of the transmit and receive queues with the goal of promoting 
+common NIC behavior and an associated collective understanding of that behavior, which should 
+simplify performance tuning. 
+The details of transmit and receive queue operation are vendor specific. 
+2.2.8.1 Transmit Queues 
+Transmit queues are used for libfabric APIs that initiate transmissions on the network (e.g., fi_send(), 
+fi_tsend(), fi_write(), fi_read(), etc.). Transmit queues contain work elements, where the work elements 
+describe the operation that is to be performed and identify the associated data buffer. The provider 
+inserts work elements into a transmit queue, and NIC hardware removes work elements from a transmit 
+queue. When the NIC hardware removes a work element, it performs the associated network 
+transmission. 
+In the simplest case, a single transmit queue could be used to initiate all network transmissions. 
+However, use of a single transmit queue might not achieve optimal performance due to head-of-line 
+blocking issues and lack of support for multiple traffic classes with different transport characteristics. 
+Figure 2-9 shows an example transmit queue configuration. 

@@ -1,0 +1,25 @@
+ 413 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• A PDS ACK transmitted by the target is dropped—does not arrive at source. 
+o PDS determines ACK state based on CACK_PSN, including both successful ACKs (if 
+CACK_PSN is larger than a missing ACK PSN) and guaranteed delivery ACKs (if the 
+pds.sack_bitmap field indicates packet was received but CACK_PSN does not). 
+Figure 3-105 shows the PDS Request dropped sequence for a RUD Send of a single-packet message. The 
+source is responsible for detecting the loss and retrying the transmission. In the example shown in 
+Figure 3-105, the source retries the transmission after a timeout. 
+  
+Figure 3-106 shows the ACK dropped sequence for a RUD Send of a single-packet message. The 
+sequence in Figure 3-106 proceeds as follow: 
+1. The PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 
+332. 
+2. FEP-A transmits a request with PSN = 333. 
+3. FEP-B accepts PSN = 333, marks the PSN as received, and generates an ACK with ACK_PSN = 333. 
+4. In the example, the ACK packet for PSN = 333 transmitted by FEP-B is dropped in network. 
+5. FEP-A retransmits the request with PSN = 333. 
+a. In this example FEP-A will timeout, since the ACK does not arrive; there are multiple 
+other methods for determining if a packet was lost (e.g., NACKs, SACK bitmap, etc.). 
+ 
+Figure 3-105 - PDS Request Dropped Sequence for RUD Send of Single-Packet Message 
+ 
+ 

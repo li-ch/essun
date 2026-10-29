@@ -1,0 +1,47 @@
+ 370 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• RETRY: This indicates a scenario where the packet is not associated with an established PDC and 
+the semantic message that is carried should be retransmitted using a different PDC and/or PSN. 
+• FAIL: This indicates the packet delivery may be failed to SES. 
+Some PDC_ERR or PDC_FATAL events are marked as RETRY; an implementation may fail these to SES. 
+The local variables shown in Table 3-67 are used by the source when handling NACKs and MUST be 
+supported. 
+Table 3-67 - Configuration Parameters for Handling NACK and RTO 
+Local Variables Requirement Definition 
+RTO_Init_Time 
+MUST 
+Initial time to wait before retransmitting a packet due to 
+timeout at the sender. 
+May be global across all PDCs or unique for RUD, ROD, RODL, 
+and reserved PDCs. 
+NACK_Retx_Time 
+MUST 
+Set of one to four configured times used to delay the 
+retransmission of a packet that was NACK’d. If more than one 
+configured value, select based on NACK code. Should provide 
+an option for no delay. 
+Max_RTO_Retx_Cnt 
+ MUST 
+Threshold for number of retransmissions declaring failure for 
+PSN. If Max_NACK_Retx_Cnt is provided, this only counts RTO 
+retransmissions. If Max_NACK_Retx_Cnt is not provided, this 
+counts RTO and NACK retransmissions  
+Max_NACK_Retx_Cnt 
+  Threshold for number of retransmissions performed due to receiving NACKs before declaring failure on the PSN. 
+ 
+Packets are retransmitted when an RTO occurs, or a NACK packet is received. The number of times a 
+packet is retransmitted due to RTO is limited to a configured value, Max_RTO_Retx_Cnt, before 
+declaring failure. The number of times a packet is retransmitted due to receiving a NACK may be limited 
+to a configured value, Max_NACK_Retx_Cnt, before declaring failure. Implementing 
+Max_NACK_Retx_Cnt is optional. If omitted, NACK retransmissions are included in the RTO counter. 
+Retransmission due to RTO MUST be supported as follows: 
+1. Retransmit any packet that has not been acknowledged or NACK’d in the RTO time period 
+2. Each time a packet is retransmitted because of an RTO, the RTO time period is exponentially 
+increased as follows: 
+a. RTO_TIMER = RTO_INIT_TIME * 2retry_count 
+b. Where retry_count is the number of times a packet has been retransmitted due to RTO 
+3. If a NACK is received: 
+a. Retransmit the packet after waiting NACK_Retx_Time, based on pds.nack_code 
+b. Reset the RTO_TIMER and, optionally, set retry_count to zero 
+4. If a Probe CP is sent, the RTO_TIMER may be paused until the ACK for the Probe CP is received. 

@@ -1,0 +1,50 @@
+# Calibration-ladder GF-06 registry-twin RUN (gap-fill
+# anchor): the L0 single-stage crossbar identity at the REGISTRY-B twin
+# of the GF-06 anchor point — r=8, B=64 B/ns (A-L0X-BW registry point),
+# L=1000 ns (the SAME declared import as the anchor run, so the run
+# pair isolates the B axis ALONE), payload 2097152 B = 2 MiB (the same
+# size as run_gf06_anchor_sim_v1.yaml). Placement arithmetic backed by
+# this pair: anchor 7390032/25 = 295,601.28 ns vs twin 59,344 ns —
+# ratio exactly 92725/461877 ~ 0.2008 (the anchor sim config predicts
+# ~4.98x slower CCT than the registry defaults at equal L), pure-B
+# asymptote exactly 128/25 = 5.12, delta exactly -5906432/25 =
+# -236,257.28 ns. Placement, never tuning; the registry value and
+# range are untouched. GF-06's subject (programmable congestion
+# management) is out of the L0 input space; nothing about CC is
+# executed here; no anchor FCT is compared to any CCT.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF06-REG64-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf06/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf06/topologies/crossbar8_gf06_reg64_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf06/profiles/implementation_profile_l0_crossbar_cal_gf06_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf06_reg64_v1 (one non-blocking switch stage; r=8, B=64 B/ns = A-L0X-BW registry point, L=1000 ns = the anchor run's declared import — the pair isolates the B axis)
+  workload: w1_dense_tp_decode tp8, payload 2^21 (2 MiB, the anchor run's size; inside the anchor's staged 150 KB - 16 MiB range)
+  implementation: analytical L0 crossbar identity; GF-06 comparison is sim-config-axis placement only (programmable congestion management out of model scope; no FCT comparison; very-recent-preprint simulation anchor) — PROPOSED, review required
+evidence_level_requested: E0

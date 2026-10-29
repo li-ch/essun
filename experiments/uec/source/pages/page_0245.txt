@@ -1,0 +1,38 @@
+ 245 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+second response that indicates an error that is marked for guaranteed delivery; however, no more 
+than one response per packet may be marked for guaranteed delivery. 
+ 
+Except in the case of deferrable send, an implementation MAY acknowledge a packet before semantic 
+processing. In this case, UET_NO_RESPONSE MUST be used as the semantic opcode for any packet 
+acknowledged before semantic processing. The PDC at the initiator may use this to determine that a 
+packet was delivered successfully, but that semantic processing had not concluded. This response uses 
+the same format as UET_DEFAULT_RESPONSE and contains a ses.JobID and ses.message_id. Deferrable 
+sends MUST include a semantic response with the response to the first packet received for that 
+message. 
+Informative Text: 
+The semantic response is the mechanism by which deferrable sends are deferred. If a deferrable send 
+is going to be deferred, then the implementation cannot delay the semantic response which would 
+lead to deferring the send. 
+ 
+If delivery complete (ses.dc) is set for the message, the response to the last packet that is received for a 
+message MUST NOT be generated until the completion semantics have been met—that is, until the 
+entire message is globally observable (3.4.9.3). The last packet received may not be the last packet of a 
+message (e.g., for the RUD protocol). 
+Responses MUST include the ses.message_id that was included in the request ses.message_id field or 
+ses.read_request_message_id field (for responses with data). For request formats that do not contain a 
+message ID, a response that has a message ID field MUST have the value 0 in the ses.message_id field or 
+ses.read_request_message_id field (for responses with data). 
+The ses.JobID in the response MUST be the ses.JobID of the request—if one is present. Certain PDS 
+control packets do not necessarily provide a JobID to use in the response. 
+For a response with data that contains a message offset, the ses.message_offset field MUST be 0 when 
+responding to the start-of-message request and MUST be the ses.message_offset carried in the header 
+data for other responses. 
+If a UET_DEFAULT_RESPONSE opcode is not appropriate, the response opcode MUST be UET_RESPONSE 
+when no data is returned or UET_RESPONSE_W_DATA when data is returned (Table 3-23). 
+UET_RESPONSE and UET_RESPONSE_W_DATA packets MUST be marked for guaranteed delivery. 
+The ses.return_code field MUST be RC_OK (Table 3-25) for successful operations. Errors from all 
+previous packets in the message MUST be aggregated into the ses.return_code field using a first error 
+model for error precedence (3.4.6.1). Here, “first error” is the first error for this message that SES 
+encountered. Due to out-of-order packet handling, the first error may occur out of packet order. 

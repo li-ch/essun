@@ -1,0 +1,48 @@
+ 131 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The libfabric mappings for the SES standard request header are shown in Table 2-39. 
+Table 2-39 - Mappings for Standard Request (UET HDR_REQUEST_STD) 
+Request Field Libfabric Source 
+opcode Based on an associated libfabric API as specified in Section 2.2.5.4 
+delivery complete (dc) Set when an operation completion mode associated with libfabric API call is 
+FI_DELIVERY_COMPLETE 
+Relative (rel) Address mode component of UET address assigned to destination libfabric endpoint 
+header data present (hd) Set when the associated libfabric API provided remote CQ data 
+resource_index Resource Index component of UET address assigned to destination libfabric 
+endpoint 
+ri_generation Managed by the provider in accordance with the SES specification  
+JobID JobID associated with libfabric API operation (see Section 2.2.4) 
+PIDonFEP PIDonFEP component of the UET address assigned to the destination libfabric 
+endpoint 
+buffer_offset Offset from the buffer starting address specified in the associated libfabric API call 
+initiator Initiator ID component of the UET address assigned to the source libfabric endpoint 
+match_bits Remote memory key for RMA/atomic opcodes, tag for tagged send opcodes  
+header_data (som=1) 
+payload_length +  
+message_offset (som=0) 
+Remote CQ data from an associated libfabric API call 
+Managed by the provider in accordance with the SES specification  
+request_length Length of the payload provided on an associated libfabric API call 
+ 
+The criteria for using the UET HDR_REQUEST_SMALL header for RMA operations are specified in Section 
+2.2.5.3.4.1. The same criteria MUST be applied for atomic operations. The UET HDR_REQUEST_SMALL 
+header SHOULD be used only for RMA or atomic operations that satisfy the specified criteria. The 
+libfabric mappings for UET HDR_REQUEST_SMALL are shown in Table 2-40. 
+Table 2-40 - Mappings for Optimized Non-Matching (UET HDR_REQUEST_SMALL) 
+Request Field Libfabric Source 
+opcode Same as standard format 
+delivery complete (dc) Same as standard format 
+resource_index Resource Index for MR as specified in Section 2.2.5.3.4.1 
+JobID Same as standard format 
+PIDonFEP Same as standard format 
+request_length Length of payload provided on associated libfabric API call 
+buffer_offset Same as standard format 
+ 
+A single-format, UET_HDR_REQUEST_MEDIUM supports both small message and small RMA use cases. 
+The criteria for the small message use case are specified in Table 2-41. The small message SES header 
+SHOULD be used when the criteria specified in Table 2-41 are satisfied. 
+Table 2-41 - Criteria for Small Message Header (UET HDR_REQUEST_SMALL) 
+Criteria for Use of Small Message SES Header 
+Message size <= MTU 
+Operation is tagged send 

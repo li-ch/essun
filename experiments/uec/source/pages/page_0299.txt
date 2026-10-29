@@ -1,0 +1,44 @@
+ 299 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+void *pkt                 # ptr to packet  
+uint16_t pkt_len          # packet length in bytes 
+void *rsp                 # ptr to response  
+uint16_t rsp_len          # response length in bytes 
+uint8_t tc                # traffic class 
+uint8_t next_hdr          # controlled by SES, used to determine the type of  
+                          #   header in the encapsulated UET payload 
+bool som                  # TRUE => start of message 
+bool eom                  # TRUE => end of message 
+bool lock_pdc             # TRUE => do not close this PDC until SES indicates  
+                          #   the lock can be lifted (separate function) 
+bool return_data          # TRUE => packet must use PDC in orig_pdcid, 
+                          #   set for read responses 
+uint16_t orig_pdcid       # PDCID from Read request in fwd direction 
+                          # [local ID identifying a specific PDC] 
+bool orig_psn_val         # TRUE => include orig PSN field in PDS Request hdr 
+uint32_t orig_psn         # PSN from Read req or Def Send in fwd direction 
+bool gtd_del              # TRUE => SES Response needs guaranteed delivery 
+bool ses_nack             # SES indication to send a PDS NACK 
+uint16_t eager_id         # SES identifier for eager estimate request 
+uint32_t eager_size       # size in bytes of eager data  
+uint16_t rx_pkt_handle    # PDS assigned packet handle at destination 
+bool pdc_pause            # TRUE => SES stops sending RUD/ROD packets to PDS 
+bool rudi_pause           # TRUE => SES stops sending RUDI packets to PDS 
+enum pds_error            # enum of reasons for PDC reset 
+ 
+Contexts are used to group or isolate packets for PDCs or CCCs. Contexts are assigned by SES and used 
+by PDS in assigning packets to PDCs and/or CCCs. 
+Table 3-33 - Packet Contexts 
+Context Usage 
+tss_context Used to limit all packets on a PDC to a common SDI; that is, all packets on a 
+PDC must have the same tss_context. 
+SDI, secure domain identifier, is defined in the TSS Section 3.7.4. 
+rod_context Used to keep all packets with common rod_context on the same PDC. Multiple 
+rod_contexts may map to the same PDC. If used with security, this includes the 
+SDI, and tss_context is ignored. 
+rsv_pdc_handle This handle is assigned when a reserved PDC is allocated. 
+It is used to assign  group packets to a common PDC; that is, only packets 
+passed to the PDS with this handle will use the associated PDC. If used with 
+security, this handle encompasses the SDI, and tss_context is ignored. 
+ 

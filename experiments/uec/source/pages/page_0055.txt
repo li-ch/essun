@@ -1,0 +1,70 @@
+ 55 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+Informative Text: 
+Assume a job contains K endpoints and P processes per endpoint. The relative addressing scheme 
+allows for a table of size K-1 at the source to translate to a destination FA and then, at this 
+destination, a table of size P to translate to the target process at the destination. In a system that 
+supports multiple jobs per endpoint, the JobID disambiguates different jobs at the destination to find 
+the right PIDonFEP table of size P. This avoids O(K*P) table entries at the source that would be 
+required if one flat address space was used. This approach replaces the O(K*P) table entries with 
+O(K+P) entries. K is expected to be in the tens of thousands, P in the hundreds. 
+ 
+In the absolute addressing mode, UE defines three complementary parts of an address: 
+1. An FA identifying a FEP. 
+2. A PIDonFEP identifying one of the OSI PIDs that are associated with a destination FEP. 
+3. A Resource Index (RI) identifying a service or other entity within the target process. 
+ 
+Figure 1-9 - Addressing Modes 
+ 
+Server
+Initiator
+Cluster
+Rank0
+PIDonFEP=X
+Memory
+Target
+Rank1
+PIDonFEP=X
+Memory
+{FA, JobID, PIDonFEP, Resource Index}
+Node Node
+Cluster
+PIDonFEP=Y
+Memory
+Client
+PIDonFEP=Z
+Memory
+{FA, PIDonFEP, Resource Index}
+Node Node
+PIDonFEP=X
+Memory
+Relative Addressing Absolute Addressing
+Rank0
+PIDonFEP=X
+Memory
+Rank1
+PIDonFEP=X
+Memory
+JobID=K
+JobID=P
+{FA, JobID, PIDonFEP, Resource Index}
+Initiator
+Cluster
+Rank0
+Memory
+Target
+Rank1
+Memory
+{FA, JobID}
+Node Node
+Direct Memory Addressing
+Rank0
+Memory
+Rank1
+Memory
+JobID=K
+JobID=P
+{FA, JobID}

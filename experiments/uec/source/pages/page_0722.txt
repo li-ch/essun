@@ -1,0 +1,42 @@
+ 722 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+opaque 4 For use by higher-layer protocol 
+sa_encode 
+• z-bit 
+• y-bit 
+• x-bit 
+• m-bit 
+4 ufh.sa_encode = [z, y, x, m] = Specified by IEEE Std 802 
+• SLAP quadrant encoding Z bit 
+• SLAP quadrant encoding Y bit 
+• Universal/Local encoding X bit 
+• Individual/Group encoding M bit 
+dscp 6 Differentiated services code point aligned with IPv4/IPv6 usage. 
+Together with the ufh.ecn field it forms the IPv4 differentiated 
+services field or the IPv6 traffic class field. 
+ecn 2 Explicit congestion notification aligned with IPv6/IPv6 usage. 
+Together with the ufh.dscp field it forms the IPv4 differentiated 
+services field or the IPv6 traffic class field. 
+opaque 16 For use by higher-layer protocol 
+src_addr 16 Source address 
+ 
+5.4.5 UFH and Header Stacking 
+UFH retains the use of the EtherType field to identify the next header in the header stack and extend the 
+information carried with a packet. For example, VLAN tags can be used to partition a network domain 
+for multi-tenancy, MACSEC tags can add link security, and CSIG tags can carry telemetry for congestion 
+control or diagnostics. Figure 5-27 shows different tag stacking examples. 
+The ordering of tags in the header stack MUST follow Ethernet ordering rules. For example, a VLAN tag if 
+present MUST be the first tag on a frame at offset 12. 
+Because UFH subsumes the traditional network layer, there is no additional IP header, and tags are 
+followed by an L4 transport header. UFH is designed to be used with UDP, UET, and future transports. 
+New EtherType encodings are required to identify them. 
+ 
+Figure 5-27 - UFH Coexistence and Extensibility 
+ 

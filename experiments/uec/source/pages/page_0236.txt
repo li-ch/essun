@@ -1,0 +1,46 @@
+ 236 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Size Description Section Ref 
+read_request_message_id 16 Message ID used in the original read request 
+(or of the original fetching atomic operation 
+request). 
+3.4.2.14 
+rsvd 2 Reserved  
+payload_length 14 Length of the payload in this specific packet for 
+a response with data. 
+Note: These bits are reserved in a semantic 
+response without payload. 
+ 
+modified_length 32 Indicates the total number of bytes of the 
+initiator buffer that will be modified by this 
+transaction. For example, a message may be 
+truncated because no buffer is available or the 
+buffer it was targeting is too small.  
+ 
+message_offset 32 Indicates the relative position in the message 
+that this payload corresponds to. 
+ 
+ 
+The second response with data header format (Figure 3-27) is used for responses with data where the 
+original operation consisted of an optimized request header (Figure 3-15) with a request length that 
+described a total payload that could be carried in a single Payload MTU. Here, the payload length is also 
+the modified length and a message ID is not needed, because PDS can associate the response with the 
+original request using the packet sequence number (PSN) echoed in this packet format. This MAY be 
+used for small reads and for fetching atomic operations. The payload length in this format is placed 
+where the message ID is carried in the full format, and the modified length and message offset are 
+omitted. 
+Table 3-18 - Optimized Response with Data Header Fields 
+Field Size Description Section Ref 
+list 2 Indicates if the payload was delivered to 
+the expected or unexpected list.  
+3.4.7.3 
+opcode 6 Indicates type of response (e.g., semantic 
+ACK, response with payload, etc.). 
+3.4.7.2 
+version (ver) 2 Semantic protocol version: Set to 0 in the 
+initial version. 
+ 
+ 
+Figure 3-27 - Optimized Response with Data Header Format (UET_HDR_REQUEST_DATA_SMALL) 
+ 

@@ -1,0 +1,42 @@
+ 204 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+wildcard matching is used with ROD, the message MUST consume the entries in the FIFO order provided 
+by software amongst all buffers that match the matching criteria; thus, for a given {FA, JobID, PIDonFEP, 
+Resource Index} matching is performed in the order that buffers were added to that Resource Index. 
+When RUD is used, the matching process SHOULD consume the entries in the FIFO order provided by 
+software amongst all buffers that match the matching criteria—whether exact matching or wildcard 
+matching is used; however, because RUD is unordered, the fabric is allowed to reorder packets. Entries 
+are allowed to be consumed in any order when using RUD. 
+The match bits MAY be used as part of the RMA operations for libfabric. In this use case, the target of an 
+RMA operation configures the resources identified by a {JobID, PIDonFEP, Resource Index} tuple in an 
+RMA operation (e.g., fi_write(), fi_read(), fi_atomic()) as expressed as an RMA opcode (e.g., UET_WRITE, 
+UET_READ, UET_ATOMIC, UET_FETCH_ATOMIC) for access using a “key” provided as a parameter of the 
+fi_write() or fi_read() API. The implementation MUST map the key into the match bits on the wire. On 
+some implementations, this key (as carried in the match bits) MAY have a very limited range and simply 
+index a table of memory regions affiliated with a {JobID, PIDonFEP, Resource Index} tuple. On other 
+implementations, some values of this key MAY use a hash table to identify a buffer associated with that 
+{JobID, PIDonFEP, Resource Index, key} tuple. On still other implementations, the hardware MAY be 
+simply configured to use the matching logic used to support tagged messaging. Each of these modes is 
+enabled through the libfabric mapping because the libfabric API allows implementations to control the 
+actual values of a memory key and how those values are used. Interoperability between various 
+implementation strategies for the use of match bits is discussed in the libfabric mapping specification. 
+3.4.2.3.6 Memory Addressing 
+The UET header provides an offset within the buffer selected through the above processes. The offset is 
+zero based (with respect to the buffer start) and matches the default memory region behavior for 
+libfabric (formerly known as FI_MR_SCALABLE). Implementations MAY support the FI_MR_VIRT_ADDR 
+option. FI_MR_ENDPOINT MAY be set by the user of the libfabric provider. 
+3.4.2.3.7 Addressing Summarized 
+A message that uses relative addressing selects a set of resources associated with a libfabric endpoint 
+using a JobID, PIDonFEP, operation type, and Resource Index combination. For an untagged operation, a 
+given {JobID, PIDonFEP, Resource Index} tuple MUST be used to select one buffer. If the message uses a 
+tagged operation, the FEP uses the match bits as part of selecting a buffer. In a matching operation, a 
+given {JobID, PIDonFEP, Resource Index, Match Criteria} tuple MUST be used to select one buffer; 
+however, the FEP MAY use one or more mechanisms to uniquely identify that buffer (as defined in 
+Section 3.4.2.3.5). The mechanism used MAY depend on the {JobID, PIDonFEP, Resource Index} tuple. An 
+RMA operation MAY include a memory key in the same header field used for match bits (i.e., 
+Informative Text: 
+The design of SES always provides an ses.initiator field to be part of the matching criteria. This 
+enables libfabric to support FI_DIRECTED_RECV. An endpoint could be opened without 
+FI_DIRECTED_RECV. In this case, the target side endpoint would ignore the ses.initiator field. This is a 
+topic for coverage in the libfabric mapping specification but is noted here for the sake of the reader. 

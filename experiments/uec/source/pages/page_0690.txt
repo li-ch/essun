@@ -1,0 +1,41 @@
+ 690 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+LLR-W Value UE Link optional capability 
+1 Reserved for future specification. 
+2 Reserved for future specification. 
+3 This port wants bidirectional LLR (it both sends and receives). 
+ 
+Even if the local port has set the LLR-E flag, indicating the local port is set to use LLR, the local port SHALL 
+NOT begin using LLR until the remote link partner indicates it has enabled LLR by setting its LLR-E flag to 
+TRUE(3). Both link partners SHALL enable LLR before the LLR feature is operational.  
+5.3.2.1.6.2 IPGR 
+If the 1-bit IPGR-C is set TRUE(1), the sending port is capable of sending and enabled for receiving 
+reduced idle bytes (see 5.5). A port SHALL NOT transmit reduced idles unless it sees the IPGR-C flag 
+TRUE(1) in the remote LLDP database. If a port sees the remote port is capable of receiving a reduced 
+number of idle bytes indicated by the IPGR-C flag being TRUE(1) in the remote LLDP database, the port 
+seeing the remote IPGR-C flag TRUE(1) SHALL enable idle reduction on transmission if it is capable. If the 
+LLDP Options TLV is NULL or is version 0, the link ends SHALL behave the same as if IPGR-C is set 
+FALSE(0). 
+5.3.2.1.6.3 CSIG 
+The 2-bit CSIG-C flag can take one of three values (see Table 5-3). If CSIG-C is set to 0, the port cannot 
+participate in CSIG. If CSIG-C=0 or if the LLDP Options TLV is NULL or if the LLDP Options TLV is version 0, 
+then there isn’t any forwarding behavior defined for CSIG. If CSIG-C=1, the port can forward and update 
+only compact CSIG tags. If CSIG-C=2, the port can forward and update both compact and wide CSIG tags. 
+The link negotiation supports only CSIG wide tags in combination with CSIG compact tags, as support for 
+CSIG compact tags is mandatory for all implementations (see Section 4.2). 
+Table 5-34 - UE Link Negotiation Options TLV CSIG-C Field Options 
+CSIG-C Value UE Link CSIG capability 
+0 The port cannot participate in CSIG (default value). 
+1 The port can participate in CSIG compact-tag updates only. 
+2 The port can participate in both CSIG compact and CSIG wide-tag updates. 
+3 Reserved 
+ 
+If the LLDP advertisement from one or both link partners is CSIG-C=0, then the link end is not capable of 
+processing CSIG tags (though it might forward them); therefore, the link is not capable of forwarding 
+packets with CSIG tags. If one link end is CSIG capable (CSIG-C=1 or CSIG-C=2) while the other is not 
+(CSIG-C=0), then the link end that is CSIG capable SHALL NOT transmit packets with CSIG tags. If the LLDP 
+Options TLV is NULL or is Version 0, the link end SHALL behave the same as if CSIG-C=0. 
+If the LLDP advertisements from one link partner is CSIG-C=1 and the other link partner advertises CSIG-
+C=1 or CSIG-C=2, then the CSIG-C=1 link end is capable of processing and forwarding only compact CSIG 
+tags; therefore, the link is capable of forwarding only packets with compact CSIG tags. In this case both 

@@ -1,0 +1,42 @@
+ 697 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.3.2.2.15.4 R_PktID_Sel 
+The 4-bit R_PktID_Sel field indicates the type of identifier for the VC.  Table 5-37 shows the possible 
+R_PktID_Sel options. This is an optional service that provides assurance that both the CBFC sender and 
+receiver are configured to count credits on the same packets. If the link partners do not agree on the 
+packets that belong to each VC, then the credit counts will be incorrect and the link can lose packets 
+even with CBFC. 
+Table 5-37 - UE Link Negotiation CBFC TLV R_PktID_Sel Field Options 
+Value Meaning 
+0x0 Disable packet to VC identification matching. 
+0x1 The R_PcpDei contains a 4-bit PCP/DEI value used by this VC. The R_MaskPcpDei 
+parameter identifies which R_PcpDei bits are valid. 
+0x2 The R_DSCP contains a 6-bit DSCP value used to identify this VC. The 
+R_MaskDSCP parameter identifies which DSCP bits are valid. 
+0x3 The R_Handle contains a 12-bit stream handle identifying this VC. The handle 
+identifies a stream handle such as specified in IEEE Std 802.1CBdb-2021 clause 6 
+[10] . 
+0x4-0xF Reserved for future specification by UE. 
+ 
+5.3.2.2.15.5 R_PktID 
+The R_PktID contains one of three sets of fields that are used to identify the packets to VC mapping. The 
+type of field is determined by the R_PktID_Sel parameter. The R_PktID information is provided by the 
+receiver for each receiver VC and can be used by the sender in one of three ways depending on the local 
+configuration of the sender’s CBFC management agent. The sender MAY: 
+1) Ignore the packet to VC mapping. 
+2) Compare the mapping to its own sending VC configuration to verify agreement. 
+3) Dynamically install the mapping for its sending VC. 
+If the receiver elects to disable packet-to-VC mapping identification by setting R_PktID_Sel = 0, then the 
+sender cannot use dynamic packet identification. In the event the receiver disables packet identification 
+while the sender is configured for dynamic mapping, then the sender disables the VC and reports an 
+error. 
+5.3.2.2.15.6 R_MaskPcpDei 
+Selected if R_PktID_Sel = 1. The 4-bit R_MaskPcpDei field identifies the bits of the L2 PCP/DEI fields that 
+are valid for identifying this VC. The DEI bit is the least significant bit of the R_MaskPcpDei field. 
+5.3.2.2.15.7 R_PcpDei 
+Selected if R_PktID_Sel = 1. The 4-bit R_PcpDei field contains the L2 packet PCP/DEI value after the 
+R_MaskPcpDei mask is applied identifying this VC. The DEI bit is the least significant bit of the R_PcpDei 
+field. The set of packets that are members of the VC are those where (PcpDei & R_MaskPcpDei) == 
+R_PcpDei is TRUE. 
+5.3.2.2.15.8 R_MaskDSCP 

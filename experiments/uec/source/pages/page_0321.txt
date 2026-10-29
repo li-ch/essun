@@ -1,0 +1,42 @@
+ 321 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Once an initiator begins the PDC closing process, it MUST NOT transmit new SES messages for that PDC. 
+If additional messages need to be sent between the same pair of FEPs, a new PDC is established. This 
+enables fairness when PDC resources are stressed. If the PDC being closed is a RUD PDC, the additional 
+SES requests can be sent on another PDC immediately (either existing or newly opened). If the PDC 
+being closed is a ROD or RODL PDC, the additional SES requests MUST be deferred until the original 
+ROD/RODL PDC is fully closed. This maintains the ordering of messages. 
+Closing a PDC is triggered by either the initiator deciding to close (local FEP decision) and sending a Close 
+Command CP or the target FEP sending a Close Request CP to the initiator. 
+The PDC close procedure MUST be supported as follows: 
+1. If the initiator decides to close the PDC, the PDC close procedure at the initiator is: 
+a. Stop accepting new message requests for this PDC. 
+i. A clean closing point on an SES message boundary is identified—the initiator does 
+not send a Close Command CP in the middle of a message. 
+b. Complete all SES messages that are in progress. 
+i. An SES message remains in progress until all SES packets associated with the 
+message have been received, transmitted, and responded to, including all necessary 
+PDS acknowledgements, clears and recovery from any NACKs that arrive. 
+ii. This includes receiving return data (or error) for all outstanding read requests. 
+c. When all PDS ACKs for in-progress SES messages have arrived, the initiator checks the PDC 
+for lost packets that have pds.flags.syn=1. If packets with pds.flags.syn=1 were determined 
+to be lost, the initiator MUST choose one of the following approaches: 
+i. Wait until at least Syn_Retx_Safety_Time has elapsed since transmission of the most 
+recent lost packet with               = 1, and then send a Close Command CP. 
+ii. Or, if the target has assumed responsibility for tracking Syn_Retx_Safety_Time, 
+immediately send a Close Command CP with the remaining time to be tracked 
+encoded in the command payload. 
+1. Determining if the target accepts responsibility for tracking the 
+Syn_Retx_Safety_Time can be accomplished using a Negotiation CP at any 
+time between the determination of loss (i.e., a loss detected by a timeout or 
+inferred by other mechanisms) and the issuing of the Close Command CP. 
+d. Wait for PDS ACK of the Close Command CP packet to arrive. 
+i. Close the PDC and free resources when this ACK is received. 
+ii. If this does not arrive after Max_RTO_Retx_Cnt retransmit, close the PDC in error. 
+2. The PDC close procedure at the target is: 
+a. Receive a Close Command CP. 
+i. The Close Command CP implicitly clears all PSNs. 
+ii. There should be no active PSNs when this is received—no packets outstanding on 
+the return direction; if the PDC is not idle then a PDC_CLOSE_IN_ERR SHOULD be 
+recorded for diagnostic purposes. 

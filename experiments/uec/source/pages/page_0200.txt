@@ -1,0 +1,18 @@
+ 200 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Direct memory addressing is associated only with transactions using the Unified Local profile. These 
+transactions do not carry PIDonFEP, Resource Index, memory key / match bits, or initiator fields; hence, 
+they cannot use these as part of addressing or resource separation. Instead, a single network-visible 
+address space is associated with the entire JobID at the target FEP. System-level software is responsible 
+for managing addresses in this context. Translations (or, lack thereof) and protection mechanisms other 
+than the JobID are outside the scope of UET. The target FEP MUST utilize the JobID for isolation. It may 
+do this in one of two ways: 
+1. Allowing only a specific job to access memory at a given FEP. 
+2. Making the address relative to a base address associated with the JobID. 
+ 
+Figure 3-9 - Overview of Relative Addressing for RMA Operations Using Optimized Headers 
+ 
+ 
+Figure 3-10 - Overview of Direct Memory Addressing 
+ 

@@ -1,0 +1,52 @@
+# Calibration-ladder GF-01 anchor-point RUN (gap-fill
+# anchor): the L0 single-port crossbar identity at the anchor's MEASURED
+# link-sum aggregate — r=8, B=325.6 B/ns (GF-01's TransferBench "Sum of
+# Average Bandwidth Across All GPU Pairs: 325.6 GB/s"; the 45.8-average
+# companion tensions by 1.56% at r=8 — recorded not smoothed), L=200 ns
+# (A-L0X-LAT registry point), payload 17179869184 B = 2^34 (16 GiB): the
+# LARGEST row of the anchor's measured series and one of its three
+# reconciling time-and-busbw rows (eager t = 94,254.55 us, busbw
+# 318.98 GB/s; graph busbw 319.22) — the bandwidth-bound plateau target.
+#
+# DOMAIN HONESTY: executed as the AGGREGATE reading of the anchor's
+# non-switched full mesh; the single-port abstraction is OUT-OF-DOMAIN as
+# a physical description of per-pair dedicated capacity (plan §2.1
+# A-L0X-PORT) but term-by-term exact for THIS symmetric collective at
+# B=(r-1)*b per the A7 equivalence finding (cross-checked again on
+# this stage's executed rows).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF01-LARGE-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf01/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+infra_graph:
+  path: experiments/calibration/gf01/topologies/crossbar8_gf01_sum325_6_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf01/profiles/implementation_profile_l0_crossbar_cal_gf01_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf01_sum325_6_v1 (aggregate reading of the GF-01 xGMI full mesh at the anchor's measured link-sum B=325.6 B/ns, L=200 ns free)
+  workload: w1_dense_tp_decode tp8, payload 2^34 (16 GiB, the reconciling GF-01 plateau row — eager 94,254.55 us / busbw 318.98 GB/s)
+  implementation: analytical L0 crossbar identity; GF-01 comparison is measured large-message O-CCT placement on a non-NVIDIA scale-up fabric (gap-fill anchor, PROPOSED, not yet an integrated anchor row) — PROPOSED, review required
+evidence_level_requested: E0

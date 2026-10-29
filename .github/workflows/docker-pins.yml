@@ -1,0 +1,86 @@
+# Weekly Docker-pin rot check (release-readiness A8, 2026-10-28).
+#
+# Why this exists: every backend image is built from source inside Docker
+# against pinned upstream state — one canonical multi-arch base-image digest
+# shared by all three Dockerfiles (ubuntu:22.04@sha256:e0f80c…), pinned
+# upstream commits fetched by git clone at build time (astra-sim @ 4ce9ecf,
+# uet-htsim @ 65ea315b) plus submodule commits, apt-jammy toolchain packages,
+# and release tarballs (abseil 20240722.0, protobuf 29.0) fetched over the
+# network. Any of those can rot after upstream churn, and a repo that only
+# ever builds its images on one laptop finds out at the worst time. This
+# workflow rebuilds every repo-owned pinned Dockerfile from scratch weekly
+# so rot is a loud red X, not a surprise (item: "Fast CI stays per-push" —
+# ci.yml is untouched; this one runs on a weekly cron only).
+#
+# Item text says "both Dockerfiles"; HEAD ships three repo-owned pinned
+# Dockerfiles (backends/docker/astra-sim.Dockerfile, astra-csg-htsim
+# .Dockerfile, uet-htsim.Dockerfile — all committed before the plan was
+# written). The matrix covers all three: a strict superset of the item's
+# bar, chosen over guessing which two the plan counted; if you want
+# a narrower set, delete matrix rows.
+#
+# Design constraints (release-readiness A8: weekly scheduled, rebuilds,
+# opens no PR, fails loudly on rot):
+#   - cron is weekly, Mondays 06:00 UTC (GitHub schedules are UTC); GitHub
+#     runs scheduled workflows on the default branch only. workflow_dispatch
+#     allows a manual first run at the public flip instead of waiting a week.
+#   - opens NO pull request and pushes NOTHING: images are tagged
+#     :pins-check — never the recorded :s1/:s1-seeded tags, whose runbook
+#     digests are the dev host's arm64 builds (runners here are amd64, so
+#     image digests differ by construction) — stay runner-local, and die
+#     with the runner. Rot detection is deliberately NOT auto-repair.
+#   - a failing build IS the alarm: the job goes red and GitHub notifies
+#     the repo (email/Actions tab). fail-fast: false so one rotted pin is
+#     reported rather than cancelled by another's failure (same rationale
+#     as the ci.yml Python matrix).
+#   - docker build --pull --no-cache: the "from scratch" bar held even if
+#     a build cache were ever wired in; --pull re-resolves the digest-
+#     pinned base from the registry, so a withdrawn base digest fails
+#     loudly at this step already.
+#   - the Dockerfiles themselves fail their own builds on pin drift (clone
+#     + `git rev-parse` pin checks, `test -x` on the deliverable binary,
+#     sha256 receipts, and the grep marker that trips if the seeded
+#     sed target line moves upstream) — the build IS the verification.
+#
+# Lands before any remote exists, like ci.yml: never
+# executed on GitHub Actions yet; validated locally with actionlint +
+# PyYAML structural checks (receipts: reports/p0_a8.md). Unverifiable-
+# until-push residue is recorded there per the item envelope.
+name: docker-pins
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker-pins:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        # One repo-owned pinned Dockerfile per row; build context is
+        # backends/docker for all three (per each Dockerfile's own header).
+        include:
+          - dockerfile: backends/docker/astra-sim.Dockerfile
+            tag: essun/astra-sim-analytical:pins-check
+          - dockerfile: backends/docker/astra-csg-htsim.Dockerfile
+            tag: essun/astra-csg-htsim:pins-check
+          - dockerfile: backends/docker/uet-htsim.Dockerfile
+            tag: essun/uet-htsim:pins-check
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rebuild ${{ matrix.dockerfile }} from scratch
+        run: |
+          docker build \
+            --pull \
+            --no-cache \
+            --file "${{ matrix.dockerfile }}" \
+            --tag "${{ matrix.tag }}" \
+            backends/docker

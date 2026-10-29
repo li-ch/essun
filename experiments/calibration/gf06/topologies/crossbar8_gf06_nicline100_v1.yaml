@@ -1,0 +1,31 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 100 B/ns,
+# L = 1000 ns (declared import) — the CONNECTX-8 PER-NIC LINE row AND the
+# GF-05 SIM-CONFIG CROSS-CHECK row (double provenance, declared): (a)
+# GF-06's staged hardware is "2x 800 Gbit/s ConnectX-8 each" — per-NIC
+# 800 Gbit/s / 8 = 100 B/ns per direction; (b) 100 B/ns is exactly
+# GF-05's UET-htsim sim line rate (stage GF-05's anchor point
+# crossbar8_gf05_line100_v1), so this row at the SAME L and ladder is
+# the executed two-user UET-htsim contrast: GF-06's sim links (12.5) sit
+# exactly x8 below GF-05's sim links (100) — the x8 is the anchor-set's
+# own two-config spread on the bandwidth axis, executed at every ladder
+# size (asymptotic CCT ratio exactly 8; at the shared 2 MiB size the
+# GF-06-config/GF-05-config CCT ratio is exactly 461877/60469 ~ 7.638 —
+# identical arithmetic to GF-05's own 8:1 displacement row at that size,
+# recorded in both stages, never conflated). Nothing tuned; no anchor
+# time compared anywhere.
+topology_id: crossbar8_gf06_nicline100_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the ConnectX-8 per-NIC line
+  rate of GF-06's UCCL platform (800 Gbit/s = 100 B/ns per direction,
+  decimal reading) — numerically identical to GF-05's UET-htsim sim line
+  point (cross-anchor coincidence, recorded in both stages, never
+  cross-derived). Identity t = 2(r-1)/r*M/B + 2L, L = 1000 ns declared
+  import from GF-05's staged per-hop decomposition. Provenance: GF-06
+  staged hardware config + GF-05 staged sim config; never our
+  measurements, never tuned.

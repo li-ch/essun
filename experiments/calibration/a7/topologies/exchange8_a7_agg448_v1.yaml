@@ -1,0 +1,38 @@
+# Calibration-ladder A7 topology: fully-connected EXCHANGE fabric of 8
+# ranks at the CAL-A7 aggregate anchor point — recursive-halving/doubling
+# AllReduce (backend analytical_l0_recursive_doubling), per-rank
+# per-direction injection B = 448 B/ns, uniform per-pair exchange latency
+# L = 200 ns. Same provenance as crossbar8_a7_agg448_v1 (CAL-A7: 7 x 64
+# B/ns per direction aggregate; plan §2.1 A-L0D-BW).
+#
+# ROLE: the third single-port L0 identity over the same mesh-class
+# fabric. The backend's own docstring states the design-space relation:
+# ring / doubling / crossbar share the identical bandwidth term
+# 2*(r-1)/r*M/B and wire bytes, differing ONLY in the latency chain —
+# ring 2*(r-1)*L = 14L, doubling 2*log2(r)*L = 6L, crossbar 2L at r=8.
+# Executing the doubling row at the anchor point places the third point
+# of that latency-chain spectrum inside the anchor's fabric class and
+# lets the record verify t_doubling - t_crossbar = 2*(log2(r)-1)*L = 4L
+# exactly against executed artifacts (r=8 is a power of two, so the
+# A-L0D-POW2 gate accepts the anchor's rank count natively).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0D-BW), never tuned toward any
+# model output; the same OUT-OF-DOMAIN caveat as crossbar8_a7_agg448_v1
+# applies (single-port abstraction vs the anchor's dedicated per-pair
+# structure). L = 200 ns is the A-L0D-LAT registry point (KEEP).
+topology_id: exchange8_a7_agg448_v1
+topology_class: fully_connected_exchange
+ranks: 8
+nic:
+  injection_bytes_per_ns: 448
+link:
+  pair_latency_ns: 200
+notes: >
+  Partner-exchange steps over a fully-reachable fabric: every rank pair
+  adjacent with uniform per-pair exchange latency; one partner per rank
+  per step (XOR schedule), log2(r)=3 steps per phase, 6L latency chain
+  total. No congestion, no credits, no packetization — L0 transport
+  model only. Provenance: B = 448 B/ns from CAL-A7's staged 7 x 128 GB/s
+  bidirectional links (per-direction split per plan §2.1 convention; spec
+  ceiling, never an achieved value), L from the free A-L0D-LAT registry
+  point. Values are anchor quotes / assumptions, never our measurements.

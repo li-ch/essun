@@ -1,0 +1,48 @@
+# Calibration-ladder GF-01 topology: unidirectional ring of 8 ranks at
+# B = 64 B/ns per direction — the PER-LINK reading of the GF-01 anchor's
+# fabric (AMD ROCm blog "Understanding RCCL Bandwidth and xGMI Performance
+# on AMD Instinct MI300X": each xGMI link has a raw unidirectional
+# bandwidth of 64 GB/s; 7-hop full-mesh xGMI across 8 MI300X GPUs;
+# docs/calibration/anchors_gapfill.md §GF-01, gap-fill anchor NOT yet
+# integrated into the anchor registry (as CAL-A13 if accepted).
+# Decimal units, 1 GB/s = 1 B/ns (plan §2 convention).
+#
+# ROLE OF THIS TOPOLOGY: GF-01's fabric is the SAME non-switched full mesh
+# CAL-A7 stages as a spec (7 dedicated per-pair links per GPU, 128 GB/s
+# bidirectional => 64 GB/s per direction per link). The ring here is the
+# ring ALGORITHM EMBEDDED in that mesh (the A7 anchor's declared reading): every
+# ring hop a dedicated 1-hop pair, B = the anchor's raw per-link
+# per-direction rate 64 B/ns, latency chain 2(r-1)L = 14L. The anchor's
+# OWN per-link measurements sit BELOW this raw rate (45.1-47.2 GB/s
+# observed; ~45.8 average; 48 GB/s "usable") — those derated points are
+# the aggregate-sweep's business (crossbar8_gf01_* below); this topology
+# is the raw-rate per-link reading, numerically identical to the A7 record's
+# ring8_a7_link64_v1 anchor point (cross-stage consistency: GF-01
+# MEASURES the fabric CAL-A7 SPECIFIED).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward the
+# GF-01 measurements; 64 B/ns is the anchor's own staged raw per-link
+# rate, fixed BEFORE any model output was read (and exactly the A-L0-BW
+# registry point, as in the A7 record). L = 200 ns is the A-L0-LAT registry
+# point (KEEP; the latency axis is the plan's weakest axis, gap §4.2 —
+# GF-01's small-message rows are the first MEASURED staged content in
+# that regime, and the stage records where the registry point sits
+# relative to them rather than moving it).
+topology_id: ring8_gf01_link64_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Ring hops are
+  dedicated 1-hop pairs of the MI300X xGMI full mesh (no switch
+  traversed). Provenance: B = 64 B/ns is GF-01's staged RAW unidirectional
+  xGMI link rate (measured table context: TransferBench observes only
+  45.1-47.2 GB/s per link usable on this fabric — derated aggregate
+  readings live in the crossbar8_gf01_* topologies; gap-fill anchor,
+  PROPOSED, not yet an integrated anchor row); L = 200 ns is the free A-L0-LAT
+  registry point. Values are anchor quotes / free-registry points, never
+  our measurements, never tuned.

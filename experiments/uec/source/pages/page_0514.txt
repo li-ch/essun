@@ -1,0 +1,37 @@
+ 514 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+SHOULD map its entire entropy space to the port managed by its PDS. The free_port_list in 
+GetSendParams() can then indicate only a single port, so the choice of port by the CCC is a no-op. 
+3.6.17 Switch Configuration for UET CC 
+UET-CC uses ECN both for load balancing and as the congestion signal driving NSCC. UET-CC also 
+optionally uses trimming for oblivious load balancing and to provide early loss indication. Thus, the 
+correct configuration of network switches is important for UET-CC performance. 
+Plane_BDP is defined as the bandwidth-delay product of the lowest bandwidth path between a source 
+and destination, measured without queuing, where the network path traverses the core of the network. 
+In most networks this will be: 
+Plane_BDP = min(sender.linkspeed, receiver.linkspeed) * config_base_rtt 
+ 
+For a multi-ported NIC on a multi-rail topology, the linkspeed is typically the linkspeed of a single port, 
+not the aggregate bandwidth of all ports. 
+Informative Comment 
+Plane_BDP may differ from the BDP value used in CCC algorithms over a multi-ported NIC in a multi-
+rail topology. In this scenario, the CCC BDP value is based on the sprayed capacity across all ports in 
+the spraying set, but Plane_BDP considers only a single port or rail. For a single-port NIC, Plane_BDP 
+and BDP are the same.  
+ 
+UET can be used with two or three traffic classes (3.6.4.7) for each UET PDC. In the three-traffic class 
+case, these are: 
+• Low priority (TC_low) 
+Queue setting for this TC is referred to as queue_low. 
+• Medium priority (TC_med) 
+Queue setting for this TC is referred to as queue_med. 
+• High priority (TC_high) 
+Queue setting for this TC is referred to as queue_high. 
+• When two traffic classes are used, the medium priority TC (TC_med) will not be used. 
+The RECOMMENDED default settings for ECN when using probabilistic marking are: 
+queue_low.min_thresh = 0.2 * Plane_BDP 
+queue_low.max_thresh = 0.8 * Plane_BDP 
+ 
+ECN can also be set using a deterministic marking threshold. The recommended deterministic ECN 
+marking threshold is 0.5 * Plane_BDP. In general, probabilistic marking is preferred. 

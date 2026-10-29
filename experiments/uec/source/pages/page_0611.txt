@@ -1,0 +1,40 @@
+ 611 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+should not attempt to change paths in an incast but should do so when congestion occurs at any 
+other link. Trimmed packets already use distinct DSCP code points to distinguish the incast and non-
+incast cases. 
+Some example information that can be encoded in locator metadata is as follows: 
+• Outgoing Link Capacity 
+o For normalized signal types like ABW/C, knowing the link capacity is helpful. 
+o Common link speeds can be encoded in 2 bits. 
+• Outgoing Link Orientation 
+o Uplink, downlink, side link, penultimate hop link. 
+o Fabric information. 
+o Fat tree stages or group ID in DragonFly++ topology. 
+o Rail/plane ID in multi-rail or multi-plane topology. 
+• Outgoing PortID/DeviceID 
+o Possibly only applicable to wide format: 9 bits are needed for 512-radix switches. 
+o TTL of packet on egress: 8 bits of information to detect the exact hop in the path. 
+ 
+4.2.4.1.8 Do Not Modify (csig.d) 
+The csig.d bit provides a Do Not Modify indication for a CSIG tag. When a switch receives a CSIG tag with 
+csig.d = 0, that switch MUST, according to the signal type (csig.t) specified in the tag and the signal 
+type’s aggregation function, perform CSIG-Compare-and-Update() on the signal value (csig.s) in that tag. 
+When a switch receives a CSIG tag with csig.d = 1, that switch MUST NOT modify the signal value (csig.s) 
+in that tag. When a CSIG tag is first initialized, its csig.d bit MUST be set to zero, to indicate that 
+receiving switches are permitted to update the signal value in that tag. 
+In a UE fabric configured to perform packet trimming and that supports CSIG, all switches MUST support 
+the following base case behavior: When a CSIG-tagged packet arrives at a heavily congested queue, and 
+the receiving switch trims the packet, that switch MUST set the CSIG tag’s csig.d bit, and SHOULD make 
+no further modifications to the CSIG tag. Some deployments MAY overwrite the CSIG tag’s signal value 
+(csig.s) with signal information from the switch where trimming occurs; this policy may benefit 
+congestion control at endpoints. Those use cases and their configuration are outside the scope of this 
+specification. 
+A CSIG-capable switch may support configurations in which it does not set the csig.d bit when trimming 
+CSIG-tagged packets. Those use cases and their configuration are outside the scope of this specification. 
+Moreover, all UE-compliant switches that support CSIG MUST support the base case behavior of setting 
+the csig.d bit in the CSIG tag on any packet they trim. 
+The rationale for this base case behavior of setting the csig.d bit in CSIG tags on trimmed packets is that 
+once a packet has been trimmed, it traverses high-priority queues, whose measured signal values may 
+not be representative of the congestion state at the lower-priority queues traversed by untrimmed 

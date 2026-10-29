@@ -1,0 +1,42 @@
+ 542 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-126 - ERROR State Transition Function 
+Function Name (Argument(s)) Description 
+void uet_ccc_fatal(int reason) 
+ 
+Transition the CCC into ERROR state. The value of reason 
+is algorithm-defined and is used to signal the cause of the 
+error for debug and telemetry purposes; it is not 
+interpreted or used by the PCM subsystem. 
+ 
+3.6.18.7.2 ERROR state semantics 
+3.6.18.7.2.1 Data path 
+Once a CCC has entered the ERROR state, the implementation MUST ensure the following: 
+• The CCC is logically disabled. 
+• No new packets associated with the CCC are admitted to the data path. 
+• All in-flight, acknowledged, and queued packets associated with the CCC are logically dropped. 
+• No further PCM events or telegrams are generated for the CCC. 
+• No API operations invoked by the algorithm are applied. 
+3.6.18.7.2.2 PCM subsystem behavior 
+After the CCC enters the ERROR state: 
+• Any PCM algorithm invocation already in progress MAY be aborted or MAY complete execution; 
+however, regardless of completion or abortion, it MUST NOT produce any externally visible side 
+effects of any kind. 
+• No mutation of the CCC or PDC state is permitted after the CCC enters the ERROR state, 
+including mutations attempted by an in-flight algorithm invocation. 
+• Any PCM API invocation targeting the CCC (including those issued by an in-flight algorithm 
+invocation) MUST fail and MUST return the error code -ENOTRECOVERABLE. 
+• Further PCM algorithm invocations for the CCC MUST NOT occur. 
+3.6.18.7.3 Error reporting and observability 
+When a CCC transitions to the ERROR state, the implementation MUST record a single CCC-scoped fatal 
+error indication with the following information: 
+• Error source. One of: 
+o IMPLEMENTATION: Fatal error detected by the implementation. 
+o PCM_ALGORITHM: CCC transitioned to ERROR due to a PCM algorithm action. 
+• Error value: 
+o If IMPLEMENTATION: Value is implementation-defined. 
+o If PCM_ALGORITHM: Value MUST equal the reason supplied to uet_ccc_fatal(). 
+Once a fatal error indication is recorded for a CCC, subsequent fatal causes for that CCC MUST NOT 
+overwrite, append, or accumulate additional fatal indications. The fatal error indication MUST remain 
+available for software inspection until CCC reset or reinitialization. 

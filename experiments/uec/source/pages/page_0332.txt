@@ -1,0 +1,44 @@
+ 332 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.10 Header Formats 
+This section specifies the PDS header formats.  All UET packets MUST use the header formats defined in 
+this section. 
+Formats are defined for the following headers: 
+• Entropy 
+• RUD/ROD Request 
+• RODL Request 
+• Acknowledgement 
+• ACK with CC 
+• ACK with extended CC 
+• CP 
+• RUDI Request/Response 
+• Negative Acknowledgement 
+• UUD Request 
+In all PDS headers, reserved fields MUST be set to zero on transmission and ignored on reception. 
+Section 3.5.10 presents the header fields in a compact tabular format with a brief description of each 
+field.  Section 3.5.11 provides more detailed descriptions of each field. 
+3.5.10.1 UET Entropy Header  
+The UET entropy header is used when running UET directly over IPv4 or IPv6, without UDP. It appears 
+directly after the IP header. The format of the UET entropy header is shown in Figure 3-63. The header 
+fields are described in Table 3-38. 
+   
+Table 3-38 - Fields of UET Entropy Header  
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+ 
+entropy 
+ 
+16 
+Entropy value used — typically by fabric switches — for path selection 
+• Positioning at this location places the entropy value in the same 
+packet location as the UDP source port when UDP is not present 
+rsvd 16 Reserved 
+ 
+ 
+Figure 3-63 - UET Entropy Header Format 
+ 

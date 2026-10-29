@@ -1,0 +1,76 @@
+ 371 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+For example, if the base time period is 30 µsec and zero retries have previously occurred, then the timer 
+is set to 30 µsec. If this times out, then retry_cnt = 1 and the timer is set to 30* 2retry_cnt = 60 µsec. If this 
+times out again, then retry_cnt = 2 and the timer is set to 120 µsec, and so on. 
+Refer to Section 3.5.21 for NACK processing specific to ROD. 
+The processing based on error type is defined in the error model in Section 3.5.24. The events leading to 
+the NACK generation are described in Section 3.5.8.2, unless otherwise indicated in the description. The 
+description ‘fail to SES’ means the source PDS will indicate to SES that the packet was not successfully 
+delivered. SES will generally complete the associated operation in error. 
+NACK packets MUST have the pds.nack_code field set to a valid value as specified in Table 3-68. 
+Multiple NACK codes are defined to allow tracking the details of what triggered the NACK. For example, 
+an implementation may send pds.nack_code = UET_NO_PDC_AVAIL whenever a PDC is not created. Or 
+it may set pds.nack_code to UET_NOCCC_AVAIL, UET_NO_BITMAP, etc. 
+Upon reception of a NACK packet with valid pds.nack_code, the source MUST perform the source action 
+specified in Table 3-68. 
+Table 3-68 - PDS NACK Codes 
+Name Value Error Type Source 
+Action 
+Description 
+Reserved 0x00 N/A N/A Reserved 
+UET_TRIMMED 
+(Section 3.5.15.1) 
+0x01 NORMAL Retransmit 
+(RETX) 
+Packet was trimmed 
+UET_TRIMMED_LASTHOP 
+(Section 3.5.15.1) 
+0x02 NORMAL Retransmit 
+(RETX) 
+Packet was trimmed at the last hop switch 
+Reserved 0x03 - - - 
+UET_NO_PDC_AVAIL 
+(Section 3.5.8.2) 
+0x04 NORMAL Retransmit 
+(RETRY - 
+no PDC 
+created) 
+No PDC resource available; set pds.spdcid = 0 
+UET_NO_CCC_AVAIL 
+(Section 3.5.8.2) 
+0x05 NORMAL Retransmit 
+(RETRY- 
+no PDC 
+created) 
+No CCC resource available; set pds.spdcid = 0 
+UET_NO_BITMAP 
+(Section 3.5.8.2) 
+0x06 NORMAL Retransmit 
+(RETRY - 
+no PDC 
+created) 
+No bitmap or other PSN tracking resource 
+available 
+(e.g., if bitmaps are dynamically allocated and 
+none are available); 
+set pds.spdcid = 0 
+UET_NO_PKT_BUFFER 
+(Section 3.5.8.2) 
+0x07 NORMAL Retransmit 
+(RETX) 
+No packet buffer resource available 
+UET_NO_GTD_DEL_AVAIL 
+(Section 3.5.8.2) 
+0x08 NORMAL Retransmit 
+(RETX) 
+No SES guaranteed delivery response 
+resource available (i.e., can’t save guaranteed 
+delivery response if needed so packet was 
+dropped before passing to SES) 
+UET_NO_SES_MSG_AVAIL 
+(Section 3.5.8.2) 
+0x09 NORMAL Retransmit 
+(RETX) 
+No message tracking state available 

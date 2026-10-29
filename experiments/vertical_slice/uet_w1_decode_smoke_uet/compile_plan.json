@@ -1,0 +1,187 @@
+{
+  "backend_id": "uet_htsim_cms",
+  "binary_cli": {
+    "anchor": "backends/docker/uet-htsim-runbook.md sections 2-4",
+    "flags_at_upstream_defaults": {
+      "-cwnd": 0,
+      "-ecn": "0 0 (derived)",
+      "-end": 1000,
+      "-mtu": 4150,
+      "-q": 0,
+      "-receiver_cc": false,
+      "-sender_cc": true,
+      "-sender_cc_algo": "nscc",
+      "-strat": "ecmp_host"
+    },
+    "flags_from_manifest": {
+      "-hop_latency": "0.2 (us; exactly 200 ns / 1000, per PHYSICAL fat-tree hop, A-UET1-LAT/A-UET1-FABRIC)",
+      "-linkspeed": "512000 (Mbps; exactly 8000 * 64 B/ns, A-UET1-BW)",
+      "-o": "per-op trace file (CWD-relative; the CWD must be writable, runbook section 2)",
+      "-seed": "20261026 (manifest seed, explicit per platform rule 6; upstream default is 13, A-UET1-SEED)",
+      "-tm": "one compiled connection-matrix file per op, run in op order; serialization across ops is enforced by the run orchestration, not by the file (A-UET1-OPFILE)"
+    },
+    "run_shape_per_op_file": "cd /opt/uet-htsim/htsim/sim/datacenter && ./htsim_uec -tm w1_decode_smoke_uet.op<NNNNNN>.cm -o w1_decode_smoke_uet.op<NNNNNN>.logout.dat -linkspeed 512000 -hop_latency 0.2 -seed 20261026",
+    "verification_status": "the -tm/-o command shape and Nodes-16 matrix header were executed in the Docker smoke (runbook section 2); the manifest-derived flag values are source-verified only (runbook section 3) and are exercised by this ladder's stage S2 \u2014 stage S1 is translation-only, no binary"
+  },
+  "experiment_id": "EXP-VS-W1-SMOKE-UET-001",
+  "fabric": {
+    "auto_topology": "3-tier fat tree at pinned defaults, 100 Gbps unless -linkspeed overrides (A-UET1-FABRIC)",
+    "idle_hosts": 8,
+    "nodes": 16,
+    "ranks_placed": 8
+  },
+  "files": {
+    "w1_decode_smoke_uet.op000000.cm": "c17db600657b8cf8648ff9619c02f685a6d8d0c4d979b9e9a5c0b314024244b9",
+    "w1_decode_smoke_uet.op000001.cm": "51a86f13c588d99b3adc1da832b0ab788760774386ee2b8ea763f5679df8302e",
+    "w1_decode_smoke_uet.op000002.cm": "af0cfc580cb24bcb43f5daa8c7a9b8b99925a4f270b28b9eafe05dfeb681bf20",
+    "w1_decode_smoke_uet.op000003.cm": "c30aa51628c91bfc2d23a9242fee890b8f319a38940704cf0b3b64e6e65d7dbf",
+    "w1_decode_smoke_uet.op000004.cm": "0869278b08ecd1a3b30810cfa4004e5e1d1b1c8fc331289edaf095bb388f9d62",
+    "w1_decode_smoke_uet.op000005.cm": "863c1fdfd65a9e5485c922e3e589cde03b2a1b39c0fb2b38b4260e04b4407423"
+  },
+  "free_parameters": [
+    {
+      "assumption": "A-L0-BW",
+      "name": "link.bytes_per_ns",
+      "source": "experiments/topologies/ring8_free_params.yaml",
+      "unit": "bytes_per_ns",
+      "value": "64"
+    },
+    {
+      "assumption": "A-L0-LAT",
+      "name": "link.hop_latency_ns",
+      "source": "experiments/topologies/ring8_free_params.yaml",
+      "unit": "ns",
+      "value": "200"
+    },
+    {
+      "assumption": "A-W1-SIZE",
+      "name": "workload.allreduce_bytes",
+      "source": "experiments/workloads/w1_dense_tp_decode_small.yaml",
+      "unit": "bytes",
+      "value": "16384"
+    }
+  ],
+  "pin": {
+    "base_image": "ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b",
+    "binary_path_in_image": "/opt/uet-htsim/htsim/sim/build/datacenter/htsim_uec",
+    "binary_sha256": "fe5a1c645719b792bb56c631fbd991cf7f6c824af8a97f42971bd59b584cd896",
+    "capability_matrix": "backends/pins/uet-htsim.md",
+    "docker_image": "essun/uet-htsim:s1",
+    "docker_image_id": "sha256:7eafbdd387fd521d5531050ae40ab97f0a3b81f3424c95619fbc5095da83d312",
+    "dockerfile": "backends/docker/uet-htsim.Dockerfile",
+    "license": "BSD-2-Clause via LICENSE-Transport-WG.txt (backends/pins/uet-htsim.LICENSE-Transport-WG.txt)",
+    "runbook": "backends/docker/uet-htsim-runbook.md",
+    "uet_htsim_commit": "65ea315b25725df9791a5b93b61cbd6938cba0a8"
+  },
+  "source_manifest": {
+    "path": "experiments/vertical_slice/w1_decode_smoke_uet.yaml",
+    "sha256": "52c4fea2b6199c861810e751cf653473b8d8d3f9d3a66cc0e52a98f455c467ba"
+  },
+  "stage": "Q3-S1 translation (no binary; execution in Docker + output parsing land with stage S2 per OD-002)",
+  "topology": {
+    "hop_latency_ns_exact": "200",
+    "hop_latency_us_exact": "0.2",
+    "link_bytes_per_ns_exact": "64",
+    "linkspeed_mbps_exact": 512000,
+    "ranks": 8,
+    "realization": "logical traffic pattern on the fat-tree fabric (A-UET1-FABRIC); NOT a physical ring",
+    "topology_class": "unidirectional_ring",
+    "topology_id": "ring8_free_v1"
+  },
+  "translation_assumptions": [
+    {
+      "anchor": "src/essun/backends/analytical/l0.py (ring_traffic_per_rank); src/essun/observables.py (O-CONSERVATION, O-TRAFFIC-IMBALANCE); runbook section 4.1 grammar",
+      "id": "A-UET1-WIRE",
+      "parameter": "workload collective -> connection-matrix flows",
+      "rationale": "htsim_uec has no collective semantics, so the W1 AllReduce is translated as the chunked-ring WIRE pattern the L0 ring identity declares (l0.py ring_traffic_per_rank; O-CONSERVATION identity total 2*(r-1)*M; O-TRAFFIC-IMBALANCE relation 'each rank sends 2*(r-1)/r*M to its single successor'). The emitted traffic is therefore byte-identical to the L0/ASTRA-sim declared logical pattern; only its transport is simulated. Equal-chunk realizability requires r | M, mirroring the L0 divisibility gate A-L0-DIV.",
+      "value": "one flow per rank per op: rank i -> ring successor (i+1) mod r, size 2*(r-1)/r*M bytes, requires r | M"
+    },
+    {
+      "anchor": "runbook section 4.1 (connection_matrix.cpp grammar: src->dst [start] [size] [id] [msg] [trigger], no deps); src/essun/backends/astra_sim/adapter.py A-AS1-CHAIN",
+      "id": "A-UET1-OPFILE",
+      "parameter": "op serialization -> file layout",
+      "rationale": "The connection-matrix grammar has no dependency mechanism (only absolute start times), so serialized ops \u2014 the L0 sum-of-ops reading and the ASTRA-sim data_deps chain (A-AS1-CHAIN) \u2014 cannot be expressed inside one file. Each op is compiled to its own matrix; op serialization is enforced by the stage S2 run orchestration (files run in op order, per-op completion times summed), never by invented start times. Within one op the r ring flows are concurrent (the wire pattern of one collective).",
+      "value": "one .cm file per workload op; an op's r flows start at 0"
+    },
+    {
+      "anchor": "runbook sections 4.1, 4.2 (not exercised), 4.3, 6",
+      "id": "A-UET1-FABRIC",
+      "parameter": "fabric topology",
+      "rationale": "With no -topo, the binary builds a fat tree sized by the matrix's Nodes header; the only smoke-verified shape is Nodes 16 (NSRV=16, runbook sections 4.1/4.3), so every compiled matrix declares exactly that and places ranks 0..r-1 on hosts 0..r-1 (hosts r..15 idle). The manifest's unidirectional ring is thus a LOGICAL traffic pattern on a fat-tree fabric: ring neighbors are multiple physical hops apart and each hop carries L (A-UET1-LAT), a declared modeling-assumption difference vs the single-hop L0/ASTRA ring \u2014 classified, never tuned, in the stage S3 independence note. Larger node counts are an untranslated gap pending -topo verification (runbook section 4.2, not exercised).",
+      "value": "auto 3-tier fat tree, Nodes 16, ranks 0..r-1 placed"
+    },
+    {
+      "anchor": "runbook section 3 (-linkspeed NUM, Mbps, default 100000)",
+      "id": "A-UET1-BW",
+      "parameter": "link.bytes_per_ns -> -linkspeed",
+      "rationale": "The flag is link speed in Mbps (runbook section 3); 1 B/ns = 1e9 B/s = 8000 Mbit/s exactly, so B = 64 B/ns maps to -linkspeed 512000. A bandwidth with no exact integral Mbps value (e.g. 1/3 B/ns) is rejected rather than silently rounded \u2014 the translation must not perturb the free parameter.",
+      "value": "exact integer Mbps = 8000 * B"
+    },
+    {
+      "anchor": "runbook section 3 (-hop_latency NUM, us, default 1)",
+      "id": "A-UET1-LAT",
+      "parameter": "link.hop_latency_ns -> -hop_latency",
+      "rationale": "The flag is per-hop wire latency in us (runbook section 3); L = 200 ns maps to -hop_latency 0.2 exactly. A latency whose us form has no finite decimal is rejected, not rounded. NOTE the semantic difference: the flag applies per PHYSICAL fat-tree hop (see A-UET1-FABRIC), while L0 charges L once per logical ring hop \u2014 part of the declared cross-backend difference, not a conversion error.",
+      "value": "exact decimal us = L / 1000"
+    },
+    {
+      "anchor": "runbook sections 3 (-seed UINT, default 13) and 6",
+      "id": "A-UET1-SEED",
+      "parameter": "experiment seed -> -seed",
+      "rationale": "Platform determinism rule 6 / runbook section 6: pass -seed explicitly instead of relying on the upstream default 13 (the two default-seed smoke runs were byte-identical, consistent with a fixed default). The manifest seed must fit the flag's uint range; out-of-range seeds are rejected.",
+      "value": "manifest seed, explicit"
+    },
+    {
+      "anchor": "runbook section 4.1 (connection_matrix.cpp: flow id 0 rejected)",
+      "id": "A-UET1-IDS",
+      "parameter": "connection flow ids",
+      "rationale": "Flow id 0 is rejected by the parser (runbook section 4.1), so ids start at 1; the rule is globally unique across all op files (op 0 -> 1..r, op k -> k*r+1..(k+1)*r) and replayable.",
+      "value": "op_index * ranks + rank + 1"
+    },
+    {
+      "anchor": "runbook section 3 (-mtu UINT, default 4150, main.h:9)",
+      "id": "A-UET1-MTU",
+      "parameter": "-mtu",
+      "rationale": "Upstream default packet size (HOST MTU, main.h:9 at the pin), retained. Packetization is a real effect this backend models and the L0 model does not \u2014 a declared fidelity difference, never tuned to match curves.",
+      "value": 4150
+    },
+    {
+      "anchor": "runbook section 3; backends/pins/uet-htsim.md scope (README non-goals)",
+      "id": "A-UET1-CC",
+      "parameter": "-sender_cc_algo / -sender_cc / -receiver_cc",
+      "rationale": "Upstream defaults, retained: they select the UET CMS path (NSCC sender congestion control with receiver credit) that is this backend's entire reason to exist in OD-002. Per the pin doc these are the WG research implementation's semantics, not the CMS specification.",
+      "value": {
+        "-receiver_cc": false,
+        "-sender_cc": true,
+        "-sender_cc_algo": "nscc"
+      }
+    },
+    {
+      "anchor": "runbook section 3 (-end UINT, us, default 1000)",
+      "id": "A-UET1-END",
+      "parameter": "-end",
+      "rationale": "Upstream default simulation end (us), retained. Static sufficiency estimate for the smoke shape (an ESTIMATE, not a result): 28672 B per flow at B = 64 B/ns serializes in 448 ns = 0.448 us, and the fat-tree path latency is a handful of 0.2 us hops, so per-op completion is far below 1000 us; stage S2 verifies against parsed output before relying on it.",
+      "value": 1000
+    }
+  ],
+  "workload": {
+    "collective_semantics": "none in the simulator; allreduce translated by chunked-ring wire-pattern decomposition (A-UET1-WIRE)",
+    "file_rule": "w1_decode_smoke_uet.op<index:06d>.cm, one per op, op order = generator order (step-major, layer-minor; A-UET1-OPFILE)",
+    "flow_id_rule": "op_index * ranks + rank + 1 (A-UET1-IDS)",
+    "flow_rule": "rank i -> (i+1) mod r, start 0, size 2*(r-1)/r*M (A-UET1-WIRE)",
+    "flows_per_op": 8,
+    "kind": "w1_dense_tp_decode",
+    "op_order": [
+      "s000000-l000000-allreduce",
+      "s000000-l000001-allreduce",
+      "s000001-l000000-allreduce",
+      "s000001-l000001-allreduce",
+      "s000002-l000000-allreduce",
+      "s000002-l000001-allreduce"
+    ],
+    "ops": 6,
+    "ops_per_rank": 6,
+    "per_op_wire_bytes_total": 229376,
+    "per_rank_wire_bytes": 28672
+  }
+}

@@ -1,0 +1,41 @@
+ 352 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+When enabled by configuration parameter ACK_On_ECN, ECN marked packets always trigger an ACK or 
+NACK. In the case of an ACK, the ACK packet cannot be coalesced. 
+3.5.11.8.6 pds.flags.req 
+This 2-bit pds.flags.req field in the RUD/ROD/RODL ACK is used to indicate the target has a request for 
+the initiator. An initiator always sets the pds.flags.req field to zero. The field is defined as: 
+Table 3-53 - REQ Field Definition 
+REQ State Mnemonic Description 
+‘b00 NO_REQUEST No request 
+‘b01 REQ_CLEAR Target requires a clear for this PSN 
+• Set when ACK carries a guaranteed 
+delivery SES Response 
+‘b10 REQ_CLOSE Target requests the initiator to close the PDC 
+‘b11 Reserved Invalid, drop this packet and report event, 
+PDC_REQ_ERR 
+3.5.11.8.7 pds.flags.p 
+The probe (pds.flags.p) flag is used in an ACK message to indicate the ACK was triggered by a Probe CP. 
+The ACK_PSN value is not valid when the pds.flags.p flag is set.  
+3.5.11.8.8 pds.flags.nt 
+The NACK type (pds.flags.nt) flag in the NACK header indicates the type of packet being NACK’d. If 
+pds.flags.nt is cleared, the NACK is for RUD, ROD, or RODL. If pds.flags.nt is set, the NACK is for a RUDI 
+packet. 
+3.5.11.8.9 pds.flags.cack 
+The pds.flags.cack field is used in the RODL general request format (3.5.10.5) to indicate that the 
+pds.rev_cack_psn_lsb field is present and represents the lower 16 bits of the CACK_PSN for the reverse 
+direction.  If the flag is cleared, the pds.clear_psn_offset is present and operates the same as with 
+ROD/RUD. 
+3.5.11.8.10 Reserved Flags 
+Reserved flags are reserved for future use. Reserved flags are set to zero on transmission and ignoreded 
+on receipt. 
+3.5.11.8.11 Mapping pds.flags Fields to pds.type 
+Table 3-54 and Table 3-55 show the definition of sub-fields of the pds.flags field in the UET headers 
+dependent upon the setting of the pds.type field. A dash indicates the bit is reserved (i.e., not used). 
+Table 3-54 - pds.flags by pds.type 
+Type PDS Type         
+0 Reserved rsvd rsvd rsvd rsvd rsvd rsvd rsvd 
+1 TSS encryption Refer to TSS Section 3.7.11 
+2-3 RUD/ROD Request rsvd rsvd retx ar syn rsvd rsvd 
+4 RUDI Request rsvd rsvd retx rsvd rsvd rsvd rsvd 

@@ -1,0 +1,37 @@
+ 283 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+provisioning systems, the JobID and source FA SHOULD be enforced by resources that are controlled by 
+only the provisioning system to protect against HV/VMM escalation attacks. 
+3.4.8.2 SDI Assignment to Applications 
+The secure domain identifier (SDI) is used as part of the selection of an encryption key. Devices MUST 
+limit how the SDI is utilized by applications. An application MUST NOT be allowed to use an SDI that is 
+not assigned to it. A device MUST support the pairing of SDI and JobID at the initiator. That is, the device 
+MUST provide a mechanism to guarantee that a specific SDI is used only with JobIDs that are allowed to 
+use that SDI. 
+One JobID MAY be allowed to use more than one SDI. The number of SDIs that are usable by a single 
+JobID is implementation-defined (a number greater than or equal to 1). 
+3.4.9 UE Transport Semantics: Memory Model 
+The AI Base, AI Full, and HPC profiles provide a memory model that is consistent with options that are 
+available through the libfabric API. This memory model includes a set of minimal requirements that is 
+expected for all implementations as well as how the memory model is controlled to be stronger for 
+implementations that choose to do so. 
+The memory model supporting libfabric covers ordering, consistency, atomicity, global observability, 
+and idempotency. The memory model for the Unified Local profile is largely implementation‑dependent; 
+supported options and capabilities are detailed in section 3.4.9.5. 
+3.4.9.1 Ordering 
+Ordering consists of two components: message ordering and data ordering. Both message ordering and 
+data ordering are tightly tied to the underlying transport layer. 
+3.4.9.1.1 Message Ordering 
+Message ordering applies to the set of send operations (e.g., send, tagged send). The RUD and RUDI 
+protocols do not make any message ordering guarantees.  
+Implementations of the ROD protocol MUST provide message processing ordering for a given “flow” 
+between SES on an initiator FEP and SES on a target FEP. On ROD, at minimum, a flow is defined as the 
+traffic from one PIDonFEP at the initiator to a specific Resource Index associated with a PIDonFEP at a 
+target FEP. One or more flows may be mapped onto a single PDC. 
+SES MUST process messages in the order presented to it at a target FEP for a specific {JobID, PIDonFEP, 
+Resource Index} tuple when using ROD. 
+3.4.9.1.2 Completion Ordering 
+If requested, implementations MUST deliver completion notifications at the target after all data has 
+been placed. Messages marked with the delivery complete bit MUST NOT deliver the target completion 
+until the corresponding global observability has been achieved (3.4.9.3). 

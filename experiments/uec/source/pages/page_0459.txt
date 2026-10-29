@@ -1,0 +1,28 @@
+ 459 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• A CCC is PENDING if it is not active, but there is data that has been sent by any of its PDCs that is 
+not yet acknowledged. 
+• A CCC is IDLE if it is not ready, active, or pending. 
+The state machine in Figure 3-126 indicates the transitions between the four states.  
+To summarize the state transitions: 
+• A CCC transitions from IDLE state to ACTIVE when new data arrives to be sent on any PDC 
+associated with the CCC. 
+• A CCC transitions from ACTIVE to READY state if the CCC’s congestion control algorithm permits 
+sending. For window-based control, this is when there is space in the source’s cwnd. For 
+destination credit control, this is when the source has sufficient credit. If both are used, both 
+conditions must be satisfied. 
+• A CCC transitions from READY back to ACTIVE if the CCC’s congestion control algorithm no 
+longer permits sending. This typically occurs when data has been sent, filling the cwnd or 
+consuming credit. It can also occur when sending does not occur, if an ACK or NACK arrives or a 
+timeout occurs that causes the cwnd to be reduced. 
+• When in READY state, if data is sent but the CCC still allows sending, the CCC stays in READY 
+state. 
+• A CCC transitions from READY to PENDING state when no PDC associated with the CCC has any 
+more new data to send or packets marked for retransmission. 
+• A CCC transitions from PENDING to IDLE state when all data has been ACKed on all PDCs 
+associated with the CCC. A CCC MUST NOT be removed except when in IDLE state, unless all 
+PDCs associated with the PDC have been declared failed. 
+ 
+Figure 3-126 - CCC State Machine 
+ 

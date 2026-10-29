@@ -1,0 +1,33 @@
+# UnifiedBus license-gate source record (repo level).
+# Rows copied VERBATIM from the license-gate source registry
+# (2026-10-28). Scope choice (S1 finding F2, decided here): ALL three
+# STD-UB rows — the two PUBLIC_READ rows the paper registry cites
+# (STD-UB-HOME, STD-UB-OS) PLUS the gated STD-UB-LICENSE row, so the
+# "no registry/fetch URL is a gated URL" check keeps meaning instead of
+# silently narrowing to the public rows only. The registry rows remain the writable master:
+# changes there must be re-copied here, never paraphrased.
+sources:
+  - id: STD-UB-HOME
+    category: standard
+    title: UnifiedBus community index
+    version: current
+    url: https://www.unifiedbus.com/
+    access: PUBLIC_READ
+    role: Specification/software tracking
+    notes: Full documents still required
+  - id: STD-UB-LICENSE
+    category: license
+    title: UnifiedBus Specification License
+    version: "1.0"
+    url: https://www.unifiedbus.com/zh/specification-license-agreement-v1
+    access: APPROVAL_REQUIRED
+    role: Usage and derivative review
+    notes: Purpose-limited
+  - id: STD-UB-OS
+    category: standard
+    title: UnifiedBus OS component
+    version: current
+    url: https://www.unifiedbus.com/zh/software/ub-os-component
+    access: PUBLIC_READ
+    role: Programming/resource scope
+    notes: Cross-check normative documents

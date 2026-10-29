@@ -1,0 +1,28 @@
+# Implementation profile for the calibration-ladder A12 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A12).
+implementation_profile_id: analytical_l0_crossbar_cal_a12_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); modeling
+  assumptions A-L0X-PORT / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1). The crossbar is the L0
+  abstraction of the anchor's NVSwitch fat-tree class, exactly as stage
+  A2 abstracted NVL72 and the A7 record the MI300X domain.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) swept over {192, 240, 300} bytes/ns —
+  the AGGREGATE-granularity reading of CAL-A12's own numbers at the
+  anchor's per-GPU 12-link NVLink-3 arithmetic: 300 = 12 x 25 physical
+  (nvidia-smi total; the ceiling NCCL derates FROM), 240 = 12 x 20 =
+  the issue's system->totalBw (NCCL's own topo-model rate; the exact
+  4/5 = 0.8 derating bridge executed on the anchor's own fabric), and
+  192 = 0.8^2 x 300 (double-application hazard bracket; NEVER a bridge
+  value — the verified maintainer reply forecloses composing the
+  derating with itself). L fixed at the registry point 200 ns (KEEP;
+  latency axis deferred to its own global stage). Values are
+  anchor-derived or declared brackets, never measurements.
+measurement_source: none   # not calibrated; the comparison against CAL-A12 is recorded as PROPOSED evidence in results/calibration/

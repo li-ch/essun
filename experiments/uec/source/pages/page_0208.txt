@@ -1,0 +1,42 @@
+ 208 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+(3.4.2.11). All packets in a message—other than the last packet—carry exactly Payload MTU bytes of 
+data. 
+ 
+3.4.2.5.1 Sends—Tagged and Untagged 
+All sends cross the wire with addressing information—JobID, PIDonFEP, Resource Index, an optional 
+offset into the target buffer, matching criteria5, header data, and a payload. The target of the operation 
+(e.g., the receiving process where the data will be deposited) then has some control over the exact 
+handling of that message and the resulting change in the state of the buffer that addressing information 
+specifies (3.4.2.6). Sends select the head of the untagged receive queue addressed by the {JobID, 
+Process ID, Resource Index} and tagged sends use the matching criteria to choose one of the buffers 
+associated with the tagged receive queue selected by {JobID, Process ID, Resource Index}. Send 
+operations that arrive at a receive queue that does not have a posted receive buffer are handled using 
+unexpected header processing (3.4.4.6.1). Similarly, tagged sends that do not find a matching entry 
+follow the unexpected header processing procedures. 
+3.4.2.5.2 Writes 
+A write crosses the wire with addressing information—JobID, PIDonFEP, Resource Index, an offset into 
+the target buffer, an optional memory key6, header data (immediate data) and a payload. Direct 
+memory addressing carries only JobID and an offset into the target buffer. 
+Writes select a single buffer based on the addressing criteria. The target of the operation (e.g., the 
+memory region within the target process where the data will be deposited) then has some control over 
+the exact handling of that message and the resulting change in the state of the buffer that addressing 
+information specifies (3.4.2.6). For example, a target buffer could be defined as use-once or could be 
+defined as read-only. For any access violation (e.g., the memory key is not valid, a write accesses a read-
+only buffer, etc.), a return code (Table 3-25) is generated that indicates the error. 
+3.4.2.5.3 Reads 
+A read utilizes the same addressing information as a write. Reads select a single buffer based on the 
+addressing criteria. The target of the operation (e.g., the memory region within the target process from 
+ 
+5 Matching criteria is currently included in the packet for all types of sends, but it is used only as part of buffer 
+selection for tagged sends. 
+6 RMA addressing may work in either of two formats—one with and one without a memory key on the wire. 
+Informative Text: 
+Where implementations choose different maximum message sizes to export, that decision will 
+impose requirements on middleware software (e.g., MPI or *CCL implementations). An initiator that 
+fails to honor the limits of the target FEP will receive a return code indicating a failure to deliver the 
+message. It is the responsibility of the middleware to coordinate the maximum message size limits 
+across the environment. In practice, this is not typically a problem, since implementations have 
+traditionally chosen from a small number of maximum message sizes (either the largest the transport 
+supports or a single MTU), and the middleware is typically coded to choose from those options. 

@@ -1,0 +1,25 @@
+# Calibration-ladder A7 topology: unidirectional ring of 8 ranks at the
+# plan-span mid/CAL-A1-2-5 cross-generation endpoint B = 50 B/ns per
+# direction. Provenance: CAL-A1's NVLink5 per-port per-direction rate
+# (57.6 Tbps full-duplex / 72 ports) — numerically identical to CAL-A5's
+# ICI reading-1 (50 GB/s per link, direction convention flagged
+# unverified by the staging doc; stage A5 owns that flag). This row
+# places the ring reading at the non-AMD point of the anchor-informed
+# per-link span [20, 64] B/ns (plan §2.1 A-L0-BW NARROW range).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), fixed by anchor
+# arithmetic BEFORE any stage output was read; never tuned. L = 200 ns is
+# the A-L0-LAT registry point (KEEP; latency axis deferred to its own
+# global stage).
+topology_id: ring8_a7_link50_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 50
+  hop_latency_ns: 200
+notes: >
+  Same identity and assumptions as ring8_a7_link64_v1 (A-L0-BW, A-L0-LAT,
+  A-L0-FD, A-L0-DIV); only the swept free parameter B differs. Provenance
+  of this B value: CAL-A1 NVLink5 per-port / CAL-A5 ICI reading-1
+  cross-generation endpoint, 50 B/ns per direction. Anchor quote /
+  assumption, never our measurement.

@@ -1,0 +1,40 @@
+ 179 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Single applications are expected to span the entire system, single-node jobs filling up the system, and 
+the full spectrum in between. The objective of UET is to serve the breadth of all those use cases with a 
+single transport. 
+3.1.1 Virtualization 
+Virtualization hides the details of the physical infrastructure from tenants and tenants from each other. 
+Although there are “bare metal” instances, host virtualization is common, and network virtualization is 
+almost universal in cloud deployments. This level of virtualization presents a stark contrast between 
+traditional HPC and clouds: Traditional HPC deployments typically focus on performance first with a 
+more trusted user base.  
+Most virtualization technology sits in direct tension with performance objectives. For example, 
+traditional network virtualization requires O(N) state per endpoint, which UET tries to avoid. 
+Additionally, using network tunnel techniques introduces substantial packet overheads. In many 
+environments, however, the added security and isolation provided by virtualization is a fundamental 
+requirement. UET assumes the following with respect to virtualization: 
+1) Network tunnel techniques that are used today work in the context of UET, because UET uses IP 
+packets. UET packets can be encapsulated within VXLAN and similar tunnels; similarly, UET 
+packets can carry packets of tunneled protocols. Detailed implementations of virtualization 
+techniques are currently beyond the scope of UET. If UET packets are encapsulated in other 
+protocols, care must be taken to support UET’s signaling. 
+2) Host virtualization can be accomplished using traditional techniques—such as SR-IOV, SIOV, 
+unique fabric addresses (IP) per tenant, or others. 
+3) Deployments focused on the largest scales leverage techniques that simplify the tunnel logic 
+(e.g., structured addressing techniques). 
+4) Deployments that need to focus on network packet efficiency may choose to not use 
+encapsulation. 
+Nonetheless, some basic support is needed to support tunneling in a network using UET. For example, 
+systems carrying UET packets inside a tunnel would provide congestion information, such as explicit 
+congestion notification (ECN), to the encapsulated packets. Solutions such as IETF RFC 6040 [2] are 
+available to provide this functionality. Furthermore, such systems would copy the entropy value of 
+encapsulated UET packets to the encapsulating packet to ensure ordering and load balancing. UET does 
+not currently define details for tunneling and leaves it up to the system administrator to ensure correct 
+encapsulation and decapsulation. 
+3.2 UET Layers, Components, and Capabilities 
+The Ultra Ethernet transport layer is built on four largely independent sublayers: semantics, packet 
+delivery, congestion management, and security. See Figure 3-1. Each piece is designed to be separable 
+from the others; however, implementations may choose to build and integrate the functionality in any 
+way. 

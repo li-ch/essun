@@ -1,0 +1,42 @@
+ 247 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A rendezvous send is provided an eager length from software. The portion of the eager length that is 
+sent before receiving the semantic response SHOULD NOT exceed the current size of the PDC's 
+congestion management window at the time the eager portion is attempted to be sent. This is true even 
+if the congestion control window is increased while the eager portion of the message is in flight. A 
+rendezvous send operation MUST NOT send more data than the eager length before completing the 
+rendezvous send. Stated differently, the eager length is the full length of the message as it is transferred 
+on the wire for a rendezvous send or rendezvous tagged send. On receiving a semantic response, the 
+rendezvous send implementation SHOULD adjust the eager transfer for this specific message to be no 
+longer than the modified length provided in the response. If the portion of the eager length already 
+transferred equals or exceeds the modified length, the implementation MUST send at least one more 
+packet to mark this portion of the transfer with the ses.eom bit set. This additional packet MAY be 
+0 bytes, Payload MTU bytes, or the remaining fragment of the eager portion. Implementations MAY 
+treat packets in the process of being constructed as if they had already been sent. The last packet of the 
+eager portion of the message MUST have ses.eom set. 
+The text above covers the sequence for data delivery when the message is expected. In the unexpected 
+case, the above scenario would typically have a modified length smaller than the eager length (often 0). 
+In addition, the unexpected message solution MUST use one of the mechanisms described in Section 
+3.4.4.6.1 to complete the data transfer. When using a RUD PDC, an implementation of rendezvous 
+SHOULD implement a buffered header solution (3.4.4.7.2.1) and MUST implement a back-off and retry 
+(3.4.4.7.1.1) for when the header space is exhausted. When using a ROD PDC, an implementation of 
+rendezvous MUST implement a buffered header solution, and MUST implement a resource exhaustion 
+solution (3.4.4.7.3). 
+The rendezvous send message contains sufficient information to retrieve the remainder of the payload 
+using a read operation. The contents of the rendezvous extension header are provided at the initiator by 
+software or hardware. The rendezvous extension header fields for ses.PIDonFEP, ses.resource_index, 
+and ses.match_bits MUST be used “as is” for the construction of the read operation that completes the 
+rendezvous transfer. The ses.read_offset field in the rendezvous extension header MUST be an offset 
+that can be used to retrieve the entire message. The target of the operation MAY buffer up to the eager 
+length of the payload if it implements a buffered unexpected message solution (3.4.4.7.2.2). The read 
+operation uses either the offset provided or the amount of eager payload that was buffered to 
+increment the offset used in the read. 
+3.4.4.6 Deferrable Send Processing 
+A deferrable send from the initiator SHOULD NOT send more data than the current congestion 
+management window size for the PDC that the deferrable send uses before it receives a semantic 
+response from the target. On receiving a semantic response with RC_OK, if the ses.modified_length is 0, 
+the deferrable send implementation MUST send at least one additional packet that has ses.eom set. 
+This additional packet MAY be 0 bytes, Payload MTU bytes, or the remaining fragment of the eager 
+portion. The deferrable send implementation MUST send the entire payload if the ses.return_code is 
+RC_OK and the modified length is equal to the request length. 

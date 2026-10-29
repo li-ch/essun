@@ -1,0 +1,10 @@
+# W1 Dense TP Decode — tp_size 4 at 128 MiB (2^27): interior point of
+# CAL-A4's staged 64 MB - 1.5 GB All-Reduce regime (binary reading
+# declared in the stage record); 2 layers x 3 steps = 6 AllReduce ops.
+# r = 4 divides the size exactly (A-L0-DIV accepts; no bracketing).
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-a4
+tp_size: 4
+layers: 2
+steps: 3
+allreduce_bytes: 134217728   # 2^27 (128 MiB); free parameter A-W1-SIZE

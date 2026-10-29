@@ -1,0 +1,55 @@
+ 287 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.9.6.1 Sync Group Error Cases 
+There are several error cases that can occur when using sync groups. Table 3-31 describes the behavior 
+under various conditions. 
+Table 3-31 - Synchronized Operation Error Cases 
+Case Error Case Target Behavior 
+1 One or more messages of the sync 
+group failed at target due to error. 
+The failure of one message does not impact the 
+other messages of the sync group. 
+The failed message is still counted as part of the 
+sync group count. 
+2 Fewer than (X + 1) messages are 
+received by the target 
+Target ages out incomplete sync groups. 
+If a completing operation message was received it is 
+not completed or executed. 
+3 Completing operation is received on a 
+sync group where the current count is 
+greater than ses.sync_count. 
+Operation fails with SES Error (RC _OP_VIOLATION) 
+ 
+4 Initiator sends X write messages, 
+completing the operation with 
+ses.sync_count = (X + 1), then Y write 
+messages on same sync group without 
+waiting for appropriate completions. 
+All X operations are not impacted. 
+All Y operations fail with SES error 
+(RC_OP_VIOLATION). 
+5 Initiator sends multiple completing 
+operations on same sync group. 
+First operation will be processed normally. 
+Subsequent completing operations will fail with 
+RC_OP_VIOLATION. 
+ 
+3.4.10 Mapping of *CCL Send/Receive to Proposed Semantics [Informative] 
+The text in this section is informative and not normative. The section describes two approaches for 
+mapping *CCL send/receive APIs to the proposed libfabric/UET semantics, where the notation *CCL is 
+used to denote a generic Collective Communication Library (CCL). Both approaches aim to maintain the 
+current *CCL buffer usage semantics in conjunction with UET’s reliable connectionless delivery modes. 
+Other approaches beyond those described in this section are also possible. 
+The section assumes *CCL APIs of the form shown below: 
+• *ccl_send: API to send a message with parameters that identify: 
+o The buffer containing the message and its size. 
+o The peer rank that the message is destined to. 
+o A communication context for the message. 
+• *ccl_recv: API to post a receive buffer with parameters that identify: 
+o The address and size of the buffer. 
+o The peer rank that the buffer is being posted for. 
+o A communication context for the message. 
+In one of the approaches described, the *CCL plugin that implements the *ccl_send/*ccl_recv APIs uses 
+the libfabric fi_tagged() APIs, while the other approach uses the libfabric fi_rma() APIs. 

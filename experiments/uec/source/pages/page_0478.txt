@@ -1,0 +1,42 @@
+ 478 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+quantity proportional to the difference between the Delay and the target_delay. Thus, when the 
+network is lightly loaded, ccc.cwnd increases faster than when the load approaches the congestion 
+threshold. If the network has been underloaded for some time, as might happen when competing flows 
+terminate, proportional_increase() can trigger fast_increase() to converge more rapidly on a new 
+operating point. The fast_increase() action performs an exponential increase and is terminated by any 
+sign of incipient congestion. 
+The fair_increase() action is performed after a packet experiences congestion, but ECN indicates the 
+queue behind it has drained below the ECN setting threshold. The fair_increase() action prevents 
+transmission rate undershooting. It performs an additive increase, which helps competing CCCs 
+converge toward fairness: all CCCs receiving the same signal increase ccc.cwnd by the same amount, so 
+CCCs with a smaller ccc.cwnd see a larger proportional increase than CCCs with a larger ccc.cwnd. 
+The multiplicative_decrease() action is performed when the Ddelay is over threshold and ECN does not 
+indicate the queue is decreasing. In this case, the average delay provides a direct indication of the extent 
+to which the queue holds more data than is desired. The multiplicative_decrease() action then directly 
+reduces ccc.cwnd proportional to this queuing excess. If all flows take the same action, the queue is 
+expected to return to the target level in just over one RTT. 
+The goal of the algorithm is to keep queue sizes small without sacrificing throughput, thereby avoiding 
+steady-state packet loss and minimizing the duration of loss when the offered load changes too rapidly 
+to control. In AI networks, this condition typically occurs when collectives cause synchronized flow 
+startup. 
+Finally, The quick_adapt() action is performed when loss is detected or when delay across many paths is 
+excessively high. The quick_adapt() function uses the measured achieved goodput to directly set 
+ccc.cwnd. This means that if incast congestion occurs, for example, in the second RTT, the ccc.cwnds of 
+the PDCs involved in the incast will combine to avoid overloading the destination’s link. The 
+quick_adapt() action does not guarantee instantaneous fairness, but in subsequent RTTs fair_increase() 
+and multiplicative_decrease()cause convergence. Because quick_adapt() relies on a measure of achieved 
+bandwidth, it can be triggered only once per RTT. When the quick_adapt() action is triggered, many 
+packets may already be queued, and most of the corresponding acknowledgements will indicate that 
+ECN was set. Until these packets are ACKed, multiplicative_decrease() is suppressed. 
+NSCC is designed to work with active ECN-based load balancing, where the ECN signal is also used to 
+balance congestion across paths, in addition to being used as an NSCC congestion signal. As a result, 
+NSCC does not react to low levels of congestion, indicated only by ECN and not by Delay, as this is often 
+a symptom of imperfect load balancing. When ECN-based load balancing is used, it is desirable to allow 
+the load balancing algorithm to react before reducing the aggregate send rate, except under high 
+congestion when the ECN signal saturates and is used only to reduce the aggregate load. 
+NSCC leaves it to the implementor to handle outcast (e.g., when multiple CCCs are active and ccc.inflight 
+never approaches the ccc.cwnd limit) if needed. During a period of outcast, it is possible that the 
+congestion windows (ccc.cwnd) of multiple sending CCCs increase to their maximum values beyond the 
+sending capacity of the outgoing FEP. This occurs because each CCC is operating below its nominally 

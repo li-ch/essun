@@ -1,0 +1,77 @@
+ 64 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+1.5.1.3 Local Scale-up Network 
+Scale-up networks are typically very specialized short-range interconnects that often come with only a 
+single or limited tier of switches or possibly no switch at all. 
+Historical scale-up networks support I/O coherency that is not always present in all types of 
+interconnects. Modern examples used to connect accelerators (e.g., XPUs known as GPUs, FPGAs, or 
+specialized SoCs) include AMD’s XGMI, NVIDIA’s NVLINK, Intel’s Xe Link, switched PCIExpress, and CXL 
+systems. The capabilities of these networks usually include memory semantics (which is similar to RDMA 
+for bulk transfers) at the lowest available latencies (targeting sub-microsecond, for a small-scale or 
+programmed memory access). The Unified Local profile can be used to build local scale-up networks 
+with Ultra Ethernet. The optimized, compact header formats support high-performance and low-latency 
+read/write operations. UE does not specify the user interface to those operations. 
+In typical 2024 datacenter environments, the three types of networks are distinguished by different 
+characteristics, summarized in Table 1-1. 
+Table 1-1 - Distinctive characteristics by network type (circa 2024) 
+Characteristic (2024) Frontend  
+(Intra Data Center) 
+Backend Scale-out 
+ 
+Local Scale-up 
+ 
+Latency requirements1 
+(One-way delay) 
+100 µs+ < 10 µs < 1 µs 
+Single-link bandwidth 
+requirements 
+up to 100 Gbit/s up to 800 Gbit/s up to 800 Gbit/s 
+Number of links  1 per node 1 to 2  
+(per accelerator) 
+Many 
+(per accelerator) 
+Multi-tenancy 
+requirements 
+Hundreds of tenants 
+per endpoint 
+Up to tens of tenants per 
+endpoint 
+Usually, single tenant 
+Security requirements Important today 
+(SSL/TLS encrypt 
+everything) 
+Important in the future for 
+some (depends on 
+offering, encrypt 
+everything should be 
+optional) 
+Optional 
+Protocol requirements Wide variety of 
+transport protocols (all 
+IP compatible, some 
+workload-specialized 
+proprietary, need to 
+co-exist) 
+Proprietary protocols ok 
+(desired for workload 
+specialization, probably L3 
+headers for compatibility, 
+no need to co-exist) 
+Proprietary protocols 
+necessary (probably no 
+IP for performance 
+reason, L1/L2 headers 
+only, some provide 
+coherency) 
+Maximum link length 
+requirement 
+1500 m 150 m 5-10 m 
+Deployment scale  
+(network endpoints) 
+256k+ 256k 100-1000 
+Topology 3 level Clos 2-3 level Clos or Dragonfly full mesh or single stage 
+switch 
+Single-job scale  
+(network endpoints) 
+100 256k 100-1000 

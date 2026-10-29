@@ -1,0 +1,43 @@
+ 76 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Channel Quality Assumption: Accelerator nodes are more complex than standard endpoints or TOR 
+switches. At the time of publication, it is assumed that IEEE standards are sufficient, while UE products 
+are encouraged to build more robust channels. 
+FEC Statistics for Prediction of Link Quality: UE networks are assumed to comprise multiple high-
+performance links protected by forward error correction (FEC), on which data loss due to physical layer 
+errors is extremely infrequent. However, on a large-scale network there can be a few outlier links with 
+more frequent errors than the rest of the network. With massively parallel applications, such links can 
+require frequent retransmissions and thus become the performance bottlenecks of the whole network. 
+The UE PHY specification includes a method of estimating the mean time between PHY errors (MTBPE) 
+on each link from the statistics of the FEC decoder. This estimation enables identifying poor 
+performance and thus provides an opportunity to improve the network performance (e.g., by removing 
+the weakest links from the network or servicing their endpoints). 
+MEDIUM
+PRESENTATION
+APPLICATION
+SESSION
+TRANSPORT
+NETWORK
+DATA LINK
+PHYSICAL
+OSI
+REFERENCE
+MODEL
+LAYERS
+MDI
+MAC – MEDIA ACCESS CONTROL
+MAC CONTROL (OPTIONAL)
+LLC (LOGICAL LINK CONTROL) OR OTHER MAC CLIENT
+HIGHER LAYERS
+ETHERNET
+LAYERS
+RECONCILIATION
+MII
+FEC
+PMA
+PMD
+AN
+PCS
+ 
+Figure 1-18 - UE Physical Layer Specification Focus Areas 

@@ -1,0 +1,18 @@
+ 90 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-4 - JobID Assignment at Job Initialization Time 
+The UET Control API JobID mapping parameters are specified in Table 2-8. 
+Table 2-8 - UET Control API JobID Mapping Parameters 
+Parameter Name Size (bits) Description 
+Flags 8  Valid Flags 
+Bit 0:0 Indicates validity of UET Address Field 
+          0 => UET Address field is NOT valid  
+          1 => UET Address field is valid 
+Bit 1:1 Indicates validity of security bindings field 
+          0 => Security bindings field is NOT valid  
+          1 => Security bindings field is valid 
+Bits 2:7 Reserved, MUST be 0 
+JobID 24 JobID assigned 
+OS PID 32 Operating system process ID that JobID is assigned to 

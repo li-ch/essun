@@ -1,0 +1,36 @@
+ 392 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.16.5 Probe  
+Probe CPs are generated at the source and trigger an ACK. The ACK is used to collect congestion control 
+information. The conditions for generating a Probe CP are listed in Section 3.5.15 and in the CMS Section 
+3.6.13.7. A Probe CP may be generated for implementation specific reasons. 
+The Probe CP packet is not allocated a new PSN and MUST have the pds.flags.ar bit set to one and the 
+pds.psn field set to zero. The pds.probe_opaque field in the CP header is used to carry a 16-bit opaque 
+value that is reflected back in the associated ACK packet. The pds.probe_opaque field can be used to 
+associate a received ACK with a specific Probe CP packet. The pds.probe_opaque field is copied from a 
+received Probe CP packet into the pds.ack_psn_offset field in the corresponding ACK. The Probe CP 
+pds.payload field is set to the desired selective ACK base PSN in the ACK response (when ACK_CC or 
+ACK_CCX is in use). 
+When a destination receives a Probe CP, it generates an ACK because the pds.flags.ar is set in the 
+received packet. The generated ACK MUST have the pds.flags.p bit set to indicate it is a Probe CP 
+response and MUST NOT have the pds.flags.req field set to REQ_CLEAR or REQ_CLOSE. 
+When ACK_CC or ACK_CCX is in use, the pds.sack_psn_offset field is determined based on the PSN in 
+the Probe CP pds.payload field. If the PSN in the Probe CP pds.payload field is lower than CACK_PSN, 
+then CACK_PSN is used as the base PSN for the pds.sack_bitmap field in the ACK. Other fields are 
+populated as usual. 
+3.5.16.6 Credit 
+There are two types of Credit CPs used with RCCC and TFC: one to send credit (Credit CP) and one to 
+request credit (Credit Request CP). These packets are transmitted based on a request from CMS. Both 
+credits CPs MUST set pds.psn to zero and pds.flags.ar to zero. 
+3.5.16.6.1 Credit 
+A Credit CP is used to carry credit allocated to sources. Credit CPs are generated at the destination and 
+sent to the source. The conditions for triggering a Credit CP and the details of the pds.payload.credit 
+field are discussed in the CMS sections 3.6.14.6 and 3.6.15.2. The Credit CP format is illustrated in Figure 
+3-91. The fields are defined in Table 3-75. 
+Credit is associated with a CCC. If multiple PDCs are sharing a CCC, the Credit CP may be sent on any PDC 
+that is scheduled with the CCC. 
+An ACK_CC or ACK_CCX may be used to send credit, in which case the credit is carried in the 
+pds.ack_cc_state or pds.ack_ccx_state fields as defined in the CMS Section 3.6.9.2. Either of these two 
+mechanisms (Credit CP and ACK) may be used, or both may be used simultaneously, as the 
+pds.payload.credit field is a monotonically increasing value. 

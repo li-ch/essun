@@ -1,0 +1,20 @@
+# Calibration-ladder GF-04 topology: fully-connected exchange fabric of 16
+# ranks at the anchor's TWO-NODE figure B = 469.67 B/ns for the
+# recursive-doubling identity (the r=16 anchor-point leg on the
+# rank-scaling family; see rd8_gf04_anchor476_37_v1 / rd16_gf04_
+# anchor476_37_v1 headers for the family's role and the projection
+# declarations — uniform projection of the hybrid NVSwitch+RoCE fabric,
+# GF-02 above-ceiling classification noted, 8->16 RATIO is the stage
+# target). HONESTY: B swept free (A-L0D-BW), anchor-stated, fixed BEFORE
+# any model output was read; L = 200 ns A-L0D-LAT registry point (KEEP).
+topology_id: rd16_gf04_anchor469_67_v1
+topology_class: fully_connected_exchange
+ranks: 16
+nic:
+  injection_bytes_per_ns: 469.67
+link:
+  pair_latency_ns: 200
+notes: >
+  Fully-connected exchange fabric of the two-node rank count at the
+  anchor's own two-node 469.67 B/ns figure (recursive-doubling identity).
+  Anchor-stated, never our measurement, never tuned.

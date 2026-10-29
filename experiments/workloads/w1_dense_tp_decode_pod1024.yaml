@@ -1,0 +1,20 @@
+# W1 Dense TP Decode — pod-scale operating point for the D4 envelope
+# (experiments/envelopes/uec_vs_ub_window_reversal_v1.yaml).
+#
+# Same W1 shape as the cross-design configuration
+# (experiments/workloads/w1_dense_tp_decode_rack64.yaml: 2 layers x 3 decode
+# steps = 6 AllReduce ops per operating point); tp_size 1024 is the TOP of
+# the declared rank freedom A-XDUO-TP (range [2, 1024],
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml) — FREE on the UEC
+# side (UEC 1.1 fixes no rank count) and, on the UnifiedBus-paper side, the
+# POD scale anchored by UBP-P18 (UB-Mesh-Pod: 1024 NPUs, PAPER_REPORTED).
+# The envelope runner's same-workload gate (one workload = one tp_size for
+# every comparator) is what makes "same operating point" literal here.
+# allreduce_bytes below is OVERRIDDEN by the envelope operating point
+# (payload_assumption A-XDUO-PAYLOAD); integer byte counts throughout.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-pod1024
+tp_size: 1024
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # free parameter (overridden per operating point)

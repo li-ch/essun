@@ -1,0 +1,23 @@
+ 358 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+The ACK, ACK_CC, and ACK_CCX contents can be split into three sections, as illustrated in Figure 3-80. 
+The base state is the same for all ACK types and SHOULD be processed when a valid ACK, ACK_CC, or 
+ACK_CCX is received. The pds.mpr field SHOULD be supported. On RUD PDCs, the pds.sack_bitmap field 
+MUST be processed when Enb_ACK_Per_Pkt is not set and SHOULD be processed when 
+Enb_ACK_Per_Pkt is set. On ROD PDCs, use of the pds.sack_bitmap field is optional except for Probe 
+CPs. The pds.sack_bitmap field MUST be populated in the ACKs generated in response to a Probe CP. 
+The pds.ack_cc_state or pds.ack_ccx_state fields SHOULD be processed if the corresponding 
+pds.cc_type or pds.ccx_type field is supported. Setting pds.cc_type to 0 is required for NSCC. An 
+implementation may provide a configuration option to enable/disable each type (e.g., CC_TYPE_ENB 
+and CCX_TYPE_ENB). 
+ 
+ 
+Figure 3-79 - Example ACK Packet 
+ 
+ 
+ 
+Figure 3-80 - ACK State Sections 
+ 
+ 

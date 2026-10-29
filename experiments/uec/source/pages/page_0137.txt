@@ -1,0 +1,61 @@
+ 137 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Object Description 
+The cmd_fd communicates with the kernel via ioctls and is used to allocate, 
+configure, and release device resources. 
+ 
+Applications interact with the cmd_fd indirectly by calling libibverbs function calls.  
+Async Event FD 
+(async_fd) 
+File descriptor used to report asynchronous events. 
+Associated with the device context and opened by libibverbs.  
+ 
+Applications may interact directly with the async_fd, such as waiting on the fd via 
+select/poll, to receive notifications when an async event has been reported.  
+Port Identifies a physical port on the NIC. 
+Protection Domain (PD) A protection domain provides process-level isolation of resources and is considered 
+a fundamental security construct for Linux RDMA devices. A PD defines a boundary 
+between memory regions and queue pairs. A network data transfer is associated 
+with a single queue pair. That queue pair may access only a memory region that 
+shares the same protection domain as itself. 
+ 
+Protection domains provide security for memory regions accessed by both local and 
+remote operations. Local access includes work requests posted to hardware 
+command queues that reference memory regions. Remote access includes RDMA 
+operations that read or write memory regions. 
+ 
+A queue pair is associated with a single PD. The PD verifies that hardware access to a 
+given LKey or RKey is valid for the specified QP and that the initiating or targeted 
+process has permission to the LKey or RKey. Vendors may implement a PD using a 
+variety of mechanisms but are required to meet the defined security isolation.  
+Memory Region 
+(MR) 
+A memory region identifies a virtual address range known to the NIC. MRs are 
+registered address ranges accessible by the NIC for local and remote operations. The 
+process of creating an MR associates the given virtual address range with a 
+protection domain, to ensure process-level isolation. 
+ 
+Once allocated, data transfers reference the MR using a key value (LKey and/or 
+RKey). When accessing an MR as part of a data transfer, an offset into the memory 
+region is specified. The offset is relative to the start of the region and may be either 
+0-based or based on the region’s base virtual address. 
+MR LKey The LKey is designed as a hardware identifier for a locally accessed data buffer. 
+Because work requests are formatted by user space software and may be written 
+directly to hardware queues, hardware must validate that the memory buffers being 
+referenced are accessible to the application. 
+ 
+NIC hardware may not have access to the operating system's virtual address 
+translation table. Instead, hardware can use the LKey to identify the registered 
+memory region, which in turn identifies a protection domain, which finally identifies 
+the calling process. The protection domain of the processing queue pair must match 
+that of the accessed memory region. This prevents an application from sending data 
+from buffers outside of its virtual address space. 
+MR RKey The RKey is designed as a transport identifier for remotely accessed data buffers. It's 
+conceptually like an LKey, but the value is shared across the network. An RKey is 
+associated with transport permissions. 
+Queue Pair 
+(QP) 
+A queue pair is a transport addressable set of hardware queues, with a QP consisting 
+of send and receive queues. A QP's address is identified as a queue pair number 
+(QPN). In networking stack models, a QP is considered a transport layer object.  

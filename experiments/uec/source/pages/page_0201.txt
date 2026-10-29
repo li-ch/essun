@@ -1,0 +1,40 @@
+ 201 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+As illustrated in Figure 3-10, the lookup of the properties of the address region and the validation and 
+translation of the address in the semantic header are vendor-defined functions. 
+3.4.2.3.1 Job Identifiers (JobID) 
+A JobID identifies an application (spanning one or more FEPs) that a communicating process belongs to 
+(e.g., within a distributed parallel application). The JobID is assigned to the initiating process and is part 
+of both addressing and buffer access authorization. In relative addressing for a FEP, it defines the scope 
+of the PIDonFEP within the FEP. In absolute addressing for a FEP, JobID is used only for buffer access 
+authorization. See 3.4.2.4.1 for an elaboration on the use of JobID for authorization. In all addressing 
+modes, the JobID is populated with the JobID of the initiating application. 
+Job identifiers are useful in a traditional parallel computing environment (e.g., both HPC and AI) to 
+segregate different user applications. They also provide a scalable authorization field when 
+communicating in a client/server environment. A JobID is assigned by a provisioning system—much like 
+a VXLAN ID would be. The numerical relationship of the JobID to the security domain is not defined by 
+UET. The JobID MUST be unique for all jobs that are concurrently executing within the reachable 
+network, and it could potentially utilize an existing ID if that is how the provisioning system is designed. 
+Phrased differently, two entities that can reach each other across the network MUST have different 
+JobIDs unless they are allowed to communicate. A distributed parallel application MAY be associated 
+with more than one JobID. 
+ 
+3.4.2.3.2 Process Identification (PIDonFEP) 
+UET provides a process identification field in the SES header called ses.PIDonFEP, which is used to select 
+a set of resources associated with a specific process. Because operating systems tend to evolve 
+independently of network protocols, the UET PIDonFEP is decoupled from the OS process ID as well as 
+the PCI Express PASID. The PIDonFEP-to-OS process mapping is many-to-one. That is, each OS process 
+using the network stack MUST have a different PIDonFEP, but more than one PIDonFEP may be assigned 
+Informative Text: 
+An example of a parallel application being associated with more than one JobID is the case where two 
+separately launched distributed parallel applications need to communicate. These two jobs may be 
+launched at somewhat different times such that the first job has no knowledge of the details of the 
+second job at launch time. Multiple mechanisms can achieve this. The two historical solutions are: 1) 
+Create a spanning JobID where each process uses relative addressing in two different jobs, and 2) Use 
+absolute addressing. In either case, separate resources (e.g. separate sets of receive buffers and 
+completion queues) are used for communicating between the two jobs.  
+Informative Text: 
+JobID assignment is conceptually similar to VXLAN ID assignment. The relationship of the JobID to a 
+VXLAN ID (or other virtualization ID) is not defined by UET. In either case, the JobID could potentially 
+be the same as a virtualization ID or a security domain, but that is not a requirement. 

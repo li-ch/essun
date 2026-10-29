@@ -1,0 +1,41 @@
+ 72 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+hardware and software to meet the specification. Multiple vendors have successfully created products 
+that enable MPI-based HPC applications while also allowing PGAS, SHMEM, and other programming 
+models. At the same time, vendors have created libraries that support popular AI frameworks (e.g., 
+PyTorch, TensorFlow, or ONNX). All these vendor offerings have proven to be easily and efficiently 
+mapped over libfabric. UEC collaborates with the libfabric community to extend the libfabric API, as 
+appropriate and necessary to support new UE features. 
+libibverbs mapping: The UET libibverbs mapping specification defines a standardized set of extensions 
+to the widely adopted RDMA verbs API that enables applications and software stacks to access Ultra 
+Ethernet Transport (UET) capabilities through a familiar programming model. By maintaining 
+compatibility with existing RDMA infrastructure while introducing support for UET, the specification 
+provides a practical migration path for applications, libraries, and operating system components to 
+adopt Ultra Ethernet with minimal disruption. This approach accelerates adoption, simplifies integration 
+with the Linux RDMA software stack, enables multi-vendor software implementations, and provides a 
+foundation for AI, HPC, and future Ultra Ethernet use cases while preserving long-term extensibility and 
+transport independence. 
+In-network collectives (INC): Collective operations such as allreduce are common in many AI and HPC 
+applications. The completion of collective operations gates the next computing phase in many jobs, 
+therefore accelerating the completion of the operation and optimizing the network transfer of collective 
+data is an important optimization. The optional INC specification enables switches to offload multiple 
+collective operations and provides application-level performance improvements as well as network-level 
+traffic optimizations. 
+1.6.2 Transport Layer  
+UE transport layer specifications are provided in Section 3. The UE transport protocol is designed to 
+serve the networking demands of both HPC and AI workloads. Different profiles are defined to allow 
+product optimization for satisfying the unique needs of the workloads. It is anticipated that the network 
+requirements for AI and HPC workloads will increasingly overlap. The UE transport protocol enables a 
+wide range of implementations. The components of the UE transport protocol include message 
+semantics, packet delivery reliability modes, congestion management, and security. 
+Semantics Sublayer (SES): The SES sublayer is designed to integrate into broadly deployed AI 
+frameworks and HPC libraries through a libfabric mapping. Applications using libfabric exchange 
+messages over the fabric and place those messages directly into one another’s buffer memory using 
+popular zero-copy techniques. The SES sublayer specifies a protocol that defines how application 
+messages are identified, how the associated buffers are addressed, and how the preferred operations 
+on the messages are employed. The SES sublayer is the primary interface between the UE transport and 
+the libfabric provider. 
+Packet Delivery Sublayer (PDS): Application requirements determine the selection of the appropriate 
+UET packet delivery services. Different applications are optimized for various reliability and packet 
+ordering constraints on message delivery. Through the UET layering model and associated libraries 

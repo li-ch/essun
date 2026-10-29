@@ -1,0 +1,40 @@
+ 533 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-113 - Trigger Field Resolution 
+Field Name Datatype Unit 
+mode_ref_count_val uint 1 
+mode_ref_time_val uint 128 ns 
+invoke_deadline uint 128ns  
+ 
+3.6.18.5.3 Trigger Evaluation 
+Triggers are logically evaluated as follows: 
+• When a packet is received, all armed triggers associated with accumulators tracking uet_rx 
+signals are evaluated 
+• When a packet is transmitted, all armed triggers associated with accumulators tracking uet_tx 
+signals are evaluated 
+• When a time event occurs, all armed triggers associated with accumulators tracking uet_time 
+signals are evaluated 
+The algorithm MUST be invoked exactly once to deliver all fired (non-deferred) triggers; piecemeal 
+delivery is not allowed. Algorithms determine the set of fired triggers by examining the trigger bitmask 
+delivered with every invocation. 
+Multiple deferred invocation triggers are reconciled as follows:  
+• A per-CCC deadline variable maintains the minimum deadline to the next invocation.  
+• For every evaluated trigger, if the trigger has a non-zero invocation deadline, the per-CCC 
+deadline is updated as follows: 
+CCC.invoke_deadline = min(CCC.invoke_deadline,now() +     
+trigger.invoke_deadline) 
+3.6.18.5.4 Trigger Updates 
+On successful application of a trigger update, the PCM subsystem MUST reset all trigger working states. 
+After resetting, the trigger MUST be immediately eligible for evaluation and firing under the new 
+configuration. All trigger reference value fidelities match those of the associated signal. 
+3.6.18.5.5 Trigger Modification 
+The PCM API provides support for algorithms to manipulate their triggers as  seen in Table 3-114: 
+Table 3-114 - Trigger Modification API 
+Function Name Description 
+int uet_modify_trigger(unsigned int signal_index, const struct 
+uet_trigger_attr *attr, uint32_t attr_mask); 
+Modify a trigger’s configuration  
+int uet_query_trigger(unsigned int signal_index, struct uet_trigger_attr 
+*attr, uint32_t attr_mask); 
+Query a trigger’s configuration 

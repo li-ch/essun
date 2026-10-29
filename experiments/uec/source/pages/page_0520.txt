@@ -1,0 +1,40 @@
+ 520 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+transmitted packets; this state is available to the algorithm when the corresponding ACK or NACK for the 
+packet is received. 
+3.6.18.3.2 EV Table  
+In the EV table model, the HW maintains a logical table of EVs for every active CCC. For each transmit, 
+the hardware LB algorithm selects an EV, and for every received ACK or NACK packet the HW may invoke 
+the PCM algorithm, depending on runtime configuration. 
+In this model, each HW LB algorithm is described by a YAML schema under an lb_algorithm stanza. This 
+scheme is used to: 
+• Specify and validate the per-CCC and per-EV configuration. 
+• Generate LB API bindings to enable the algorithm to manipulate per-EV and per-CCC state. 
+Using this mechanism, implementations can achieve hardware performance while still maintaining 
+software control. 
+The detailed YAML schema and fields for EV table LB algorithms are described in Section 3.6.18.8.5. The 
+key concepts and primitives are described in Table 3-105: 
+Table 3-105 - YAML Schema Concepts and Primitives 
+Primitive Description 
+hw_algo Names the hardware LB implementation for the instance. 
+hw_config Algorithm-specific, static configuration consumed by the HW algorithm. 
+ev_fields Per-EV fields; defines EV values and state accessible or modifiable by SW. Multiple fields may 
+be defined for every EV; each field is defined by a unique name, type, and whether it can be 
+modified or accessed by SW. 
+ccc_fields Per-CCC fields; used for CCC wide parameters. Like ev_fields, multiple fields may be defined for 
+every CCC. 
+ 
+In the EV table model: 
+• Each CCC has an EV table of fixed depth, E, addressed by an index into a per-CCC logical table of 
+range [0, E]. 
+• For each transmit: 
+o The hardware LB algorithm selects an EV in the EV table. 
+▪ The selection process is algorithm-specific. 
+o The hardware LB algorithm derives the on-wire entropy from the EV (as stored in the EV 
+table), the values of exposed per-CCC and per-EV fields, and private state and logic. 
+• The LB algorithm: 
+o The algorithm uses the PCM LB API to read and update (where allowed) ev_fields and 
+ccc_fields. 
+o The algorithm interacts with the hardware LB algorithm via the same trigger and signal 
+mechanisms as for congestion management. 

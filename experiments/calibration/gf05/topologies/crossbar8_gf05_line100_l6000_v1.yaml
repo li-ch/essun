@@ -1,0 +1,30 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 100 B/ns, L =
+# 6000 ns — the ONE-WAY-PATH reading row of the latency sweep: the
+# anchor's base RTT is derivable from its own trimming quote ("roughly
+# 84 us = 7 base RTTs" => base RTT = 12000 ns exactly), and 12000 =
+# 2 x 6 x (400 + 600) exactly — consistent with a SIX-HOP one-way
+# host-to-host path (6 link traversals + 6 switch stages at the
+# anchor's staged per-hop components; a standard 3-tier fat-tree path
+# has 5 switches + 6 links = 11200 ns, within one switch traversal of
+# 12000 — CONSISTENT-WITH, flagged as interpretation, never derived;
+# the tier/hop count is not staged). The one-way path reading is then
+# L = 6000 ns = 6 x 1000 — the full multi-hop path latency charged as
+# the single-stage abstraction's per-pair latency (declared path
+# reading, vs the per-hop reading 1000 in crossbar8_gf05_line100_v1).
+# Placement arithmetic only, never tuning.
+topology_id: crossbar8_gf05_line100_l6000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 6000
+notes: >
+  One-way-path reading row (L = 6000 ns = 6 hops x (600 link + 400
+  switch) = half the base RTT derived from the anchor's own
+  "84 us = 7 base RTTs") at GF-05's fixed sim line rate B = 100 B/ns.
+  Identity t = 2(r-1)/r*M/B + 2L. The multi-hop fat-tree structure
+  itself is INEXPRESSIBLE at L0 (no fat-tree topology_class in the
+  landed set) — only its aggregate path latency enters through this
+  declared reading. Provenance: anchor-staged numbers (600/400 per-hop
+  components, 84 us / 7 RTT); never our measurements, never tuned.

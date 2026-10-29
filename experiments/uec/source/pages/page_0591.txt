@@ -1,0 +1,41 @@
+ 591 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Packet trimming is useful functionality that can improve packet loss detection. Packet trimming MUST 
+only be performed on valid IP packets that fail buffer admission checks. Conceptually, packet trimming 
+normally occurs at the point of buffer admission, after switch ingress processing has validated the L2 
+frame and the L3 header, and the switch next hop lookup has found a valid egress port for the packet. 
+However, this depends on switch-architecture. 
+Packet trimming helps transports that accept trimmed packets and use the information in these packets 
+to enable fast retransmission of the original packets. 
+Packet trimming uses at least two categories of differentiated service codepoints (DSCPs) that are 
+configured by the network operator: The first category is for packets that are eligible for trimming 
+(called TRIMMABLE). and the second is for packets that have been trimmed (TRIMMED). Only packets 
+belonging to the TRIMMABLE category SHALL be trimmed. Each category of DSCPs MUST include at least 
+one value. Example DSCP values from the trimmable category are {1,2,3} and from the trimmed 
+category are {4,5,6}; however, this spec does not place any constraints on the values of the DSCPs used. 
+For each network device (generically called switch) that supports trimming, the network operator MUST 
+associate (i.e., configure a mapping) a DSCP_TRIMMED codepoint with each DSCP_TRIMMABLE 
+codepoint. For instance, in the example above, we could have the following mappings: {1->4; 2->5; 3-
+>6}. Multiple trimmable codepoints can be mapped to the same trimmed codepoint, if necessary. 
+The first step of trimming involves reducing the IP payload length to a length larger than or equal to the 
+MIN_TRIM_SIZE parameter. MIN_TRIM_SIZE is a lower bound, and it depends on both the transport 
+protocols used in the network as well as the tunneling protocols, if any. The actual trimmed IP payload 
+size MAY be influenced by architecture-specific constraints (e.g., switch cell size), and it MUST be larger 
+than or equal to MIN_TRIM_SIZE to allow the transport to detect the identity of the trimmed packet. For 
+instance, in the context of UE, MIN_TRIM_SIZE should be large enough to ensure the trimmed packet 
+contains the parts of the PDS header that include the PSN, PDC identifiers and any tunnel encapsulation 
+identification fields (e.g., VXLAN header—if present). MIN_TRIM_SIZE is a network-wide configuration 
+parameter that depends on the transport and tunneling/virtualization protocols (if any) used in the 
+network. Guidelines on how to select MIN_TRIM_SIZE are provided in Table 4-1. 
+When an incoming packet with a DSCP that is DSCP_TRIMMABLE fails buffer admission, the switch MUST 
+trim the incoming packet.  The trimmed packet size MUST NOT be larger than the original packet size. 
+When the incoming packet’s IP payload length is smaller than MIN_TRIM_SI E and buffer admission 
+fails, the switch MAY treat the packet as trimmed (without updating its length but updating its DSCP, as 
+shown in the pseudocode), or it MAY drop the packet. 
+Trimming aims to reduce the amount of information carried by the network in overload scenarios: It 
+reduces the size of the data packets by dropping their payload, turning them into trimmed packets. 
+Trimming is most effective when it is applied to large data packets (e.g., 4 KB), because it reduces the 
+data rate significantly (e.g., on the order of 4 KB/MIN_TRIM_SIZE) while enabling single RTT loss 
+detection. Conversely, trimming packets just fractionally larger than MIN_TRIM_SIZE provides little data 
+reduction and can even be detrimental if a large fraction of bandwidth is used by trimmed packets. To 

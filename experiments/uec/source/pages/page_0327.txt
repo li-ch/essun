@@ -1,0 +1,8 @@
+ 327 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+Figure 3-60 - PDS Manager State Machine 
+ 
+ 

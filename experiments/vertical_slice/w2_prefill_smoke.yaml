@@ -1,0 +1,33 @@
+# Vertical-slice smoke experiment: W2 Dense TP Prefill on the analytical L0
+# phase-collectives model — ReduceScatter/AllGather execute via the
+# recursive-halving / recursive-doubling family on the fully-connected
+# exchange fabric (the A-L0P-ALGO pairing selected by the topology class).
+# Evidence level E0 only: identities and determinism, no empirical claim.
+experiment_id: EXP-VS-W2-SMOKE-001
+research_question: RQ2
+claim_id: C2
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w2_dense_tp_prefill_small.yaml
+infra_graph:
+  path: experiments/topologies/rdoubling8_free_params.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_l0_phase_collectives.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_phase_collectives
+seed: 20261027
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: rdoubling8_free_v1 (fully-connected exchange, free parameters)
+  workload: w2_dense_tp_prefill smoke configuration
+  implementation: analytical L0 phase-collectives free-parameter model, no standard semantics
+evidence_level_requested: E0

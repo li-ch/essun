@@ -1,0 +1,47 @@
+# Calibration-ladder GLOBAL stage GLOB-LAT endpoint RUN 2 of 2 : the W1 smoke config with the hop-latency free parameter
+# A-L0-LAT at the REGISTERED RANGE UPPER ENDPOINT L = 2000 ns — the
+# latency-rich, ANCHOR-FREE corner of the registered axis (no anchor
+# supports L >= ~800-1000 ns per plan section 2.1 A-L0-LAT's
+# NARROW-range-upper candidate; swept anyway because the REGISTERED
+# range is the stage's object) where the line 448 + 14L reaches its
+# maximum 28448 ns (CCT = 448 x 127/2 exactly, the bandwidth floor
+# carried 63.5x). Same workload file, seed discipline and observable set
+# as the W1 smoke manifest (experiments/vertical_slice/
+# w1_decode_smoke.yaml); ONLY the topology file differs (L 200 -> 2000,
+# B = 64 B/ns unchanged).
+#
+# claim_id is deliberately EMPTY: a PROPOSED global sensitivity candidate
+# must not be linked to any claim (p1 stage boundary: zero claim edits);
+# the schema requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# sensitivity comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GLOBLAT-L2000-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/globlat/topologies/ring8_globlat_l2000_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/globlat/profiles/implementation_profile_l0_ring_cal_globlat_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_globlat_l2000_v1 (the W1 smoke ring with A-L0-LAT at its registered range upper endpoint 2000 ns, B = 64 B/ns registry point)
+  workload: w1_dense_tp_decode smoke configuration (tp8, 2 layers x 3 steps, 16384 B) — unchanged
+  implementation: analytical L0 free-parameter identity; global hop/pair-latency sensitivity stage GLOB-LAT — PROPOSED, review required
+evidence_level_requested: E0

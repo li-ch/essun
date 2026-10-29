@@ -1,0 +1,19 @@
+# W1 Dense TP Decode — tp_size 8 (the executed rank count for the GF-03
+# anchor; the anchor itself does not state one — staging doc: "rank count,
+# NCCL version not cleanly captured" — r=8 is the HGX B300 single-node
+# default, a power of two so A-L0D-POW2 accepts natively, recorded as an
+# ASSUMPTION with the r-sensitivity of every finding computed at r=72 too)
+# at 2097152 B = 2^21 (2 MiB): GF-03's ONLY staged CCT row — "NCCL
+# AllReduce completes 2 MiB in as little as 42–52 µs" (a best-case band,
+# not a mean; semantics recorded in the ambiguity register). 2^21 is
+# divisible by 8 so the A-L0-DIV / A-L0X-DIV / A-L0D-DIV gates ACCEPT the
+# anchor's exact size — no bracketing. Same workload shape as every W1
+# file (2 layers x 3 decode steps = 6 AllReduce ops per config). Nothing
+# measured or standard-normative here; integer byte counts; deterministic
+# by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-gf03
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 2097152   # 2 MiB; GF-03's only staged CCT row ("as little as 42-52 us"); free parameter A-W1-SIZE

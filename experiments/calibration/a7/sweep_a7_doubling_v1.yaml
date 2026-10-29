@@ -1,0 +1,43 @@
+# Calibration-ladder A7 sweep: the L0
+# recursive-doubling identity at the CAL-A7 aggregate anchor point across
+# the stage's 12-size ladder — the third single-port latency chain
+# (2*log2(r)*L = 6L at r=8) placed inside the anchor's fabric class, so
+# the stage record can verify the backend's declared exact relation
+# t_doubling - t_crossbar = 2*(log2(r)-1)*L = 4L against executed
+# artifacts at every ladder size.
+#
+# EXECUTION PATH NOTE (recorded as a stage finding, not worked around
+# silently): this identity is reached through the SWEEP path only.
+# The run path's collective-capability gate
+# (_supported_collectives) strips one '_'-segment from declared names, so
+# 'allreduce_recursive_doubling' normalizes to 'allreduce_recursive' and
+# can never match the bare 'allreduce' the W1 generator issues — although
+# the backend's own execute() accepts exactly 'allreduce'. Structural
+# naming mismatch, classified in the stage record for the owner; no src/
+# change is made by this stage.
+#
+# NOTHING IS TUNED: single topology (the CAL-A7 aggregate point B=448),
+# L at the A-L0D-LAT registry point 200 ns; deltas vs the baseline are
+# zero by construction (baseline == the only grid topology) — the sweep
+# exists to execute the identity at the anchor point per size, with
+# content-addressed rows, not to compare configurations. Every completion
+# time below is an arithmetic fact of t = 2(r-1)/r*M/B + 2*log2(r)*L.
+#
+# Payload grid: the SAME 12-size ladder 8*2^k as this stage's twin sweeps
+# (8 KiB -> 8 GiB); r=8 is a power of two and divides every size, so the
+# A-L0D-POW2 and A-L0D-DIV gates accept the exact ladder with no
+# bracketing.
+sweep: cal_a7_doubling_v1
+workload: experiments/calibration/a7/workloads/w1_dense_tp_decode_tp8_512mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_recursive_doubling
+  topology: experiments/calibration/a7/topologies/exchange8_a7_agg448_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/a7/topologies/exchange8_a7_agg448_v1.yaml

@@ -1,0 +1,40 @@
+ 530 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Signal/Accumulation Operation 
+Model 
+uet_op_sum uet_op_max uet_op_min uet_op_last 
+uet_tx_ev_tbl_idx ET N/A N/A N/A MUST 
+uet_tx_rto ET, PP MAY N/A N/A MUST 
+ 
+3.6.18.4.5 Optional Signals 
+Table 3-112 defines the set of optional signals that MAY be supported. If a YAML definition uses a signal 
+that is not supported by the specific implementation, the compiler MUST fail. 
+3.6.18.4.5.1 CSIG Signals 
+Ultra Ethernet defines congestion signaling (CSIG) in Section 4.2. CSIG is an in-band telemetry method to 
+collect information on the fabric’s congestion state as the packets traverse the network. Each switch 
+along the path applies a simple aggregation function to a locally measured congestion value and the 
+value carried in the CSIG tag of the received packet. The result of the aggregation function at each 
+switch is that the packet egresses with a single, path‑summary result. In many useful cases, the relevant 
+metric is the minimum or maximum of a signal across the path—i.e., the value where the signal is most 
+constraining (e.g., the minimum available bandwidth or the maximum queueing delay). 
+Within PCM, CSIG signals are accumulated to provide a standardized source of congestion signals that 
+algorithms can consume for their decisions. The CSIG specification defines multiple signal types (e.g., 
+available bandwidth and delay), but each packet carries exactly one CSIG signal at a time, encoded as a 
+quantized value. CSIG information can be consumed at the receiver (termination) or reflected back to 
+the sender, enabling sender- or receiver-based PCM algorithms to react by adjusting windows, rates, or 
+path selection. 
+If a switch performs packet trimming, then a CSIG-tagged packet’s csig.d bit (do-not-modify flag) is set. 
+This leaves the tag unchanged thereafter and preserves the congestion signal as before the trimming. 
+This information is to be made available to the PCM algorithms when CSIG support is enabled in PCM. 
+The PCM interface exposes these readings as optional CSIG signals delivered to the algorithms. 
+CSIG always does tag termination at the receiver if it receives a CSIG packet. If NSCC is enabled, the 
+CSIG-Reflect() function is mandatory, which populates the CSIG Reflection Header within ACK/NACK 
+packets. However, an algorithm can have only one source of the data at any given time–The CSIG-Term() 
+function is the natural input for receiver-based CC, whereas CSIG-Reflect() would provide the input to 
+the sender-based CC. 
+A per-group set of signals could be defined, but invocations can be easily controlled by checking if the 
+CSIG signal type received is terminal or reflected. 
+PCM exposes a boolean uet_rx_csig_type where 0=TERM and 1=REFLECT. Algorithms SHOULD validate 
+the origin on each sample and then operate on the unified fields {uet_rx_csig_t, uet_rx_csig_s, 
+uet_rx_csig_m, uet_rx_csig_d}. 

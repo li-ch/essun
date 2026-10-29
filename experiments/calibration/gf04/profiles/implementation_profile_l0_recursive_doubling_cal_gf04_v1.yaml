@@ -1,0 +1,31 @@
+# Implementation profile for the calibration-ladder GF-04 sweep rows on
+# the analytical L0 recursive-doubling backend 
+# gap-fill anchor GF-04; docs/calibration/anchors_gapfill.md §GF-04).
+implementation_profile_id: analytical_l0_recursive_doubling_cal_gf04_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0_recursive_doubling
+fidelity: L0
+model: >
+  recursive halving + doubling AllReduce identity t = 2(r-1)/r*M/B +
+  2*log2(r)*L (see src/essun/backends/analytical/l0_recursive_doubling.py);
+  assumptions A-L0D-POW2 / A-L0D-STEP / A-L0D-BW / A-L0D-LAT / A-L0D-DIV.
+  Role in this stage: the ONLY L0 allreduce family whose latency chain
+  grows with rank count (6L at r=8 -> 8L at r=16), hence the strongest
+  in-family candidate for expressing an 8->16 busbw change — executed at
+  both rank counts to bound what latency-chain structure alone can do
+  (~1.7e-5 relative at the executed sizes, ~800x below the measured
+  1.41% drop). r=8 and r=16 are powers of two (A-L0D-POW2 ACCEPTS both).
+  Same pinned busbw = algbw x 2(r-1)/r mapping (plan §3 targets rule).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) at {476.37 = the anchor's single-node
+  figure (executed at BOTH rank counts — the doubling-family
+  scaling-null pair), 469.67 = the anchor's two-node figure (r=16 anchor
+  point)} — fixed by anchor arithmetic BEFORE any model output was read.
+  L fixed at the A-L0D-LAT registry point 200 ns. NOTHING was tuned
+  toward the GF-04 measurements.
+measurement_source: >
+  Same as implementation_profile_l0_ring_cal_gf04_v1 (the GF-04 anchor's
+  staged + fetch-verified numbers and the fetch corrections recorded in
+  the stage record's verification block). Vendor blog, not peer-reviewed;
+  PROPOSED evidence only; no E3/E4 language.

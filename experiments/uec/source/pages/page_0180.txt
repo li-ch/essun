@@ -1,0 +1,22 @@
+ 180 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The semantics sublayer (SES) defines addressing, authorization, message types, protocols, and semantic 
+header formats between endpoints. SES works at the level of transactions, such as messages or remote 
+memory accesses (RMA), and breaks those into multiple packets to be transmitted by the packet 
+delivery sublayer. The packet delivery sublayer (PDS) transports a stream of packets reliably to the 
+destination FEP and passes them to the target’s SES layer for processing. It generates and interprets ACK 
+and NACK packets to ensure reliable transmission and uses ephemeral state to track outstanding 
+packets in the network. The congestion management sublayer (CMS) ensures that the packets are 
+transmitted at highest rate while minimizing network congestion. The transport security sublayer (TSS) 
+defines scalable encryption and authentication mechanisms for peer-to-peer as well as client-server 
+communications. 
+Figure 3-1 shows an overview of the overall UE stack and the UET sublayer structure. The key 
+architectural features of each sublayer are summarized, including how they are composed to form UET. 
+Full details of the specification are defined in the respective sections of this document. 
+ 
+ 
+Figure 3-1 - Overview of UET 
+Each sublayer uses specific header fields in the packet. The UET payload is the data portion of a UET 
+packet beginning immediately after the SES header fields and of length specified by the length field of 
+the SES header. The length field of the SES header does not include the UET trailer if present. The total 

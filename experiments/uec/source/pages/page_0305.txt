@@ -1,0 +1,62 @@
+ 305 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-36 - PDS Status and Error Indications 
+Name Required Range Description 
+respond to a request to close with a Close Command 
+CP. 
+Refer to Section 3.5.8.3. 
+Tail_Loss_Time 0—100 ms 
+Unit: 128 ns 
+Default: n/a 
+Optional: See Section 3.5.15. 
+Max_Tail_Loss_Retx 0—15 
+Unit: retry count 
+Default: 5 
+Optional: See Section 3.5.15. 
+Override_MPR_Zero_Value 0 – 127 
+Default: 0 
+This configuration parameter defines the 
+interpretation of the value of 0 in the pds.mpr field. 
+When set to 0, this parameter indicates that a 
+pds.mpr setting of 0 should be interpreted as meaning 
+that the MP_Range is ignored. Otherwise, the value of 
+0 in the pds.mpr field means that the MP_Range is set 
+to this CSR value. 
+Syn_Retx_Safety_Time 0 – 216-1 
+Unit: 1 s 
+ 
+If a packet with pds.flags.syn=1 is an inferred loss 
+(e.g., based on timeout), a FEP MUST wait 
+Syn_Retx_Safety_Time between the original transmit 
+of that packet and the closing of that PDC (see Section 
+3.5.8.3). The required range is a 24-bit value in 
+microseconds. Syn_Retx_Safety_Time SHOULD be set 
+to 0 if encryption is enabled or if another anti-replay 
+mechanism is enabled. 
+Note: 
+1. As of this specification’s publication, IANA has not assigned a native IP protocol number. Th is field remains 
+configurable, allowing users to set experimental or locally determined values.  
+2. The IETF does not allow experimental numbers to be set as default values. Implementations are required to 
+provide a means of configuring the IP_Proto_Nxt_Hdr parameter. Deployments may use an experimental 
+value (e.g. 253, 254) until the UEC obtains an IP protocol number. 
+Name Field Type Description 
+NEW_START_PSN_TO_ERR Boolean 
+FALSE: no 
+error 
+This is set when the 
+NEW_PDC_TIMEOUT_CNT crosses the 
+configured threshold, 
+New_PDC_Timeout_Thresh 
+NEW_PDC_TIMEOUT_CNT Bit or counter This is used when TSS is enabled. 
+Incremented when New_PDC_Timer expires. 
+CC_TYPE_EVENT 16-bits Optional: Should be clearable. 
+Bit is set when an ACK_CC arrives with 
+pds.cc_type corresponding to the bit, e.g., if 
+pds.cc_type = 3 then bit 3 in the field is set.  
+CCX_TYPE_EVENT 16-bits Optional: Should be clearable. 
+Bit is set when an ACK_CCX arrives with 
+pds.ccx_type corresponding to the bit, e.g., if 
+pds.ccx_type = 4 then bit 4 in the field is set. 
+NCCX_TYPE_EVENT 16-bits Optional: Should be clearable. 

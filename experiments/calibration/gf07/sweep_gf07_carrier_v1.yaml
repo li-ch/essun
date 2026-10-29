@@ -1,0 +1,55 @@
+# Calibration-ladder GF-07 sweep #2: the
+# CROSS-CARRIER FACTOR-TRANSFER probe — the anchor's own Leonardo
+# collapse factor (staged ratio 0.2 => CCT factor exactly 5) executed
+# at BOTH staged per-node fabric rates (GF-07, arXiv:2604.11432;
+# docs/calibration/anchors_gapfill.md §GF-07).
+#
+# WHY THIS SWEEP EXISTS: the anchor's envelope is a set of
+# DIMENSIONLESS per-fabric ratios measured against each fabric's OWN
+# uncongested baseline. Mapping them onto the L0 B axis requires a
+# carrier B_ref; the mapping is asymptotically carrier-INDEPENDENT
+# (t ratios -> factor as M/B grows) but at FINITE size the observed
+# CCT ratio depends on the carrier through the latency fraction
+# 2L / (2(r-1)/r*M/B_carrier + 2L): the SAME factor 5 measured on
+# Leonardo (HDR, 400 Gb/s/node => B = 50) reads as a DIFFERENT CCT
+# ratio than on a LUMI-rate fabric (4x200 Gb/s => B = 100) at every
+# finite payload — congestion magnitudes do NOT transfer across fabric
+# classes at finite size; the transfer is exact only in the
+# bandwidth-bound limit. This sweep EXECUTES that statement:
+#   100 = LUMI-rate carrier row (uncongested);
+#   20  = 100/5 — factor 5 at the LUMI rate (envelope-sweep row,
+#        repeated here so the pair is self-contained);
+#   50  = Leonardo-rate carrier row (uncongested);
+#   10  = 50/5 — the SAME factor 5 at Leonardo's OWN staged rate (the
+#        quote's home fabric).
+# Exact closed form (cross-checked row-by-row in the stage record):
+# ratio_c(M) = (c_rank*M/(B_ref/f) + 2L) / (c_rank*M/B_ref + 2L) — a
+# function of the CARRIER through B_ref; ratio_50(M) >= ratio_100(M)
+# at every M with equality only in the limit.
+#
+# NOTHING IS TUNED: all four B values are anchor/registry arithmetic
+# fixed BEFORE any stage output was read; L = 200 the A-L0X-LAT
+# registry point (GF-07 stages no latency number). No anchor time is
+# compared anywhere (the anchor stages bandwidth ratios only).
+#
+# Payload grid: the anchor's own staged vector range 8*2^k (8 B ->
+# 16 MiB, 22 sizes) — identical to sweep_gf07_envelope_v1.yaml so the
+# carrier comparison is per-size exact; r=8 divides every size, no
+# bracketing.
+sweep: cal_gf07_carrier_v1
+workload: experiments/calibration/gf07/workloads/w1_dense_tp_decode_tp8_16mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf07/topologies/crossbar8_gf07_rate100_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_rate100_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_leo20_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_rate50_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_leo10_l200_v1.yaml

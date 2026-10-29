@@ -1,0 +1,47 @@
+# Calibration-ladder A12 sweep: where does the L0
+# single-port crossbar identity sit relative to CAL-A12 (NCCL GitHub
+# issue #1054 — NCCL's internal NVLink bandwidth model on an 8-GPU
+# A100 server: totalBw 240 GB/s = 12 links x 20 GB/s/link vs the
+# physical 12 x 25 = 300 GB/s; maintainer: the 20/25 = 4/5 = ~80%
+# derating IS the app-level figure, cause NVLink packet overhead)?
+#
+# CAL-A12 is a DERATING anchor, not a time series: per
+# docs/calibration/CALIBRATION_PLAN.md §1.1 it CANNOT calibrate O-CCT
+# directly — "it calibrates the bridge: the derating between
+# physical-BW-based L0 predictions and what an NCCL-driven measurement
+# (CAL-A3/A6) can express. Mandatory normalization whenever spec
+# ceilings (CAL-A1/A2/A7) are compared with measured series." This
+# stage works the anchor itself: the 0.8 already used by stages A2
+# (720=0.8x900), A6 (320=0.8x400), A7 (358.4=0.8x448) is executed here
+# on the anchor's OWN fabric and rank count, at AGGREGATE granularity
+# (per-GPU 12-link totals).
+#
+# Swept B (A-L0X-BW): 300 = physical point (12 x 25; nvidia-smi total;
+# the BASELINE, so delta columns read as placement vs the physical
+# ceiling); 240 = the NCCL topo-model point (the issue's system->totalBw;
+# the exact 4/5 bridge); 192 = 0.8^2 x 300 (double-application hazard
+# bracket — never a bridge value; quantifies the misreading the verified
+# maintainer reply forecloses: NCCL's 20 GB/s/link IS the ~80% figure,
+# one derating, not two composed). L fixed at the A-L0X-LAT registry
+# point 200 ns. Nothing is tuned toward any anchor output.
+#
+# Payload grid: the SAME 12-size ladder as the A7 record (8*2^k,
+# k = 10,12,14,16,18,20,22,24,25,26,28,30; 8 KiB -> 8 GiB; r=8 divides
+# every size so A-L0X-DIV never rejects) — reused verbatim so A7/A12
+# rows are directly comparable at equal (r, M).
+sweep: cal_a12_aggregate_v1
+workload: experiments/calibration/a12/workloads/w1_dense_tp_decode_tp8_512mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a12/topologies/crossbar8_a12_physical300_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a12/topologies/crossbar8_a12_hazard192_v1.yaml
+    - experiments/calibration/a12/topologies/crossbar8_a12_nccl240_v1.yaml
+    - experiments/calibration/a12/topologies/crossbar8_a12_physical300_v1.yaml

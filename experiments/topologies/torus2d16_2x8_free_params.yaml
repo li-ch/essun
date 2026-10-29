@@ -1,0 +1,31 @@
+# Transport-agnostic analytical topology: 2D torus (ring x ring) of 16 ranks
+# as a 2 x 8 grid. Atlas cell 16r-torus (design-space atlas ladder, G2 /
+# decision D-025) — the skewed member of the FIRST rank class with TWO
+# declared torus factorizations (2x8 and 4x4; see
+# torus2d16_4x4_free_params.yaml and the skip record for 1x16/16x1).
+#
+# Same shape convention and the SAME free parameters as
+# torus2d4_free_params.yaml / torus2d_8_free_params.yaml and
+# ring16_free_params.yaml (B = 64 bytes/ns, L = 200 ns) so every atlas cell
+# compares under shared free parameters (the atlas fairness rule). Values are
+# explicit FREE PARAMETERS (A-L0T-BW, A-L0T-LAT) and the sequential-dimension,
+# uniform-link, and shape models are MODELING ASSUMPTIONS (A-L0T-SEQ,
+# A-L0T-UNIF, A-L0T-SHAPE) — not standard-derived, not measured. See
+# experiments/vertical_slice/assumptions_l0.yaml.
+topology_id: torus2d16_2x8_free_v1
+topology_class: torus2d_ring_x_ring
+ranks: 16
+grid:
+  dim1_ranks: 2
+  dim2_ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  Two wrapped dimensions; dimension-d rings connect ranks that agree on the
+  other dimension's coordinate (8 rings of 2, then 2 rings of 8). The grid
+  shape is a free design-space parameter; the identity is symmetric in
+  dim1 x dim2 (the 8x2 transpose is the same identity). Dimensions execute
+  sequentially over the full message, so each dimension's links are used
+  exclusively (no cross-dimension contention). Both dimensions share B and
+  L. No congestion, no credits, no packetization — L0 transport model only.

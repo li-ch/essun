@@ -1,0 +1,19 @@
+# W1 Dense TP Decode — tp_size 8 (the CAL-A7 anchor's own rank count: one
+# MI300X baseboard domain) at the 512 MiB payload 536870912 B = 8*2^26:
+# a bandwidth-bound member of this stage's 12-size ladder (8 KiB -> 8
+# GiB, every size 8*2^k so r=8 divides every size and the A-L0-DIV /
+# A-L0X-DIV / A-L0D-DIV input gates all ACCEPT the exact ladder with no
+# bracketing — the same structural contrast with stage A3's r=72 that
+# stage A4 recorded for r=4/16). No measured MI300X series exists to
+# neighbor (CAL-A7 is a spec), so the anchor-point size is declared as
+# the ladder's clearly bandwidth-bound middle (at this size the latency
+# term is ~0.02% of CCT in all three executed identities). Same workload
+# shape as every other W1 file (2 layers x 3 decode steps = 6 AllReduce
+# ops per config). Nothing here is measured or standard-normative;
+# integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-a7
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 536870912   # 8*2^26 (512 MiB); free parameter A-W1-SIZE

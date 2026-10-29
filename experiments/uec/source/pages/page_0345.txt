@@ -1,0 +1,39 @@
+ 345 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+payload 32 Specific to pds.nack_code 
+ 
+3.5.10.13 NACK_CCX 
+The header format for a NACK_CCX packet is shown in Figure 3-76. The header fields are described in 
+Table 3-50. Similar to ACK_CCX described in Section 3.5.10.8, NACK_CCX provides flexibility to enable 
+evolution of congestion management schemes in the future. 
+ 
+Table 3-50 - Header Fields for NACK_CCX 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+First 12 bytes 96 Identical to PDS NACK header but with pds.type set 
+to NACK_CCX 
+nccx_type 4 Encoding identifying contents of 
+pds.nack_ccx_state 
+• Refer to Section 3.5.11.12. 
+nack_ccx_state 124 Congestion control state generated at the 
+destination and carried to the source; content 
+defined by pds.type and pds.nccx_type fields. The 
+pds.nack_ccx_state field is defined for future 
+extensibility. 
+ 
+3.5.10.14  UUD Request  
+The PDS UUD Request Header, shown in Figure 3-77, uses a compact 4-byte format. The header fields 
+are described in Table 3-51. 
+ 
+Figure 3-76 - NACK_CCX Header Format 

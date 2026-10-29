@@ -1,0 +1,31 @@
+# Calibration-ladder GF-10 latency row: PCIe REMOTE ACCESS — crossbar
+# r=8, B = 25 B/ns (the GF-10 carrier), L = 13000 ns.
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# remote access over PCIe at "~13 µs". The HIGHEST of the anchor's
+# measured app-level latencies (the non-NVLink transport of the study) —
+# 6.5x ABOVE the A-L0X-LAT declared free-range upper 2000 ns, 65x the
+# registry point (recorded; the range is untouched: app-level quantity
+# class — bound, not equality). DOMAIN NOTE: PCIe is the host-attach
+# transport, not a GPU scale-up fabric — this row is executed under the
+# same labeled-proxy discipline as the scale-out rows of CAL-A11/GF-07
+# (placement context on the axis, never a scale-up prediction); its
+# ratio against the NVLink row (13000/9000 = 13/9) is the anchor's own
+# transport-class spread measurement.
+topology_id: crossbar8_gf10_b25_l13000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 13000
+notes: >
+  Single non-blocking switch-stage abstraction: uniform per-pair latency
+  L = 13000 ns (GF-10's staged PCIe remote-access measurement, ~13 µs,
+  app-level) at the measured carrier B = 25 B/ns, charged once per phase
+  by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). Placement row on
+  the measured latency axis: the top of the anchor's measured range,
+  13/9 above the NVLink direct-pair point (the transport-class spread),
+  6.5x the declared free-range upper (bound not equality — app-level
+  quantity class). Labeled proxy: PCIe is not a GPU scale-up fabric.
+  Value is an anchor measurement, never our measurement.

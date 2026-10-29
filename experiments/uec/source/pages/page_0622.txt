@@ -1,0 +1,40 @@
+ 622 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+pkt → minABW = min(𝑖, 𝑝𝑘𝑡 → 𝑚𝑖𝑛𝐴𝐵𝑊) 
+All network devices in a CSIG domain SHOULD be configured with the same value for t and the same 
+quantization function(s)—for each of the compact and/or wide CSIG tag formats they support—for use 
+with the min(ABW) signal type. Undesirable behavior may result if measurement intervals t differ across 
+devices. 
+4.2.9.1.2 Load Accounting 
+UE-compliant switches MUST support a mode of operation in which they exclude MAC-generated 
+frames in per-port transmit load accounting. min(ABW) measurements are intended to include only data 
+frames subject to congestion control by an originating FEP. Other MAC-generated frames (e.g., PAUSE, 
+LLR, CBFC, and PFC frames) SHOULD NOT be included in per-port transmit load accounting. Switches 
+MAY support other variations of transmit load accounting outside the scope of this specification. 
+4.2.9.1.3 UET Congestion Control Use Cases 
+A potential use case for the min(ABW) signal in UE congestion control concerns improving the 
+effectiveness of multi-path load balancing. Both the NSCC and RCCC congestion control algorithms 
+incorporate multi-path load balancing, whereby a sending FEP selects and writes an entropy value (EV) 
+in each packet it sends, and switches include this EV in the input to the hash functions they use for 
+ECMP path selection. Distinct flows may obliviously select EVs that direct their traffic to collide at the 
+same output port of a switch. When other uncongested paths are available, such flow collisions cause 
+otherwise avoidable congestion at that port’s queue. 
+Current proposals for multi-path load balancing in UET, such as REPS, use the presence or absence of 
+ECN marks on returning transport ACKs as an indication of whether a packet encountered congestion 
+from a flow collision when sent with a particular EV. By efficiently informing sending FEPs of the 
+minimum available bandwidth along a packet’s path, the min(ABW) CSIG signal may allow sending FEPs 
+to perform a finer-grained comparison of the merits of the paths selected by distinct EVs, such that a 
+sending FEP may be able not only to avoid EVs that have experienced congestion, but also to select an 
+EV preferentially for a path that offers comparatively more available bandwidth than other EVs’ paths. 
+4.2.9.2 min(ABW/C) 
+The min(ABW/C) signal is similar to the min(ABW) signal, but its signal value is normalized by the output 
+port capacity C in bytes per second. Both the unquantized and quantized normalized available 
+bandwidth values are represented as integers. 
+In fabrics with heterogeneous port speeds, comparison of absolute available bandwidths measured at 
+ports of different speeds does not reliably reveal which port is operating at a greater fraction of its 
+capacity. Normalizing by capacity reliably identifies the port operating at the greatest fraction of its 
+capacity, even when comparing across ports of different speeds. 
+4.2.9.2.1 Available Bandwidth Computation 
+The min(ABW/C) signal uses a simple, time window-based computation of normalized available 
+bandwidth, represented as an integer value between 0 and 100. 

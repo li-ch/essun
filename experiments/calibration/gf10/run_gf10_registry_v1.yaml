@@ -1,0 +1,46 @@
+# Calibration-ladder GF-10 registry-twin RUN (gap-fill
+# anchor): the L0 single-stage crossbar identity at the REGISTRY DEFAULTS
+# — r=8, B=64 B/ns, L=200 ns (A-L0X-BW / A-L0X-LAT; no GF-10 provenance
+# on either value), payload 2097152 B = 2 MiB — the SAME payload as the
+# anchor-point run (run_gf10_anchor_p2p9us_v1.yaml), isolating the
+# model-at-defaults placement against the measured point: exact CCT
+# 57744 ns (numerically IDENTICAL to the GF-05 and GF-09 registry twins
+# at the same free-parameter point — the intended cross-stage
+# determinism tie-in), ratio vs the anchor point exactly 257501/90225
+# (~2.8534), delta exactly 2676416/25 = 107056.64 ns.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF10-REG-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf10/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf10/topologies/crossbar8_gf10_b64_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf10/profiles/implementation_profile_l0_crossbar_cal_gf10_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf10_b64_l200_v1 (one non-blocking switch stage; r=8; B=64 B/ns and L=200 ns = the free registry defaults — placement reference, no GF-10 provenance; the registry L sits exactly 45x below the anchor's measured 9000 ns point, the registry B exactly 64/25 = 2.56x above the measured per-link rate)
+  workload: w1_dense_tp_decode tp8, payload 2^21 (2 MiB, a standard-ladder member and the GF-05/GF-09 run-pair payload — the cross-stage comparability point)
+  implementation: analytical L0 crossbar identity; registry placement reference for the GF-10 measured-point comparison (PROPOSED, review required; no anchor-time comparison)
+evidence_level_requested: E0

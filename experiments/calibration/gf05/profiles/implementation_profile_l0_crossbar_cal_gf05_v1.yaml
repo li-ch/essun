@@ -1,0 +1,77 @@
+# Implementation profile for the calibration-ladder GF-05 runs/sweeps
+# on the analytical L0 crossbar backend (gap-fill
+# anchor GF-05, SMaRTT+REPS NSDI 2025 — the congestion control UEC
+# standardized, evaluated in uet-htsim + hardware).
+implementation_profile_id: analytical_l0_crossbar_cal_gf05_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. ROLE per the gap-fill
+  doc §GF-05: GF-05 is the R1+R3 row — the UEC-standardized congestion
+  behavior (SMaRTT = the basis of the UEC NSCC specification; REPS the
+  UET 1.0 reference load-balancing mechanism) with quantified sim+HW
+  deltas. The crossbar rows execute (a) the anchor's OWN simulator
+  config on the free axes (800 Gbps => B = 100 B/ns per direction under
+  the declared reading; per-hop latency 600 link + 400 switch => L =
+  1000 ns — anchor-able sim-config provenance for the pinned uet-htsim
+  third-backend family), (b) its oversubscription series as structural
+  effective-bandwidth displacements (2:1 => 50, 4:1 => 25, 8:1 => 12.5),
+  (c) its HW RoCE envelope factor (x5 => 20), all at r=8 (free smoke
+  default) and r=1,024 (the anchor's stated node count; the non-blocking
+  ceiling abstraction of the paper's own 1,024-node non-blocking fat
+  tree). CONGESTION CONTROL ITSELF — the anchor's subject — is OUT of
+  this input space by the backend's own capability declaration
+  ("congestion" among explicitly_unsupported) and by the loader surface
+  (no CC / ECMP / queueing / MTU / window / fairness key exists); the
+  L0 per-flow spread is exactly 0 by construction. The stage's central
+  expressiveness finding, recorded in results/calibration/.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) and L (link.pair_latency_ns) fixed by
+  anchor/registry arithmetic BEFORE any stage output was read. Envelope
+  sweep (r=8, L=1000 fixed at the anchor's per-hop decomposition):
+  B in {100 = THE ANCHOR POINT (800 Gbps / 8, declared per-direction
+  reading; flagged alternative 50 recorded), 64 = A-L0X-BW registry
+  point (asymptotic CCT ratio exactly 25/16), 50 = 2:1 oversubscription
+  displacement (also the alt line reading and the alt "50%" reading —
+  triple coincidence recorded), 25 = 4:1, 20 = the HW permutation RoCE
+  "3-5x slower" upper factor applied to the sim point (dimensionless
+  transfer, declared), 12.5 = 8:1 oversubscription (exact 25/2 — the
+  fairness quote's topology class)}. Latency sweep (r=8, B=100 fixed):
+  L in {200 = A-L0X-LAT registry point, 400 = the anchor's switch
+  traversal component, 600 = its link component, 1000 = their sum (THE
+  ANCHOR per-hop point), 6000 = the 6-hop one-way path reading,
+  12000 = base RTT (84 us / 7, the CC reaction timescale reading)}.
+  Non-representable envelope displacements recorded NOT executed:
+  200/3 (the "up to 50%" quote, primary 3/2 reading), 250/3 (the "20%
+  better" quote), 5000/53 (the "6% behind ideal" quote), 100/3 and
+  50/3 (the RoCE x3/x6 factors), 2000/33 (the 65% fairness spread) —
+  exact-fraction arithmetic in the stage record. Scale sweep: r=1,024
+  at B=100 (non-blocking ceiling), B=12.5 (the fairness-quote 8:1
+  configuration), and the ring at B=100 (schedule contrast) on the
+  18-size ladder 1024*2^k (1 KiB -> 128 MiB, bracketing the ring regime
+  boundary M* = L*B*r = 102,400,000 B). Message sizes for the r=8
+  sweeps: the same 12-size ladder 8*2^k (8 KiB - 8 GiB) as stages
+  A1/A2/A7/A9/A11 (includes the anchor's 2 MiB flow size). NO parameter
+  was tuned toward any anchor output — the anchor stages no (size ->
+  time) series in any CCT-comparable metric class (FCT tables
+  unstaged); the sweeps measure WHERE the identities sit relative to
+  the anchor's sim config, oversubscription structure, envelope
+  magnitudes, and stated scale.
+measurement_source: >
+  GF-05 staged numbers (SMaRTT and REPS: Near-Optimal Congestion Control
+  and Load Balancing for Data Centers, arXiv:2404.01630, NSDI 2025 per
+  paper text; docs/calibration/anchors_gapfill.md §GF-05; numbers AS
+  STAGED, not re-fetched; gap-fill anchor, NOT yet an integrated anchor row —
+  the owner integrates accepted rows; confidence H — numbers extracted
+  from the paper HTML). CAVEAT CLASSES carried by this profile:
+  peer-reviewed SIMULATION + a small DPDK hardware testbed, NOT UEC
+  silicon; the outcome metrics are FCTs, NOT collective CCTs — the
+  FCT->CCT regime bridge is declared inexpressible at L0 (no per-flow
+  observable) and NO comparison against any anchor FCT is attempted;
+  compared as PROPOSED evidence in results/calibration/; not our
+  testbed, no E3/E4 language.

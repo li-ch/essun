@@ -1,0 +1,41 @@
+# Calibration-ladder A9 topology: unidirectional ring of 8 ranks at per-
+# hop latency 80 ns — the CAL-A9 one-stage budget sum (10 ns link + 70 ns
+# switch stage, per the plan's stated sum) charged PER RING HOP. This is
+# the stage's LATENCY-CHAIN CONTRAST row: on a switched fabric a multi-
+# hop schedule pays the switch stage once per traversal, so the ring
+# identity charges the budget sum 2*(r-1) = 14 times per AllReduce
+# (reduce-scatter + allgather, r-1 hops each) while the crossbar charges
+# it exactly 2 (once per phase, the pipelined-injection convention). At
+# equal B the difference is exactly 12*L = 960 ns at EVERY payload size —
+# an identity of the two backends, verified against executed artifacts in
+# the stage's calibration record. This quantifies how the SAME latency
+# budget amplifies (r-1)-fold under a multi-hop schedule on the switch
+# fabric — the latency-axis analog of the A7 record's bandwidth-side 7x
+# bracket.
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0-LAT for the ring), never
+# tuned; 80 ns is the plan-stated CAL-A9 one-stage sum. The ring here is
+# the ring ALGORITHM embedded in the switched fabric (every hop one
+# link+switch traversal) — the anchor analyzes memory-pool fabrics, not
+# collective schedules, so no schedule is claimed to be THE CXL
+# behavior; the two identities bracket the chain multiplicities 2..14.
+# B = 64 B/ns is the A-L0-BW registry point (anchor-free axis: CAL-A9
+# stages no bandwidth); r = 8 the free smoke-default rank count (a power
+# of two; divides every ladder size).
+topology_id: ring8_a9_hop80_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 80
+notes: >
+  One send and one receive direction per neighbor, modeled
+  independently; full-duplex uniform per-direction links (A-L0-FD). No
+  congestion, no credits, no packetization — L0 transport model only.
+  Ring hops are single-switch-stage traversals of a CAL-A9-class
+  fabric: per-hop latency = the plan-stated one-stage budget sum
+  (10 ns link + >=~70 ns switch). Provenance: L = 80 ns from CAL-A9's
+  staged numbers via the calibration plan's stated sum (anchor PROPOSED
+  in the anchor registry; design estimate, one-sided
+  floor). B = 64 B/ns free A-L0-BW registry point. Values are anchor
+  quotes / registry defaults, never our measurements.

@@ -1,0 +1,27 @@
+ 604 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 4-2 - Example of CSIG Endpoint and Fabric Processing 
+4.2.3 Use Cases 
+The collection of network telemetry with CSIG benefits multiple UE-relevant use cases.  
+4.2.3.1 End-to-End Congestion Control 
+When a sender’s transport protocol includes CSIG tags on its packets, the returning information about 
+the congestion state at switches along each packet’s path can be used to improve congestion control’s 
+performance. This information can include the least available bandwidth at any link along a packet’s 
+path (useful for promptly and precisely claiming newly released link capacity in NSCC and RCCC; see 
+sections 4.2.9.1.3 and 4.2.9.2.3) and the greatest queueing delay at any queue along a packet’s path 
+(useful for improving the bandwidth fairness of delay-based congestion control schemes, such as NSCC, 
+and for responding to oversubscription in RCCC; see Section 4.2.9.3.4). 
+4.2.3.2 Multi-Path Load Balancing 
+CSIG signals describing the least available bandwidth at any link along a packet’s path are also useful for 
+choosing higher-spare-capacity paths in multi-path load balancing, as applied in NSCC and RCCC (see 
+sections 4.2.9.1.3 and 4.2.9.2.3). 
+4.2.3.3 Telemetry 
+The signal collected in a CSIG tag provides useful telemetry information describing the congestion state 
+of a path through the fabric.  
+These signals can help developers understand the extent to which their applications’ packets encounter 
+congestion (e.g., service delay, normalized queue depth) or available link capacity. This insight can be 
+used to inform application design changes or debugging efforts. 
+CSIG tags can assist in localizing congestion points within the network fabric and evaluating how 
+effectively the fabric’s provisioning meets workload demands. 

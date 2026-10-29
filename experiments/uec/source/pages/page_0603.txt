@@ -1,0 +1,32 @@
+ 603 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Each switch along the path traversed by a CSIG-tagged packet identifies the signal type encoded in the 
+tag and updates the associated value within the tag using a simple aggregation function. The switch can 
+also write locator metadata within the tag to indicate properties of the network hop that updated the 
+signal. 
+CSIG supports three signal types in its base profile: 
+• The max(Delay) signal finds the delay bottleneck along a path. When each switch along a CSIG-
+tagged packet’s path receives the packet, it conditionally updates the queueing delay signal 
+value stored in the CSIG tag using the maximum function, where the switch overwrites the delay 
+signal value in the CSIG tag with its own local delay value if it exceeds that in the CSIG tag. 
+• The min(ABW) signal finds the available bandwidth bottleneck along a path. When each switch 
+along a CSIG-tagged packet’s path receives the packet, it conditionally updates the available 
+bandwidth signal value stored in the CSIG tag using the minimum function, where the switch 
+overwrites the available bandwidth value in the CSIG tag with its own local available bandwidth 
+value from the egress port if it is less than that in the CSIG tag. 
+• The min(ABW/C) signal does the same, but for each switch’s relative available bandwidth, 
+normalized by output port capacity. 
+(Full definitions of these CSIG signal types may be found in Section 4.2.4.1.2.) 
+Figure 4-2 illustrates through a simple example how CSIG telemetry functions on endpoints and in the 
+network fabric. It depicts a high-level schematic of a CSIG-tagged packet, showing both the CSIG tag 
+carried on a packet’s forward path and the reflection of the signal from the destination endpoint back to 
+the source endpoint in an layer 4 transport header. (Examples of the placement of the CSIG tag in other 
+layer 2 frame types may be found in Figure 4-8 and Figure 4-9.) It further shows the local signal value at 
+each hop for three signal types—max(Delay), min(ABW), and min(ABW/C)—and the distinct bottleneck 
+locations for each of these signal types along the path. Upon receiving a CSIG-tagged packet, each switch 
+along the path conditionally updates the signal value in the CSIG tag according to the signal type 
+specified in the CSIG tag, the min() or max() function specified in the signal type’s definition (and name), 
+and the local value for that signal type at that switch. 
+This specification defines the CSIG telemetry method in an application-agnostic fashion. It further 
+discusses CSIG’s relevance to multiple use cases relevant in the UE setting. 

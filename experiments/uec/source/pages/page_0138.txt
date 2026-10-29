@@ -1,0 +1,51 @@
+ 138 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Object Description 
+QP Receive Queue (RQ) Receive queues are command queues belonging to queue pairs. Receive commands 
+post application buffers to receive incoming data. 
+ 
+Receive queues are configured as part of queue pair setup. An RQ is accessed 
+indirectly through the QP when submitting receive work requests. 
+QP Send Queue (SQ) A send queue is a command queue belonging to queue pairs. It represents a 
+command queue for operations that initiate a network operation. A send queue may 
+also be used to submit local commands that update hardware resources, such as 
+updating memory regions. Network operations submitted through the send queue 
+include message sends, RDMA reads, RDMA writes, and atomic operations, among 
+others. 
+ 
+Send queues are configured as part of queue pair setup. An SQ is accessed indirectly 
+through the QP when submitting send work requests. 
+QP Type QP type identifies the communication semantic between two QPs. Supported UET 
+QP types include unreliable datagram (UD) and reliable unconnected (RD) 
+communication (2.3.5.1.1). 
+Completion Queue (CQ) A completion queue is designed to represent a hardware queue where the status of 
+asynchronous operations is reported. Each operation that was triggered by a 
+signaled work request results in a single entry written to the completion queue.  
+Address Handle (AH) An address handle identifies the link and/or network layer address to a network port 
+or multicast group. 
+ 
+Address handle attributes identify the addressing for headers that reside under the 
+transport header(s). 
+Global Identifier (GID) InfiniBand defines a GID as an optional network-layer or multicast address. Because 
+GIDs are large enough to store an IPv6 address, their use has evolved to support 
+other transports. A GID identifies a network port, with the most well-known GIDs 
+being IPv4 and IPv6 addresses. 
+GID Type The GID type determines the specific type of GID address being referenced. 
+Additionally, it identifies the set of addressing headers underneath the transport 
+header. 
+ 
+An RDMA transport protocol may be layered over different networking stacks. It 
+may layer directly over a link layer (like InfiniBand or Ethernet), over the network 
+layer (such as IP), or over another transport layer (such as TCP or UDP). The GID type 
+conveys how the RDMA transport stack is constructed, as well as how the GID 
+address is interpreted. 
+GID Index / GID Entry RDMA addresses are securely managed to ensure that unprivileged applications do 
+not inject arbitrary source addresses into the network. Transport addresses are 
+injected by the queue pair. Network addresses are selected from a set of addresses 
+stored in a source addressing table. 
+ 
+The source addressing table is referred to as a GID table. The GID index identifies an 
+entry into that table. The GID table exposed to a user space process contains only 
+those addresses usable by that process. Queue pairs are frequently assigned a 
+specific GID index to use for their source network address when initially configured.  

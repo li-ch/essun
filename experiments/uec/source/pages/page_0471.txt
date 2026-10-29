@@ -1,0 +1,37 @@
+ 471 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+and in Section 4.2.4.1.6 for the wide tag format. The min value of each bucket is used to represent the 
+resulting value of the de-quantization process. For the max(Delay) signal, the value conversion must 
+follow the precision requirements discussed in Section 3.6.13.3. 
+If no reflection header is present, the NULL value indicator is passed to the functions using this input. 
+3.6.11 Congestion Control Modes 
+In this specification, three CC modes are defined: 
+1. Network-signal Congestion Control (NSCC): NSCC uses a combination of ECN and network 
+latency to detect and respond to congestion by adapting a congestion window at the source and 
+is clocked by state in the ACK pds.ack_cc_state field when pds.cc_type = CC_NSCC. 
+2. Receiver-credit Congestion Control (RCCC): RCCC uses explicit Credit CPs from the destination 
+to control the sending rate of all sources to that destination. 
+3. Transport Flow Control (TFC): TFC uses credit sent from the destination to control sources with 
+the aim of avoiding buffer overflow at the destination. TFC is not, by itself, a congestion control 
+mechanism, so the expectation is for it be used across only a single link where congestion is 
+managed internally to the ingress FEP. If it is used across multiple network hops, it should be 
+used in conjunction with additional mechanisms to avoid or manage congestion at intermediate 
+switches. TFC credit MAY be sent in ACKs using the pds.ack_cc_state field when pds.cc_type = 
+CC_CREDIT or in the pds.payload.credit field of Credit CPs. 
+For ROD or RUD CCCs, either NSCC or RCCC may be used by themselves, or both can be used together. 
+Generally, it is RECOMMENDED that all CCCs in a cluster use the same combination for NSCC and RCCC. 
+3.6.12 Overall CCC Pseudocode 
+The CCC algorithm is divided into a common part that is independent of which CC algorithms are 
+selected, and specific parts for NSCC and RCCC. This section specifies the common part that handles 
+generic state and load balancingI. 
+3.6.12.1 Sender Algorithm 
+The pseudocode for the common parts of the NSCC and RCCC corresponding to the abstract API at the 
+source is shown in Section 3.6.12.3. 
+General Configuration State 
+nscc: TRUE if NSCC is enabled 
+rccc: TRUE if RCCC is enabled 
+disable_quick_adapt: TRUE if quick adapt has been disabled 
+ 
+It is RECOMMENDED to enable quick adapt unless RCCC is enabled. 
+NSCC and RCCC general configuration states are listed in sections 3.6.13.3, 3.6.14.2, and 3.6.14.5. 

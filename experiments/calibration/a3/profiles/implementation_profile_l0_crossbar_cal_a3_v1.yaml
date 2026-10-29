@@ -1,0 +1,35 @@
+# Implementation profile for the calibration-ladder A3 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A3 — the
+# ladder's first MEASURED O-CCT target).
+implementation_profile_id: analytical_l0_crossbar_cal_a3_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); modeling
+  assumptions A-L0X-PORT / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) swept over {448, 720, 900} bytes/ns — the
+  SAME anchor-informed span as stage A2 (plan §2.1 A-L0X-BW, NARROW scale
+  [448, 900]): 448 = CAL-A7-derived MI300X-class lower endpoint, 720 =
+  CAL-A2 900 x CAL-A12 ~80% software derating (spec-to-measured bridge),
+  900 = the CAL-A2 per-GPU per-direction ceiling (stage A2's normalization
+  line; this stage's anchor-point row). Message sizes are CAL-A3's own
+  2-32 GiB regime, executed at the 72-divisible floor/ceil brackets
+  (A-L0X-DIV rejects the exact powers of two at r=72; relative bracket
+  offset <= 2.7e-8), with the exact-size identity evaluation recorded in
+  the calibration record. L fixed at the registry point 200 ns. NO
+  parameter was tuned toward any CAL-A3 measurement: the anchor-implied
+  effective-B per size is a RECORDED DIAGNOSTIC (placement), never a
+  topology value.
+measurement_source: >
+  CAL-A3 staged series (Crusoe Cloud GB200 NVL72 all_reduce_perf, NCCL
+  2.28.3 / CUDA 12.9.1 / driver 580.82.07, 72 GPUs, 2-32 GiB per rank,
+  out-of-place; docs/calibration/anchors_staging.md §A3; anchor PROPOSED
+  in the anchor registry, confidence M-H) — external published measurement,
+  compared CCT-vs-CCT as PROPOSED evidence in results/calibration/; not
+  our testbed, no E3/E4 language.

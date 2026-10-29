@@ -1,0 +1,39 @@
+ 492 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+It is RECOMMENDED to enable NSCC to complement RCCC. NSCC depends on ECN to trigger a 
+congestion window reduction, so disabling ECN on the last hop means that NSCC will be relatively 
+insensitive to incast, leaving RCCC to more effectively manage the incast, while NSCC can still respond to 
+congestion due to oversubscription. 
+When enabling NSCC is not possible or desirable, the RCCC rate control algorithm described in Section 
+3.6.14.7.1 MAY be used to handle oversubscribed networks. 
+With RCCC, the source notifies the destination of its backlog so the latter has an accurate view of the 
+demand of the sources. On receipt of any trimmed or data packet, the destination knows the source’s 
+demand and can schedule credit. 
+RCCC benefits from packet trimming in switches to ensure that even under incast, the destination has an 
+accurate view of the demand of the sources. On receipt of a trimmed packet, the destination knows the 
+source’s demand and can schedule credit. 
+To ensure that the destination knows how to divide its credit flow between sources so that credit is not 
+wasted unnecessarily, the source sets the pds.req_cc_state.credit_target field in the PDS Request 
+header. When work is posted to a PDC, this causes the CCC’s backlog of work to be increased, and this in 
+turn increases the pds.req_cc_state.credit_target. The pds.req_cc_state.credit_target field is 
+cumulative; when pds.req_cc_state.credit_target is increased, this indicates to the destination that the 
+source requires the amount of extra credit indicated by how much pds.req_cc_state.credit_target was 
+increased by. This ensures that pds.req_cc_state.credit_target is resilient to the reordering of data 
+packets. 
+3.6.14.1 CCC Identifiers 
+The CCC Identifier, CCC_ID, identifies a specific instance of RCCC or TFC. The CCC_ID is assigned by the 
+source and carried in PDS Request packets in the pds.req_cc_state.ccc_id field. When RCCC or TFC is 
+enabled, the pds.type field MUST be RUD_CC_REQ or ROD_CC_REQ. When these types are used, the 
+pds.req_cc_state field is present and it carries pds.req_cc_state.ccc_id and 
+pds.req_cc_state.credit_target fields, as shown in Section 3.6.9.1. 
+When there is a PDS Request to send by an initiator of a PDC, the PDS determines if there is an existing 
+PDC and/or CCC: 
+• A lookup is done on PDC mapping tuple as defined in the PDS. 
+o If there is an existing, available PDC, then the associated CCCs (one for forward direction and 
+one for the reverse direction) are used. 
+▪ AI Base implementations do not require the reverse direction CCC. 
+o If there is an existing PDC but the implementation chooses to create another PDC to the 
+same destination FEP, the CCCs from the existing PDC are used. 
+• If there is not an existing PDC then: 
+o If the PDC is RUD, a lookup is done on {destination FEP address, traffic class}. 

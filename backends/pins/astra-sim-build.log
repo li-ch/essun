@@ -1,0 +1,49 @@
+=== ASTRA-sim build attempt log (2026-10-26T10:04:07Z) ===
+Pinned commit: 4ce9ecfe746a3ee5fe47559a11d91644d641fa7f
+Host: Darwin lideMacBook-Pro.local 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:06:40 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6050 arm64
+Toolchain: Apple clang version 21.0.0 (clang-2100.3.34.2)
+  make: GNU Make 3.81
+  cmake: MISSING (cmake not found)
+  protoc: MISSING (protoc not found)
+  boost: not found in /opt/homebrew/include or /usr/local/include
+  nproc: MISSING (macOS; script uses it to size parallel build)
+
+=== Attempt 1: documented entry point build/astra_analytical/build.sh ===
+$ cd build/astra_analytical && ./build.sh 2>&1
+./build.sh: line 32: nproc: command not found
+EXIT_CODE=127
+
+=== Attempt 2: direct cmake configure into build-local/ (per P1 prompt) ===
+$ cmake .. -B ../../build-local 2>&1   [from build/astra_analytical]
+zsh:20: command not found: cmake
+EXIT_CODE=127
+
+=== Note: submodules intentionally NOT initialized for this attempt ===
+git submodule status:
+-0e3cd40c569f0a4cacb6d961bb56be53407abd2f extern/graph_frontend/chakra
+-7e73566ce7bd3617cd4b14a2e3a19a2a30b524c7 extern/helper/fmt
+-63f0875000bf90867aa7c76a831bd834cb7d4b5e extern/helper/spdlog
+-e8c5119f8d5a690b955e25c37a74359f23ac64cc extern/network_backend/analytical
+-67cbbbb1cccdbddc400803414127d044ecd55290 extern/network_backend/csg-htsim
+-f764bed27630ee45368c03e22e4f952b69fab30a extern/network_backend/ns-3
+-641cce854d256bfd288b1de9607b6757313363f9 extern/remote_memory_backend/analytical
+
+Rationale: first hard blockers are host-side (protoc, cmake). Submodule
+initialization cannot remove them: build.sh compiles the Chakra protobuf
+schema with protoc before cmake runs, and cmake>=3.22 + libprotobuf +
+boost are required at configure time (CMakeLists.txt:9,47; Dockerfile:21).
+
+=== Attempt 1b: same documented entry point with nproc shim (PATH override) ===
+Purpose: expose the next blocker past the nproc portability issue.
+$ mkdir -p /tmp/nproc_shim && printf '#!/bin/sh
+sysctl -n hw.ncpu
+' > /tmp/nproc_shim/nproc && chmod +x /tmp/nproc_shim/nproc
+$ PATH=/tmp/nproc_shim:$PATH ./build.sh 2>&1
+./build.sh: line 13: protoc: command not found
+EXIT_CODE=127
+
+=== Verdict input: three independent host-side blockers on this host ===
+1. nproc missing (macOS) — dies in setup() before any compilation
+2. protoc/libprotobuf missing — build.sh compiles Chakra et_def.proto first
+3. cmake >= 3.22 missing — no documented non-cmake alternative exists in-tree
+(plus: boost, and git submodules not initialized)

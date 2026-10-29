@@ -1,0 +1,52 @@
+ 134 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+In Linux implementations, the UET Control API MUST be implemented with Netlink messages. The 
+Netlink messages are all exchanged with the UET provider kernel driver using the new “UET” family. The 
+base set of encodings for the Netlink commands that represent each message are shown below. 
+enum uet_nl_cmd { 
+     UET_NL_CMD_JOB_ID = 1, 
+     UET_NL_CMD_ADDR_REQ, 
+     UET_NL_CMD_ADDR_RESP, 
+     UET_NL_CMD_REKEY, 
+     UET_NL_CMD_REKEY_REQ, 
+     __UET_NL_CMD_MAX 
+}; 
+ 
+For extensibility, Netlink does not represent messages as ‘C’ structures but uses a sequence of typed 
+attributes instead. The base set of attributes used to represent UET Netlink messages are shown below. 
+enum uet_nl_attr { 
+     UET_NL_ATTR_JOB_ID, 
+     UET_NL_ATTR_OS_PID, 
+     UET_NL_ATTR_SERVICE, 
+     UET_NL_ATTR_FLAGS, 
+     UET_NL_ATTR_FA, 
+     UET_NL_ATTR_UET_ADDR, 
+     UET_NL_ATTR_SEC_BINDINGS, 
+     UET_NL_ATTR_SEC_AN_SDI, 
+     UET_NL_ATTR_SEC_SSI, 
+     UET_NL_ATTR_SEC_KEY, 
+     __UET_NL_ATTR_MAX 
+}; 
+  
+static const struct nla_policy uet_policy[__UET_NL_ATTR_MAX] = {  
+     [UET_NL_ATTR_JOB_ID] = { .type = NLA_U32 }, 
+     [UET_NL_ATTR_OS_PID] = { .type = NLA_U32 }, 
+     [UET_NL_ATTR_SERVICE] = { .type = NLA_NUL_STRING,  
+                               .len = UET_MAX_SERVICE_NAME_CHARS }, 
+     [UET_NL_ATTR_FLAGS] = { .type = NLA_U8 }, 
+     [UET_NL_ATTR_FA] = NLA_POLICY_EXACT_LEN(sizeof(struct uet_fa)),  
+     [UET_NL_ATTR_UET_ADDR] = NLA_POLICY_EXACT_LEN(sizeof(struct uet_addr)),  
+     [UET_NL_ATTR_SEC_BINDINGS] = NLA_POLICY_EXACT_LEN( 
+sizeof(struct uet_sec_bindings)), 
+     [UET_NL_ATTR_SEC_AN_SDI] = { .type = NLA_U32 },  
+     [UET_NL_ATTR_SEC_SSI] = { .type = NLA_U32 }, 
+     [UET_NL_ATTR_SEC_KEY] = NLA_POLICY_EXACT_LEN(UET_SEC_MAX_KEY_OCTETS)  
+}; 
+ 
+2.2.12 References 
+[1] IETF RFC 2474, "Definition of the Differentiated Services Field (DS Field) in the IPv4 and IPv6 
+Headers," 1998. [Online]. Available: https://datatracker.ietf.org/doc/html/rfc2474. 
+[2] IETF RFC 3246, "An Expedited Forwarding PHB (Per-Hop Behavior)," 2002. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc3246. 
+ 

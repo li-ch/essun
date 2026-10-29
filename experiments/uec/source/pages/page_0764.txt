@@ -1,0 +1,24 @@
+ 764 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Impact Statement 
+This revision defines new optional enhancement updates to protocol functionality and associated 
+requirements while preserving full backward compatibility with previous versions. It introduces a new 
+Unified Local profile with mandatory requirements. Clarifications and editorial updates to existing 
+functionality are non‑substantive and do not alter protocol behavior, compliance, or interoperability. 
+Correction updates are normative and required for conforming implementations. 
+Document Version History 
+Version Date Description 
+1.0 06/11/2025 Initial version. 
+1.0.1 09/05/2025 Editorial clarifications and correction to the RCCC source 
+algorithm. 
+1.0.2 01/21/2026 Correction to CMS congestion control algorithms and other 
+editorial clarifications. 
+1.0.3 07/16/2026 A number of editorial clarifications, addition of 200 Gb/s 
+per lane signaling, a new Negotiation CP type, corrections 
+to UE PHY CtlOS corruption protection, UE Transport 
+handling of retransmission when pds.flags.syn=1 on PDC 
+close, specifying MP_Range less than 128 and corrections 
+to UE Link Layer to resolve CBFC/LLR race conditions. 
+1.1 10/12/2026 Major release with new functionality. 
+ 

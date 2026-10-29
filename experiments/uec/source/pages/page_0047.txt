@@ -1,0 +1,31 @@
+ 47 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+gRPC A high-performance open-source 
+framework for universal remote 
+procedure call (RPC). 
+Yet Another Next Generation 
+(YANG) 
+A data modeling language for the 
+definition of data sent over 
+network management protocols 
+such as the NETCONF and 
+RESTCONF. 
+ 
+1.2.3 Formatting 
+Figures are used to define protocol headers and protocol sequence exchanges. The conventions for 
+these figures are shown in Figure 1-2, Figure 1-3, and Figure 1-4. Wherever diagrams and figures 
+inadvertently contradict the textual description, the text always takes precedence. 
+1.2.3.1 Header Format Figures 
+Figure 1-2 is an example of a full-header stack as illustrated in other sections of the specification. These 
+full-header stacks do not show all the details of each header in each layer, but rather identify the 
+important fields needed for parsing the headers and finding the next layer of the stack. The layers of the 
+header stack are shown on the left and are differentiated by color. 
+Figure 1-3 is an example of an individual detailed header figure used in other parts of the specification. 
+Bytes are labeled across the top and down the left side. The least significant bit (LSB) of a byte is the first 
+bit on the left, and the most significant bit (MSB) of a byte is on the right. Header fields are labeled 
+below the byte labels at the top and to the right of the byte offset labels. Header field widths are based 
+ 
+Figure 1-2 - Example Full Header Format 
+ 

@@ -1,0 +1,25 @@
+ 574 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+is defined by rxMaxEpochLifetime. Parameters epochBasedRejection and rxMaxEpochLifetime MAY be 
+global parameters OR stored in SDKDB per SDI. 
+Mathematical operations on wrapping unsigned sequence numbers (integers) can be done by a variety 
+of methods, some of which are described in IETF RFC 1982 [48], which considers the wrap conditions. 
+The intent is to reject epochs lower (older) then the current epoch. 
+The following pseudo code summarizes the check using a wrap subtract function that implements the 
+wraparound sequence math from IETF RFC 1982 [48]: 
+if( epochBasedRejection == TRUE) &&  
+( wrapSubtract(SDI[pkt.tss.SDI].current_epoch – pkt.tss.tsc.epoch) >          
+rxMaxEpochLifetime){ 
+     drop packet and sdiXXInLatePkts[pkt.tss.SDI]++ 
+}    
+3.7.11 TSS over the UFH_32 Header 
+The primary goal for the Unified Local profile is to reduce the wire overhead and maintain 8-byte 
+alignment to facilitate efficient mapping at the Ethernet layer.   
+The regular TSS mode is supported when using the UFH_32 header. The regular TSS mode MUST be 
+supported if TSS is supported in the Unified Local profile.TSS Packet Processing 
+UET defines three types of encapsulations: 
+• Directly over IP using the IP header to identify the UET protocol. 
+• UDP encapsulation over IP, where the UDP port number of 4793 is used to identify the UET 
+protocol. 
+• Directly over UFH_32 where the EtherType 0xE790 is used to identify the UET. 

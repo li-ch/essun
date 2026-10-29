@@ -1,0 +1,39 @@
+ 106 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 2-16 - Criteria for RUDI Packet Delivery Mode with RMA Operations 
+Criteria for Use of RUDI PDC for RMA Operations 
+Libfabric endpoint is NOT configured for R/W message ordering 
+IDEMPOTENT_SAFE bit is 1 in memory region key format 
+Target supports use of RUDI packet delivery mode 
+As indicated by the fabric endpoint capabilities field of the destination UET address 
+ 
+Both user-supplied and provider-supplied memory keys MAY be marked as IDEMPOTENT_SAFE and/or 
+OPTIMIZED. A UET provider SHOULD honor the IDEMPOTENT_SAFE and OPTIMIZED bits in the 
+requested_key parameter of the fi_mr() APIs even when FI_MR_PROV_KEY is configured. If the user 
+attempts to bind a completion counter to a memory region marked as IDEMPOTENT_SAFE, a UET 
+provider MUST fail the bind operation. If an OPTIMIZED provider-supplied key is requested but cannot 
+be allocated, the provider SHOULD fall back to non-optimized operation. 
+Requirements for the scope of the memory keys are specified in Table 2-47. 
+Table 2-17 - Memory Key Scope Requirements 
+Memory Key Format Scope in Relative Addressing Mode Scope in Absolute Addressing Mode 
+Optimized {FA, JobID, PIDonFEP} {FA, PIDonFEP} 
+All Others {FA, JobID, PIDonFEP, Resource Index} {FA, PIDonFEP, Resource Index} 
+ 
+2.2.5.3.5 fi_endpoint() and fi_ep_bind() APIs 
+The fi_endpoint() API is used to open an active endpoint on the domain. Endpoints are transport-level 
+communication portals. The data transfer interfaces are associated with active endpoints, which 
+typically have transmit and receive queues. The fi_endpoint() API takes a fi_info structure as a 
+parameter. The fi_info parameter is typically the fi_info structure returned by the fi_getinfo() API. The 
+fi_info structure includes a source address field that is used as part of opening an active endpoint. The 
+source address field MAY be used to request assignment of a specific UET address. Selected components 
+of a UET address MAY be requested using the valid bits in the flags field of the UET address. 
+Libfabric endpoint address assignment MAY be a multi-stage process, where a portion of the endpoint 
+address MAY be assigned at job initialization time or by the fi_getinfo() API; the remainder is assigned 
+when the endpoint is opened. An application can learn its full UET address only by calling the 
+fi_getname() API, which is described in Section 2.2.5.3.6. 
+The JobID MAY be assigned at job initialization time or when the endpoint is opened. The JobID MUST 
+be programmed into the hardware by a privileged entity. 
+UET providers MUST support the following libfabric endpoint types: 
+• FI_EP_DGRAM 
+• FI_EP_RDM 

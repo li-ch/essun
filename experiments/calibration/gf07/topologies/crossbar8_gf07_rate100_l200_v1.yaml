@@ -1,0 +1,70 @@
+# Calibration-ladder GF-07 topology: fully-connected (crossbar /
+# single non-blocking switch stage) abstraction of 8 ranks at the GF-07
+# ENVELOPE CARRIER POINT — B = 100 B/ns, L = 200 ns (registry).
+#
+# Source numbers (docs/calibration/anchors_gapfill.md §GF-07;
+# "Characterizing the Impact of Congestion in Modern HPC Interconnects",
+# arXiv:2604.11432; numbers AS STAGED, not re-fetched): LUMI is staged
+# as "Cray Slingshot Dragonfly, 4x200 Gb/s". Under the DECLARED reading
+# (decimal units, the plan's convention 1 GB/s = 1 B/ns; the per-node
+# aggregate 4x200 = 800 Gb/s mapped onto the per-rank single-port
+# injection B — A-L0X-PORT first-order, the 4 NICs collapsed to one
+# port; NO direction split is staged, flagged): 800 Gb/s / 8 = 100 B/ns.
+# ROLE: the anchor's outcome numbers are per-fabric ratios against each
+# fabric's OWN uncongested baseline, so the displacement mapping needs a
+# carrier B_ref; 100 = LUMI's staged aggregate is the ONLY staged
+# per-node rate at or above the modern-anchor scale (Leonardo's
+# 400 Gb/s/node = 50 B/ns is the other staged rate, executed as its own
+# carrier in the carrier sweep). LUMI is also the MANAGED floor of the
+# measured envelope ("per-flow HW CM + global-aware adaptive routing:
+# always within 5% of the uncongested case"), making its rate the
+# natural uncongested reference for the whole 5% -> 25x band. L = 200 ns
+# = the A-L0X-LAT registry point — GF-07 stages NO latency number
+# (stage A11 precedent: registry L kept when the anchor stages none).
+#
+# Cross-anchor coincidences, recorded never cross-derived: 100 B/ns is
+# numerically identical to GF-05's uet-htsim sim line rate (800 Gbps
+# per direction); 2x Leonardo's staged 50 B/ns; the registry point 64
+# sits 36% below it (asymptotic CCT ratio exactly 100/64 = 25/16).
+#
+# DOMAIN HONESTY: GF-07 measures CONGESTION impact on victim collectives
+# (incast / AllToAll / Open MPI AllReduce) in HPC SCALE-OUT fabrics
+# (IB Dragonfly+, blocked fat tree, Slingshot, RoCE) — NOT GPU
+# scale-up; staged under the same labeled-proxy rule as CAL-A11. The
+# congestion MECHANISM (incast trees, DCQCN sawtooth, NSLB, per-flow
+# HW congestion management, global-aware adaptive routing) has NO input
+# key in the L0 loader surface and "congestion" is declared
+# explicitly_unsupported by the backend — only the envelope MAGNITUDES
+# can enter, as free-scalar effective-B displacements (stage A11's /
+# GF-05's technique). This row is the uncongested carrier, not a
+# prediction of LUMI.
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS (A-L0X-BW / A-L0X-LAT),
+# placed at the anchor's staged per-node rate / the registry default
+# BEFORE any stage output was read, never tuned toward any anchor
+# output. r = 8 is the free smoke-default rank count (the anchor's
+# staged node counts 32–64 are executed by the scale sweep at r=64);
+# 8 divides every 8*2^k ladder size. Values are anchor quotes / free
+# registry defaults, never our measurements.
+topology_id: crossbar8_gf07_rate100_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 200 ns (the A-L0X-LAT
+  registry point; GF-07 stages no latency number), per-rank single-port
+  injection B = 100 B/ns (LUMI's staged 4x200 Gb/s per-node aggregate
+  under the declared reading), charged once per phase (reduce-scatter,
+  allgather) by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). No
+  congestion, no incast, no DCQCN/NSLB/adaptive routing, no
+  packetization — the congestion axis the anchor measures is
+  inexpressible here by capability declaration. Provenance: B from
+  GF-07's staged LUMI rate (gap-fill anchor PROPOSED, not yet an
+  integrated anchor row; confidence H — numbers extracted from the paper
+  HTML; measured-fabric class, scale-out not scale-up); L = registry
+  default. Values are anchor quotes / free registry defaults, never our
+  measurements.

@@ -1,0 +1,55 @@
+# Calibration-ladder A11 sweep #2: the anchor's
+# STATED CLUSTER SCALE — r = 24,576 ranks (CAL-A11: two ~24,576-GPU
+# production clusters, one RoCE one InfiniBand; Llama 3 trained on
+# 16,000 GPUs of the RoCE one) — at the anchor link class B = 50 B/ns
+# per direction (400 Gbps optics, declared reading) and the registry
+# latency point L = 200 ns (CAL-A11 stages no latency number).
+#
+# TWO ROWS, TWO ROLES (both identities at equal B, L, r):
+# 1. crossbar24576_a11_link50_v1 (BASELINE): the NON-BLOCKING
+#    single-stage CEILING abstraction at the anchor's scale and link
+#    class (the role CAL-A1/A2 spec ceilings play; Meta's fabric is a
+#    subscribed, congestible two-tier spine-leaf, so this row is a
+#    ceiling, never a prediction). It executes the structural
+#    rank-count fact: the bandwidth coefficient 2(r-1)/r =
+#    24575/12288 sits within 1/21504 (~0.0047%) of the asymptote 2 —
+#    exactly (8/7)*(r-1)/r = 24575/21504 ~ 1.1428 above the r=8 smoke
+#    default; the structural scale effect is AT MOST +1/7 ~ +14.29%
+#    for ANY r (identity arithmetic, cross-checked on executed rows).
+# 2. ring24576_a11_link50_v1: the MULTI-HOP SCHEDULE contrast at the
+#    same scale/link class — the identity charges the per-hop latency
+#    2*(r-1) = 49,150 times per AllReduce (latency chain exactly
+#    9,830,000 ns; ring-minus-crossbar exactly 2*(r-2)*L = 9,829,600
+#    ns at every size). Across the ladder members bracketing the exact
+#    crossover M* = L*B*r = 245,760,000 B (234.375 MiB) the
+#    ring/crossbar CCT ratio is ~2.22 (192 MiB) and ~1.61 (384 MiB):
+#    SCHEDULE STRUCTURE ALONE moves CCT by factors far beyond the
+#    anchor's 30-40% congestion envelope — schedule, scale, and
+#    congestion state are three separable confounders of
+#    comparable-or-larger magnitude than every noise floor in the
+#    anchor set (CAL-A4 ~5%, CAL-A6 5-8%). That is the sanity context
+#    the plan assigns to CAL-A11, executed.
+#
+# NOTHING IS TUNED: CAL-A11 stages no (size -> time) series (its
+# tables live in the paper PDF, unstaged); no row is compared to any
+# anchor CCT. Payload grid: 15-size ladder 24576*2^k (24 KiB -> 384
+# MiB) — every size divisible by r = 24576 = 3*2^13 (A-L0-DIV /
+# A-L0X-DIV accept, no bracketing), spanning the ring crossover with
+# executed rows on both sides (192 MiB below, 384 MiB above).
+sweep: cal_a11_scale24576_v1
+workload: experiments/calibration/a11/workloads/w1_dense_tp_decode_tp24576_24kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a11/topologies/crossbar24576_a11_link50_v1.yaml
+grid:
+  payload_sizes_bytes: [24576, 49152, 98304, 196608, 393216, 786432, 1572864, 3145728, 6291456, 12582912, 25165824, 50331648, 100663296, 201326592, 402653184]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a11/topologies/crossbar24576_a11_link50_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a11/topologies/ring24576_a11_link50_v1.yaml

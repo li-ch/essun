@@ -1,0 +1,43 @@
+ 12 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Tables 
+Table 1-1 - Distinctive characteristics by network type (circa 2024) .......................................................... 64 
+Table 1-2 - Characteristics of UET Deployment Model ............................................................................... 65 
+Table 2-1 - UE Software Components and Interfaces ................................................................................. 78 
+Table 2-2 - UE Reference Software ............................................................................................................. 79 
+Table 2-3 - UET Application Categories ....................................................................................................... 84 
+Table 2-4 - Per-Profile Libfabric Parameter Requirements ......................................................................... 85 
+Table 2-5 - Application Use Case Mapping to UET Profiles ......................................................................... 87 
+Table 2-6 - Profile Logical Priorities ............................................................................................................ 87 
+Table 2-7 - Libfabric UET Provider Configuration Parameters .................................................................... 88 
+Table 2-8 - UET Control API JobID Mapping Parameters ............................................................................ 90 
+Table 2-9 - Libfabric API Groups .................................................................................................................. 95 
+Table 2-10 - UET Libfabric Endpoint Address .............................................................................................. 97 
+Table 2-11 - fi_getinfo() Parameters ......................................................................................................... 100 
+Table 2-12 - Pre-Defined UET Service Names ........................................................................................... 101 
+Table 2-13 - Memory Region Key Format ................................................................................................. 104 
+Table 2-14 - Criteria for Optimized Non-Matching SES Header for RMA Operations .............................. 105 
+Table 2-15 - Criteria for Small RMA SES Header with RMA Operations ................................................... 105 
+Table 2-16 - Criteria for RUDI Packet Delivery Mode with RMA Operations ............................................ 106 
+Table 2-17 - Memory Key Scope Requirements ....................................................................................... 106 
+Table 2-18 - UET Control API Address Assignment Request Parameters ................................................. 109 
+Table 2-19 - UET Control API Address Assignment Response Parameters ............................................... 109 
+Table 2-20 - Completion Counter Requirements ...................................................................................... 110 
+Table 2-21 - fi_msg() Receive API Requirements ...................................................................................... 112 
+Table 2-22 - fi_msg() Send API Requirements .......................................................................................... 112 
+Table 2-23 - fi_tagged() Receive API Requirements ................................................................................. 115 
+Table 2-24 - fi_tagged() Send API Requirements ...................................................................................... 115 
+Table 2-25 - fi_rma() API Requirements ................................................................................................... 117 
+Table 2-26 - fi_atomic() API Requirements ............................................................................................... 118 
+Table 2-27 - Libfabric APIs for which Support is Not Required ................................................................. 120 
+Table 2-28 - Libfabric API Options for which Support is Not Required ..................................................... 120 
+Table 2-29 - Packet Delivery Mode Selection Criteria for AI Base Profile ................................................. 122 
+Table 2-30 - Packet Delivery Mode Selection Criteria for AI Full Profile .................................................. 122 
+Table 2-31 - Packet Delivery Mode Selection Criteria for HPC Profile ...................................................... 122 
+Table 2-32 - Default Traffic Classes ........................................................................................................... 123 
+Table 2-33 - UET Security Binding Parameters ......................................................................................... 126 
+Table 2-34 - UET Rekey Parameters .......................................................................................................... 126 
+Table 2-35 - UET Control API Rekey Request Parameters ........................................................................ 128 
+Table 2-36 - Libfabric to IP Header Mapping ............................................................................................ 129 
+Table 2-37 - Libfabric Fields Used to Select Packet Delivery Context ....................................................... 130 

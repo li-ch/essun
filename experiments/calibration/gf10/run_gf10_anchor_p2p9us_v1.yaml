@@ -1,0 +1,58 @@
+# Calibration-ladder GF-10 anchor-point RUN (gap-fill
+# anchor): the L0 single-stage crossbar identity at the GF-10 MEASURED
+# POINT — r=8, B=25 B/ns (the anchor's staged per-link per-direction
+# NVLink-2 rate), L=9000 ns (the anchor's staged "around 9 µs" NVLink
+# direct-pair app-level P2P latency on DGX-1), payload 2097152 B = 2 MiB
+# (a member of the standard 12-size ladder and the GF-05/GF-09 run-pair
+# payload — the cross-stage comparability point; GF-10 stages NO
+# collective size series, so the run pair executes a declared free
+# probe).
+#
+# ROLE: GF-10's staged numbers are MEASURED app-level P2P/pair-level
+# quantities — no collective (size -> time) series exists, and NO
+# comparison to any anchor collective time is attempted (the stage
+# prompt's FAIL clause, applied honestly). What this run lands in the
+# append-only store is the measured point of the latency-axis placement
+# so the PROPOSED record's arithmetic (vs the registry-twin run
+# run_gf10_registry_v1.yaml at the SAME payload: exact CCT 4120016/25 ns
+# vs 57744 ns, ratio exactly 257501/90225, delta exactly 2676416/25 ns)
+# is backed by run ids. The app-level quantity-class caveat (software
+# stack included — bound, not equality) and the one-way/round-trip
+# reading ambiguity are carried on the row; B and L are free parameters
+# placed at the anchor's measured values, never tuned.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF10-P2P9US-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf10/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l9000_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf10/profiles/implementation_profile_l0_crossbar_cal_gf10_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf10_b25_l9000_v1 (one non-blocking switch stage; r=8 = DGX-1's own GPU count, the 9 µs system; B=25 B/ns = the GF-10 staged per-link per-direction NVLink-2 rate (direction split stated by the anchor); L=9000 ns = the GF-10 staged "around 9 µs" NVLink direct-pair app-level P2P latency — BOUND not equality; app-level includes the software stack, L is a bare per-pair parameter)
+  workload: w1_dense_tp_decode tp8, payload 2^21 (2 MiB, a standard-ladder member and the GF-05/GF-09 run-pair payload; GF-10 stages no collective size series — executed as a declared free probe)
+  implementation: analytical L0 crossbar identity; GF-10 comparison is measured axis placement only (app-level P2P microbenchmarks, never collective CCT; nonuniform pair latency and the software stack are out of model scope by capability declaration; no anchor-time comparison) — PROPOSED, review required
+evidence_level_requested: E0

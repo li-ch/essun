@@ -1,0 +1,48 @@
+ 645 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 5-11 - LLR RX Path Variables 
+Variable name Description 
+init_echo_received The init_echo_received variable is used by the LLR transmit state machine shown in 
+Figure 5-3 and pulses each time a valid LLR_INIT_ECHO Control Ordered Set is 
+received (see 5.1.9.1.2). 
+next_rx_seq The expected sequence number of the next LLR-eligible frame to be received. 
+It is set to the value contained in the LLR_INIT Control Ordered Set when an LLR_INIT 
+Control Ordered Set is received; it is incremented by one each time a LLR frame is 
+received that has an fcs_status of GOOD or POISONED and for which expected_frame 
+is TRUE. 
+next_rx_seq_vld Indicates that the value in next_rx_seq is valid. 
+Set to FALSE whenever the ACK/NACK transmit state machine enters the OFF state.  
+Set to TRUE when llr_mode_local is ON and an LLR_INIT Control Ordered Set has 
+been received. 
+frame_seq The sequence number for the LLR-eligible frame that is being processed. 
+A 20-bit variable with values: 0 to 1048575 
+expected_frame Is TRUE when the sequence number of a received LLR-eligible frame is the next 
+expected sequence number. The variable is determined as follows:  
+expected_frame = next_rx_seq_vld && (frame_seq == next_rx_seq)  
+expected_frame_ok Pulses TRUE when an LLR-eligible frame is received with an fcs_status of GOOD or 
+POISONED and expected_frame is TRUE. 
+expected_frame_bad Pulses TRUE when an LLR-eligible frame is received with an fcs_status of BAD and 
+expected_frame is TRUE. 
+duplicate_frame Is TRUE when the sequence number of a received LLR-eligible frame indicates that 
+the frame has already been successfully received. 
+(I.e., when the frame_seq is ‘behind’ the next_rx_seq) 
+duplicate_frame = next_rx_seq_vld && !expected_frame && 
+   ((next_rx_seq – frame_seq) <= 524288) 
+missing_frame Is TRUE when the sequence number of a received LLR-eligible frame indicates that a 
+frame has been lost. 
+(I.e., when the frame_seq is ‘ahead’ of next_rx_seq) 
+missing_frame = next_rx_seq_vld && !expected_frame && !duplicate_frame  
+ 
+When llr_mode_local is ON, LLR-eligible frames are filtered by the RX LLR if expected_frame is FALSE. 
+5.1.8 Received ACK/NACK processing 
+The ack_nack_seq of received LLR_ACKs (or LLR_NACKs) should either match an unacknowledged frame 
+that is held in the replay buffer or be equal to acked_seq. This can be done by applying the following 
+equation: 
+ack_nack_seq_ok = (((tx_seq -1) – ack_nack_seq) mod 1048576 <= 524288) &&  
+   ((ack_nack_seq – acked_seq) mod 1048576 < 524288) 
+ 
+If ack_nack_seq_ok is FALSE, then the ack_nack_seq value is an error and the rx_ack_nack_seq_error 
+counter is incremented. 
+If ack_nack_seq_ok is TRUE and ack_nack_seq is not equal to acked_seq then the LLR_ACK/LLR_NACK is 
+acknowledging some frames in the replay buffer. The replay buffer can remove all the frames up to and 

@@ -1,0 +1,31 @@
+# Calibration-ladder A11 topology: the same 8-rank crossbar identity at
+# B = 64 B/ns — the A-L0X-BW / A-L0-BW REGISTRY POINT (the smoke
+# default of the free bandwidth axis, range [1, 1024]). PLACEMENT FACT
+# this row executes against the anchor row crossbar8_a11_link50_v1: in
+# the bandwidth-bound limit the registry point sits at CCT ratio exactly
+# 50/64 = 25/32 = 0.78125 relative to the anchor's 400G link class
+# (i.e. the registry default is 21.875% FASTER than the anchor line —
+# a placement fact about where the smoke default sits on the anchor's
+# axis, never a tuning target). The plan §2.1 A-L0-BW verdict (NARROW
+# range: candidate anchored span ~[20, 64]; KEEP point) is recorded by
+# this stage as the plan states it; the registry value and range are
+# untouched. L fixed at the registry point 200 ns (CAL-A11 stages no
+# latency number); r = 8 the free smoke default (divides every ladder
+# size). The twin store runs of this stage execute this row and the
+# anchor row at the same 8 GiB payload, isolating the B axis exactly.
+topology_id: crossbar8_a11_registry64_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Registry-placement row: B = 64 B/ns is the untouched A-L0X-BW /
+  A-L0-BW registry point placed against CAL-A11's 50 B/ns anchor line
+  (exact ratio 64/50 = 32/25 = 1.28 on the bandwidth axis; asymptotic
+  CCT ratio 25/32 = 0.78125). L = 200 ns free A-L0X-LAT registry point
+  (anchor-free axis for this stage). No congestion, no ECMP — L0
+  transport model only. Provenance: registry defaults, never our
+  measurements; no anchor selects the 64 point (it sits at the TOP of
+  the plan's candidate anchored span [20, 64]).

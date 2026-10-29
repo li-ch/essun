@@ -1,0 +1,50 @@
+ 565 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2. If the counter wraps or is greater than invokeFatalTheshold, then all packets MUST be dropped 
+within the secure domain and the sdiXXOutInvokeFail counter MUST be incremented for each 
+failure (packet). 
+3.7.6 Secure Domain Key Database (SDKDB) 
+The secure domain is identified by the SDI carried within the packet. The maxSDI is a property of the 
+FEP.  The baseSDI and maxSDI are configured by the SDME after collecting the maxSDI from all FEPs and 
+determining a compatible range of SDIs. The SDI MUST be allocated between the range of baseSDI and 
+(baseSDI+maxSDI-1). The FEP MUST allow placement of baseSDI between 1 and 224-maxSDI-1, ensuring 
+that SDIs are allocated in a contiguous range. If the SDKDB lookup fails, then the packet MUST be 
+discarded and counted (ifPPInErroredPkts). SDI zero MUST NOT be allocated to be consistent with IPSec 
+and PSP implementations. 
+The SDKDB lookup returns the fields shown in Table 3-133. 
+Table 3-133 - SDKDB Fields 
+Field Size/type Description 
+kdf-mode enum KDF mode (direct, cluster, client-server) 
+ssi-mode boolean Determines if SSI is obtained from the TSS header or the source IP 
+address. 
+TxActiveAN 1 bit Active AN used for transmit packets 
+AES-GCM-256  AES-GCM-256  AES-GCM-256  
+algo  enum Cipher mode used: Only AES-GCM-256 is defined 
+encap-type 3 bits Packet encapsulation used for security association 
+0b000: Native IPv4 
+0b001: Native IPv6 
+0b010: UDP over IPv4 
+0b011: UDP over IPv6 
+0b100: Native UFH_32 
+0b101 – 0b111: Reserved 
+Aoff unsigned integer 
+(2-byte units) 
+An offset from the start of the UET header towards the start of the 
+packet that indicates the start of the AAD (may be passed from PDS 
+with each packet). This is valid only for a single encapsulation type. 
+See Figure 3-145. 
+Coff unsigned integer 
+(2-byte units) 
+An offset from the start of the UET header towards the end of the 
+packet that indicates the the boundary between the AAD and the 
+cipher text (may be passed from PDS with each packet). This is valid 
+only for a single encapsulation type. See Figure 3-145. 
+SDI 24 bits SDI used in packet—included in SDKDB if the database is indexed by a 
+pointer (e.g., sdi_idx in logical interface) 
+SDKiAN0 256 bits SDKi for AN0 
+SDKiAN1 256 bits SDKi for AN1 
+Rekey_Mask  48 bits Optional MASK for Rekey 
+Rekey_Shift Integer (0-31) Optional SHIFT for Rekey  
+IVMask0 96 bits IVMask for AN0. Only for direct KDF mode (generated per packet, 
+otherwise via KDF) 

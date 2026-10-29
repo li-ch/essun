@@ -1,0 +1,32 @@
+ 196 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The addressing hierarchy begins with a Fabric Address. An FA selects a fabric endpoint (FEP). Once a FEP 
+is selected, two addressing modes are defined. Relative addressing is intended to enable scalable 
+addressing for parallel communication within a distributed application, which is called a job. Absolute 
+Addressing is intended to enable scalable addressing for client/server operations where the server is not 
+required to be part of the application. In both cases, the initiator of a transaction is assigned a JobID (0) 
+that is inserted in each packet in a trusted way (3.4.8.1). The JobID is an identifying property of the 
+initiator only, and then is used as part of addressing and authorization (3.4.2.4) at the target. 
+In relative addressing, the FEP uses JobID to define the scope of the PIDonFEP. Within the PIDonFEP, a 
+Resource Index (RI) is associated with a “service”. A service can correspond to a specific use case or 
+library. In libfabric, a libfabric endpoint is opened for the service, and the number of Resource Index 
+values used depends on the service. The details of the usage of the Resource Index is hidden beneath 
+the libfabric endpoint4 that was opened in association with the service. The mapping of services to 
+Resource Index values is covered in the libfabric mapping specification [6]. Within a service, each 
+Resource Index creates a unique addressing space where a send operation, tagged send operation, or 
+RMA operation can select a buffer. This is highlighted in Figure 3-4. Figure 3-4 specifically illustrates the 
+operation of send/receive and tagged send/receive, where there is a pool of buffers behind a Resource 
+Index. For send/receive, the first buffer is consumed from the queue by an incoming message. For 
+tagged send/receive, the buffer is selected using the matching criteria. An initiator identifier is provided 
+as part of the matching criteria (3.4.2.3.4). Note that send/receive and tagged send/receive have a 
+different pool of buffers—even when they use the same Resource Index. 
+While Figure 3-4 provides an overview of how the addressing might be used in a complete HPC software 
+stack—where multiple complex applications might share a node—it is also possible to implement a 
+simplified version of this hierarchy for more purpose-built use cases (e.g., an integrated FEP in an AI 
+ 
+4 Implementation of various libfabric features (e.g., scalable endpoints) can lead to a limited level of application 
+level visibility of index values. 
+ 
+Figure 3-4 - Relative Addressing 
+ 

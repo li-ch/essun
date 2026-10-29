@@ -1,0 +1,57 @@
+# Calibration-ladder GF-07 carrier-point RUN 
+# gap-fill anchor): the L0 single-stage crossbar identity at the GF-07
+# ENVELOPE CARRIER — r=8, B=100 B/ns (LUMI's staged "4x200 Gb/s"
+# per-node aggregate under the declared decimal + single-port reading;
+# the managed floor fabric of the measured 5% -> 25x envelope, hence
+# the uncongested reference), L=200 ns (A-L0X-LAT registry point —
+# GF-07 stages NO latency number), payload 16777216 B = 16 MiB (the
+# anchor's MAXIMUM staged vector size, "vectors 8 B–16 MiB", and its
+# DCQCN-threshold size).
+#
+# ROLE: GF-07's outcomes are collective BANDWIDTH RATIOS on victim
+# collectives — no (size -> time) series is staged, and NO comparison
+# to any anchor time is attempted. What this run lands in the
+# append-only store is the carrier point of the displacement mapping so
+# the PROPOSED record's placement arithmetic (vs the registry-twin
+# run_gf07_registry_v1.yaml at the SAME payload: asymptotic CCT ratio
+# exactly 100/64 = 25/16) is backed by run ids. The congestion
+# mechanism the anchor measures (incast, DCQCN, NSLB, HW CM, adaptive
+# routing) is OUT of the L0 input space by capability declaration.
+# B and L are free parameters placed at the anchor's staged rate /
+# registry default, never tuned.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF07-CARRIER100-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf07/workloads/w1_dense_tp_decode_tp8_16mib.yaml
+infra_graph:
+  path: experiments/calibration/gf07/topologies/crossbar8_gf07_rate100_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf07/profiles/implementation_profile_l0_crossbar_cal_gf07_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf07_rate100_l200_v1 (one non-blocking switch stage; r=8, B=100 B/ns = GF-07's staged LUMI 4x200 Gb/s per-node aggregate under the declared reading, L=200 ns registry — GF-07 stages no latency number)
+  workload: w1_dense_tp_decode tp8, payload 2^24 (16 MiB, the anchor's maximum staged vector size and DCQCN-threshold size; executed as a free probe)
+  implementation: analytical L0 crossbar identity; GF-07 comparison is fabric-rate placement + envelope-magnitude mapping only (congestion mechanism itself out of model scope; no anchor-time comparison; measured scale-out HPC fabrics as labeled proxy, not GPU scale-up) — PROPOSED, review required
+evidence_level_requested: E0

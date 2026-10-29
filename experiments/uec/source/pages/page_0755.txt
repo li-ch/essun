@@ -1,0 +1,18 @@
+ 755 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 7-2 - UE Fabric Manager 
+7.4 Redfish for UE Endpoint Manageability 
+Remote management of the server can be done via two manageability paths, as shown in Figure 7-3: in-
+band or out-of-band management. The in-band path uses the same resources that hosts the operating 
+system. The out-of-band path uses dedicated resources that are operationally independent of the state 
+of the in-band resources. This path enables the system to be managed before the OS is operational or 
+when the OS is non-operational (hung or shutdown). The BMC (baseboard management controller) is 
+the component that exposes the Redfish interface to two management entities. The out-of-band 
+interface is accessed by the remote client. The in-band interface (host interface) is accessed by the in-
+band entities (BIOS, OS, software agent). 
+ 
+Figure 7-3 - Server Management Architecture 
+OCP prescribes common manageability for the OCP platform using Redfish profiles. A profile uses the 
+Redfish Interop Validator (open source) to verify the conformance of an implementation. 

@@ -1,0 +1,53 @@
+ 26 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Role Name Affiliation 
+Author Sean Hefty Nvidia 
+Author Torsten Hoefler Microsoft 
+Author Cathy Huang Intel 
+Author Adbul Kabbani Microsoft 
+Author Brad Karp Google 
+Author Vivek Kashyap Intel 
+Author Jai Kumar Broadcom 
+Author Vlad Olteanu Broadcom 
+Author Eugene Opsasnick Broadcom 
+Author Rong Pan AMD 
+Author Costin Raiciu Broadcom 
+Author Adee Ran Cisco 
+Author Karen Schramm Broadcom 
+Author Hemal Shah Broadcom 
+Author Rip Sohan AMD 
+Author Eric Spada Broadcom 
+Author Keith Underwood HPE 
+Author Niranjan Vaidya Broadcom 
+Contributor Puneet Agarwal Marvell 
+Contributor Anup Agarwal Microsoft 
+Contributor Nikolay Aleksandrov Enfabrica 
+Contributor Alex Badea Keysight 
+Contributor Przemyslaw Baranski Marvell 
+Contributor Martin Belanger Dell 
+Contributor Rakhahari Bhunia Keysight 
+Contributor Devin Bidstrup HPE 
+Contributor Manomugdha Biswas Keysight 
+Contributor Michael Blocksome Cornelis Networks 
+Contributor Tommaso Bonato Microsoft 
+Contributor Mihai Brodschi Broadcom 
+Contributor Rupa Budhia Marvell 
+Contributor Thomas Calvert AMD 
+Contributor Ron Cohen Marvell 
+Contributor Barry Davis Intel 
+Contributor Mark Debbage Arista 
+Contributor Iulian Dracea Broadcom 
+Contributor Roland Dreier Enfabrica 
+Contributor Uri Elzur Intel 
+Contributor Matthew Fernandez DreamBig Semiconductor 
+Contributor Ahmad Ghalayini Microsoft 
+Contributor Evan Green Meta 
+Contributor Xingling Han AMD 
+Contributor Hugh Holbrook Arista 
+Contributor Nusrat Islam AMD 
+Contributor Vipin Jain AMD 
+Contributor Bob Lantz HPE 
+Contributor Yanfang Le AMD 
+Contributor John Leung Intel 
+Contributor Meg Lin Marvell 

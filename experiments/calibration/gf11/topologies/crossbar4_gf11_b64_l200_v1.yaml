@@ -1,0 +1,26 @@
+# Calibration-ladder GF-11 topology: fully-connected crossbar of 4 ranks at
+# the REGISTRY DEFAULTS — B = 64 B/ns, L = 200 ns (A-L0X-BW / A-L0X-LAT;
+# no GF-11 provenance on either value). The registry-twin row of the GF-11
+# L-axis sweep and the registry-twin RUN at the anchor's bracket point:
+# at r=4, M=128 it gives t = 3 + 400 = 403 ns — 1407/403 above the
+# anchor-mapped point (the L axis alone: 702/200 = exactly 351/100), and
+# 2370/403 ~ 5.88 BELOW the anchor's near-optimal measured leg: the free
+# registry defaults badly under-predict current-gen small-message CCT.
+# Same honesty rules as crossbar4_gf11_b64_l702_v1.yaml (values are free
+# registry points, never tuned, never measured).
+topology_id: crossbar4_gf11_b64_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction at the free registry
+  defaults (B = 64 B/ns, L = 200 ns; A-L0X-BW / A-L0X-LAT points, KEEP).
+  Identity t = 3M/128 + 400 at r=4. Placement reference for the GF-11
+  measured-axis comparison: the registry L sits exactly 100/351 of the
+  GF-11 derived 702 ns, and the registry point under-predicts the anchor's
+  near-optimal 4-GPU small-message AllReduce (2370 ns) by a factor
+  2370/403 ~ 5.88 at the 128-B reading. Values are free registry points,
+  never our measurements, never standard-normative.

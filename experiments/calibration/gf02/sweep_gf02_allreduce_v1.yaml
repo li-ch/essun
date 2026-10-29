@@ -1,0 +1,46 @@
+# Calibration-ladder GF-02 ALLREDUCE sweep (gap-fill
+# anchor GF-02): where does the L0 aggregate-reading identity sit relative
+# to the anchor's measured busbw plateau (~360 GB/s, both collectives,
+# 128 MiB-16 GiB regime, 8 H100 + NVLink; maintainer: "360 GB/s is exactly
+# what we'd expect on H100"), across the FOUR anchor-arithmetic points of
+# the counting-convention axis?
+#
+# NOTHING IS TUNED: the swept B values were fixed by anchor/staging
+# arithmetic BEFORE any model output was read — 360 = the anchor's own
+# measured plateau (the BASELINE, so delta columns read as placement vs
+# the anchor), 450 = 900/2 (the per-direction split of the poster's own
+# bidirectional peak figure; the physical reading), 476.37 = GF-04's
+# staged 8-GPU H100 busbw (the gapfill doc's OPEN DISCREPANCY vs this
+# anchor's 360 — staged "do not average them"; executed here only as a
+# bracket, and it EXCEEDS the 450 physical ceiling, i.e. it is
+# inexpressible by the single-port identity at physical B — the
+# in-network-computing/NVLS class every L0 backend declares unsupported),
+# 900 = the poster's bidirectional figure used UNSPLIT (the
+# counting-convention hazard this thread exists for: predictions 2.5x too
+# fast; never a bridge value). L = 200 ns (registry point) everywhere.
+#
+# Payload grid: {2^27 = 128 MiB (the anchor's command-line regime floor
+# "-b 128M"), 2^30 = 1 GiB (mid ladder member), 2^34 = 16 GiB (the regime
+# top "-e 16384M", the size at which the body's saturation statement is
+# made)} — all members of the anchor's own -f 2 ladder, all divisible by
+# r=8, so A-L0X-DIV gates ACCEPT with no bracketing. Per-size rows of the
+# anchor's tables are screenshots (not text-extractable even after the
+# 2026-10-28 verification fetch) — the plateau + regime endpoints are the
+# extractable targets, recorded in the stage record.
+sweep: cal_gf02_allreduce_v1
+workload: experiments/calibration/gf02/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf02/topologies/crossbar8_gf02_plateau360_v1.yaml
+grid:
+  payload_sizes_bytes: [134217728, 1073741824, 17179869184]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf02/topologies/crossbar8_gf02_gf04_476_37_v1.yaml
+    - experiments/calibration/gf02/topologies/crossbar8_gf02_perdir450_v1.yaml
+    - experiments/calibration/gf02/topologies/crossbar8_gf02_plateau360_v1.yaml
+    - experiments/calibration/gf02/topologies/crossbar8_gf02_bidir900_v1.yaml

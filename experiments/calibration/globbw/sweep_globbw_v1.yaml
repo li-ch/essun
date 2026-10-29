@@ -1,0 +1,60 @@
+# Calibration-ladder GLOBAL stage GLOB-BW sweep (the
+# first of the four global parameter-class stages): sensitivity of the
+# model's own outputs to the link-BW free parameter A-L0-BW
+# (link.bytes_per_ns) across its REGISTERED range [1, 1024] B/ns, on the
+# W1 smoke config exactly as shipped .
+#
+# W1 smoke config, verbatim: workload experiments/workloads/
+# w1_dense_tp_decode_small.yaml (W1 Dense TP Decode, tp8, 2 layers x 3
+# steps = 6 AllReduce ops), payload 16384 B (16 KiB, the A-W1-SIZE smoke
+# value; 8 divides it so the A-L0-DIV gate accepts every row), fabric the
+# smoke ring (unidirectional_ring, r=8), L fixed at the A-L0-LAT registry
+# point 200 ns (KEEP per plan section 2.1). Only B moves.
+#
+# Swept B ladder (14 points, every value a FREE PARAMETER, nothing tuned):
+#   powers of two covering the whole registered range
+#   1, 2, 4, 8 | 16, 32, 64, 128, 256, 512, 1024
+#   (1 and 1024 = the registered ENDPOINTS; 64 = the registry point and
+#   smoke value, the BASELINE) plus three anchor-informed span CONTEXT
+#   markers inside the range (20, 25, 50 - plan section 2.1 A-L0-BW
+#   candidate span [20, 64] interior; context only, the anchor
+#   comparisons themselves were the per-anchor stages' job).
+#
+# Expected identity under sweep (E0 arithmetic fact, cross-checked by the
+# stage record builder on every row): t(B) = 2(r-1)/r*M/B + 2(r-1)L =
+# 28672/B + 2800 ns; per-rank wire 28672 B constant in B; O-CONSERVATION
+# exact at every B. The balance point of the axis is B* = M/(r*L) =
+# 256/25 = 10.24 B/ns - inside the registered range, between grid points
+# 8 and 16: below it the bandwidth term dominates, above it the latency
+# term dominates, so the smoke config sits deep on the latency-dominated
+# side at B = 64.
+#
+# claim linkage: none - a PROPOSED global sensitivity candidate must not
+# link to any claim (the sweep runner records no claims by construction).
+sweep: cal_globbw_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/globbw/topologies/ring8_globbw_b64_v1.yaml
+grid:
+  payload_sizes_bytes: [16384]   # the W1 smoke payload (A-W1-SIZE), unchanged
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/globbw/topologies/ring8_globbw_b1_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b2_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b4_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b8_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b16_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b20_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b25_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b32_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b50_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b64_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b128_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b256_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b512_v1.yaml
+    - experiments/calibration/globbw/topologies/ring8_globbw_b1024_v1.yaml

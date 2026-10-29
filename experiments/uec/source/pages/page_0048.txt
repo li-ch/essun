@@ -1,0 +1,22 @@
+ 48 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+on actual bit sizes. Reserved fields are to be ignored upon receipt and transmitted as zeros. Each 
+individual header is a stand-alone figure and shows the header starting at a byte offset of zero. The 
+actual offset of the header within a receive packet depends upon the specific format of the previous 
+headers, which are not shown in the stand-alone figure. 
+A description of the header fields is provided in a table following the detailed header figure. 
+1.2.3.2 Sequence Diagrams 
+Figure 1-4 shows an example of a sequence diagram used in this specification. Sequence diagrams are 
+used to illustrate the timeline for specific information exchanges between two entities and across 
+functional layers within entities. The event timeline flows from top to bottom. The sequence diagrams 
+do not provide a normative depiction of the complete set of information exchanged between entities, 
+but rather are used to describe a particular instance of a communication scenario. The example shows a 
+message provided to the UET semantics layer by an external entity (e.g., a libfabric provider), and how it 
+is broken into packets and passed to the PDS layer for transmission over the wire to a remote target. 
+Some of the important UET header fields are shown above the arrows indicating packets transmitted on 
+the wire. Actions and events that occur during the information exchange are highlighted using dashed 
+arrows and supporting text. 
+ 
+Figure 1-3 - Example Individual Header Format 
+ 

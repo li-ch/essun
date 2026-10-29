@@ -1,0 +1,26 @@
+# Calibration-ladder GF-11 topology: fully-connected EXCHANGE fabric of 64
+# ranks at the GF-11 scaling point — B = 64 B/ns, L = 702 ns (backend
+# analytical_l0_recursive_doubling; sweep-path only).
+#
+# ROLE: the r=64 leg of the chain-family scaling demonstration: the
+# doubling chain 2*log2(64)*L = 12L = 8424 ns — a 6x latency-chain growth
+# over the r=2 value (2L), sitting between the crossbar's flatness (1x)
+# and the ring's 63x across the anchor's 32x rank span. Under the
+# constant-SoL reading the measured r=64 envelope (~1.7*1404 = 2386.8 ns)
+# lands between the crossbar (1407.94) and doubling (8427.94) chains at
+# M=128 — the same two-sided bracket as the r=4 near-optimal leg. 64 is a
+# power of two so A-L0D-POW2 accepts natively. Same honesty rules as
+# crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: exchange64_gf11_b64_l702_v1
+topology_class: fully_connected_exchange
+ranks: 64
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 702
+notes: >
+  Partner-exchange fabric of 64 ranks (log2(64) = 6 steps per phase), B =
+  64 B/ns (free registry), L = 702 ns (GF-11 derived reading SoL/2).
+  Identity t = 63M/2048 + 8424 (chain 2 x 6 x L). The doubling leg of the
+  GF-11 rank-scaling comparison. Values are anchor arithmetic / free
+  registry points, never ours, never tuned, never standard-normative.

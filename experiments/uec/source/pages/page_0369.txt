@@ -1,0 +1,34 @@
+ 369 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+For diagnostic purposes, the arrival of a NACK_CCX packet should be reported based on pds.nccx_type. 
+This state, provided in NCC_TYPE_EVENT, is a 16-bit field where a set bit indicates the arrival of a packet 
+with that pds.nccx_type. For example, if pds.nccx_type = 0 then bit 0 in the NCC_TYPE_EVENT field is 
+set. 
+PDS NACKs carry negative acknowledgement NACK codes (pds.nack_code). There are two categories of 
+NACK codes indicating either retransmit events or error events. The NACK codes are enumerated in 
+Table 3-68. The NACK code is carried in the pds.nack_code field to indicate the specific type of NACK 
+event, which may be useful for diagnostics, and to enable the source to determine if it should wait an 
+appropriate time before retrying. 
+Events leading to NACK generation can be split into the following NACK error types: 
+• NORMAL: This indicates normal operation, an expected event. Typically, these NACKs occur 
+when a packet cannot be processed when it is received but should be processed in the future. 
+This results in a packet being retransmitted on the same PDC. When the packet would have 
+created a PDC, but it does not, the retransmit may be done using a different PDC (i.e., different 
+SPDCID). 
+• PDC_ERR: This indicates an unexpected event occurred, but the PDC remains active; for 
+example, if a packet is received with pds.flags.syn set and the PDC is no longer accepting SYN 
+packets (pds.nack_code = UET_INVALID_SYN). 
+• PDC_FATAL: This indicates the error is unrecoverable; for example, the associated PDCID could 
+not be found, or the IP address does not match. The associated PDC MUST be closed. The FEP 
+sends a NACK and closes the PDC. When a FEP receives a NACK with a PDC_FATAL code, it closes 
+the PDC. 
+The NACK codes in Table 3-68 use the following terms to clarify the expected behavior at the source 
+when a NACK is received: 
+• RETX:  This indicates a transient scenario where the packet SHOULD be retransmitted on the 
+same PDC using the same PSN. (e.g., resource exhaustion or restart with new Start_PSN). 
+ 
+Figure 3-84 - NACK Sections 
+ 
+ 

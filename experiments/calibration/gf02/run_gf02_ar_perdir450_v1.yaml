@@ -1,0 +1,45 @@
+# Calibration-ladder GF-02 ceiling-reading RUN (gap-fill
+# anchor): the L0 single-port crossbar AllReduce identity at the
+# PER-DIRECTION PHYSICAL point — r=8, B=450 B/ns (= 900/2, the per-direction
+# split of the poster's own "NVLink's peak bi-directional bandwidth is 900
+# GB/s"; no link-count claim load-bearing), L=200 ns, payload 2^34 (16 GiB,
+# identical to the plateau twin). This run and run_gf02_ar_plateau360_v1
+# differ ONLY in B (450 vs 360), so their CCT ratio IS the
+# measured-plateau-vs-ceiling relation executed through the identity:
+# 360/450 = 4/5 exactly (to the anchor's "~" precision) — the CAL-A12
+# derating bridge factor, one NVLink generation after CAL-A12's own
+# NVLink-3 20/25, now against a MEASURED plateau (CAL-A12 staged no
+# achieved-bandwidth number at all). Free parameters stayed free; nothing
+# is tuned.
+#
+# claim_id is deliberately EMPTY (zero claim edits; see the plateau twin).
+# Evidence level E0: analytical identity execution; the comparison is
+# recorded as PROPOSED in results/calibration/.
+experiment_id: EXP-CAL-GF02-AR-PERDIR450-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf02/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+infra_graph:
+  path: experiments/calibration/gf02/topologies/crossbar8_gf02_perdir450_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf02/profiles/implementation_profile_l0_crossbar_cal_gf02_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf02_perdir450_v1 (NVSwitch-class abstraction of the GF-02 8xH100 node at the per-direction physical reading B=450 B/ns = 900/2 from the anchor's own bidirectional figure, L=200 ns free)
+  workload: w1_dense_tp_decode tp8, payload 2^34 (16 GiB, identical to the plateau twin — only B differs)
+  implementation: analytical L0 crossbar identity; the ceiling side of the GF-02 measured-vs-ceiling pair (gap-fill anchor, PROPOSED, not yet an integrated anchor row) — PROPOSED, review required
+evidence_level_requested: E0

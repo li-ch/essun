@@ -1,0 +1,17 @@
+ 658 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2.5.5 Packet and CBFC Message Sequence 
+ 
+Figure 5-8 - Packet and CBFC Message Sequence with Counter Updates 
+5.2.5.6 Sender Operations 
+5.2.5.6.1 Packet Transmission Credit Check 
+To select a packet from a lossless VC for transmission and to make counter updates, the number of 
+credits required for the packet must first be computed: 
+pktSize = size of the MAC frame in bytes 
+pktCredits = roundup((pktSize + PktOvhd) ÷ CreditSize) 
+ 
+Informative Text: 
+The size of a MAC frame includes the bytes beginning with the MAC DA and ending with the FCS. 
+ 
+A packet can be selected for transmission in the following cases: 

@@ -1,0 +1,55 @@
+ 102 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+application-visible resource index (there MAY also be an additional resource index associated with the 
+endpoint that is not application-visible but used as a provider-to-provider control channel). 
+2.2.5.3 Communication and Completion APIs 
+The communication and completion APIs are used to perform the setup required for data transfer and 
+to report data transfer operation results. 
+The following communication and completion APIs are discussed in this section: 
+int fi_fabric(struct fi_fabric_attr *attr, struct fid_fabric **fabric, 
+        void *context); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_fabric.3.html> 
+ 
+ 
+int fi_eq_open(struct fid_fabric *fabric, struct fi_eq_attr *attr, 
+         struct fid_eq **eq, void *context); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_eq.3.html> 
+ 
+ 
+int fi_domain(struct fid_fabric *fabric, struct fi_info *info, 
+        struct fid_domain **domain, void *context); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_domain.3.html> 
+ 
+ 
+int fi_mr_reg(struct fid_domain *domain, const void *buf, size_t len, 
+        uint64_t access, uint64_t offset, uint64_t requested_key, 
+        uint64_t flags, struct fid_mr **mr, void *context); 
+ 
+uint64_t fi_mr_key(struct fid_mr *mr); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_mr.3.html> 
+ 
+ 
+int fi_endpoint(struct fid_domain *domain, struct fi_info *info, 
+          struct fid_ep **ep, void *context); 
+ 
+int fi_ep_bind(struct fid_ep *ep, struct fid *fid, uint64_t flags); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_endpoint.3.html> 
+ 
+ 
+int fi_getname(fid_t fid, void *addr, size_t *addrlen); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_cm.3.html> 
+ 
+ 
+int fi_cq_open(struct fid_domain *domain, struct fi_cq_attr *attr, 
+         struct fid_cq **cq, void *context); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_cq.3.html> 
+ 
+ 

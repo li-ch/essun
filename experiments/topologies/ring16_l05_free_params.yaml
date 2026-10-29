@@ -1,0 +1,43 @@
+# Atlas cell 16r-l05 (design-space atlas ladder, G2 / decision D-025):
+# rank class 16 x algorithm family L0.5 — the 16-rank instance of the
+# serialized-ring topology (ring8_l05_free_params.yaml with ranks = 16,
+# the rank-16 mirror of ring4_l05_free_params.yaml). This cell COMPLETES
+# rank class 16 (the last of its six families).
+#
+# Link values are the SAME free parameters as every other atlas cell
+# (B = 64 bytes/ns, L = 200 ns — A-L05-BW / A-L05-LAT, shared with
+# A-L0-BW / A-L0-LAT so the L0.5-to-L0 convergence anchor is meaningful);
+# the injection rate I is the L0.5 family's one NEW free parameter
+# (A-L05-INJ), fixed by the atlas fairness rule at the registered
+# convention value 64 bytes/ns — equal to B, matching
+# ring8_l05_free_params.yaml (the file the convention was derived from),
+# ring4_l05_free_params.yaml and the GF-05 anchor convention (injection
+# at line rate). None of these values is standard-derived or measured.
+#
+# Setting nic.injection_bytes_per_ns to null (or omitting nic) encodes the
+# I -> infinity limit, where this topology evaluates to the landed L0 ring
+# identity exactly. See experiments/vertical_slice/assumptions_l05.yaml
+# (A-L05-*).
+schema_version: 0.2.0
+topology_id: ring16_l05_free_v1
+topology_class: unidirectional_ring_with_serialization
+ranks: 16
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+nic:
+  injection_bytes_per_ns: 64
+notes: >
+  Same serialized-ring fabric as ring8_l05_free_v1 / ring4_l05_free_v1
+  (per-chunk serialization term c/I at the transmitting NIC, per-hop
+  latency charged per chunk transfer, A-L05-SER; equal chunks c = M/r,
+  A-L05-CHUNK) at the atlas rank class 16. Distinct topology_class so no
+  landed L0 backend can silently load this file (l0.load_infra would
+  ignore the nic term); the L0.5 loader checks the class explicitly.
+  Deliberately not registered in the sweep runner's or the run
+  run-path registry (the module's own scope fence:
+  run-path/golden integration is a separate capability-gated step)
+  — the atlas cell's execution vehicle is
+  experiments/atlas/16r_l05/run_atlas_16r_l05_cell.py, which loads this
+  file through the module's own loader and gates. No congestion, no
+  credits, no packetization — the L0.5 transport model only.

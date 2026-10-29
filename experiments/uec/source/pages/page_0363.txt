@@ -1,0 +1,50 @@
+ 363 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+On ROD PDCs, the pds.sack_bitmap field may be set to all zeros as ACK_PSN and CACK_PSN provide the 
+required information. 
+On RUD PDCs, multiple PSNs may arrive between transmissions of an ACK such that it is not possible to 
+represent all of the received PSNs in a single pds.sack_bitmap. The goal is to efficiently represent as 
+many PSNs as possible while biasing toward sending acknowledgements for lower PSNs, to allow older 
+resources to be freed. The following pseudo-code provides an example of the state maintained to assign 
+the SACK bitmap to cover the newly received low PSN while iterating over the Expected_PSN range. For 
+clarity, the case of the PSN wrapping at 0xFFFFFFFF is not described. 
+Table 3-65 - Local Variables for SACK Bitmap - Coalesced ACKs 
+Local Variables Definition 
+Max_Rcv_PSN Highest PSN to arrive on PDC (wraps at 0xFFFFFFFF) 
+CACK_PSN Cumulative ACK PSN: All PSN lower than this PSN are received, processed, and 
+cleared 
+SACK_Base Defines PSN to be used as the lowest bit in SACK bitmap when generating an 
+ACK. 
+SACK_Base_Track Tracks the SACK_Base value used when generating an ACK in response to PDS 
+requests. It is updated based on the PSNs received between ACKs. 
+ 
+Processing upon PDS Request or ACK Request CP acceptance 
+// If lowest PSN not yet received & cleared is advanced, advance CACK_PSN 
+update CACK_PSN 
+ 
+if (SACK_Base_Track < CACK_PSN) { 
+        // CACK_PSN will ACK all packets up to CACK_PSN, update SACK_BASE 
+        SACK_Base_Track = CACK_PSN} else { 
+    If (CACK_PSN < rcvd_pkt.pds.psn) && (rcvd_pkt.pds.psn < SACK_Base_Track) 
+{ 
+        // Lower PSN arrives, favor ACK’ing these so update SACK_BASE 
+        SACK_Base_Track = rcvd_pkt.pds.psn 
+    } 
+} 
+ 
+Processing for ACK transmission 
+if (ACK is triggered by Probe CP) { 
+    SACK_Base = max{probe.payload, CACK_PSN} 
+    generate_ack() 
+} 
+ 
+if (ACK is triggered by PDS Request or ACK Request CP) { 
+    SACK_Base = SACK_Base_Track 
+    generate_ack() 
+    // shift the tracker up 64 to iterate over PSNs if no low PSNs arrive, 
+    // unless it would go past Max_Rcv_PSN 
+    if ((SACK_Base_Track + 63) < Max_Rcv_PSN) { 
+        SACK_Base_Track = SACK_Base_Track + 64 
+    } 
+} 

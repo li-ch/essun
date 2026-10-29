@@ -1,0 +1,29 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 64 B/ns,
+# L = 1000 ns (declared import) — the REGISTRY POINT row (A-L0X-BW /
+# A-L0-BW assumed value 64, free range [1, 1024]): the placement row
+# locating the model's registry default relative to GF-06's anchor
+# config. At the anchor's own scale of rates this stage executes
+# (12.5 sim links, 100 per-NIC, 195 goodput, 200 per-server line), the
+# registry point 64 sits between the sim links and the NIC line:
+# asymptotic CCT ratio vs the anchor row exactly 128/25 (the anchor sim
+# config predicts 128/25 ~ 5.12x SLOWER CCT than the registry defaults
+# in the bandwidth-bound limit at equal L) — placement arithmetic, never
+# a tuning target; the registry value and range are untouched. This row
+# is also the REGISTRY TWIN of the stage's store run pair
+# (run_gf06_registry_v1.yaml) at the anchor-run payload 2 MiB, sharing
+# the anchor row's L so the run pair isolates the B axis alone. Nothing
+# tuned.
+topology_id: crossbar8_gf06_reg64_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the A-L0X-BW / A-L0-BW
+  registry point (64 B/ns, free parameter default; range [1, 1024]
+  untouched by this stage). Identity t = 2(r-1)/r*M/B + 2L, L = 1000 ns
+  declared import from GF-05's staged UET-htsim per-hop decomposition.
+  Provenance: free-registry default; placement row only, never tuned,
+  never our measurements.

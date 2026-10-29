@@ -1,0 +1,22 @@
+ 569 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The PRF MUST be implemented using CMAC with AES-256 as the block cipher. The inputs to the CMAC 
+function are always aligned to the block size of the cipher to simplify implementation. The Label field 
+MUST be 16 bit and contain an ASCII-encoded text based on the type of KDF used. 
+The Rekey field is part of the Context of the KDF_fixed portion and MAY be used in the KDF Context field 
+to facilitate automatic rekeying. Rekey MAY be only in cluster kdf-mode. From 0 to 32 bits are extracted 
+from the TSC based on a mask and shift operation:  
+• Rekey = (tss.tsc & Rekey_Mask) >> Rekey_Shift) 
+o During the logical right shift operation, zeros are injected. 
+o Rekey MUST be initialized to zero such that if 0 bits are extracted the Rekey is zero. 
+• The Rekey_Mask and Rekey_Shift shift MAY be global or part of the SDKDB. 
+o All members of the SD MUST use the same Rekey_Mask and Rekey_Shift values. 
+3.7.8.1 Cluster KDF mode for IPv4 and Packets with Explicit SSI 
+For IPv4 and SSI packets, the Context field MUST be 80 bits and constructed from the following fields 
+based on ssi-mode: 
+• LabelCluster  = 0x5531 or ‘U1’ in ASCII 
+• Contextv4 = current_epoch || Rekey || tss.ssi: if ssi-mode is TRUE. 
+• Contextv4 = current_epoch || Rekey || ipv4.src_addr: if ssi-mode is FALSE. 
+The KDF is invoked in the following manner:IVMask ||SDKo = KDF(SDKi, context=Contextv4, label=Label) 
+Figure 3-143 depicts how each iteration is accomplished for an IPv4/SSI cluster KDF mode. 

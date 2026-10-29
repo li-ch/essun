@@ -1,0 +1,41 @@
+ 691 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ends of the link SHALL NOT send any wide CSIG tags and SHALL log an error if any wide CSIG tags are 
+received. 
+If the LLDP advertisements from both link partners have CSIG-C=2, then both ends of the link are able to 
+process and forward packets with compact and wide CSIG tags; therefore, the link is capable of 
+forwarding both compact and wide CSIG tags. 
+5.3.2.1.6.4 UFH 
+The 2-bit UFH-C field can take one of four values (see Table 5-4). If UFH-C is set to 0, the port cannot 
+participate in forwarding the unified fabric header (UFH). If UFH-C=0 or if the LLDP Options TLV is NULL 
+or if the LLDP Options TLV is version 0, then the port isn’t capable of forwarding UFH encoded packets. If 
+UFH-C=1, the port can forward only UFH_32-encoded packets. If UFH-C=2, the port can forward only 
+UFH_16-encoded packets. If UFH-C=3, the port can forward both UFH_32- and UFH_16-encoded 
+packets.  
+A port SHALL discard all UFH-encoded frames before transmitting them onto the link until it has both the 
+local and remote Options TLV. Once a port sees both the local and remote UFH-C values along with the 
+UFH configuration parameters, it SHALL choose an operating mode that is common to both ports, if one 
+exists; set the local UFH-S to reflect that operational state by setting the UFH-S to the appropriate value 
+from table 5-4; and stop discarding the UFH encoded packets that conform to the chosen operational 
+mode. If there is no common operating mode, UFH-S=0 SHALL be set in the local database and 
+transmitted to the link partner. For an operating mode to be valid, the link partners MUST be using the 
+same number of bits, as indicated by the UFH_32 and UFH_16 configuration fields, and be running the 
+same UFH version, indicated by the V32 and V16 bits. 
+Table 5-35 - UE Link Negotiation Options TLV UFH-C and UFH-S Field Options 
+UFH-C or UFH-S Value UE Link UFH capability or status 
+0 The port cannot participate in UFH (default value). 
+1 The port can participate in UFH_32 forwarding. 
+2 The port can participate in UFH_16 forwarding. 
+3 The port can participate in both UFH_32 and UFH_16 forwarding.  
+ 
+The UFH_32 parameter indicates how many address bits are used for addressing in the UFH_32 
+encoding. The range of the UFH_32 parameter is 4 to 32 bits where 32 is represented by UFH_32=0. The 
+UFH_16 parameter indicates how many address bits are used for addressing in the UFH_16 encoding. 
+The range for the UFH_16 parameter is 4 to 16 bits where 16 is represented by UFH_16=0. The V32 and 
+V16 parameters indicate the version of the UFH_32 and UFH_16 encoding respectively. The first version 
+is indicated by a 0 in the V32 or V16 fields, while a future version is indicated by a 1 in the V32 or V16 
+field. 
+If the LLDP advertisements from both link partners have the same UFH capabilities, indicated by the 
+value of UFH-C, then both ends of the link are able to forward packets with the indicated UFH encoding. 
+In addition to having matching encodings for the link to exchange packets, the link partners SHALL also 

@@ -1,0 +1,41 @@
+ 505 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+        if (updateWc): 
+            increment_stage++ 
+            reference_rate = rate 
+            next_rate_change = now() + update_interval 
+ 
+3.6.15 Transport Flow Control (TFC) 
+Transport Flow Control is provided to allow a destination to control the amount of data transmitted 
+from one or more sources. TFC uses a point-to-point credit mechanism, with the destination allocating 
+credit and the source consuming credit. A source MUST NOT transmit a packet if it does not have credit. 
+For the purposes of transmission of credit from the destination to the source, TFC is aligned with the 
+RCCC credit mechanism and uses the same header fields. It uses a 24-bit pds.credit field that is carried 
+from the destination to the source in either PDS Credit CPs or using the pds.cc_type=CC_CREDIT header 
+in PDS acknowledgements. When using pds.cc_type=CC_CREDIT with TFC, pds.ooo_count MUST be set 
+to 0xFFFF, indicating the field is invalid and pds.ooo_count MUST be ignored on receipt. 
+As with RCCC, the pds.credit field is a monotonically increasing number that wraps at its maximum 
+value. An increase in the value of the pds.credit field provides additional credit to the source. This is 
+used to provide tolerance to packet loss. A single bit in the pds.credit field represents 256 bytes of 
+credit. When a Credit CP or an ACK conveying credit arrives at the source, the source’s state is updated 
+in a similar way to RCCC: 
+TFC.OnCreditUpdate(Credit): 
+if Credit > ccc.cumulative_credit: 
+ccc.credit += (Credit - ccc.cumulative_credit) >> 8 
+ccc.cumulative_credit = Credit 
+ 
+As with RCCC, the source is permitted to send if ccc.credit > 0. Note that being able to send is not 
+dependent on packet size, so if ccc.credit is greater than zero, the destination MUST be able to accept an 
+MTU-sized packet. 
+TFC differs from RCCC credit in that a TFC source can retransmit without using credit. The rationale for 
+this difference is that the role of TFC credit is to prevent the source from sending data that the 
+destination cannot buffer, whereas the role of RCCC is to manage network bandwidth. With TFC, a 
+packet can be safely retransmitted without needing additional credit because the corresponding buffer 
+at the destination must have already been allocated for the original packet. 
+Note that retransmission at the PDC level is conceptually separate from any retransmission that may 
+occur at the link level using link-layer retry (LLR). 
+Because TFC controls access to receive buffers, different destinations may have different requirements 
+when it comes to buffer management. Some destinations may allocate buffers for entire MTU-sized 
+packets, so the transmission of a packet must then consume an MTU of credit. Other destinations may 

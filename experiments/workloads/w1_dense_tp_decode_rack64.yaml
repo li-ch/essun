@@ -1,0 +1,22 @@
+# W1 Dense TP Decode — cross-design comparison configuration (Q6 stage S4).
+# Same workload shape as the smoke config (2 layers x 3 decode steps = 6
+# AllReduce ops per config); the ONE shared workload file for BOTH flavors
+# in experiments/sweeps/cross_design_uec_vs_ub_paper_l0_v1.yaml — the sweep
+# runner's same-workload gate (one workload => one tp_size for every
+# config) is what makes "same workload" literal.
+#
+# tp_size 64 is ANCHORED on the UnifiedBus-paper side (UBP-P17: 64 NPUs per
+# rack, PAPER_REPORTED) and FREE on the UEC side (UEC 1.1 fixes no rank
+# count) — the stated asymmetry A-XDUO-TP in
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml. Workload scoping
+# follows the UB papers' own traffic claim (UBP-P39: TP+SP ~97% of
+# traffic, PAPER_REPORTED), which is what justifies a dense-TP workload
+# for this comparison on the UB side; on the UEC side W1 is the platform's
+# landed first workload.
+# All sizes are integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-xduo64
+tp_size: 64
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # free parameter (overridden per config by the sweep grid)

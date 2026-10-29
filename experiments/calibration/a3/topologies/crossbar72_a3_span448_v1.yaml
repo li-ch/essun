@@ -1,0 +1,27 @@
+# Calibration-ladder A3 topology: fully-connected crossbar of 72 ranks at
+# B = 448 B/ns per rank per direction — the lower endpoint of the plan §2.1
+# A-L0X-BW anchor-informed aggregate injection span [448, 900] B/ns:
+# CAL-A7-derived MI300X class (7 bidirectional 128 GB/s Infinity Fabric
+# links per GPU => 7 x 64 B/ns per direction). Included in stage A3 for
+# span completeness and cross-stage comparability with stage A2 (same three
+# B values), NOT because any CAL-A3 measurement suggests it: the CAL-A3
+# series (docs/calibration/anchors_staging.md §A3) sits far above this
+# point at every message size.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW); 448 is fixed by CAL-A7's
+# own staged arithmetic, never tuned toward CAL-A3 output. L = 200 ns is
+# the A-L0X-LAT registry point.
+topology_id: crossbar72_a3_span448_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 448
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency; single-port injection shared across the 71 peers. No congestion,
+  no credits, no packetization — L0 transport model only. Provenance:
+  B = 448 B/ns derived from CAL-A7 (MI300X 7 links x 64 B/ns/dir; spec,
+  never an achieved value); L = 200 ns is the free A-L0X-LAT registry
+  point. Values are anchor specs/assumptions, never measurements.

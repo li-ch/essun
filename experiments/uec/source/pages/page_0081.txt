@@ -1,0 +1,29 @@
+ 81 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.2 UE Libfabric Mapping 
+This document specifies the mapping between libfabric v2.0, also known as Open Fabrics Interfaces 
+(OFI), and the Ultra Ethernet Transport (UET v1.0), as well as the requirements imposed on UET OFI 
+providers. The mappings are an important part of enabling communication libraries and services over 
+UET, including support for MPI, *CCL, SHMEM/PGAS, and other communication uses. UET must uphold 
+the expectations of these communication libraries and services. Additionally, the mapping is dependent 
+on the UET semantics and profiles. It is expected that each UET Fabric End Point (FEP) vendor will 
+provide a UET libfabric provider that is optimized for their FEP; however, this specification defines 
+requirements that enable interoperability between UET FEPs. 
+Libfabric has been selected as the primary network data plane API for UET as it is a flexible open-source 
+framework utilized by various communication libraries for AI and HPC workloads. Libfabric is 
+incorporated into this specification by normative reference. This specification does not attempt to 
+provide a tutorial description of libfabric. Details about libfabric and the libfabric APIs are available from 
+libfabric.org. Where possible, references to the libfabric main pages are provided. Note that these 
+references are subject to change. 
+In summary, libfabric provides a communication API tailored for high-performance, parallel, and 
+distributed applications. As a low-level communication library, it abstracts various networking 
+technologies. However, in this context, we define its use for UET, aiming to eliminate ambiguity while 
+enhancing interoperability and simplifying debugging. Libfabric has been deployed at scale, and its open-
+source ecosystem is suitable for future enhancements that can be delivered as UET evolves. Libfabric 
+supports Linux, Windows, FreeBSD, and macOS platforms and uses a dual GPLv2/BSD license or a 
+compatible license, such as MIT. Extensibility has been designed into the API. 
+Libfabric is built around the concept of plugins known as “providers.” The software components of UET 
+functionality are part of a vendor-supplied UET provider. The libfabric core communicates with all 
+providers via a common provider API. The libfabric software architecture is illustrated in Figure 2-2. The 
+applications shown in the diagram are illustrative and not meant to be comprehensive. 

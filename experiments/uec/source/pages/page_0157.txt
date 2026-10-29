@@ -1,0 +1,41 @@
+ 157 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.4.4 Datatypes 
+The supported atomic datatypes are shown in Table 3-28. 
+2.4.5 Reduction Operators 
+A subset of the operations defined in Section 3.4.7.2 is available for INC reductions. The encoding of the 
+INC reductions is kept consistent with the atomic operation encoding while replacing some codepoints 
+that do not apply to INC (See Table 3-27). 
+Table 2-50 - INC Reduction Operations 
+Name Constant Description 
+UET_INC_MIN 0x00 Minimum: Output = MIN(Input1, Input2) 
+UET_INC_MAX 0x01 Maximum: Output = MAX(Input1, Input2) 
+UET_INC_SUM 0x02 Sum: Output = Input1 + Input2 
+UET_INC_SUM_SCALE 0x03 Sum and divide by a 32-bit unsigned integer factor 
+configured by IM for communicator 
+UET_INC_PROD 0x04 Product: Output = Input1 * Input2 
+UET_INC_LOR 0x05 Logical OR: Output = Input1 || Input2 
+UET_INC_LAND 0x06 Logical AND: Output = Input1 && Input2 
+UET_INC_BOR 0x07 Bitwise OR: Output = Input1 | Input2 
+UET_INC_BAND 0x08 Bitwise AND: Output = Input1 & Input2 
+UET_INC_LXOR 0x09 Logical XOR: Output = Input1 xor Input2 
+UET_INC_BXOR 0x0A Bitwise XOR: Output = Input1 ^ Input2 
+UET_INC_MINLOC 0x0B Minimum value and location (on paired types) 1 
+UET_INC_MAXLOC 0x0C Maximum value and location (on paired types) 1 
+Reserved 0x0D-0xEF Reserved 
+Vendor specific 0xF0-0xFE Vendor-defined reduction operation 
+Reserved 0xFF Reserved 
+Note: 
+1. The location is UET_TYPE_UINT32. If the value and the location are of different sizes, the smaller of the two 
+is padded to match the other’s size. The padding is added after the element. It is set to zero by the sender 
+and ignored by the receiver. 
+ 
+Informative Text: 
+The sum-and-scale operation is a generalized version of average, in that the factor by which the final 
+division is performed is configurable. Setting said factor to the number of ranks in the group makes 
+sum-and-scale work the same as average. 
+ 
+The required combinations of datatypes and operations are defined in Table 2-51. 
+ 
+ 

@@ -1,0 +1,43 @@
+ 353 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Type PDS Type         
+5 RUDI Response rsvd m retx rsvd rsvd rsvd rsvd 
+6 UUD Request rsvd rsvd rsvd rsvd rsvd rsvd rsvd 
+7-9 RUD/ROD ACK rsvd m retx p req rsvd 
+10 NACK rsvd m retx nt rsvd rsvd rsvd 
+11 CP pdc_type retx ar syn rsvd rsvd 
+15 RODL – General rsvd cack retx ar syn rsvd rsvd 
+ 
+Table 3-55 - pds.flags for RODL over UFH_16 
+Type PDS Type     
+15 RODL over UFH_16 retx ar syn 
+ 
+3.5.11.9 pds.entropy 
+The pds.entropy field is used by network switches to select a path through the network. UET provides 
+two methods for carrying this entropy field depending on the encapsulation: 
+• udp.src_port when UDP encapsulation is used. 
+• A UE entropy header (pds.entropy) that immediately follows an IPv4 or IPv6 header when native 
+IPv4 or IPv6 encapsulation is used or immediately follows the EtherType 0xE790 when UET runs 
+directly over Ethernet. 
+The congestion management function assigns the pds.entropy field used in each request packet. ACK 
+packets use the pds.entropy field from the packet that triggered the ACK generation. Refer to the CMS 
+Section 3.6.16 for more information on how entropy is selected. 
+3.5.11.10 NACK pds.payload 
+The NACK pds.payload field carries NACK specific information. The contents are dependent on the 
+pds.nack_code field. 
+Table 3-56 - NACK Payload Contents 
+NACK_CODE NACK Payload 
+UET_NEW_START_PSN pds.payload.start_psn 
+This carries the new Start_PSN as described in Section 
+3.5.8.2.1.  
+All other NACK_CODEs on ROD PDC  pds.payload.expected_psn 
+The next Expected_PSN on this ROD PDC 
+All others 0x0 
+Note: 
+• When the NACK pds.spdcid=0, the pds.payload is set to 0x0 
+ 
+3.5.11.11  pds.cc_type and pds.ccx_type 
+The pds.cc_type and pds.ccx_type fields are used to determine the contents of the pds.ack_cc_state 
+and pds.ack_ccx_state fields in the ACK_CC and ACK_CCX packets, respectively. The two defined 
+formats are shown in Table 3-57 and Table 3-58. 

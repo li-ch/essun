@@ -1,0 +1,39 @@
+ 509 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Some network switches can perform packet spraying themselves, rather than hashing the header fields 
+to determine the path. It is RECOMMENDED that such behavior not be enabled for UET traffic if path-
+aware multipath spraying (Section 3.6.16.4) is used, as it prevents UET getting a clean signal as to which 
+paths are congested. 
+Despite attempts to evenly distribute the traffic, some path-specific congestion is likely to occur. 
+Hashing is not guaranteed to spread the packets evenly. The presence of other traffic that is not sprayed 
+may impact available bandwidth on some paths. In addition, failures may render a path unavailable. 
+Improved throughput and reduced flow completion times can be achieved if the sources actively 
+balance traffic. 
+3.6.16.1 Path Entropy 
+When packet spraying is employed, packets are sprayed across multiple paths by varying the value of an 
+entropy field that carries the Entropy value (EV) in packet headers (see Section 3.6.10.1). The entropy 
+field is used by switches to determine which ECMP path each packet takes to the destination.  
+Three modes of operation are permitted: 
+• Single path (used only by ROD). All packets in a CCC use the same EV for some period of time, 
+before the EV is changed. 
+• Oblivious spraying. The packets of a CCC are sprayed across many paths by changing the EV 
+through a large space (typically at least 256 values). EVs are chosen pseudo-randomly with the 
+goal of spreading traffic evenly across all possible paths. 
+• Path-aware spraying. The packets of a CCC are sprayed across many paths by adaptively 
+changing the EV to avoid congested paths, based on feedback provided by the destination as to 
+which EVs saw congestion. 
+3.6.16.2 Single-Path Entropy 
+At PDC startup, the reliability module generates an AllocateCCC() event with sprayed=FALSE. The CCC 
+chooses an entropy value to use for the packets of the flow. To ensure that, in the absence of route 
+changes or packet loss, packets arrive in order, only a single entropy value is used at one time for this 
+CCC. 
+If network congestion is observed and it is determined that the congestion is not occurring at the final 
+link to the destination (which cannot be avoided by re-routing), then the CCC MAY change the entropy 
+value it uses. To minimize the impact of reordering and any potential retransmission, it is 
+RECOMMENDED that the CCC either change the entropy value when the flow has become idle, or if 
+there is no idle period, that it does not change the entropy value more often than every t_reroute RTTs. 
+How long a flow should be idle before changing entropy value is a configuration choice. It is safe to 
+switch whenever there are no packets in transit, but such a conservative choice will not necessarily lead 
+to improved performance. It is RECOMMENDED that the default value of t_reroute be set to at least 10 
+RTTs and that this value be configurable. 

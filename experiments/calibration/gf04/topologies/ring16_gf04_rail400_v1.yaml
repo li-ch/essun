@@ -1,0 +1,33 @@
+# Calibration-ladder GF-04 topology: the RAIL-BOUND bracket — B = 400
+# B/ns per hop at r = 16. Arithmetic provenance (the anchor's own fetched
+# config statement, A6 convention): "Node 1: H100.8 Shape with 16x200
+# Gbps RoCEv2 NIC" per node; under the per-direction Ethernet port
+# convention 200 Gbps = 25 B/ns, so the per-node rail aggregate is
+# 16 x 25 = 400 B/ns per direction. A ring allreduce over 2 nodes crosses
+# the inter-node rail; a uniform ring at B = 400 makes that hop the
+# binding rate — the declared lower-bracket projection of the hybrid
+# fabric (the mirror of stage A6's rail400 topology for its 4x8 hybrid
+# anchor; SAME per-node config class, one H100 generation later, now on a
+# 2-node ring instead of a 4-node one).
+#
+# This bracket is what the uniform-B input space CAN say about the
+# crossing cost: busbw ceiling 400 => an asymptotic 8->16 drop of
+# 1 - 400/476.37 = 16.03%, vs the anchor's measured 1.41% — the measured
+# configuration did not saturate the per-node rail (per-cut demand under
+# two counter-rotating channels is ~234.8 B/ns per direction < 400; the
+# arithmetic lives in the stage record, declared inline).
+#
+# HONESTY: B = 400 is anchor-config arithmetic (a ceiling, never a
+# measurement); free parameter A-L0-BW; L = 200 ns registry point (KEEP).
+topology_id: ring16_gf04_rail400_v1
+topology_class: unidirectional_ring
+ranks: 16
+link:
+  bytes_per_ns: 400
+  hop_latency_ns: 200
+notes: >
+  Unidirectional ring of 16 ranks at the inter-node rail aggregate
+  400 B/ns (16 x 200 Gbps RoCEv2 per node, per-direction port convention,
+  fetched config statement; the A6-convention rail arithmetic on this
+  anchor's own config). Declared rail-bound bracket, a ceiling never a
+  measurement; never tuned.

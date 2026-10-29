@@ -1,0 +1,39 @@
+ 315 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The target either verifies the tuple on every received packet or relies on the pds.dpdcid once received 
+packets no longer have the pds.flags.syn set. The source FA (ip.src_addr) and pds.spdcid MUST be 
+verified on every packet. When the tuple {ip.src_addr, pds.spdcid} is checked and does not match the 
+expected fields, the packet MUST be dropped and an error recorded, UET_PDC_HDR_MISMATCH. 
+Figure 3-55 illustrates the startup sequence. The pds.spdcid is the source PDCID, unique at the FEP that 
+sent the packet. The pds.dpdcid is the destination PDCID. The initiator/target labels consistently refer to 
+specific FEPs based on how the PDC is created. The source/destination labels vary depending on the 
+specific task/packet being discussed. For example, in Figure 3-55 both FEP-A and FEP-B may be a source 
+or destination. 
+Once a PDC is established, packets with pds.flags.syn set are accepted for PSNs up to the Start_PSN plus 
+MP_RANGE (as defined in Section 3.5.11.13). If a packet is received with a PSN higher than Start_PSN + 
+MP_RANGE and pds.flags.syn is set, the packet MUST be NACK’d with pds.nack_code = 
+UET_INVALID_SYN. 
+The source receives an ACK or NACK indicating whether the target established the PDC. If the pds.spdcid 
+field in a received NACK is zero, then the PDC was not created. In this case, all traffic (except control 
+packets) on the PDC MUST be paused until a NACK retransmit timer (Section 3.5.12.7) expires or a 
+subsequent ACK or NACK is received with a non-zero pds.spdcid. 
+If the pds.spdcid in the ACK/NACK is non-zero, then the PDC is established. The source uses that 
+pds.spdcid from the ACK/NACK as the pds.dpdcid for all subsequent PDS requests and CPs sent on the 
+PDC, including any retransmissions that originally had pds.flags.syn = 1. 
+When encryption is not enabled, an initiator SHOULD NOT retransmit a packet with pds.flags.syn=1 
+unless an explicit NACK is received for that packet. Instead, for packets with pds.flags.syn=1 and are 
+determined to be lost, the initiator SHOULD wait until the PDC is established and retransmit lost packets 
+with pds.flags.syn=0. If any packet with pds.flags.syn=1 is determined to be lost, the initiator MAY use a 
+Negotiation CP at any time before the Close Command CP is sent to determine if the target will accept 
+responsibility for tracking Syn_Retx_Safety_Time when the PDC is ready to close. The Negotiation CP 
+uses the negotiation type (see Table 3-78) of PDS_NEG_ON_OFF with SYN_RETX_TRANSFER feature bit 
+of the pds.net_on_off_mask field set (see Table 3-80). 
+If all packets with pds.flags.syn=1 are lost, the initiator SHOULD establish the PDC by sending a 
+Negotiation CP (see 3.5.16.7). The Negotiation CP is used to establish the PDC, avoiding the need to send 
+additional payload packets with pds.flags.syn=1. An initiator MAY use the Negotiation CP to negotiate 
+that the target assume responsibility for tracking Syn_Retx_Safety_Time. 
+When encryption is not enabled, if a packet with pds.flags.syn=1 is considered lost, an initiator MUST 
+capture a timestamp. The timestamp captured SHOULD be the local time that the packet was originally 
+transmitted, but MAY be the local time that it was determined to be lost. This time MUST be kept as 
+part of the initiator PDC state. The initiator PDC needs to track only a single captured timestamp—the 

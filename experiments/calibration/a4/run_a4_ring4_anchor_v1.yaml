@@ -1,0 +1,46 @@
+# Calibration-ladder A4 anchor-point RUN: the L0 ring
+# identity at the CAL-A4 anchor point — B = 150 B/ns (the paper's staged
+# per-GPU per-direction NVLink quote), r = 4, payload 3*2^29 = 1610612736 B
+# (the 1.5 GiB large endpoint of the anchor's 64 MB-1.5 GB regime, binary
+# reading declared in the stage record), L = 200 ns (A-L0-LAT registry
+# point). L0 twin of the pinned-ASTRA-sim store run at the same
+# configuration: the anchor validates THAT backend family against real
+# V100 systems, so this stage places both of our backends inside the
+# anchor's regime and measures where they sit relative to each other and
+# to the anchor's own numbers.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes an analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A4-RING4-ANCHOR-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a4/workloads/w1_dense_tp_decode_tp4_1500mib.yaml
+infra_graph:
+  path: experiments/calibration/a4/topologies/ring4_a4_b150_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a4/profiles/implementation_profile_l0_ring_cal_a4_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring4_a4_b150_v1 (unidirectional ring, r=4, B=150 B/ns CAL-A4 anchor point, L=200 ns free)
+  workload: w1_dense_tp_decode tp4, payload 3*2^29 (1.5 GiB endpoint of CAL-A4's 64 MB-1.5 GB regime, binary reading)
+  implementation: analytical L0 ring identity; CAL-A4 comparison is placement of the model and of the pinned ASTRA-sim backend inside a peer-reviewed validated regime — PROPOSED, review required
+evidence_level_requested: E0

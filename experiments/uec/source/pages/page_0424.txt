@@ -1,0 +1,40 @@
+ 424 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.22.3 Error Sequences 
+RODL error sequences are the same as ROD when retransmission is enabled. See Section 3.5.21.3. When 
+retransmission is not enabled, the dropped request results in a PDC fatal error and the PDC is closed. 
+RODL lost ACKs are handled in the same manner as ROD lost ACKs. 
+3.5.23 RUDI  
+RUDI sequences are specified for RMA Writes and RMA Reads. RUDI provides reliable delivery for 
+idempotent operations. It does not use PDCs. Each packet is handled individually without maintaining 
+sequence numbers. 
+The pds.pkt_id field in RUDI PDS headers is a locally assigned number that is echoed back in the RUDI 
+response to allow the response to be associated with the request. 
+RUDI maintains no PDS or SES state at the target; all state resides at the initiator. As a result, no 
+clear‑protocol exchanges are required to free target‑side state. All reliability is provided at the initiator, 
+and SES responses are not retained for retransmission. 
+3.5.23.1 RUDI Services 
+The primary differences between the RUDI Write sequence and the RUD Write sequence are: 
+1. The RUDI delivery mode guarantees that each packet is delivered to SES at least once. 
+2. RUDI is only be used for idempotent operations. 
+3. The RUDI source assigns a unique pds.pkt_id to each transmitted packet. 
+4. PDS at the target waits for semantic processing to complete before transmitting the response 
+for each packet. 
+a. There is no message completion at the target. 
+b. RUDI Requests are acknowledged by RUDI Response packets. 
+5. If a RUDI packet is retransmitted, the pds.flags.retx field is set. 
+6. If a received RUDI Request is ECN marked, the pds.flags.m field is set on the corresponding RUDI 
+Response. 
+7. Each RUDI Request packet results in one and only one RUDI Response packet. 
+8. Each RUDI Response uses the pds.pkt_id from the corresponding RUDI Request. 
+9. PDS NACK event processing for RUDI includes the following: 
+a. The destination transmits a NACK if a trimmed RUDI Request is received. 
+b. The destination SHOULD transmit a NACK if a RUDI packet is dropped (e.g., due to 
+limited resources). 
+c. The source processes NACKs for RUDI Requests and retransmits the request. 
+d. The source receives trimmed RUDI Responses and retransmits the request. 
+e. RUDI Response packets are not NACK’d. 
+10. Loss recovery is provided by the initiator. 
+a. An RTO_TIMER per packet is required. 
+11. RUDI does not use UET congestion control. 

@@ -1,0 +1,116 @@
+ 86 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Structure Field Value(s) Required Notes 
+AI 
+BASE 
+AI 
+FULL 
+HPC 
+ cq_data_size 8 Y Y Y  
+ max_ep_tx_ctx >= 1 Y Y Y  
+ max_ep_rx_ctx4 >= 1 Y Y Y See footnote 4 
+ max_ep_stx_ctx 0 Y Y Y No shared transmit 
+queues 
+ max_ep_srx_ctx 0 Y Y Y No shared receive 
+queues 
+ mr_iov_limit >= 1 Y Y Y  
+ mr_cnt >= 8 Y Y Y Floor is subject to 
+overall availability of 
+MR resources if MRs 
+are a shared resource  
+ tclass FI_TC_BEST_EFFORT 
+FI_TC_UNSPEC 
+DSCP value 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Maps to default TC 
+Maps to default TC 
+ auth_key_size 0 or 3 or 
+FI_AV_AUTH_KEY 
+Y Y Y 
+Y 
+See Section 2.2.4 
+ max_ep_auth_key >= 1   Y Valid only in 
+conjunction with 
+auth_key_size = 
+FI_AV_AUTH_KEY 
+fi_ep_attr  
+ type FI_EP_RDM 
+FI_EP_DGRAM 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Reliable datagram 
+Unreliable datagram 
+ protocol FI_PROTO_UET Y Y Y New for UET 
+ protocol_version FI_VERSION (1, 0) Y Y Y  
+ max_msg_size  Max 
+PDU5 
+4GB-1 4GB-1 See footnote 5 
+ max_order_raw_size 0 Y Y Y No data ordering 
+ max_order_war_size 0 Y Y Y No data ordering 
+ max_order_waw_size 0 Y Y Y No data ordering 
+ tx_ctx_cnt >= 1 Y Y Y  
+ rx_ctx_cnt >= 1 Y Y Y See footnote 4 
+ auth_key JobID when  
+auth_key_size is 3 
+Y Y Y See Section 2.2.4 
+fi_tx_attr  
+ op_flags FI_COMPLETION 
+FI_INJECT 
+FI_INJECT_COMPLETE 
+FI_TRANSMIT_COMPLETE 
+FI_DELIVERY_COMPLETE6 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+ 
+ 
+ 
+ 
+Applies only to reliable 
+endpoints 
+ msg_order 0 
+FI_ORDER_SAS 
+Any combination of defined 
+Message ordering modes 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+Y 
+No message ordering 
+ comp_order 0 Y Y Y Field being deprecated 
+by libfabric 
+ inject_size Vendor specific     
+ iov_limit >= 1 Y Y Y  
+ rma_iov_limit >= 1 Y Y Y  
+fi_rx_attr  
+ op_flags FI_COMPLETION Y Y Y  
+ msg_order 0 Y Y Y No message order 

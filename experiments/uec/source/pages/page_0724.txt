@@ -1,0 +1,38 @@
+ 724 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+example, a scale-up fabric mapping a 10-bit device ID to a 16-bit address container must place it in the 
+lower 10 bits, and endpoints and switches must mask out the upper 6 bits when using the address 
+container. 
+The UFH forwarding function behaves analogously to an IP router for implementations mapping a 32-bit 
+IPv4 or 128-bit IPv6 address to the address containers. The UFH address containers carry the lower 32 
+bits or 16 bits of the address, with the upper bits configured consistently with a subnet prefix at every 
+endpoint and switch within a UFH domain (see 5.4.11). 
+The UFH format retains the ability to mark a frame as multicast via the M bit, and its usage should be in 
+accordance with the needs of the mapped address space. If the mapped address space is IP and the 
+destination is a multicast or broadcast address, the M bit SHOULD be set to 1. A UFH switch can 
+interpret the destination is multicast using either the M bit or the IP address type. 
+Hop-limit processing for UFH follows the same rules as IPv6 as defined in RFC 8200. Senders initialize the 
+hop-limit to a non-zero value in the range 1–15. Transit switches verify the incoming hop-limit, 
+forwarding packets if it is greater than 1 and dropping them if it is 0 or 1 and the switch is not the 
+destination for the packet. Destinations (endpoints or switches) accept all hop-limits including 0. ICMP 
+generation on hop-limit expiry is possible if a deployment maps an IP address namespace to UFH. 
+The ECN field is interpreted and marked per the rules for IP packets as described in RFC 3168. 
+This UFH specification does not define a UFH learning function or a spanning tree analog. The source 
+address within a UFH packet plays no direct part in forwarding; it can be optionally used by an UFH 
+switch for load balancing and by upper layers to track connection partners. 
+5.4.7 UFH and Queue Assignment 
+In a routed IP network, the DSCP field serves to assign the traffic class and queue assignments. The DSCP 
+field in UFH is expected to serve the same purpose. 
+When UFH packets are used with VLANs, there is an option to use the VLAN PRI field for traffic class and 
+queue assignment. In such cases, network configuration will determine the preference given for either. 
+This is no different than usage of IP over Ethernet VLANs. 
+5.4.8 UFH and Packet Trimming 
+UFH packets dropped due to congestion may be “trimmed” and sent as drop notifications to a receiver. 
+The UFH DSCP code point MUST be updated in accordance with the UE Packet Trimming specification 
+(see Section 4.1). 
+5.4.9 UFH and VLANs 
+VLANs are commonly used to isolate endpoints in an Ethernet network, and they can serve the same 
+function when used in conjunction with UFH. In a multi-tenant UFH environment, tenant identification 
+can be encoded in VLANs and isolation enforced in the switches through either VLAN filtering or VRF 
+assignment. 

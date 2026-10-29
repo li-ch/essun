@@ -1,0 +1,40 @@
+ 155 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3. Packets carrying INC reduction operations (allreduce and reduce) MUST carry full elements of 
+the specified datatype (i.e., a single element of the operation must be carried in one packet). 
+4. All FEPs in an INC communicator are associated with the same job. 
+5. The operands carried in the payload MUST use little-endian byte order. Operands MUST NOT be 
+padded1. 
+INC is composed of the following components: 
+• INC manager (IM): A daemon that facilitates collective offload. 
+• UET. 
+o SES deferrable send. 
+o PDS reserved ROD service. 
+o Non-interleaved messages. 
+o TFC (optional). 
+o TSS (optional). 
+• Group(s) of UET fabric endpoints (FEPs) called communicator(s). 
+• One or more logical SEPs. 
+o Each SEP supports the INC switch. 
+The INC switch requirements are defined in Section 2.4.10. 
+2.4.2 Theory of Operation 
+The IM establishes a communicator by grouping member FEPs and associating the group with a SEP, 
+assigning a unique collective ID (CID) upon creation. The INC switch uses the CID to disambiguate 
+communicators. The INC switch filters packets based on JobID/CID combinations. 
+Some applications require specific orders of operator application. Optionally, each communicator can 
+have constraints on the order of operations. 
+Upon communicator creation, the CSN is set to 0. The establishment of the required transport resources 
+is coordinated by the IM, as described in Section 2.4.12. 
+When a new operation is started, a rank uses the current CSN and increments it by one, wrapping from 
+the maximum 12-bit value back to 0. To start a collective operation, a rank issues a 
+UET_DEFERRABLE_SEND with the defined INC field (see Section 2.4.11.1) that encodes the CSN, type of 
+operation, and necessary parameters.  
+The SEP receives the input data, performs the operation defined by the INC field on the group identified 
+by the CID, and sends the output data to the recipients. The recipients of the output data depend upon 
+the operation.  For example, the allreduce collective requires the SEP to send the data to all ranks of the 
+communicator. The reduce collective requires the SEP to send the data to only one specified root node. 
+The broadcast collective requires the SEP to send the data to all ranks except the root node. Optionally 
+ 
+1 Composite operands, such as those used for MINLOC and MAXLOC, may contain padding. No padding is added to 
+the payload before or after any of the operands. 

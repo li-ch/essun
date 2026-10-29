@@ -1,0 +1,23 @@
+# Calibration-ladder GF-11 topology: UNIDIRECTIONAL RING of 2 ranks at the
+# GF-11 decomposition point — B = 64 B/ns, L = 702 ns per hop.
+#
+# ROLE: the r=2 leg of the identity-coincidence demonstration: at r=2 the
+# ring chain 2(r-1)L = 2L equals the crossbar and doubling chains, so this
+# row's outputs are IDENTICAL to crossbar2_gf11_b64_l702_v1.yaml at every
+# payload (executed equality, verified cell-by-cell in the stage record) —
+# algorithm choice vanishes at the decomposition rank, matching the
+# algorithm-free character of the measured speed-of-light bound. Same
+# honesty rules as crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: ring2_gf11_b64_l702_v1
+topology_class: unidirectional_ring
+ranks: 2
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 702
+notes: >
+  Unidirectional ring of 2 ranks, B = 64 B/ns (free registry), per-hop
+  latency L = 702 ns (GF-11 derived reading SoL/2). Identity
+  t = M/B + 2L — identical to the r=2 crossbar and exchange identities by
+  construction (2(r-1) = 2*log2(2) = 1 step per phase). Values are anchor
+  arithmetic / free registry points, never ours, never tuned, never
+  standard-normative.

@@ -1,0 +1,13 @@
+ 676 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 5-13 - Example CC_Update Packet During LLR Discard Window  
+When both CBFC and LLR are enabled, all CBFC lossless data packets are required to also be LLR-eligible; 
+but this is the common case and is a reasonable expectation. This has two advantages: 
+• The CC_Update packet follows the usual LLR rules during the LLR discard window and is simply 
+discarded as an LLR-eligible packet. 
+• The replay of the CC_Update packet produces a correct CC counter comparison and recovers 
+any leaked credits rather than waiting for the next CC_Update interval (which may also hit an 
+LLR replay event). 
+ 

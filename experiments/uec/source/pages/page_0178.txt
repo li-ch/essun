@@ -1,0 +1,40 @@
+ 178 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3 UE Transport Layer 
+The Ultra Ethernet Transport (UET) layer is designed to handle the most challenging application scale, 
+deliver packets reliably and securely, manage and avoid congestion within the network, and react to 
+contention at the endpoints. Its goals are minimal tail latency and highest network utilization. At the 
+same time, UET is designed to enable simple hardware and software implementations—such as what 
+might be required for accelerator-integrated endpoints. UET can be programmed through the OFI 
+libfabric standard interface. It sets out to address the shortcomings of RoCEv2 [1], specifically its 
+semantics, transport layer, wire operations, implementation complexities, and scale limits. 
+UET leverages semantics and reliability techniques from HPC to enable extreme scale while providing 
+advanced congestion management that employs the breadth of techniques and telemetry rising from 
+hyperscale datacenters for traditional Ethernet environments. The transport supports up to millions of 
+endpoints (NIC ports) with the ability to address up to billions of processes. Scalability is built into every 
+aspect of its design—from the state required in the semantic layer down to the way encryption keys are 
+managed and the way reliability and ordering are achieved. 
+To enable simplified implementations, subsets of the capabilities are defined in specific profiles that 
+support specialized use cases in AI domains. The HPC profile offers the most comprehensive 
+functionality. Some of it is optional to implement; two of the AI profiles define subsets of HPC. The AI 
+Full and AI Base profiles enable full or partial offload of *CCL-like messaging functions to hardware. The 
+AI Full profile offers deferrable sends, which save up to 1 RTT compared to the AI Base profile in the case 
+when the receive buffer is not ready. The AI Full profile also provides exact match offload to identify a 
+specific receive buffer. The AI Base profile requires a prior message exchange to communicate a desired 
+target buffer, which enables slimmer AI Base profile implementations. The Unified Local profile extends 
+UET to support local scale-up networks. Optimized for wire efficiency, small transactions, and compact 
+implementation, the Unified Local profile supports write/read/atomic operations. 
+This overview section has been used by the working group to define the goals and the overall 
+architecture of UET as well as to design the specifics of the sublayers. It contains an overview of the 
+architecture and each sublayer as well as some historic context to ease the understanding of readers. It 
+does not contain normative text outside of Section 3.3. 
+3.1 UET Scope, Scale, and Reach 
+This section outlines the original design guidelines for UET to limit its scope and enable optimized design 
+choices. This background information helps readers understand decisions and architectural choices. 
+UET focuses on the backend scale-out and local scale-up networks. UET opportunistically considers 
+support for frontend networks while not preventing applications in the scale-up network. UET does not 
+define details of the hardware interface to the endpoints. 
+UET is designed to operate within one administrative domain. This means that, where necessary, a 
+single provisioning system is presumed for the assignment of identity and policy. 
+The workload and use cases are focused on generic AI, HPC, and storage traffic. 

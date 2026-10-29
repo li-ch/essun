@@ -1,0 +1,29 @@
+We now formally introduce Nested BSP, which extends classic BSP by nesting it recursively. The idea is simple. The outermost layer is BSP for the whole army. And every “advance in parallel” inside that layer is itself a smaller army; within its own scope it runs the same four steps again: parallel work, barrier, exchange and aggregate, next phase. Inside that sits a still smaller layer, and within that, yet another. Layer within layer, recursion all the way down. What Nested BSP extends beyond classic BSP is one hard constraint: at every layer, the units are peers—no master that must own every barrier, no slave that may only obey. Parallelism is nested, authority is not.
+
+Huawei’s SuperNode cluster design rests on Nested BSP as its theoretical foundation. The hardware properties described so far—one protocol end to end, memory semantics, full peer equality, copper near and optics far—all exist so that this nested structure can stand in the physical world. That hardware nest is the Nested Parallel von Neumann Architecture: from package to autonomous zone, concurrent units at every layer, peers on one bus.
+
+First, the software nest, illustrated in Fig. 1.
+
+Figure 1: Software nesting dolls: Nested BSP. From outermost to innermost, the levels are data parallel (DP), pipeline parallel (PP), expert parallel (EP), fully sharded data parallel (FSDP), context parallel (CP), and tensor parallel (TP).
+
+Every layer runs the same playbook: compute in parallel, then barrier and reduce. In plain terms: map and reduce. A problem of that scale is broken into a problem every layer can manage. Orders pass down layer by layer; only then does the army hold.
+
+Notice one thing: inside each larger doll there is not one smaller doll, but many. One DP holds many PPs; one PP holds many EPs; one EP holds many FSDP shards. That multiplicity is the source of parallelism.
+
+The body of this army is also a nest of dolls, illustrated in Fig. 2, layer within layer, each with its own boundary. Counting from the inside out: CORE, chiplet, chip package, board, rack, SuperNode, data hall, autonomous zone, data center, and outermost, inter data center.
+
+Figure 2: Hardware nesting dolls: the body of the machine, from chip package to autonomous zone. One autonomous zone holds many data halls, one hall holds many SuperNodes, and one SuperNode holds many racks, all the way down to the package.
+
+The software nest above and this hardware nest must line up, layer by layer.
+
+This paper does not go from the innermost atom to the outermost campus. We focus on the middle stretch of hardware system design: from the chip package to the cluster that fills a data center.
+
+Further in is how to train one soldier; further out is how campuses talk to campuses. The battlefield where a hundred thousand or a million become one army sits in these middle layers: package, board, rack, SuperNode, data hall, autonomous zone. Orders must pass down without a single layer dropped. Between layers: is it still one plan, one command set, one computer?
+
+Unified Bus does exactly that: it makes the split and join of every layer line up, so that command does not break at the boundaries [5].
+
+On the τ\tau Scaling law [6], we note this: at the system level, it maps to these two nests of dolls.
+
+At every Nested BSP layer and every physical scale, Huawei’s τ\tau Scaling law does the same thing: it folds time. The playbook at every layer is the same: work that would have been done one piece after another is spread across many units that can work at once on that layer, and that layer’s time constant folds shorter. Once inside the package, once on the board, once in the rack, once in the SuperNode, once again in the data hall.
+
+The software nest is Nested BSP, and the hardware nest is the Nested Parallel von Neumann Architecture, with more concurrent, peer-equal units at every layer: more in the package, more on the board, more in the rack, more in the hall. The two nests correspond layer by layer, and time folds at each. One layer alone folds only so much, six layers fold multiplicatively. That is how the time of the whole campaign truly comes down.

@@ -1,0 +1,107 @@
+# Implementation profile for the calibration-ladder GF-09 runs/sweeps
+# on the analytical L0 crossbar backend (gap-fill
+# anchor GF-09, "Ultra Ethernet's Design Principles and Architectural
+# Innovations", arXiv:2508.08906, Aug 2025, Hoefler et al. — a public
+# arXiv paper authored by UEC participants; NOT a specification
+# document; nothing ingested from ultraethernet.org).
+implementation_profile_id: analytical_l0_crossbar_cal_gf09_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. ROLE per the gap-fill
+  doc §GF-09: R1 DESIGN-TARGET class — the anchor's numbers are design
+  targets and worked examples, NOT measurements; per the plan §1.1 they
+  are used as ceiling/target anchors exactly the way CAL-A1/A2 are used
+  (never as achieved values), and CAL-A10's assumption-class discipline
+  applies to every one of them (zero falsification power against model
+  outputs; placement only). The crossbar rows execute (a) the staged
+  design rate on the B axis under BOTH direction readings ("400+ Gbps"
+  => 50 B/ns primary per-direction Ethernet-rate reading, 25 B/ns
+  bidirectional-aggregate alternative — the reading ambiguity is itself
+  a factor exactly x2), (b) the two worked-example fractions as
+  exact-fraction effective-B displacements at the design-rate carrier:
+  RCCC "assigns 25% of the bandwidth to each" of 4 incast flows =>
+  per-flow share exactly 1/4 => 50/4 = 12.5 executed (structural twin:
+  the single-port identity at r=5 has exactly 4 peers sharing the one
+  port — recorded identity arithmetic); oversubscription example
+  bottleneck "can only satisfy 33% of the bandwidth" => 50 x 33/100 =
+  16.5 executed under the exact-33% reading, with the 3:1-oversubscription
+  reading 1/3 => 50/3 NON-representable as a finite decimal, RECORDED
+  NOT EXECUTED (the two readings differ by exactly 1/300 in share —
+  below every corpus noise floor), and (c) the latency-axis targets:
+  the "sub-microsecond latency" boundary executed at its edge L = 1000
+  (a target upper bound, never an achieved value), the "target
+  round-trip times of 10 us" charged as the identity's 2L term => L =
+  5000 (the GF-05 precedent for the quantity-class caveat: a path
+  round-trip is a different quantity class than a per-pair parameter),
+  and the 10-150 m reach class as propagation-floor rows L = 50 / 750
+  under the DECLARED fiber-class engineering constant 5 ns/m (~2/3 c —
+  a free physical context constant, never anchor- or standard-derived;
+  the vacuum-c exact bounds 33.36 / 500.35 ns are recorded as exact
+  Fraction arithmetic in the stage record). The PROTOCOL CONSTANTS —
+  64-bit SACK bitmap, 8B NSCC receiver feedback, two 20-bit CBFC cyclic
+  counters — have NO input key in the L0 loader surface
+  ("credit_flow_control" and "packetization_flit_effects" are among
+  explicitly_unsupported); they enter ONLY as exact scale arithmetic
+  (feedback share exactly 1/62500 of the design rate per target RTT;
+  counter wrap 2^20 = 1048576 vs the design BDP 500000 B) recorded in
+  the stage record for the UEC-profile backend family (uet-htsim class,
+  GF-05's sim-config provenance).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) and L (link.pair_latency_ns) fixed by
+  anchor/registry arithmetic BEFORE any stage output was read. Envelope
+  sweep (r=8, L=200 registry): B in {50 = the "400+ Gbps" design class
+  floor under the declared per-direction Ethernet-rate reading (the
+  carrier — the anchor's own design target), 25 = the
+  bidirectional-aggregate alternative reading, 64 = A-L0X-BW registry
+  point (placement; asymptote exactly 64/50 = 32/25 = 1.28), 12.5 =
+  50/4 (the RCCC 4-flow 25%-each worked example at the carrier), 16.5 =
+  50 x 33/100 (the oversubscription worked example, exact-33% reading)}.
+  Latency sweep (r=8, B=50): L in {200 (A-L0X-LAT registry point),
+  50 = 10 m and 750 = 150 m at the DECLARED fiber-class 5 ns/m
+  propagation constant, 1000 = the "sub-microsecond" target boundary
+  edge, 5000 = the "10 us" target RTT charged as 2L}. Payload ladder:
+  the standard 12-size ladder of stages A1/A2/A7/A9/A11/GF-05 (8 KiB ->
+  8 GiB) — DECLARED FREE PROBE grid (GF-09 stages no size regime); the
+  run pair executes the 2 MiB ladder member (GF-05's run-pair payload —
+  the R1 cross-stage comparability point). Recorded NOT executed
+  (non-representable finite decimals, exact fractions in the record):
+  50/3 (the 1/3 oversubscription reading), 5000000000/149896229 and
+  75000000000/149896229 ns (the vacuum-c one-way propagation bounds at
+  10 m / 150 m). NO parameter was tuned toward any anchor output — the
+  anchor stages NO (size -> time) series and NO measurements at all
+  (its CM evaluation is deferred to the simulation paper it cites, i.e.
+  the GF-05 material); the sweeps measure WHERE the identity sits
+  relative to the design-target axes.
+measurement_source: >
+  GF-09 staged numbers (Ultra Ethernet's Design Principles and
+  Architectural Innovations, arXiv:2508.08906v1, Hoefler et al., Aug
+  2025; docs/calibration/anchors_gapfill.md §GF-09; numbers AS STAGED,
+  not re-fetched; gap-fill anchor, NOT yet an integrated anchor row — the owner
+  integrates accepted rows; confidence M — design targets and worked
+  examples, not measurements; authored by consortium participants but
+  published as a public paper, license-clean; no spec text ingested,
+  nothing from ultraethernet.org). CAVEAT CLASSES carried by this
+  profile: DESIGN-TARGET class (the R1 counterpart of CAL-A1/A2's spec
+  ceilings — targets and class floors, NEVER achieved values; A10's
+  assumption-class discipline: zero falsification power, placement
+  only); "400+" is an OPEN-ENDED class floor (no per-link value exists;
+  the uet-htsim sim config of GF-05, 800 Gbps = 100 B/ns, is an example
+  INSIDE the class at 2x the floor — cross-anchor context, never
+  cross-derived); the "33%" worked example carries the exact-33/100 vs
+  1/3 reading ambiguity (differ by 1/300 in share — below the CAL-A4
+  ~5% band and CAL-A6 5-8% swing); the sub-microsecond / 10 us RTT
+  quantities carry the A10-class end-to-end-vs-per-hop reading
+  ambiguity (both readings recorded, neither adjudicated); the 10-150 m
+  reach enters only through DECLARED physics constants (SI vacuum c
+  exact; fiber-class 5 ns/m an engineering round value), never through
+  anchor- or standard-derived latency values; the protocol constants
+  (SACK bitmap, NSCC feedback size, CBFC counters) are protocol-STATE
+  scale, inexpressible at L0, recorded for the UEC-profile backend
+  family; compared as PROPOSED evidence in results/calibration/; not
+  our testbed, no E3/E4 language.

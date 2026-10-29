@@ -1,0 +1,45 @@
+ 23 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 3-122 - UET CRC coverage when using the UFH_16 header .......................................................... 437 
+Figure 3-123 - Example packets using padding ......................................................................................... 438 
+Figure 3-124 - PDC mapped over Best-Effort Ethernet: Traffic Class Mapping (ROD and RUD) .............. 448 
+Figure 3-125 - PDC mapped over Lossless Ethernet: Traffic Class Mapping (ROD and RUD) ................... 449 
+Figure 3-126 - CCC State Machine ............................................................................................................ 459 
+Figure 3-127 - pds.req_cc_state Header Format for RCCC / TFC .............................................................. 461 
+Figure 3-128 - pds.ack_cc_state for UET TYPE = ACK_CC and CC_TYPE = CC_NSCC................................. 462 
+Figure 3-129 - pds.ack_cc_state for UET TYPE = ACK_CC and CC_TYPE = CC_CREDIT.............................. 464 
+Figure 3-130 - CSIG Reflection Header for Compact CSIG Tag .................................................................. 465 
+Figure 3-131 - CSIG Reflection Header for Wide Compact CSIG Tag ........................................................ 465 
+Figure 3-132 - pds.ack_ccx_state for UET_TYPE = ACK_CCX and CCX_TYPE = NSCC_CSIG ...................... 466 
+Figure 3-133 - pds.ack_ccx_state for ACK_CCX and CCX_TYPE = RCCC_CSIG ........................................... 466 
+Figure 3-134 - pds.nack_ccx_state for NCCX_TYPE = CSIG ....................................................................... 467 
+Figure 3-135 - PCM Logical Architecture Overview .................................................................................. 518 
+Figure 3-136 - Example PDS-TSS-Link Logical Interface ............................................................................ 553 
+Figure 3-137 - TSS Architecture ................................................................................................................ 556 
+Figure 3-138 - Single Job in a Secure Domain ........................................................................................... 557 
+Figure 3-139 - Multiple Jobs in a Single SD ............................................................................................... 557 
+Figure 3-140 - Secure Domain with Four FEPs .......................................................................................... 559 
+Figure 3-141 - KDF Rekeying Example ....................................................................................................... 563 
+Figure 3-142 - SDKDB database and crypto interfaces ............................................................................. 567 
+Figure 3-143 - Cluster KDF mode for IPv4 and Packets with Explicit SSI .................................................. 570 
+Figure 3-144 - Cluster KDF mode for IPv6 without explicit SSI ................................................................. 571 
+Figure 3-145 - UET Secure Transport Packets ........................................................................................... 575 
+Figure 3-146 - TSS with Native IPv4 Transport ......................................................................................... 576 
+Figure 3-147 - TSS with Native IPv6 Transport ......................................................................................... 577 
+Figure 3-148 - TSS with UDP Encapsulation .............................................................................................. 578 
+Figure 3-149 - TSS with UFH_32 Encapsulation ........................................................................................ 579 
+Figure 4-1 - Drop Threshold Settings ........................................................................................................ 598 
+Figure 4-2 - Example of CSIG Endpoint and Fabric Processing ................................................................. 604 
+Figure 4-3 - 4-Byte Compact CSIG Tag ...................................................................................................... 605 
+Figure 4-4 - 8-Byte Wide CSIG Tag ............................................................................................................ 606 
+Figure 4-5 - Example Local Signal Quantization and Packet Signal Compare-and-Update ....................... 608 
+Figure 4-6 - CSIG LLDP Example ................................................................................................................ 614 
+Figure 4-7 - CSIG Reflection Entity Interactions ........................................................................................ 617 
+Figure 4-8 - CSIG Tag Position in Ethernet Headers .................................................................................. 618 
+Figure 4-9 - Example CSIG Tag Position with MACSec .............................................................................. 619 
+Figure 4-10 - Timestamping Points in Switch Pipeline .............................................................................. 624 
+Figure 4-11 - CSIG Domain ........................................................................................................................ 628 
+Figure 5-1 - Architectural position of LLR. ................................................................................................ 631 
+Figure 5-2 - MAC Control interface connectivity. ..................................................................................... 632 
+Figure 5-3 - LLR transmit state machine ................................................................................................... 639 

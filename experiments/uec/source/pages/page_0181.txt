@@ -1,0 +1,25 @@
+ 181 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+size of a UET packet is the sum of UET header, UET payload, and UET trailer. The UET packet structure is 
+shown in Figure 3-2. 
+ 
+3.2.1 Semantic Sublayer (SES) 
+The objective of UET’s semantic sublayer is to provide high-performance and highly scalable messaging 
+to enable specialized AI and fully featured HPC deployments. The SES bridges between the user-facing 
+libfabric API and the PDS by mapping libfabric API calls to a set of UET communication operations, such 
+as tagged and untagged send/receive, RMA read/write, and atomics. Utilizing libfabric inherits benefits 
+from a wider ecosystem in which user-facing libraries using libfabric already exist and are portable even 
+beyond UE devices. SES is optimized for common end-user-facing APIs—from *CCL to MPI to 
+OpenSHMEM. It provides optional message ordering and various optional initiator or target completion 
+notifications (e.g., global observability). SES supports libfabric’s connectionless API to allow the 
+underlying hardware to support a large number of endpoints. 
+SES translates libfabric communication calls into messages that transmit data from or to buffers at the 
+initiator or target process, respectively. It transmits message transactions by utilizing PDS functionality, 
+packetizing messages and mapping packets into messages at the destination. PDS interactions include 
+the packets of the message but also control packets for reliability and status exchanges. 
+SES defines two protocols for (large) message transmission: rendezvous and deferrable send. The 
+rendezvous protocol is used for messages that exceed the available temporary eager buffer limit at the 
+ 
+Figure 3-2 - UET Packet Structure 
+ 

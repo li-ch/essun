@@ -1,0 +1,29 @@
+# Calibration-ladder A6 topology: the SINGLE-PORT endpoint of the swept B
+# span. B = 25 B/ns = one 200 Gbps RoCEv2 port per direction (200 Gbps =
+# 25 GB/s, decimal) — the reading in which the ring's node crossing
+# serializes through exactly ONE rail port instead of bundling the node's
+# 16. It brackets the expressible crossing-rate space from below by the
+# port granularity: per-port 25 ... full rail 400 (the anchor point).
+# 25 also sits INSIDE the plan §2.1 A-L0-BW candidate per-link span
+# [20, 64] B/ns — the only anchor-informed per-link reading of this
+# fabric that lives in that span (the rail aggregate 400 is a per-crossing
+# aggregate, a different parameter scale; recorded in the calibration
+# record, not merged).
+#
+# Same ring32 file as the anchor point, one free parameter changed; the
+# projection and honesty statements of ring32_a6_rail400_v1 are inherited
+# verbatim. NOT a fit: 25 is pure port arithmetic from the staged config
+# statement, chosen before any model output was read.
+topology_id: ring32_a6_port25_v1
+topology_class: unidirectional_ring
+ranks: 32
+link:
+  bytes_per_ns: 25
+  hop_latency_ns: 200
+notes: >
+  Unidirectional ring of 32 ranks (the anchor's 4x8 H100 count), hybrid
+  projected to the uniform rail rate (see ring32_a6_rail400_v1 header).
+  Provenance: B = 25 B/ns = one 200 Gbps RoCEv2 port per direction from
+  the anchor's own staged config statement (per-port endpoint of the
+  swept span; never tuned toward any measured time); L = 200 ns free
+  A-L0-LAT registry point.

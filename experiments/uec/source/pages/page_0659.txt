@@ -1,0 +1,39 @@
+ 659 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• When the receiver sets individual per-VC credit limits: 
+S_VC_CU[x] + pktCredits  ≤ S_VC_CL[x] 
+OR 
+• When the receiver sets the TotalCredits limit: 
+S_P_CU + pktCredits ≤ S_P_CL  
+Additional per-VC limits are not precluded when checking the S_P_CL, but the only requirement is that 
+the S_P_CL limit shall be observed. 
+The credit limit check does not preclude cut-through operation. If the number of credits available is 
+sufficient to transmit a packet of the maximum size, then the packet may be selected for transmission as 
+soon as the first bytes of the packet are ready for transmission. 
+Transmission of packets for best-effort VCs do not require this credit check and do not consume credits. 
+5.2.5.6.2 Packet Transmission Counter Updates 
+When a packet is selected for transmission from a lossless VC, these counter updates are made: 
+S_P_CU = S_P_CU + pktCredits 
+S_VC_CC[x] = S_VC_CC[x] + pktCredits 
+S_VC_CU[x] = S_VC_CU[x] + pktCredits 
+ 
+Where x is the VC number of the scheduled packet. 
+5.2.5.6.3 CF_Update Message Reception 
+When the sender receives a CF_Update message with a valid R_VC_CF[x] value, these counter updates 
+are made: 
+credits_returned = R_VC_CF[x] – S_VC_CF[x] 
+S_P_CU = S_P_CU – credits_returned 
+S_VC_CU[x] = S_VC_CU[x] – credits_returned 
+S_VC_CF[x] = R_VC_CF[x] 
+ 
+5.2.5.6.4 CC_Update Message Generation 
+CC_Update packet(s) MUST be generated periodically to cover all lossless VCs (note that VCs 0 to 15 and 
+VCs 16 to 31 are contained in two separate CC_Update packets). The main purpose for the CC_Update is 
+to recover any leaked credits due to packet drops caused by link errors (uncorrectable FEC errors or 
+packet CRC errors). 
+If a data packet is discarded due to link errors, the sender’s S_VC_CC x  counter was already 
+incremented by the number of credits required. But since the receiver never receives the discarded 
+packet, it would never return the credits to the sender in a CF_Update message. This is known as “credit 
+leakage.” The CC_Update message is a means for the sender to inform the receiver of the number of 
+credits it thinks it has consumed, thus allowing the receiver to make any necessary counter corrections 

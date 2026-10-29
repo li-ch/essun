@@ -1,0 +1,31 @@
+ 760 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Credit-based flow control (CBFC) is a newly introduced feature in the Switch Abstraction Interface (SAI) 
+that enhances link-level flow control without impacting the existing SAI logical pipeline. The following 
+SAI enhancements are done for CBFC: 
+• Three new objects: 
+o Virtual channel: Contains per-VC attributes associated with CBFC sender and CBFC 
+receiver functions on a port. 
+o CBFC credit profile: Attributes for management of receiver credits (i.e., receiver’s 
+buffer) on a per-VC basis. 
+o CBFC credit pool: Used to provide isolation of credits (i.e., receiver’s buffer) between 
+groups of VCs. 
+• New attributes for CBFC to the port object. 
+• New QoS map types for VC derivation from TC, queue, or packet’s dot1p DEI. 
+• New attributes to enable/disable enqueue and dequeue, which are needed for lossless VC 
+initialization and deinitialization. 
+7.6.1.3 SAI Enhancements for CSIG 
+Congestion signaling (CSIG) is a simple and efficient network telemetry method that collects fine-grained 
+signals that describe the network fabric’s congestion state. The central insight underlying CSIG’s design 
+is that for many telemetry signals useful in congestion control and performance analysis, the result of a 
+simple aggregation function computed over the congestion state at switches along a packet’s path is of 
+interest. For example, for several signal types, the congestion state is of interest only at a single switch 
+along a path, where the switch of interest is the one where a signal’s value is an extremum (maximum or 
+minimum) among the signal’s values at all switches along the path. 
+CSIG does not alter the forwarding behavior of a packet in the SAI logical pipeline. This means that the 
+SAI logical pipeline does not require any changes for CSIG packets. SAI already provides an existing 
+infrastructure that uses the telemetry and management (TAM) object. This TAM infrastructure currently 
+supports in-band network telemetry, streaming telemetry, events, transport for reporting, and various 
+reporting formats. The TAM infrastructure has been enhanced to support CSIG. 
+  

@@ -1,0 +1,45 @@
+# Calibration-ladder GF-01 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the SPEC-CEILING aggregate B = 448 B/ns per rank per
+# direction — the aggregate reading of the GF-01 fabric at its RAW rate
+# (7 links x 64 B/s per direction; the CAL-A7 spec arithmetic, numerically
+# the same aggregate the A7 record derived and swept). GF-01 is the MEASURED
+# twin of that spec: the blog's TransferBench link measurements (45.1-47.2
+# GB/s observed per link, ~48 GB/s usable, ~45 GB/s worst-link cap, sum of
+# per-pair averages 325.6 GB/s) sit well below this ceiling — the derated
+# aggregate points have their own topologies (crossbar8_gf01_usable336 /
+# sum325_6 / worst315 below), so this file isolates the RAW spec reading.
+# docs/calibration/anchors_gapfill.md §GF-01 (gap-fill anchor, PROPOSED,
+# not yet an integrated anchor row). Decimal units, 1 GB/s = 1 B/ns.
+#
+# DOMAIN HONESTY (inherited from the A7 record, plan §2.1 A-L0X-PORT): the
+# single-port crossbar is OUT-OF-DOMAIN as a PHYSICAL description of the
+# non-switched full mesh (dedicated per-pair capacity lost); for the
+# symmetric uniform-chunk RS+AG collective the crossbar at B=(r-1)*64=448
+# coincides term-by-term with the multi-port mesh identity (the A7 record's
+# exact-equivalence finding, t = 2*M/(r*64) + 2L) — the aggregate reading
+# is exact for THIS collective and 7x wrong for single-pair patterns.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-01 measurements; 448 is the anchor's own raw arithmetic, fixed BEFORE
+# any model output was read. The measured plateau comparison shows where
+# this spec reading sits relative to the measured 16 GiB row (it does not
+# move B). L = 200 ns is the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_gf01_agg448_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 448
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT — OUT-OF-DOMAIN as a physical description of this full-mesh
+  anchor; exact-equivalence caveat for the symmetric collective recorded
+  in stages A7 and GF-01). No congestion, no credits, no packetization —
+  L0 transport model only. Provenance: B = 448 B/ns = 7 x 64 is the GF-01
+  anchor's raw per-link rate aggregated (identical to CAL-A7's spec
+  arithmetic; measured per-link rates on this fabric run 45.1-47.2 GB/s —
+  derated points in sibling topologies), L from the free A-L0X-LAT
+  registry point. Values are anchor arithmetic / free-registry points,
+  never our measurements, never tuned.

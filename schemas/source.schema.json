@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/scaleup/source.schema.json",
+  "title": "Source record",
+  "type": "object",
+  "required": [
+    "source_id",
+    "title",
+    "url",
+    "access",
+    "owner"
+  ],
+  "properties": {
+    "source_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": "string"
+    },
+    "access": {
+      "enum": [
+        "UNREVIEWED",
+        "PUBLIC_READ",
+        "APPROVAL_REQUIRED",
+        "DO_NOT_INGEST",
+        "DISTRIBUTION_RESTRICTED",
+        "PIN_AND_REVIEW_LICENSE",
+        "REVIEW_REQUIRED"
+      ]
+    },
+    "license_url": {
+      "type": "string"
+    },
+    "ingestion_scope": {
+      "type": "string"
+    },
+    "redistribution_scope": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "retrieved_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

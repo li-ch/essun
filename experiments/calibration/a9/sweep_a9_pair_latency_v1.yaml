@@ -1,0 +1,56 @@
+# Calibration-ladder A9 sweep: where does the L0
+# crossbar identity sit on the CAL-A9 LATENCY-BUDGET axis (Berger et
+# al., IEEE Micro 2023: CXL links ~10 ns per direction; CXL switches
+# "at least ~70 ns" per stage; docs/calibration/anchors_staging.md §A9)?
+# The crossbar's L (link.pair_latency_ns, A-L0X-LAT) is the landed
+# parameter for a one-switch-stage fabric — exactly the fabric class the
+# anchor budgets. The ring row adds the chain-multiplicity contrast: the
+# same budget sum charged per hop (2*(r-1) = 14 times) vs per phase (2).
+#
+# CAL-A9 is a LATENCY-BUDGET BREAKDOWN, not a time series: per
+# docs/calibration/CALIBRATION_PLAN.md §1.1 it CANNOT calibrate O-CCT (no
+# collective measurements; design-estimate numbers from the paper's
+# budget analysis, not silicon). NOTHING IS TUNED: the L ladder {10, 70,
+# 80, 160, 200, 800} was fixed by anchor/registry/plan arithmetic BEFORE
+# any stage output was read — 10 = the anchor's link term alone; 70 =
+# the anchor's switch-stage floor alone; 80 = 10 + 70 = the plan-stated
+# one-stage pair sum (§2.1 A-L0X-LAT) — THE ANCHOR POINT and this
+# sweep's BASELINE; 160 = 2 x 80 two cascaded traversals (anchor
+# arithmetic, labeled); 200 = the A-L0X-LAT registry point (placement);
+# 800 = the plan's stated pair-latency span upper endpoint (CAL-A10
+# 0.8 us assumption-class figure, cross-class transfer, labeled). B
+# fixed at the A-L0X-BW / A-L0-BW registry point 64 B/ns (CAL-A9 stages
+# no bandwidth number; the mirror of the A7 record, which swept B at fixed
+# L=200). Every completion time below is an arithmetic fact of t =
+# 2(r-1)/r*M/B + {2L, 14L}.
+#
+# Payload grid: the same 12-size ladder 8*2^k (8 KiB -> 8 GiB) as stages
+# A1/A2/A7, at the free smoke-default r=8 (the anchor pins no rank
+# count); r=8 divides every size, so the A-L0-DIV / A-L0X-DIV gates
+# accept the exact ladder with NO bracketing. The ladder spans both
+# latency-term regimes so the record can state the exact crossover
+# spectrum M*(L) = 512*L/7 B (where the latency chain equals the
+# bandwidth term): the plan's small-message O-CCT gap (§4.3, no anchor
+# <= ~64 KiB) is exactly the regime this axis governs.
+sweep: cal_a9_pair_latency_v1
+workload: experiments/calibration/a9/workloads/w1_dense_tp_decode_tp8_8kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a9/topologies/crossbar8_a9_pair80_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a9/topologies/crossbar8_a9_link10_v1.yaml
+    - experiments/calibration/a9/topologies/crossbar8_a9_switch70_v1.yaml
+    - experiments/calibration/a9/topologies/crossbar8_a9_pair80_v1.yaml
+    - experiments/calibration/a9/topologies/crossbar8_a9_pair160_v1.yaml
+    - experiments/calibration/a9/topologies/crossbar8_a9_pair200_v1.yaml
+    - experiments/calibration/a9/topologies/crossbar8_a9_pair800_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a9/topologies/ring8_a9_hop80_v1.yaml

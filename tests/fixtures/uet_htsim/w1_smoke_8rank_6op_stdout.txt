@@ -1,0 +1,331 @@
+ESSUN_BINARY_SHA256=fe5a1c645719b792bb56c631fbd991cf7f6c824af8a97f42971bd59b584cd896
+=== OP FILE w1_decode_smoke_uet.op000000.cm ===
+traffic matrix input file: /mnt/inputs/w1_decode_smoke_uet.op000000.cm
+Hop latency set to 0.2
+random seed 20261026
+Packet size (MTU) is 4150
+Parsed args
+Logging to w1_decode_smoke_uet.op000000.logout.dat
+Linkspeed set to 512Gbps
+Loading connection matrix from  /mnt/inputs/w1_decode_smoke_uet.op000000.cm
+Nodes: 16 Connections: 8 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 0.2us links and 0us switching latency for 1.2us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 182600 bytes
+Tier 0 QueueSize Up 182600 bytes
+Tier 1 QueueSize Down 182600 bytes
+Tier 1 QueueSize Up 182600 bytes
+Tier 2 QueueSize Down 182600 bytes
+Setting min RTO to 32.1187
+Setting ECN to parameters low 37350 high 149400 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=149400 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=200000 switch_latency=0 diameter_latency=1200000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=4 queue_down=182600
+queue_id 2 ecn_low 37350 ecn_high 149400
+network_max_unloaded_rtt 2.79506
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=2096296 _network_linkspeed=512000000000 _network_rtt=2795062 _network_bdp=178883 _qa_gate=2^3 _qa_threshold=8.38518e+06 _scaling_factor_a=1.19255 _scaling_factor_b=0.174691 _alpha=0.00162426 _fi=24363.9 _eta=730.916 _qa_scaling=1 _gamma=0.8 _fi_scale=0.298138 _delay_alpha=0.0125 _adjust_period_threshold=2795062 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 1 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 2 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 3 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 4 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 5 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 6 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 7 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 8 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Starting simulation
+Flow Uec_0_1 flowId 1 uecSrc 0 starting at 0
+Flow Uec_1_2 flowId 2 uecSrc 1 starting at 0
+Flow Uec_2_3 flowId 3 uecSrc 2 starting at 0
+Flow Uec_3_4 flowId 4 uecSrc 3 starting at 0
+Flow Uec_4_5 flowId 5 uecSrc 4 starting at 0
+Flow Uec_5_6 flowId 6 uecSrc 5 starting at 0
+Flow Uec_6_7 flowId 7 uecSrc 6 starting at 0
+Flow Uec_7_0 flowId 8 uecSrc 7 starting at 0
+Flow Uec_0_1 flowId 1 uecSrc 0 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_4_5 flowId 5 uecSrc 4 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_2_3 flowId 3 uecSrc 2 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_6_7 flowId 7 uecSrc 6 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_5_6 flowId 6 uecSrc 5 finished at 2.2419 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_1_2 flowId 2 uecSrc 1 finished at 2.24391 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_7_0 flowId 8 uecSrc 7 finished at 3.16832 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_3_4 flowId 4 uecSrc 3 finished at 3.17033 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 64 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 26 NACKs: 0 Pulls: 0 sleek_pkts: 0
+UET_EXIT=0
+=== OP FILE w1_decode_smoke_uet.op000001.cm ===
+traffic matrix input file: /mnt/inputs/w1_decode_smoke_uet.op000001.cm
+Hop latency set to 0.2
+random seed 20261026
+Packet size (MTU) is 4150
+Parsed args
+Logging to w1_decode_smoke_uet.op000001.logout.dat
+Linkspeed set to 512Gbps
+Loading connection matrix from  /mnt/inputs/w1_decode_smoke_uet.op000001.cm
+Nodes: 16 Connections: 8 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 0.2us links and 0us switching latency for 1.2us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 182600 bytes
+Tier 0 QueueSize Up 182600 bytes
+Tier 1 QueueSize Down 182600 bytes
+Tier 1 QueueSize Up 182600 bytes
+Tier 2 QueueSize Down 182600 bytes
+Setting min RTO to 32.1187
+Setting ECN to parameters low 37350 high 149400 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=149400 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=200000 switch_latency=0 diameter_latency=1200000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=4 queue_down=182600
+queue_id 2 ecn_low 37350 ecn_high 149400
+network_max_unloaded_rtt 2.79506
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=2096296 _network_linkspeed=512000000000 _network_rtt=2795062 _network_bdp=178883 _qa_gate=2^3 _qa_threshold=8.38518e+06 _scaling_factor_a=1.19255 _scaling_factor_b=0.174691 _alpha=0.00162426 _fi=24363.9 _eta=730.916 _qa_scaling=1 _gamma=0.8 _fi_scale=0.298138 _delay_alpha=0.0125 _adjust_period_threshold=2795062 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 9 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 10 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 11 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 12 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 13 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 14 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 15 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 16 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Starting simulation
+Flow Uec_0_1 flowId 9 uecSrc 0 starting at 0
+Flow Uec_1_2 flowId 10 uecSrc 1 starting at 0
+Flow Uec_2_3 flowId 11 uecSrc 2 starting at 0
+Flow Uec_3_4 flowId 12 uecSrc 3 starting at 0
+Flow Uec_4_5 flowId 13 uecSrc 4 starting at 0
+Flow Uec_5_6 flowId 14 uecSrc 5 starting at 0
+Flow Uec_6_7 flowId 15 uecSrc 6 starting at 0
+Flow Uec_7_0 flowId 16 uecSrc 7 starting at 0
+Flow Uec_0_1 flowId 9 uecSrc 0 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_4_5 flowId 13 uecSrc 4 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_2_3 flowId 11 uecSrc 2 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_6_7 flowId 15 uecSrc 6 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_5_6 flowId 14 uecSrc 5 finished at 2.24227 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_1_2 flowId 10 uecSrc 1 finished at 2.24391 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_3_4 flowId 12 uecSrc 3 finished at 3.16832 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 235 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_7_0 flowId 16 uecSrc 7 finished at 3.17033 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 64 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 25 NACKs: 0 Pulls: 0 sleek_pkts: 0
+UET_EXIT=0
+=== OP FILE w1_decode_smoke_uet.op000002.cm ===
+traffic matrix input file: /mnt/inputs/w1_decode_smoke_uet.op000002.cm
+Hop latency set to 0.2
+random seed 20261026
+Packet size (MTU) is 4150
+Parsed args
+Logging to w1_decode_smoke_uet.op000002.logout.dat
+Linkspeed set to 512Gbps
+Loading connection matrix from  /mnt/inputs/w1_decode_smoke_uet.op000002.cm
+Nodes: 16 Connections: 8 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 0.2us links and 0us switching latency for 1.2us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 182600 bytes
+Tier 0 QueueSize Up 182600 bytes
+Tier 1 QueueSize Down 182600 bytes
+Tier 1 QueueSize Up 182600 bytes
+Tier 2 QueueSize Down 182600 bytes
+Setting min RTO to 32.1187
+Setting ECN to parameters low 37350 high 149400 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=149400 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=200000 switch_latency=0 diameter_latency=1200000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=4 queue_down=182600
+queue_id 2 ecn_low 37350 ecn_high 149400
+network_max_unloaded_rtt 2.79506
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=2096296 _network_linkspeed=512000000000 _network_rtt=2795062 _network_bdp=178883 _qa_gate=2^3 _qa_threshold=8.38518e+06 _scaling_factor_a=1.19255 _scaling_factor_b=0.174691 _alpha=0.00162426 _fi=24363.9 _eta=730.916 _qa_scaling=1 _gamma=0.8 _fi_scale=0.298138 _delay_alpha=0.0125 _adjust_period_threshold=2795062 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 17 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 18 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 19 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 20 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 21 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 22 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 23 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 24 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Starting simulation
+Flow Uec_0_1 flowId 17 uecSrc 0 starting at 0
+Flow Uec_1_2 flowId 18 uecSrc 1 starting at 0
+Flow Uec_2_3 flowId 19 uecSrc 2 starting at 0
+Flow Uec_3_4 flowId 20 uecSrc 3 starting at 0
+Flow Uec_4_5 flowId 21 uecSrc 4 starting at 0
+Flow Uec_5_6 flowId 22 uecSrc 5 starting at 0
+Flow Uec_6_7 flowId 23 uecSrc 6 starting at 0
+Flow Uec_7_0 flowId 24 uecSrc 7 starting at 0
+Flow Uec_0_1 flowId 17 uecSrc 0 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_4_5 flowId 21 uecSrc 4 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_2_3 flowId 19 uecSrc 2 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_6_7 flowId 23 uecSrc 6 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_1_2 flowId 18 uecSrc 1 finished at 2.24227 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_5_6 flowId 22 uecSrc 5 finished at 2.24227 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_3_4 flowId 20 uecSrc 3 finished at 3.16832 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 181 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_7_0 flowId 24 uecSrc 7 finished at 3.16832 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 64 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 27 NACKs: 0 Pulls: 0 sleek_pkts: 0
+UET_EXIT=0
+=== OP FILE w1_decode_smoke_uet.op000003.cm ===
+traffic matrix input file: /mnt/inputs/w1_decode_smoke_uet.op000003.cm
+Hop latency set to 0.2
+random seed 20261026
+Packet size (MTU) is 4150
+Parsed args
+Logging to w1_decode_smoke_uet.op000003.logout.dat
+Linkspeed set to 512Gbps
+Loading connection matrix from  /mnt/inputs/w1_decode_smoke_uet.op000003.cm
+Nodes: 16 Connections: 8 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 0.2us links and 0us switching latency for 1.2us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 182600 bytes
+Tier 0 QueueSize Up 182600 bytes
+Tier 1 QueueSize Down 182600 bytes
+Tier 1 QueueSize Up 182600 bytes
+Tier 2 QueueSize Down 182600 bytes
+Setting min RTO to 32.1187
+Setting ECN to parameters low 37350 high 149400 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=149400 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=200000 switch_latency=0 diameter_latency=1200000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=4 queue_down=182600
+queue_id 2 ecn_low 37350 ecn_high 149400
+network_max_unloaded_rtt 2.79506
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=2096296 _network_linkspeed=512000000000 _network_rtt=2795062 _network_bdp=178883 _qa_gate=2^3 _qa_threshold=8.38518e+06 _scaling_factor_a=1.19255 _scaling_factor_b=0.174691 _alpha=0.00162426 _fi=24363.9 _eta=730.916 _qa_scaling=1 _gamma=0.8 _fi_scale=0.298138 _delay_alpha=0.0125 _adjust_period_threshold=2795062 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 25 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 26 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 27 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 28 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 29 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 30 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 31 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 32 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Starting simulation
+Flow Uec_0_1 flowId 25 uecSrc 0 starting at 0
+Flow Uec_1_2 flowId 26 uecSrc 1 starting at 0
+Flow Uec_2_3 flowId 27 uecSrc 2 starting at 0
+Flow Uec_3_4 flowId 28 uecSrc 3 starting at 0
+Flow Uec_4_5 flowId 29 uecSrc 4 starting at 0
+Flow Uec_5_6 flowId 30 uecSrc 5 starting at 0
+Flow Uec_6_7 flowId 31 uecSrc 6 starting at 0
+Flow Uec_7_0 flowId 32 uecSrc 7 starting at 0
+Flow Uec_0_1 flowId 25 uecSrc 0 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_4_5 flowId 29 uecSrc 4 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_2_3 flowId 27 uecSrc 2 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_6_7 flowId 31 uecSrc 6 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_1_2 flowId 26 uecSrc 1 finished at 2.24227 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_5_6 flowId 30 uecSrc 5 finished at 2.24227 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_7_0 flowId 32 uecSrc 7 finished at 3.16832 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 181 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_3_4 flowId 28 uecSrc 3 finished at 3.16832 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 64 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 27 NACKs: 0 Pulls: 0 sleek_pkts: 0
+UET_EXIT=0
+=== OP FILE w1_decode_smoke_uet.op000004.cm ===
+traffic matrix input file: /mnt/inputs/w1_decode_smoke_uet.op000004.cm
+Hop latency set to 0.2
+random seed 20261026
+Packet size (MTU) is 4150
+Parsed args
+Logging to w1_decode_smoke_uet.op000004.logout.dat
+Linkspeed set to 512Gbps
+Loading connection matrix from  /mnt/inputs/w1_decode_smoke_uet.op000004.cm
+Nodes: 16 Connections: 8 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 0.2us links and 0us switching latency for 1.2us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 182600 bytes
+Tier 0 QueueSize Up 182600 bytes
+Tier 1 QueueSize Down 182600 bytes
+Tier 1 QueueSize Up 182600 bytes
+Tier 2 QueueSize Down 182600 bytes
+Setting min RTO to 32.1187
+Setting ECN to parameters low 37350 high 149400 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=149400 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=200000 switch_latency=0 diameter_latency=1200000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=4 queue_down=182600
+queue_id 2 ecn_low 37350 ecn_high 149400
+network_max_unloaded_rtt 2.79506
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=2096296 _network_linkspeed=512000000000 _network_rtt=2795062 _network_bdp=178883 _qa_gate=2^3 _qa_threshold=8.38518e+06 _scaling_factor_a=1.19255 _scaling_factor_b=0.174691 _alpha=0.00162426 _fi=24363.9 _eta=730.916 _qa_scaling=1 _gamma=0.8 _fi_scale=0.298138 _delay_alpha=0.0125 _adjust_period_threshold=2795062 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 33 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 34 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 35 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 36 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 37 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 38 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 39 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 40 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Starting simulation
+Flow Uec_0_1 flowId 33 uecSrc 0 starting at 0
+Flow Uec_1_2 flowId 34 uecSrc 1 starting at 0
+Flow Uec_2_3 flowId 35 uecSrc 2 starting at 0
+Flow Uec_3_4 flowId 36 uecSrc 3 starting at 0
+Flow Uec_4_5 flowId 37 uecSrc 4 starting at 0
+Flow Uec_5_6 flowId 38 uecSrc 5 starting at 0
+Flow Uec_6_7 flowId 39 uecSrc 6 starting at 0
+Flow Uec_7_0 flowId 40 uecSrc 7 starting at 0
+Flow Uec_0_1 flowId 33 uecSrc 0 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_4_5 flowId 37 uecSrc 4 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_2_3 flowId 35 uecSrc 2 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_6_7 flowId 39 uecSrc 6 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_1_2 flowId 34 uecSrc 1 finished at 2.2419 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_5_6 flowId 38 uecSrc 5 finished at 2.2419 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_3_4 flowId 36 uecSrc 3 finished at 3.17033 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_7_0 flowId 40 uecSrc 7 finished at 3.17033 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 64 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 26 NACKs: 0 Pulls: 0 sleek_pkts: 0
+UET_EXIT=0
+=== OP FILE w1_decode_smoke_uet.op000005.cm ===
+traffic matrix input file: /mnt/inputs/w1_decode_smoke_uet.op000005.cm
+Hop latency set to 0.2
+random seed 20261026
+Packet size (MTU) is 4150
+Parsed args
+Logging to w1_decode_smoke_uet.op000005.logout.dat
+Linkspeed set to 512Gbps
+Loading connection matrix from  /mnt/inputs/w1_decode_smoke_uet.op000005.cm
+Nodes: 16 Connections: 8 Triggers: 0 Failures: 0
+Automatic queue sizing enabled trimming queue-size-to-bdp-factor is 1xBDP
+Fat Tree topology (0) with 0.2us links and 0us switching latency for 1.2us diameter latency.
+Set params 16
+_no_of_nodes 16
+K 4
+Queue type 3
+Tier 0 QueueSize Down 182600 bytes
+Tier 0 QueueSize Up 182600 bytes
+Tier 1 QueueSize Down 182600 bytes
+Tier 1 QueueSize Up 182600 bytes
+Tier 2 QueueSize Down 182600 bytes
+Setting min RTO to 32.1187
+Setting ECN to parameters low 37350 high 149400 enable on tor downlink 1
+FatTreeTopologyCfg NCORE=4 NAGG=8 NTOR=8 NSRV=16 NPOD=4 tor_switches_per_pod=2 agg_switches_per_pod=2 tiers=3 host_per_pod=4 enabled_ecn=1 enable_ecn_on_tor_downlink=1 ecn_low=37350 ecn_high=149400 num_failed_links=0 failed_link_ratio=0.25 no_of_nodes=16 hop_latency=200000 switch_latency=0 diameter_latency=1200000 diameter=6 tier=0 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=1 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=2 queue_down=182600 radix_up=2 queue_up=182600 tier=2 link_latency=0 switch_latencies=0 bundlesize=1 downlink_speeds=512000000000 oversub=1 radix_down=4 queue_down=182600
+queue_id 2 ecn_low 37350 ecn_high 149400
+network_max_unloaded_rtt 2.79506
+Initializing static NSCC parameters: _reference_network_linkspeed=100000000000 _reference_network_rtt=12000000 _reference_network_bdp=150000 _target_Qdelay=2096296 _network_linkspeed=512000000000 _network_rtt=2795062 _network_bdp=178883 _qa_gate=2^3 _qa_threshold=8.38518e+06 _scaling_factor_a=1.19255 _scaling_factor_b=0.174691 _alpha=0.00162426 _fi=24363.9 _eta=730.916 _qa_scaling=1 _gamma=0.8 _fi_scale=0.298138 _delay_alpha=0.0125 _adjust_period_threshold=2795062 _adjust_bytes_threshold=33200
+Initialize per-instance NSCC parameters: flowid 41 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 42 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 43 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 44 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 45 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 46 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 47 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Initialize per-instance NSCC parameters: flowid 48 _base_rtt=2795062 _base_bdp=178883 _bdp=178883 _min_cwnd=4150 _maxwnd=268324 _cwnd=268324
+Starting simulation
+Flow Uec_0_1 flowId 41 uecSrc 0 starting at 0
+Flow Uec_1_2 flowId 42 uecSrc 1 starting at 0
+Flow Uec_2_3 flowId 43 uecSrc 2 starting at 0
+Flow Uec_3_4 flowId 44 uecSrc 3 starting at 0
+Flow Uec_4_5 flowId 45 uecSrc 4 starting at 0
+Flow Uec_5_6 flowId 46 uecSrc 5 starting at 0
+Flow Uec_6_7 flowId 47 uecSrc 6 starting at 0
+Flow Uec_7_0 flowId 48 uecSrc 7 starting at 0
+Flow Uec_0_1 flowId 41 uecSrc 0 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_4_5 flowId 45 uecSrc 4 finished at 1.31749 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_2_3 flowId 43 uecSrc 2 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_6_7 flowId 47 uecSrc 6 finished at 1.37417 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_1_2 flowId 42 uecSrc 1 finished at 2.24227 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_5_6 flowId 46 uecSrc 5 finished at 2.24227 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 0 fast_inc 0 eta_inc 0 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_7_0 flowId 48 uecSrc 7 finished at 3.16832 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 235 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+Flow Uec_3_4 flowId 44 uecSrc 3 finished at 3.17033 total messages 1 total packets 8 RTS 0 total bytes 32688 in_flight now 0 fair_inc 0 prop_inc 264 fast_inc 0 eta_inc 730 multi_dec -0 quick_dec -0 nack_dec -0
+.Done
+New: 64 Rtx: 0 RTS: 0 Bounced: 0 ACKs: 26 NACKs: 0 Pulls: 0 sleek_pkts: 0
+UET_EXIT=0

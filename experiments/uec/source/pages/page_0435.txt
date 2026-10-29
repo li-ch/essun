@@ -1,0 +1,23 @@
+ 435 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.26 UET CRC 
+This section describes the coverage and calculation used for the UET CRC. The UET CRC is optional and 
+used to provide additional protection beyond the Ethernet FCS. Additional protection can be achieved 
+using TSS. It is RECOMMENDED that either the CRC or TSS is used to ensure end-to-end protection of 
+data and CPs. The CRC is placed after the UET payload in the UET trailer field. A global user configuration 
+(refer to Section 3.5.5), UET_Data_Protect, indicates if the trailer contains the CRC. This configuration is 
+the responsibility of the operator and needs to be consistent across the entire fabric domain, as 
+received packets cannot be properly parsed if the CRC is present on some packets and not others in the 
+same domain. 
+The CRC is designed to include non-mutable portions of the IP headers shown in Figure 3-121. 
+The Roff offset is calculated automatically based on the packet encapsulation and is not a user-
+configurable parameter. 
+When the configuration parameter UET_DATA_PROTECT is set to TSS, the CRC MUST NOT be used. 
+When TSS is enabled, the ICV provides protection equivalent to the CRC. 
+For a packet sent when the configuration parameter UET_Data_Protect is set to CRC, the CRC MUST be 
+calculated for all packets including CPs based on the CRC calculation procedure defined in the steps 
+below and appended as the UET trailer. 
+ 
+Figure 3-121 - UET CRC Coverage 
+ 

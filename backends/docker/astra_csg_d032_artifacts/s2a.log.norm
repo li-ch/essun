@@ -1,0 +1,45 @@
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+ [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 8 index in ring: 0 offset: 1 total nodes in ring: 8
+ [workload] [info] sys[1] finished, 780323236 cycles, exposed communication 780323236 cycles.
+ [statistics] [info] sys[1]. Post statistics processing start.
+ [statistics] [info] sys[1]. Post statistics processing end.
+ [statistics] [info] sys[1], Wall time: 780323236
+ [statistics] [info] sys[1], Comm time: 780323236
+ [workload] [info] sys[3] finished, 780332616 cycles, exposed communication 780332616 cycles.
+ [statistics] [info] sys[3]. Post statistics processing start.
+ [statistics] [info] sys[3]. Post statistics processing end.
+ [statistics] [info] sys[3], Wall time: 780332616
+ [statistics] [info] sys[3], Comm time: 780332616
+ [workload] [info] sys[2] finished, 780335966 cycles, exposed communication 780335966 cycles.
+ [statistics] [info] sys[2]. Post statistics processing start.
+ [statistics] [info] sys[2]. Post statistics processing end.
+ [statistics] [info] sys[2], Wall time: 780335966
+ [statistics] [info] sys[2], Comm time: 780335966
+ [workload] [info] sys[5] finished, 780348416 cycles, exposed communication 780348416 cycles.
+ [statistics] [info] sys[5]. Post statistics processing start.
+ [statistics] [info] sys[5]. Post statistics processing end.
+ [statistics] [info] sys[5], Wall time: 780348416
+ [statistics] [info] sys[5], Comm time: 780348416
+ [workload] [info] sys[6] finished, 780349487 cycles, exposed communication 780349487 cycles.
+ [statistics] [info] sys[6]. Post statistics processing start.
+ [statistics] [info] sys[6]. Post statistics processing end.
+ [statistics] [info] sys[6], Wall time: 780349487
+ [statistics] [info] sys[6], Comm time: 780349487
+ [workload] [info] sys[7] finished, 780350857 cycles, exposed communication 780350857 cycles.
+ [statistics] [info] sys[7]. Post statistics processing start.
+ [statistics] [info] sys[7]. Post statistics processing end.
+ [statistics] [info] sys[7], Wall time: 780350857
+ [statistics] [info] sys[7], Comm time: 780350857
+ [workload] [info] sys[0] finished, 780366187 cycles, exposed communication 780366187 cycles.
+ [statistics] [info] sys[0]. Post statistics processing start.
+ [statistics] [info] sys[0]. Post statistics processing end.
+ [statistics] [info] sys[0], Wall time: 780366187
+ [statistics] [info] sys[0], Comm time: 780366187
+ [workload] [info] sys[4] finished, 1040008079 cycles, exposed communication 1040008079 cycles.
+ [statistics] [info] sys[4]. Post statistics processing start.
+ [statistics] [info] sys[4]. Post statistics processing end.
+ [statistics] [info] sys[4], Wall time: 1040008079
+ [statistics] [info] sys[4], Comm time: 1040008079
+ [network] [debug] All ranks have finished. Exiting simulation.

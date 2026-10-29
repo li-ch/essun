@@ -1,0 +1,27 @@
+ 668 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2.8.3.2 CBFC Sender TLV Fields 
+The CBFC TLV sender information fields are shown in Table 5-25. 
+Table 5-25 - CBFC TLV Sender Information Fields 
+Information Fields Description 
+S_VC_RTS A 32-bit bitmap of all possible VCs supported by this sender. When the 
+sender has completed initialization of lossless VC[x] and is ready to send 
+packets using credits, S_VC_RTS[x] is set to one. 
+S_CreditSize The sender’s configured CreditSize. This value is set only after receiving the 
+link partner’s advertised R_CellSize. 
+S_PktOvhd The sender’s configured per-packet overhead. This value is set only after 
+seeing the link partner’s advertised R_PktOvhd. Stored as an eight-bit two’s 
+complement number of bytes, -16 to +127. 
+ 
+5.2.8.4 Lossless VC Initialization Process 
+Each end station requires two LLDP CBFC TLV databases, one for itself and one for its link partner. They 
+are referred to as the local LLDP database (and local TLV values) and the remote LLDP database (and 
+remote TLV values). A single end station may act as both a sender and receiver, but these functions do 
+not interact and must be configured separately. A CBFC local sender communicates only with the 
+remote receiver, and a local receiver communicates only with the remote sender. The lossless VC 
+initialization process may occur simultaneously and independently for each direction of traffic on a link. 
+The local sender’s TLV information depends on first receiving its remote receiver’s information. The local 
+sender SHALL NOT start sending packets using CBFC credits until both stations have completed 
+initialization, as indicated by the sender’s ready-to-send (RTS) and the receiver’s ready-to-receive (RTR) 
+bits in the respective LLDP databases. 

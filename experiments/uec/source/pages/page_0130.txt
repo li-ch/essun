@@ -1,0 +1,46 @@
+ 130 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+security binding parameters that should be applied, while the source IP address is used by the key 
+derivation function. 
+2.2.10.3 UET PDS Header Field Mappings 
+The PDS headers vary based on the packet delivery mode. The UUD and RUDI packet delivery modes do 
+not use packet delivery contexts and have small PDS headers. For the RUD and ROD delivery modes, the 
+libfabric to PDS header field mapping is primarily an indirect mapping, where libfabric data is used to 
+select the PDC, and then the PDC state determines the PDS header field contents. The libfabric fields 
+used to select the PDC are shown in Table 2-37. 
+Table 2-37 - Libfabric Fields Used to Select Packet Delivery Context 
+PDC Selection Field Libfabric Source 
+JobID JobID associated with a libfabric API operation 
+Source FA IP address component of a UET address assigned to the source libfabric endpoint 
+Destination FA IP address component of a UET address assigned to the destination libfabric 
+endpoint 
+Traffic Class tclass field of struct fi_domain_attr associated with the source libfabric endpoint 
+Packet Delivery Mode As specified in Section 2.2.6 
+ 
+2.2.10.4 UET SES Header Field Mappings 
+The SES specification describes multiple header formats as summarized in Table 2-38. 
+Table 2-38 - Summary of Semantic Header Formats 
+SES Header Format Description 
+Standard Request Format used by most requests 
+Non-Matching Request Optimized format for requests that do not require matching or header data  
+Small Message / Small RMA Specialized format for: 
+• Single-packet tagged messages 
+• Single-packet RMA operations that cannot use the non-matching request 
+format 
+Deferrable Send Request Specialized format for deferrable send requests that replaces the offset field 
+in the standard request with a restart token 
+Ready To Restart Variation of standard request used to restart paused deferrable send  
+Rendezvous Extension Used in conjunction with rendezvous send operations 
+• The extension includes an eager length that indicates how much message 
+payload is being pushed with the request, and the addressing information 
+needed to issue a read operation 
+Atomic Extension Used in conjunction with atomic operations 
+• The extension contains an atomic opcode and datatype derived from 
+parameters of the associated fi_atomic() API call 
+Compare and Swap Used in conjunction with compare and swap atomic operations 
+• In addition to the atomic opcode and datatype, the extension also 
+contains the compare value and the swap value parameters from the 
+associated fi_compare_atomic() API call 
+Response Used for SES acknowledgements and responses with data 
+ 

@@ -1,0 +1,65 @@
+ 65 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Characteristic (2024) Frontend  
+(Intra Data Center) 
+Backend Scale-out 
+ 
+Local Scale-up 
+ 
+Note: 
+1. The latency requirement is a bound on the range of the congestion window for full bandwidth. 
+ 
+1.5.2 UE Transport (UET) Objectives 
+UET is focused on enabling the workloads and use cases for HPC and AI (AIT and AII). UET mainly targets 
+RDMA service and attempts to provide the best, modernized, and highly optimized transport service for 
+carrying RDMA in AI and HPC workloads. The general characteristics are summarized in Table 1-2. The 
+three use cases (i.e., dedicated AI training cluster, cloud AI/HPC, and at-scale HPC) involve organizations 
+that leverage the full system scale of a single application as well as organizations who fill a significant 
+fraction of the machine with single-node applications–and the full spectrum in between. UET also 
+defines smaller optimized headers that can be used in local communication use cases. This allows 
+vendors to implement efficient short-range interconnects with UE, which is crucial to support larger AI 
+and HPC installations. The objective for UET is to serve the breadth of these use cases with a single 
+transport protocol. 
+Table 1-2 - Characteristics of UET Deployment Model 
+Characteristic 
+(2026+) 
+Dedicated AI 
+Training Cluster 
+Cloud AI/HPC At Scale HPC Local 
+Networks 
+Network scale  
+(Ethernet ports) 
+100k—256k 256k 80k—256k 32—4K 
+Target unloaded 
+one-way latency 
+2—10 µs 2—10 µs 2—10 µs < 5µs 
+Ethernet port speed 800 G+ 400 G+ 800 G+ 800 G+ 
+Average network 
+utilization 
+Up to 85% 20-40% overall BW 
+60-80% for AI cloud 
+Varies, 60-80% 
+for BW-intensive 
+apps 
+85% for small 
+transactions 
+Packet rate Low Mixed High High 
+Message size Relatively large Mixed Tiny to Mixed Small 
+Encryption Optional Required Optional Optional 
+Multi-tenancy Node-level job 
+isolation 
+Node-level job isolation 
++ network virtualization 
+Node-level job 
+isolation 
+Node-level job 
+isolation 
+ 
+An additional UET goal is to provide an accelerator-friendly interface. This involves defining a 
+specification that minimizes the required hardware complexity for integrated endpoints. Another aspect 
+involves defining a software solution that enables accelerators and other processors to do more in 
+hardware. For example, UET may allow an accelerator to own the ‘fast path’ and move other functions 
+(e.g., management and complex error handling) to a separate processor (e.g., host CPU). The details of a 
+hardware implementation and interface within an endpoint to an accelerator are out of scope for this 
+specification. 

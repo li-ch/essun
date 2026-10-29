@@ -1,0 +1,47 @@
+# Approval overlay (2026-10-28): the assumption packet and the UEC
+# profile were expert-reviewed and all entries approved. Approvals live in
+# this overlay — NOT edited into the assumption files — because those files
+# are hashed into every run id; review status is registry metadata, not a run
+# input. The in-file review: fields stay PROPOSED-vintage; this file governs.
+approvals_id: assumptions_approvals_v1
+reviewer: Li Chen
+date: 2026-10-28
+approvals:
+  A-AS2-DELAY-POS: {status: APPROVED}
+  A-AS2-INERT-KEYS: {status: APPROVED}
+  A-AS2-MEM-BW: {status: APPROVED}
+  A-L0-BW: {status: APPROVED}
+  A-L0-DIV: {status: APPROVED}
+  A-L0-FD: {status: APPROVED}
+  A-L0-LAT: {status: APPROVED}
+  A-L05-BW: {status: APPROVED}
+  A-L05-CHUNK: {status: APPROVED}
+  A-L05-DIV: {status: APPROVED}
+  A-L05-INJ: {status: APPROVED}
+  A-L05-LAT: {status: APPROVED}
+  A-L05-SER: {status: APPROVED}
+  A-L0D-BW: {status: APPROVED}
+  A-L0D-DIV: {status: APPROVED}
+  A-L0D-LAT: {status: APPROVED}
+  A-L0D-POW2: {status: APPROVED}
+  A-L0D-STEP: {status: APPROVED}
+  A-L0P-ALGO: {status: APPROVED}
+  A-L0P-COMP: {status: APPROVED}
+  A-L0P-DIV: {status: APPROVED}
+  A-L0P-MSG: {status: APPROVED}
+  A-L0T-BW: {status: APPROVED}
+  A-L0T-DIV: {status: APPROVED}
+  A-L0T-LAT: {status: APPROVED}
+  A-L0T-SEQ: {status: APPROVED}
+  A-L0T-SHAPE: {status: APPROVED}
+  A-L0T-UNIF: {status: APPROVED}
+  A-L0X-BW: {status: APPROVED}
+  A-L0X-DIV: {status: APPROVED}
+  A-L0X-LAT: {status: APPROVED}
+  A-L0X-PORT: {status: APPROVED}
+  A-W1-SIZE: {status: APPROVED}
+  A-W2-CHUNK: {status: APPROVED}
+  A-W2-DAG: {status: APPROVED}
+  UEC-SPEC-ANCHORED-1: {status: APPROVED}
+  UEC-SPEC-ANCHORED-2: {status: APPROVED}
+  UEC-SPEC-ANCHORED-3: {status: APPROVED}

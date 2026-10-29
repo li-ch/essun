@@ -1,0 +1,14 @@
+ 316 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+one associated with the most recently transmitted packet with pds.flags.syn=1 that was determined to 
+be lost. 
+Informative Text: 
+Implementations MAY choose to allow the anti-replay mechanisms described in 3.5.8.2.1 to be 
+enabled independently of encryption. A deployment that guarantees that anti-replay mechanisms are 
+enabled on all nodes MAY safely set Syn_Retx_Safety_Time to 0. 
+ 
+ 
+ 
+ 
+Figure 3-55 - PDC Startup using SYN Flag 

@@ -1,0 +1,39 @@
+6.3. Inter-Rack Architecture Exploration
+
+Beyond the intra-rack 2D-FM, UB-Mesh adopts another 2D-FM within the UB-Mesh Pod, forming a 4D-FM network architecture. As illustrated Fig. 18, we compare UB-Mesh’s 2D full-mesh inter-rack architecture with the baseline Clos architecture:
+
+Figure 18. Inter-Rack Network Architectures
+
+(a) 2D-FM: The 16 racks are directly interconnected horizontally and vertically, forming a 2D full-mesh direct connection. All racks are connected to HRS switches, enabling cross-pod interconnection.
+
+In UB-Mesh-Pod, three routing strategies can be supported:
+
+•
+
+Shortest: The baseline routing strategy, only the shortest path on the 2D mesh will be selected for P2P communication.
+
+•
+
+Detour: According to the All-Path-Routing mechanism, other paths will also be used for maximizing the bandwidth.
+
+•
+
+Borrow: Since all racks are also connected to switches, we enable racks to "borrow" the bandwidth from switches.
+
+(b) Clos: All racks are connected to HRS switches, without direct connection. This architecture consumes many more switches than 2D-FM but provides the highest all-to-all bandwidth and flexibility.
+
+Performance Comparison: As shown in Fig. 19, we compare the performance of 2D-FM (including different routing strategies) and Clos architectures. As we can see, compared to the ideal Clos architecture, the performance gap between 2D-FM and Clos is negligible, especially when Detour and Borrow strategies are applied. The GPT3-175B is not sensitive to inter-rack communication performance, while on GPT4-2T, the naive 2D-FM with shortest-path routing suffers from 0.73% training performance degradation. The performance gap is narrowed to merely 0.46% when Detour and Borrow routing strategies are adopted. Generally, the 2D-FM inter-rack interconnects demonstrates almost the same performance as the expensive Clos architecture.
+
+Figure 19. End-to-End Performance Comparison of Different Inter-Rack Interconnections
+
+Inter-Rack Bandwidth Exploration: Fig. 20-(b) compares the throughput performance of 8K SuperPod under varying inter-rack bandwidth conditions. The inter-rack bandwidths evaluated are x4, x8, x16, and x32 UB IO per NPU. For sequence lengths ranging from 8K to 32K, the optimal inter-rack bandwidth is identified as UB x16, while for sequence lengths from 64K to 10M, the optimal inter-rack bandwidth is identified as UB x32. The performance gain from increasing the inter-rack bandwidth from UB x8 to UB x16 in the 8K-32K sequence length range is minimal, at only 0.44%. However, the performance gain from increasing the inter-rack bandwidth from UB x16 to UB x32 in the 64K-10M sequence length range is more significant, at 1.85%. In scenarios with sequence lengths from 64K to 10M, a portion of the TP (Tensor Parallelism) and SP (Sequence Parallelism) traffic inevitably traverses the inter-rack link. Higher inter-rack bandwidths significantly reduce the communication time for TP and SP, leading to a more pronounced performance improvement in these scenarios. The data underscores the importance of matching inter-rack bandwidth to the specific sequence length requirements of different model scenarios, particularly in reducing TP and SP communication latency for large-scale models. UB-Mesh assigns a UB x16 IO per NPU for inter-rack communication by default to achieve a balance between cost and performance. We can also adjust the intra/inter-rack bandwidth ratio to match the specific requirements from certain LLM training workloads.
+
+Figure 20. Inter-Rack Bandwidth Exploration
+
+6.4. Cost-Efficiency Comparison
+
+The system cost is usually measured in TCO, i.e., TCO = CapEx + OpEx. Considering the achieved training performance relative to the baseline, we define the cost-efficiency of a system as following:
+
+(1)Cost-efficiency=Average PerformanceOpEx + CapEx\textit{Cost-efficiency}=\frac{\textit{Average Performance}}{\texttt{OpEx + CapEx}}
+
+We estimate the CapEx cost, including the costs of NPUs, CPUs, LRS, HRS, cables and other modules using in-house numbers, and compare among different architectures. As shown in Fig. 21, UB-Mesh’s 4D-FM+Clos architecture achieves 1.18×1.18\times, 1.26×1.26\times, 1.65×1.65\times and 2.46×2.46\times CapEx reduction compared to 2D-FM+x16 (denotes UB x16 IO per-NPU) Clos, 1D-FM+x16 Clos, and x64T Clos architectures, respectively. Compared to the baseline Clos architecture, UB-Mesh successfully reduces the ratio of network infrastructure cost in the system from 67% to 20%, due to the saving of high-performance switches and long-range optical cables/modules. According to our evaluation, 98% of high-radix switches and 93% of optical modules are saved compared to baseline Clos architecture.

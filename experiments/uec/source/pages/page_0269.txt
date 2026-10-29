@@ -1,0 +1,26 @@
+ 269 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 3-41 illustrates several aspects of the resource exhaustion protocol. First, once a resource is 
+exhausted (e.g., an unexpected message buffer), the next message and all subsequent messages fail 
+with an RC_DISABLED_GEN return code—until resources are added. Second, when resources are 
+replenished, the generation number is atomically updated with the addition of resources. Third, 
+messages that were already in flight encounter a generation mismatch and are dropped with an 
+RC_BAD_GENERATION return code being generated. Fourth, to maintain ordering, the first dropped 
+message is retransmitted with an updated generation number, but subsequent messages are not 
+retransmitted until a successful return code is received. Once the first message is accepted by the target 
+semantic sublayer, subsequent messages may be retransmitted with the new generation number. 
+Some features of this protocol are not illustrated. For example, a third FEP could send a message and 
+encounter a generation mismatch. It would follow the same recovery procedure as illustrated. Note 
+that, with multi-packet messages, it is still necessary to wait until the entire message has completed 
+before starting the next message. This is because PDS can promote a UET_NO_RESPONSE to a 
+UET_DEFAULT_RESPONSE as part of acknowledgement coalescing. It is not until the entire message has 
+been acknowledged that the initiator can know for sure that the message was accepted at the target. 
+3.4.5.7 Errors Indicated by the Initiator 
+Two types of error sequences are illustrated in Figure 3-42 and Figure 3-43. Errors that are detected at 
+the target are delivered to the initiator using return codes in a response using guaranteed delivery. 
+Errors detected at the initiator can be signaled to the target in two different ways. An error can be 
+signaled by setting the initiator error (ses.ie) bit in the header as shown in Figure 3-42. This type of error 
+signaling only marks a packet as bad and results in a message completion in error at the target. The 
+ 
+Figure 3-42 - Multi-Packet Request, Expected Message, with Initiator Error 

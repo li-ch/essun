@@ -1,0 +1,30 @@
+ 288 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Mapping *CCL send/receive concepts to the scale-up semantics is not specified. 
+3.4.10.1 Tag-Based *CCL Mapping 
+The tag-based *CCL mapping leverages the libfabric fi_tagged() API beneath the untagged send and 
+receive operations within a typical *CCL API. The *CCL user API is unchanged, but the tagged API 
+implementation allows the ordered send/receive pair to use an unordered protocol underneath for 
+better network efficiency. To simplify the underlying implementation, libfabric will be extended to allow 
+the libfabric user to specify that only “exact match” operations will be supported for a given Resource 
+Index. In this model, libfabric is initialized with FI_ORDER_NONE. This allows the implementation to 
+choose a RUD PDC. 
+A *CCL send must match the corresponding *CCL receive based on the order in which they were issued. 
+To achieve this while using the RUD protocol, the *CCL implementation maintains the following state 
+per communication context: 
+1. A send message sequence number (MSN) per-peer rank 
+2. A receive MSN per-peer rank 
+The tag passed through the fi_tagged() API is a communication context identifier concatenated with the 
+appropriate MSN for that peer. For example, an fi_tsend() uses the send MSN combined with the 
+communication context identifier. The source rank is part of the local endpoint and is placed in the 
+initiator field of the packet by the provider. The dest_addr field of the fi_tsend() comes from the 
+destination in the *CCL send. Each time a *CCL send is called, the send message MSN for the 
+corresponding rank is incremented. Correspondingly, the fi_trecv() uses the receive MSN combined with 
+the communication context identifier. The source rank is used to populate the src_addr field. Each time 
+a *CCL receiver is called, the receive MSN for the corresponding rank is incremented. 
+The use of the MSN tables is illustrated in Figure 3-47. 
+ 
+ 
+Figure 3-47 - Use of MSN Tables 
+A sequence diagram for tag-based *CCL send and receive operations is shown in Figure 3-48. 

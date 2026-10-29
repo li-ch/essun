@@ -1,0 +1,38 @@
+# Calibration-ladder A1 aggregate-mapping RUN: same
+# workload and identity as run_a1_anchor_point_v1, at the AGGREGATE
+# injection scale B=900 B/ns per rank per direction — CAL-A1's own port
+# arithmetic (18 chips x 72 ports / 72 GPUs = 18 ports per GPU; 18 x 50 =
+# 900). This is the mapping that abstracts the whole 18-chip rack fabric
+# as one non-blocking switch; the pair (50-port run, 900-aggregate run)
+# brackets the two fabric-consistent readings of the anchor.
+#
+# claim_id deliberately EMPTY (PROPOSED candidate, zero claim edits);
+# evidence level E0 (analytical execution only).
+experiment_id: EXP-CAL-A1-AGG900-001
+research_question: RQ2
+claim_id: ""
+baseline_id: EXP-CAL-A1-PORT50-001
+workload_ir:
+  path: experiments/calibration/workloads/w1_dense_tp_decode_tp72.yaml
+infra_graph:
+  path: experiments/calibration/a1/topologies/crossbar72_a1_agg900_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a1/profiles/implementation_profile_l0_crossbar_free.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar72_a1_agg900_v1 (NVSwitch-class abstraction, r=72, B=900 B/ns CAL-A1-derived per-GPU aggregate, L=200 ns free)
+  workload: w1_dense_tp_decode tp72, payload 2.25 GiB (bandwidth-bound regime)
+  implementation: analytical L0 free-parameter identity; CAL-A1 comparison is normalization-ceiling only — PROPOSED, review required
+evidence_level_requested: E0

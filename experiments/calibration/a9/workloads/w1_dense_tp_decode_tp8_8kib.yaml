@@ -1,0 +1,23 @@
+# W1 Dense TP Decode — tp_size 8 at payload 8192 B = 8*2^10: the SMALLEST
+# member of this stage's 12-size ladder 8*2^k (8 KiB -> 8 GiB, every size
+# divisible by 8 so the A-L0-DIV / A-L0X-DIV / A-L0D-DIV input gates all
+# ACCEPT the exact ladder with no bracketing). Stage A9 is a LATENCY-BUDGET
+# stage (CAL-A9, CXL link ~10 ns + switch >=~70 ns per stage): the small
+# end of the ladder is where the latency axis governs O-CCT, so the two
+# store runs of this stage execute at this member (the sweep still spans
+# the whole ladder, recording the exact crossover spectrum — see
+# sweep_a9_pair_latency_v1.yaml). At this size the identity's latency
+# fraction of CCT at the anchor point L=80 is exactly 5/12 (~41.7%) and at
+# the registry point L=200 exactly 25/39 (~64.1%) — the regime the anchor's
+# axis actually speaks to. Same workload shape as every other W1 file (2
+# layers x 3 decode steps = 6 AllReduce ops per config). Nothing here is
+# measured or standard-normative; integer byte counts; deterministic by
+# construction. No anchor measures O-CCT in this regime (plan gap §4.3:
+# small-message O-CCT <= ~64 KiB is unanchored) — this file EXECUTES the
+# identity for placement arithmetic only, it calibrates nothing.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-a9
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 8192   # 8*2^10 (8 KiB); free parameter A-W1-SIZE

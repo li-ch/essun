@@ -1,0 +1,23 @@
+ 150 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-21 - Verbs Example Relative Addressing 
+2.3.6 JobIDs 
+Support for job-based communication introduces new verbs objects. A job object is a device-level object 
+that may be shared between processes. The configuration of a job object is considered a privileged 
+operation. 
+The maximum number of JobIDs that a device supports is advertised as an extended device attribute. 
+2.3.6.1 Job Attributes 
+A job object MUST be associated with a JobID value, port number, and source GID entry. The JobID value 
+maps directly to the JobID carried in the SES header. The source GID entry identifies the transport 
+protocol and source network address. 
+2.3.6.2 Address Table 
+An address table identifies a set of peer QPs belonging to a JobID. Each entry in the table contains the 
+extended address attributes used to target a remote service. Each address inserted into the table is 
+associated with an address index. The address index is specified when submitting send work requests to 
+identify the target QP. 
+The configuration of an address table within a job object is considered a privileged operation. 
+Operations include adding, replacing, removing, and querying an address at a specific index. 
+A JobID’s address table is automatically shared between all processes within the same job. 
+Support for address tables is optional. 

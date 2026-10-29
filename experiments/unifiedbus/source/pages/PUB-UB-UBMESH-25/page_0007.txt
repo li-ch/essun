@@ -1,0 +1,35 @@
+The detailed specification of UB protocol is going to be released.. UB simultaneously supports synchronized operations like Load/Store/Atomic and asynchronous operations like Read/Write/Message. Based on UB, we only need to design and implement a single UB IO controller that can be reused across CPU, NPU, and even LRS switches. UB also offers the following three main advantages:
+
+•
+
+Flexible IO Resource Allocation. The UB interconnects are decoupled from specific use cases, enabling flexible resource allocation for different types of IO within the chip, as illustrated in Fig. 3. The inter-NPU bandwidth and CPU-NPU bandwidth can also be flexibly adjusted according to specific requirements, as they utilize the same UB links.
+
+•
+
+Hardware Resource Pooling. The UB’s peer-to-peer communication capabilities enable efficient pooling of hardware resources, including DDR DRAM, CPUs, NPUs and NICs. For instance, in Fig. 6-(b), CPUs and NPUs are pooled via UB interconnects to enhance resource utilization.
+
+•
+
+System Optimization Benefits. A unified interconnect eliminates the need for protocol conversions, significantly reducing overhead and simplifying the design and optimization of drivers, communication libraries, and frameworks, among others.
+
+3.3. Architecture Overview
+
+Composing the hardware building blocks listed in Table 3 and interconnecting them via the Unified Bus (UB), we present the overall architecture design of UB-Mesh. As illustrated in Fig. 7-(a), we implement a UB-Mesh-Pod following the proposed nD-FullMesh topology. Specifically, within this architecture, we create a 2D-FullMesh within each rack and extend this to another 2D-FullMesh beyond the rack, resulting in a 4D-FullMesh. We have chosen not to scale UB-Mesh to 5D-FullMesh or higher in this generation to achieve an engineering balance between cost-efficiency and flexibility, still adopting a Clos topology beyond the 4D-FullMesh555
+
+UB-Mesh-Pod can evolve to 5D-FullMesh or higher dimensions as future LLM training demands scale.. Details are introduced as follows:
+
+3.3.1. Implementing 2D-FullMesh in Racks.
+
+Figure 8. The Hardware Implementation of UB-Mesh Rack
+
+As illustrated in Fig. 7-(b), each rack is configured with a 2D-FullMesh topology, integrating multiple components to ensure efficient communication and resource utilization. The core of the rack consists of eight NPU boards, each containing eight NPUs, as shown in Fig. 8-(a). These 64 NPUs are interconnected within the rack to form a 2D-full-mesh network, ensuring high NPU-to-NPU bandwidth. Note that since the UB IO controllers also have the routing ability, each NPU serves as a router and enables indirect routing in this architecture.
+
+In addition to the NPUs, the rack includes dedicated CPU boards, as shown in Fig. 8-(c). Unlike traditional setups where CPUs and NPUs are on the same board, here they are separated. The CPUs connect to the NPUs through switches, enabling flexible CPU/NPU ratios and supporting CPU/NPU/DDR resource pooling for resource utilization improvement.
+
+The rack features multiple back-plane switches that manage both intra-rack and inter-rack connections. These switches employ low-radix designs, termed LRS, to reduce costs while ensuring non-blocking communication among devices. As shown in Fig. 7-(b), 18 LRSes are fully-connected to form one switch plane, where two LRSes are used for CPUs and backup NPUs, eight for regular NPUs and eight for inter-rack connection. Aggregately, these back-plane switches output four UB x256 IO.
+
+3.3.2. The 64+1 High Availability Design.
+
+As highlighted in Section 1, ensuring system availability is a critical challenge in large-scale AI datacenters. Individual NPUs within the system may experience unexpected failures. While the software system can detect these failures and restart training using the remaining healthy NPUs, the system performance will be significantly impacted due to reduced computational power and system bandwidth.
+
+To enhance system availability, we introduce a special 64+1 design: As depicted in Fig.7-(b) and Fig.8-(b), the system comprises 64 regular NPUs along with an additional backup NPU. This NPU is connected to the 64 regular NPUs via LRS. The backup NPU is strategically utilized in the event of any NPU failures. As illustrated in Fig. 9, when NPU-3 has a failure, the management system activates the backup NPU (node-B in the figure) to replace NPU-3. The original direct-connection links related to NPU-3 are redirected. For instance, the path 5-3 is redirected to path 5-LRS-B. Although this strategy changes the original direct-connection to one-hop routing, slightly increasing transmission latency, it is far superior to simply masking NPU-3 and running tasks on the remaining seven NPUs. In LLM training scenarios where intra-rack bandwidth is the primary concern, the increased latency has a negligible impact on overall training performance.

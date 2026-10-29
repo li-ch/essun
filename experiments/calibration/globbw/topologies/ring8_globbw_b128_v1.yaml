@@ -1,0 +1,28 @@
+# Calibration-ladder GLOBAL stage GLOB-BW topology: unidirectional ring
+# of 8 ranks - the W1 smoke fabric (experiments/topologies/
+# ring8_free_params.yaml) with the link-BW free parameter A-L0-BW set
+# to 128 B/ns.
+#
+# Role in this sweep: Powers-of-two ladder interior point, latency-dominated
+# side (B > B* = 10.24 B/ns).
+#
+# This is the FIRST of the four global parameter-class sensitivity
+# stages :
+# B is swept across its REGISTERED range [1, 1024] B/ns on the W1
+# smoke config; L is fixed at the A-L0-LAT registry point 200 ns
+# (KEEP per plan section 2.1). Nothing is tuned toward any anchor or
+# measurement - this stage maps the model's own response surface
+# along the registered axis (anchor-informed span points are context
+# markers, per plan section 2.1 A-L0-BW).
+topology_id: ring8_globbw_b128_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 128
+  hop_latency_ns: 200
+notes: >
+  powers-of-two ladder interior point, latency-dominated side (B > B* =
+  10.24 B/ns). Same transport-agnostic L0 ring as ring8_free_v1 (the W1
+  smoke fabric) with only B moved; B is a FREE PARAMETER (A-L0-BW), not
+  standard-derived and not measured. No congestion, no credits, no
+  packetization - L0 transport model only.

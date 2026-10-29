@@ -1,0 +1,21 @@
+ 762 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+8.1.1 UE Support Requirements 
+Implementers SHALL call out supported features and associated profiles [e.g. LL-LLR, AI-BASE]. 
+Implementers SHALL execute the checklist tests, corresponding to the profile line items [e.g. LL-LLR-1.1]. 
+8.1.2 Declaration Format  
+The declaration format is: 
+<Complies to UE Specifications: [spec ver # - section], [profile + optional/conditional], tested against 
+[checklist doc ver #]>  
+It is RECOMMENDED that the declaration statement lists the optional/conditional profile features that 
+were tested. 
+Declaration example: “Complies to UE Specifications: UE Specification v1.0 – Section 5.1, AI-BASE, CT LL-
+PHY Specifications 1.0”. 
+Non-mandatory features can be enabled during compliance tests, but it must be possible to disable non-
+mandatory features if they can cause interoperability issues with other implementations using the same 
+UE profile without the optional features. 
+8.1.3 Compliance verses Support Terminology  
+Support is synonymous to Comply.   A statement of compliance with UE Specifications should be 
+accompanied by a declaration stating what was tested. 
+  

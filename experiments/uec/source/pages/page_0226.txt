@@ -1,0 +1,24 @@
+ 226 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.3.3 Optimized Header Formats for the Unified Local Profile 
+Two request header formats are used in conjunction to optimize the wire efficiency of the Unified Local 
+profile transport. These formats target single packet transfers with a payload size up to 16K-1 bytes and 
+have a request length that is sized appropriately. The payload size is limited by the configured Payload 
+MTU, which has a maximum 8 KB. Optimizing beyond the format selected by 
+UET_HDR_REQUEST_SMALL, these two formats support only the direct memory addressing mode; thus, 
+they do not have the ses.PIDonFEP, ses.resource_index, or ses.ri_generation fields. The 
+ses.request_length field is shortened to optimize for shorter transfer lengths, and flags that are not 
+relevant to single-packet direct memory addressing are removed (i.e., ses.rel, ses.som, and ses.eom). 
+UET_HDR_REQUEST_LCL provides the option to carry implementation specific data per message. This is 
+done by setting ses.ehl to one for 4 B, two for 8 B or three for 16 B. The extension header is supported 
+explicitly when ses.ac = 0. If ses.ac = 1, the ses.ehl field is not present. In this case, ses.ehl is taken from 
+the previous message in the same packet with ses.ac = 0 
+Multiple optimized semantic headers for the Unified Local profile can be combined into a single PDS 
+packet. The first optimized semantic header in a PDS packet MUST use the format shown in Figure 3-17 
+and described by Table 3-12. In this format, the address compression bit (ses.ac) MUST be set to 0. If 
+only one semantic header is used per PDS packet, then ses.ac MUST be set to 0 and ses.mm (more 
+messages) MUST be set to 0. 
+ 
+Figure 3-16 - Small Message/Small RMA Format (UET_HDR_REQUEST_MEDIUM) 
+ 

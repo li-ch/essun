@@ -1,0 +1,51 @@
+ 91 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Parameter Name Size (bits) Description 
+Service Name 136 Null-terminated string identifying a service that JobID is assigned to. A 
+NULL string indicates the JobID is assigned to all services of the process. 
+UET Address See Table 
+2-10 
+MAY be used to assign components of the local UET address (e.g., 
+PIDonFEP or Initiator ID) 
+The UET address format is specified in Table 2-10 
+Security Bindings See Table 
+2-33 
+MAY be used to assign security bindings 
+Security binding parameters are specified in Table 2-33 
+ 
+A ‘C’ structure representation of the UET Control API JobID mapping request is shown in Figure 2-5. 
+#define UET_CTRL_FLAG_ADDR_V (1 << 0)  /* uet address field valid */ 
+#define UET_CTRL_FLAG_SEC_V (1 << 1)   /* security bindings field valid */ 
+#define UET_MAX_SERVICE_NAME_CHARS 64  /* max len of service name str */ 
+ 
+struct uet_ctrl_job_id_map_req { 
+  uint8_t flags;   
+       uint32_t job_id; 
+       uint32_t os_pid; 
+ char service[UET_MAX_SERVICE_NAME_CHARS+1]; 
+ struct uet_addr uet_addr; 
+ struct uet_sec_bindings sec_bindings; 
+}; 
+ 
+Figure 2-5 - UET Control API JobID Mapping Request Structure 
+Security bindings MAY be assigned for the entire JobID mapping using the sec_bindings field of the 
+uet_ctrl_job_id_map_req structure. Alternatively, in the Linux implementation of the UET Control API 
+(see Section 2.2.11), security bindings MAY be assigned for each allocated resource index using a series 
+of UET_NL_ATTR_SEC_BINDINGS Netlink attributes. 
+JobID mappings MAY be removed using the UET Control API JobID unmapping request. A ‘C’ structure 
+representation of the UET Control API JobID unmapping request is shown in Figure 2-6. 
+struct uet_ctrl_job_id_unmap_req { 
+ uint8_t flags;   
+      uint32_t job_id; 
+      uint32_t os_pid; 
+      char service[UET_MAX_SERVICE_NAME_CHARS+1]; 
+struct uet_addr uet_addr; 
+}; 
+ 
+Figure 2-6 - UET Control API JobID Unmapping Request Structure 
+More than one JobID MAY be assigned to the same {OS PID, Service Name}. When multiple JobIDs are 
+assigned to the same {OS PID, Service Name}, the libfabric FI_AV_AUTH_KEY capability MUST be used to 
+select the JobID associated with a data transfer operation. As an example, multiple JobIDs allow a single 
+libfabric endpoint of a server to communicate with multiple client jobs. Another use case is when 
+multiple jobs need to communicate with one another. 

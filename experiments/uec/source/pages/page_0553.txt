@@ -1,0 +1,23 @@
+ 553 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Details of the trimming feature are covered in the UE trimming specification 4.1.  
+3.7.2.5 TSS Logical Interfaces [informative] 
+This section contains non-normative text that describes example PDS-TSS and TSS-Link interfaces from a 
+logical perspective to illustrate the information that crosses the interface. The interfaces between these 
+sublayers are implementation specific. 
+The TSS is responsible for authentication of the packet within the secure domain. It relies on information 
+provided by the link layer and PDS as well as local state (SDKDB). 
+Before packets are sent to the TSS from either the PDS or the link layer, the following steps MUST be 
+complete: 
+• SDKDB is configured for active secure domains. 
+• Global parameters configured (e.g., Rekey_Mask). 
+• Required initialization and configuration of cipher hardware (KDF, AES, etc.). 
+Figure 3-136 summarizes an example PDS-TSS interface using C function signatures. This example is 
+presented to provide a framework for better understanding the overall architecture but does use some 
+terminology that is not introduced until subsequent sections. 
+ 
+ 
+Figure 3-136 - Example PDS-TSS-Link Logical Interface 
+ 
+ 

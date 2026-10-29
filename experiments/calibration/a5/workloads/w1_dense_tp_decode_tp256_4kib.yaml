@@ -1,0 +1,23 @@
+# W1 Dense TP Decode — tp_size 256, the rank count of CAL-A5's larger
+# measured slice (TPU v4 4x8x8; docs/calibration/anchors_staging.md §A5).
+# Payload 4096 B = the anchor's individual all-to-all DMA size ("individual
+# DMAs of 4 KiB"), used as the model's AllReduce message so the runs sit in
+# the anchor's own message regime. HONEST MAPPING: the anchor measures
+# all-to-all throughput; this model executes AllReduce — the two collectives
+# are never compared to each other (no mixed metric per CALIBRATION_PLAN
+# §3); the 4 KiB size only places the run in the anchor's regime.
+#
+# 4096 is a power of two and every torus dimension of this stage is a power
+# of two, so the A-L0T-DIV gate ACCEPTS the anchor's size exactly — no
+# floor/ceil bracketing (contrast stage A3, where 72 = 8*9 rejected every
+# power of two).
+#
+# Same workload shape as every other W1 file (2 layers x 3 decode steps = 6
+# AllReduce ops per config). Nothing here is measured or standard-normative;
+# integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal256-a5
+tp_size: 256
+layers: 2
+steps: 3
+allreduce_bytes: 4096   # 4 KiB; CAL-A5's individual DMA size; free parameter A-W1-SIZE

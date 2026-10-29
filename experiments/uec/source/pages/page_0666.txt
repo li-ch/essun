@@ -1,0 +1,32 @@
+ 666 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• PktOvhd 
+o The size of the per-packet overhead is a function of the receiver buffer design and is set 
+to the size of additional space required at input buffer for each packet. 
+o Receiver: 
+▪ Receiver.PktOvhd = (additional per-packet buffer space). 
+o Sender: Ideally set to the same number as at the receiver but must be conservative if 
+not set to exactly the receiver’s value. 
+▪ Sender.PktOvhd ≥ Receiver.PktOvhd 
+• Per-VC credit limits 
+o When the receiver sets the TotalCredits limit: 
+▪ Distribution of the TotalCredits among the lossless VCs at the sender is an 
+implementation-dependent function. The sender’s implementation must 
+prevent blocking between VCs. 
+o When the receiver sets an individual VC_CreditLimit[x] for each lossless VC: 
+▪ The sender shall set each lossless VC credit limit, S_VC_CL[x], to honor the 
+receiver’s requested limits. 
+While each link partner must be able to be configured by management software with these link-specific 
+parameters, it is also desirable to provide a link-level protocol to allow communication between link 
+partners to set up coordinated values for these parameters. UE link negotiation may be used for this 
+purpose. 
+5.2.8.3 CBFC Link Level Initialization Using UE Link Negotiation 
+When a port is reset, all VCs are initially set to best effort delivery. To establish lossless packet delivery, 
+lossless VCs must be initialized using the CBFC lossless VC initialization process through an exchange of 
+LLDP packets between the link partners. As shown in Figure 5-10, a VC’s disposition can later be changed 
+back to best effort through the lossless VC removal process without disturbing traffic on other VCs. 
+ 
+Figure 5-10 - Virtual Channel State 
+The UE link negotiation mechanism uses the IEEE Link Layer Discovery Protocol (LLDP) [5]to specify UE-
+enabled features and exchange any necessary information between link partners to support those 

@@ -1,0 +1,39 @@
+ 312 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+traffic class SHOULD be supported to reduce head-of-line blocking that may occur when one or more 
+large messages are posted to a PDC. 
+When UET-CC is used, all RUD PDCs between a pair of FEPs sharing a TC MUST be mapped to the same 
+CCC except for RUD PDCs from the reserved pool, which may use independent CCCs. 
+When multiple PDCs are established between two FEPs, all packets from a single message MUST use the 
+same PDC. RUD mode allows different messages to be distributed across multiple PDCs. In ROD mode, 
+all messages between {JobID, source PIDonFEP, destination PIDonFEP, RI, TC} MUST use a single PDC. 
+3.5.8.2 PDC Establishment 
+A PDC is created dynamically on demand. The protocol is defined to allow PDC creation to occur without 
+incurring a round-trip delay (i.e., with zero startup time). The initiator assigns an IPDCID used as part of 
+PDC creation. When the target establishes the PDC, it assigns a TPDCID that is returned to the initiator. 
+PDCID = 0 is reserved and MUST NOT be used to establish a PDC. PDCID = 0 is used in NACK messages 
+when a valid PDCID is not available.  
+PDC creation refers to allocating PDC resources and transmitting packets. PDC establishment refers to 
+both initiator and target allocating and using PDCIDs. The target moves directly from created to 
+established, while the initiator waits until a response packet is received with the target’s PDCID. 
+Trimmed packets MUST NOT be used to establish a new PDC. A NOOP CP or Negotiation CP may 
+establish a new PDC. 
+PDCIDs are intended to be locally unique at the FEP level to enable efficient implementation. An 
+implementation MUST allocate PDCIDs such that {source FA, destination FA, PDCID} is globally unique. 
+For example, the PDC mode (RUD, ROD) cannot be used to uniquely identify a PDC. This is done at the 
+initiator and target FEPs. When using UET-CC, a CCC_ID is assigned such that RUD PDCs share a CCC 
+when possible and ROD PDCs each use their own CCC. 
+An initiator requests PDC establishment by setting pds.flags.syn in a PDS Request packet. This PDS 
+Request packet may also contain an SES Request. The pds.flags.syn MUST be set in all packets sent on 
+the PDC until a packet is received for the PDC from the target. An initiator SHOULD NOT send more than 
+MP_Range - 1 packets with pds.flags.syn=1. If a PDC is still not established, an initiator SHOULD 
+establish a connection with control packets before sending any more data packets. MP_Range is defined 
+in Section 3.5.11.13. This provision facilitates recovery when all packets with pds.flags.syn=1 are lost. 
+Before the first PDS packet is received, the TPDCID is not known by the initiator, as it is assigned by the 
+target. The PDS Request packet sent by the initiator overloads the pds.dpdcid field to allow the target to 
+determine the mode of the PDC and the starting initiator PSN number: 
+• The initiator MUST set DPDCID = {pds.pdc_info, pds.psn_offset} when the initiator generates 
+packet with pds.flags.syn set to 1 
+The pds.pdc_info field is defined in Section 3.5.11.6. The pds.psn_offset field is the offset of the PSN 
+from the starting PSN for the PDC, as illustrated in Table 3-37. The initiator starting PSN MUST be a 

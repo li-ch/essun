@@ -1,0 +1,35 @@
+ 678 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+9. During the LLR replay window, no new CC_Update packet shall be transmitted. 
+ 
+5.2.10 Compliance Requirements 
+5.2.10.1 CreditSize Parameter 
+The receiver’s input buffer is typically divided into cells, and the cell size (in bytes) is the input buffer 
+allocation unit. Packets smaller than the cell size, or larger packet sizes that are not evenly divisible by 
+the cell size, end up wasting some buffer space: the “cell tax.” To make optimal use of the receiver’s 
+input buffer, the CreditSize parameter should be set to the buffer cell size. However, requiring all 
+implementations of CBFC to support any CreditSize in the sender logic is overly burdensome, and the 
+CBFC mechanism works even if the CreditSize is not set to this “optimal” value. Implementations should 
+support their own native cell size of the port input buffer but are not required to support all possible 
+CreditSize values. See Section 5.2.5.8 for information on handling non-ideal CreditSize values at the 
+sender and receiver. 
+CBFC requires support for a minimal set of CreditSize values, on powers of 2: 
+• 32, 64, 128, 256, 512, 1024 and 2048 bytes 
+In addition, to make better use of the credit mechanism and buffer storage, it is recommended to also 
+support values at 8 B intervals from 32 B to 64 B, 16 B intervals from 64 B to 128 B, 32 B intervals from 
+128 B to 256 B, 64 B intervals from 256 B to 512 B, 128 B intervals from 512 B to 1024 B, and 256 B 
+intervals from 1024 B to 2048 B. 
+Additional recommended CreditSize values: 
+• 40, 48, 56, 80, 96, 112, 160, 192, 224, 320, 384, 448, 640, 768, 896, 1280, 1536, and 1792. 
+Finer granularity is always better and is encouraged. The programmed CreditSize at the sender must be 
+conservative with respect to the receiver’s actual input buffer cell size, such that the programmed 
+CreditSize ≤ (receiver’s cell size). 
+5.2.10.2 Packet Overhead 
+An implementation shall support the packet overhead parameter, PktOvhd, in the range from -16 to 
++127 bytes. An implementation may use a PktOvhd value quantized to a granularity greater than one 
+byte if it is conservative with respect to the receiver’s actual per-packet overhead buffer requirement, 
+such that the programmed PktOvhd ≥ (actual receiver packet overhead). 
+ 
+ 

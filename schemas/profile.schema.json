@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/scaleup/profile.schema.json",
+  "title": "essun profile artifact (design doc D2, ladder S3)",
+  "description": "The versioned profile format: a profile is a first-class, engine-separable artifact carrying ten required elements (design doc D2, docs/plans/design-integration-20261029.md): source identity/revision, provenance and permissions, interpreted requirements WITH dispositions (D1), declared implementation freedom, backend capability bindings, executable checks, supported workloads/observables, calibration scope, known omissions, and versioning rules — plus the two identity keys 'format' and 'profile_id'. DRAFT CONTRACT: not promoted by an ADR; the format carries its own version (format.version) and every change to it is a versioned, conscious change. Structural rules live here; cross-reference rules (bindings/checks must reference existing requirement ids; simulated_behavior requires a binding; conformance_test requires a check; calibration status/target consistency) are enforced by the loader (essun.specir.profile_format) and pinned in agreement with this schema by tests/specir/test_profile_format.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "profile_id",
+    "source",
+    "provenance",
+    "requirements",
+    "freedom",
+    "bindings",
+    "checks",
+    "supported",
+    "calibration",
+    "omissions",
+    "versioning"
+  ],
+  "properties": {
+    "format": {
+      "type": "object",
+      "description": "Identity of the FORMAT itself (the artifact is self-describing; the loader dispatches on it). While the format is a 0.x draft, loader and artifact must agree exactly on version.",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "essun-profile" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" }
+      }
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable identity of this profile artifact (e.g. 'uec-1.1-semantic'). Comparisons are of named profiles."
+    },
+    "source": {
+      "type": "object",
+      "description": "Element 1: source identity/revision — which standard/document the profile interprets.",
+      "required": ["name", "document_id", "revision"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "document_id": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "url": { "type": "string" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Element 2: provenance and permissions — the repo-level license-gate source record and access status. License review precedes ingestion; the profile never carries restricted text.",
+      "required": ["source_record", "access"],
+      "additionalProperties": true,
+      "properties": {
+        "source_record": { "type": "string", "minLength": 1 },
+        "access": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Access class of the source record (e.g. PUBLIC_READ, APPROVAL_REQUIRED), copied verbatim from the license-gate registry row."
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "description": "Element 3: interpreted requirements WITH dispositions (D1). An empty object set is allowed only as a VISIBLE absence: requirements.note is then required.",
+      "additionalProperties": false,
+      "required": ["objects"],
+      "properties": {
+        "objects": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/requirement" }
+        },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "freedom": {
+      "type": "array",
+      "description": "Element 4: declared implementation freedom — degrees of freedom the source explicitly leaves open. Never invent normative values; use a free parameter.",
+      "items": { "$ref": "#/$defs/freeParameter" }
+    },
+    "bindings": {
+      "type": "array",
+      "description": "Element 5: backend capability bindings — which requirement (disposition simulated_behavior) is executed by which backend capability. Enforced cross-reference: a binding must name an existing simulated_behavior requirement. May be empty: a profile executed by no backend today says so by having no bindings, never by omitting the element.",
+      "items": { "$ref": "#/$defs/binding" }
+    },
+    "checks": {
+      "type": "array",
+      "description": "Element 6: executable checks — golden/negative/invariant checks exercising the profile's requirements. Every conformance_test requirement must be referenced by at least one check. May be empty.",
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "supported": {
+      "type": "object",
+      "description": "Element 7: supported workloads and observables — the profile's declared executable surface.",
+      "additionalProperties": false,
+      "required": ["workloads", "observables"],
+      "properties": {
+        "workloads": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "observables": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "description": "Element 8: calibration scope — verification != calibration (hard rule 5); a profile states what it is calibrated against, or says uncalibrated.",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": ["uncalibrated", "partial", "calibrated"]
+        },
+        "targets": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Anchor ids or dataset identities the calibration used; must be empty exactly when status is uncalibrated."
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "omissions": {
+      "type": "array",
+      "description": "Element 9: known omissions — what the profile does NOT interpret or execute, stated visibly (honesty over coverage).",
+      "items": {
+        "type": "object",
+        "required": ["what"],
+        "additionalProperties": true,
+        "properties": {
+          "what": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "versioning": {
+      "type": "object",
+      "description": "Element 10: versioning rules — the PROFILE's own version (independent of format.version) and the declared change policy: which changes bump which component. Anchor citations are immutable: a changed citation is a new version, never a silent edit.",
+      "additionalProperties": false,
+      "required": ["profile_version", "bump_rules"],
+      "properties": {
+        "profile_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "bump_rules": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["major", "minor", "patch"],
+          "properties": {
+            "major": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "minor": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "patch": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          }
+        },
+        "note": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "description": "One interpreted requirement. Extra keys (keyword, subject, unit, value_kind, ...) are preserved for the migrating profile families.",
+      "required": ["requirement_id", "anchor_ids", "statement", "disposition"],
+      "additionalProperties": true,
+      "properties": {
+        "requirement_id": { "type": "string", "minLength": 1 },
+        "anchor_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Every standard-derived value keeps a source anchor; anchor ids resolve against the profile's registry (checked explicitly via check_anchor_refs — never at load, so the artifact stays engine/placement independent)."
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "disposition": {
+          "enum": [
+            "constraint",
+            "simulated_behavior",
+            "conformance_test",
+            "informational",
+            "unsupported",
+            "not_applicable"
+          ],
+          "description": "D1 disposition: how the platform executes this requirement. unsupported is a valid, visible answer."
+        }
+      }
+    },
+    "freeParameter": {
+      "type": "object",
+      "required": ["parameter_id", "name", "freedom", "anchor_ids"],
+      "additionalProperties": true,
+      "properties": {
+        "parameter_id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "freedom": { "type": "string", "minLength": 1 },
+        "anchor_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "domain": { "const": "FREE" }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "required": ["requirement_id", "backend", "capability"],
+      "additionalProperties": true,
+      "properties": {
+        "requirement_id": { "type": "string", "minLength": 1 },
+        "backend": { "type": "string", "minLength": 1 },
+        "capability": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Name inside the backend's declared CAPABILITIES (the dict every essun backend publishes). Unsupported bindings fail loudly via check_bindings_against — never silently approximated."
+        },
+        "parameters": { "type": "object" },
+        "note": { "type": "string" }
+      }
+    },
+    "check": {
+      "type": "object",
+      "required": ["check_id", "kind", "requirement_ids", "description"],
+      "additionalProperties": true,
+      "properties": {
+        "check_id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["golden", "negative", "invariant"] },
+        "requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "location": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "requirements": {
+            "properties": { "objects": { "maxItems": 0 } },
+            "required": ["objects"]
+          }
+        },
+        "required": ["requirements"]
+      },
+      "then": {
+        "properties": {
+          "requirements": { "required": ["note"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "calibration": {
+            "properties": { "status": { "const": "uncalibrated" } },
+            "required": ["status"]
+          }
+        },
+        "required": ["calibration"]
+      },
+      "then": {
+        "properties": {
+          "calibration": {
+            "properties": { "targets": { "maxItems": 0 } },
+            "required": ["targets"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "calibration": {
+            "properties": { "status": { "enum": ["partial", "calibrated"] } },
+            "required": ["status"]
+          }
+        },
+        "required": ["calibration"]
+      },
+      "then": {
+        "properties": {
+          "calibration": {
+            "properties": { "targets": { "minItems": 1 } },
+            "required": ["targets"]
+          }
+        }
+      }
+    }
+  ]
+}

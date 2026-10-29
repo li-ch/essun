@@ -1,0 +1,42 @@
+ 415 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.21 Reliable Ordered Delivery 
+A ROD PDC is a reliable PDC established between a single initiating FEP and a single target FEP that 
+guarantees packets are delivered at most once. PDCs are ephemeral: established and closed on demand. 
+Packets from multiple PIDs and/or send queues may share a PDC. All packets from a single message use 
+a single ROD PDC. Messages MUST NOT be interleaved on a ROD PDC. 
+3.5.21.1 ROD Services 
+The requirements in this section are for ROD PDS using a GoBackN retransmission protocol for all 
+packets conveyed on the PDC. With the GoBackN retransmission protocol, UET ROD mode MUST 
+operate on a single network path such that packets always arrive at the target in the order in which the 
+packets were transmitted by the source. Packets within a message MUST be transmitted in order. The 
+source MUST transmit the packets in the order that packets were posted to a common send queue. 
+There are no ordering requirements across messages in separate send queues. 
+ROD implementations use the following requirements for PDS requests (both forward and return 
+direction): 
+1. ROD MUST support GoBackN retransmission. 
+2. ROD MUST guarantee that each packet is delivered to the target SES once and only once in the 
+order of arrival. 
+3. ROD ACKs MUST be transmitted in the same order as the packets they ACK. 
+4. ROD Read responses MUST be transmitted on the wire in the same order os the corresponding 
+requests. 
+5. If a packet arrives in order and a NACK is generated for a reason other than an out-of-order PSN, 
+the NACK carries the pds.nack_code field representing the event (e.g., UET_NO_PKT_BUFF or 
+UET_TRIMMED). 
+a. The NACK payload (pds.payload field) carries the Expected_PSN except in the case of 
+pds.nack_code = UET_NEW_START_PSN. 
+b. The pds.nack_psn field is set to the PSN of the packet being NACKed. 
+c. This applies in both forward and return directions. 
+6. If a packet is received at the destination with an out-of-order PSN (PSN != last received PSN+1), 
+the packet MUST be dropped and a NACK generated. 
+a. pds.nack_code = UET_ROD_OOO. 
+b. pds.nack_psn = the PSN of the out-of-order packet.  
+c. pds.payload carries the Expected_PSN. 
+d. This applies in the forward and return directions. 
+7. If a packet is received in order, the packet is accepted. 
+8. When a NACK is received at the source, the source determines if the NACK indicates a new 
+packet loss or if the NACK is related to a packet loss that already triggered GoBackN processing. 
+If new packet loss occurred, the source MUST stop transmitting higher PSN packets on that PDC 
+and apply GoBackN retransmission. The source MUST retransmit all packets starting from the 
+Expected_PSN in the NACK payload. The When a NACK arrives at a source PDC that is not 

@@ -1,0 +1,65 @@
+# Calibration-ladder GF-10 sweep #2: the MEASURED
+# BANDWIDTH AXIS — where do the L0 crossbar rows sit on the B axis
+# relative to Li et al.'s staged per-link/per-pair rates (GF-10,
+# arXiv:1903.04611; docs/calibration/anchors_gapfill.md §GF-10; numbers
+# AS STAGED, not re-fetched)?
+#
+# NOTHING IS TUNED: the B ladder was fixed by anchor/registry
+# arithmetic BEFORE any stage output was read —
+#   25  = the anchor's per-link rate "50 GB/s bidirectional (25 GB/s
+#         per direction)" — NVLink-2, the latency sweep's carrier
+#         (this row is that carrier's own twin in this sweep: the two
+#         sweeps share the (B=25, L=200) cell exactly); the anchor
+#         STATES the direction split — the x2 reading-ambiguity class
+#         of GF-05/GF-08/GF-09 does NOT apply to this anchor's rate;
+#   64  = A-L0X-BW registry point (the placement reference; 64/25 =
+#         2.56x above the measured per-link rate);
+#   150 = the DGX-2 per-GPU-pair aggregate, "6 switches => 300 GB/s per
+#         GPU pair" bidirectional => 6 x 25 = 150 B/ns per direction
+#         (the single-port injection reading of a switched fabric —
+#         A-L0X-PORT's intended scale); internal consistency of the
+#         anchor's own arithmetic: the staged bisection "25 GB/s x 8
+#         links/switch x 6 switches = 2.4 TB/s" = 2400 B/ns = 16 x 150
+#         exactly (recorded — the bisection is a fabric aggregate,
+#         never an L0 row);
+#   12  = SummitDev GPUDirect-RDMA peak "12 GB/s at 64 MB" (a peak AT
+#         its staged operating point; labeled proxy — host-path
+#         transport, not a GPU scale-up fabric; below the anchored
+#         span [20, 64]);
+#   14  = PinnedMem-GPUDirect "more than 14 GB/s" — a STRICT LOWER
+#         BOUND (inequality recorded; 14/12 = 7/6 exactly above the
+#         RDMA row — the pinned-memory speedup on the same transport).
+#
+# PLACEMENT CONTEXT: 25 lands INSIDE the plan §2.1 A-L0-BW anchored
+# span [20, 64] at its lower edge (numerically equal to CAL-A12's
+# physical per-direction per-link 25 GB/s — NVLink-2 and NVLink-3 share
+# the number, coincidence recorded — and to GF-08's Falcon carrier and
+# GF-09's alternative reading); 150 sits ABOVE the span (V100-era
+# aggregate; the plan's modern aggregates run 448-900); 12/14 sit BELOW
+# the span's lower edge (host-path proxy class).
+#
+# L fixed at the A-L0X-LAT registry point 200 (sweep_gf10_latency_v1.yaml
+# owns the L axis). Payload grid: the standard 12-size ladder (8 KiB ->
+# 8 GiB) — DECLARED FREE PROBE; r=8 divides every size. The anchor's
+# staged saturation point "about 2^22 = 4 MB" (4194304 B) falls between
+# ladder members 2^21 and 2^23 (bracket recorded); the latency-flat
+# boundaries (16 KiB P100 / 64 KiB V100) are recorded against ladder
+# members in the stage record (65536 itself is not a ladder member).
+sweep: cal_gf10_bandwidth_v1
+workload: experiments/calibration/gf10/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l200_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b64_l200_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b150_l200_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b12_l200_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b14_l200_v1.yaml

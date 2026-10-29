@@ -1,0 +1,66 @@
+ 571 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The KDF is invoked in the following manner: IVMask ||SDKo = KDF(SDKi, context=Contextv6, 
+label=LabelCluster) 
+   
+Figure 3-144 - Cluster KDF mode for IPv6 without explicit SSI 
+3.7.8.3 Server KDF Mode 
+The server KDF mode is used to assist server key scaling and MUST use the cluster KDF mode 
+construction, except destination information is used in the Context. The Label is 0x5532 or ‘U2’ in ASCII 
+and the Context is defined as follows: 
+• LabelSrv  = 0x5532 or ‘U2’ in ASCII 
+• Contextv4 = current_epoch||0x00000000||DestSSI:if ssi-mode==TRUE  
+                            
+          
+   
+      
+       
+              
+              
+         
+   
+         
+         
+              
+    
+                                                          
+              
+         
+   
+         
+              
+    
+            
+            
+          
+                    
+   
+       
+              
+                       
+       
+            
+            
+     
+          
+     
+     
+                                                          
+              
+         
+   
+         
+              
+    
+            
+            
+                       
+     
+            
+     
+  
+                                         
+           
+        
+     

@@ -1,0 +1,39 @@
+ 541 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Function Name (Argument(s)) Description 
+int uet_set_ccc_field_float(int field_index, 
+uet_float_t value); 
+Generic CCC field setter function for float CCC fields. 
+field_index is YAML-defined per-CCC field macro 
+ 
+3.6.18.7 Error Handling and Recovery 
+This section defines mandatory behavior for signaling, containing, and recovering from fatal errors 
+originating from the data path or PCM subsystem. 
+The error handling and recovery model is defined to enforce the following invariants: 
+1. A CCC MUST NOT operate in an uncontrolled, undefined, or partially corrupt state. 
+2. Any condition that compromises correctness, safety, or determinism of CCC operation MUST 
+result in immediate and permanent disablement of the CCC by transitioning it to the ERROR 
+state. 
+3.6.18.7.1 Fatal error conditions and state transition 
+A CCC in the ACTIVE state MUST atomically transition to the ERROR state if any of the following fatal 
+conditions occur: 
+• The hardware detects an internal fault while generating PCM signal updates, evaluating triggers, 
+invoking an algorithm, or applying algorithm-initiated operations 
+• A PCM algorithm performs an invalid operation as defined by this specification, including (but 
+not limited to) illegal PCM API usage or out-of-range index access 
+• A PCM algorithm explicitly requests fatal termination of the CCC by invoking uet_ccc_fatal() 
+Upon detection of a fatal condition, the implementation MUST make the ACTIVE→ERROR transition 
+atomically visible to all components that can observe the CCC or PDC state. 
+When a CCC transitions to the ERROR state: 
+• All PDCs serviced by the CCC MUST simultaneously transition to an ERROR condition consistent 
+with the CCC ERROR state. 
+• There MUST be no transition out of ERROR except via explicit reinitialization or reset performed 
+outside the PCM subsystem. 
+3.6.18.7.1.1 Algorithm API 
+Algorithms choose to cope with unexpected events or conditions by performing algorithm-mediated 
+control actions (e.g., setting the congestion window to a single packet). When an algorithm encounters 
+an (algorithm-defined) unrecoverable error, it can transition a CCC into ERROR state by using the 
+function defined in Table 3-126. 
+ 
+ 

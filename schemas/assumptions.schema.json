@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/essun/assumptions.schema.json",
+  "title": "Assumption registry",
+  "description": "Draft contract for assumption registry documents. Two entry dialects are recognized: the registry style (id/parameter/value/range/rationale/sensitivity/owner/review, as in experiments/vertical_slice/assumptions_l0.yaml) and the example style (assumption_id/name/kind/allowed_range/basis/sensitivity_priority/owner/review_status, as in examples/assumptions.example.yaml). Every entry must state its value space, rationale, sensitivity, owner, and review status. schema_version changes on every public change to this contract.",
+  "type": "object",
+  "required": [
+    "assumptions"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of this document contract; optional because the existing experiment registries predate it."
+    },
+    "assumptions_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registry identity (repo dialect), e.g. assumptions_l0_v1."
+    },
+    "status": {
+      "$ref": "#/$defs/evidenceLabel",
+      "description": "Overall registry status (repo dialect)."
+    },
+    "assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/assumptionEntry"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "evidenceLabel": {
+      "enum": [
+        "PROPOSED",
+        "IMPLEMENTED_UNVERIFIED",
+        "VERIFIED",
+        "CALIBRATED",
+        "EXTERNALLY_REPRODUCED"
+      ]
+    },
+    "assumptionEntry": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/registryEntry"
+        },
+        {
+          "$ref": "#/$defs/handoffEntry"
+        }
+      ]
+    },
+    "registryEntry": {
+      "type": "object",
+      "description": "Repo registry style: one modeling assumption or free parameter with its range, rationale, sensitivity, owner, and review state.",
+      "required": [
+        "id",
+        "parameter",
+        "value",
+        "rationale",
+        "sensitivity",
+        "owner",
+        "review"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "description": "Registry key, e.g. A-L0-BW."
+        },
+        "parameter": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Dotted model parameter this assumption governs, e.g. link.bytes_per_ns."
+        },
+        "value": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "Selected value; numeric for quantities, symbolic for model identities (e.g. full_duplex_uniform_per_direction)."
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "range": {
+          "anyOf": [
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "description": "Free-text range for symbolic design spaces, e.g. factorizations r1*r2=r with r1,r2 >= 2."
+            }
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why this value/space; must distinguish free parameters from standard-derived or measured values."
+        },
+        "sensitivity": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Which observables move if the assumption is violated."
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review": {
+          "$ref": "#/$defs/evidenceLabel"
+        }
+      },
+      "additionalProperties": true
+    },
+    "handoffEntry": {
+      "type": "object",
+      "description": "Handoff example style: illustrative registry entry keyed by assumption_id with an explicit allowed_range and selected_values.",
+      "required": [
+        "assumption_id",
+        "name",
+        "kind",
+        "allowed_range",
+        "basis",
+        "sensitivity_priority",
+        "owner",
+        "review_status"
+      ],
+      "properties": {
+        "assumption_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "related_requirement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "SpecIR requirement this assumption relates to."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "standard_target",
+            "implementation_specific",
+            "modeling_assumption"
+          ],
+          "description": "Handoff hard rule 4 taxonomy: keep standard targets, implementation profiles, and modeling assumptions separate."
+        },
+        "allowed_range": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": [
+              "number",
+              "string"
+            ]
+          }
+        },
+        "selected_values": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": [
+              "number",
+              "string"
+            ]
+          }
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Provenance of the range; must not claim measurement without a run record."
+        },
+        "sensitivity_priority": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_status": {
+          "$ref": "#/$defs/evidenceLabel"
+        },
+        "invalidates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Claims invalidated when this assumption is violated."
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,51 @@
+# Implementation profile for the calibration-ladder A9 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A9).
+implementation_profile_id: analytical_l0_crossbar_cal_a9_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. FABRIC-CLASS ROLE per
+  plan §1.1 row CAL-A9: the crossbar is the landed identity whose
+  topology class (one non-blocking switch stage between any pair, a
+  uniform lumped per-pair latency charged once per phase) is the
+  closest structural match to the anchor's switch-based memory-semantic
+  fabric abstraction; the anchor's link-vs-switch budget DECOMPOSITION
+  itself is inexpressible in this input space (a declared
+  expressiveness finding of the stage, recorded in
+  results/calibration/ — the backend itself lists
+  nonuniform_pair_latency among explicitly_unsupported capabilities).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  L (link.pair_latency_ns) swept over {10, 70, 80, 160, 200, 800} ns at
+  r=8, fixed by anchor/registry arithmetic BEFORE any stage output was
+  read: 10 = the CAL-A9 link term alone (budget-component row; also the
+  A-L0X-LAT registry range lower endpoint); 70 = the CAL-A9 switch-stage
+  floor alone (budget-component row; "at least ~70 ns"); 80 = 10 + 70 =
+  the plan-stated one-stage pair sum (§2.1 A-L0X-LAT) — THE ANCHOR
+  POINT; 160 = 2 x 80, two cascaded one-stage traversals (anchor
+  arithmetic, labeled; per-path link count of multi-stage paths is not
+  stated by the anchor); 200 = the A-L0X-LAT registry point (placement
+  row: where the model's smoke default sits on the axis); 800 = the
+  plan's stated pair-latency span upper endpoint (CAL-A10 0.8 us
+  assumption-class GPU figure; cross-class transfer, labeled). Message
+  sizes: 12-size ladder 8*2^k (8 KiB - 8 GiB); r=8 divides every size
+  (A-L0X-DIV accepts, no bracketing). B (nic.injection_bytes_per_ns)
+  FIXED at the registry point 64 B/ns: CAL-A9 stages NO bandwidth
+  number, so the bandwidth axis is anchor-free for this stage (the
+  mirror of the A7 record, which swept B and fixed L). NO parameter was
+  tuned toward any anchor output — CAL-A9 stages no time series; the
+  sweep measures WHERE the identity sits relative to the anchor's
+  latency-budget decomposition.
+measurement_source: >
+  CAL-A9 staged numbers (M. S. Berger et al., "Design Tradeoffs in
+  CXL-Based Memory Pools", IEEE Micro 2023, public author copy at
+  pages.cs.wisc.edu; docs/calibration/anchors_staging.md §A9; anchor
+  PROPOSED in the anchor registry; confidence H for
+  transcription) — DESIGN-ESTIMATE numbers from the paper's
+  latency-budget analysis, NOT silicon measurements (pair with CAL-A8's
+  emulated 64/140 ns; staging doc caveat); compared as PROPOSED evidence
+  in results/calibration/; not our testbed, no E3/E4 language.

@@ -1,0 +1,43 @@
+# Calibration-ladder GLOBAL stage GLOB-BW endpoint RUN 2 of 2 : the W1 smoke config with the link-BW free parameter
+# A-L0-BW at the REGISTERED RANGE UPPER ENDPOINT B = 1024 B/ns — the
+# bandwidth-rich corner where the identity collapses onto its latency
+# floor 2(r-1)L = 2800 ns (CCT 2828 ns = floor + 28672/1024 = floor +
+# 28 ns). Same workload file, seed discipline and observable set as the
+# W1 smoke manifest (experiments/vertical_slice/w1_decode_smoke.yaml);
+# ONLY the topology file differs (B 64 -> 1024, L = 200 ns unchanged).
+#
+# claim_id is deliberately EMPTY: a PROPOSED global sensitivity candidate
+# must not be linked to any claim (p1 stage boundary: zero claim edits);
+# the schema requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# sensitivity comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GLOBBW-B1024-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/globbw/topologies/ring8_globbw_b1024_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/globbw/profiles/implementation_profile_l0_ring_cal_globbw_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_globbw_b1024_v1 (the W1 smoke ring with A-L0-BW at its registered range upper endpoint 1024 B/ns, L = 200 ns registry point)
+  workload: w1_dense_tp_decode smoke configuration (tp8, 2 layers x 3 steps, 16384 B) — unchanged
+  implementation: analytical L0 free-parameter identity; global link-BW sensitivity stage GLOB-BW — PROPOSED, review required
+evidence_level_requested: E0

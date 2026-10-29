@@ -1,0 +1,41 @@
+# Calibration-ladder A4 topology: unidirectional ring of 4 ranks at the
+# CAL-A4 ANCHOR POINT B = 150 B/ns — the NVLink rate the anchor quotes for
+# its validated systems ("two real systems leverage NCCL v2.4.6 which
+# consist of 4 and 16 NVIDIA V100 GPUs using a Ring topology with 150 GB/s
+# NVLink"; ASTRA-sim 2.0, ISPASS 2023, simulator-vs-hardware validation,
+# docs/calibration/anchors_staging.md §A4). Reading declared: 150 GB/s is
+# the per-GPU per-direction NVLink rate a rank feeds its single ring
+# successor link (decimal units, 1 GB/s = 1 B/ns); on a ring the link B and
+# the per-rank injection rate coincide.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward any
+# anchor output. The three stage-A4 B values were fixed by anchor
+# arithmetic BEFORE any stage output was read: 150 = the CAL-A4 quote
+# (this file, the anchor point); 25 = the per-link per-direction split
+# 150/6 (V100 NVLink-2 hardware context: 6 links per GPU — and consistent
+# with the anchor set's own per-link scale, CAL-A12's 25 GB/s/link
+# physical NVLink figure); 50 = the CAL-A1 NVLink5 per-port point
+# (cross-generation span endpoint). L = 200 ns is the A-L0-LAT registry
+# point (KEEP; the GPU-fabric latency axis is unanchored — plan gap §4.2 —
+# and belongs to its own global stage).
+#
+# Structural gate note (contrast with stage A3): r = 4 is a power of two
+# and every stage-A4 payload is a multiple of 16, so the A-L0-DIV input
+# gate ACCEPTS every exact anchor-regime size — no bracketing is needed at
+# this anchor (verified programmatically in the stage's calibration
+# record).
+topology_id: ring4_a4_b150_v1
+topology_class: unidirectional_ring
+ranks: 4
+link:
+  bytes_per_ns: 150
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: B =
+  150 B/ns is CAL-A4's staged NVLink quote for the validated V100 systems
+  (a hardware capability quoted by a peer-reviewed simulator-validation
+  paper — not a completion-time measurement); L = 200 ns is the free
+  A-L0-LAT registry point. Values are anchor quotes / assumptions, never
+  our measurements.

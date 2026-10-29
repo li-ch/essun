@@ -1,0 +1,41 @@
+ 511 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+In reverse-direction ACK and NACK packets, the destination feeds back the Entropy from the received 
+packet together with the pds.flags.m (“marked”) flag that indicates that this path experienced 
+congestion. The pds.flags.m is set when the arriving packet that triggers an ACK or NACK has the 
+ip.ecn.ce bit set. 
+The destination MAY use other forms of telemetry to determine whether a path is congested. 
+On receipt of an ACK or NACK packet with the pds.flags.m flag set, the source SHOULD ensure that the 
+indicated Entropy is not reused for at least one round-trip time. An exception is when ACKs or NACKs 
+indicate that the majority of paths are congested. Under such circumstances, the load balancing signal 
+has become saturated, and skipping paths will no longer be effective. The fraction of paths that must be 
+congested before the destination decides the load balancing signal is saturated SHOULD be a 
+configuration option. A reasonable default value for this configuration option is 50% of paths congested. 
+This value is a tradeoff: It is undesirable to reduce the entropy pool unnecessarily during network 
+oversubscription or incast; however, it is desirable to maintain load balancing for as long as reasonably 
+possible when congestion occurs. 
+How the source chooses to avoid reusing the path is implementation specific. For example, two possible 
+approaches are: 
+1. Entropy from ACKs received that do not indicate congestion via the pds.flags.m flag can be re-
+used for outgoing packets, as in REPS [12]. This self-clocking mechanism essentially stores the 
+Entropy values “on the wire.” If a packet is lost, the packet is not ACKed, so the Entropy is not 
+reused; similarly, if the packet is ACKed but the pds.flags.m flag indicates congestion, then the 
+EV is not reused. REPS can be extended with a small local circular buffer (significantly smaller 
+than the supported EV space, e.g., eight values) to cache good entropies. These entropy values 
+are then consumed when sending out data packets. If an outgoing packet requires an EV but the 
+buffer is empty, a new (random) EV can be used. 
+2. Maintain a bitmap where each bit in the bitmap corresponds to an Entropy value used [10]. 
+When feedback indicates a path selected by an Entropy value is congested, the corresponding 
+bit in the bitmap is set. The source rotates through the entropy space using values in a pseudo-
+random order. When the source is choosing an EV for a packet to send, if the corresponding bit 
+is set, it skips that EV, clears the bit, and tries the next EV in sequence. To ensure feedback is 
+recent, the size of the active Entropy value space may be dynamically changed, so that 
+uncongested entropy values are reused within approximately two RTTs. 
+Combinations of these methods or other methods are also permitted. Path-aware spraying permits 
+more active load balancing across the paths selected by the entropy values. 
+3.6.16.5 Detecting and Handling Path Failure 
+CMS is primarily aimed at networks with switches that perform ECMP load balancing based on a hash of 
+the Entropy in the packet header. In such networks there is a mapping of a single path to a destination 
+with an Entropy value. Path-aware multipath spraying can use this mapping, together with ECN feedback 
+and NACKs generated due to packet trimming, to improve load balancing beyond what the switches 

@@ -1,0 +1,39 @@
+ 452 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+and many more available paths between a source and a destination. UET is optimized for back-end 
+datacenter networks — an area targeted traditionally by HPC networks. UET is aimed at AI and HPC 
+workloads, which commonly consist of synchronized collectives that aim to run on a network with many 
+redundant paths at close to 100% load, while caring mostly about the final completion time within a 
+group collective. Congestion control algorithms designed for other contexts often perform poorly in 
+such environments. 
+UET-CC is intended to be used in networks with topologies such as fat trees where, in the absence of 
+failures, there are many routed paths from a source to a destination, and they are all of equal length and 
+capacity. Future UET-CC specifications may extend CC to other network topologies. 
+There are five main causes of congestion in datacenter networks:  
+1. Network congestion localized to a subset of switch-to-switch links in the topology, mainly due to 
+improper load balancing (e.g., ECMP hash collisions leading to multiple flows being placed on 
+the same paths) or failures or interference from ordered traffic. 
+2. Overall network congestion when most or all available paths between two end hosts are 
+congested; for instance, in the case where the network core is under-provisioned for the traffic 
+it carries. 
+3. Outcast when the source apps are trying to send to many destinations simultaneously and thus 
+generating more traffic than the source’s connection to the network can manage. 
+4. Incast when many sources are sending to the same destination at the same time. 
+5. Local congestion at the destination when accessing memory. 
+HPC networks have traditionally relied on link-level flow control to provide a lossless L2 implementation 
+together with simple end-to-end flow-control algorithms as adopted in RDMA over Converged Enhanced 
+Ethernet10 (also known as RoCE). Single-path transports (e.g., RoCE/TCP) running traditional congestion 
+control algorithms such as DCTCP [17], DCQCN [18], or Swift [19], coupled with ECMP flow hashing, is 
+the standard for Ethernet-based datacenter congestion control today. However, many research works 
+have shown this approach deals poorly with flow collisions ((1) in the list above). Instead, when the 
+transport actively sends packets from each flow across multiple paths, collisions are reduced (see 
+MPTCP [29], NDP [31], Homa [20], pHost [21], MP-RDMA [22]), network utilization increases, and flow 
+completion times become low and predictable. 
+Instead of relying on end-to-end multipathing, HPC networks have traditionally used adaptive packet 
+routing (see [24], [25], and [26]) with extensions such as fine-grained L2 flow-control for traffic isolation 
+[27]. UET specifies ECMP flow hashing schemes for load balancing but, at the same time, allows vendors 
+to enhance networks with compatible but proprietary features such as adaptive packet spraying or fine-
+grained end-to-end flow control. Those are outside the scope of this specification. 
+ 
+10 Converged Enhanced Ethernet (CEE) is specified in IEEE Std 802.1Q  

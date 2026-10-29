@@ -1,0 +1,45 @@
+ 279 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Mnemonic Constant Scope/ 
+Recover 
+Description 
+RC_EXTENDED 0x3E  Used to extend the RC space. The format for 
+this extension will be defined when it is 
+needed. 
+RC_RESERVED 0x3F   
+ 
+When buffered payload schemes are used for unexpected message handling, the initiator cannot 
+determine whether the message was expected or unexpected at the target. The libfabric provider—
+often even the hardware—knows which of those things happened; thus, this information is returned in 
+the semantic response. By returning this information to the initiator, it significantly simplifies the 
+synchronous send implementation (MPI_Ssend()). 
+Table 3-26 - List Where the Message was Delivered 
+Mnemonic Constant Description 
+UET_EXPECTED 0x0 Message matched the expected list. 
+UET_OVERFLOW 0x1 An unexpected header was tracked for this message 
+(3.4.4.7.2.1 or 3.4.4.7.2.2). Message payload may have been 
+(3.4.4.7.2.2) 
+UET_VENDOR_DEFINED[0-1] 0x2-0x3  
+ 
+3.4.7.4 Atomic Memory Operations (AMO) Enumerations 
+Table 3-27 enumerates the atomic opcode encodings, while Table 3-28 enumerates the encodings for 
+datatypes. A broad set of operations and datatypes are defined based on the datatypes that are defined 
+in libfabric, which was in turn inherited from the MPI definition. Two types beyond the MPI definition 
+(two 16-bit floating-point types) are specifically included for AI. Space is reserved in both encodings to 
+allow for vendor innovation. The UET_AMO_INVAL operation can be used in conjunction with the 
+delivery complete bit to make the cached item globally observable. 
+Table 3-27 - Atomic Operation Opcodes 
+Mnemonic Constant Description 
+UET_AMO_MIN 0x00 Minimum:  Target = MIN(Target, Initiator) 
+UET_AMO_MAX 0x01 Maximum: Target = MAX(Target, Initiator) 
+UET_AMO_SUM 0x02 Sum: Target = Target + Initiator 
+UET_AMO_DIFF 0x03 Diff: Target  = Target – Initiator 
+UET_AMO_PROD 0x04 Product: Target = Target * Initiator 
+UET_AMO_LOR 0x05 Logical OR: Target = Target || Initiator 
+UET_AMO_LAND 0x06 Logical AND: Target = Target && Initiator 
+UET_AMO_BOR 0x07 Bitwise OR: Target = Target | Initiator 
+UET_AMO_BAND 0x08 Bitwise AND: Target = Target & Initiator 
+UET_AMO_LXOR 0x09 Logical XOR:  Target = (Target && !Initiator) || (!Target && 
+Initiator) 
+UET_AMO_BXOR 0x0A Bitwise XOR: Target = Target ^ Initiator 

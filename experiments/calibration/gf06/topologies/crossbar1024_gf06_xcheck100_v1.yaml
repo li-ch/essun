@@ -1,0 +1,30 @@
+# Calibration-ladder GF-06 topology: fully-connected crossbar of 1,024
+# ranks at B = 100 B/ns, L = 1000 ns — the UET-htsim TWO-USER
+# CROSS-CHECK row at GF-06's stated scale: GF-05's UET-htsim config
+# (800 Gbps links => 100 B/ns per direction, stage GF-05's
+# crossbar1024_gf05_line100_v1 at the SAME r, L, and ladder) against
+# GF-06's (12.5). The two independent users of the SAME simulator
+# family differ by EXACTLY x8 on the bandwidth axis, and this row pair
+# executes that spread at every one of the 18 ladder sizes: the CCT
+# ratio t(12.5-row)/t(100-row) falls from ~19.3 at 1 KiB (latency term
+# shared, bandwidth term x8) toward the exact asymptote 8 as the payload
+# grows (exact values in the stage record). This is sim-config
+# PROVENANCE arithmetic (config-class inputs), never a claim about
+# either paper's outcomes — no FCT comparison is attempted. Nothing
+# tuned; the registry and both anchors' staged numbers are untouched.
+topology_id: crossbar1024_gf06_xcheck100_v1
+topology_class: fully_connected_crossbar
+ranks: 1024
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-switch-stage abstraction at GF-05's UET-htsim sim
+  link rate (100 B/ns per direction from "800 Gbps") placed on GF-06's
+  stated scale and ladder (r = 1024, L = 1000 ns) — the executed
+  two-user UET-htsim cross-check row (the x8 line-rate spread between
+  the family's two staged configs, asymptotic CCT ratio exactly 8).
+  Identity t = 2(r-1)/r*M/B + 2L. Provenance: GF-05 staged sim config
+  on GF-06 staged scale, both config-class quotes; never our
+  measurements, never tuned.

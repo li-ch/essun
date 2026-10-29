@@ -1,0 +1,38 @@
+ 515 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ECN SHOULD be disabled for queue_med and queue_high. 
+When trimming is enabled, the RECOMMENDED default settings are: 
+queue_low.trim_threshold = Plane_BDP 
+queue_med.drop_threshold = Plane_BDP 
+queue_high.drop_threshold = Plane_BDP 
+ 
+If the DSCP_TRIMMABLE_RTX codepoint is used to protect retransmitted packets, the 
+queue_low.trim_threshold for these packets is RECOMMENDED to be 1.5 * Plane_BDP. 
+ 
+In the absence of trimming, the UET congestion management algorithm supports widely deployed 
+shared switch buffer architectures. Although the algorithm is capable of handling highly variable 
+latencies caused by the shared buffer, it is recommended to bound the tail drop threshold. The 
+RECOMMENDED drop threshold for a given queue should be at least 2 * Plane_BDP and at most 
+5 * Plane_BDP. 
+Rather than using strict priority, a deployment MAY choose to use the same priority for queue_med and 
+queue_low, but instead use weighted round robin or a similar scheduling scheme to ensure that when 
+the trim rate is high, queue_med gets a large share of the bandwidth. In such cases a reasonable default 
+is for queue_med to be weighted to receive 75% of the capacity when competing with queue_low. 
+3.6.17.1 CSIG Configuration 
+The overall bucket boundaries for the max(Delay) signal quantization SHOULD be configured based on 
+the trim or drop threshold recommendations, regardless of whether the compact or wide CSIG header 
+format is used. 
+The recommended queue_low.trim_threshold, queue_med.drop_threshold, and 
+queue_high.drop_threshold are specified as factors of Plane_BDP, which is derived from the link speed 
+and config_base_rtt. This information is used to derive expected maximum packet queueing times per 
+trim or drop threshold, which equates Plane_BDP to config_base_rtt as follows: 
+Plane_BDP = min(sender.linkspeed, receiver.linkspeed) * config_base_rtt  
+ 
+However, this equation assumes that only a single queue is active per port. To account for scenarios 
+where other, higher-priority queues are active and may increase maximum queueing times, it is 
+RECOMMENDED to apply a 2-times multiplier to the threshold-derived maximum packet queueing time. 
+Informative Text: 
+These queue threshold settings are based on simulated results to date. Lower drop thresholds may 
+lead to additional loss of high-priority traffic. Additional tuning of deployed implementations may be 
+required. 

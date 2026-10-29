@@ -1,0 +1,39 @@
+ 472 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+General CCC State: 
+ccc.backlog = 0   
+ccc.backlog holds the total number of bytes (including packet headers, as calculated by 
+nominal_pktsize) that PDS told the CCC to send on this CCC across all the PDCs associated with 
+the CCC. 
+ccc.waiting_rtx = 0  
+ccc.waiting_rtx holds a count of the number of packets currently marked as needing 
+retransmission. 
+ccc.rtx_backlog = 0  
+ccc.rtx_backlog holds the total number of bytes (including packet headers, as calculated by 
+nominal_pktsize) that the PDS has pending retransmit on this CCC across all of the PDCs 
+associated with the CCC. 
+ccc.inflight_pkts = 0  
+ccc.inflight_pkts holds the total number of packets in flight on this CCC across all of the PDCs 
+associated with the CCC. 
+3.6.12.2 Nominal Packet Size 
+The pseudocode in Section 3.6.12.3 refers to the size of the packet for many values. Where stated, these 
+use nominal_pktsize. It is important that the source and destination come up with the same value, even 
+if the length of the packet changes in flight due to, for example, network telemetry. nominal_pktsize is 
+an approximation of the actual packet size that is sufficiently accurate for the purposes of congestion 
+control, but which cannot change in flight. 
+nominal_pktsize = transport_pktsize + 40 
+transport_pktsize is the UDP length of the packet if UDP encapsulation is used, or the size of the packet 
+from the start of the UET entropy header to the end of the UET trailer if UDP encapsulation is not used. 
+3.6.12.3 Overall CCC Pseudocode 
+ 
+OnACK(newly_rcvd_bytes, Entropy, M_Flag, pkt_tx_state, ack_arrival_time, 
+      Service_Time, Retx_Flag, Rcv_Cwnd_Pend, Restore_Cwnd, 
+csig_refl_data): 
+#Each packet that was ACKed for the first time (e.g., by a cumulative 
+#ACK or a SACK bit being set) should not be retransmitted.  Remove it 
+#from the retransmit list if it is there. 
+foreach newly acked packet: 
+unmark_packet_for_rtx(acked_pkt) 
+ 
+if M_Flag == 1:  #pkt was ECN marked  

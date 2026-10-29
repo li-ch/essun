@@ -1,0 +1,17 @@
+# W1 Dense TP Decode — tp_size 32, the rank count of CAL-A6's system
+# (4 nodes x 8 H100; docs/calibration/anchors_staging.md §A6). Payload
+# 1073741824 B = 1 GiB = 2^30 EXACTLY, the anchor's staged 1 GiB size
+# ("1 GiB (1073741824 B)"). 32 = 2^5 divides 2^30, so the A-L0-DIV /
+# A-L0T-DIV input gates ACCEPT the anchor's exact size — NO bracketing
+# (the mirror image of stage A3, where r=72 = 8*9 rejected every power
+# of two; contrast also stage A5, which accepted exactly like here).
+#
+# Same workload shape as every other W1 file (2 layers x 3 decode steps =
+# 6 AllReduce ops per config). Nothing here is measured or
+# standard-normative; integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal32-a6
+tp_size: 32
+layers: 2
+steps: 3
+allreduce_bytes: 1073741824   # 1 GiB = 2^30; CAL-A6 staged size; free parameter A-W1-SIZE

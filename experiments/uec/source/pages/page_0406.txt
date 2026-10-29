@@ -1,0 +1,20 @@
+ 406 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+338 had !gtd_del responses, CACK_PSN advances to 338 as well. When ACK_PSN = CACK_PSN, no clear is 
+required. 
+ 
+3.5.20.2.5 Single Packet Read Sequence—SES Standard Header 
+Three of the types of SES headers described in the Semantics Section 3.4.3 include: standard 
+(UET_HDR_REQUEST_STD), medium (UET_HDR_REQUEST_MEDIUM), and small 
+(UET_HDR_REQUEST_SMALL). Only the standard header includes an ses.message_id field. This leads to 
+differences in how reads are processed. The standard header sequence is described in this section; 
+medium and small header sequences are described in Section 3.5.20.2.6. These sequences are the same 
+for PDS regardless of SES header. 
+The standard RUD sequence for a single-packet read using SES standard headers on a best-effort 
+network is shown in Figure 3-101. This shows a read with return data larger than Max_ACK_Data_Size, 
+so the return direction is used to send return data. 
+ 
+Note: CLEAR_PSN in the packet with PSN = 337 is set to 334 because the ACK for PSN = 335 has not 
+yet arrived and CACK_PSN is less than 335. 
+Figure 3-100 - Standard Sequence for RUD Send of Multi-Packet Message with Guaranteed Delivery 

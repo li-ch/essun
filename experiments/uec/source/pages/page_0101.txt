@@ -1,0 +1,53 @@
+ 101 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Parameter Description 
+mapping defined in the service configuration MUST take precedence. When 
+the service parameter is specified, UET providers MUST filter the returned 
+providers based on the service parameter, and only return providers that 
+support the specified service. 
+flags UET providers MUST support the following flag values: 
+• FI_SOURCE 
+hints->addr_format Indicates the format of addresses referenced by the fabric interfaces and 
+data structures. If the value is not FI_ADDR_UET, UET providers MUST NOT 
+return info. 
+hints->src_addr This parameter MAY be used as a filter to limit the returned providers in a 
+manner like the case where the node parameter is non-NULL and the 
+FI_SOURCE flag is set. If hints->src_addr is non-NULL, the UET provider 
+SHOULD filter the returned info based on the fields of the UET address that 
+are valid. 
+hints->dst_addr This parameter is intended as a filter to limit the returned providers. If the 
+hints->dst_addr parameter is specified, UET providers SHOULD NOT return 
+info. 
+(*info)->src_addr Because full UET addresses are not available until the libfabric endpoint is 
+opened, the components of the UET address that MUST be returned are 
+limited to the following: 
+• Version 
+• Flags 
+• Fabric address type 
+• Fabric address 
+• Start resource index 
+o The returned start resource index is NOT required to be the 
+actual start resource index, but the provider MUST be able to 
+identify the service based on the returned start resource index 
+value (i.e., when this src_addr is used as a parameter to the 
+fi_endpoint() API). 
+o If the service parameter is not specified, the start resource 
+index is associated with the generic service. 
+• Fabric endpoint capabilities 
+(*info)->dst_addr The UET provider MUST NOT return a destination address. 
+ 
+Table 2-12 - Pre-Defined UET Service Names 
+Pre-Defined Service Name 
+Strings 
+Reserved Starting Resource  
+Index Value 
+Number of Resource Indices 
+“generic” None (dynamically allocated) 1 
+“ccl” 1 5 
+“mpi” 6 5 
+“shmem” 11 5 
+ 
+Multiple resource indices MAY be assigned to a service. Scalable endpoints (created with the 
+fi_scalable_ep() API) MUST assign a unique resource index to each rx context (see fi_rx_context() API). 
+The UET address of an endpoint created with the fi_endpoint() API MUST be assigned a single 

@@ -1,0 +1,35 @@
+ 644 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Implementation Note: 
+If a receiver drops an LLR-eligible frame and would also drop its retransmission (e.g., due to 
+exceeding the MTU), the LLR protocol expects the receiver to treat the original frame as correctly 
+received to prevent retransmission. 
+ 
+When the ACK/NACK transmit state machine is in the SEND_ACKS state, the LLR will send an LLR_ACK 
+that contains next_rx_seq – 1 whenever there is an opportunity to send a Control Ordered Set (subject 
+to the CtlOS transmission priority rules). 
+When the ACK/NACK state machine is in the SEND_NACK state, the LLR will send a single LLR_NACK at 
+the next opportunity (subject to the CtlOS transmission priority rules), then transition to the NACK_SENT 
+state.  
+No LLR_ACKs or LLR_NACKs are sent in the NACK_SENT state. 
+5.1.7 LLR receive path operation 
+The LLR receive path maintains the variables shown in Table 5-11 to control its operation. 
+ 
+OFF
+SEND_
+ACKS
+(llr_mode_local == ON) 
+&& init_echo_sent
+reset | (llr_mode_local == OFF)
+SEND_
+NACK
+NACK_
+SENT
+missing_frame || 
+expected_frame_bad
+expected_frame_ok
+nack CtlOS sent
+ 
+Figure 5-4 - ACK/NACK transmit state machine. 
+ 

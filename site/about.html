@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — essun</title>
+<meta name="description" content="essun project facts: MIT code and CC-BY-4.0 documentation, contributing rules (goldens, determinism, evidence labels, run ids), support via GitHub issues, and acknowledgments of the pinned upstream simulators.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html" aria-current="page">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">About</p>
+    <h1>License, contributing, support, acknowledgments</h1>
+    <p class="tagline">essun is a single-maintainer research simulator project by Li Chen, with everything stated so that another engineer can reproduce or review any result without hidden context.</p>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="license">
+  <p class="kicker">Who owns what</p>
+  <h2>License</h2>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Content</th><th>License</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Code (<code>src/</code>, <code>tests/</code>, <code>tools/</code>, <code>schemas/</code>, <code>examples/</code>, <code>experiments/</code> machine-consumed inputs, <code>backends/docker/</code>, <code>Makefile</code>, <code>.github/</code>)</td><td>MIT — full text in <code>LICENSE</code></td></tr>
+      <tr><td>Documentation, figures, and this site (<code>docs/</code>, root prose files, <code>paper/figures/</code>, <code>site/</code>)</td><td>CC-BY-4.0 — suggested attribution: "essun project, Li Chen", linked to the repository</td></tr>
+      <tr><td>Third-party pins (<code>backends/pins/</code>)</td><td>Their own licenses: ASTRA-sim (MIT), csg-htsim (BSD-2-Clause), uet-htsim (BSD-2-Clause, Ultra Ethernet Transport-WG notice). Nothing here relicenses them</td></tr>
+      <tr><td>Extracted standard and paper text (<code>experiments/*/source/</code>, quotes in the anchor registries)</td><td>Remains the property of its copyright holders, used under recorded PUBLIC_READ citation terms; no grant on this site applies to it, and the source PDFs never enter git</td></tr>
+      <tr><td>Manuscript drafts (<code>paper/sections/</code>, <code>paper/notes/</code>, the <a href="assets/essun-whitepaper.pdf">white-paper asset</a>)</td><td>Unpublished drafts; neither grant covers them — all rights reserved, a license to be recorded when and where the paper is published</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="prose">The full license map is <code>LICENSES.md</code> in the repository.</p>
+</section>
+
+<section id="contributing">
+  <p class="kicker">What a good pull request looks like</p>
+  <h2>Contributing</h2>
+  <div class="prose">
+    <p>Set up with <code>make bootstrap</code> (creates <code>.venv</code> and installs the package with dev extras), then <code>make test</code>; <code>make ci-local</code> runs the exact CI sequence locally. The full guide, with the machinery behind each rule, is <a href="https://github.com/li-ch/essun/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> in the repository.</p>
+    <p>A good pull request:</p>
+    <ul>
+      <li><strong>Tests pin the change.</strong> Golden tests write expected values by hand — a closed-form identity, a conservation law — never pasted back from the implementation's output, and schema or contract changes ship negative tests alongside golden ones. Determinism is required throughout: no unseeded randomness, integer byte counts, fixed tie-breaking; a rerun of the same manifest must reproduce the same content-addressed run id, and a comparison across different workloads is not a controlled ablation.</li>
+      <li><strong>A run id for anything numeric.</strong> Behavioral claims cite a run id plus the manifest and commit that reproduce it — "a claim without an id is an opinion." Interface-affecting decisions ship with a short decision record in the pull request.</li>
+      <li><strong>An evidence label in the commit title.</strong> The lowest honest rung of <code>PROPOSED</code> / <code>IMPLEMENTED_UNVERIFIED</code> / <code>VERIFIED</code> / <code>CALIBRATED</code> / <code>EXTERNALLY_REPRODUCED</code>; a citing party cannot upgrade a label it reproduces.</li>
+    </ul>
+    <p>Issue and pull-request templates encode the same discipline: the <a href="https://github.com/li-ch/essun/blob/main/.github/ISSUE_TEMPLATE/bug_report.md">bug-report template</a> (it asks for the run id, manifest, and commit) and the <a href="https://github.com/li-ch/essun/blob/main/.github/PULL_REQUEST_TEMPLATE.md">pull-request template</a>.</p>
+  </div>
+</section>
+
+<section id="support">
+  <p class="kicker">Getting help</p>
+  <h2>Support</h2>
+  <div class="prose">
+    <ul>
+      <li><strong>Bugs and capability gaps:</strong> <a href="https://github.com/li-ch/essun/issues">GitHub issues</a> — the bug-report template asks for the run id, manifest, and commit, because a report with those three is reproducible.</li>
+      <li><strong>Usage questions:</strong> start from the <a href="quickstart.html">Quickstart page</a> and <code>docs/usage.md</code> in the repository (two worked examples with real outputs).</li>
+      <li><strong>Everything else:</strong> open an issue; there is no chat channel or mailing list today.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="acknowledgments">
+  <p class="kicker">Standing on pinned, recorded work</p>
+  <h2>Acknowledgments</h2>
+  <div class="prose">
+    <p>essun stands on pinned, recorded upstream work — each ingested only after license review, pinned by commit with recorded digests, and credited with its exact contribution:</p>
+    <ul>
+      <li><strong><a href="https://github.com/astra-sim/astra-sim">ASTRA-sim</a></strong> (MIT; Georgia Institute of Technology, Facebook Inc) — pinned at <code>4ce9ecf</code>; its analytical frontend is the project's discrete-event second backend in Docker.</li>
+      <li><strong><a href="https://github.com/ultraethernet/uet-htsim">uet-htsim</a></strong> (BSD-2-Clause; Ultra Ethernet Consortium Transport-WG) — pinned at <code>65ea315b</code>; adapted as the third backend <code>uet_htsim_cms</code>.</li>
+      <li><strong><a href="https://github.com/Broadcom/csg-htsim">csg-htsim</a></strong> (BSD-2-Clause) — built and runbooked, with its run-to-run nondeterminism root-caused and an env-seeded patch recorded; the essun adapter is future work.</li>
+    </ul>
+    <p>The calibration anchors cite public measurements from the GPU-fabric and collective-communication literature (23 anchors staged with sources in <code>docs/calibration/</code>) — cited as measurements with their contexts, never laundered into model constants. The htsim lineage itself (the open-source network simulator tradition) underlies two of the three pinned simulators.</p>
+  </div>
+</section>
+
+<section id="colophon">
+  <p class="kicker">How this site is built</p>
+  <h2>Site colophon</h2>
+  <div class="prose">
+    <p>Hand-written static HTML with one shared stylesheet and a few lines of progressive-enhancement JavaScript (a copy button on code blocks; every page renders fully with scripting off). No frameworks, no external fonts or other CDNs, no analytics or tracking of any kind; every page renders fully offline. Served from the repository's <code>site/</code> directory via GitHub Pages from a workflow in <code>.github/workflows/pages.yml</code> (relative links throughout, so it works from the Pages subpath and from a local directory alike). Pages: <a href="index.html">Home</a>, <a href="why.html">Why</a>, <a href="quickstart.html">Quickstart</a>, <a href="backends.html">Backends</a>, <a href="standards.html">Standards</a>, <a href="evidence.html">Evidence</a>, <a href="explorer.html">Explorer</a>, <a href="comparison.html">Comparison</a>, <a href="roadmap.html">Roadmap</a>, About. Figures: the <a href="assets/w1_smoke_occt_l0_vs_astra.svg">cross-fidelity comparison SVG</a> and the <a href="assets/essun-whitepaper.pdf">white-paper PDF</a>, both regenerated and registered from run records by repository tooling.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

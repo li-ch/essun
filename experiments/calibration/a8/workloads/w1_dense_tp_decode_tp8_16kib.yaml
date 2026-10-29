@@ -1,0 +1,21 @@
+# W1 Dense TP Decode — tp_size 8, payload 16384 B (16 KiB): the A-W1-SIZE
+# registry smoke size, i.e. the SMALL-MESSAGE LATENCY-BOUND regime where the
+# L axis (link.hop_latency_ns, A-L0-LAT) is visible in O-CCT at all
+# (CALIBRATION_PLAN.md §1.2: "Small-message latency-bound (<= ~64 KiB) —
+# where the current smoke manifests live (16 KiB)"). Stage A8's anchor
+# (CAL-A8, Pond ASPLOS 2023) stages NO collective, NO message size and NO
+# rank count — it emulates per-memory-access ADDED latency (64/140 ns) — so
+# this size is a DECLARED model-side regime choice (the smoke default), not
+# an anchor-derived number.
+#
+# 16384 = 2^14 is divisible by r = 8 = 2^3, so the A-L0-DIV gate ACCEPTS
+# the size exactly — no floor/ceil bracketing. Same workload shape as every
+# other W1 file (2 layers x 3 steps = 6 AllReduce ops per config). Nothing
+# here is measured or standard-normative; integer byte counts; deterministic
+# by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal8-a8
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # 2^14 (16 KiB); registry smoke point; free parameter A-W1-SIZE

@@ -1,0 +1,33 @@
+# Calibration-ladder A12 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the DOUBLE-APPLICATION HAZARD point — B = 192 bytes/ns
+# per rank per direction = 0.8 x 240 = 0.8^2 x 300. This point is NOT an
+# anchor value and is NOT used anywhere as a bridge; it exists to
+# quantify, in executed model output, the specific misreading the
+# verified issue thread forecloses: if NCCL's 20 GB/s-per-link model were
+# (wrongly) treated as a SECOND derating on top of the ~80% app-level
+# guidance — instead of being the SAME statement, as maintainer sjeaugey
+# states ("Roughly, the app-level bandwidth is 80% of the peak
+# bandwidth", explaining the 20-vs-25 GB/s gap as NVLink packet
+# overhead) — every downstream comparison would carry 0.64 instead of
+# 0.8, i.e. CCT inflated by 25/16 = 1.5625 over the physical point in
+# the bandwidth term instead of the correct 5/4 = 1.25. The sweep row at
+# this topology measures that hazard's size; the record classifies it as
+# a reading hazard, not a modeling result.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW); 192 = 12 x 16 is
+# exact (0.8^2 x 300 = 192); nothing here is tuned toward any
+# measurement. L = 200 ns is the A-L0X-LAT registry point.
+topology_id: crossbar8_a12_hazard192_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 192
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar8_a12_physical300_v1; only
+  the swept free parameter B differs — here at the double-derating
+  bracket 0.8^2 x 300 = 192 B/ns (hazard quantification row; never a
+  bridge value; the ladder's shipped bridge usages — A2's 720, A6's 320,
+  A7's 358.4 — are all SINGLE applications of 0.8, audited in this
+  stage's record).

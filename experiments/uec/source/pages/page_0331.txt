@@ -1,0 +1,145 @@
+ 331 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.9.4 PDC Target State Machine 
+Figure 3-62 illustrates example processing at the target on a per-PDC basis. Most state machine 
+processes are to the same as the initiator state machine processes with the following exception: 
+• chk_secure_psn() 
+o If secure PSN is enabled, this process checks if the Start_PSN from the initiator is 
+acceptable; if invalid, a NACK with the alternate Start_PSN is transmitted. 
+  
+ 
+Figure 3-62 - PDS Target State Machine  
+CLOSED
+closing = FALSE
+req closing = FALSE
+TX REQ
+pkt.rto = BASE_RTO
+pkt.retry _cnt = 0
+  unack_cnt 
+pkt.psn = setPSN()
+chk_bitmap() {
+  If(MPR) pause_PDC  
+If som: open_msg  
+If eom: open_msg 1
+             
+NACK   RTO
+If (pkt.retry _cnt < MAX_RETX_CNT) {
+     pkt.retry _cnt
+   pkt.rto = BASE_RTO * 2 retry _cnt
+                
+  
+   Else close_error = true
+SECURE PSN 2
+chk_secure_psn()
+if invalid_psn: { 
+                         
+  else {
+      bad_psn = FALSE
+ 
+         bad_psn == TRUE
+         bad_psn == FALSE
+                    == Close   
+ close_error == TRUE
+bad_psn == FALSE
+         bad_psn == FALSE
+REQ CLOSE
+                
+pdc_close_ mer = CLOSE_TIME
+BEGIN  CLOSE
+closing = TRUE
+pdc_close_ mer = CLOSE_TIME
+      = ACK_WAIT
+closing == TRUE    unack_cnt == 0    allACK == TRUE
+UCT
+UCT
+RX CONTROL
+process_rx_ctrl()
+             bad_psn == FALSE
+ESTABLISHED
+UCT UCT
+       == (RETX     pkt.RTO)    bad_psn == FALSE
+TX CONTROL
+process_tx_ctrl()
+              bad_psn == FALSE
+              bad_psn == FALSE
+KEY
+                           
+             
+                 
+UCT: Uncondi onal Transi on
+MPR: Max PSN Range
+RX REQ
+process_rx_req()
+if (trim    rx_error) 
+               
+else {
+   update_psn_tracker() 
+                 
+ 
+chk_clear(): gen_cm
+UCT
+UCT
+gen_cm == TRUE
+CLOSE
+                
+saveExpectedPSN()
+free_pdc()
+      = CLOSED
+       →             
+OPEN
+If  secure_psn: {
+     dPDCID=pkt.spdcid
+     process_rx_req()
+     bad_psn = FALSE
+           = EST ABLISHED
+  else {       = PENDING  
+chk_rx_error()
+If (error_chk = OPEN) {
+    update_psn_tracker()
+               
+  else {             
+   
+secure_psn   trim = FALSE
+SECURE PSN 1
+dPDCID=pkt.spdcid
+process_rx_req()
+chk_secure_psn()
+if invalid_psn: { 
+                          
+        bad_psn = TRUE
+             = PENDING
+        else bad_psn = FALSE
+ 
+ secure_psn   trim = FALSE
+bad_psn == FALSE bad_psn == TRUE
+bad_psn == TRUE
+TX ACK
+update_psn_tracker()
+gen_ack()  {
+   if TX_ACK = TRUE {
+                   
+        
+   
+RX ACK
+update_psn_tracker () {
+   update unack_cnt
+   update pause_PDC
+ 
+update_ccc()
+              
+If close {
+     close_cmd = TRUE
+           = QUIESCE
+ 
+UCT
+      == Close              == Close
+OPEN
+if (trim) {
+               
+    trim = TRUE
+  else trim = FALSE
+     
+trim = TRUE
+error_chk = OPEN
+error_chk =  OPEN

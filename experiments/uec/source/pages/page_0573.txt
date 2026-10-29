@@ -1,0 +1,41 @@
+ 573 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• SDK = 0x245e67ab286218530edd53c26ea9ec33c96b35192d0a0eb54d08be281c5d304b 
+• IVMask =  0x02d5ee33684201990e1629e0 
+For IPv6 Client-server KDF mode with ssi-mode=FALSE 
+• Label = 0x5532 or ‘U2’ in ASCII 
+• IPv6 SIP = 0x20010cb0000000000fc0000000000abc or 
+                  2001:0cb0:0000:0000:0fc0:0000:0000:0abc 
+• Context6 = 0x000000001dc00000000020010cb0000000000fc0000000000abc 
+• Kdf_fixed6 = 0x553200000000001dc00000000020010cb0000000000fc0000000000abc0160 
+• SDK = 0xb59002ad3e6a9ae5864878730070f8916e43e5011acaa4be3504256185f24d97 
+• IVMask = 0x209a3d29581028fb0da2749e 
+ 
+3.7.9 Replay Protection 
+It is necessary to detect when a packet has been replayed on the network, through either normal retry 
+mechanisms or a malicious actor observing and playing back a packet. Replay protection will be handled 
+at the layers above this protocol. 
+Informative Text: 
+Both ROD and RUD use a dynamic connection protocol. This is similar to 0-RTT in that it is susceptible 
+to replay attack. The UET PDS specification uses a mechanism to keep track of close information to 
+ensure connection-open is not replayed. For existing PDCs the following applies: 
+• Reliable ordered delivery (ROD): Replay protection is inherent in the in-order protocol (reject 
+old PSNs), and no additional processing is required. Please see PDS specification for 
+connection creation replay protection—specifically, the connection setup replay in Section 
+3.5.8.2.1. 
+• Reliable unordered delivery for non-idempotent operations (RUD): Apply-once semantic can 
+be used for replay protection. Please see PDS specification for connection creation replay 
+protection—specifically, the connection setup replay in Section 3.5.8.2.1 
+• Reliable unordered delivery for idempotent operations (RUDI): Due to the idempotent nature 
+of this transport, replay protection at the transport layer is not possible and NOT provided by 
+TSS. Replay protection MAY be achieved by adding a nonce at the application layer. Another 
+solution is to rely on rekeying to minimize attack window. Finally, RUDI MAY be disabled. 
+• Unreliable and unorder delivery (UUD): Application solution or epoch-based rejection MAY be 
+used. 
+ 
+3.7.10 Epoch-based packet rejection 
+A key epoch can be used to reject old frames in the network. The epoch is carried in the TSC field in the 
+packet and the SDME controls when the epoch is incremented. 
+If epoch-based rejection is enabled (epochBasedRejection) then packets with older epochs MUST be 
+dropped and the sdiXXInLatePkts counter MUST be incremented. The number of older epochs accepted 

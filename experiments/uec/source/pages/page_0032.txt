@@ -1,0 +1,44 @@
+ 32 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Abbreviation Definition 
+GCM Galois counter mode 
+GMAC Galois message authentication code 
+gNMI GRPC network management interface 
+gNOI GRPC network operations interface 
+gRPC gRPC remote procedure calls 
+HPC High-performance computing 
+ICV Integrity check value 
+INC In-Network Collectives 
+IP Internet protocol (RFC 791 and/or RFC 8200) 
+IPG Interpacket gap 
+IV Initialization vector 
+KDF Key derivation function 
+KMD Kernel mode driver 
+LACP Link Aggregation Control Protocol (IEEE Std 802.1AX) 
+LAG Link aggregation 
+LLDP Link Layer Discovery Protocol (IEEE Std 802.1AB) 
+LLR Link layer retry 
+MAC Media access control 
+MDIO Management data input/output 
+MID Message identifier 
+MII Media-independent interface 
+MMF Multi-mode fiber 
+MPI Message passing interface 
+MR Libfabric memory region 
+MTBPE Mean time between PHY errors 
+MTTFPA Mean time to false 802.3 packet acceptance 
+NACK Negative acknowledgement 
+OSI Operating system instance 
+PASID Process address space identifier 
+PCS Physical coding sublayer 
+PDC Packet delivery context 
+PDS Packet delivery sublayer 
+PFC Priority-based flow control 
+PGAS Partitioned global address space 
+PHY Physical layer device 
+PID Process identifier 
+PLS Physical layer signaling 
+PSN Packet sequence number 
+QoS Quality of service 
+RI Resource index 

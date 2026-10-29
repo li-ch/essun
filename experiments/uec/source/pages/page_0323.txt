@@ -1,0 +1,9 @@
+ 323 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Refer to Section 3.5.9 for a more detailed example state machine. 
+   
+ 
+ 
+Figure 3-57 - Single PDC Close State Machine 
+ 

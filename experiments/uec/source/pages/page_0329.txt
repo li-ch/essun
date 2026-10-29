@@ -1,0 +1,37 @@
+ 329 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o Verifies that packets received from the network are valid, checks for unexpected events 
+that are not associated with a specific PDC (e.g., NACK_NO_CONN or 
+NACK_INV_DPDCID). 
+o If invalid, then do not forward the packet to a PDC state machine. 
+• chk_unexp_event() 
+o Checks the type of unexpected event and determine whether to transmit a NACK. 
+3.5.9.3 PDC Initiator State Machine 
+Figure 3-61 provides an illustrative example skeleton of a PDS state machine that manages the initiator 
+side of a PDC. The states shown in the simplified PDC establishment and close state machines of Figure 
+3-56 and Figure 3-57 are represented by the State variable shown in Figure 3-61. 
+A PDC initiator state machine handles packets from SES to the target and packets arriving from the 
+target. Its functions include:  
+• chk_tx_bitmap()  
+o Checks the distance between the lowest unacknowledged PSN and the highest 
+acknowledged PSN. 
+o If the distance reaches the maximum PSN range (MP_RANGE), then pause the PDC until 
+the lower PSN(s) are acknowledged. 
+• update_ccc() 
+o Pass the received bytes, round-trip time, etc. to the CCC. 
+o The send_req() process is constrained by CC scheduling. 
+• update_tx_psn_tracker() 
+o Update the PSN bitmap to reflect which packets have been acknowledged. 
+o Determine if a Clear Request or ACK Request CP should be transmitted; or if a request 
+packet should be retransmitted (note that this is not called out in the state machine). 
+• process_rx_req() 
+o Process a read response at the initiator. 
+• update_rx_psn_tracker() 
+o Update the PSN bitmap to reflect which packets have been received. 
+o Determine if an ACK should be transmitted. 
+• gen_ack() 
+o Check the criteria for generating an ACK; if TRUE, then transmit an ACK packet. 
+• send_close() 
+o Send a Close Request CP to the target. This is done by sending a Close Command CP. 
+ 

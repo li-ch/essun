@@ -1,0 +1,74 @@
+# Calibration-ladder GF-10 topology: fully-connected (crossbar / single
+# non-blocking switch stage) abstraction of 8 ranks at the GF-10 ANCHOR
+# POINT — B = 25 B/ns, L = 9000 ns.
+#
+# Source numbers (docs/calibration/anchors_gapfill.md §GF-10; Li et al.,
+# "Evaluating Modern GPU Interconnect: PCIe, NVLink, NV-SLI, NVSwitch and
+# GPUDirect", IEEE TPDS 32(1) 2020/2019, arXiv:1903.04611; numbers AS
+# STAGED, not re-fetched; confidence M-H — prose numbers extracted
+# verbatim from the ar5iv HTML, the full per-pair matrices are heat-map
+# figures, not text-extractable):
+#   - L = 9000 ns: NVLink directly-connected GPU pairs on DGX-1 show P2P
+#     latency "around 9 µs" (Tartan-suite P2P microbenchmarks) — the
+#     MEASURED headline of the anchor and the first measured µs-class
+#     per-pair latency in the corpus (plan gap 2: "the weakest axis of
+#     the whole plan").
+#   - B = 25 B/ns: the anchor's per-link rate "50 GB/s bidirectional
+#     (25 GB/s per direction)" — NVLink-2 (V100-class), the SAME
+#     generation as the 9 µs DGX-1 measurement. NOTE: this is the first
+#     corpus anchor that STATES the direction split itself — the x2
+#     direction-reading ambiguity class (GF-05/GF-08/GF-09) does not
+#     apply to this anchor's rate.
+#
+# ROLE: GF-10 is the MEASURED hop/pair-latency-axis anchor (plan gap 2).
+# The gap-fill doc stages its µs-class numbers precisely so CAL-A10's
+# assumption-class 0.8 µs value "can finally be checked against" a
+# measurement: 9000/800 = exactly 45/4 = 11.25 — the doc's own "an order
+# above the assumption", now quantified exactly (executed as the L=800
+# row in sweep_gf10_latency_v1.yaml). QUANTITY-CLASS CAVEAT (the doc's
+# own): app-level P2P latency includes the software stack (CUDA API,
+# driver), while L is a bare per-pair fabric parameter — they BOUND
+# different things; the row is a placement/bound, never an equality and
+# never a tuning target.
+#
+# r = 8 is DGX-1's own GPU count — the 9 µs system — so for the first
+# time in the gap-fill ladder the rank count carries ANCHOR provenance
+# (it is also the free smoke default; DGX-2's r=16 is recorded not
+# executed — its staged numbers are per-link/per-pair rates and a
+# qualitative homogeneity fact, none of which pins the collective
+# identity's rank dependence).
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS (A-L0X-BW / A-L0X-LAT),
+# placed at the anchor's staged measured values BEFORE any stage output
+# was read, never tuned toward any anchor output. The 9 µs number comes
+# from DGX-1, whose manual-routing pairs measure 2x-3x SLOWER
+# ("increased by about 2x for P100-DGX-1 and 3x for V100-DGX-1") —
+# charging 9000 uniformly to ALL pairs is a DECLARED reading (the
+# direct-pair value as the uniform L); the heterogeneous tail is executed
+# as its own uniform rows (18000 / 27000) and "nonuniform_pair_latency"
+# is explicitly_unsupported at L0. The one-way vs round-trip reading of
+# the P2P latency numbers is NOT staged (recorded ambiguity, x2). Values
+# are anchor measurements / free registry defaults, never our
+# measurements, never standard-normative values.
+topology_id: crossbar8_gf10_b25_l9000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 9000
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 9000 ns (GF-10's measured
+  app-level NVLink direct-pair P2P latency, "around 9 µs" on DGX-1), per-
+  rank single-port injection B = 25 B/ns (GF-10's measured per-link
+  per-direction NVLink-2 rate), charged once per phase (reduce-scatter,
+  allgather) by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). No
+  software stack, no CUDA API/driver path, no multi-link aggregation, no
+  pair heterogeneity — the app-level P2P measurement BOUNDS the bare
+  per-pair L from above; the row is placement, never an equality.
+  Provenance: both values from GF-10's staged measured numbers (gap-fill
+  anchor PROPOSED, not yet an integrated anchor row; confidence M-H — prose
+  verbatim from ar5iv HTML, per-pair heat-map matrices not extractable;
+  V100-era, one generation older than CAL-A4's NVLink-3 domain). Values
+  are anchor measurements, never our measurements.

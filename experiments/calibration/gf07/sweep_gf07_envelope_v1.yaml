@@ -1,0 +1,104 @@
+# Calibration-ladder GF-07 sweep #1: the R3
+# MEASURED CONGESTION ENVELOPE — where do the L0 crossbar rows sit on
+# the B axis relative to the anchor's measured 5% -> 25x slowdown band
+# (GF-07: "Characterizing the Impact of Congestion in Modern HPC
+# Interconnects", arXiv:2604.11432; docs/calibration/
+# anchors_gapfill.md §GF-07; measured on Leonardo HDR IB Dragonfly+,
+# CRESCO8 NDR IB 1.67:1-blocking fat tree, LUMI Cray Slingshot
+# dragonfly, HAICGU EDR IB+RoCE, Nanjing RoCE NSLB)?
+#
+# The anchor's outcome numbers are collective BANDWIDTH RATIOS on
+# victim collectives (incast / AllToAll / one Open MPI AllReduce
+# quote), NEVER (size -> time) series — NOTHING below is compared to
+# any anchor time. For a fixed-size collective the ratio->factor
+# bridge is dimensionally EXACT (t_congested/t_uncongested =
+# bw_uncongested/bw_congested), so each measured factor enters the L0
+# input space as an effective-B displacement (stage A11's / GF-05's
+# technique) at a DECLARED carrier B_ref = 100 B/ns = LUMI's staged
+# 4x200 Gb/s per-node aggregate (the anchor stages NO shared reference
+# fabric; LUMI is the managed floor — "always within 5%" — making its
+# rate the natural uncongested reference; the Leonardo carrier 50 is
+# executed by sweep_gf07_carrier_v1.yaml). The congestion MECHANISM
+# (incast trees, DCQCN sawtooth > 16 MiB, NSLB, per-flow HW CM,
+# adaptive routing) has NO input key and "congestion" is
+# explicitly_unsupported — the mechanism is inexpressible; only the
+# measured magnitudes enter.
+#
+# NOTHING IS TUNED: the B ladder was fixed by anchor/registry
+# arithmetic BEFORE any stage output was read —
+#   100 = CARRIER: LUMI's staged per-node aggregate 4x200 Gb/s / 8
+#        (declared reading; first staged rate at/above the modern
+#        anchor scale; numerically identical to GF-05's uet-htsim sim
+#        line rate — coincidence recorded, never cross-derived);
+#   95  = 20/19 floor: LUMI "always within 5% of the uncongested
+#        case" (per-flow HW CM + global-aware adaptive routing);
+#   75  = 4/3: "Open MPI AllReduce showed up to a 25% bandwidth loss"
+#        (the ONE AllReduce-class quote);
+#   70  = 10/7: bursty alltoall "drops to 70% of its uncongested
+#        baseline";
+#   64  = A-L0X-BW registry point (placement; asymptotic CCT ratio
+#        exactly 25/16; sits INSIDE the envelope band between the
+#        5/3 and 10/7 rows);
+#   60  = 5/3: steady incast "performance dropping to 60% of the
+#        uncongested case";
+#   22.5 = 180 Gb/s / 8: Nanjing victim AllToAll measured PEAK — the
+#        only staged absolute bandwidth (AllToAll-class proxy on the
+#        AllReduce identity's axis, declared);
+#   20  = 5: Leonardo incast ratios "collapse to 0.2" at 32–64 nodes
+#        (exact staged ratio);
+#   15  = 120 Gb/s / 8: Nanjing with NSLB disabled — the second
+#        absolute; exact pair factor 180/120 = 3/2;
+#   8   = 25/2: bursty incast 64 nodes, staged ratio "0.08" read
+#        EXACTLY (1/0.08 = 12.5; the paper's own "12x" gloss is
+#        mutually inconsistent — 100/12 = 25/3 is non-representable,
+#        recorded NOT executed);
+#   4   = 25: CRESCO8 steady incast AllToAll victims "slowdowns up to
+#        25x" — the envelope CEILING.
+# Asymptotic CCT ratios vs the carrier row are exactly {1, 20/19,
+# 4/3, 10/7, 25/16, 5/3, 40/9 (cross-fabric scale, not congestion),
+# 5, 20/3 (cross-fabric), 25/2, 25} — pure 1/B arithmetic; the
+# executed displacement signature rises monotonically toward each
+# asymptote as payload grows (A11/GF-05 class).
+#
+# Non-representable displacements RECORDED NOT EXECUTED (exact
+# fractions in the stage record): 25/3 (the "12x" reading), 10000/167
+# (CRESCO8's staged "1.67:1 blocking" as a first-order effective-B
+# displacement).
+#
+# L fixed at the A-L0X-LAT registry point 200 — GF-07 stages NO
+# latency number (stage A11 precedent: registry L kept when the
+# anchor stages none; contrast GF-05, which staged latency and swept
+# it).
+#
+# Payload grid: the anchor's OWN staged vector range "vectors 8 B–
+# 16 MiB" as a power-of-2 ladder 8*2^k (8 B -> 16 MiB, 22 sizes) —
+# includes both endpoints (8 B the minimum; 16 MiB the maximum AND
+# the DCQCN-sawtooth threshold size) and every in-range member of the
+# standard 12-size ladder of stages A1/A2/A7/A9/A11/GF-05 (8 KiB,
+# 32 KiB, 128 KiB, 512 KiB, 2 MiB, 8 MiB); r=8 divides every size, so
+# the A-L0-DIV / A-L0X-DIV gates accept the exact ladder with NO
+# bracketing.
+sweep: cal_gf07_envelope_v1
+workload: experiments/calibration/gf07/workloads/w1_dense_tp_decode_tp8_16mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf07/topologies/crossbar8_gf07_rate100_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_rate100_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_floor95_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_ar75_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_a2a70_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_reg64_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_inc60_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_njpeak22_5_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_leo20_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_njoff15_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_burst8_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar8_gf07_worst4_l200_v1.yaml

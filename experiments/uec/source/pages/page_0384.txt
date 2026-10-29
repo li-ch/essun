@@ -1,0 +1,51 @@
+ 384 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+slot is updated or skipped, the ‘ev_update’ bit is set. Example processing code for an implementation 
+that stores state as shown in Figure 3-86 follows: 
+SLOT_STATE = older EV state, set ev_update when EV is changed 
+EV_CHANGE = temporary state with new EV, moves to SLOT_STATE when all packets 
+on older EV are completed 
+ 
+if(cms_changes_EV) { 
+// Need to track 2 paths(EVs)during change 
+    add_ev_change_entry()             
+    SLOT_STATE.ev_update = TRUE 
+} 
+// Check if PSN used older EV  
+if(SLOT_STATE.ev_update = FALSE || ((rcvd_ev & 0xFF80) >> 7) != 
+   EV_CHANGE.new_upper_ev) { 
+    // Yes, this is on older EV 
+    if (rcvd_psn != SLOT_STATE.next_psn) { 
+        // Not Expected_PSN so determine loss 
+        determine_lost_psn() 
+    } 
+    // Calculate next Expected_PSN  
+    SLOT_STATE.next_psn = rcvd_psn + 128          
+    if (SLOT_STATE.next_psn = EV_CHANGE.start_psn){      
+        // All PSN using older EV are done 
+        SLOT_STATE.ev_update = 0 
+        SLOT_STATE.next_psn = new_next_psn 
+        delete_ev_change_entry() 
+    }  
+} else {  
+    // This PSN is on the new EV, check if it’s the Expected_PSN 
+    if (rcvd_psn != EV_CHANGE.new_next_psn) { 
+        // Not the Expected_PSN so determine loss 
+        determine_lost_psn() 
+    } 
+    // calculate the next Expected_PSN 
+        EV_CHANGE.new_next_psn = rcvd_psn + 128 
+    } 
+} 
+ 
+Informative Text: 
+When cwnd is reduced such that fewer packets are in flight, it may be beneficial to adjust the number 
+of EVs in use accordingly. This improves the freshness of the EV congestion state and reduces the 
+potential for tail loss. Probe CPs can be used to check slots that have been migrated to new EVs. 
+ 
+3.5.15.4.3 Tail Loss Detection 
+Tail loss refers to losing the last packet(s) of a message or EV such that the early loss detection 
+mechanism doesn’t trigger. For example, if using the OOO method in Section 3.5.15.4.1, then if a small 
+number of packets is lost—below the loss_threshold_pkts or ooo_rcvd_bytes threshold —the detection 
+method will not trigger. 

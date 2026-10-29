@@ -1,0 +1,41 @@
+ 456 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.6 Congestion Control Context (CCC) 
+Between two FEPs, one or more PDCs may be established using the same traffic class for transmitted 
+data. These PDCs are called a “PDC group.” A congestion control context (CC context or CCC) controls 
+the admission of data packets into the network for a PDC group. 
+A CCC controls the admission of data packets into the network in a single direction; thus, for 
+bidirectional data transmission two CCCs are used, one controlling admission in each direction. The CCC 
+utilizes control packets in the reverse direction to determine the fate of those data packets, and so 
+adapt its admission decisions for future data packets. Reverse-path PDS ACK packets and control packets 
+are not congestion controlled and SHOULD use a separate traffic class and queue from data traffic 
+(Section 3.6.4.7). The reverse CCC may need to factor the bandwidth used by ACK packets into its 
+admission decision. 
+As more than one PDC can be active simultaneously within the same CCC, a congestion control 
+algorithm cannot assume that all data packets handled by a CCC share one sequence number space. 
+Rather, a CCC needs to keep track of the total number of bytes in packets it admits to the network and 
+updates that byte count when packets are acknowledged, NACKed, or when it is determined that the 
+packet has, with high likelihood, been lost (referred to as an inferred loss). Conceptually, the CCC keeps 
+track of state by keeping records of sequence numbers of data packets and their responses, timeouts, 
+etc., but in practice the PDC and CCC are unlikely to be implemented in a manner that replicates this 
+state in both PDC and CCC. For simplicity of explanation, it is assumed that the CCC sees reverse path 
+control packets and updates its own state accordingly. 
+When multiple PDCs transfer data in the same direction from the same sending FEP to the same 
+receiving FEP using the same traffic class, those PDCs SHOULD be mapped to a common PDC group and 
+SHOULD share a CCC. This ensures the CCCs do not unnecessarily compete with one another, and that 
+load balancing of the aggregate traffic flow is performed effectively. This applies to PDCs transferring 
+data in the forward direction as well as those transferring data in the reverse direction. That is, read 
+response data mapped onto a reverse direction PDC from FEP-B to FEP-A SHOULD be controlled by the 
+same CCC as write request data mapped onto a forward direction PDC from FEP-B to FEP-A. Two RUD 
+PDCs using different CCCs would still be expected to converge, but would be less optimal.  
+UET permits multiple PDC groups with each group using a different (set of) traffic class(es). When two 
+PDC groups transfer data packets from the same source to the same destination (using different traffic 
+class mappings), a separate CCC MUST be used for each PDC group. This is because congestion 
+measured on one traffic class cannot safely be used to infer congestion on another traffic class. 
+3.6.7 CCC for ROD PDCs 
+The ROD delivery mode provides reliable ordered delivery. UET achieves this by sending all the packets 
+of a ROD PDC via the same network path. ROD flows SHOULD use one CCC per PDC, not shared with 
+other ROD flows or with RUD flows. This ensures that when a single-path ROD PDC encounters a flow 
+collision within the network, other ROD PDCs and RUD PDCs sending to the same destination FEP are 
+not adversely affected by congestion state of a flow that may have taken a different network path. 

@@ -1,0 +1,23 @@
+ 74 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Congestion Signaling (CSIG): Congestion Signaling (CSIG) is a lightweight in-band telemetry mechanism 
+designed to meet the demands of modern AI, HPC, and high-speed datacenter networks, where 
+traditional congestion signals such as ECN, packet loss, and RTT are too slow and coarse-grained. By 
+embedding a small fixed-size tag in packets, CSIG collects real-time, per-path congestion information—
+such as available bandwidth, capacity, delay, and queue buildup—directly from network switches, 
+enabling faster and more accurate congestion control, improved flow completion times, better network 
+utilization, and enhanced visibility for troubleshooting, monitoring, and traffic engineering, all with 
+minimal overhead and compatibility with encrypted traffic. 
+1.6.4 Link Layer  
+Optional UE link layer specifications are provided in Section 5. The UE specification adds several optional 
+features to the Link Layer. Figure 1-17 shows the areas of focus for the UE link layer specifications with 
+respect to IEEE 802 architecture at the link layer. UE’s optional recommendations for the Link Layer 
+relate to the shaded areas. All features are optional for UE compliance. 
+Idle Reduction (IPGR): The Idle Reduction feature is an optional enhancement that reduces the number 
+of idle bytes transmitted between Ethernet frames, improving wire efficiency and increasing achievable 
+packet rates, particularly for small packets. By minimizing unnecessary inter-packet overhead while 
+maintaining frame alignment requirements, the feature allows more payload data to be carried over the 
+same link bandwidth. This helps improve network performance, throughput, and efficiency in high-
+ 
+Figure 1-17 - UE Link Layer Specification Focus Areas 

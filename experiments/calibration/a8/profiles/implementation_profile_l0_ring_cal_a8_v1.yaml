@@ -1,0 +1,51 @@
+# Implementation profile for the calibration-ladder A8 runs on the
+# analytical L0 ring backend ( anchor CAL-A8 — Pond,
+# ASPLOS 2023: CXL added-latency tolerance emulation on production cloud
+# workloads; docs/calibration/anchors_staging.md §A8).
+implementation_profile_id: analytical_l0_ring_cal_a8_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml
+  (KEEP verdicts per docs/calibration/CALIBRATION_PLAN.md §2.1). This
+  stage sweeps the LATENCY axis A-L0-LAT — the axis the plan's CAL-A8 row
+  assigns to this anchor ("locates the CXL-class point on the latency axis
+  for L parameters only") — as the mirror image of stages A4/A5/A6, which
+  swept the bandwidth axis B at fixed L.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  L (link.hop_latency_ns, A-L0-LAT) swept over {10, 64, 140, 200, 800,
+  2000} ns, fixed by registry/anchor/plan arithmetic BEFORE any stage
+  output was read: 10 = the registry free-range lower endpoint [10, 2000];
+  64 and 140 = CAL-A8's two emulated added-latency points (the anchor
+  points of this stage); 200 = the A-L0-LAT registry point (KEEP) and the
+  sweep baseline; 800 = the plan §2.1 anchored-axis upper endpoint context
+  (CAL-A10's assumption-class 0.8 us — a different anchor's number, cited
+  as span context only); 2000 = the registry free-range upper endpoint,
+  executed to show it is anchor-free above the plan's NARROW candidate.
+  B fixed at the A-L0-BW registry point 64 B/ns (the anchor says nothing
+  about bandwidth); r = 8 = the free smoke default (the anchor stages no
+  rank count, no collective, no message size). DECLARED READING: CAL-A8's
+  numbers are EMULATED additions — study inputs injected in hardware that
+  bound plausible CXL-class device latency, not device measurements — read
+  onto L as per-traversal added latency, the same reading as the plan's
+  A-L0-LAT row; the per-access ns-scale -> collective hop-latency
+  projection is a declared distortion, recorded in the stage's calibration
+  record. NO parameter was tuned toward any CAL-A8 output: the anchor's
+  measured outputs are workload-goal fractions (43%/37% of 158 workloads),
+  which the L0 input space cannot express (no population/SLO axis;
+  quantified structurally in the record).
+measurement_source: >
+  CAL-A8 staged numbers (H. Li et al., "Pond: CXL-Based Memory Pooling
+  Systems for Cloud Platforms", ASPLOS 2023; arXiv:2203.00241; ACM DOI
+  10.1145/3575693.3578835; docs/calibration/anchors_staging.md §A8;
+  anchor PROPOSED in the anchor registry, confidence H — numbers verified from
+  paper text by the staging job) — external published
+  production-trace-driven study; recorded as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language. The staged
+  numbers are emulated study inputs (64/140 ns injected additions) plus
+  population fractions (43%/37% of 158 workloads within performance
+  goals); neither is a collective completion time.

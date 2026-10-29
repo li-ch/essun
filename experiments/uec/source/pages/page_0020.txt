@@ -1,0 +1,45 @@
+ 20 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 2-22 - Example INC Communicator Creation ................................................................................. 159 
+Figure 2-23 - Example INC Communicator Teardown .............................................................................. 160 
+Figure 2-24 - INC Operation ses.inc_info Encoding .................................................................................. 162 
+Figure 2-25 - Allreduce Sequence ............................................................................................................. 164 
+Figure 2-26 - Deferrable RTR Sequence .................................................................................................... 165 
+Figure 3-1 - Overview of UET .................................................................................................................... 180 
+Figure 3-2 - UET Packet Structure ............................................................................................................. 181 
+Figure 3-3 - Component Interface Overview ............................................................................................ 186 
+Figure 3-4 - Relative Addressing ............................................................................................................... 196 
+Figure 3-5 - Absolute Addressing .............................................................................................................. 197 
+Figure 3-6 – Simplified Absolute Addressing ............................................................................................ 198 
+Figure 3-7 - Relative Addressing for RMA Operations using Resource Index Namespace ....................... 198 
+Figure 3-8 - Relative Addressing for RMA Operations using PIDonFEP Namespace ................................ 199 
+Figure 3-9 - Overview of Relative Addressing for RMA Operations Using Optimized Headers ................ 200 
+Figure 3-10 - Overview of Direct Memory Addressing ............................................................................. 200 
+Figure 3-11 - Standard Header Format when ses.som is 1 (UET_HDR_REQUEST_STD) ........................... 218 
+Figure 3-12 - Standard Header Format when ses.som is 0 (UET_HDR_REQUEST_STD) ........................... 221 
+Figure 3-13 - Standard Header Format as Used for Deferrable Sends ..................................................... 223 
+Figure 3-14 - Standard Header Format as Used for Ready-to-Restart Requests ...................................... 224 
+Figure 3-15 - Optimized, Non-Matching Format (UET_HDR_REQUEST_SMALL) ...................................... 224 
+Figure 3-16 - Small Message/Small RMA Format (UET_HDR_REQUEST_MEDIUM) ................................. 226 
+Figure 3-17 - Unified Local Semantic Header with ac=0 (UET_HDR_REQUEST_LCL) ................................ 227 
+Figure 3-18 - Packed messages using ses.mm=1 ...................................................................................... 228 
+Figure 3-19 - Unified Local Semantic Header with ac=1 (also uses UET_HDR_REQUEST_LCL) ................ 229 
+Figure 3-20 - Unified Local Semantic Header with ac=1, ext_hdr > 0, and atomic operation .................. 231 
+Figure 3-21 - Rendezvous Extension Header Format ................................................................................ 231 
+Figure 3-22 - Atomic Operation Extension Header Format ...................................................................... 232 
+Figure 3-23 - Compare and Swap Operation Atomic Header and Payload Format .................................. 233 
+Figure 3-24 - Synchronized Operation Extension Header Format ............................................................ 234 
+Figure 3-25 - Semantic Response Header Format (UET_HDR_RESPONSE) ............................................... 234 
+Figure 3-26 - Semantic Response with Data Header Format (UET_HDR_RESPONSE_DATA) ................... 235 
+Figure 3-27 - Optimized Response with Data Header Format (UET_HDR_REQUEST_DATA_SMALL) ...... 236 
+Figure 3-28 - Unified Local Semantic Header Response Header (UET_HDR_RESPONSE_DATA_LCL) ...... 238 
+Figure 3-29 - Single-Packet Request, Expected Message ......................................................................... 254 
+Figure 3-30 - Multi-Packet Request, Expected Message .......................................................................... 255 
+Figure 3-31 - Multipacket Read Request – Standard ................................................................................ 256 
+Figure 3-32 - Multi-Packet Read Request – Large PDS_MAX_ACK_DATA ................................................ 257 
+Figure 3-33 - Rendezvous Transaction, Expected Message Case ............................................................. 259 
+Figure 3-34 - Rendezvous Transaction, Unexpected Message Case ......................................................... 260 
+Figure 3-35 - Deferrable Sends, Expected Message Case ......................................................................... 261 
+Figure 3-36 - Deferrable Sends, Unexpected Message Case .................................................................... 262 
+Figure 3-37 - Deferrable Sends, Unexpected Message Case, No Reserved Buffer ................................... 263 

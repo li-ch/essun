@@ -1,0 +1,29 @@
+# Calibration-ladder GF-11 topology: fully-connected crossbar of 4 ranks at
+# the CAL-A10 CHECK row — B = 64 B/ns, L = 800 ns.
+#
+# L = 800 ns is CAL-A10's integrated assumption-class 0.8 µs NVLink
+# end-to-end value (integrated the anchor registry anchor, no measurement behind
+# it). GF-10 checked it against a 2018-era app-level measurement and found
+# the measurement 45/4 = 11.25x above it; GF-11 checks it against the
+# FIRST current-gen bare-hardware-derived value and finds the assumption
+# only 400/351 ~ 1.14x ABOVE the derived 702 ns — the assumption-class row
+# lands within 14% of the current-gen decomposition reading (a coincidence
+# across quantity classes: 800 was never derived from any decomposition;
+# recorded, never cross-derived). 800 sits inside the declared free range
+# [10, 2000] at 2/5 of its upper. Same honesty rules as
+# crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: crossbar4_gf11_b64_l800_v1
+topology_class: fully_connected_crossbar
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 800
+notes: >
+  Single non-blocking switch-stage abstraction carrying CAL-A10's
+  assumption-class 0.8 µs NVLink end-to-end value (integrated anchor) as
+  the uniform per-pair latency L = 800 ns. Identity t = 3M/128 + 1600 at
+  r=4. Check row of the GF-11 L-axis sweep: the assumption vs the
+  current-gen derived reading at exactly 800/702 = 400/351 ~ 1.1396.
+  Values are integrated-anchor assumptions / free registry points, never
+  our measurements, never tuned, never standard-normative.

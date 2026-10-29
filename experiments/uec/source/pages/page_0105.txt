@@ -1,0 +1,39 @@
+ 105 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+mr_key_size attribute in the fi_domain_attr structure. If mr_key_size is < 6, the unused most-significant 
+bits MUST be 0. 
+The format of provider-supplied RKEYs is provider-specific (since the format is only locally significant at 
+the assigning provider). The provider implementation MUST choose how the RKEY is used in identifying 
+a registered memory region (e.g., the key MAY be used as a table index, part of hash lookup tuple, etc.). 
+A UET provider MAY choose to partition the RKEY into a portion that carries the memory key and 
+another portion that carries additional authentication information. 
+The RKEY values in the range [0..4095] merit additional discussion, since these values MAY be used in 
+conjunction with the optimized non-matching SES header in some cases. The optimized non-matching 
+SES header SHOULD be used when the criteria specified in Table 2-14 are satisfied. The RMA operations 
+that the criteria specified in this section are applied to are associated with the libfabric APIs defined in 
+the fi_rma() API Group <https://ofiwg.github.io/libfabric/v1.20.1/man/fi_rma.3.html>. 
+Table 2-14 - Criteria for Optimized Non-Matching SES Header for RMA Operations 
+Criteria for Use of Optimized Non-Matching SES Header for RMA Operations 
+OPTIMIZED bit is 1 in Memory region key format 
+RMA operation size <= MTU 
+FI_REMOTE_CQ_DATA is NOT set for the RMA operation 
+ 
+When the optimized non-matching SES header is used for RMA operations, the RKEY/INDEX value MUST 
+be carried in the ses.resource_index field of the SES header. 
+The criteria that MUST be satisfied to use the small RMA SES header for RMA operations are shown in 
+Table 2-15. The small RMA SES header SHOULD be used for RMA operations when the criteria specified 
+in Table 2-15 are satisfied. 
+Table 2-15 - Criteria for Small RMA SES Header with RMA Operations 
+Criteria for Use of Small RMA SES Header for RMA Operations 
+RMA operation size <= MTU 
+FI_REMOTE_CQ_DATA is NOT set for the RMA operation 
+ 
+If the criteria for use of the optimized non-matching SES header is NOT satisfied and the criteria for use 
+of the small RMA SES header is NOT satisfied, then the standard SES header MUST be used for RMA 
+operations. 
+The criteria that MUST be satisfied to use the RUDI packet delivery mode for RMA operations are shown 
+in Table 2-16. The RUDI packet delivery mode is optimized for idempotent operations and is described in 
+the PDS reliability specification. If supported, the RUDI packet delivery mode SHOULD be used when the 
+criteria specified in Table 2-16 are satisfied. 
+ 

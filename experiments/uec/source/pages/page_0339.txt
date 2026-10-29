@@ -1,0 +1,62 @@
+ 339 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.10.7 ACK 
+The PDS header format for a RUD/ROD acknowledgment packet is shown in Figure 3-70. The header 
+fields are described in Table 3-44. 
+Table 3-44 - Header Fields for ACK 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = PDS ACK 
+next_hdr 4 Encoding identifying UET Semantic type (Refer to SES 
+Section 3.4.3.8) 
+flags (7 bits) 
+• rsvd 
+• m 
+• retx 
+• p 
+ 
+• req  
+• rsvd 
+ 
+1 
+1 
+1 
+1 
+ 
+2 
+1 
+pds.flags = [rsvd, m, retx, p, req, rsvd] 
+• Reserved 
+• 1 => Associated request packet was ECN marked 
+• 1 => This is an ACK for a packet with pds.flags.retx = 
+1 
+• 1 => This ACK is for a Probe CP; pds.ack_psn_offset 
+and pds.cack_psn are ignored 
+• Requests a clear or close; see Section 3.5.11.8.6 
+• Reserved 
+ack_psn_offset 16 Signed representation of the offset from CACK_PSN to 
+ACK_PSN. 
+This field encodes the PSN of the packet that triggered 
+the generation of the ACK packet. Done to reduce the 
+size of the field from 32 bits to 16 bits. 
+probe_opaque 16 Used when an ACK is generated for a Probe CP, copied 
+from the Probe CP into the ACK; see Section 3.5.16.4.2. 
+cack_psn 32 Cumulative acknowledgement packet sequence 
+number—all PDS requests with PSN prior and including 
+this PSN are acknowledged. On the forward direction, 
+this includes all PSNs prior, and including this PSN, that 
+require a clear have been cleared. 
+spdcid 16 Source PDCID assigned by FEP that is the source of the 
+packet 
+dpdcid 16 Destination PDCID assigned by FEP that is the 
+destination of the packet 
+ 
+ 
+Figure 3-70 - ACK Header Format 
+ 
+ 

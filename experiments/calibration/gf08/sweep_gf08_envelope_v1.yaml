@@ -1,0 +1,86 @@
+# Calibration-ladder GF-08 sweep #1: the R1
+# UEC-CLASS HARDWARE TRANSPORT ENVELOPE — where do the L0 crossbar rows
+# sit on the B axis relative to Falcon's staged endpoint peak and its
+# measured congestion/loss factors (GF-08: "Falcon: A Reliable, Low
+# Latency Hardware Transport", ACM SIGCOMM 2025; docs/calibration/
+# anchors_gapfill.md §GF-08; numbers AS STAGED from the official
+# abstract mirror, not re-fetched)?
+#
+# The anchor stages NO (size -> time) series — its staged numbers are
+# abstract-level headline rates ("peak performance of 200 Gbps,
+# 120 Mops/sec") and dimensionless envelope-edge factors ("operation
+# completion times 8x lower than CX-7 RoCE under network congestion";
+# "up to 65% higher goodput under lossy conditions"). NOTHING below is
+# compared to any anchor time. Unlike GF-07 (per-fabric ratios, no
+# shared reference, declared carrier), Falcon stages its OWN absolute
+# rate, so the carrier is the anchor itself: B_ref = 200 Gbps / 8 =
+# 25 B/ns under the DECLARED per-endpoint reading (decimal convention
+# 1 GB/s = 1 B/ns, A-L0X-PORT first-order; the abstract stages NO
+# direction split — the bidirectional-aggregate alternative 12.5 is
+# executed as its own row, and the reading ambiguity is itself a factor
+# exactly x2, larger than the anchor's lossy factor 33/20, a recorded
+# stage finding). The transport MECHANISM (delay-based HW congestion
+# control, multipath packet spraying, selective retransmission,
+# PFC-free lossy operation) has NO input key and "congestion" is
+# explicitly_unsupported — the mechanism is inexpressible; only the
+# measured magnitudes enter.
+#
+# NOTHING IS TUNED: the B ladder was fixed by anchor/registry
+# arithmetic BEFORE any stage output was read —
+#   25    = CARRIER: Falcon's staged 200 Gbps peak under the declared
+#           per-endpoint reading (the FIRST staged UEC-class HARDWARE
+#           endpoint rate; lands INSIDE the plan §2.1 anchored span
+#           [20, 64], between CAL-A12's NCCL 20 and CAL-A7's 64 —
+#           unlike GF-05's sim rate 100 which sat above it);
+#   12.5  = the BIDIRECTIONAL-AGGREGATE alternative reading of the same
+#           200 Gbps (100 Gbps per direction); numerically identical to
+#           GF-05's 8:1 displacement value — coincidence recorded,
+#           never cross-derived; asymptotic CCT ratio vs the carrier
+#           exactly 2;
+#   64    = A-L0X-BW registry point (placement; asymptotic CCT ratio vs
+#           the carrier exactly 25/64 — the registry default predicts
+#           bandwidth-bound CCTs 64/25 = 2.56x FASTER than the anchor
+#           rate; the ratio falls monotonically toward 25/64 from 1);
+#   3.125 = 25/8: the measured 8x congestion factor ("operation
+#           completion times 8x lower than CX-7 RoCE under network
+#           congestion") as an effective-B displacement at the anchor's
+#           own carrier — the asymptotic CCT ratio vs the carrier row
+#           is EXACTLY 8; the LOWEST executed B row in the calibration
+#           corpus to date (below GF-07's worst 4).
+# Recorded NOT executed (non-representable finite decimals, exact
+# fractions in the stage record): 500/33 = 25/(33/20) — the "up to 65%
+# higher goodput" lossy factor (goodput ratio 1.65 = 33/20 exactly,
+# numerically the same fraction class as GF-05's fairness 65% quote —
+# coincidence recorded, never cross-derived); 250/33 = 12.5/(33/20) at
+# the alternative carrier.
+#
+# L fixed at the A-L0X-LAT registry point 200 — GF-08 stages NO
+# abstract-level latency number (the paper's latency tables were not
+# extracted at staging; A11/GF-07 precedent: registry L kept).
+#
+# Payload grid: DECLARED FREE PROBE (GF-08 stages no size regime) —
+# the power-of-2 ladder 8*2^k (8 B -> 16 MiB, 22 sizes), the same
+# ladder GF-07 used for its staged vector range: it brackets the
+# anchor's implied per-op size 625/3 ~ 208.33 B (120 Mops/sec at
+# 25 B/ns) between its 128 B and 256 B members, and contains every
+# in-range member of the standard 12-size ladder of stages
+# A1/A2/A7/A9/A11/GF-05 (8 KiB, 32 KiB, 128 KiB, 512 KiB, 2 MiB,
+# 8 MiB). r=8 divides every size, so the A-L0-DIV / A-L0X-DIV gates
+# accept the exact ladder with NO bracketing.
+sweep: cal_gf08_envelope_v1
+workload: experiments/calibration/gf08/workloads/w1_dense_tp_decode_tp8_16kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf08/topologies/crossbar8_gf08_falcon25_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_falcon25_l200_v1.yaml
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_alt12_5_l200_v1.yaml
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_reg64_l200_v1.yaml
+    - experiments/calibration/gf08/topologies/crossbar8_gf08_roce8x3_125_l200_v1.yaml

@@ -1,0 +1,42 @@
+# Calibration-ladder GF-02 ALLGATHER ceiling-reading RUN step
+# 3, gap-fill anchor): the L0 ring AllGather phase identity at the
+# PER-DIRECTION PHYSICAL point — r=8, B=450 B/ns (= 900/2, the
+# per-direction split of the poster's own bidirectional peak figure), L=200
+# ns, W2 chunk M = 2^37 total gathered (identical to the plateau twin).
+# This run and run_gf02_ag_ring360_v1 differ ONLY in B, so their AG-op CCT
+# ratio executes the 360/450 = 4/5 relation on the allgather identity —
+# the twin of the allreduce crossbar pair, completing the anchor's
+# two-collective statement with one executed pair per collective. Free
+# parameters stayed free; nothing is tuned.
+#
+# claim_id is deliberately EMPTY (zero claim edits). Evidence level E0:
+# analytical identity execution; the comparison is recorded as PROPOSED in
+# results/calibration/.
+experiment_id: EXP-CAL-GF02-AG-RING450-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf02/workloads/w2_dense_tp_prefill_tp8_total128gib.yaml
+infra_graph:
+  path: experiments/calibration/gf02/topologies/ring8_gf02_perdir450_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf02/profiles/implementation_profile_l0_phase_collectives_ring_cal_gf02_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_phase_collectives
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_gf02_perdir450_v1 (ring-family abstraction of the GF-02 8xH100 node at the per-direction physical reading B=450 B/ns = 900/2, declared aggregate-scale projection, L=200 ns free)
+  workload: w2_dense_tp_prefill tp8, one RS+AG pair at chunk 2^37 total gathered (identical to the plateau twin — only B differs)
+  implementation: analytical L0 phase-collectives ring identity; the ceiling side of the GF-02 allgather pair (gap-fill anchor, PROPOSED, not yet an integrated anchor row) — PROPOSED, review required
+evidence_level_requested: E0

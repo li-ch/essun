@@ -1,0 +1,38 @@
+# Calibration-ladder A9 topology: crossbar of 8 ranks at L = 160 ns =
+# 2 x 80 — TWO cascaded one-stage traversals of the CAL-A9 budget sum
+# (2 x (10 ns link + 70 ns switch stage)). ANCHOR ARITHMETIC ONLY,
+# labeled: the Berger et al. paper analyzes CXL memory-pool fabrics whose
+# multi-tier deployments traverse more than one switch stage; the exact
+# per-path link COUNT of a multi-stage path is NOT stated by the anchor,
+# so this row is the pure doubling of the plan-stated one-stage sum
+# (80 -> 160), never a paper quote. Its role: show how a lumped free
+# parameter absorbs a multi-stage latency chain — the L0 input space has
+# no link/switch decomposition and no stage count, so k cascaded
+# one-stage traversals enter ONLY as L = 80k (the expressiveness finding
+# recorded in the stage's calibration record; the crossbar backend
+# itself declares nonuniform_pair_latency and multi_port_injection
+# explicitly unsupported).
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0X-LAT), never tuned; 160 ns
+# is anchor arithmetic fixed BEFORE any stage output was read. CAL-A9 is
+# a design-estimate budget breakdown, not a silicon measurement. B = 64
+# B/ns is the fixed free A-L0X-BW registry point (anchor-free axis); r=8
+# the free smoke-default rank count.
+topology_id: crossbar8_a9_pair160_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 160
+notes: >
+  Single non-blocking switch-stage abstraction of 8 ranks with the pair
+  latency set to two cascaded CAL-A9 one-stage budget sums (2 x 80 ns).
+  Anchor-arithmetic row (labeled: per-path link count of a multi-stage
+  CXL path is not stated by the anchor; this is the plan-stated sum
+  doubled, never a paper quote). L0 transport model only. Provenance:
+  L = 160 ns = 2 x (10 + 70) from CAL-A9's staged numbers via the
+  calibration plan's stated sum (anchor PROPOSED in the anchor registry,
+  history-only since ; design estimate). B = 64 B/ns free A-L0X-BW
+  registry point. Values are anchor quotes / free registry defaults,
+  never our measurements.

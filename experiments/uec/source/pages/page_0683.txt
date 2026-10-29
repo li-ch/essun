@@ -1,0 +1,28 @@
+ 683 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 5-31 - CC_Update Message - Counter values 
+VC # S_VC_CC 
+(decimal) 
+S_VC_CC (hex)  VC # S_VC_CC 
+(decimal) 
+S_VC_CC (hex) 
+0 800008 0xC3508  8 100100 0x18704 
+1 100001 0x186A1  9 200200 0x30E08 
+2 200002 0x30D42  10 300300 0x4950C 
+3 300003 0x493E3  11 400400 0x61C10 
+4 400004 0x61A84  12 500500 0x7A314 
+5 500005 0x7A125  13 600600 0x92A18 
+6 600006 0x927C6  14 700700 0xAB11C 
+7 700007 0xAAE67  15 800800 0xC3820 
+ 
+Figure 5-16 shows the CC_Update frame format, followed by the example hexadecimal data, followed by 
+the eight data transfers on the xMII bus (TXD<0:63>) for the above example values. 
+ 
+ 
+Figure 5-16 - Example CC_Update Frame 
+Each data byte on the xMII interface, with the exception of the FCS, is transmitted from LSBit to MSBit 
+and from TXD<0> to TXD<63>. 
+5.2.13 References 
+[1] IEEE Std 802.3-2022, "IEEE Standard for Ethernet," 2022. [Online]. Available: 
+https://ieeexplore.ieee.org/document/9844436. 

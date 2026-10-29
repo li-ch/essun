@@ -1,0 +1,37 @@
+ 560 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A key epoch is used to help coordinate changing keys and ensure nonce (number used only once) 
+properties of the IV. This concept is different than changing the security association, which specifically 
+installs a new key. Changing the epoch performs two functions: 
+1. It changes a portion of the TSC, affecting the IV for the symmetric cipher to ensure uniqueness. 
+2. It MAY change the symmetric key if a KDF is used (e.g., cluster KDF mode). 
+The epoch MAY be global to the SDI or based on a source within the SDI. If a FEP leaves and rejoins a 
+domain for any reason where the TSC cannot be preserved, the SDME MUST coordinate either an epoch 
+update or a key rotation operation. The epoch MUST be a monotonically increasing number for the 
+same association (e.g., without a key rotation). An epoch is scoped within a security association and 
+MUST reset when a new key is installed. 
+The SDME is responsible for: 
+• Creating secure domains and assigning SDI values. 
+• Managing and updating the domain or source epoch. 
+• Admitting new FEPs to a secure domain (allowing them to join the secure domain). 
+• Managing SSI assignment to FEPs (this may directly use the source IP address). 
+• Distributing security parameters (SDK, AN, etc.) to FEPs within the secure domain. These 
+parameters are used to populate global or SDKDB configuration. This may include coordinating 
+the client-server KDF mode key distribution. 
+• Removing FEPS from secure domain. 
+• Coordinating key rotation. 
+3.7.4.1 Joining a Secure Domain  
+When a FEP joins a secure domain, the SDME assigns an SSI and provides security parameters. Once the 
+FEP receives the information from the SDME, the FEP is free to send or receive packets securely. The 
+SDME MUST provide a mechanism to ensure every FEP in the secure domain has current security 
+parameters before FEPs are allowed to send. 
+3.7.4.2 Removing a FEP from a Secure Domain 
+The SDME may administratively remove a FEP from a security domain at any time. This can be 
+accomplished in two ways. The first method is using the key rotation procedure defined in Section 
+3.7.5.1. The second method involves creating a new security domain without the FEP and transition the 
+remaining FEPS to the new domain. 
+3.7.4.3 Rejoining a Secure Domain  
+To ensure that a nonce is not reused, a FEP MUST either re-establish communication with SDME such 
+that the epoch can be updated or ensure that after reboot/power-failure the nonce is preserved such 
+that it is not reused. See Section 3.7.5.5 for more details. 

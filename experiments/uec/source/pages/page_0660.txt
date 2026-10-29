@@ -1,0 +1,41 @@
+ 660 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+and reclaim any leaked credits. The receiver makes corrections to its credit counters, and eventually the 
+sender’s S_VC_CF, S_VC_CU, and S_P_CU are also updated. 
+The CC_Update packet contains up to 16 of the sender’s S_VC_CC x  counter values carried in a 64-byte 
+MAC frame. The S_VC_CC[x] values in the CC_Update packet MUST include all credits consumed for 
+packets transmitted prior to the CC_Update packet and MUST NOT include any credits for packets to be 
+transmitted after the CC_Update packet. 
+A configurable time interval MUST be provided between generation of CC_Update messages 
+(CC_msg_timer). 
+5.2.5.7 Receiver Operations 
+5.2.5.7.1 Packet Reception Counter Updates 
+When a packet is received, the VC number of the packet is determined (mapped) from packet header 
+fields. The number of credits required by the packet is calculated in the same way that was done at the 
+sender.  Once calculated the receiver updates the VC credits consumed.  
+pktSize = size of the MAC frame in bytes 
+pktCredits = roundup((pktSize + PktOvhd) ÷ CreditSize) 
+R_VC_CC[x] = R_VC_CC[x] + pktCredits 
+ 
+Whether the packet is written into the receiver’s input buffer or accorded cut-through operation, 
+possibly bypassing the receiver’s data buffer, the R_VC_CC x  counter must be updated as shown in the 
+pseudocode above. If the packet is cut through without utilizing any buffer resources, the VC’s credit 
+freed counter must also be immediately updated as shown in Section 5.2.5.7.2. 
+5.2.5.7.2 Input Buffer Drain and Counter Updates 
+When a packet is removed from the receiver’s input buffer or is cut through, the packet’s VC number is 
+used to update the credit-freed counter by the packet’s credit usage: 
+pktSize = size of the MAC frame in bytes 
+pktCredits = roundup((pktSize + PktOvhd) ÷ CreditSize) 
+R_VC_CF[x] = R_VC_CF[x] + pktCredits 
+ 
+At this point, the R_VC_CF[x] is now eligible to be sent to the sender in the CF_Update message. 
+5.2.5.7.3 CF_Update Message Generation 
+CF_Update messages contain R_VC_CF[x] values from the receiver to the sender. They must be 
+generated based on any of the following triggers: 
+• The R_VC_CF[x] was updated, and the CF_min_timer has expired. 
+• When a single CF_max_timer exists and has expired. 
+o While permissible to generate CF_Update messages for all R_VC_CF[x] values, it is only 
+necessary to generate CF_Update messages for VCs that did not have an R_VC_CF[x] 
+update within the CF_max_timer interval. 
+• When a per-VC CF_max_timer[x] exists and has expired. 

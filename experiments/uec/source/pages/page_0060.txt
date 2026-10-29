@@ -1,0 +1,26 @@
+ 60 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+AI inference is often run only in scale-up networks because it does not require more than 100 endpoints. 
+HPC workloads are more diverse than AI training and AI inference. Some optimize for local versus global 
+networks, but many assume a flat address space driven by MPI. Many HPC workloads are expected to 
+optimize for scale-up networking once such architectures become prevalent in HPC. 
+1.4 Software 
+1.4.1 AI and HPC API Interface 
+UE is designed to support libibverbs and libfabric v2.0 APIs. UEC collaborates with the libfabric 
+community to allow an endpoint to interact with AI frameworks and HPC workloads. Some UE optional 
+features require support from network devices (e.g., switches) for advanced capabilities such as packet 
+trimming, CSIG, and INC. To that end, the network operating system (NOS) requires extensions to 
+support UE features. 
+UE does not currently address interactions across administrative domains. 
+1.4.2 Fabric Endpoint Software Stack 
+Figure 1-11 shows the software stack running on a FEP. 
+UE is designed to support existing AI training (AIT) and AI inference (AII) frameworks. These frameworks, 
+like TensorFlow, PyTorch, JAX, and others, are expected to work seamlessly on top of a UE software 
+stack. In other words, a goal of UE is to enable the migration of applications, relying on these 
+frameworks, to UE-powered nodes without requiring change. It is common for the frameworks to 
+leverage a hardware-dependent vendor-specific *CCL library. However, a UE-compliant *CCL library, 
+while not directly specified, does not require an application change. 
+ 
+Figure 1-11 - UE Software Endpoint Stack 
+ 

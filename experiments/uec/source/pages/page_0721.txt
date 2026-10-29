@@ -1,0 +1,89 @@
+ 721 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 5-40 - UFH_32 Field Names 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+flags 
+• v-bit 
+• w-bit 
+ 
+• rsvd 
+• rsvd 
+ 
+4 
+ufh.flags = [v, w, rsvd, rsvd] 
+• UFH version, with v=0 indicating the current version 
+• Indicates UFH width for v=0. Setting w=0 for 32-bit format, 
+w=1 for 16-bit format 
+• Reserved 
+• Reserved 
+da_encode 
+• z-bit 
+• y-bit 
+• x-bit 
+• m-bit 
+4 ufh.da_encode = [z, y, x, m] = Specified by IEEE Std 802 [2] 
+• SLAP quadrant encoding Z bit 
+• SLAP quadrant encoding Y bit 
+• Universal/Local encoding X bit 
+• Individual/Group encoding M bit 
+opaque 8 For use by higher-layer protocol 
+dst_addr 32 Destination address 
+hop_limit 4 Hop-limit processed by the forwarding function analogous to 
+processing of an IP router. See Section 5.4.6. 
+sa_encode 
+• z-bit 
+• y-bit 
+• x-bit 
+• m-bit 
+4 ufh.sa_encode = [z, y, x, m] = Specified by IEEE Std 802 
+• SLAP quadrant encoding Z bit 
+• SLAP quadrant encoding Y bit 
+• Universal/Local encoding X bit 
+• Individual/Group encoding M bit 
+dscp 6 Differentiated services code point aligned with IPv4/IPv6 usage. 
+Together with the ufh.ecn field it forms the IPv4 differentiated 
+services field or the IPv6 traffic class field. 
+ecn 2 Explicit congestion notification aligned with IPv6/IPv6 usage. 
+Together with the ufh.dscp field it forms the IPv4 differentiated 
+services field or the IPv6 traffic class field. 
+src_addr 32 Source address 
+ 
+Table 5-41 - UFH_16 Field Names 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+flags 
+• v-bit 
+• w-bit 
+ 
+• rsvd 
+• rsvd 
+ 
+4 
+ufh.flags = [v, w, rsvd, rsvd] 
+• UFH version, with v=0 indicating the current version 
+• Indicates UFH width for v=0. Setting w=0 for 32-bit format, 
+w=1 for 16-bit format. 
+• Reserved 
+• Reserved 
+da_encode 
+• z-bit 
+• y-bit 
+• x-bit 
+• m-bit 
+4 ufh.da_encode = [z, y, x, m] = Specified by IEEE Std 802 [2] 
+• SLAP quadrant encoding Z bit 
+• SLAP quadrant encoding Y bit 
+• Universal/Local encoding X bit 
+• Individual/Group encoding M bit 
+opaque 24 For use by higher-layer protocol 
+dst_addr 16 Destination address 

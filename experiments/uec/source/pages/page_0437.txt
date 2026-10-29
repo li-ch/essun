@@ -1,0 +1,26 @@
+ 437 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5. Galois Field (GF2) polynomial division of the message, M(x), by the generator polynomial, G(x), is 
+used to produce the remainder, R(x). 
+6. The calculation is performed in big-endian byte order with the least significant bit first. 
+7. The CRC value is the complemented value of R(x) and appended to the end of the UET payload 
+in network byte order. The 32 bits of the CRC value are placed after the UET payload as the UET 
+trailer, so that the x31 term is the left-most bit of the first octet, and the x0 term is the right-most 
+bit of the last octet. 
+If validation fails, the same processing is performed for UET over non-UFH addressing except when RODL 
+is used without PDS retransmission. This configuration is described in Section 3.5.10.5. 
+The UET CRC MUST be included when using the UFH_16 header. The CRC is required as it carries the PSN 
+state. The coverage when using the UFH_16 header is illustrated in Figure 3-122.
+ 
+The UET CRC is always located directly before the Ethernet FCS. When the sum of the UFH header, PDS 
+header, SES header(s) and SES payload is less than 56 bytes, sufficient padding is added after the last SES 
+payload to reach the 56-byte size. This assures the packet meets the minimum Ethernet frame size of 64 
+bytes when the 4-byte UET CRC and 4-byte FCS are added. 
+3.5.27 Padding of Ethernet Packets 
+Figure 3-123 shows example packets where pad bytes are used. The first packet is a RODL request 
+sending a read request over the UFH_32 header. The second is an ACK packet over the UFH_16 header.  
+ 
+ 
+ 
+Figure 3-122 - UET CRC coverage when using the UFH_16 header 

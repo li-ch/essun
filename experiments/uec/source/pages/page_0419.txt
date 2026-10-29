@@ -1,0 +1,25 @@
+ 419 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o In this case, when the next ACK is received with the next Expected_PSN+1, the source 
+will generate an ACK Request CP. 
+The sequence for cumulative ACKs with a lost ACK that has guaranteed delivery — item 2 in the list 
+above — is shown in Figure 3-108 and described as follows: 
+1. PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 332. 
+2. FEP-A sends two packets to FEP-B, PSN = 333 and 334. 
+3. Both arrive and are processed. 
+a. The PSN = 333 SES Response requires guaranteed delivery; PSN = 334 does not. 
+4. ACK for PSN = 333 is dropped. 
+5. When ACK for a packet with PSN = 334 is received, FEP-A determines that the 333 ACK was lost 
+and that it was guaranteed delivery. 
+a. The pds.sack_bitmap field indicates PSN = 333 arrived. 
+b. CACK_PSN is set to 332; because pds.sack_bitmap shows PSN = 333 arrived, the 
+CACK_PSN indicates 333 requires a clear. 
+6. FEP-A generates an ACK Request CP to request an ACK for PSN = 333. 
+7. FEP-B receives the ACK Request CP and generates the ACK for PSN = 333. 
+a. This carries the original SES Response, which was saved since it is guaranteed delivery. 
+8. When ACK with PSN = 333 is received, it is processed as well as any responses that were held to 
+be passed to SES in order. 
+9. FEP-A then updates the clear state to PSN = 334; this is used in the next message. 
+10. When the CLEAR_PSN = 334 reaches FEP-B, CACK_PSN is updated — in this case to 335, since 
+PSN = 335 is not guaranteed delivery. 

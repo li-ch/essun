@@ -1,0 +1,55 @@
+# Calibration-ladder GF-06 topology: unidirectional ring of 1,024
+# ranks at per-link B = 12.5 B/ns (the GF-06 anchor sim-config link
+# rate) and per-hop L = 1000 ns (declared import from GF-05's staged
+# UET-htsim per-hop decomposition). This is the stage's MULTI-HOP
+# SCHEDULE CONTRAST at the anchor's own stated scale: the identity
+# charges the per-hop latency 2*(r-1) = 2,046 times per AllReduce — a
+# latency chain of exactly 2,046,000 ns per op — against the crossbar
+# ceiling's 2; at equal B the ring-minus-crossbar difference is exactly
+# 2*(r-2)*L = 2,044,000 ns at EVERY payload size (identity, verified on
+# executed rows in the stage record). The ring's regime boundary lands
+# at M* = L*B*r = 12,800,000 B — exactly 1/8 of GF-05's M* =
+# 102,400,000 B (same L, r; B/8) — so the ladder members bracketing it
+# (8 MiB below, 16 MiB above) sit at the SAME M*-relative positions as
+# GF-05's 64/128 MiB bracket, and the ring/crossbar ratios there are
+# IDENTICAL to GF-05's (exactly 755997/299747 ~ 2.522 and
+# 7387083/4193333 ~ 1.762): the ratio at equal M*-relative position is
+# B-INVARIANT — recorded as the scale-invariance note of the A11/GF-05
+# displacement technique.
+#
+# WHY THIS ROW IS IN THIS STAGE: GF-06's headline results are
+# programmable-congestion-management effect sizes (3x max-FCT incast
+# speedup; REPS+ECMP 1.51-2.61x; reaction-delay 1.11-1.32x). This row
+# shows SCHEDULE STRUCTURE ALONE — an in-model choice, no congestion —
+# produces CCT swings of 1.76-2.52x at the M*-bracketing sizes and
+# unboundedly more below M*, at the anchor's own scale and link class:
+# inside the anchor's measured envelope band and beyond its smallest
+# (1.11x) effect. Schedule structure, the x8 two-user sim-config
+# spread, rank-count structure (<= +1/7), and the CM envelope
+# (1.11-3x) are separable confounders — the honest R3 classification
+# this stage records.
+#
+# HONESTY: the ring is a schedule-structure probe embedded in the
+# anchor's link class and scale — no schedule is claimed to be THE
+# PCM/uet-htsim behavior (the paper's FCT tables are unstaged); B and L
+# are free parameters placed at anchor quotes / declared imports, never
+# tuned. Every 1024*2^k grid size divides exactly (A-L0-DIV accepts, no
+# bracketing).
+topology_id: ring1024_gf06_simline12_5_v1
+topology_class: unidirectional_ring
+ranks: 1024
+link:
+  bytes_per_ns: 12.5
+  hop_latency_ns: 1000
+notes: >
+  One send and one receive direction per neighbor, modeled
+  independently; full-duplex uniform per-direction links (A-L0-FD).
+  Ring hops are single link traversals of GF-06's sim link rate (12.5
+  B/ns) at the imported per-hop latency (1000 ns). Identity
+  t = 2(r-1)/r*M/B + 2(r-1)*L; latency chain 2*(r-1)*L = 2,046,000 ns
+  at r = 1,024; regime boundary M* = L*B*r = 12,800,000 B. No
+  congestion, no credits, no packetization — L0 transport model only.
+  Provenance: B = 12.5 B/ns from GF-06's staged "100 Gbit/s links";
+  L = 1000 ns declared import from GF-05's staged per-hop
+  decomposition; values are anchor quotes / declared imports /
+  registry defaults, never our measurements.

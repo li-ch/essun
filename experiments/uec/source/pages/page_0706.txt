@@ -1,0 +1,60 @@
+ 706 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+      Signaled as the value 0x0."; 
+  } 
+  identity csig-compact { 
+    base csig-capable-selector; 
+    description 
+      "Indicates only CSIG compact tag service is available at this port. 
+      Signaled as the value 0x1."; 
+  } 
+  identity csig-compact-wide { 
+    base csig-capable-selector; 
+    description 
+      "Indicates CSIG compact and wide tag service is available at this port. 
+      Signaled as the value 0x2."; 
+  } 
+  identity csig-resv { 
+    base csig-capable-selector; 
+    description 
+      "Indicates CSIG compact and wide tag service is available at this port. 
+      Signaled as the value 0x3."; 
+  } 
+  identity ufh-version-selector { 
+    description 
+      "Specifies the UFH version on this port."; 
+  } 
+  identity ufh-first-version { 
+    base ufh-version-selector; 
+    description 
+      "Indicates UFH is the first version. Signaled as the value 0x0."; 
+  } 
+  identity ufh-update-version { 
+    base ufh-version-selector; 
+    description 
+      "Indicates UFH is an updated version. Signaled as the value 0x1."; 
+  } 
+  identity ufh-selector { 
+    description 
+      "Specifies the UFH encoding on this port."; 
+  } 
+  identity ufh-no { 
+    base ufh-selector; 
+    description 
+      "Indicates no UFH encoding. Signaled as the value 0x0."; 
+  } 
+  identity ufh-32 { 
+    base ufh-selector; 
+    description 
+      "Indicates 32-bit, UFH encoding format.  
+      Signaled as the value 0x1."; 
+  } 
+  identity ufh-16 { 
+    base ufh-selector; 
+    description 
+      "Indicates 16-bit, UFH encoding format.  
+      Signaled as the value 0x2."; 
+  } 
+  identity ufh-32-16 { 
+    base ufh-selector; 

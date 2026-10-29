@@ -1,0 +1,35 @@
+ 222 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Size  Description  Section Ref 
+message_offset 32 32-bit offset (in bytes) from the start of the 
+message.  
+ 
+request_length 32 Table 3-9. The request length field MUST be 
+populated both when ses.som=1 and ses.som=0. 
+ 
+ 
+A special case form of the UET_HDR_REQUEST_STD format is used for deferrable sends (Figure 3-13). 
+Deferrable sends are designed for *CCL-style messaging where unexpected messages may occur, and 
+the sequence of messages in a deferrable send is illustrated in 3.4.5.4. Deferrable sends always deliver 
+data starting at the first byte of the receive buffer; thus, deferrable sends do not require a buffer offset 
+field. This allows the offset in UET_HDR_REQUEST_STD to be replaced by a restart token, which is 
+broken into an initiator restart token and a target restart token. The upper half of the restart token is 
+entirely defined by the initiating FEP. This allows implementations to choose how the bits are populated 
+and how they are encoded. The lower half is set to zero in the initial request and contains the target 
+restart token when the operation is restarted using a ready-to-restart message. 
+The ready-to-restart (RTR) message (Figure 3-14) in the deferrable send sequence uses a similar special 
+case. In the ready-to-restart message, the restart token is placed in the match bits. This consists of an 
+echo of the initiator restart token as well as a restart token allocated by the target. The target is not 
+required to allocate a restart token. If the target does not allocate a restart token, it MUST populate the 
+target restart token field with 0. If the target allocates a restart token, it MUST accept the restarted 
+deferrable send. If the target does not allocate a restart token, it MAY defer the deferrable send again. 
+An offset from the start of the buffer originally being sent is placed in the buffer offset field. This buffer 
+offset is limited to the range 0 to 232-2 and is used to select the portion of the transfer that the target 
+did not capture when it was first transmitted. When the deferrable send restarts, it creates a new 
+message using the format in Figure 3-13 and carries the full restart token (initiator restart token and 
+target restart token) that was provided in the RTR message. As with all other send operations, the offset 
+relative to the start of this new message is carried in the header data field. When the deferrable send 
+restarts, it MUST set the ses.som bit. A deferrable send can only be restarted if a corresponding buffer is 
+not found at the target. A deferrable send MUST be restarted using an RTR message containing a target 
+restart token value other than 0 exactly once and MUST NOT be deferred after being restarted by an 

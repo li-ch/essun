@@ -1,0 +1,18 @@
+ 629 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Whether a switch supports processing of a new signal type is NOT discoverable through LLDP. Such 
+discovery is not necessary, as a switch receiving a packet with a CSIG tag for an unsupported signal type 
+can still parse and forward the packet correctly. Instead, the central management entity is responsible 
+for configuring switches that receive a packet with a CSIG tag for an unsupported signal type to either 1) 
+CSIG-Strip-and-Forward() the packet or 2) CSIG-Forward() the packet while preserving the CSIG tag 
+unchanged. A deployment will specify which one of a few policies to follow when a switch receives a tag 
+for a signal type it does not implement (e.g., Forward() without updating the tag or CSIG-Strip-and-
+Forward()). 
+4.2.11 References 
+[1]  W. Wang, M. Moshref, Y. Li, G. Kumar, T. E. Ng, N. Cardwell and N. Dukkipati, "Poseidon: Efficient, 
+Robust, and Practical Datacenter {CC} via Deployable {INT}," in 20th USENIX Symposium on 
+Networked Systems Design and Implementation (NSDI 23), 2023.  
+[2]  IEEE Std 802.1Q-2022, "IEEE Standard for Local and Metropolitan Area Networks – Bridges and 
+Bridged Networks," 2022. [Online]. Available: https://ieeexplore.ieee.org/document/10004498. 
+  

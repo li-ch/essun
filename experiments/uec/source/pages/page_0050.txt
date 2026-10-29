@@ -1,0 +1,32 @@
+ 50 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+HPC workloads. Horizontal scaling involves adding more endpoints and/or fabric switches. Vertical 
+scaling involves endpoint expansion by adding more processing, memory, and/or storage. 
+Algorithm and model evolution is outpacing the hardware (mainly on memory, storage, and network 
+aspects). An optimal system balances a triangle of compute, network (i.e., fabric), and the associated 
+data (i.e., model parameters and training data). The UE specification explicitly addresses network 
+technology and implicitly addresses other elements. 
+The UE specification addresses distributed workloads, whether they are AI or HPC, and naturally inherits 
+some nomenclature from parallel computing. Figure 1-5 provides a system overview of the parallel 
+computing components, terms, and concepts addressed by the UE specification. The following text 
+provides a high-level overview and introduction of the UE environment and associated nomenclature.  
+Technical details of the procedures, protocols and operation of the components specified in this 
+standard are provided in subsequent normative chapters. 
+UE is specified to operate within a cluster, which includes an interconnection of nodes through a fabric. 
+A port implements a single Media Access Control (MAC) as defined by IEEE Std 802.3, optionally 
+including any UE specific extensions, as required by the UET profile it complies with. A link connects two 
+ports. A fabric interface (FI) is a physical entity that provides one or more ports and exposes one or more 
+fabric endpoints (FEPs) to one or more operating system instances (OSIs). A fabric address (FA) is either 
+an IPv4 or IPv6 address, and a FEP is a logically addressable entity assigned a single FA. The UE transport 
+protocol terminates at a FEP, optionally including a security context. Specifically, a FEP can only be used 
+by a single OSI, and a node may have one or more FEPs. Each OSI may use one or more FIs with one or 
+more FEPs to connect to a fabric. 
+A switch has two or more ports and is a packet forwarding device that is part of the fabric. Packets are 
+forwarded along a path based on forwarding information that includes the packet’s FA, other header 
+fields (e.g., the UDP source port used as an entropy value), and switch state. Any two packets with the 
+same path forwarding information are expected to take the same path through the fabric. A fabric plane 
+is a set of FEPs connected with links and optionally switches allowing any FEP to communicate with 
+other FEPs in the same set. Communication between FEPs across different fabric planes is beyond the 
+scope of this specification. A path exists within a fabric plane, but not across fabric planes. A fabric is 
+made up of one or more fabric planes. 

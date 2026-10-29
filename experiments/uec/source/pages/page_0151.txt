@@ -1,0 +1,39 @@
+ 151 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.3.7 Job Keys 
+Job keys functionally import a device-level job object into a specific protection domain. A job key 
+provides a secure mapping between a user-accessible value and the corresponding transport JobID. QPs 
+may access JobIDs only where the job key and the QP share the same PD. Job keys enable processes to 
+share job information, including the address table, while maintaining separate memory registrations. 
+2.3.7.1 JKey 
+A JKey is a vendor-assigned value to a job key. A JKey is to a JobID as an LKey is to an MR. The JKey value 
+is submitted as part of a work request to target a specific job. When address tables are being used, a 
+JKey is paired with an address index to identify a target QP. 
+2.3.8 Work Requests 
+Work requests over UET QPs require additional information, including larger-sized data fields, than 
+those provided by RDMA verbs. UET verbs defines extended QP operations to configure work requests. 
+Extended operations are required to support: 
+• 64-bit immediate data 
+• 64-bit RKey and LKey 
+• JobID (i.e., JKey) 
+• Extended address handle 
+• Address table index (i.e., index into the JobID’s address table when the extended address handle 
+is not specified) 
+2.3.9 Immediate Data Support 
+A NIC may support RDMA and UET protocols. Such NICs may implement transport neutral methods for 
+handling immediate data. To allow NIC implementations that are optimized for legacy RDMA protocols, 
+the UET verbs implementation may expose device restrictions on immediate data used by applications. 
+Restrictions may include: 
+• Preventing an RDMA write with immediate data to consume a receive buffer at the target. 
+• The maximum size of immediate data written to the CQ. 
+A new device capability is exposed that specifies if 64-bit immediate data is supported. If it is supported 
+and the underlying transport (i.e., UET) also supports 64-bit immediate values, then the application can 
+use 64-bit values. If not supported and the application uses a 64-bit value, the upper 32 bits will get 
+truncated. Similarly, if the transport does not support 32-bit immediate values, yet the device advertises 
+64-bit support, any 64-bit value used by the application over that transport will get truncated. 
+2.3.10 Work Completions 
+UET verbs defines extended CQ operations to report larger and additional completion data. Extended 
+operations are required to report: 
+• 64-bit immediate data 
+• JobID 

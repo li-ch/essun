@@ -1,0 +1,37 @@
+ 237 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Size Description Section Ref 
+return_code 6 Indicates success conditions and some 
+types of error conditions detected at the 
+semantic sublayer. 
+3.4.7.3 
+rsvd 2 Reserved  
+payload_length 14 Length of the payload for a response with 
+data. This field serves at the modified 
+length as well. For two-operand atomics, 
+this value contains the length of the 
+datatype in the typical case. 
+Note: These bits are reserved in a semantic 
+response without payload. 
+ 
+rsvd 8 Reserved  
+JobID 24 JobID of the original request. 0 
+3.4.2.4.1 
+original_request_psn 32 The PSN of the original request (either 
+fetching atomic or read) that yielded this 
+return data. 
+3.4.2.15 
+ 
+Informative Text: 
+The original request PSN is provided for the case where the returned data is larger than the 
+Max_ACK_Data_Size in PDS. In these cases, the data is returned on the response direction channel 
+using a separate sequence number space. As such, the original request PSN is needed to reconcile the 
+optimized response header with the original request.  
+ 
+3.4.3.8 Semantic Response Header Formats for the Unified Local Profile 
+In addition to optimizing the request header formats for the Unified Local profile, an optimized header is 
+provided for responses as shown in Figure 3-28 and Table 3-19. If any semantic request that is packed 
+into a single PDS packet has a semantic response that is not UET_DEFAULT_RESPONSE, then each 
+semantic request from that packet MUST have a corresponding semantic response in the PDS 
+acknowledgement. See Section 3.4.4.4 for additional details. 

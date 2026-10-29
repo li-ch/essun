@@ -1,0 +1,26 @@
+# W1 Dense TP Decode — tp_size 64 at payload 64 B (the ladder base;
+# overridden per grid cell): the GF-07 SCALE-SWEEP workload at the
+# anchor's largest STAGED exact node count — "bursty incast 64 nodes: a
+# ratio of approximately 0.08 (i.e., 12x slower)" and the Leonardo
+# collapse range "32–64 nodes" (arXiv:2604.11432;
+# docs/calibration/anchors_gapfill.md §GF-07). The scale sweep executes
+# the non-blocking crossbar CEILING abstraction at B=100 B/ns (LUMI's
+# staged per-node aggregate), the same ceiling displaced by the anchor's
+# WORST congestion factor 25x (CRESCO8 "slowdowns up to 25x"), and the
+# ring as the multi-hop schedule contrast. Payload grid: 19-size ladder
+# 64*2^k (64 B -> 16 MiB) — every size divisible by r=64 (A-L0-DIV /
+# A-L0X-DIV accept, no bracketing), ending exactly at the anchor's
+# maximum staged vector 16 MiB and bracketing the ring regime boundary
+# M* = L*B*r = 200*100*64 = 1,280,000 B (1 MiB member below, 2 MiB
+# member above). r=64 is a power of two (A-L0D-POW2 native). NOTHING
+# here is a prediction of the anchor's fabrics: no congestion, no
+# incast tree, no DCQCN/NSLB/adaptive-routing mechanism exists at L0 —
+# the rows execute STRUCTURAL placement and contrast arithmetic only.
+# Nothing measured or standard-normative; integer byte counts;
+# deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf07-tp64
+tp_size: 64
+layers: 2
+steps: 3
+allreduce_bytes: 64   # 64 B ladder base (overridden per grid cell); free parameter A-W1-SIZE

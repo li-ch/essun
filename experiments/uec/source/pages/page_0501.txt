@@ -1,0 +1,40 @@
+ 501 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The RCCC oversubscribed congestion control algorithm is derived from HPCC [57]. HPCC is a sender-
+based algorithm that computes a congestion window based on network information. It relies on in-band 
+network telemetry to compute the maximum queue depth across all hops and maximum relative 
+bandwidth utilization across all hops. 
+Informative Text: 
+HPCC’s key measure of network congestion is U, computed as an EWMA of max(queue_length) / 
+BDP + utilization where queue_length and utilization are instantaneous values measured using in-
+band network telemetry by data packets and then reflected in ACK packets. The algorithm adjusts 
+the CWND to control U to reach a configured setpoint (U_Target). 
+RCCC adapts HPCC to work in the context of UET and at the receiver. The key modifications are: 
+• Instead of updating the sender congestion window, it modifies the credit rate of the 
+receiver. 
+• Instead of requiring in-band network telemetry, RCCC uses congestion signaling when 
+available. 
+• When CSIG is not available, ECN and packet trimming are used to estimate queue length 
+and network utilization. The presence of the CSIG tag in incoming packets is used to select 
+between CSIG- and ECN-based operation on a per-packet basis. 
+• HPCC needs to carry all the in-band telemetry information to the sender to enable it to 
+make congestion control decisions. RCCC uses the information at the receiver, and thus 
+does not need to relay the information to the sender; hence no protocol changes are 
+needed. 
+ 
+CSIG provides only bottleneck hop information instead of per-hop information, but this is 
+sufficient for congestion control. RCCC can use the optional maximum normalized queue depth 
+CSIG signal (max(nQD)) or the mandatory maximum hop delay (maxDelay), which provides the 
+maximum latency a packet experienced in any switch along the path (this value is quantized). 
+The latter is directly correlated with queue length but is a lagging signal. These signals have been 
+found to work similarly; they do, however, require different configuration parameters values to 
+work well. 
+HPCC uses network utilization estimation to be able to operate without standing queue (thus 
+slightly underutilizing the network) and to enable fast increases when utilization is low. In the 
+context of RCCC, the aim is to fully load the network core, so the target utilization will be set to 
+1.5-1.75 of base RTT, resulting in an operating point similar to NSCC (0.75 base RTT setpoint). An 
+approximation of utilization = 1 is therefore used, at the cost of slower increases in underutilized 
+networks. Preliminary experiments using this approach demonstrate strong performance. 
+To improve the accuracy of utilization information and to enable faster increases under low 
+network load, the min(ABW/C) CSIG signal may be used. Because each packet can only carry one 

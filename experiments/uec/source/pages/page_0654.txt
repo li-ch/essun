@@ -1,0 +1,27 @@
+ 654 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 5-7 - Architectural Position of CBFC in Ethernet Functional Layer Model 
+5.2.5.2 Configuration Parameters and Initialization 
+Several configuration parameters must be initialized at both the sender and receiver with compatible 
+values for correct operation.  These configuration parameters are shown in Table 5-14. 
+Table 5-14 - Configuration Parameters and Initialization 
+Configuration 
+Parameter 
+Description 
+CreditSize The number of bytes represented by each credit. This must be a function of the size of 
+the receiver’s buffer allocation unit, or “cell size.” 
+NumVCs The number of virtual channels supported on the link. 1 ≤ NumVCs ≤ 32.  
+TotalCredits The total number of credits available at the receiver. Must be set to a positive value 
+based on the receiver’s buffer size. 
+VC_CreditLimit[x] The maximum number of credits allowed for VC[x]. 
+PktOvhd The number of bytes required on a per-packet basis as overhead in the receiver’s input 
+buffer. The total number of bytes required at the receiver’s buffer for a single packet 
+equals PktOvhd + (frame size in bytes) rounded up to the credit size. This total size is 
+used to determine the number of credits required to transmit a packet. If a part of 
+each packet is not stored in the receiver’s input buffer, for example, the CRC may be 
+stripped before storing, then PktOvhd may be a negative value. 
+ 
+The number of credits is a function of the receiver’s buffer implementation. CBFC supports two methods 
+of setting credit limits: 

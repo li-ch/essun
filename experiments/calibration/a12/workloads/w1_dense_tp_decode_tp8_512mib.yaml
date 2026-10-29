@@ -1,0 +1,24 @@
+# W1 Dense TP Decode — tp_size 8 (the CAL-A12 anchor's own rank count:
+# one 8-GPU A100 server; docs/calibration/anchors_staging.md §A12) at
+# the 512 MiB payload 536870912 B = 8*2^26: a bandwidth-bound member of
+# this stage's 12-size ladder (8 KiB -> 8 GiB, every size 8*2^k so r=8
+# divides every size and the A-L0-DIV / A-L0X-DIV input gates ACCEPT the
+# exact ladder with no bracketing). The ladder and anchor-point size are
+# IDENTICAL to the A7 record's r=8 grid, so A7/A12 executed rows are directly
+# comparable at equal (r, M). CAL-A12 publishes no message sizes (it is
+# a derating anchor, not a series), so the anchor-point size is declared
+# as the same bandwidth-bound middle member A7 chose (latency term
+# ~0.02% of CCT in the executed identities).
+#
+# Stage A12's store runs execute this file (the anchor-point size); the
+# sweeps override per config via grid.payload_sizes_bytes.
+#
+# Same workload shape as every other W1 file (2 layers x 3 decode steps
+# = 6 AllReduce ops per config). Nothing here is measured or
+# standard-normative; integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal8-a12
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 536870912   # 8*2^26 (512 MiB); free parameter A-W1-SIZE

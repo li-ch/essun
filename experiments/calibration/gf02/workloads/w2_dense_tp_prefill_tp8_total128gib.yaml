@@ -1,0 +1,20 @@
+# W2 Dense TP Prefill — tp_size 8 (the GF-02 anchor's own rank count) with
+# ONE ReduceScatter+AllGather pair at chunk_bytes = 137438953472 B = 2^37:
+# the ALLGATHER side of the anchor at its own top row. A-L0P-MSG semantics:
+# the AllGather op's M is the TOTAL gathered size, so M = 2^37 = 8 x 2^34
+# means every rank contributes 2^34 B (16 GiB — exactly the anchor's
+# all_gather_perf table row "-e 16384M") and ends with 2^37 B (128 GiB);
+# nccl-tests prints the per-rank contribution as "size", and its pinned
+# convention (algbw = size x nranks / t, busbw = algbw x (r-1)/r; verified
+# from src/all_gather.cu fetched 2026-10-28) maps the plateau to the same
+# B = 360 reading as the allreduce side. 2^37 is divisible by 8 (A-L0P-DIV
+# accepts, no bracketing). The paired ReduceScatter op carries the same M
+# and is recorded by the run; the AllGather row is the calibration target.
+# Nothing measured or standard-normative here; integer byte counts;
+# deterministic by construction.
+workload: w2_dense_tp_prefill
+model_name: dense-tp-prefill-cal4-gf02
+tp_size: 8
+layers: 1
+chunks_per_layer: 1
+chunk_bytes: 137438953472   # 2^37 (128 GiB total gathered = 8 x the anchor's 16 GiB allgather row); free parameter A-W2-CHUNK

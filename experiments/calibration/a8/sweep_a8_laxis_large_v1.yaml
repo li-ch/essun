@@ -1,0 +1,40 @@
+# Calibration-ladder A8 sweep, bandwidth-bound contrast regime : the same LATENCY-AXIS placement as
+# sweep_a8_laxis_small_v1.yaml, executed at the A-W1-SIZE registry range's
+# upper endpoint (16 MiB = 2^24) to quantify WHERE CAL-A8's axis
+# disappears from model output — in the bandwidth-bound regime the L term
+# is a ~0.03-5.8% share of CCT across the whole registered L span, so the
+# CXL-class latency points the anchor contributes are invisible in O-CCT
+# here (the mirror image of the 16 KiB sweep, where they are 66.7-86.2%).
+#
+# NOTHING IS TUNED: identical L span {10, 64, 140, 200, 800, 2000} ns at
+# fixed B = 64 B/ns (registry point), r = 8 (free smoke default), fixed by
+# the same registry/anchor/plan arithmetic as the small sweep BEFORE any
+# stage output was read. The anchor stages no message size — the 16 MiB
+# choice is the registry range upper endpoint, a declared model-side
+# regime choice. Every delta below is an arithmetic fact of
+# t = 2(r-1)/r*M/B + 2(r-1)*L.
+#
+# 16777216 = 2^24 is divisible by r = 8, so the A-L0-DIV gate ACCEPTS the
+# size exactly — no bracketing.
+#
+# Baseline = the registry point (L = 200): delta columns read directly as
+# placement of every L setting against the repo-wide default latency.
+sweep: cal_a8_laxis_large_v1
+workload: experiments/calibration/a8/workloads/w1_dense_tp_decode_tp8_16mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/a8/topologies/ring8_a8_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [16777216]   # 2^24 (16 MiB); registry range upper endpoint; gate-accepted
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a8/topologies/ring8_a8_l10_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l64_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l140_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l200_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l800_v1.yaml
+    - experiments/calibration/a8/topologies/ring8_a8_l2000_v1.yaml

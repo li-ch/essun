@@ -1,0 +1,39 @@
+# Calibration-ladder A2 topology: fully-connected crossbar of 72 ranks at
+# the CAL-A2 anchor point — per-GPU per-direction injection B = 900 B/ns.
+# Provenance is CAL-A2's own staged numbers (docs/calibration/
+# anchors_staging.md §A2, NVIDIA GB200 NVL72 product page): 1.8 TB/s
+# bidirectional NVLink bandwidth per GPU; the staging doc states the split
+# (= 900 GB/s per direction), so per-direction 900 B/ns is a STAGED
+# DERIVATION, flagged as interpretation risk if quoted as measured
+# (decimal units, 1 GB/s = 1 B/ns).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), not a value taken from
+# any standard; 900 B/ns is where the sweep's anchor-point row sits, chosen
+# BY THE ANCHOR's own staged arithmetic, never tuned toward any model
+# output. CAL-A2 is a SPEC CEILING, never an achieved value. The
+# single-port model (one shared injection port per rank, A-L0X-PORT) is a
+# modeling assumption the plan keeps (KEEP for NVSwitch-class fabrics).
+# L = 200 ns is the registry point of A-L0X-LAT (KEEP; the latency axis is
+# swept by a later global stage, not here).
+#
+# Scale note (plan §2.1 A-L0X-BW, NARROW scale): 900 B/ns is the top of
+# the anchor-informed per-rank aggregate injection span [448, 900] B/ns
+# (MI300X-class 448 .. NVL72-class 900); the smoke point 64 B/ns sits an
+# order below this anchored scale, so this stage sweeps B only at the
+# anchored scale. Consistency with stage A1: the CAL-A1 port arithmetic
+# (18 ports x 50 B/ns) lands on exactly the same 900 — recorded there as a
+# cross-anchor note; here it is the anchor's own product-page quote.
+topology_id: crossbar72_a2_ceiling900_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 900
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency; single-port injection shared across the 71 peers. No congestion,
+  no credits, no packetization — L0 transport model only. Labeled
+  provenance for every number: B from CAL-A2's staged per-GPU quote
+  (anchor PROPOSED in the anchor registry; spec ceiling, never an achieved value),
+  L from the free A-L0X-LAT registry point.

@@ -1,0 +1,37 @@
+ 62 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The control plane software interacts with data plane functionality through an abstract API. One example 
+interface is the switch abstraction interface (SAI) developed in the Open Compute Project (OCP). SAI 
+provides an abstraction layer on top of a vendor-provided software development kit. This abstraction 
+helps the NOS interact with a single consistent set of APIs for hardware programming. See the following 
+references: 
+• <https://www.opencompute.org/wiki/Networking> 
+• <https://www.opencompute.org/wiki/Networking/SAI> 
+The INC functionality includes an INC manager (IM) with specified APIs as discussed in Section 2.4. An 
+SDN controller may be part of UE implementations but is not within scope of the UE specifications.  
+1.5 Networking 
+1.5.1 AI and HPC Network Taxonomy 
+UE differentiates three network types as illustrated in Figure 1-13: 
+1. Frontend network 
+2. Backend scale-out network 
+3. Local scale-up network 
+1.5.1.1 Frontend Network 
+The frontend network is the operational network in datacenters that connects all compute nodes to the 
+outside world (e.g., other datacenters or end customers on the Internet). This makes the frontend 
+network one of the most important components in the datacenter. Any loss of availability in the 
+frontend transport leads to direct customer impact and related costs. Because the frontend network 
+connects customers and distant datacenters, it may support a variety of transport protocols (e.g., 
+TCP/IP, UDP/IP, and QUIC) that can operate over long-distance links with millisecond-level delays. 
+Furthermore, multi-tenancy of the compute node is frequently used and may require network overlays 
+to support virtual machine migration and network virtualization.  
+Fundamentally, frontend networks carry two types of traffic: “north-south” (NS) traffic to and from the 
+outside world (i.e., other datacenters and customers) and “east-west” (EW) traffic from network 
+endpoints within the same datacenter. Each traffic type has fundamentally different characteristics. For 
+example, EW traffic is often higher bandwidth than NS traffic, and packets are less “valuable” (i.e., they 
+can be discarded and retransmitted at lower cost than for NS traffic). Furthermore, EW traffic usually 
+has more stringent latency (i.e., microseconds) and higher bandwidth requirements (e.g., tens-of-
+gigabit/s) as it often connects diverse services, such as deep call chains of microservices, serverless 
+functions, or storage access. NS traffic is often customer-facing, and bottlenecks often occur outside the 
+datacenter. These characteristics may limit latencies to single-digit milliseconds and tens-of-megabit/sec 
+bandwidths. 

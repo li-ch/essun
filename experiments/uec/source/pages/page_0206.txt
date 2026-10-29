@@ -1,0 +1,41 @@
+ 206 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+In libfabric, RMA operations (e.g., fi_write(), fi_read()) utilize a 64-bit memory key. The wire formats 
+provide two encodings of the key information for these operations. In one mechanism, only the {JobID, 
+PIDonFEP, Resource Index} tuple is available in the UET header, and this chooses exactly one buffer. In 
+this mechanism, the key pass through the libfabric API uses an encoding that is compatible with an 
+abbreviated encoding on the wire—essentially placing all key information needed for addressing into 
+the Resource Index itself. In the second mechanism, the wire protocol provides 64 bits for transporting 
+the memory key (i.e., ses.memory_key). The {JobID, PIDonFEP, Resource Index} tuple selects a set of 
+resources associated with a libfabric endpoint where the key has meaning and selects the completion 
+queue for delivering libfabric completion data (i.e., the ses.header_data field in the transport header 
+that is analogous to the immediate data for an RDMA Write-with-Immediate). The libfabric mapping 
+specification fully defines the memory key encoding and how that encoding is utilized to create the 
+relevant transport header formats. 
+3.4.2.4 Authorization 
+After addressing a buffer, access to that buffer MUST be authorized as specified in 3.4.2.4.1 and 
+3.4.2.4.2. The security mechanisms outlined in the security chapter assist in establishing the identity of 
+the sending device and authenticity of the header fields. Beyond that, the JobID plays a key role in 
+buffer access authorization. 
+3.4.2.4.1 Job Identifier (JobID) and Authorization 
+The JobID MUST be assigned by or validated by a trusted layer within the initiating node (3.4.8.1). This 
+can be within the FEP or OS—if the OS is part of the network trust boundary for a given deployment. The 
+JobID can be assigned in any way that the provisioning system sees fit. 
+For every access to a buffer, the implementation MUST apply a mechanism to validate that the JobID is 
+allowed to access the buffer. This mechanism can be as simple as the JobID being a required part of the 
+mechanism to address the buffer (e.g., in relative addressing). In absolute addressing, this can require 
+checking the JobID for each buffer. Implementations MUST support at least one JobID, and an 
+implementation MAY support only one JobID and support only relative addressing or direct memory 
+addressing; such an implementation can simply check the JobID of every inbound transaction. However, 
+an implementation that simply checks that a JobID is one of a set supported by the FEP, without further 
+applying a mechanism (e.g., relative addressing or a per-buffer check) to validate that JobID can access 
+the buffer, is not sufficient. 
+3.4.2.4.2 Encryption and Authorization 
+Encryption is optionally supported and described in the transport security subsystem. The primary 
+purpose of encryption in UET is to secure data and authenticate headers. Enforcement of fabric 
+Informative Text: 
+In libfabric, a memory key uniquely identifies a memory region that is the target of an RMA operation 
+(e.g., fi_read()).  The memory key in libfabric may be used to encode various information. The 
+memory key is controlled by the provider implementation, which is how various usages and 
+structures of the memory key achieve interoperability. 

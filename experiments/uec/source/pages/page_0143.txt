@@ -1,0 +1,29 @@
+ 143 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+have their own assigned JobIDs and clients will use that JobID when sending messages to the server. 
+Reverse traffic from a server to clients will use separate JobIDs per-client. 
+ 
+Figure 2-16 shows the relationships between UET verbs objects for absolute addressing. At the top level 
+is the PD, which is associated with a PIDonFEP. Every QP and MR allocated under a PD will be associated 
+with that PD’s PIDonFEP. The server can receive a message on any JobID but can send only on job keys 
+allocated under the PD. 
+ 
+Figure 2-16 - Verbs Absolute Addressing Model 
+UET verbs maintains a flexible access model to MRs for absolute addressing on a server. MR access 
+restrictions to a client can be: 
+• MR is unrestricted on the PIDonFEP. Any client may access it using any QP that shares the PD. 
+• MR is restricted to a client’s JobID (i.e., job-restricted). Only that specific client may access it 
+using any QP that shares the PD. 
+• MR is restricted to a QP (i.e., RI restricted). Any client may access it using only that QP. 
+• MR is restricted to a client’s JobID and restricted to a QP (i.e., RI job restricted). Only that 
+specific client may access it using only that QP. 
+2.3.3.2 Relative Addressing Model 
+ 
+Informative Text: 
+The relative addressing model targets a parallel application running under a specific JobID. Like 
+absolute addressing, the PD is associated with a PIDonFEP. Additionally, it’s associated with a JobID. 
+All QPs will be associated to their PD’s JobID and PIDonFEP. Similarly, MRs will receive only data that 
+target the PD’s JobID and PIDonFEP. Messages sent can target only job keys allocated under the PD. A 
+job key may reference a different JobID than that associated with the PD. This enables a parallel 
+application to communicate with a server as a client, for example. 

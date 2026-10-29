@@ -1,0 +1,38 @@
+ 507 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The values of tfc_dest_cell_size and tfc_pkt_overhead cannot be modified on an active PDC. Either their 
+default values MUST be used, or any non-default values MUST be configured or communicated out of 
+band prior to data being sent on the PDC. 
+3.6.15.1 Examples of credit_used calculation 
+The values of UET payload size, tfc_dest_cell_size and tfc_pkt_overhead determine the amount of 
+credit required to send a packet. 
+For example, to send an UET payload size of 4096 bytes with a tfc_dest_cell_size set to 512 bytes and 
+default tfc_hdr_size, then: 
+tfc_dest_cell_size = 512B (configured value) 
+tfc_pkt_overhead = 256B (default value) 
+tfc_pkt_size = UET payload + tfc_pkt_overhead 
+credit_used = ROUNDUP(tfc_pkt_size/tfc_dest_cell_size)*tfc_dest_cell_size 
+ 
+Thus with a 4096 byte UET payload, tfc_pkt_size is 4096 + 256 = 4352 bytes. 
+Sending a tfc_pkt_size of 4352 bytes requires 4352/512 = 8.5 cells; rounded up this requires 9 cells, and 
+so credit_used = 4608 bytes. 
+Alternately, a destination may wish to maintain data structures for packet buffers on a per-packet basis. 
+In such a case, tfc_dest_cell_size would be set to the maximum value of 9216 bytes. Sending the same 
+4 KB packet would use the same tfc_pkt_size of 4352 bytes, but this would require only one 9126-byte 
+cell. The credit_used would then be 9216 bytes. Such a destination would then allocate n * 9216 bytes 
+of credit for n packet buffers. 
+3.6.15.2 TFC Credit Initialization 
+When a TFC PDC is created, the ccc.credit value MUST be set to tfc_pkt_overhead or a larger configured 
+value, but it cannot be less than tfc_pkt_overhead. The intent of setting the initial credit to 
+tfc_pkt_overhead is to permit the source to send an SES NO_OP packet that contains a credit request in 
+the pds.req_cc_state.credit_target field, allowing the source to request enough additional credit to 
+send data. If an implementation reports a tfc_pkt_overhead of 0, a larger configured value should be 
+used. The rationale for using an SES NO_OP instead of a Credit Request CP to request initial credit is that 
+an SES NO_OP can bring up a PDC, whereas a Credit Request CP cannot. The ACK for the SES NO_OP may 
+carry the available credit, or a separate Credit CP may be used. 
+Once a PDC is established, if more credit is required than initially requested, the source can convey this 
+to the destination using the pds.req_cc_state field in PDS Request packets or the pds.payload field in 
+Credit Request CPs. The pds.payload field and Credit Request CP is used in the same way as RCCC. It 
+carries a pds.payload.ccc_id to identify the CCC context at the source and a pds.payload.credit_target 
+field, which carries the cumulative amount of credit requested since the CCC was created. 

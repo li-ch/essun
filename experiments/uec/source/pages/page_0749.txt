@@ -1,0 +1,38 @@
+ 749 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• From 6.3.1.2, the MTBPE can be estimated as 6.4e-9/2e-19=3.2e10 seconds, or about 1000 
+years. Thus, node C is not expected to experience frequent PHY errors. 
+• The software agent can report the estimated MTBPE to a network monitoring system that 
+aggregates information from all ports on the network. If all 1000 nodes in the network report 
+similar MTBPE estimates, the full network is expected to have a PHY error once a year.  
+6.3.3.3 Planning a large-scale network with reliability requirements 
+Consider a plan to build a network with 1 million links of 100 Gb/s each. Two options for reliability 
+requirements are considered: 
+• Option A targets minimization of retransmissions due to PHY errors, with a requirement that the 
+network-wide MTBPE is less than once per day. 
+• Option B assumes that occasional retransmissions are acceptable and allows a network-wide 
+MTBPE up to once per minute. 
+Assuming that all links have the same performance, the minimum MTBPE on each link has to be at least 
+1 million days (8.6e10 seconds) for option A or 1 million minutes (6e7 seconds) for option B. 
+At 100 Gb/s, the codeword period is 51.2 ns (see 6.3.1.2), so these requirements can be translated to a 
+maximum UCR of approximately 6e-19 for option A or approximately 8.5e-16 for option B. 
+Assuming that all nodes have observable FEC_codeword_error_bin_i counters, the estimation method 
+in 6.3.2.3 can be used. Using the approximate log-linear relationships shown in Figure 6-2, the maximum 
+allowed values of P6, P8, and P10 are approximately 1.6e-5, 7.5e-8, and 2.1e-10, respectively, for option A 
+or 2.1e-4, 2.5e-6, and 1.8e-8, respectively, for option B. 
+From Table 6-12, at 100 Gb/s, Ntotal is approximately 1.2e9 per minute. To verify the UCR requirements, 
+network agents on each node can read the FEC_codeword_error_bin_i counters once per minute. With 
+this observation period, the values of N6, N8, and N10 corresponding to the maximum UCR are 
+approximately 19 800, 90, and 0.26, respectively, for option A or approximately 257000, 2990, and 22, 
+respectively, for option B. 
+With either option A or option B, if the counters exceed the maximum values on any of the nodes, that 
+node might fail the per-node UCR requirement, and the link associated with it can be considered a weak 
+link. However, the overall network performance can still be acceptable if other links are better than the 
+requirement and compensate for the weak link. It is therefore preferable that a software agent on each 
+node reports the MTBPE to a network monitoring system that aggregates information from all ports on 
+the network to assess the network-wide MTBPE. If the network-wide MTBPE is shorter than the 
+reliability requirement, the weak links should be identified and handled. 
+6.4 Recommendations 
+To meet the requirements of AI and HPC environments and enable efficient and scalable 
+communication, special attention is needed in the following areas of PHY and channel design. 

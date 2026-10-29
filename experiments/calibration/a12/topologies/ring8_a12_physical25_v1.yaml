@@ -1,0 +1,36 @@
+# Calibration-ladder A12 topology: unidirectional ring of 8 ranks (the
+# anchor's own rank count: one 8-GPU A100 server) at the per-link
+# PHYSICAL point B = 25 bytes/ns. Provenance: CAL-A12's own per-link
+# figures (docs/calibration/anchors_staging.md §A12; NCCL GitHub issue
+# #1054, verified verbatim 2026-10-28): NVLink-3 physical peak 25 GB/s
+# per link per direction (`nvidia-smi nvlink -s` totals 12 x 25 = 300
+# GB/s per GPU).
+#
+# GRANULARITY PROJECTION (declared, never silent): the ring identity
+# carries ONE per-hop link rate B, and this topology sets it to a SINGLE
+# NVLink's physical rate — the per-link axis on which the anchor states
+# its 20-vs-25 GB/s figures. This is deliberately NOT the per-hop rate a
+# real NCCL ring would enjoy on this fabric (a ring hop is bounded by the
+# sender's 12-link aggregate, i.e. the crossbar8_a12_* twin's 240/300
+# axis); the per-link reading exists because the anchor's numbers are
+# per-link and because the plan §2.1 A-L0-BW per-link span's LOWER
+# ENDPOINT (20 B/ns) is exactly this anchor's NCCL per-link model — a
+# registry placement this stage owns. The 12x gap between the two
+# readings is the same aggregation gap the A7 record bracketed on its mesh
+# (there 7x); it is an axis difference, recorded, not tuned.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward any
+# measurement. L = 200 ns is the A-L0-LAT registry point (KEEP).
+topology_id: ring8_a12_physical25_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 25
+  hop_latency_ns: 200
+notes: >
+  Chunked ring AllReduce over 8 ranks (the anchor's own GPU count);
+  per-hop B = 25 B/ns = the anchor's physical per-link per-direction
+  NVLink-3 rate. No congestion, no credits, no packetization, no
+  multi-link aggregation (declared per-link projection, see header);
+  L0 transport model only. Provenance: anchors_staging.md §A12 staged
+  numbers; anchor-derived, never our measurement.

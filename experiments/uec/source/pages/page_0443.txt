@@ -1,0 +1,40 @@
+ 443 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o UET sprays packets across many paths, resulting in reordering. This complicates loss 
+detection, as the simple arrival of a higher sequence number cannot be used to infer 
+loss.  
+Packet trimming helps mitigate the problem of loss detection by informing the destination which 
+packets were lost, providing congestion state and explicit drop notifications. This allows congestion 
+management algorithms to activate and allows reliability mechanisms to efficiently recover lost packets. 
+In its simplest form, the procedure is: 
+• Packets that are eligible to be trimmed are sent with a specific diffserv codepoint, 
+DSCP_TRIMMABLE, chosen for that particular network and class of UET traffic. 
+• Switches that are configured to perform trimming will only trim packets that they know to be 
+trimmable, as indicated by DSCP_TRIMMABLE. 
+• When a packet with DSCP_TRIMMABLE arrives at such a switch, if a queue would overflow and 
+the packet would be dropped, the packet is truncated to no smaller than MIN_TRIM_SIZE, which 
+is a network-specific configuration parameter. 
+• The IP length field is modified and the IP header checksum (for IPv4) is updated so that the 
+trimmed packet is a valid IP datagram. 
+• Any payload fields left in the truncated packet (including the UDP length field, if UDP is used) are 
+unmodified. 
+• The DCSP is changed to DSCP_TRIMMED (also configured for that particular network and class of 
+UET traffic) to indicate to the network that the packet has been trimmed and cannot be 
+trimmed again, and to indicate to the receiving FEP that the packet was trimmed. 
+• After trimming, the trimming switch should treat the packet in the same way it would treat a 
+newly arrived packet with DSCP_TRIMMED. 
+• The network should typically be configured so that DCSP_TRIMMED indicates to switches that a 
+different traffic class should be used, so that trimmed packets do not sit behind untrimmed 
+packets in switch queues. 
+This description of packet trimming is provided for guidance only; more complete details of trimming 
+and compliance requirements are in Section 4.1. 
+Packet trimming can assist in the efficient fast startup of multiple PDCs converging on a common 
+destination by providing congestion signals that explicitly identify lost packets. Fast startup is used to 
+minimize latency. Time used to slowly build up to faster rates is added latency and reduced network 
+utilization. However, simultaneous fast startup can lead to excessive congestion and packet drops, 
+which may lead to higher latency and longer tail latency. Packet trimming helps recover from such 
+congestion quickly. 
+UE FEPs MUST be capable of receiving trimmed data packets, as identified by the ip.dscp field, and 
+generating NACKs for them (see Section 3.5.15.1). Implementation and enabling of trimming in switches 
+in UET deployments is OPTIONAL. 

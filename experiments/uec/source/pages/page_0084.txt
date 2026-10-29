@@ -1,0 +1,55 @@
+ 84 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.2.1 Application Use Cases 
+Different applications have different communication requirements. This section highlights several 
+application use cases that were considered by UET along with a high-level summary of their expected 
+usage of the libfabric APIs. Additional use cases were considered, but not documented here, such as a 
+variety of client/server applications for purposes such as storage or remote procedure calls (RPC). Table 
+2-3 summarizes the expected libfabric API usage for selected UET targeted applications. 
+Table 2-3 - UET Application Categories 
+Application Use Case Summary of Expected API Usage 
+ 
+ 
+*CCL 
+• Reliable communication 
+• Matching based on sender ID 
+• Tagged messages using exact matching 
+o With no guarantees about which tag matches if duplicate tags are used  
+• Data transfers using RMA Write 
+• Message and data ordering not required 
+• Optional use of collective offload 
+ 
+ 
+*MPI 
+• Reliable communication 
+• Matching based on sender ID 
+• Tagged messages with wildcard matching and duplicated tags 
+• Send/receive untagged messages 
+• Data transfers using RMA Read and RMA Write 
+• Tagged message ordering is required 
+• Data ordering is not required 
+• Optional support for atomic operations 
+• Optional use of collective offload 
+ 
+SHMEM 
+• Reliable communication 
+• Message and data ordering not required  
+• Data transfers using RMA Read, RMA Write, and atomics 
+• Optional use of collective offload 
+ 
+UD 
+• Unreliable datagram communication 
+• Send/receive MTU-sized messages 
+• Message and data ordering not required 
+Load/Store • Data transfer using write and read 
+• In-order delivery of transactions 
+• Optimized for small, efficient transfers—typically between two accelerators. 
+ 
+2.2.2 UET Profiles 
+UET defines multiple profiles that allow for tradeoffs between implementation complexity/cost and 
+capabilities. Each UET profile corresponds to a set of required capabilities. The details of the capabilities 
+required by each profile are defined in the UE Transport specification. The four UET profiles in order of 
+functionality (least to most) are: 
+1. Unified Local 
+2. AI Base 

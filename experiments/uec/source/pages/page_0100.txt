@@ -1,0 +1,50 @@
+ 100 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+     uint8_t reserved; /* for alignment */ 
+     uint16_t flags; 
+     uint16_t fep_cap; 
+     uint16_t pid_on_fep; 
+     struct uet_fa fa; 
+     uint16_t start_resource_index; 
+     uint16_t num_resource_indices; 
+     uint32_t initiator_id; 
+}; 
+ 
+2.2.5.2 Discovery APIs 
+Discovery APIs are used to discover the available libfabric communication services. 
+The following two discovery APIs are discussed in this section: 
+uint32_t fi_version(void); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_version.3.html> 
+ 
+int fi_getinfo(int version, const char *node, const char *service,uint64_t 
+         flags, const struct fi_info *hints, struct fi_info **info); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_getinfo.3.html> 
+2.2.5.2.1 fi_version() API 
+The fi_version() API is used to discover the libfabric version. The API returns an encoded version, which 
+can be decoded using the FI_MAJOR () and FI_MINOR () macros. The information MAY be used to ensure 
+the libfabric version meets the minimum that the application requires. For UET, this minimum should be 
+Major Version 2 and Minor Version 0. 
+2.2.5.2.2 fi_getinfo() API 
+The fi_getinfo() API is used to identify locally available providers and their capabilities. The parameters 
+to fi_getinfo() in Table 2-11 merit additional description: 
+Table 2-11 - fi_getinfo() Parameters 
+Parameter Description 
+node 
+ 
+The node parameter is usually set to NULL and ignored by the provider, but 
+MAY be used as a filter to limit the returned providers. For UET, if the node 
+parameter is non-NULL, it MUST point to a UET address. If the node 
+parameter is non-NULL and the FI_SOURCE flag is set, UET providers 
+SHOULD filter the returned info based on the fields of the UET address that 
+are valid (see Table 2-10). If the node parameter is non-NULL and the 
+FI_SOURCE flag is not set, UET providers SHOULD NOT return info.  
+service Previously, the service parameter has usually been set to NULL and ignored 
+by the provider. For UET, the service parameter MAY contain a service 
+name string. The string MAY be a pre-defined value associated with a 
+particular service supported by UET or a user-defined value read by the 
+provider from an optional service configuration file as described in Section 
+2.2.3. The set of pre-defined service strings is shown in Table 2-12. If a pre-
+defined service string value appears in the service configuration file, the 

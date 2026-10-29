@@ -1,0 +1,52 @@
+# Calibration-ladder A7 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the CAL-A7 AGGREGATE anchor point — per-rank per-direction
+# injection B = 448 B/ns. Provenance is CAL-A7's own staged numbers
+# (docs/calibration/anchors_staging.md §A7, AMD Instinct MI300X): 7
+# bidirectional Infinity Fabric links per GPU, each 128 GB/s, 896 GB/s
+# aggregate bidirectional; per-direction split stated by the plan's unit
+# convention (§2.1: "128 GB/s/link => 64 B/ns per direction"), so the
+# per-GPU per-direction aggregate is 7 x 64 = 448 B/ns.
+#
+# DOMAIN HONESTY (the central caveat of this stage, plan §2.1 A-L0X-PORT):
+# CAL-A7's fabric is a NON-SWITCHED FULL MESH with a DEDICATED 64 B/ns
+# per-direction capacity per PAIR. The single-port crossbar identity
+# (one shared injection port across the 7 peers) is flagged OUT-OF-DOMAIN
+# for this fabric class as a PHYSICAL description — the per-pair capacity
+# structure is lost. This topology therefore models the AGGREGATE reading
+# only. Exact-arithmetic note (proven in the stage record): for the
+# symmetric uniform-chunk reduce-scatter + allgather identity at r=8,
+# the single-port identity at B=(r-1)*64=448 coincides TERM BY TERM with
+# the (unimplemented) multi-port full-mesh identity at per-pair 64 B/ns
+# — both t = 2*M/(r*64) + 2L — so no accuracy is lost for THIS
+# collective; what is lost is expressiveness (per-pair caps, unbalanced
+# patterns; quantified in the record: a single-pair transfer is
+# overestimated 7x in the bandwidth term by this abstraction).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), not a value taken from
+# any standard; 448 B/ns is where the sweep's anchor-point row sits,
+# chosen BY THE ANCHOR's own staged arithmetic, never tuned toward any
+# model output. CAL-A7 is a SPEC CEILING, never an achieved value.
+# Cross-stage note: stage A2 already swept this same 448 as the lower
+# endpoint of its [448, 900] aggregate span (crossbar72_a2_span448_v1);
+# THIS stage works the anchor itself and derives 448 from CAL-A7's own
+# numbers at the anchor's own r=8. L = 200 ns is the A-L0X-LAT registry
+# point (KEEP; latency axis deferred to its own global stage).
+topology_id: crossbar8_a7_agg448_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 448
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency 2L total across the two phases; single-port
+  injection shared across the 7 peers (A-L0X-PORT — KEEP for NVSwitch
+  class, OUT-OF-DOMAIN as a physical description of this full-mesh
+  anchor; the exact-equivalence caveat for the symmetric collective is
+  recorded in the stage's calibration record). No congestion, no
+  credits, no packetization — L0 transport model only. Labeled
+  provenance for every number: B = 448 B/ns from CAL-A7's staged 7 x 128
+  GB/s bidirectional links (split stated by the plan convention; anchor
+  PROPOSED in the anchor registry; spec ceiling, never
+  an achieved value), L from the free A-L0X-LAT registry point.

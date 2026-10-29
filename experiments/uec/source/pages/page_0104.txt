@@ -1,0 +1,46 @@
+ 104 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+destination for a read operation). The fi_mr_reg() API is used to register a memory region on the 
+domain. A memory region is bound to an endpoint using the fi_mr_bind() API. 
+The fi_mr_key() API is used to obtain the key that remote endpoints need to access a registered memory 
+region. Libfabric offers options that enable the key for a memory region to be assigned by the 
+application or the provider. A UET provider SHOULD support user-assigned keys and therefore SHOULD 
+NOT require the FI_MR_PROV_KEY mode flag. 
+ 
+2.2.5.3.4.1 Memory Key Format 
+For interoperability, the format of the memory region key is standardized as specified in Table 2-13. 
+Table 2-13 - Memory Region Key Format 
+Field Name Bit 
+Location 
+Size 
+(bits) 
+Description 
+IDEMPOTENT_SAFE 63 1 0 => Memory region MUST NOT be used as target of idempotent 
+transport operations. 
+1 => Memory region MAY be used as target of idempotent 
+transport operations (i.e., there are no completion counters 
+bound to the memory region). 
+Idempotent operations can improve the efficiency of the 
+transport protocol. 
+OPTIMIZED 62 1 0 => Memory region does not support optimized non-matching 
+headers (the optimized non-matching header format is defined in 
+the UET SES specification; optimized refers to a header that is 
+smaller than the standard SES request header). 
+1 => Memory region supports optimized non-matching headers. 
+RESERVED 56:61 6 Reserved for future UET definitions; MUST be 0. 
+VENDOR_SPECIFIC 48:55 8 MAY be used in vendor-specific manner for provider-assigned 
+memory keys; MUST be 0 for user-assigned memory keys. 
+OPTIMIZED = 0 
+RKEY 0:47 48 Memory key for MR. 
+OPTIMIZED = 1 
+RESERVED 12:47 36 Reserved for future UET definitions; MUST be 0. 
+RKEY / INDEX 0:11 12 Index for MR. 
+ 
+The memory region key format shown in Table 2-13 MUST be used for both user-supplied keys and 
+provider-supplied keys. The full 64-bit key format MUST be passed across the fi_mr() APIs. Bit mask 
+definitions will be provided to assist in forming keys with the desired format. The size of the RKEY field is 
+fixed at 48 bits, but the range of RKEY values that are supported MUST be based on the value of the 
+Informative Text: 
+Support for user-assigned keys can enable applications to avoid exchanging memory keys if the 
+application uses a convention where the appropriate key values are well-known. 

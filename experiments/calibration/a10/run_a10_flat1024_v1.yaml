@@ -1,0 +1,58 @@
+# Calibration-ladder A10 anchor-scale RUN, FLAT side:
+# the L0 single-stage crossbar identity at CAL-A10's assumption point AND
+# the anchor's own stated scale ceiling — r = 1024 ("scales to 1024
+# GPUs"), L = 800 ns = the stated 0.8 us end-to-end NVLink-Network
+# assumption (DECLARED PRIMARY pair reading), B = 64 B/ns (A-L0X-BW
+# registry point, fixed free: the anchor's bandwidth values are not
+# staged), payload 16384 B (the A-W1-SIZE registry smoke point — the
+# plan §1.2 small-message regime; a declared model-side regime choice,
+# the anchor names no size). 16384 = 2^14 is divisible by 1024 = 2^10, so
+# the A-L0X-DIV gate ACCEPTS exactly — no bracketing.
+#
+# ASSUMPTION-CLASS HONESTY (plan §1.1 row CAL-A10: "cannot calibrate
+# O-CCT — a stated assumption, not a measurement"): CAL-A10 publishes NO
+# completion time; this run cannot be compared to any anchor CCT. Its
+# role is to place the flat identity's small-message O-CCT AT the
+# anchor's assumption point and scale ceiling in the append-only store,
+# so the PROPOSED record's flat-vs-chained placement arithmetic at
+# r = 1024 is backed by run ids. The 0.8 us figure is a stated assumption
+# in a peer-reviewed usage (confidence M per the staging doc — quote via
+# public snippet, paywalled parameter table; wording re-verify at owner
+# integration); the quote's own premise is that NVIDIA publishes no such
+# number, so the figure can falsify nothing.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes an analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A10-FLAT1024-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a10/workloads/w1_dense_tp_decode_tp1024_16kib.yaml
+infra_graph:
+  path: experiments/calibration/a10/topologies/crossbar1024_a10_pair800_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a10/profiles/implementation_profile_l0_crossbar_cal_a10_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar1024_a10_pair800_v1 (one non-blocking switch stage; r=1024 = the anchor's stated scale ceiling, L=800 ns = CAL-A10's assumption-class end-to-end figure under the declared primary pair reading, B=64 B/ns free registry point)
+  workload: w1_dense_tp_decode tp1024, payload 16384 B (registry smoke point; the anchor names no size — declared model-side regime choice)
+  implementation: analytical L0 crossbar identity; CAL-A10 comparison is assumption-class placement at the anchor's scale ceiling only (the anchor stages no completion time) — PROPOSED, review required
+evidence_level_requested: E0

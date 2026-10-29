@@ -1,0 +1,129 @@
+ 330 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+Figure 3-61 - PDC Initiator State Machine  
+ 
+ 
+CLOSED
+OPENING
+unack_cnt = 0
+open_msg = 0
+SYN = 1
+      = CREATING
+          
+TX REQ
+pkt.rto = BASE_RTO
+pkt.retry_cnt = 0
+  unack_cnt 
+pkt.psn = setPSN()
+update_psn_tracker ()
+chk_tx_bitmap() {
+  if(MPR) pause_PDC  
+if som: open_msg  =1
+if eom: open_msg  =1
+                  
+RX ACK
+if SYN==1 {
+    dPDCID=pkt.spdcid
+          = EST ABLISHED
+    SYN=0  
+update_tx_psn_tracker () {
+   if need clear: gen_cm()
+   if need ack: gen_cm()
+   update unack_cnt
+   update pause_PDC
+ 
+update_ccc()
+if REQ = close request {
+   trigger close_event
+ 
+              
+NACK   RTO
+if (pkt.retry _cnt < MAX_RETX_CNT) {
+     pkt.retry _cnt
+   pkt.rto = BASE_RTO * 2 retry _cnt
+  else close_error = true
+NEW PSN
+pkt.psn = securePSN()
+RX REQ
+process_rx_req()
+if (trim    rx_error) 
+               
+else if {If duplicate or out of 
+valid range psn :  drop pkt
+  else {
+    update_rx_psn_tracker ()
+    if SYN==1 {
+        dPDCID=pkt.dpcdid
+              = EST ABLISHED
+        SYN=0    
+                 
+  
+      ==NewPSN    SYN==1
+     
+(       ==Close                 
+close_req == TRUE    close_error == TRUE )    
+open_msg == 0
+UCT
+     
+BEGIN  CLOSE
+closing = TRUE
+      = ACK WAIT
+    →                 
+pdc_close_ mer = CLOSE_TIME
+TARGET CLOSE
+      = CLOSE ACK WAIT
+            
+closing == TRUE          == close PSN
+UCT
+UCT
+RX CONTROL
+process_rx_ctrl()
+         
+OPENED
+UCT UCT
+RETX
+                  
+close_error == 
+FALSE
+      ==(RETX     NewPSN)     pkt.rto
+TX CONTROL
+process_tx_ctrl()
+closing == TRUE    open_msg == 0
+          
+          
+KEY
+                           
+             
+                 
+UCT: Uncondi onal Transi on
+MPR: Max PSN Range
+close_error == 
+TRUE
+TX ACK
+update_psn_tracker()
+chk_ack(TX_ACK)  {
+   if TX_ACK = TRUE {
+                   
+        
+   
+UCT
+UCT
+gen_cm == TRUE
+CLOSE
+saveExpectedPSN()
+freePDC()
+      = CLOSE
+       →             
+UCT
+UCTUCT
+UCT
+UCT
+UCT
+CLOSE REQ
+close_req = TRUE
+      = QUIESCE
+             (PDS Manager or RX ACK or RX CM )
+UCT

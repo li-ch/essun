@@ -1,0 +1,39 @@
+ 436 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+All packets received when the configuration parameter UET_Data_Protect is set to CRC MUST be 
+validated based on the CRC procedure, unless the packet was trimmed. The process of trimming can 
+remove the UET CRC, and verification of the CRC cannot be done on trimmed packets. 
+If the CRC validation fails, the following occurs: 
+1. The packet is dropped and not passed to SES. 
+2. The validation failure event is reported. 
+3. The diagnostic counter UET_CRC_ERR_COUNT is incremented.  
+The CRC algorithm is CRC32C, also known as Castagnoli. It uses the iSCSI polynomial (0x1EDC6F41, or 
+reversed 0x82F63B78) per IETF RFC 3385 [52]. CRC32C polynomial is: 
+𝐺(𝑥) =  𝑥32 + 𝑥28 + 𝑥27 + 𝑥26 + 𝑥25 + 𝑥23 + 𝑥22 + 𝑥19 + 𝑥18 + 𝑥14 + 𝑥13 + 𝑥11 + 𝑥10 + 𝑥9 + 𝑥8 + 𝑥6 + 1 
+ 
+The CRC calculation procedure uses the following steps: 
+1. The CRC is calculated over the packet starting at the first byte of the source IP address for both 
+IPv4 and IPv6 packets, as defined by the Roff offset. 
+2. For UDP packets, the checksum is set to zero for calculation and verification. 
+3. The initialization value is 0xFFFFFFFF, and the polynomial in normal form is 0x1EDC6F41. 
+4. Galois Field (GF2) polynomial division of the message, M(x), by the generator polynomial, G(x), is 
+used to produce the remainder, R(x). 
+5. The calculation is performed in big-endian byte order with the least significant bit first. 
+6. The CRC value is the complemented value of R(x) and appended to the end of the UET payload 
+in network byte order. The 32 bits of the CRC value are placed after the UET payload as the UET 
+trailer, so that the x31 term is the left-most bit of the first octet, and the x0 term is the right-most 
+bit of the last octet. 
+3.5.26.1 UET CRC over UFH_16 
+The UET CRC calculation over UFH_16 uses the same CRC32C algorithm; however, the CRC calculation is 
+performed differently: 
+G(x) =  x32 + x28 + x27 + x26 + x25 + x23 + x22 + x19 + x18 + x14 + x13 + x11 + x10 + x9 + x8 + x6 + 1 
+ 
+The CRC calculation uses the following steps: 
+1. The CRC is calculated over the packet starting as defined by Roff. 
+a. Roff starts at the first byte of the packet with the UFH_16 header. 
+2. The 32-bit expected PSN is appended after the SES headers and payload in the calculation of the 
+CRC when pds.type = RODL over the UFH_16 header. 
+3. Any masked fields are set to 0x0. 
+a. The ufh.dscp and ufh.ecn fields are masked when using the UFH_16 header.  
+4. The initialization value is 0xFFFFFFFF and the polynomial in normal form is 0x1EDC6F41. 

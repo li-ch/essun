@@ -1,0 +1,24 @@
+# Calibration-ladder GF-11 topology: fully-connected EXCHANGE fabric of 2
+# ranks at the GF-11 decomposition point — B = 64 B/ns, L = 702 ns
+# (backend analytical_l0_recursive_doubling; sweep-path only).
+#
+# ROLE: the r=2 leg of the identity-coincidence demonstration: at r=2
+# (log2(2) = 1 step per phase) the doubling chain 2L equals the crossbar
+# and ring chains — the backend module's own documented coincidence
+# ("At r = 2 (k = 1) all three identities coincide"), here executed
+# against a MEASURED decomposition point for the first time. Outputs
+# identical to crossbar2_gf11_b64_l702_v1.yaml at every payload. Same
+# honesty rules as crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: exchange2_gf11_b64_l702_v1
+topology_class: fully_connected_exchange
+ranks: 2
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 702
+notes: >
+  Partner-exchange fabric of 2 ranks (one step per phase), B = 64 B/ns
+  (free registry), L = 702 ns (GF-11 derived reading SoL/2). Identity
+  t = M/B + 2L — identical to the r=2 crossbar and ring identities. Values
+  are anchor arithmetic / free registry points, never ours, never tuned,
+  never standard-normative.

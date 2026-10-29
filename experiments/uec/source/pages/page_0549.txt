@@ -1,0 +1,68 @@
+ 549 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Term Definition 
+Plaintext The original data that needs to be encrypted by the sender before transmission and 
+the resulting data after it is decrypted by the receiver. 
+Protocol secrets UET secrets that are protected from users of the protocol and/or attackers to maintain 
+the trusted connection. 
+Side channel A method for an attacker to extract information without the knowledge of the sender 
+or receiver. 
+Threat Damage or danger that could expose protocol secrets, allow the leaking of packet 
+data, or degrade the integrity of the network. 
+Threat mitigation How TSS specifically addresses the possible threat. 
+In-scope threat Threat that is explicitly addressed by TSS and has defined mitigations.  
+Out-of-scope threat A threat that is not considered or addressed in this specification.  
+Trusted entity  Portion of the FEP entrusted to handle key material and perform cryptographic 
+functions. 
+Privileged entity  A portion of the FEP and kernel driver that is responsible for assigning transport -
+critical information such as JobID and security context. 
+User entity User application that uses a UET transport service 
+Table 3-128 describes the various mechanisms available to the attacker. On-path attacks are where the 
+attacker is inserted in line between the sender and receiver. Off-path attacks describe the case where 
+the attacker within the network uses networking infrastructure (mirror, etc.) to observe and inject 
+traffic. 
+Table 3-128 - Tools Available to Attacker 
+Attack Tool Type of Attack Purpose  
+Arbitrary network packet 
+insertion  
+• Chosen ciphertext Purpose is to cause protocol 
+faults or misplacement of data. 
+In-line and off-path insertion is 
+in scope. 
+Arbitrary network packet 
+deletion 
+• Chosen ciphertext Deletion of packets on path. 
+Arbitrary network packet 
+replication 
+• Replay attack Replication of packets on and 
+off path. 
+Arbitrary network packet 
+modification 
+• Chosen ciphertext at application layer 
+(user) 
+Modification of packets on and 
+off path. 
+Arbitrary privilege injection 
+packet modification 
+• Chosen ciphertext at driver/privilege 
+layer (user) 
+Compromise of privileged 
+portions of driver/FEP is out of 
+scope. 
+Arbitrary application 
+insertion 
+• Chosen plaintext 
+• Performed at application layer 
+Purpose is to cause protocol 
+faults or misplacement of data. 
+Observe (snoop) traffic • Performed at any location within the 
+network or endpoint outside of the 
+privilege and/or trusted portion of the 
+FEP 
+Observe application patterns 
+between sender and receiver to 
+obtain information about higher 
+layer protocols. 
+Collection of data for off-line 
+data analysis. 

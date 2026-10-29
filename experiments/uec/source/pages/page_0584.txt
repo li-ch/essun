@@ -1,0 +1,81 @@
+ 584 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.7.12 Statistics, Parameters, and Events  
+Table 3-137 describes the counters and statistics that MUST be supported. Counters MUST initialize to 
+zero and wrap when their bit width is exceeded. These counters MUST be provided to the management 
+entity within the FEP. These are modeled after the Ethernet MIB counters [44]. All counters MUST be 64 
+bits when presented to the SDME. 
+ 
+Table 3-137 - TSS Security Counters 
+Counter Description Units Scope Imp 
+sdiXXInAuthPkts Number of successfully received, decrypted, and 
+authenticated (pass authentication) packets. 
+packet
+s 
+SDI M 
+sdiXXInAuthFailPkts Number of received packets that fail 
+authentication and are not trimmed. 
+packet
+s 
+SDI M 
+sdiXXInInvalid Number of received packets with errors. packet
+s 
+SDI M 
+sdiXXInInvalidSa Number of received packets dropped due to an 
+inactive or invalid security association. 
+packet
+s 
+SDI M 
+sdiXXInLatePkts Received packets dropped/rejected based on 
+epoch-based rejection. 
+packet
+s 
+SDI O 
+sdiXXOutInvokeFail The number of transmit packets dropped 
+because invoke limit is reached. 
+packet
+s 
+SDI M 
+sdiXXOutAuthPkts Number of authentication and encrypted 
+packets transmitted. This is also the number of 
+invocations of the SDK for the TxActiveAN. 
+packet
+s 
+SDI M 
+ifPPOutErroredPkts Packets with invalid information from PDS and 
+cannot be mapped to a secure domain. These 
+packets MUST be dropped and not sent on wire. 
+packet
+s 
+PORT M 
+ifPPInErroredPkts Packets received with invalid security 
+information and cannot be mapped to secure 
+domain. These packets have a UET TSS header. 
+packet
+s 
+PORT M 
+inPPRxEncryptionBypassPkts Packets that are received with a UET PDS header 
+where the type is not UET_TSS. These packets 
+MUST bypass encryption and authentication and 
+be presented to PDS. 
+packet
+s 
+PORT M 
+outPPRxEncryptionBypassPkts UET PDS packets sent that bypass encryption 
+and authentication. These packets are passed to 
+the link layer unmodified. 
+packet
+s 
+PORT M 
+sdiXXInBindingFailurePkts Received packets that fail the SES binding check. packet
+s 
+SDI M 
+Note:  
+• XX is the SDI number and PP is the port number. 
+• M=mandatory, O=Optional if feature is not supported but mandatory if it is implemented. 
+Table 3-138 describes various parameters used in this specification. 
+Table 3-138 - TSS Security Parameters 
+Parameter Description Scope Imp 
+invokeWarnThreshold Invoke warning limit SDI/Global M 
+invokeFatalTheshold Invoke fatal limit SDI/Global M 

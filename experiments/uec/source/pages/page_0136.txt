@@ -1,0 +1,40 @@
+ 136 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+with that abstraction. As a result, API names, including the library name, are closely aligned with those 
+defined for InfiniBand. 
+However, the library and API have evolved to support additional high-performance transports and NICs. 
+libibverbs constructs have expanded beyond their traditional roles and definitions, except that the 
+original InfiniBand naming has been kept for backwards compatibility purposes. 
+Today, verbs can be viewed as defining software primitives for NIC hardware supporting one or more of 
+the following: 
+• NIC hardware queues are directly accessible from user space. 
+• NIC hardware can directly access application memory buffers. 
+• Transport supporting RDMA operations. 
+Even the meaning of RDMA has evolved to refer to the key features of devices that support RDMA 
+transports and not just the transport operation. 
+The impact of integrating UET support into verbs is that UET concepts will adopt RDMA naming. 
+However, such naming should not be interpreted as requiring that UET must adhere to RDMA 
+semantics, as RDMA objects have evolved beyond their original definitions. Select RDMA objects are 
+defined in the following section. 
+2.3.2 Verbs Overview 
+Conceptually, “verbs” is an abstract description of the functionality of an RDMA NIC. RDMA verbs is an 
+API definition of that abstraction, with these general characteristics: 
+• The API is device-centric. Functions map to a specific NIC. 
+• There is an identifiable mapping between API calls and transport operations and fields. 
+RDMA verbs defines several objects that are relevant for UET verbs. These are highlighted in Table 2-45 
+with applicable implementation details. 
+Table 2-45 - Verb Objects 
+Object Description 
+Device An RDMA or verbs device is one that is accessible through the Linux RDMA 
+subsystem and, as a result, plugs into the libibverbs and rdma-core framework. NICs 
+plug into the RDMA subsystem to expose hardware primitives supported by verbs.  
+ 
+NICs do not necessarily need to support transport offload to leverage the rdma -core 
+infrastructure. It is sufficient for a NIC to expose similar features found in RDMA 
+devices. 
+The device list is obtained using a netlink socket to communicate with the Linux 
+RDMA subsystem. 
+Device Context Identifies an instance of an opened NIC. 
+Command FD (cmd_fd) File descriptor used to communicate with the kernel device driver. 
+Associated with the device context and opened by libibverbs.  

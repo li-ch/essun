@@ -1,0 +1,24 @@
+ 414 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+6. FEP-B processes the retransmitted packet as follows: 
+a. FEP-B checks if the PSN is outside the valid PSN range (based on MP_RANGE)—which in 
+this example is not true; if TRUE, drop the packet with no ACK. 
+b. FEP-B checks if PSN = 333 is not marked as received, so it can accept and pass the 
+request to SES—in this example, the request has already been received. 
+i. The packet is marked as a retransmission (pds.flags.retx is set), which is used to 
+trigger an ACK. However, the pds.flags.retx flag does not indicate whether a 
+previous copy of the packet arrived. 
+c. PSN = 333 is in the expected range and is marked as received. 
+i. FEP-B determines if there is a guaranteed delivery SES Response state entry for 
+PSN = 333. 
+ii. If there is a guaranteed delivery SES Response entry for PSN = 333: 
+1. FEP-B retransmits the ACK to the initiator with stored, guaranteed 
+delivery SES Response. 
+2. FEP-B maintains the SES Response, waiting for clear before freeing. 
+iii. If there is not a guaranteed delivery SES response entry for PSN = 333: 
+1. FEP-B retransmits the ACK with the default response; see Section 3.5.17. 
+ 
+ 
+Figure 3-106 - PDS ACK Dropped Sequence for RUD Send of Single-Packet Message 
+ 

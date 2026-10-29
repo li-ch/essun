@@ -1,0 +1,51 @@
+# Calibration-ladder A11 topology: unidirectional ring of 24,576 ranks
+# at per-link bandwidth B = 50 B/ns (CAL-A11's 400 Gbps optics class,
+# declared per-direction reading) and per-hop latency L = 200 ns (the
+# A-L0-LAT registry point; CAL-A11 stages no latency number). This is
+# the stage's MULTI-HOP SCHEDULE CONTRAST at the anchor's own scale:
+# every ring hop is one link traversal, so the identity charges the
+# per-hop latency 2*(r-1) = 49,150 times per AllReduce — a latency
+# chain of exactly 9,830,000 ns (9.83 ms) per op — against the
+# crossbar's 2 (once per phase); at equal B the ring-minus-crossbar
+# difference is exactly 2*(r-2)*L = 9,829,600 ns at EVERY payload size
+# (an identity of the two backends, verified on executed rows in the
+# stage's calibration record).
+#
+# WHY THIS ROW IS IN THIS STAGE: the anchor's headline numbers are a
+# congestion/load-balance envelope of 30-40%. This row shows that
+# SCHEDULE STRUCTURE ALONE — an in-model choice, no congestion —
+# produces CCT swings far beyond that envelope at the anchor's scale:
+# across the bracketing ladder members 192 MiB and 384 MiB the
+# ring/crossbar CCT ratio is ~2.22 and ~1.61 (exact values in the
+# record), flipping at the exact crossover M* = L*B*r = 245,760,000 B
+# (234.375 MiB). Rank-count structure adds exactly <= 1/7 ~ +14.3%.
+# Schedule, scale, and congestion state are therefore three separable
+# confounders of comparable-or-larger magnitude than every noise floor
+# in the anchor set (CAL-A4's ~5% band, CAL-A6's 5-8% software swing)
+# — none diagnosable from a raw CCT number without pinning the other
+# two. That is the sanity context the calibration plan assigns to
+# CAL-A11, executed.
+#
+# HONESTY: the ring is the ring ALGORITHM embedded in the anchor's link
+# class — no schedule is claimed to be THE Meta behavior (their
+# per-collective tables are unstaged); B and L are free parameters
+# (A-L0-BW / A-L0-LAT) placed at the anchor's link class and the
+# registry point respectively, never tuned. Payload divisibility: every
+# grid size 24576*2^k divides exactly (A-L0-DIV accepts).
+topology_id: ring24576_a11_link50_v1
+topology_class: unidirectional_ring
+ranks: 24576
+link:
+  bytes_per_ns: 50
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled
+  independently; full-duplex uniform per-direction links (A-L0-FD).
+  Ring hops are single link traversals of the CAL-A11 400G optics
+  class at the registry latency point. Identity
+  t = 2(r-1)/r*M/B + 2(r-1)*L; latency chain 2*(r-1)*L = 9,830,000 ns
+  at r = 24,576. No congestion, no credits, no packetization — L0
+  transport model only. Provenance: B from CAL-A11's staged 400 Gbps
+  optics (anchor PROPOSED; confidence M-H); L = 200 ns free registry
+  point; values are anchor quotes / registry defaults, never our
+  measurements.

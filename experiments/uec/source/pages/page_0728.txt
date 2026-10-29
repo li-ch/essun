@@ -1,0 +1,39 @@
+ 728 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.5 Idle Reduction 
+This standard specifies an optional feature that reduces the number of idle bytes inserted between 
+frames. The goal of this feature is to improve payload efficiency for small frames and increase the packet 
+rate. 
+A standard UDP Ethernet frame contains 18 bytes for the Ethernet header and CRC, 20 bytes for the IPv4 
+header, and 8 bytes of UDP header. With an 8-byte preamble and 12 bytes of inter-packet gap (IPG), 
+there are already 66 bytes of overhead before accounting for the transport header(s). Each of these 
+headers can potentially be reduced in size, increasing transmission efficiency for small payloads. 
+The idle reduction feature focuses on reducing the average of 12 idle bytes that are required by the 
+standard (as introduced in IEEE Std 802.3-2022 Clause 46.3.1.4). At the latest link speeds specified in 
+IEEE Std 802.3, frames start on an 8-byte boundary, so the number of idles bytes cannot always be 
+exactly 12. Instead, a deficit idle count tracks idle bytes across a stream of frames and ensures the short-
+term average is at least 12 bytes. Ignoring upper-level protocols, the minimal Ethernet packet of 64 
+bytes requires 8 bytes of preamble and at least one byte for inter-packet gap (for the terminate block). 
+With the restriction of starting frames on an 8-byte boundary, the minimum number of bytes on the 
+wire is 80. The 12-byte average IPG requirement will cause some minimum frames to be further padded 
+to 88 bytes on the wire, so that the average comes to at least 12 bytes of idle between packets. 
+To improve this design, this specification removes the 12-byte requirement while retaining the 
+requirement to start frames on an 8-byte boundary. Maintaining this boundary reduces the impact of 
+supporting idle reduction. For minimum-sized frames, this change reduces the wire usage to 80 bytes 
+and eliminates the occasional need to pad to 88 bytes to achieve the target idle count. Furthermore, the 
+frame size can now increase by up to 7 bytes (within the terminate block) while still maintaining the 80-
+byte wire usage. 
+5.5.1 Approach 
+This specification defines a reduction of the per-frame overhead, to increase the efficiency of small size 
+frames. In IEEE Std 802.3 high-speed links, 12 bytes of idle are required. This is an average requirement, 
+since idles on these links are added in blocks of eight bytes. While this is less significant for large frames, 
+it is significant for minimum-sized frames. This optional feature allows most of these idle bytes to be 
+omitted. 
+When this feature is supported and enabled, an average of 12 bytes of idle is no longer required. A 
+terminate block (with up to 7 data bytes) MUST be included and MUST be sized to ensure 8-byte 
+alignment. With modern network architectures, incoming link data is typically retimed to a core clock 
+that runs faster than the fastest legal line rate. With this structure, issues transitioning from a fast clock 
+to a slow clock do not immediately cause clock-domain-crossing FIFO problems. While the standard 
+inter-frame gap is less significant for large packets, it wastes bandwidth when there is a large fraction of 
+short packets. 

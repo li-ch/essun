@@ -1,0 +1,20 @@
+# Calibration-ladder A6 topology: the 4x8 hierarchical twin at the
+# CAL-A12 derated bridge B = 320 B/ns (0.8 x 400; same provenance as
+# ring32_a6_derated320_v1). Everything else identical to
+# torus2d32_a6_4x8_b400_v1 — see that file's header for the structural
+# demonstration this file participates in; the honesty statements are
+# inherited verbatim. NOT a fit.
+topology_id: torus2d32_a6_4x8_b320_v1
+topology_class: torus2d_ring_x_ring
+ranks: 32
+grid:
+  dim1_ranks: 4
+  dim2_ranks: 8
+link:
+  bytes_per_ns: 320
+  hop_latency_ns: 200
+notes: >
+  2D torus 4x8 (the anchor's node x GPU shape), uniform B/L across
+  dimensions (A-L0T-UNIF). Provenance: B = 320 B/ns = CAL-A12 ~80%
+  derating x the anchor's 400 B/ns rail arithmetic (anchor-informed span
+  point, never tuned); L = 200 ns free A-L0T-LAT registry point.

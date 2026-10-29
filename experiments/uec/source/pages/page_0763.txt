@@ -1,0 +1,53 @@
+ 763 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Release Notes 
+Document: Ultra EthernetTM Specification 
+Version: 1.1 
+Release Date: 10/12/2026 
+Previous Version: 1.0.3 (Released 07/16/2026) 
+ 
+Overview 
+This release includes significant new functionality and normative requirements.  It also includes a set of 
+editorial corrections and clarifications to improve the readability and accuracy of the Ultra EthernetTM 
+Specification v1.0.3, published on July 16, 2026. 
+Summary of Changes 
+Section Type Description of Change 
+2.3 Enhancement UE verbs interface mapping.  
+2.4 Enhancement In-Network Collectives (INC). 
+3.3 thru 3.5, 3.7.11 Enhancement The Unified Local Profile enhancements for scale-up 
+networking to SES, PDS, and TSS, including the new reliable 
+ordered delivery mode for local networks (RODL).  
+3.4.2.3 
+Figure 3-8 
+Enhancement Adds an optional hardware feature allowing a FEP to 
+allocate Memory Regions (MRs) scoped to a specific 
+PIDonFEP instance. 
+3.4, 3.5.8.2 
+Table 3-1, Table 3-3,  
+Table 3-20 thru Table 3-23, 
+Table 3-68,  
+Enhancement Adds a Sync Group mechanism to group write transactions 
+and trigger a completion or atomic operation once all writes 
+in the group have been posted. 
+3.6.18 Enhancement Programmable congestion management (PCM) 
+3.6, 4.2, 5.3 Enhancement Congestion Signaling (CSIG), enhancements to CMS to utilize 
+CSIG and enhancements to LLDP negotiations for enabling 
+CSIG. 
+5.4 Enhancement Optimized headers and Packet Rate Improvement using the 
+Unified Forwarding Header (UFH). 
+5.5 Enhancement Ethernet idle reduction. 
+7 Enhancement Overview of UE management and reference to standalone 
+documentation. 
+Table 5-27 Correction Correct the range and granularity of the CF_max_timers to 
+be 16 KB with granularity between 1 byte and 16384 bytes. 
+2.1 Clarification Clarify new software interfaces, module relationships and 
+open source projects in the UE Software Overview. 
+Table 2-13 Clarification Clarify bit location range of VENDOR_SPECIFIC field in the 
+memory region key format. 
+3.5.8.2.1 Clarification Clarify the process of PDC establishment with encryption. 
+3.5.5, 3.5.8, 3.5.10, 3.5.11 Clarification PDS conformance checklist statement reference alignment. 
+Table 5-9 Clarification Clarify minimum values of data_age_timer_max. 
+Various Editorial Correct minor punctuation, spelling, figure labeling and 
+formatting errors. 
+ 

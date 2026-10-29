@@ -1,0 +1,45 @@
+ 171 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  // The rank's addressing information 
+  AddressingInfo rank_info = 2; 
+  // The reason for leaving 
+  LeaveReason reason = 3; 
+  // A vendor-specific description of the reason for leaving the communicator 
+  string message = 4; 
+} 
+ 
+message CommunicatorLeaveReply { 
+} 
+ 
+message CommunicatorStatusReply { 
+  // The list Unique IDs of failed communicators that the rank has not 
+  // explicitly left 
+  repeated bytes failed_communicator_uids = 1; 
+} 
+ 
+2.4.15.2 Semantics of the Capabilities Fields for the CommunicatorJoin RPC 
+During the CommunicatorJoin RPC, the Capabilities message appears in the CommunicatorJoinRequest 
+as both required_capabilities and desired_capabilities, and in the CommunicatorJoinReply as capabilities. 
+The fields in the Capabilities message have the following semantics based on where they are located: 
+• collectives, operations, which contain items that are non-exclusive: 
+o Required: the list of required items 
+o Desired: the list of desired items, in addition to the required items 
+o Reply: list of supported items 
+• protocol_types, rounding_modes, which contain items that are exclusive on a per-group basis: 
+o Required: the list of items in order of preference, any of which are considered sufficient 
+o Desired: the list of items in order of preference, if none are required 
+o Reply: the item chosen by the IM for the communicator 
+• ordering, payload_mtu, bandwidth, which contain the minimum values: 
+o Required: the minimum required value, if any 
+o Desired: the minimum desired value, if any 
+o Reply: the value chosen by the IM for the communicator 
+2.4.16 IM Management 
+An IM management interface is required for the job launcher to configure the IM at job launch and 
+termination. A control protocol is also required to establish INC communicators and configure 
+components for collective operations. Vendors can implement a control protocol of their choosing; this 
+document provides an example gRPC API. 
+2.4.16.1 The gRPC API [Informational] 
+The full .proto file specifying the suggested API can be found at the following URL: 
+<https://github.com/ultraethernet/uec-inc/blob/main/proto/uec-uet-inc-mgmt.proto> 
+It is reproduced below: 

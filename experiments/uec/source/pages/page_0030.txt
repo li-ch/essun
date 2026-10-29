@@ -1,0 +1,38 @@
+ 30 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+devices supporting a given profile exhibit interoperability and functionality as described in these 
+specifications. 
+Profiles may include optional-to-implement features. If optional features are implemented, they MUST 
+follow the defined specification to claim compliance. 
+1.2 UE Specification Conventions 
+The UE specification uses the following conventions for normative language, informative notes, 
+terminology, units, numbers, and figure formatting. 
+1.2.1 Normative, Informative, and Implementation Statements 
+Normative language is identified using terms defined by IETF BCP14. The key words “MUST”, “MUST 
+NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT 
+RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in IETF 
+BCP 14 [4], IETF RFC 2119 [1], and IETF RFC 8174 [2] when, and only when, they appear in all capitals, as 
+shown here. 
+All text not explicitly identified as informative comment is normative. An [informative] marking in the 
+section title applies to the entire section including any subsections. Diagrams and tables are considered 
+normative unless marked in the title as [informative]. 
+Sections of text are marked as informative using the following convention: 
+Informative Text: 
+Informative text is included in this area. 
+Occasionally, notes to the implementer of this specification are included for informational purposes. 
+These notes are intended to clarify the intent of the specification and to provide guidance to the 
+implementer. They are indicated with the following format: 
+Implementation Note: 
+Implementation note text is included in this area. 
+ 
+1.2.2 Terminology 
+1.2.2.1 Abbreviations 
+Abbreviation Definition 
+AAD Additional authentication data 
+ABI Application binary interface 
+ACK Acknowledgement 
+AEAD Authenticated encryption associated data 
+AES Advanced encryption standard 
+AI Artificial intelligence 
+AN Association number 

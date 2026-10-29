@@ -1,0 +1,41 @@
+# Calibration-ladder GF-11 sweep #3: the LATENCY-CHAIN
+# RANK SCALING at the anchor's 64-GPU endpoint — the three identities at
+# the SAME (B=64, L=702) as sweeps #1/#2, at r=64 (the anchor's scaling
+# system: "Even at 64 GPUs, multicast one-shot variants stay within
+# roughly 70% overhead of the SoL bound", vs "about 7% ... at 2 GPUs").
+# Chains: ring 126L = 88452 ns, doubling 12L = 8424 ns, crossbar 2L =
+# 1404 ns — across the anchor's 32x rank span (2 -> 64) the executed
+# latency-chain growth factors are exactly 63x / 6x / 1x, bracketing the
+# measured overhead-fraction growth (7% -> ~70%, a ~1.59x total-time
+# growth under the constant-SoL reading, envelope ~1.7*1404 = 2386.8 ns at
+# r=64 — between the crossbar and doubling chains at the 128-B reading)
+# from both sides: no L0 chain matches the measured growth; the residual
+# is rank-dependent kernel/multicast overhead the identities cannot
+# express (the crossbar's latency term is rank-flat BY CONSTRUCTION).
+#
+# NOTHING IS TUNED: 702 = measured SoL/2 fixed before any stage output was
+# read; ranks anchor-pinned (2/4/64 = the anchor's three staged systems;
+# r=8 and r=72 recorded NOT executed — the anchor stages no collective
+# number at either, and 72 is not a power of two so the exchange fabric
+# rejects it). Payload grid as sweeps #1/#2 (every size divisible by 64;
+# 41216 = 64 x 644 exactly).
+sweep: cal_gf11_tp64_v1
+workload: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp64_128b.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf11/topologies/crossbar64_gf11_b64_l702_v1.yaml
+grid:
+  payload_sizes_bytes: [128, 512, 2048, 8192, 32768, 41216, 65536]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf11/topologies/ring64_gf11_b64_l702_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf11/topologies/crossbar64_gf11_b64_l702_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/gf11/topologies/exchange64_gf11_b64_l702_v1.yaml

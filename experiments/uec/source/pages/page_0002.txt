@@ -1,0 +1,33 @@
+ 2 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Copyright © 2026 Ultra Ethernet Consortium. 
+The Ultra Ethernet Consortium (UEC) is a consensus-based standards organization operating under the 
+Joint Development Foundation. Its members collaborate openly to define and promote high-
+performance Ethernet technologies for modern computing environments. This specification 
+(“Specification”) contains Approved Deliverables of UEC as such term is defined in the UEC Charter. 
+This document is made available under the terms of the Creative Commons Attribution-NoDerivatives 
+4.0 International License (CC BY-ND 4.0). As stated in the license, you may copy and redistribute the 
+document, provided that attribution is given to the Ultra Ethernet Consortium. However, if you create a 
+derivative work from the material, you may not distribute that work. A copy of the license is available at 
+https://creativecommons.org/licenses/by-nd/4.0/. 
+This Specification is provided on an "AS IS" basis. UEC and The Joint Development Foundation (the 
+"Parties") make no warranties of any kind, either express or implied, including without limitation 
+warranties of merchantability, fitness for a particular purpose or noninfringement of any third party 
+intellectual property rights, or compliance with applicable laws. Use of the information in this 
+Specification is at your own risk. The entire risk as to the results and performance of this Specification 
+is assumed by the user. In no event will the Parties (as defined above) be liable to any other party for 
+lost profits or any form of indirect, special, incidental, or consequential damages of any character 
+from any causes of action of any kind with respect to this Specification or its governing document, 
+whether based on breach of contract, tort (including negligence), or otherwise, and whether or not 
+the recipient of this Specification has been advised of the possibility of such damage. 
+This Specification may include references to technologies for which patent rights might be claimed. UEC 
+does not make any representation regarding the existence or status of any such rights. Implementers of 
+this Specification are solely responsible for obtaining any necessary licenses or permissions from the 
+appropriate rights holders. 
+UEC reserves the right to adopt any changes or alterations to this Specification as it deems necessary or 
+appropriate. 
+Ultra Ethernet, Ultra Ethernet Consortium, and the Ultra Ethernet Consortium logo are the unregistered 
+trademarks of Ultra Ethernet Consortium in the United States and other countries. All rights reserved. 
+Other brands, names or logos contained herein are the property of their respective owners. 
+For more information about the Ultra Ethernet Consortium, visit: https://ultraethernet.org.  

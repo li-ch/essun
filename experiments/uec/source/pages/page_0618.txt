@@ -1,0 +1,12 @@
+ 618 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+To further exemplify that the CSIG tag is positioned as the last tag before the original EtherType, Figure 
+4-9 shows the position of a CSIG tag when using both IEEE Std 802.1AE and IEEE Std 802.1Q. The same 
+relative position applies for both the compact and wide tag formats. 
+ 
+ 
+ 
+ 
+ 
+Figure 4-8 - CSIG Tag Position in Ethernet Headers 

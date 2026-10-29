@@ -1,0 +1,34 @@
+# Calibration-ladder GF-11 topology: fully-connected crossbar of 64 ranks
+# at the GF-11 SCALING point — B = 64 B/ns, L = 702 ns.
+#
+# ROLE: the anchor's multi-rank scaling endpoint — "Even at 64 GPUs,
+# multicast one-shot variants stay within roughly 70% overhead of the SoL
+# bound" (vs "about 7% overhead over the SoL bound at 2 GPUs"). The
+# multicast one-shot pattern maps onto the single-stage abstraction; at
+# M=128 this row gives t = 2*63/64*128/64 + 2L = 63/16 + 1404 =
+# 22527/16 = 1407.9375 ns — the identity stays
+# essentially FLAT across the 32x rank growth (its latency term is
+# rank-independent by construction), while the measured overhead fraction
+# grows 7% -> ~70%: under the constant-SoL reading the measured envelope
+# at r=64 is ~1.7*1404 = 2386.8 ns, and the identity sits below it —
+# CONSISTENT with the envelope (a bound, not an equality), and the growth
+# itself (1.7/1.07 ~ 1.59x over 32x ranks) is the rank-dependent
+# kernel/multicast overhead the rank-flat identity cannot express. NVL72's
+# own r=72 is recorded NOT executed (not a power of two — the exchange
+# fabric rejects it; the anchor stages no r=72 collective number). Same
+# honesty rules as crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: crossbar64_gf11_b64_l702_v1
+topology_class: fully_connected_crossbar
+ranks: 64
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 702
+notes: >
+  Single non-blocking switch-stage abstraction of 64 ranks (the GF-11
+  scaling endpoint system) at the derived per-pair latency L = 702 ns and
+  B = 64 B/ns (free registry). Identity t = 2*63/64*M/B + 2L = 63M/2048 +
+  1404: rank-flat latency term, wire coefficient 63/32 -> asymptote 2. The
+  64-GPU leg of the GF-11 scaling comparison. Values are anchor arithmetic
+  / free registry points, never ours, never tuned, never
+  standard-normative.

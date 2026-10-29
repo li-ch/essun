@@ -1,0 +1,38 @@
+# Calibration-ladder GF-10 latency row: DGX-1 MANUAL-ROUTING PAIRS, 3x —
+# crossbar r=8, B = 25 B/ns (the GF-10 carrier), L = 27000 ns.
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# DGX-1 GPU pairs that need manual routing show P2P latency "increased
+# by ... 3x for V100-DGX-1"; the doc's own derivation arrow gives
+# "~27 µs" (27000 = 3 x 9000, the same-system derivation — cleaner than
+# the 18000 row's P100 caveat: the 3x multiplier IS the V100-DGX-1
+# figure and the 9 µs baseline IS the V100-DGX-1 value).
+#
+# ROLE: the TOP of the anchor's measured latency range and the anchor's
+# own full pair-heterogeneity spread: 27000/9000 = exactly 3x within ONE
+# chassis. With the 18000 row this executes the DGX-1 heterogeneity
+# bracket against the uniform-L abstraction ("nonuniform_pair_latency"
+# explicitly_unsupported at L0): DGX-1 (hybrid cube) violates uniformity
+# by up to 3x, DGX-2 (NVSwitch) is measured homogeneous across all pairs
+# with two-hop ~ one-hop ("very small, almost negligible") — the anchor
+# brackets the A-L0X uniform-L assumption's validity by topology class.
+# 27000 ns sits 13.5x ABOVE the A-L0X-LAT declared free-range upper 2000
+# ns — the largest above-range placement in the corpus (recorded; the
+# range is untouched: app-level quantity class, bound not equality).
+topology_id: crossbar8_gf10_b25_l27000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 27000
+notes: >
+  Single non-blocking switch-stage abstraction: uniform per-pair latency
+  L = 27000 ns (GF-10's staged V100-DGX-1 manual-routing pair class at
+  "3x", derived 3 x 9000 per the gap-fill doc's own parenthetical;
+  app-level) at the measured carrier B = 25 B/ns, charged once per phase
+  by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). Top of the
+  measured range: exactly 3x the direct-pair point within one chassis —
+  the anchor's full pair-heterogeneity spread, 13.5x the declared
+  free-range upper. Value is a derived anchor number, never our
+  measurement.

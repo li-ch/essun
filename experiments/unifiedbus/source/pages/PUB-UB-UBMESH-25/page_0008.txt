@@ -1,0 +1,105 @@
+Figure 9. Fault-Tolerance via Enabling Backup NPU
+
+3.3.3. Scaling to 4D-FullMesh in UB-Mesh-Pod.
+
+Within a rack, we organize 64 NPUs in a 2D full-mesh topology. Beyond the rack, we implement another 2D full-mesh to organize the racks, forming a 4D-FullMesh architecture named UB-Mesh-Pod.
+
+As depicted in Fig.7-(a) and (c), four adjacent racks in a row are organized in a tightly-coupled 1D full-mesh, where racks are directly interconnected via LRS ports in each rack. In each rack column, racks are also directly connected, creating a 16-rack 2D full-mesh topology. Each link in this configuration represents a UB x128 IO, as shown in Fig.8-(d). We connect four adjacent racks along two dimensions for constructing inter-rack full-mesh because this is the optimal point considering the reach of active electrical cables. Since each rack has 64 NPUs and each pod has 16 racks, a 4D-FullMesh UB-Mesh-Pod contains 1024 NPUs in total.
+
+3.3.4. UB-Mesh-SuperPod and Beyond.
+
+Having the 1K UB-Mesh-Pod, we further construct the UB-Mesh-SuperPod, which can hold multiple UB-Mesh-Pods. Considering that in current cloud scenarios the small or middle-scale LLM training workloads may not consume the whole SuperPod, we choose to adopt the symmetrical Clos topology in the Pod-level interconnection, rather than continue the usage of full-mesh. Such a design allows the cloud managers to flexibly divide the SuperPod according to consumers’ requirements and guarantee full bandwidth in each divided domains. As shown in Fig 7-(c), we use high-radix Pod-switches (HRS) to connect each rack in the SuperPod, scaling up to 8K NPUs.
+
+Finally, racks in SuperPods are also connected to the large-scale DCN (Data-Center Network) either via UB switches (Solution-(a)) or via the NICs located on CPU boards (Solution-(b)). The DCN domain usually supports large-scale  Data Parallelism training. The DCN switches are organized using Clos topology. The DCN domain can scale to 100K NPUs or more.
+
+4. Enabling The Architecture
+
+Table 4. Routing Systems Comparison
+
+Routing
+
+System
+
+LPM with BGP
+
+Host-based
+
+Routing
+
+DORAPR
+
+ApplicationGeneric DCNIBTofu,TPUUB-Mesh
+
+Design
+
+Principle
+
+Shortest Path First
+
++ Longest Prefix
+
+Matching
+
+Host-based Routing
+
++EM/Linear Table
+
+Lookup
+
+Dimension Ordered
+
+Routing
+
+Topology-Aware
+
+Routing
+
+Support
+
+Hybrid
+
+Topology
+
+✔✔✗✔
+
+High-Performance
+
+Forwarding
+
+✗✗✔✔
+
+Non-Shortest
+
+Path
+
+✗✗✗✔
+
+Fault
+
+Tolerance
+
+✔✔✔
+
+In UB-Mesh-SuperPod, the 4D-FullMesh + Clos topology urgently demands efficient hybrid routing support: apart from switch-based routing via LRS and HRS, the NPUs themselves also have routing capabilities via the UB controllers. The large number of routers and the hierarchical topology in UB-Mesh introduce new complexities to the routing system. We identify that the routing system must fulfill the following five key requirements:
+
+•
+
+Support for Hybrid Topology: The routing system must meet the requirements incurred by UB-Mesh’s 4D-FullMesh + Clos hybrid topology.
+
+•
+
+Efficient Forwarding: Since each NPU is also a router, and the entire system contains a large number of NPUs, to conserve NPU hardware resources, the routing system must efficiently handle routing-table lookups and forwarding operations.
+
+•
+
+Support for Non-Shortest Paths: In the nD-FullMesh topology, between two endpoints, there are several possible paths with diverse distances. The system should enable the use of non-shortest paths to maximize bandwidth utilization across the network.
+
+•
+
+Rapid Failure Recovery: To ensure reliability and availability, the routing system must quickly recover from any failures, reducing the impact on the training procedure.
+
+•
+
+Deadlock Free: Finally, the entire network system must operate without the risk of deadlock, ensuring smooth and uninterrupted data flow.
+
+However, existing routing techniques used on Clos, Torus and DragonFly topologies, like Longest-Prefix-Matching (LPM), Host-based Routing and Dimension Ordered Routing (DOR) as listed in Table 4, none of them satisfy all our requirements. Therefore, we propose an All-Path-Routing (APR) technique and Fast Fault-Recovery via Direct Notification techniques to meet the requirements.

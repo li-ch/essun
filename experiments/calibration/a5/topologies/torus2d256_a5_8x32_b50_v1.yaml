@@ -1,0 +1,47 @@
+# Calibration-ladder A5 topology: 2D torus (ring x ring) of 256 ranks as a
+# 8 x 32 grid at link bandwidth B = 50 bytes/ns (anchor CAL-A5 — Google
+# TPU v4, ISCA 2023: ICI link bandwidth, OCS, topology measurements;
+# docs/calibration/anchors_staging.md §A5). Anchor point B=50 is where the
+# anchor's own arithmetic sits (READING 1); the other B values place the
+# anchor within the plan §2.1 A-L0T-BW candidate span [20, 64] B/ns.
+#
+# 3D->2D PROJECTION (declared, never silent): the L0 identity is 2D
+# (experiments/vertical_slice/assumptions_l0.yaml A-L0T-SHAPE); the anchor's
+# slice 4x8x8 (r=256) is 3D. This file's shape is the partition
+# 8 | 4*8: one 8-length dimension kept as one ring, the 4 collapsed with the other 8 (4*8=32) into the other.
+# The identity is symmetric in dim1 x dim2 (t = t_ring(M,r1) + t_ring(M,r2)),
+# so swapped shapes are arithmetically identical twins and are not duplicated.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0T-BW), never tuned toward any
+# CAL-A5 measurement. 50 B/ns = CAL-A5 READING 1 (per-link per-direction reading): the anchor's own
+#   §7.3 quote 'ICI link bandwidth is 2x IB—400 vs. 200 Gbit/s' reads 50 GB/s
+#   per link; 6 links per chip => 300 B/ns per-chip aggregate under this reading.
+#   The staging doc flags the direction convention as unverified — BOTH readings
+#   are executed, neither is chosen. This value is this stage's ANCHOR POINT.
+# L = 200 ns is the A-L0T-LAT registry point (KEEP; the latency axis is the
+# plan's weakest axis, gap §4.2, and belongs to its own global stage). The
+# uniform-link / sequential-dimension models are assumptions A-L0T-UNIF /
+# A-L0T-SEQ (KEEP verdicts, plan §2.1). The anchor's TWISTED-vs-REGULAR
+# geometry distinction is INEXPRESSIBLE in this topology schema (no geometry
+# field exists) — that structural blindness is this stage's falsifier
+# finding and is quantified in the calibration record, not worked around.
+topology_id: torus2d256_a5_8x32_b50_v1
+topology_class: torus2d_ring_x_ring
+ranks: 256
+grid:
+  dim1_ranks: 8
+  dim2_ranks: 32
+link:
+  bytes_per_ns: 50
+  hop_latency_ns: 200
+notes: >
+  Two wrapped dimensions; dimension-d rings connect ranks that agree on the
+  other dimension's coordinate. Dimensions execute sequentially over the
+  full message (A-L0T-SEQ), so each dimension's links are used exclusively
+  and at most one of the chip's link directions is active at a time. Both
+  dimensions share B and L (A-L0T-UNIF). No congestion, no credits, no
+  packetization, no reconfiguration (static topology) — L0 transport model
+  only. Provenance: B = 50 B/ns (see header; anchor spec readings and
+  anchor-informed span endpoints, never measurements); L = 200 ns free
+  A-L0T-LAT registry point; shape = declared 3D->2D projection of CAL-A5's
+  4x8x8 (r=256) slice (see header).

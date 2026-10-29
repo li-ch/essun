@@ -1,0 +1,49 @@
+ 717 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• UFH usage is optional, and an initiator SHOULD use it only for data flows that benefit from 
+improved wire efficiency and throughput. Applications that do not benefit from an optimized 
+header can continue to use standard Ethernet and IP formats. (e.g., LLDP, ARP, DHCP) 
+• Ethernet enables feature extensibility by stacking tags such as VLAN, MACSEC, and CSIG. The 
+UFH definition MUST support header stacking. 
+• UFH MUST be compatible with LLR (link level retry) and CBFC (credit-based flow control) but not 
+depend on them. 
+• UFH addressing MUST support scale-out fabrics with at least 256 k endpoints with a stretch goal 
+of 1 M+ endpoints. 
+• UFH source and destination address fields should not assume a specific address family even if IP 
+addressing is likely to be the de facto standard. Deployments should have the freedom to map 
+different address namespaces to UFH address fields, such as IB LIDs or device IDs, to enable 
+migration of different solutions to Ethernet using UFH. 
+• The UFH definition SHOULD support stateless translation to standard Ethernet + IP headers, 
+when addresses are interpreted as IPv4 or IPv6. Network elements such as gateway switches 
+MAY optionally enable such a capability. 
+The following are non-goals: 
+• Ethernet limits minimum frame size to 64 B. UFH does not modify this limit. 
+• Ethernet IPG and preamble reduction are outside the scope of the UFH specification. 
+• Extending existing control protocols such as DHCP or ARP to add UFH awareness is not in scope. 
+• It is expected that while many existing Ethernet switches will have the flexibility to forward UFH 
+packets, compatibility with standard 802.1 Ethernet bridges is not a goal. 
+5.4.2 Header Optimization Approach 
+Large-scale Ethernet fabrics are commonly designed as IPv4/v6 routed topologies. The Ethernet MAC 
+has link-local significance, and the DA and SA fields are swapped at each hop. This creates an addressing 
+redundancy that can be removed by collapsing to one address space. A review of the IPv4 and IPv6 
+headers suggests other optimization possibilities. Fragmentation can be avoided in homogenous fabrics 
+and length, and header checksum fields can be removed by relying on link capabilities such as Forward 
+Error Correction (FEC), link level retry (LLR), or end-to-end transport checksums such as an ICRC.   
+ summarizes optimizations for single- and multi-hop fabrics.  
+Table 5-38 - Header Optimizations 
+IPv4/IPv6 Field Name IPv4 
+Size 
+IPv6 
+Size 
+UFH Needs 
+(large fabrics) 
+UFH Needs 
+(small fabrics) 
+Comments 
+Address Version 4 4 1 1 UFH does not assume an address 
+namespace. Mapping to IPv4 or IPv6 is 
+optional and a deployment choice. 
+One bit is reserved to identify address 
+container size. 
+IHL 4 - - - - 

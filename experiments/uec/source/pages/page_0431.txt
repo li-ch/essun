@@ -1,0 +1,22 @@
+ 431 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.25.6 UET directly over IP using Encryption 
+Figure 3-117 shows the full header stack, depicting important fields necessary for parsing when using 
+UET directly over IP with the UET CRC and UET encryption. 
+ 
+3.5.25.7 UET over UFH_32 Header 
+Figure 3-118 illustrates UET over the UFH_32 header. All PDS types can be used over the UFH_32 header 
+with the following differences noted: 
+• A 16-bit version of the entropy header is carried after the EtherType. The TSS or PDS header 
+starts after the entropy field with type as the first byte. 
+o The 2-byte entropy header is always present after the EtherType field. 
+o The TSS or PDS header directly follows the entropy field. 
+• All PDS types will add pad bytes such that the UET CRC can be located directly before the 
+Ethernet FCS—see Section 3.5.26. 
+This applies to all PDS packet types: RUD, ROD, RODL, RUDI, UUD, ACK, NACK, and control packets. 
+ 
+ 
+Figure 3-117 - Full Header: UET/IP with Encryption 
+ 
+ 

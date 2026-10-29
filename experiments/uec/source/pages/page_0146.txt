@@ -1,0 +1,33 @@
+ 146 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.3.5.1.2 QP States 
+UET QPs expose a simplified QP state model to UET verbs users. Valid UET QP (UD or RU) states are: 
+• RST (Reset) – QP is allocated and not yet configured. 
+• RTS (Ready-to-Send) – QP is fully configured and may actively send and receive data transfers. 
+• ERR – An error has occurred on the QP, and all data transfers are disabled.  
+The simplified QP state machine is shown in Figure 2-18. It overlays the existing state machine apart 
+from two new added paths. The first path that can be followed is when the QP is created. Normally 
+when a QP is created, it starts in the RST state. For UET verbs, all the required attributes may be 
+specified when creating the QP, and the application can directly specify the RTS state as the initial state 
+of the QP. A second path is a direct connection from RST to RTS. This represents a modify QP call that 
+skips over the INIT and RTR states. If an underlying error occurs on the QP, the NIC hardware may put 
+the QP into the ERROR state, which stops all processing. An errored QP is recoverable only by recycling it 
+back through the RST state. 
+ 
+ 
+Figure 2-18 - QP State Machine 
+2.3.5.1.3 QP Numbers 
+For UET verbs, the QPN is formatted to contain additional addressing information used for targeting a 
+UET service. The QPN is formatted as follows:  
+QPN = [ ABS/REL 1 bit | 7 bits of 0 | RI 12 bits | PIDonFEP 12 bits ] 
+ 
+The upper bit is a flag that specifies if absolute or relative addressing is being used. When set, the QP 
+receives messages using absolute addressing. Additionally, both the Resource Index and the PIDonFEP 
+are encoded in the lower 24 bits of the QPN. The remaining seven bits are reserved. 
+When creating a QP, the application may request a specific QPN if it knows what PIDonFEP and Resource 
+Index is required for the service. Alternatively, the application may create a QP without specifying a 
+QPN, resulting in the provider driver dynamically assigning the values. 
+In either case, the PIDonFEP and Resource Index values encoded in the QPN are validated by the 
+provider kernel driver against assignments established by a privileged entity. This privileged assignment 
+may occur at job initialization time, such as through a privileged job launcher, or through a privileged 

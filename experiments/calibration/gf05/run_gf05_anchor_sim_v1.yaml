@@ -1,0 +1,60 @@
+# Calibration-ladder GF-05 anchor-point RUN (gap-fill
+# anchor): the L0 single-stage crossbar identity at the GF-05 ANCHOR
+# SIM-CONFIG POINT — r=8, B=100 B/ns (the paper's staged "800 Gbps
+# network bandwidth" under the declared decimal + per-direction
+# reading; flagged alternative 50 B/ns recorded in the calibration
+# record, not executed), L=1000 ns (the paper's own per-hop
+# decomposition: "400ns switch traversal latency" + "link latency
+# 600 ns"), payload 2097152 B = 2 MiB (the anchor's ONLY staged message
+# size — the fairness quote's "2 MiB permutation" context; an FCT
+# per-flow size executed as the free A-W1-SIZE probe, NOT compared to
+# any anchor FCT: the metric bridge is declared inexpressible at L0).
+#
+# ROLE: the uet-htsim config parameters are "themselves anchor-able
+# sim-config provenance" (gap-fill doc §GF-05) — this run lands the
+# UEC-class simulator's own config on the L0 free axes in the
+# append-only store so the PROPOSED record's placement arithmetic (vs
+# the registry-twin run_gf05_registry_v1.yaml: combined-axis ratio
+# exactly 90225/60469 ~ 1.492 at this payload; pure-B asymptote exactly
+# 25/16; pure-L terms 2000 vs 400 ns) is backed by run ids. GF-05's
+# SUBJECT — the SMaRTT congestion-control algorithm (the basis of the
+# UEC NSCC specification) and REPS load balancing — is OUT of the L0
+# input space by capability declaration; nothing about CC is executed
+# here. B and L are free parameters placed at the anchor's staged
+# sim-config numbers, never tuned.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF05-ANCHOR100-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf05/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf05/topologies/crossbar8_gf05_line100_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf05/profiles/implementation_profile_l0_crossbar_cal_gf05_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf05_line100_v1 (one non-blocking switch stage; r=8, B=100 B/ns = GF-05's 800 Gbps sim line rate per direction under the declared reading, L=1000 ns = the anchor's 600+400 per-hop decomposition)
+  workload: w1_dense_tp_decode tp8, payload 2^21 (2 MiB, the anchor's only staged size — the fairness-quote flow size; an FCT-class size executed as a free probe)
+  implementation: analytical L0 crossbar identity; GF-05 comparison is sim-config-axis placement + envelope-magnitude mapping only (congestion control itself out of model scope; no FCT comparison; peer-reviewed simulation anchor, not UEC silicon) — PROPOSED, review required
+evidence_level_requested: E0

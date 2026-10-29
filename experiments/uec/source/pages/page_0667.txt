@@ -1,0 +1,39 @@
+ 667 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+features. The UE link negotiation specification describes LLDP packet formats for several link-layer 
+features including CBFC. 
+Each station advertises its capabilities to its link partner using LLDP packets. Parameter values are 
+encoded into “type, length, value” triplets (TLVs) inside the LLDP data unit (LLDPDU) of the LLDP frame. 
+The LLDP frame format and CBFC TLV formats are described in detail in the UE Link Negotiation 
+specification. Sections 5.2.8.3.1 and 5.2.8.3.2 discuss the main CBFC TLV fields needed for the CBFC 
+initialization process as described in Section 5.2.8.4. Not all TLV fields are listed here; the Link 
+Negotiation specification provides the complete list of TLV fields. 
+LLDP packets transmitted during the lossless VC initialization process MUST NOT use any of the lossless 
+VCs being initialized. 
+5.2.8.3.1 CBFC Receiver TLV Fields 
+The CBFC TLV has two sections of receiver values: One section contains port information common across 
+all VCs, and the second section contains information fields specific to each VC. 
+CBFC TLV receiver port information fields are shown in Table 5-23. 
+Table 5-23 - CBFC TLV Receiver Port Information Fields 
+Information Field Description 
+R_NumVCs The total number of VCs supported by the receiver, both best effort and 
+lossless (2-32). 
+R_TotalCredits When non-zero, this field contains the total number of credits available at 
+the receiver. When zero, it indicates that separate per-VC credit limits are 
+set by the receiver (see R_VC_CreditLimit[x] in Table 5-24). 
+R_CellSize The receiver’s input buffer storage data unit size in bytes (ideal CreditSize).  
+R_PktOvhd The receiver’s per-packet buffer overhead. Stored as an eight-bit two’s 
+complement number of bytes, -16 to +127. 
+ 
+CBFC TLV receiver per-VC information fields are shown in Table 5-24. 
+Table 5-24 - CBFC TLV Receiver Per-VC Information Fields 
+Information Fields Description 
+R_VC_Want[x] Indicates the receiver wants to make VC[x] a lossless VC. 
+R_VC_RTR[x] Indicates the receiver is ready to receive lossless packets on VC[x] using 
+CBFC credits. 
+R_VC_CreditLimit[x] Optional credit limit to be applied to VC[x] at the sender. Valid only when 
+R_TotalCredits=0. 
+R_PKTID_Sel[x] and R_PKTID[x] Optional fields to specify the VLAN.PCP/DEI or DSCP values to identify VC[x]. 
+See the Link Negotiation specification for the use of these fields. 
+ 

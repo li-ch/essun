@@ -1,0 +1,43 @@
+ 586 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+[6] P. Grun, S. Hefty, S. Sur, D. Goodell, R. D. Russell, H. Pritchard and J. M. Squyres, "A Brief 
+Introduction to the OpenFabrics Interfaces - A New Network API for Maximizing High Performance 
+Application Efficiency," in 2015 IEEE 23rd Annual Symposium on High-Performance Interconnects, 
+2015.  
+[7] Z. Liang, J. Lombardi, M. Chaarawi and M. Hennecke, "DAOS: A Scale-Out High Performance 
+Storage Stack for Storage Class Memory," in Supercomputing Frontiers, 2020.  
+[8] R. Brightwell and K. Underwood, "Evaluation of an eager protocol optimization for MPI," in 
+European Parallel Virtual Machine/Message Passing Interface Users’ Group Meeting, 2003.  
+[9] T. Bonato, A. Kabbani, D. De Sensi, R. Pan, Y. Le, C. Raiciu, M. Handley, T. Schneider, N. Blach, A. 
+Ghalayini, D. Alves, M. Papamichael, A. Caulfield and T. Hoefler, "SMaRTT-REPS: Sender-based 
+Marked Rapidly-adapting Trimmed & Timed Transport with Recycled Entropies," 2 April 2024. 
+[Online]. Available: https://arxiv.org/abs/2404.01630v1. 
+[10] Y. Le, R. Pan, P. Newman, J. Blendin, A. Kabbani, V. Jain, R. Sivaramu and F. Matus, "STrack: A 
+Reliable Multipath Transport for AI/ML Clusters," 21 July 2024. [Online]. Available: 
+https://arxiv.org/abs/2407.15266. 
+[11] V. Olteanu, H. Eran, D. Dumitrescu, A. Popa, C. Baciu, M. Silberstein, G. Nikolaidis, M. Handley and 
+C. Raiciu, "An edge-queued datagram service for all datacenter traffic," in 19th USENIX Symposium 
+on Networked Systems Design and Implementation (NSDI 22), Renton, WA, 2022.  
+[12] T. Bonato, A. Kabbani, A. Ghalayini, M. Papamichael, M. Dohadwala, L. Gianinazzi, M. Khalilov, E. 
+Achermann, D. De Sensi and T. Hoefler, "REPS: Recycled Entropy Packet Spraying for Adaptive Load 
+Balancing and Failure Mitigation," 31 July 2024. [Online]. Available: 
+https://arxiv.org/abs/2407.21625. 
+[13] Zats, A. Iyer, G. Ananthanarayanan, R. Katz, I. Stoica and A. Vahdat, "FastLane: Agile Drop 
+Notification for Datacenter Networks," UC Berkeley Tech Report, UCB/EECS-2013-173, 2013. 
+[14] IETF RFC 3168, "The Addition of Explicit Congestion Notification (ECN) to IP," 2001. [Online]. 
+Available: https://www.rfc-editor.org/rfc/rfc3168.html. 
+[15] IEEE Std 802.1Q-2022, "IEEE Standard for Local and Metropolitan Area Networks – Bridges and 
+Bridged Networks," 2022. [Online]. Available: https://ieeexplore.ieee.org/document/10004498. 
+[16] C. Guo, H. Wu, Z. Deng, G. Soni, J. Ye, J. Padhye and M. Lipshteyn, "RDMA over commodity 
+ethernet at scale," in Proceedings of the 2016 ACM SIGCOMM Conference, 2016.  
+[17] IETF RFC 8257, "Data Center TCP (DCTCP): TCP Congestion Control for Data Centers," 2017. 
+[Online]. Available: https://www.rfc-editor.org/rfc/rfc8257. 
+[18] Y. Zhu, H. Eran, D. Firestone, C. Guo, M. Lipshteyn, Y. Liron, J. Padhye, S. Raindel, M. H. Yahia and 
+M. Zhang, "Congestion control for large-scale RDMA deployments," ACM SIGCOMM Computer 
+Communication Review, pp. 523-536, 2015.  
+[19] G. Kumar, N. Dukkipati, K. Jang, H. M. Wassel, X. Wu, B. Montazeri, Y. Wang, K. Springborn, C. 
+Alfeld, M. Ryan, D. Wetherall and A. Vahdat, "Swift: Delay is simple and effective for congestion 
+control in the datacenter," in SIGCOMM '20: Proceedings of the Annual conference of the ACM 
+Special Interest Group on Data Communication on the applications, technologies, architectures, 
+and protocols for computer communication, 2020.  

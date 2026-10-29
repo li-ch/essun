@@ -1,0 +1,47 @@
+# UnifiedBus-paper-flavored L0 configuration for the cross-design
+# comparison (Q6 stage S4). HONESTY (ladder rule): this file is a
+# paper-derived design profile, NOT a normative standard profile.
+# The UnifiedBus specification track stays license-gated (HUM-02, D-008);
+# every provenance chain below runs through the five PUBLIC_READ sources
+# anchored in experiments/unifiedbus/ (S1).
+#
+# What is ANCHORED here (structure only, never physics):
+#   - ranks = 64   <- UBP-P17 (PAPER_REPORTED, anchor
+#     UBP-UBMESH-3.3.1-RACK-64NPU): 64 NPUs per rack, intra-rack 2D
+#     full-mesh behind the LRS plane.
+#   - identity = fully-connected crossbar <- the S3 platform map's L0_READY
+#     row for UBP-P17 (the crossbar identity stands for the rack full-mesh
+#     level; it ASSUMES the LRS plane's non-blocking function), with the
+#     switch-free 16-NPU direct-connect adjacency UBP-P06 (VENDOR_CLAIMED,
+#     HC26) as the same-identity precedent.
+# What is FREE here (public silence, marked, never invented):
+#   - nic.injection_bytes_per_ns = 64 <- shared free parameter A-XDUO-BW;
+#     structured as B = 72 x per-lane rate (UBP-P07, PAPER_REPORTED) with
+#     the per-lane rate FREE (UBP-F01: no public per-lane Gbit/s; the
+#     224/256 Gbit/s official-page highlight and the 1.6 Tbit/s port figure
+#     are anchored candidates with unstated scope and are NOT used).
+#   - link.pair_latency_ns = 200 <- shared free parameter A-XDUO-LAT
+#     (UBP-F02: only end-to-end RTT OUTCOME claims are public; they are
+#     calibration targets, never L0 inputs).
+# The bandwidth/latency numbers are equal by construction to the
+# UEC-flavor files in the same sweep (shared record
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml), so any delta this
+# row shows against them is an arithmetic fact of the anchored identity
+# choice at the anchored scale — not a measured difference between UEC and
+# UnifiedBus hardware.
+topology_id: ub_rack64_crossbar_v1
+topology_class: fully_connected_crossbar
+ranks: 64
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Same crossbar identity and modeling assumptions as
+  crossbar8_free_v1 (A-L0X-PORT single-port injection, A-L0X-LAT,
+  A-L0X-DIV) at the UB-paper rack scale. Everything else the UB papers
+  describe (hierarchical full-mesh with asymmetric per-level widths,
+  memory semantics, APR routing, 64+1 backup, software) is L1/L2_REQUIRED
+  or UNSUPPORTED per experiments/unifiedbus platform map (S3) and appears
+  NOWHERE in any number produced from this file. No congestion, no
+  credits, no packetization — L0 transport model only.

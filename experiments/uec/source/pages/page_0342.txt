@@ -1,0 +1,91 @@
+ 342 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-47 - Header Fields for Control Packet 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = CP 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ctl_type 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+4 
+Identifies the type of control packet: (See Section 3.5.16) 
+• 0 => NOOP 
+• 1 => ACK Request 
+o Source requesting an ACK for a specific PSN 
+• 2 => Clear Command 
+o From initiator to target to clear guaranteed 
+delivery PDS ACK state at target 
+• 3 => Clear Request 
+o Target requests source to send clear 
+• 4 => Close Command 
+o Initiator indicating the PDC is being closed 
+• 5 => Close Request 
+o Target request to initiator to close the PDC 
+• 6 => Probe 
+o Source to destination to request PDS ACK 
+• 7 => Credit 
+o Destination to source carrying congestion 
+control credit 
+• 8 => Credit Request 
+o Source to destination requesting credit 
+• 9 => Negotiation 
+• 10-15 => Reserved 
+flags (7 bits) 
+ 
+• pdc_type 
+ 
+ 
+ 
+• retx 
+• ar 
+• syn 
+• rsvd 
+ 
+ 
+2 
+ 
+ 
+ 
+1 
+1 
+1 
+2 
+pds.flags = [pdc_type, retx, ar, syn, rsvd] 
+ 
+• 00 => RUD  
+01 => ROD  
+10 => RODL 
+11 => Reserved 
+• 1 => This CP is a retransmit 
+• 1 => ACK Request 
+• 1 => PDC establishment request 
+• Reserved 
+probe_opaque 16 Same as ACK 
+ 
+Figure 3-73 - Control Packet Header Format 
+ 
+ 

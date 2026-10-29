@@ -1,0 +1,39 @@
+# Calibration-ladder GF-08 topology: crossbar r=8 ROCE-UNDER-CONGESTION
+# DISPLACEMENT row — B = 3.125 B/ns, L = 200 ns (registry).
+#
+# Anchor quote (docs/calibration/anchors_gapfill.md §GF-08; Falcon,
+# SIGCOMM 2025; numbers AS STAGED from the official abstract mirror,
+# not re-fetched): operation completion times "8x lower than CX-7 RoCE
+# under network congestion" — i.e. the CX-7 RoCE baseline takes 8x
+# LONGER for the same operation under congestion. Mapped with the
+# A11/GF-05/GF-07 effective-bandwidth displacement technique at the
+# FALCON CARRIER B_ref = 25 B/ns (the anchor's OWN absolute rate, so NO
+# declared-carrier choice is needed — unlike GF-07, whose ratios were
+# per-fabric without a shared reference): B_displaced = 25/8 = 3.125
+# B/ns exactly (representable as a finite decimal, EXECUTED). The
+# asymptotic CCT ratio vs the carrier row is EXACTLY 8, the anchor's own
+# measured factor. CLASS CAVEATS: the quote is per-OPERATION completion
+# time on endpoint transport ops (RDMA/NVMe-class ULPs), not collective
+# CCT — the transfer onto the AllReduce identity's B axis is a DECLARED
+# dimensionless proxy (allreduce is the only L0 collective); the 8x is
+# an envelope EDGE ("8x lower"), not a mean; the congestion state itself
+# (the anchor's subject) is inexpressible at L0. L = 200 ns registry —
+# GF-08 stages no abstract-level latency number. HONESTY: swept free
+# parameter fixed by anchor arithmetic BEFORE any stage output was read;
+# never tuned. 3.125 is the LOWEST executed B row in the calibration
+# corpus to date (below GF-07's worst displacement 4) — the measured
+# RoCE-under-congestion regime extends below every previously executed
+# row; recorded, the registry range is untouched.
+topology_id: crossbar8_gf08_roce8x3_125_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 3.125
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the GF-08 congestion displacement: B = 3.125
+  = 25/8 (the "8x lower ... than CX-7 RoCE under network congestion"
+  factor applied to the Falcon carrier rate), L = 200 ns registry.
+  Asymptotic CCT ratio vs the carrier row exactly 8. Values are anchor
+  quotes / free registry defaults, never our measurements; never tuned.

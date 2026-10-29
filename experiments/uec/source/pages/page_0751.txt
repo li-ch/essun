@@ -1,0 +1,19 @@
+ 751 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+using 100 Gb/s Signaling," 2022. [Online]. Available: 
+https://ieeexplore.ieee.org/document/9988984. 
+[3] IEEE Std 802.3ck-2022, "IEEE Standard for Ethernet Amendment 4: Physical Layer Specifications and 
+Management Parameters for 100 Gb/s, 200 Gb/s, and 400 Gb/s Electrical Interfaces Based on 
+100 Gb/s Signaling," 2022. [Online]. Available: https://ieeexplore.ieee.org/document/9999414. 
+[4] IEEE Std 802.3df-2024, "IEEE Standard for Ethernet - Amendment 9: Media Access Control 
+Parameters for 800 Gb/s and Physical Layers and Management Parameters for 400 Gb/s and 
+800 Gb/s Operation," 2024. [Online]. Available: https://ieeexplore.ieee.org/document/10472445. 
+[5] IEEE P802.3dj/D3.0, February 2026, “IEEE Draft Standard for Ethernet Amendment 13: Media Access 
+Control Parameters for 1.6 Tb/s and Physical Layers and Management Parameters for 200 Gb/s, 
+400 Gb/s, 800 Gb/s, and 1.6 Tb/s Operation,” 2026.  Online . Available: 
+https://ieeexplore.ieee.org/document/11408395. 
+ 
+ 
+ 
+  

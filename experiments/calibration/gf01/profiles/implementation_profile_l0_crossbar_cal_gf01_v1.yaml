@@ -1,0 +1,42 @@
+# Implementation profile for the calibration-ladder GF-01 large-message
+# anchor-point run on the analytical L0 crossbar backend step
+# 3, gap-fill anchor GF-01; docs/calibration/anchors_gapfill.md §GF-01).
+implementation_profile_id: analytical_l0_crossbar_cal_gf01_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. DOMAIN LABELING per
+  plan §2.1 A-L0X-PORT (the A7 record's finding, inherited): the single-port
+  abstraction is OUT-OF-DOMAIN as a PHYSICAL description of the xGMI
+  non-switched full mesh, but at B=(r-1)*b it coincides term-by-term with
+  the multi-port mesh identity for THIS symmetric uniform-chunk collective
+  (exact-arithmetic equivalence, verified on executed rows by stages A7
+  and GF-01), so the aggregate reading is exact here while remaining 7x
+  wrong for single-pair patterns.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) fixed at 325.6 B/ns for the anchor-point
+  run — GF-01's OWN measured link-sum aggregate ("Sum of Average
+  Bandwidth Across All GPU Pairs: 325.6 GB/s"; the 45.8-average companion
+  quote tensions with it by 1.56% at r=8, recorded not smoothed) — and L
+  fixed at the A-L0X-LAT registry point 200 ns. NOTHING was tuned toward
+  the GF-01 collective measurements. The sweep companion
+  (sweep_gf01_large_v1.yaml) sweeps the four anchor-arithmetic aggregate
+  points {315 = 7x45 worst-link, 325.6 measured link-sum (baseline), 336
+  = 7x48 usable, 448 = 7x64 raw spec ceiling} plus the ring per-link
+  reading at 64, across the anchor's reconciling/latency sizes; every
+  delta vs the measured 16 GiB row is a recorded comparison outcome, not
+  a parameter choice.
+measurement_source: >
+  GF-01 staged numbers (AMD ROCm blog "Understanding RCCL Bandwidth and
+  xGMI Performance on AMD Instinct MI300X", RCCL 2.22.3-develop:f5b15f2 /
+  ROCm 6.3.0.0, all_reduce_perf + TransferBench on 8 MI300X GPUs;
+  docs/calibration/anchors_gapfill.md §GF-01; gap-fill anchor, PROPOSED,
+  deliberately NOT integrated into the anchor registry — accepted rows are integrated
+  accepted rows; confidence M-H, vendor blog not peer-reviewed) — external
+  MEASURED numbers, compared as PROPOSED evidence in results/calibration/;
+  not our testbed, no E3/E4 language.

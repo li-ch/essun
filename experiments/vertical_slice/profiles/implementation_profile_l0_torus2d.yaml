@@ -1,0 +1,9 @@
+# Implementation profile for the analytical L0 2D-torus backend
+# (free-parameter model).
+implementation_profile_id: analytical_l0_torus2d_free_v1
+status: PROPOSED
+backend: analytical_l0_torus2d
+fidelity: L0
+model: per-dimension sequential full-message ring AllReduce on a 2D torus (see src/essun/backends/analytical/l0_torus2d.py)
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+measurement_source: none   # not calibrated; values are assumptions, not measurements

@@ -1,0 +1,23 @@
+# Calibration-ladder A4 sweep endpoint: unidirectional ring of 16 ranks at
+# B = 25 B/ns — the per-link per-direction split of CAL-A4's own 150 B/ns
+# quote over the V100 NVLink-2 structure (6 links per GPU, 150/6 = 25;
+# declared hardware context, consistent with CAL-A12's 25 GB/s/link
+# physical NVLink figure). Inside the plan §2.1 A-L0-BW anchored span
+# [20, 64] B/ns per link per direction. FREE PARAMETER with anchor
+# provenance — never tuned toward any anchor output (the anchor stages no
+# hardware completion-time series to tune toward). L = 200 ns is the
+# A-L0-LAT registry point. r = 16 divides every stage-A4 size exactly
+# (A-L0-DIV accepts; no bracketing).
+topology_id: ring16_a4_b25_v1
+topology_class: unidirectional_ring
+ranks: 16
+link:
+  bytes_per_ns: 25
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: B =
+  25 B/ns is CAL-A4's 150 B/ns per-GPU quote split over the 6 NVLink-2
+  links of a V100 (declared hardware context, not a staged number by
+  itself); L = 200 ns is the free A-L0-LAT registry point.

@@ -1,0 +1,40 @@
+# Calibration-ladder A7 sweep: where does the L0 ring
+# identity sit relative to CAL-A7's PER-LINK reading (AMD Instinct MI300X
+# Infinity Fabric: 7 bidirectional links per GPU, each 128 GB/s => 64 B/ns
+# per direction per link; docs/calibration/anchors_staging.md §A7)? The
+# ring is the ring ALGORITHM EMBEDDED in the anchor's non-switched full
+# mesh — every hop a dedicated 1-hop pair at the per-pair rate.
+#
+# CAL-A7 is a capacity SPECIFICATION, not a time series: per
+# docs/calibration/CALIBRATION_PLAN.md §1.1 it CANNOT calibrate O-CCT. Its
+# role here is the per-link BW anchor of the non-switched full-mesh class.
+# NOTHING IS TUNED: B values {20, 50, 64} B/ns were fixed by anchor
+# arithmetic BEFORE any stage output was read (64 = the CAL-A7 anchor
+# point; 50 = CAL-A1 NVLink5 per-port / CAL-A5 ICI reading-1; 20 = CAL-A12
+# NCCL per-link software model, cross-fabric transfer labeled); L stays at
+# the A-L0-LAT registry point 200 ns. Every delta below is an arithmetic
+# fact of the identity t = 2(r-1)/r*M/B + 2(r-1)*L.
+#
+# Payload grid: 12-size ladder 8*2^k, k = 10,12,14,16,18,20,22,24,25,26,28,30
+# (8 KiB -> 8 GiB), mirroring the ladder STRUCTURE of stages A1/A2 (72*2^k)
+# at the anchor's own rank count; r=8 divides every size, so the A-L0-DIV
+# gate accepts the exact ladder with NO bracketing (contrast stage A3's
+# r=72). Baseline = the CAL-A7 per-link anchor-point topology (B=64), so
+# the delta columns read directly as placement vs the anchor's own
+# per-link quote.
+sweep: cal_a7_link_v1
+workload: experiments/calibration/a7/workloads/w1_dense_tp_decode_tp8_512mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/a7/topologies/ring8_a7_link64_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a7/topologies/ring8_a7_link20_v1.yaml
+    - experiments/calibration/a7/topologies/ring8_a7_link50_v1.yaml
+    - experiments/calibration/a7/topologies/ring8_a7_link64_v1.yaml

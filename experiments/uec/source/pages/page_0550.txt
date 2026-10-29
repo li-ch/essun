@@ -1,0 +1,65 @@
+ 550 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Attack Tool Type of Attack Purpose  
+Arbitrary timing attacks • Chosen cipher or plaintext 
+• Packet can be inserted at a specific time 
+or sent by brute force to achieve 
+desired timing  
+Observe application patterns 
+between sender and receiver to 
+obtain information about higher 
+layer protocols. 
+3.7.2.2.1 Security Assumptions 
+The threat model is based on the following assumptions: 
+• There are no errors in the implementation of the UET protocol, regardless of whether it is 
+implemented in hardware, software, or firmware. This implies that the attacker cannot be inside 
+the protocol. 
+• The protocol MUST authenticate all portions of the packet including authenticated data and 
+encrypted payload data that is used in the security solution. 
+• The protocol MUST encrypt all payload data portions of the packet. 
+• The protocol MUST maintain data separation between secure domains. 
+• The protocol MUST maintain data separation between clients in a client-server model. 
+• An implementation of the UET protocol MUST NOT disclose protocol secrets to users of the 
+protocol and/or an attacker. FEPs MUST have a secure location in which to store and/or retain 
+this information. 
+• The protocol cannot defend against an attacker from within the trusted portion of the FEP. An 
+attacker in the FEP can use the protocol but is constrained by the requirements of this threat 
+model. 
+• Other than the trusted entities within a FEP, the UE network and network elements such as 
+switches are untrusted. 
+• Attestation, authentication of each FEP, and key generation/distribution/refresh are 
+implementation specific and are considered out of scope. 
+• Critical transport parameters (JobID, security context, etc.) are assigned by an uncompromised 
+privileged entity. 
+• Congestion information (ECN, trimmed packets, etc.) from the switches is not authenticated and 
+is therefore assumed to be untrusted. 
+Table 3-129 - Threats and Mitigations 
+Threat from Attacker Threat Mitigation 
+Extracting protocol secrets 
+(keys, etc.) 
+Minimize the amount of packet information that is unencrypted 
+to minimize the attack surface. 
+• Ensure protocol secrets are not contained in unencrypted 
+information regions. 
+• Ensure that IV is not reused (nonce) in AEAD cipher. 
+• Ensure the key invocation limit for AEAD cipher is not 
+violated. 
+Arbitrarily insert traffic into the network 
+outside of the endpoint as a manipulator-in 
+the-middle 
+• Reliable ordered delivery (ROD) and reliable unordered 
+delivery (RUD) utilize the packet sequence number (PSN) to 
+detect packet insertion, removal, out-of-order packets, and 
+packet replay. Connection replay is protected using a 
+secure Start_PSN as described in the UET PDS specification. 
+• Reliable unordered delivery for idempotent operations 
+(RUDI) packet insertion is inherently vulnerable to replay. 
+Packet removal and replay detection is implementation-
+defined. 
+Arbitrarily replay legitimate traffic over the 
+network outside of the endpoint as a 
+manipulator-in the-middle  
+Arbitrarily remove traffic from the network 
+outside of the endpoint as a manipulator-in 
+the-middle  

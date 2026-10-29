@@ -1,0 +1,52 @@
+ 718 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+IPv4/IPv6 Field Name IPv4 
+Size 
+IPv6 
+Size 
+UFH Needs 
+(large fabrics) 
+UFH Needs 
+(small fabrics) 
+Comments 
+DSCP+ECN/Traffic Class 8 8 8 8 Retain same code point name space 
+for IP and UFH. 
+Total Length 16 - - - Common L4 transports (UDP, UET) 
+have length field. 
+Identification 16 - - - No support for fragmentation. 
+Flags 3 - - - 
+Fragment Offset 13 - - - 
+TTL/Hop-Limit 8 8 4 - 4 bits is sufficient for proposed 
+network architectures. 
+Protocol/Next header 8 8 - - EtherType after UFH identifies next 
+header. 
+Header Checksum 16 - - - Rely on FEC + LLR and L4 checksum. 
+Flow Label - 20 optional - Common L4 transports (UDP, UET) 
+have entropy. Optional for a network 
+header. 
+SIP 32 128 32 16 Support IPv4 or IPv4-mapped-IPv6 for 
+scale-out. Scale-up deployments can 
+use any suitable namespace. DIP 32 128 32 16 
+Total (bits) 160 320 77 + 41 
+ 
+ 
+Any packets or flows requiring unsupported features (such as packets requiring IP fragmentation or 
+tunnels), or that do not benefit from header optimizations, are not candidates for UFH and MUST 
+continue to use standard Ethernet and IP headers. 
+5.4.3 UFH Definition 
+The UFH is defined as an overlay on the 12-byte Ethernet MAC header with special encodings in the 
+MAC DA and MAC SA fields. Fields identified as essential to UFH are overlaid on this 12-byte base 
+header, and UFH defines two sub-variants to cover different needs. The Ethernet rule of inserting an 
+EtherType field at offset 12 from the start of frame is followed to maintain backward compatibility and 
+to allow UFH and standard Ethernet + IP frames to coexist on a link. This EtherType identifies the next 
+header in the stack and is not essential for UFH itself. 
+The IEEE Std 802-2024 specification [2] defines a Structured Local Address Plan (SLAP) to support 
+allocation of local addresses. This specification reserves 4 bits in the MAC address for identification, 
+ 
+Figure 5-24 - UFH Header Overlay 
+ 
+ 
+                                      
+   
+                   

@@ -1,0 +1,35 @@
+# Calibration-ladder GF-04 topology: unidirectional ring of 16 ranks (2
+# nodes x 8 H100, the anchor's two-node leg) at the anchor's TWO-NODE
+# figure — B = 469.67 B/ns is the Oracle OCI blog's own summary row
+# "NCCL on two nodes with 16 GPUs | 469.67 GB/s" (busbw, all_reduce_perf
+# -b 32 -e 10G -f 2 -g 8 under mpirun -np 2 across the two H100.8 nodes;
+# page fetched and verified 2026-10-28). Same pinned busbw = B asymptotic
+# mapping; same GF-02 above-ceiling classification note (469.67 exceeds
+# the 450 physical per-direction NVLink aggregate by 4.37% —
+# in-network-computing class; this stage works the 8->16 RATIO, not the
+# absolute class).
+#
+# HYBRID FABRIC PROJECTION (declared): the anchor's r=16 fabric is
+# intra-node NVSwitch + inter-node RoCEv2 rail (16x200 Gbps per node per
+# the fetched config => 400 B/ns per-direction rail aggregate, the same
+# A6-convention arithmetic; see ring16_gf04_rail400_v1 for the rail-bound
+# twin). The L0 topology input space carries ONE uniform B — no per-leg /
+# per-class asymmetry parameter exists (nonuniform fabrics are explicitly
+# unsupported) — so this file executes the anchor's own 469.67 reading as
+# the uniform value; the rail-bound bracket lives in its sibling file.
+#
+# HONESTY: B swept free (A-L0-BW), anchor-stated, fixed BEFORE any model
+# output was read. L = 200 ns A-L0-LAT registry point (KEEP). 16 | 2^30,
+# 2^32, 2^33 — divisibility gates ACCEPT the executed sizes exactly.
+# docs/calibration/anchors_gapfill.md §GF-04 (PROPOSED gap-fill anchor).
+topology_id: ring16_gf04_anchor469_67_v1
+topology_class: unidirectional_ring
+ranks: 16
+link:
+  bytes_per_ns: 469.67
+  hop_latency_ns: 200
+notes: >
+  Unidirectional ring of 16 ranks (the anchor's 2x8 two-node count) at
+  the anchor's own two-node busbw summary figure 469.67 B/ns (pinned
+  busbw = B mapping; aggregate-scale uniform projection of the hybrid
+  NVSwitch+RoCE fabric, header). Never tuned; anchor-stated, fetch-verified.

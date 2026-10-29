@@ -1,0 +1,51 @@
+# Calibration-ladder A3 sweep: where does the L0
+# single-port crossbar identity sit relative to CAL-A3 — the ladder's
+# first MEASURED O-CCT target (Crusoe Cloud GB200 NVL72 all_reduce_perf,
+# NCCL 2.28.3 / CUDA 12.9.1 / driver 580.82.07, all 72 GPUs, 2-32 GiB per
+# rank, out-of-place; docs/calibration/anchors_staging.md §A3)?
+#
+# Per CALIBRATION_PLAN.md §1.1 row CAL-A3 this anchor IS the primary O-CCT
+# calibration target (bandwidth-bound large-message regime on the flagship
+# NVLink scale-up fabric). The comparison is CCT-vs-CCT per plan §3: the
+# anchor's (size -> time) series with the busbw->algbw->CCT algebraic
+# mapping written down per point in the calibration record; NCCL's busbw
+# carries the 2(r-1)/r factor, which the model's wire identity carries on
+# its own side, so the factor cancels and no mixed metric is compared.
+#
+# NOTHING IS TUNED: B values are the same anchor-informed span {448, 720,
+# 900} B/ns as stage A2 (CAL-A7 endpoint / CAL-A12-derated bridge / CAL-A2
+# ceiling), fixed by anchor arithmetic before CAL-A3's times were read; L
+# stays at the A-L0X-LAT registry point 200 ns. Every delta below is an
+# arithmetic fact of the identity t = 2(r-1)/r*M/B + 2L.
+#
+# Payload grid: the A-L0X-DIV input gate (structural KEEP assumption)
+# rejects CAL-A3's exact power-of-two sizes at r=72 (72 = 8*9 never divides
+# 2^k), so the grid carries the FLOOR/CEIL 72-divisible brackets around
+# each anchor size — relative offset <= 2.7e-8; the exact-size identity
+# evaluation and the bracket cross-check live in the stage's calibration
+# record (results/calibration/, builder in this directory).
+#   2 GiB  2^31: brackets 2147483592 / 2147483664
+#   4 GiB  2^32: brackets 4294967256 / 4294967328
+#   8 GiB  2^33: brackets 8589934584 / 8589934656
+#  16 GiB  2^34: brackets 17179869168 / 17179869240
+#  32 GiB  2^35: brackets 34359738336 / 34359738408
+#
+# Baseline = the CAL-A2-derived 900 B/ns ceiling topology (the anchor
+# point), so the delta columns read directly as placement vs the line the
+# CAL-A3 series is normalized against.
+sweep: cal_a3_cct_v1
+workload: experiments/calibration/a3/workloads/w1_dense_tp_decode_tp72_32gib_floorbr.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a3/topologies/crossbar72_a3_ceiling900_v1.yaml
+grid:
+  payload_sizes_bytes: [2147483592, 2147483664, 4294967256, 4294967328, 8589934584, 8589934656, 17179869168, 17179869240, 34359738336, 34359738408]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a3/topologies/crossbar72_a3_span448_v1.yaml
+    - experiments/calibration/a3/topologies/crossbar72_a3_derated720_v1.yaml
+    - experiments/calibration/a3/topologies/crossbar72_a3_ceiling900_v1.yaml

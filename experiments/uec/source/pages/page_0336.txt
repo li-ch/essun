@@ -1,0 +1,70 @@
+ 336 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-41 - RODL Request Fields 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = RODL 
+next_hdr 4 Encoding identifying UET Semantic type  
+flags (7 bits) 
+• rsvd 
+• cack 
+ 
+• retx 
+ 
+• ar 
+ 
+• syn 
+• rsvd 
+ 
+1 
+1 
+ 
+1 
+ 
+1 
+ 
+1 
+2 
+pds.flags = [rsvd, retx, ar, syn, rsvd] 
+• Reserved  
+• 1 => pds.rev_cack_psn_lsb replaces 
+pds.clear_psn_offset 
+• 1 => This packet is a retransmit (Refer to 
+Section 3.5.11.8.4) 
+• 1 => ACK Request, when set an ACK is to be 
+sent for this packet (Refer to Section 3.5.12.2) 
+• 1 => PDC establishment request 
+• Reserved 
+clear_psn_offset 
+or 
+rev_cack_psn_lsb 
+16 If pds.flags.cack = 0: 
+pds.clear_psn_offset is the same as ROD/RUD 
+If pds.flags.cack = 1: 
+pds.rev_cack_psn_lsb are the lower 16 bits of the 
+CACK_PSN for the reverse direction. 
+psn 32 Same as ROD/RUD 
+spdcid 16 Same as ROD/RUD 
+ 
+dpdcid 
+ 
+or 
+ 
+{pdc_info, psn_offset} 
+ 
+16 
+ 
+ 
+ 
+16 
+Same as ROD/RUD 
+ 
+Figure 3-67 - RODL Header Format - General 
+ 
+ 

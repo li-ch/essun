@@ -1,0 +1,25 @@
+ 228 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Size Description Section Ref 
+address 60 Offset into the region identified by the 
+JobID. 
+ 
+ 
+Implementation Note: 
+As an example of the implementation of ses.dc, when ses.dc is 1, a target using AXI would need to 
+wait for the AXI completion before generating the SES response. 
+ 
+When additional semantic headers are placed in a single packet, the ses.mm bit MUST be set to 1 for all 
+semantic headers in the packet other than the last one. The ses.mm bit MUST be set to 0 for the last 
+semantic header in the packet. Figure 3-21 illustrates a packed SES payload with four messages and a 
+corresponding packed SES response. This example uses ses.ehl = 0. 
+When packing messages, if the payload of a message is not a multiple of four bytes, that message is 
+padded out to the next multiple of four bytes. The next SES header in a packed payload always starts on 
+the same 4-byte boundary as the previous SES header. For example, if the ses.request_length is 53 
+bytes, then the next SES header starts 56 bytes after the start of the previous message’s payload. The 
+padding bytes are set to zero. When present, the UET CRC directly follows the last message (no padding 
+before the UET CRC). 
+ 
+Figure 3-18 - Packed messages using ses.mm=1  
+ 

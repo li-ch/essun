@@ -1,0 +1,1009 @@
+#0 building with "orbstack" instance using docker driver
+
+#1 [internal] load build definition from astra-csg-htsim.Dockerfile
+#1 transferring dockerfile: 9.42kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/18] FROM docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+#4 resolve docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b 0.0s done
+#4 DONE 0.0s
+
+#5 [ 8/18] RUN wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v29.0/protobuf-29.0.tar.gz"     && tar -xf "protobuf-29.0.tar.gz"     && rm "protobuf-29.0.tar.gz"
+#5 CACHED
+
+#6 [ 7/18] WORKDIR /opt
+#6 CACHED
+
+#7 [11/18] WORKDIR /opt/astra-sim
+#7 CACHED
+
+#8 [ 9/18] WORKDIR /opt/protobuf-29.0/build
+#8 CACHED
+
+#9 [ 6/18] RUN cmake ..         -DCMAKE_CXX_STANDARD=14         -DCMAKE_BUILD_TYPE=Release         -DCMAKE_INSTALL_PREFIX="/opt/abseil-cpp-20240722.0/install"     && cmake --build . --target install --config Release --parallel "$(nproc)"
+#9 CACHED
+
+#10 [ 2/18] RUN apt-get update && apt-get install -y --no-install-recommends         coreutils wget ca-certificates git         gcc g++ make cmake         libboost-dev libboost-program-options-dev         zlib1g-dev         patch     && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [10/18] RUN cmake ..         -DCMAKE_CXX_STANDARD=14         -DCMAKE_BUILD_TYPE=Release         -Dprotobuf_BUILD_TESTS=OFF         -Dprotobuf_ABSL_PROVIDER=package         -DCMAKE_INSTALL_PREFIX="/opt/protobuf-29.0/install"     && cmake --build . --target install --config Release --parallel "$(nproc)"
+#11 CACHED
+
+#12 [ 4/18] RUN wget -q "https://github.com/abseil/abseil-cpp/releases/download/20240722.0/abseil-cpp-20240722.0.tar.gz"     && tar -xf "abseil-cpp-20240722.0.tar.gz"     && rm "abseil-cpp-20240722.0.tar.gz"
+#12 CACHED
+
+#13 [ 3/18] WORKDIR /opt
+#13 CACHED
+
+#14 [ 5/18] WORKDIR /opt/abseil-cpp-20240722.0/build
+#14 CACHED
+
+#15 [12/18] RUN git clone https://github.com/astra-sim/astra-sim.git .     && git checkout --detach "4ce9ecfe746a3ee5fe47559a11d91644d641fa7f"     && git submodule update --init --recursive         extern/graph_frontend/chakra         extern/network_backend/analytical         extern/remote_memory_backend/analytical         extern/helper/fmt         extern/helper/spdlog         extern/network_backend/csg-htsim     && echo "=== pin check ==="     && git rev-parse HEAD     && git submodule status     && echo "=== csg-htsim license (BSD-2, stays in tree) ==="     && sha256sum extern/network_backend/csg-htsim/LICENSE
+#15 CACHED
+
+#16 [13/18] RUN sed -i 's/srand(time(NULL));/{ const char* s = getenv("ESSUN_SEED"); srand(s ? atoi(s) : 0); }/'         /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc     && grep -n "ESSUN_SEED" /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc     && sed -n '100,104p' /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc
+#16 0.095 102:    { const char* s = getenv("ESSUN_SEED"); srand(s ? atoi(s) : 0); }
+#16 0.095         i++;
+#16 0.095     }
+#16 0.095     { const char* s = getenv("ESSUN_SEED"); srand(s ? atoi(s) : 0); }
+#16 0.095 
+#16 0.095     std::cout << "Using subflow count " << subflow_count << std::endl;
+#16 DONE 0.1s
+
+#17 [14/18] WORKDIR /opt/astra-sim/build/astra_htsim
+#17 DONE 0.1s
+
+#18 [15/18] RUN ./build.sh
+#18 0.120 +++ realpath ./build.sh
+#18 0.121 ++ dirname /opt/astra-sim/build/astra_htsim/build.sh
+#18 0.121 + SCRIPT_DIR=/opt/astra-sim/build/astra_htsim
+#18 0.121 + PROJECT_DIR=/opt/astra-sim/build/astra_htsim/../..
+#18 0.121 + BUILD_DIR=/opt/astra-sim/build/astra_htsim/build
+#18 0.121 + CHAKRA_ET_DIR=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.121 + build_as_debug=false
+#18 0.121 + should_clean=false
+#18 0.121 + getopts ldr OPT
+#18 0.121 + [[ false == true ]]
+#18 0.121 + setup
+#18 0.121 + [[ ! -d /opt/astra-sim/build/astra_htsim/build ]]
+#18 0.121 + mkdir -p /opt/astra-sim/build/astra_htsim/build
+#18 0.122 ++ nproc
+#18 0.122 + NUM_THREADS=18
+#18 0.122 + [[ 18 -ge 16 ]]
+#18 0.122 + NUM_THREADS=16
+#18 0.122 + compile_chakra_et
+#18 0.122 + [[ ! -f /opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf/et_def.pb.h ]]
+#18 0.122 + protoc et_def.proto --proto_path=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf --cpp_out=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.135 + [[ ! -f /opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf/et_def_pb2.py ]]
+#18 0.135 + protoc et_def.proto --proto_path=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf --python_out=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.137 + patch_htsim
+#18 0.137 + patch -p1 -d /opt/astra-sim/build/astra_htsim/../../extern/network_backend/csg-htsim --forward --reject-file=- -i /opt/astra-sim/build/astra_htsim/htsim_astrasim.patch
+#18 0.138 patching file sim/tcp.cpp
+#18 0.138 patching file sim/tcp.h
+#18 0.138 HTSim patch applied successfully
+#18 0.138 + true
+#18 0.138 + ret=0
+#18 0.138 + [[ 0 -eq 0 ]]
+#18 0.138 + echo 'HTSim patch applied successfully'
+#18 0.138 + [[ false == true ]]
+#18 0.138 + compile_astrasim_htsim
+#18 0.138 + cd /opt/astra-sim/build/astra_htsim/build
+#18 0.138 + cmake ..
+#18 0.168 -- The C compiler identification is GNU 11.4.0
+#18 0.197 -- The CXX compiler identification is GNU 11.4.0
+#18 0.203 -- Detecting C compiler ABI info
+#18 0.228 -- Detecting C compiler ABI info - done
+#18 0.231 -- Check for working C compiler: /usr/bin/cc - skipped
+#18 0.231 -- Detecting C compile features
+#18 0.232 -- Detecting C compile features - done
+#18 0.233 -- Detecting CXX compiler ABI info
+#18 0.262 -- Detecting CXX compiler ABI info - done
+#18 0.262 -- Check for working CXX compiler: /usr/bin/c++ - skipped
+#18 0.262 -- Detecting CXX compile features
+#18 0.263 -- Detecting CXX compile features - done
+#18 0.265 -- {fmt} version: 11.0.2
+#18 0.265 -- Build type: Release
+#18 0.267 -- Build spdlog: 1.14.1
+#18 0.268 -- Looking for pthread.h
+#18 0.292 -- Looking for pthread.h - found
+#18 0.292 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#18 0.311 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#18 0.312 -- Found Threads: TRUE  
+#18 0.312 -- Build type: Release
+#18 361.8 [ 11%] Creating directories for 'yaml-cpp-populate'
+#18 361.8 [ 22%] Performing download step (git clone) for 'yaml-cpp-populate'
+#18 361.8 Cloning into 'yaml-cpp-src'...
+#18 361.8 fatal: unable to access 'https://github.com/jbeder/yaml-cpp.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
+#18 361.8 Cloning into 'yaml-cpp-src'...
+#18 361.8 fatal: unable to access 'https://github.com/jbeder/yaml-cpp.git/': Failed to connect to github.com port 443 after 135730 ms: Connection timed out
+#18 361.8 Cloning into 'yaml-cpp-src'...
+#18 361.8 fatal: unable to access 'https://github.com/jbeder/yaml-cpp.git/': Failed to connect to github.com port 443 after 135141 ms: Connection timed out
+#18 361.8 -- Had to git clone more than once:
+#18 361.8           3 times.
+#18 361.8 CMake Error at yaml-cpp-subbuild/yaml-cpp-populate-prefix/tmp/yaml-cpp-populate-gitclone.cmake:31 (message):
+#18 361.8   Failed to clone repository: 'https://github.com/jbeder/yaml-cpp.git'
+#18 361.8 
+#18 361.8 
+#18 361.8 gmake[2]: *** [CMakeFiles/yaml-cpp-populate.dir/build.make:102: yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-download] Error 1
+#18 361.8 gmake[1]: *** [CMakeFiles/Makefile2:83: CMakeFiles/yaml-cpp-populate.dir/all] Error 2
+#18 361.8 gmake: *** [Makefile:91: all] Error 2
+#18 361.8 
+#18 361.8 CMake Error at /usr/share/cmake-3.22/Modules/FetchContent.cmake:1087 (message):
+#18 361.8   Build step for yaml-cpp failed: 2
+#18 361.8 Call Stack (most recent call first):
+#18 361.8   /usr/share/cmake-3.22/Modules/FetchContent.cmake:1216:EVAL:2 (__FetchContent_directPopulate)
+#18 361.8   /usr/share/cmake-3.22/Modules/FetchContent.cmake:1216 (cmake_language)
+#18 361.8   /usr/share/cmake-3.22/Modules/FetchContent.cmake:1259 (FetchContent_Populate)
+#18 361.8   /opt/astra-sim/CMakeLists.txt:34 (FetchContent_MakeAvailable)
+#18 361.8 
+#18 361.8 
+#18 361.8 -- Configuring incomplete, errors occurred!
+#18 361.8 See also "/opt/astra-sim/build/astra_htsim/build/CMakeFiles/CMakeOutput.log".
+#18 ERROR: process "/bin/sh -c ./build.sh" did not complete successfully: exit code: 1
+------
+ > [15/18] RUN ./build.sh:
+361.8   Build step for yaml-cpp failed: 2
+361.8 Call Stack (most recent call first):
+361.8   /usr/share/cmake-3.22/Modules/FetchContent.cmake:1216:EVAL:2 (__FetchContent_directPopulate)
+361.8   /usr/share/cmake-3.22/Modules/FetchContent.cmake:1216 (cmake_language)
+361.8   /usr/share/cmake-3.22/Modules/FetchContent.cmake:1259 (FetchContent_Populate)
+361.8   /opt/astra-sim/CMakeLists.txt:34 (FetchContent_MakeAvailable)
+361.8 
+361.8 
+361.8 -- Configuring incomplete, errors occurred!
+361.8 See also "/opt/astra-sim/build/astra_htsim/build/CMakeFiles/CMakeOutput.log".
+------
+astra-csg-htsim.Dockerfile:152
+--------------------
+ 150 |     #  -> cmake configure + parallel build; caps itself at 16 threads)
+ 151 |     WORKDIR /opt/astra-sim/build/astra_htsim
+ 152 | >>> RUN ./build.sh
+ 153 |     
+ 154 |     ### Verify the binary exists (S1 PASS bar) and hash build evidence ###
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c ./build.sh" did not complete successfully: exit code: 1
+BUILD_EXIT=1
+#0 building with "orbstack" instance using docker driver
+
+#1 [internal] load build definition from astra-csg-htsim.Dockerfile
+#1 transferring dockerfile: 9.42kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/18] FROM docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+#4 resolve docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b 0.0s done
+#4 DONE 0.0s
+
+#5 [ 7/18] WORKDIR /opt
+#5 CACHED
+
+#6 [ 3/18] WORKDIR /opt
+#6 CACHED
+
+#7 [ 6/18] RUN cmake ..         -DCMAKE_CXX_STANDARD=14         -DCMAKE_BUILD_TYPE=Release         -DCMAKE_INSTALL_PREFIX="/opt/abseil-cpp-20240722.0/install"     && cmake --build . --target install --config Release --parallel "$(nproc)"
+#7 CACHED
+
+#8 [12/18] RUN git clone https://github.com/astra-sim/astra-sim.git .     && git checkout --detach "4ce9ecfe746a3ee5fe47559a11d91644d641fa7f"     && git submodule update --init --recursive         extern/graph_frontend/chakra         extern/network_backend/analytical         extern/remote_memory_backend/analytical         extern/helper/fmt         extern/helper/spdlog         extern/network_backend/csg-htsim     && echo "=== pin check ==="     && git rev-parse HEAD     && git submodule status     && echo "=== csg-htsim license (BSD-2, stays in tree) ==="     && sha256sum extern/network_backend/csg-htsim/LICENSE
+#8 CACHED
+
+#9 [ 9/18] WORKDIR /opt/protobuf-29.0/build
+#9 CACHED
+
+#10 [ 8/18] RUN wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v29.0/protobuf-29.0.tar.gz"     && tar -xf "protobuf-29.0.tar.gz"     && rm "protobuf-29.0.tar.gz"
+#10 CACHED
+
+#11 [ 4/18] RUN wget -q "https://github.com/abseil/abseil-cpp/releases/download/20240722.0/abseil-cpp-20240722.0.tar.gz"     && tar -xf "abseil-cpp-20240722.0.tar.gz"     && rm "abseil-cpp-20240722.0.tar.gz"
+#11 CACHED
+
+#12 [13/18] RUN sed -i 's/srand(time(NULL));/{ const char* s = getenv("ESSUN_SEED"); srand(s ? atoi(s) : 0); }/'         /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc     && grep -n "ESSUN_SEED" /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc     && sed -n '100,104p' /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc
+#12 CACHED
+
+#13 [10/18] RUN cmake ..         -DCMAKE_CXX_STANDARD=14         -DCMAKE_BUILD_TYPE=Release         -Dprotobuf_BUILD_TESTS=OFF         -Dprotobuf_ABSL_PROVIDER=package         -DCMAKE_INSTALL_PREFIX="/opt/protobuf-29.0/install"     && cmake --build . --target install --config Release --parallel "$(nproc)"
+#13 CACHED
+
+#14 [ 2/18] RUN apt-get update && apt-get install -y --no-install-recommends         coreutils wget ca-certificates git         gcc g++ make cmake         libboost-dev libboost-program-options-dev         zlib1g-dev         patch     && rm -rf /var/lib/apt/lists/*
+#14 CACHED
+
+#15 [ 5/18] WORKDIR /opt/abseil-cpp-20240722.0/build
+#15 CACHED
+
+#16 [11/18] WORKDIR /opt/astra-sim
+#16 CACHED
+
+#17 [14/18] WORKDIR /opt/astra-sim/build/astra_htsim
+#17 CACHED
+
+#18 [15/18] RUN ./build.sh
+#18 0.088 +++ realpath ./build.sh
+#18 0.088 ++ dirname /opt/astra-sim/build/astra_htsim/build.sh
+#18 0.089 + SCRIPT_DIR=/opt/astra-sim/build/astra_htsim
+#18 0.089 + PROJECT_DIR=/opt/astra-sim/build/astra_htsim/../..
+#18 0.089 + BUILD_DIR=/opt/astra-sim/build/astra_htsim/build
+#18 0.089 + CHAKRA_ET_DIR=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.089 + build_as_debug=false
+#18 0.089 + should_clean=false
+#18 0.089 + getopts ldr OPT
+#18 0.089 + [[ false == true ]]
+#18 0.089 + setup
+#18 0.089 + [[ ! -d /opt/astra-sim/build/astra_htsim/build ]]
+#18 0.089 + mkdir -p /opt/astra-sim/build/astra_htsim/build
+#18 0.090 ++ nproc
+#18 0.090 + NUM_THREADS=18
+#18 0.090 + [[ 18 -ge 16 ]]
+#18 0.090 + NUM_THREADS=16
+#18 0.090 + compile_chakra_et
+#18 0.090 + [[ ! -f /opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf/et_def.pb.h ]]
+#18 0.090 + protoc et_def.proto --proto_path=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf --cpp_out=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.101 + [[ ! -f /opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf/et_def_pb2.py ]]
+#18 0.101 + protoc et_def.proto --proto_path=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf --python_out=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.102 + patch_htsim
+#18 0.102 + patch -p1 -d /opt/astra-sim/build/astra_htsim/../../extern/network_backend/csg-htsim --forward --reject-file=- -i /opt/astra-sim/build/astra_htsim/htsim_astrasim.patch
+#18 0.103 patching file sim/tcp.cpp
+#18 0.103 patching file sim/tcp.h
+#18 0.103 + true
+#18 0.103 + ret=0
+#18 0.103 + [[ 0 -eq 0 ]]
+#18 0.103 + echo 'HTSim patch applied successfully'
+#18 0.103 HTSim patch applied successfully
+#18 0.103 + [[ false == true ]]
+#18 0.103 + compile_astrasim_htsim
+#18 0.103 + cd /opt/astra-sim/build/astra_htsim/build
+#18 0.103 + cmake ..
+#18 0.129 -- The C compiler identification is GNU 11.4.0
+#18 0.151 -- The CXX compiler identification is GNU 11.4.0
+#18 0.153 -- Detecting C compiler ABI info
+#18 0.173 -- Detecting C compiler ABI info - done
+#18 0.176 -- Check for working C compiler: /usr/bin/cc - skipped
+#18 0.176 -- Detecting C compile features
+#18 0.176 -- Detecting C compile features - done
+#18 0.177 -- Detecting CXX compiler ABI info
+#18 0.199 -- Detecting CXX compiler ABI info - done
+#18 0.202 -- Check for working CXX compiler: /usr/bin/c++ - skipped
+#18 0.202 -- Detecting CXX compile features
+#18 0.202 -- Detecting CXX compile features - done
+#18 0.209 -- {fmt} version: 11.0.2
+#18 0.209 -- Build type: Release
+#18 0.210 -- Build spdlog: 1.14.1
+#18 0.211 -- Looking for pthread.h
+#18 0.230 -- Looking for pthread.h - found
+#18 0.230 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#18 0.250 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#18 0.250 -- Found Threads: TRUE  
+#18 0.250 -- Build type: Release
+#18 5.982 -- Found ZLIB: /usr/lib/aarch64-linux-gnu/libz.so (found version "1.2.11") 
+#18 5.988 -- Configuring done
+#18 6.006 -- Generating done
+#18 6.007 -- Build files have been written to: /opt/astra-sim/build/astra_htsim/build
+#18 6.009 + cmake --build . -j 16
+#18 6.022 make[3]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+#18 6.024 [  1%] Building CXX object AstraSim/extern/helper/fmt/CMakeFiles/fmt.dir/src/format.cc.o
+#18 6.024 [  2%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/spdlog.cpp.o
+#18 6.024 [  2%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o
+#18 6.024 [  2%] Building CXX object AstraSim/extern/helper/fmt/CMakeFiles/fmt.dir/src/os.cc.o
+#18 6.025 [  2%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/binary.cpp.o
+#18 6.025 [  3%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/convert.cpp.o
+#18 6.025 [  4%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/file_sinks.cpp.o
+#18 6.025 [  6%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilder.cpp.o
+#18 6.025 [  7%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilderadapter.cpp.o
+#18 6.025 [  8%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/color_sinks.cpp.o
+#18 6.026 [  8%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/directives.cpp.o
+#18 6.026 [  7%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/depthguard.cpp.o
+#18 6.026 [  9%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/cfg.cpp.o
+#18 6.026 [ 10%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emit.cpp.o
+#18 6.026 [  9%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/async.cpp.o
+#18 6.134 [ 11%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitfromevents.cpp.o
+#18 6.140 [ 12%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o
+#18 6.166 [ 12%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitter.cpp.o
+#18 6.200 [ 13%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitterstate.cpp.o
+#18 6.203 [ 14%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitterutils.cpp.o
+#18 6.234 [ 14%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/exceptions.cpp.o
+#18 6.276 [ 15%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/exp.cpp.o
+#18 6.358 [ 16%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/fptostring.cpp.o
+#18 6.426 [ 16%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/memory.cpp.o
+#18 6.428 [ 17%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/node.cpp.o
+#18 6.461 [ 18%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/node_data.cpp.o
+#18 6.506 [ 18%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/nodebuilder.cpp.o
+#18 6.525 [ 19%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/nodeevents.cpp.o
+#18 6.538 [ 20%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/null.cpp.o
+#18 6.555 [ 20%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/ostream_wrapper.cpp.o
+#18 6.568 [ 21%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/parse.cpp.o
+#18 6.582 [ 22%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/parser.cpp.o
+#18 6.582 [ 22%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/regex_yaml.cpp.o
+#18 6.660 [ 23%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scanner.cpp.o
+#18 6.681 [ 24%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scanscalar.cpp.o
+#18 6.682 [ 24%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scantag.cpp.o
+#18 6.730 [ 25%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scantoken.cpp.o
+#18 6.782 [ 26%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/simplekey.cpp.o
+#18 6.786 [ 26%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/singledocparser.cpp.o
+#18 6.804 [ 27%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/stream.cpp.o
+#18 6.838 [ 28%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/tag.cpp.o
+#18 6.873 queue.cpp: In member function 'PriorityQueue::queue_priority_t PriorityQueue::getPriority(Packet&)':
+#18 6.873 queue.cpp:236:1: warning: control reaches end of non-void function [-Wreturn-type]
+#18 6.873   236 | }
+#18 6.873       | ^
+#18 6.875 queue.cpp: In member function 'FairPriorityQueue::queue_priority_t FairPriorityQueue::getPriority(Packet&)':
+#18 6.875 queue.cpp:407:1: warning: control reaches end of non-void function [-Wreturn-type]
+#18 6.875   407 | }
+#18 6.875       | ^
+#18 7.549 [ 29%] Linking CXX static library libfmt.a
+#18 7.560 [ 29%] Built target fmt
+#18 7.593 [ 29%] Linking CXX static library libyaml-cpp.a
+#18 7.608 [ 29%] Built target yaml-cpp
+#18 7.614 [ 30%] Building CXX object _deps/yaml-cpp-build/util/CMakeFiles/yaml-cpp-sandbox.dir/sandbox.cpp.o
+#18 7.614 [ 30%] Building CXX object _deps/yaml-cpp-build/util/CMakeFiles/yaml-cpp-read.dir/read.cpp.o
+#18 7.615 [ 31%] Building CXX object _deps/yaml-cpp-build/util/CMakeFiles/yaml-cpp-parse.dir/parse.cpp.o
+#18 7.620 [ 32%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/FullyConnected.cpp.o
+#18 7.620 [ 32%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/BasicTopology.cpp.o
+#18 7.620 [ 33%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/Ring.cpp.o
+#18 7.620 [ 32%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/BasicTopology.cpp.o
+#18 7.620 [ 34%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/Ring.cpp.o
+#18 7.620 [ 35%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/FullyConnected.cpp.o
+#18 7.620 [ 35%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/Switch.cpp.o
+#18 7.620 [ 36%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/topology/Helper.cpp.o
+#18 7.621 [ 36%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/topology/Topology.cpp.o
+#18 7.621 [ 37%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/multi-dim-topology/MultiDimTopology.cpp.o
+#18 7.663 [ 38%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/NetworkFunction.cpp.o
+#18 7.663 [ 39%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/event-queue/Event.cpp.o
+#18 7.672 [ 39%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/Switch.cpp.o
+#18 7.674 [ 39%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/event-queue/EventList.cpp.o
+#18 7.674 [ 40%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/event-queue/EventQueue.cpp.o
+#18 7.684 [ 41%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/network-parser/NetworkParser.cpp.o
+#18 7.698 [ 42%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/network/Chunk.cpp.o
+#18 7.714 [ 43%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/network/Device.cpp.o
+#18 7.721 [ 43%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/network/Link.cpp.o
+#18 7.730 [ 44%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/topology/Helper.cpp.o
+#18 7.732 [ 45%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/topology/Topology.cpp.o
+#18 7.735 [ 45%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/NetworkFunction.cpp.o
+#18 7.736 [ 46%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/event-queue/Event.cpp.o
+#18 7.749 [ 47%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/event-queue/EventList.cpp.o
+#18 7.773 [ 48%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/network-parser/NetworkParser.cpp.o
+#18 7.773 [ 47%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/event-queue/EventQueue.cpp.o
+#18 7.935 [ 49%] Linking CXX executable parse
+#18 7.965 [ 50%] Linking CXX executable read
+#18 7.969 [ 50%] Built target yaml-cpp-parse
+#18 7.995 [ 50%] Built target yaml-cpp-read
+#18 8.009 [ 51%] Linking CXX executable sandbox
+#18 8.035 [ 51%] Built target yaml-cpp-sandbox
+#18 8.447 [ 51%] Linking CXX static library ../lib/libAnalytical_Congestion_Unaware.a
+#18 8.462 [ 51%] Built target Analytical_Congestion_Unaware
+#18 8.495 [ 51%] Linking CXX static library libspdlog.a
+#18 8.508 [ 52%] Linking CXX static library ../lib/libAnalytical_Congestion_Aware.a
+#18 8.509 [ 52%] Built target spdlog
+#18 8.516 [ 54%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/common/AstraComputeAPI.cc.o
+#18 8.516 [ 54%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/BaseStream.cc.o
+#18 8.516 [ 53%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/common/Logging.cc.o
+#18 8.516 [ 55%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CSVWriter.cc.o
+#18 8.517 [ 55%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/DataSet.cc.o
+#18 8.517 [ 56%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CollectivePlan.cc.o
+#18 8.521 [ 56%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CollectivePhase.cc.o
+#18 8.521 [ 57%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CommunicatorGroup.cc.o
+#18 8.521 [ 58%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MemEventHandlerData.cc.o
+#18 8.521 [ 59%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MemBus.cc.o
+#18 8.521 [ 58%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/LogGP.cc.o
+#18 8.521 [ 60%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/BasicEventHandlerData.cc.o
+#18 8.521 [ 61%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MemMovRequest.cc.o
+#18 8.521 [ 62%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MyPacket.cc.o
+#18 8.521 [ 62%] Built target Analytical_Congestion_Aware
+#18 8.525 [ 62%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/PacketBundle.cc.o
+#18 8.589 [ 63%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/QueueLevelHandler.cc.o
+#18 8.590 [ 64%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/QueueLevels.cc.o
+#18 8.594 [ 64%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/RecvPacketEventHandlerData.cc.o
+#18 8.626 [ 65%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/RendezvousRecvData.cc.o
+#18 8.734 [ 66%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/RendezvousSendData.cc.o
+#18 8.756 [ 66%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/Roofline.cc.o
+#18 8.841 [ 67%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/SendPacketEventHandlerData.cc.o
+#18 8.907 [ 68%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/SimRecvCaller.cc.o
+#18 8.916 [ 68%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/SimSendCaller.cc.o
+#18 10.21 [ 69%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/StreamBaseline.cc.o
+#18 11.32 [ 70%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/Sys.cc.o
+#18 11.34 [ 70%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/Usage.cc.o
+#18 11.34 [ 71%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/UsageTracker.cc.o
+#18 11.34 [ 72%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/WorkloadLayerHandlerData.cc.o
+#18 11.36 [ 72%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/Algorithm.cc.o
+#18 11.36 [ 73%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/CollectiveImplLookup.cc.o
+#18 11.40 [ 74%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.cc.o
+#18 11.43 [ 74%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/AllToAll.cc.o
+#18 11.43 [ 75%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/DoubleBinaryTreeAllReduce.cc.o
+#18 11.43 [ 76%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/HalvingDoubling.cc.o
+#18 11.45 [ 76%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/Ring.cc.o
+#18 11.46 [ 77%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/BinaryTree.cc.o
+#18 11.52 [ 78%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/DoubleBinaryTreeTopology.cc.o
+#18 11.62 [ 78%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/GeneralComplexTopology.cc.o
+#18 11.72 [ 79%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/LocalRingGlobalBinaryTree.cc.o
+#18 11.73 [ 80%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/LocalRingNodeA2AGlobalDBT.cc.o
+#18 11.86 [ 80%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/Node.cc.o
+#18 11.86 [ 81%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/RingTopology.cc.o
+#18 11.93 [ 82%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/Torus3D.cc.o
+#18 12.07 [ 82%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/scheduling/OfflineGreedy.cc.o
+#18 13.00 [ 83%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/HardwareResource.cc.o
+#18 13.02 [ 84%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/LocalMemUsageTracker.cc.o
+#18 13.13 [ 85%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/Statistics.cc.o
+#18 13.43 [ 85%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/Workload.cc.o
+#18 13.45 [ 86%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/schema/protobuf/et_def.pb.cc.o
+#18 14.04 [ 87%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/feeder_v3/dependancy_solver.cpp.o
+#18 14.10 [ 87%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/feeder_v3/et_feeder.cpp.o
+#18 14.10 [ 88%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/feeder_v3/et_feeder_node.cpp.o
+#18 14.18 [ 89%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/third_party/utils/protoio.cc.o
+#18 14.20 [ 89%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/remote_memory_backend/analytical/AnalyticalRemoteMemory.cc.o
+#18 16.91 /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc: In member function 'void AstraSim::LocalMemUsageTracker::buildTensorLifetimeHeatmap()':
+#18 16.91 /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc:406:30: warning: '%02X' directive writing between 2 and 8 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+#18 16.91   406 |     sprintf(color, "#%02X%02X%02X", intensity, 100, 255 - intensity);
+#18 16.91       |                              ^~~~
+#18 16.91 /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc:406:20: note: directive argument in the range [0, 2147483647]
+#18 16.91   406 |     sprintf(color, "#%02X%02X%02X", intensity, 100, 255 - intensity);
+#18 16.91       |                    ^~~~~~~~~~~~~~~
+#18 16.92 In file included from /usr/include/stdio.h:894,
+#18 16.92                  from /usr/include/c++/11/cstdio:42,
+#18 16.92                  from /usr/include/c++/11/ext/string_conversions.h:43,
+#18 16.92                  from /usr/include/c++/11/bits/basic_string.h:6608,
+#18 16.92                  from /usr/include/c++/11/string:55,
+#18 16.92                  from /usr/include/c++/11/bits/locale_classes.h:40,
+#18 16.92                  from /usr/include/c++/11/bits/ios_base.h:41,
+#18 16.92                  from /usr/include/c++/11/streambuf:41,
+#18 16.92                  from /usr/include/c++/11/bits/streambuf_iterator.h:35,
+#18 16.92                  from /usr/include/c++/11/iterator:66,
+#18 16.92                  from /opt/astra-sim/extern/helper/json/json.hpp:53,
+#18 16.92                  from /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.hh:4,
+#18 16.92                  from /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc:1:
+#18 16.92 /usr/include/aarch64-linux-gnu/bits/stdio2.h:38:34: note: '__builtin___sprintf_chk' output between 8 and 20 bytes into a destination of size 8
+#18 16.92    38 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+#18 16.92       |          ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#18 16.92    39 |                                   __glibc_objsize (__s), __fmt,
+#18 16.92       |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#18 16.92    40 |                                   __va_arg_pack ());
+#18 16.92       |                                   ~~~~~~~~~~~~~~~~~
+#18 17.82 [ 90%] Linking CXX static library ../lib/libAstraSim.a
+#18 17.85 [ 90%] Built target AstraSim
+#18 22.83 eqds.cpp: In member function 'void EqdsSrc::sendIfPermitted()':
+#18 22.83 eqds.cpp:703:11: warning: variable 'pkt_size' set but not used [-Wunused-but-set-variable]
+#18 22.83   703 |     mem_b pkt_size = 0;
+#18 22.83       |           ^~~~~~~~
+#18 23.25 eqds.cpp: In member function 'EqdsBasePacket::seq_t EqdsSink::sackBitmapBaseIdeal()':
+#18 23.25 eqds.cpp:1486:25: warning: 'lowest_position' may be used uninitialized in this function [-Wmaybe-uninitialized]
+#18 23.25  1486 |     if (lowest_position + 64 > _high_epsn)
+#18 23.25       |         ~~~~~~~~~~~~~~~~^~~~
+#18 24.33 ar: `u' modifier ignored since `D' is the default (see `U')
+#18 24.33 ar: creating libhtsim.a
+#18 24.33 a - eventlist.o
+#18 24.33 a - tcppacket.o
+#18 24.33 a - pipe.o
+#18 24.33 a - queue.o
+#18 24.33 a - meter.o
+#18 24.33 a - queue_lossless.o
+#18 24.33 a - queue_lossless_input.o
+#18 24.33 a - queue_lossless_output.o
+#18 24.33 a - ecnqueue.o
+#18 24.33 a - tcp.o
+#18 24.33 a - dctcp.o
+#18 24.33 a - mtcp.o
+#18 24.33 a - loggers.o
+#18 24.33 a - logfile.o
+#18 24.33 a - clock.o
+#18 24.33 a - config.o
+#18 24.33 a - network.o
+#18 24.33 a - qcn.o
+#18 24.33 a - exoqueue.o
+#18 24.33 a - randomqueue.o
+#18 24.33 a - cbr.o
+#18 24.33 a - cbrpacket.o
+#18 24.33 a - sent_packets.o
+#18 24.33 a - ndp.o
+#18 24.33 a - ndptunnel.o
+#18 24.33 a - ndppacket.o
+#18 24.33 a - roce.o
+#18 24.33 a - rocepacket.o
+#18 24.33 a - eth_pause_packet.o
+#18 24.33 a - tcp_transfer.o
+#18 24.33 a - tcp_periodic.o
+#18 24.33 a - compositequeue.o
+#18 24.33 a - prioqueue.o
+#18 24.33 a - cpqueue.o
+#18 24.33 a - ndp_transfer.o
+#18 24.33 a - compositeprioqueue.o
+#18 24.33 a - switch.o
+#18 24.33 a - dctcp_transfer.o
+#18 24.33 a - fairpullqueue.o
+#18 24.33 a - route.o
+#18 24.33 a - callback_pipe.o
+#18 24.33 a - ndptunnelpacket.o
+#18 24.33 a - swiftpacket.o
+#18 24.33 a - swift.o
+#18 24.33 a - swift_scheduler.o
+#18 24.33 a - routetable.o
+#18 24.33 a - trigger.o
+#18 24.33 a - hpccpacket.o
+#18 24.33 a - hpcc.o
+#18 24.33 a - strackpacket.o
+#18 24.33 a - strack.o
+#18 24.33 a - priopullqueue.o
+#18 24.33 a - rng.o
+#18 24.33 a - ecnprioqueue.o
+#18 24.33 a - eqdspacket.o
+#18 24.33 a - eqds.o
+#18 24.33 a - eqds_logger.o
+#18 24.33 a - aeolusqueue.o
+#18 41.86 main_eqds.cpp: In function 'int main(int, char**)':
+#18 41.86 main_eqds.cpp:71:10: warning: unused variable 'oversubscribed_congestion_control' [-Wunused-variable]
+#18 41.86    71 |     bool oversubscribed_congestion_control = false;
+#18 41.86       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#18 42.35 [ 90%] Built target htsim
+#18 42.36 [ 91%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/HTSimMain.cc.o
+#18 42.36 [ 91%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/HTSimNetworkApi.cc.o
+#18 42.36 [ 92%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/HTSimSession.cc.o
+#18 42.36 [ 93%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CallbackTracker.cc.o
+#18 42.36 [ 93%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CallbackTrackerEntry.cc.o
+#18 42.36 [ 94%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/ChunkIdGenerator.cc.o
+#18 42.36 [ 95%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/ChunkIdGeneratorEntry.cc.o
+#18 42.36 [ 96%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/connection_matrix.cpp.o
+#18 42.36 [ 96%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_switch.cpp.o
+#18 42.36 [ 96%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CmdLineParser.cc.o
+#18 42.36 [ 98%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_topology.cpp.o
+#18 42.36 [ 98%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CommonNetworkApi.cc.o
+#18 42.36 [ 98%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/proto/HTSimProtoTcp.cc.o
+#18 42.36 [ 99%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/firstfit.cpp.o
+#18 46.04 [100%] Linking CXX executable ../bin/AstraSim_HTSim
+#18 46.21 [100%] Built target AstraSim_HTSim
+#18 DONE 46.4s
+
+#19 [16/18] RUN test -x "/opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim"     && sha256sum "/opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim"     && sha256sum /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a     && grep -c "astrasim_flow_finish_send_cb" /opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp.h
+#19 0.128 00c1b94c03a691da7bb03c3e3ad73a03e3e514923c752c3c46e4facca17a7451  /opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim
+#19 0.189 f9271372054e61dfee4e65caef2865ebd8bd1feb6fc823d0170a8871a5bee877  /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a
+#19 0.189 1
+#19 DONE 0.2s
+
+#20 [17/18] RUN ls -l /opt/astra-sim/build/astra_htsim/build/bin/     && ls -l /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a
+#20 0.100 total 11948
+#20 0.100 -rwxr-xr-x 1 root root 12233624 Oct 28 01:00 AstraSim_HTSim
+#20 0.100 -rw-r--r-- 1 root root 36236852 Oct 28 01:00 /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a
+#20 DONE 0.1s
+
+#21 [18/18] WORKDIR /opt/astra-sim
+#21 DONE 0.0s
+
+#22 exporting to image
+#22 exporting layers
+#22 exporting layers 4.8s done
+#22 exporting manifest sha256:7f97b6e39234f8fea62919ebbf7bf68e56c10ec412602ed410a1d953fa4ee59f done
+#22 exporting config sha256:19d3b04d07862c6e3486872a3609a0eba57b8283e4fca8c6f558565cad3b3cb8 done
+#22 exporting attestation manifest sha256:0d91cf550fb1a82844edf9ee986909baa60ac9c5227fde4c6db476e54b68b1ab 0.0s done
+#22 exporting manifest list sha256:0dce48f16e8bf5758d4191e1e932e440eaca1659d3bb0aa85ced335c15208864 done
+#22 naming to docker.io/essun/astra-csg-htsim:s1-seeded done
+#22 unpacking to docker.io/essun/astra-csg-htsim:s1-seeded
+#22 unpacking to docker.io/essun/astra-csg-htsim:s1-seeded 0.8s done
+#22 DONE 5.6s
+BUILD_EXIT_RETRY1=0
+#0 building with "orbstack" instance using docker driver
+
+#1 [internal] load build definition from astra-csg-htsim.Dockerfile
+#1 transferring dockerfile: 9.70kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/18] FROM docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b
+#4 resolve docker.io/library/ubuntu:22.04@sha256:e0f80c829509ef4df9e76bd8944eb7b8ec25cbb379b112a7f9448b2c77a77c9b 0.0s done
+#4 DONE 0.0s
+
+#5 [ 5/18] WORKDIR /opt/abseil-cpp-20240722.0/build
+#5 CACHED
+
+#6 [ 2/18] RUN apt-get update && apt-get install -y --no-install-recommends         coreutils wget ca-certificates git         gcc g++ make cmake         libboost-dev libboost-program-options-dev         zlib1g-dev         patch     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 3/18] WORKDIR /opt
+#7 CACHED
+
+#8 [ 6/18] RUN cmake ..         -DCMAKE_CXX_STANDARD=14         -DCMAKE_BUILD_TYPE=Release         -DCMAKE_INSTALL_PREFIX="/opt/abseil-cpp-20240722.0/install"     && cmake --build . --target install --config Release --parallel "$(nproc)"
+#8 CACHED
+
+#9 [10/18] RUN cmake ..         -DCMAKE_CXX_STANDARD=14         -DCMAKE_BUILD_TYPE=Release         -Dprotobuf_BUILD_TESTS=OFF         -Dprotobuf_ABSL_PROVIDER=package         -DCMAKE_INSTALL_PREFIX="/opt/protobuf-29.0/install"     && cmake --build . --target install --config Release --parallel "$(nproc)"
+#9 CACHED
+
+#10 [11/18] WORKDIR /opt/astra-sim
+#10 CACHED
+
+#11 [ 4/18] RUN wget -q "https://github.com/abseil/abseil-cpp/releases/download/20240722.0/abseil-cpp-20240722.0.tar.gz"     && tar -xf "abseil-cpp-20240722.0.tar.gz"     && rm "abseil-cpp-20240722.0.tar.gz"
+#11 CACHED
+
+#12 [ 9/18] WORKDIR /opt/protobuf-29.0/build
+#12 CACHED
+
+#13 [ 8/18] RUN wget -q "https://github.com/protocolbuffers/protobuf/releases/download/v29.0/protobuf-29.0.tar.gz"     && tar -xf "protobuf-29.0.tar.gz"     && rm "protobuf-29.0.tar.gz"
+#13 CACHED
+
+#14 [ 7/18] WORKDIR /opt
+#14 CACHED
+
+#15 [12/18] RUN git clone https://github.com/astra-sim/astra-sim.git .     && git checkout --detach "4ce9ecfe746a3ee5fe47559a11d91644d641fa7f"     && git submodule update --init --recursive         extern/graph_frontend/chakra         extern/network_backend/analytical         extern/remote_memory_backend/analytical         extern/helper/fmt         extern/helper/spdlog         extern/network_backend/csg-htsim     && echo "=== pin check ==="     && git rev-parse HEAD     && git submodule status     && echo "=== csg-htsim license (BSD-2, stays in tree) ==="     && sha256sum extern/network_backend/csg-htsim/LICENSE
+#15 CACHED
+
+#16 [13/18] RUN sed -i 's/srand(time(NULL));/{ const char* s = getenv("ESSUN_SEED"); srand(s ? atoi(s) : 1); }/'         /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc     && grep -n "ESSUN_SEED" /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc     && sed -n '100,104p' /opt/astra-sim/astra-sim/network_frontend/htsim/proto/HTSimProtoTcp.cc
+#16 0.089 102:    { const char* s = getenv("ESSUN_SEED"); srand(s ? atoi(s) : 1); }
+#16 0.089         i++;
+#16 0.089     }
+#16 0.089     { const char* s = getenv("ESSUN_SEED"); srand(s ? atoi(s) : 1); }
+#16 0.089 
+#16 0.089     std::cout << "Using subflow count " << subflow_count << std::endl;
+#16 DONE 0.1s
+
+#17 [14/18] WORKDIR /opt/astra-sim/build/astra_htsim
+#17 DONE 0.0s
+
+#18 [15/18] RUN ./build.sh
+#18 0.081 +++ realpath ./build.sh
+#18 0.081 ++ dirname /opt/astra-sim/build/astra_htsim/build.sh
+#18 0.081 + SCRIPT_DIR=/opt/astra-sim/build/astra_htsim
+#18 0.081 + PROJECT_DIR=/opt/astra-sim/build/astra_htsim/../..
+#18 0.081 + BUILD_DIR=/opt/astra-sim/build/astra_htsim/build
+#18 0.081 + CHAKRA_ET_DIR=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.081 + build_as_debug=false
+#18 0.081 + should_clean=false
+#18 0.081 + getopts ldr OPT
+#18 0.081 + [[ false == true ]]
+#18 0.081 + setup
+#18 0.081 + [[ ! -d /opt/astra-sim/build/astra_htsim/build ]]
+#18 0.081 + mkdir -p /opt/astra-sim/build/astra_htsim/build
+#18 0.082 ++ nproc
+#18 0.082 + NUM_THREADS=18
+#18 0.082 + [[ 18 -ge 16 ]]
+#18 0.082 + NUM_THREADS=16
+#18 0.082 + compile_chakra_et
+#18 0.082 + [[ ! -f /opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf/et_def.pb.h ]]
+#18 0.082 + protoc et_def.proto --proto_path=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf --cpp_out=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.093 + [[ ! -f /opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf/et_def_pb2.py ]]
+#18 0.093 + protoc et_def.proto --proto_path=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf --python_out=/opt/astra-sim/build/astra_htsim/../../extern/graph_frontend/chakra/schema/protobuf
+#18 0.094 + patch_htsim
+#18 0.094 + patch -p1 -d /opt/astra-sim/build/astra_htsim/../../extern/network_backend/csg-htsim --forward --reject-file=- -i /opt/astra-sim/build/astra_htsim/htsim_astrasim.patch
+#18 0.095 patching file sim/tcp.cpp
+#18 0.095 patching file sim/tcp.h
+#18 0.095 HTSim patch applied successfully
+#18 0.095 + true
+#18 0.095 + ret=0
+#18 0.095 + [[ 0 -eq 0 ]]
+#18 0.095 + echo 'HTSim patch applied successfully'
+#18 0.095 + [[ false == true ]]
+#18 0.095 + compile_astrasim_htsim
+#18 0.095 + cd /opt/astra-sim/build/astra_htsim/build
+#18 0.095 + cmake ..
+#18 0.122 -- The C compiler identification is GNU 11.4.0
+#18 0.142 -- The CXX compiler identification is GNU 11.4.0
+#18 0.145 -- Detecting C compiler ABI info
+#18 0.164 -- Detecting C compiler ABI info - done
+#18 0.167 -- Check for working C compiler: /usr/bin/cc - skipped
+#18 0.167 -- Detecting C compile features
+#18 0.167 -- Detecting C compile features - done
+#18 0.169 -- Detecting CXX compiler ABI info
+#18 0.191 -- Detecting CXX compiler ABI info - done
+#18 0.194 -- Check for working CXX compiler: /usr/bin/c++ - skipped
+#18 0.194 -- Detecting CXX compile features
+#18 0.194 -- Detecting CXX compile features - done
+#18 0.196 -- {fmt} version: 11.0.2
+#18 0.196 -- Build type: Release
+#18 0.198 -- Build spdlog: 1.14.1
+#18 0.199 -- Looking for pthread.h
+#18 0.218 -- Looking for pthread.h - found
+#18 0.218 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#18 0.238 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#18 0.238 -- Found Threads: TRUE  
+#18 0.238 -- Build type: Release
+#18 4.701 -- Found ZLIB: /usr/lib/aarch64-linux-gnu/libz.so (found version "1.2.11") 
+#18 4.707 -- Configuring done
+#18 4.725 -- Generating done
+#18 4.726 -- Build files have been written to: /opt/astra-sim/build/astra_htsim/build
+#18 4.728 + cmake --build . -j 16
+#18 4.741 make[3]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+#18 4.742 [  1%] Building CXX object AstraSim/extern/helper/fmt/CMakeFiles/fmt.dir/src/format.cc.o
+#18 4.743 [  1%] Building CXX object AstraSim/extern/helper/fmt/CMakeFiles/fmt.dir/src/os.cc.o
+#18 4.743 [  1%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o
+#18 4.743 [  2%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/color_sinks.cpp.o
+#18 4.744 [  3%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/file_sinks.cpp.o
+#18 4.744 [  4%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/depthguard.cpp.o
+#18 4.745 [  5%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/spdlog.cpp.o
+#18 4.745 [  6%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o
+#18 4.745 [  6%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/async.cpp.o
+#18 4.745 [  7%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilder.cpp.o
+#18 4.745 [  8%] Building CXX object AstraSim/extern/helper/spdlog/CMakeFiles/spdlog.dir/src/cfg.cpp.o
+#18 4.745 [  8%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/binary.cpp.o
+#18 4.745 [  9%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/contrib/graphbuilderadapter.cpp.o
+#18 4.745 [ 10%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/convert.cpp.o
+#18 4.746 [ 10%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/directives.cpp.o
+#18 4.860 [ 11%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emit.cpp.o
+#18 4.864 [ 12%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitfromevents.cpp.o
+#18 4.885 [ 12%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitter.cpp.o
+#18 4.912 [ 14%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitterutils.cpp.o
+#18 4.912 [ 14%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/emitterstate.cpp.o
+#18 4.961 [ 14%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/exceptions.cpp.o
+#18 5.089 [ 15%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/exp.cpp.o
+#18 5.101 [ 16%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/fptostring.cpp.o
+#18 5.145 [ 16%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/memory.cpp.o
+#18 5.157 [ 17%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/node.cpp.o
+#18 5.175 [ 18%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/node_data.cpp.o
+#18 5.234 [ 18%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/nodebuilder.cpp.o
+#18 5.252 [ 19%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/nodeevents.cpp.o
+#18 5.292 [ 20%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/null.cpp.o
+#18 5.299 [ 20%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/ostream_wrapper.cpp.o
+#18 5.306 [ 21%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/parse.cpp.o
+#18 5.311 [ 22%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/parser.cpp.o
+#18 5.313 [ 22%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/regex_yaml.cpp.o
+#18 5.380 [ 23%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scanner.cpp.o
+#18 5.402 [ 24%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scanscalar.cpp.o
+#18 5.412 [ 24%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scantag.cpp.o
+#18 5.470 [ 25%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/scantoken.cpp.o
+#18 5.505 [ 26%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/simplekey.cpp.o
+#18 5.507 [ 26%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/singledocparser.cpp.o
+#18 5.535 [ 27%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/stream.cpp.o
+#18 5.559 [ 28%] Building CXX object _deps/yaml-cpp-build/CMakeFiles/yaml-cpp.dir/src/tag.cpp.o
+#18 5.565 queue.cpp: In member function 'PriorityQueue::queue_priority_t PriorityQueue::getPriority(Packet&)':
+#18 5.565 queue.cpp:236:1: warning: control reaches end of non-void function [-Wreturn-type]
+#18 5.565   236 | }
+#18 5.565       | ^
+#18 5.567 queue.cpp: In member function 'FairPriorityQueue::queue_priority_t FairPriorityQueue::getPriority(Packet&)':
+#18 5.567 queue.cpp:407:1: warning: control reaches end of non-void function [-Wreturn-type]
+#18 5.567   407 | }
+#18 5.567       | ^
+#18 6.205 [ 29%] Linking CXX static library libfmt.a
+#18 6.221 [ 29%] Built target fmt
+#18 6.320 [ 29%] Linking CXX static library libyaml-cpp.a
+#18 6.337 [ 29%] Built target yaml-cpp
+#18 6.344 [ 30%] Building CXX object _deps/yaml-cpp-build/util/CMakeFiles/yaml-cpp-parse.dir/parse.cpp.o
+#18 6.344 [ 31%] Building CXX object _deps/yaml-cpp-build/util/CMakeFiles/yaml-cpp-read.dir/read.cpp.o
+#18 6.344 [ 31%] Building CXX object _deps/yaml-cpp-build/util/CMakeFiles/yaml-cpp-sandbox.dir/sandbox.cpp.o
+#18 6.347 [ 31%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/BasicTopology.cpp.o
+#18 6.347 [ 32%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/FullyConnected.cpp.o
+#18 6.347 [ 33%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/BasicTopology.cpp.o
+#18 6.347 [ 33%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/Switch.cpp.o
+#18 6.347 [ 34%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/basic-topology/Ring.cpp.o
+#18 6.347 [ 34%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/network/Link.cpp.o
+#18 6.348 [ 35%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/Ring.cpp.o
+#18 6.348 [ 36%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/network/Chunk.cpp.o
+#18 6.348 [ 37%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/topology/Helper.cpp.o
+#18 6.348 [ 33%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/network/Device.cpp.o
+#18 6.349 [ 38%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/FullyConnected.cpp.o
+#18 6.389 [ 38%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/basic-topology/Switch.cpp.o
+#18 6.391 [ 39%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/congestion_aware/topology/Topology.cpp.o
+#18 6.411 [ 40%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/multi-dim-topology/MultiDimTopology.cpp.o
+#18 6.433 [ 40%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/NetworkFunction.cpp.o
+#18 6.442 [ 41%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/topology/Helper.cpp.o
+#18 6.447 [ 42%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/event-queue/Event.cpp.o
+#18 6.456 [ 43%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/event-queue/EventList.cpp.o
+#18 6.456 [ 43%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/congestion_unaware/topology/Topology.cpp.o
+#18 6.457 [ 43%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/event-queue/EventQueue.cpp.o
+#18 6.462 [ 44%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Aware.dir/common/network-parser/NetworkParser.cpp.o
+#18 6.464 [ 45%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/NetworkFunction.cpp.o
+#18 6.479 [ 46%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/event-queue/Event.cpp.o
+#18 6.481 [ 46%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/event-queue/EventList.cpp.o
+#18 6.495 [ 47%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/event-queue/EventQueue.cpp.o
+#18 6.501 [ 48%] Building CXX object Analytical/CMakeFiles/Analytical_Congestion_Unaware.dir/common/network-parser/NetworkParser.cpp.o
+#18 6.657 [ 49%] Linking CXX executable parse
+#18 6.691 [ 50%] Linking CXX executable read
+#18 6.691 [ 50%] Built target yaml-cpp-parse
+#18 6.721 [ 50%] Built target yaml-cpp-read
+#18 6.728 [ 51%] Linking CXX executable sandbox
+#18 6.754 [ 51%] Built target yaml-cpp-sandbox
+#18 7.172 [ 51%] Linking CXX static library libspdlog.a
+#18 7.191 [ 51%] Built target spdlog
+#18 7.198 [ 53%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/common/AstraComputeAPI.cc.o
+#18 7.198 [ 53%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/common/Logging.cc.o
+#18 7.198 [ 54%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/BasicEventHandlerData.cc.o
+#18 7.199 [ 55%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CSVWriter.cc.o
+#18 7.199 [ 56%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CollectivePlan.cc.o
+#18 7.200 [ 57%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CommunicatorGroup.cc.o
+#18 7.200 [ 54%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/BaseStream.cc.o
+#18 7.200 [ 54%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/CollectivePhase.cc.o
+#18 7.200 [ 57%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/DataSet.cc.o
+#18 7.200 [ 58%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MemBus.cc.o
+#18 7.200 [ 59%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MemMovRequest.cc.o
+#18 7.200 [ 60%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/LogGP.cc.o
+#18 7.201 [ 60%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MemEventHandlerData.cc.o
+#18 7.202 [ 61%] Linking CXX static library ../lib/libAnalytical_Congestion_Aware.a
+#18 7.218 [ 61%] Built target Analytical_Congestion_Aware
+#18 7.221 [ 62%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/MyPacket.cc.o
+#18 7.235 [ 62%] Linking CXX static library ../lib/libAnalytical_Congestion_Unaware.a
+#18 7.251 [ 62%] Built target Analytical_Congestion_Unaware
+#18 7.255 [ 62%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/PacketBundle.cc.o
+#18 7.269 [ 63%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/QueueLevelHandler.cc.o
+#18 7.272 [ 64%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/QueueLevels.cc.o
+#18 7.300 [ 64%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/RecvPacketEventHandlerData.cc.o
+#18 7.317 [ 65%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/RendezvousRecvData.cc.o
+#18 7.414 [ 66%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/RendezvousSendData.cc.o
+#18 7.434 [ 66%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/Roofline.cc.o
+#18 7.520 [ 67%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/SendPacketEventHandlerData.cc.o
+#18 7.570 [ 68%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/SimRecvCaller.cc.o
+#18 7.599 [ 68%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/SimSendCaller.cc.o
+#18 8.905 [ 69%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/StreamBaseline.cc.o
+#18 9.973 [ 70%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/Sys.cc.o
+#18 9.979 [ 70%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/Usage.cc.o
+#18 9.991 [ 71%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/UsageTracker.cc.o
+#18 10.01 [ 72%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/WorkloadLayerHandlerData.cc.o
+#18 10.03 [ 72%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/Algorithm.cc.o
+#18 10.04 [ 73%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/CollectiveImplLookup.cc.o
+#18 10.05 [ 74%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/custom_collectives/CustomAlgorithm.cc.o
+#18 10.07 [ 75%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/DoubleBinaryTreeAllReduce.cc.o
+#18 10.07 [ 74%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/AllToAll.cc.o
+#18 10.09 [ 76%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/HalvingDoubling.cc.o
+#18 10.09 [ 76%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/collective_algorithm/Ring.cc.o
+#18 10.11 [ 77%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/BinaryTree.cc.o
+#18 10.21 [ 78%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/DoubleBinaryTreeTopology.cc.o
+#18 10.31 [ 78%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/GeneralComplexTopology.cc.o
+#18 10.35 [ 79%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/LocalRingGlobalBinaryTree.cc.o
+#18 10.35 [ 80%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/LocalRingNodeA2AGlobalDBT.cc.o
+#18 10.49 [ 80%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/Node.cc.o
+#18 10.49 [ 81%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/RingTopology.cc.o
+#18 10.56 [ 82%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/astraccl/native_collectives/logical_topology/Torus3D.cc.o
+#18 10.69 [ 82%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/system/scheduling/OfflineGreedy.cc.o
+#18 11.65 [ 83%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/HardwareResource.cc.o
+#18 11.69 [ 84%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/LocalMemUsageTracker.cc.o
+#18 11.79 [ 85%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/Statistics.cc.o
+#18 12.03 [ 85%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/astra-sim/workload/Workload.cc.o
+#18 12.04 [ 86%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/schema/protobuf/et_def.pb.cc.o
+#18 12.70 [ 87%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/feeder_v3/dependancy_solver.cpp.o
+#18 12.74 [ 87%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/feeder_v3/et_feeder.cpp.o
+#18 12.74 [ 88%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/feeder_v3/et_feeder_node.cpp.o
+#18 12.79 [ 89%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/graph_frontend/chakra/src/third_party/utils/protoio.cc.o
+#18 12.80 [ 89%] Building CXX object AstraSim/CMakeFiles/AstraSim.dir/extern/remote_memory_backend/analytical/AnalyticalRemoteMemory.cc.o
+#18 15.52 /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc: In member function 'void AstraSim::LocalMemUsageTracker::buildTensorLifetimeHeatmap()':
+#18 15.52 /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc:406:30: warning: '%02X' directive writing between 2 and 8 bytes into a region of size between 0 and 3 [-Wformat-overflow=]
+#18 15.52   406 |     sprintf(color, "#%02X%02X%02X", intensity, 100, 255 - intensity);
+#18 15.52       |                              ^~~~
+#18 15.52 /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc:406:20: note: directive argument in the range [0, 2147483647]
+#18 15.52   406 |     sprintf(color, "#%02X%02X%02X", intensity, 100, 255 - intensity);
+#18 15.52       |                    ^~~~~~~~~~~~~~~
+#18 15.52 In file included from /usr/include/stdio.h:894,
+#18 15.52                  from /usr/include/c++/11/cstdio:42,
+#18 15.52                  from /usr/include/c++/11/ext/string_conversions.h:43,
+#18 15.52                  from /usr/include/c++/11/bits/basic_string.h:6608,
+#18 15.52                  from /usr/include/c++/11/string:55,
+#18 15.52                  from /usr/include/c++/11/bits/locale_classes.h:40,
+#18 15.52                  from /usr/include/c++/11/bits/ios_base.h:41,
+#18 15.52                  from /usr/include/c++/11/streambuf:41,
+#18 15.52                  from /usr/include/c++/11/bits/streambuf_iterator.h:35,
+#18 15.52                  from /usr/include/c++/11/iterator:66,
+#18 15.52                  from /opt/astra-sim/extern/helper/json/json.hpp:53,
+#18 15.52                  from /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.hh:4,
+#18 15.52                  from /opt/astra-sim/astra-sim/workload/LocalMemUsageTracker.cc:1:
+#18 15.52 /usr/include/aarch64-linux-gnu/bits/stdio2.h:38:34: note: '__builtin___sprintf_chk' output between 8 and 20 bytes into a destination of size 8
+#18 15.52    38 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,
+#18 15.52       |          ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#18 15.52    39 |                                   __glibc_objsize (__s), __fmt,
+#18 15.52       |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#18 15.52    40 |                                   __va_arg_pack ());
+#18 15.52       |                                   ~~~~~~~~~~~~~~~~~
+#18 16.34 [ 90%] Linking CXX static library ../lib/libAstraSim.a
+#18 16.37 [ 90%] Built target AstraSim
+#18 21.44 eqds.cpp: In member function 'void EqdsSrc::sendIfPermitted()':
+#18 21.44 eqds.cpp:703:11: warning: variable 'pkt_size' set but not used [-Wunused-but-set-variable]
+#18 21.44   703 |     mem_b pkt_size = 0;
+#18 21.44       |           ^~~~~~~~
+#18 21.86 eqds.cpp: In member function 'EqdsBasePacket::seq_t EqdsSink::sackBitmapBaseIdeal()':
+#18 21.86 eqds.cpp:1486:25: warning: 'lowest_position' may be used uninitialized in this function [-Wmaybe-uninitialized]
+#18 21.86  1486 |     if (lowest_position + 64 > _high_epsn)
+#18 21.86       |         ~~~~~~~~~~~~~~~~^~~~
+#18 22.95 a - eventlist.o
+#18 22.95 a - tcppacket.o
+#18 22.95 a - pipe.o
+#18 22.95 a - queue.o
+#18 22.95 a - meter.o
+#18 22.95 a - queue_lossless.o
+#18 22.95 a - queue_lossless_input.o
+#18 22.95 a - queue_lossless_output.o
+#18 22.95 a - ecnqueue.o
+#18 22.95 a - tcp.o
+#18 22.95 a - dctcp.o
+#18 22.95 a - mtcp.o
+#18 22.95 a - loggers.o
+#18 22.95 a - logfile.o
+#18 22.95 a - clock.o
+#18 22.95 a - config.o
+#18 22.95 a - network.o
+#18 22.95 a - qcn.o
+#18 22.95 a - exoqueue.o
+#18 22.95 a - randomqueue.o
+#18 22.95 a - cbr.o
+#18 22.95 a - cbrpacket.o
+#18 22.95 a - sent_packets.o
+#18 22.95 a - ndp.o
+#18 22.95 a - ndptunnel.o
+#18 22.95 a - ndppacket.o
+#18 22.95 a - roce.o
+#18 22.95 a - rocepacket.o
+#18 22.95 a - eth_pause_packet.o
+#18 22.95 a - tcp_transfer.o
+#18 22.95 a - tcp_periodic.o
+#18 22.95 a - compositequeue.o
+#18 22.95 a - prioqueue.o
+#18 22.95 a - cpqueue.o
+#18 22.95 a - ndp_transfer.o
+#18 22.95 a - compositeprioqueue.o
+#18 22.95 a - switch.o
+#18 22.95 a - dctcp_transfer.o
+#18 22.95 a - fairpullqueue.o
+#18 22.95 a - route.o
+#18 22.95 a - callback_pipe.o
+#18 22.95 a - ndptunnelpacket.o
+#18 22.95 a - swiftpacket.o
+#18 22.95 a - swift.o
+#18 22.95 a - swift_scheduler.o
+#18 22.95 a - routetable.o
+#18 22.95 a - trigger.o
+#18 22.95 a - hpccpacket.o
+#18 22.95 a - hpcc.o
+#18 22.95 a - strackpacket.o
+#18 22.95 a - strack.o
+#18 22.95 a - priopullqueue.o
+#18 22.95 a - rng.o
+#18 22.95 a - ecnprioqueue.o
+#18 22.95 a - eqdspacket.o
+#18 22.95 a - eqds.o
+#18 22.95 a - eqds_logger.o
+#18 22.95 a - aeolusqueue.o
+#18 22.95 ar: `u' modifier ignored since `D' is the default (see `U')
+#18 22.95 ar: creating libhtsim.a
+#18 40.54 main_eqds.cpp: In function 'int main(int, char**)':
+#18 40.54 main_eqds.cpp:71:10: warning: unused variable 'oversubscribed_congestion_control' [-Wunused-variable]
+#18 40.54    71 |     bool oversubscribed_congestion_control = false;
+#18 40.54       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#18 41.04 [ 90%] Built target htsim
+#18 41.05 [ 91%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/HTSimMain.cc.o
+#18 41.05 [ 91%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/HTSimNetworkApi.cc.o
+#18 41.05 [ 92%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/HTSimSession.cc.o
+#18 41.05 [ 93%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CallbackTracker.cc.o
+#18 41.05 [ 94%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/ChunkIdGenerator.cc.o
+#18 41.05 [ 95%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/ChunkIdGeneratorEntry.cc.o
+#18 41.05 [ 95%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CallbackTrackerEntry.cc.o
+#18 41.05 [ 95%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CmdLineParser.cc.o
+#18 41.05 [ 96%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/astra-sim/network_frontend/analytical/common/CommonNetworkApi.cc.o
+#18 41.05 [ 96%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_switch.cpp.o
+#18 41.05 [ 96%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/proto/HTSimProtoTcp.cc.o
+#18 41.05 [ 98%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/connection_matrix.cpp.o
+#18 41.05 [ 97%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/fat_tree_topology.cpp.o
+#18 41.05 [ 99%] Building CXX object AstraSim_HTSim/CMakeFiles/AstraSim_HTSim.dir/opt/astra-sim/extern/network_backend/csg-htsim/sim/datacenter/firstfit.cpp.o
+#18 44.72 [100%] Linking CXX executable ../bin/AstraSim_HTSim
+#18 44.89 [100%] Built target AstraSim_HTSim
+#18 DONE 45.0s
+
+#19 [16/18] RUN test -x "/opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim"     && sha256sum "/opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim"     && sha256sum /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a     && grep -c "astrasim_flow_finish_send_cb" /opt/astra-sim/extern/network_backend/csg-htsim/sim/tcp.h
+#19 0.148 a36f981cb91992a02fd59d6216ab88a9fc52458ceb51c9d43fdf798733bb8a94  /opt/astra-sim/build/astra_htsim/build/bin/AstraSim_HTSim
+#19 0.209 f9271372054e61dfee4e65caef2865ebd8bd1feb6fc823d0170a8871a5bee877  /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a
+#19 0.210 1
+#19 DONE 0.2s
+
+#20 [17/18] RUN ls -l /opt/astra-sim/build/astra_htsim/build/bin/     && ls -l /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a
+#20 0.118 total 11940
+#20 0.118 -rwxr-xr-x 1 root root 12225232 Oct 28 01:04 AstraSim_HTSim
+#20 0.118 -rw-r--r-- 1 root root 36236852 Oct 28 01:03 /opt/astra-sim/extern/network_backend/csg-htsim/sim/libhtsim.a
+#20 DONE 0.1s
+
+#21 [18/18] WORKDIR /opt/astra-sim
+#21 DONE 0.0s
+
+#22 exporting to image
+#22 exporting layers
+#22 exporting layers 4.8s done
+#22 exporting manifest sha256:327e8b25a4c9e5569ac2afd6b94731082023d3dc08f8e06671dbd535a1419805
+#22 exporting manifest sha256:327e8b25a4c9e5569ac2afd6b94731082023d3dc08f8e06671dbd535a1419805 done
+#22 exporting config sha256:d3c61d8d81ccdedc92ce7787d9e0bfd11b3346cde02f05ac1b23a402a8e5d60a done
+#22 exporting attestation manifest sha256:fe6d087a1f0b3b312a13d6f7af7ebd66447d566f5a136079f60a75f480259573 0.0s done
+#22 exporting manifest list sha256:6cc48e30efa8b6829a7d7da62e30e49678c7c8b7ee0f995af5fe397e4702aa2f done
+#22 naming to docker.io/essun/astra-csg-htsim:s1-seeded done
+#22 unpacking to docker.io/essun/astra-csg-htsim:s1-seeded
+#22 unpacking to docker.io/essun/astra-csg-htsim:s1-seeded 0.7s done
+#22 DONE 5.6s
+BUILD_EXIT_RETRY2=0

@@ -1,0 +1,54 @@
+# Calibration-ladder A9 anchor-point RUN: the L0
+# single-stage crossbar identity at the CAL-A9 ANCHOR POINT pair latency
+# — r=8, L=80 ns (the plan-stated one-stage sum: ~10 ns CXL link +
+# >=~70 ns CXL switch stage; §2.1 row A-L0X-LAT), B=64 B/ns (A-L0X-BW
+# registry point, FIXED and free: CAL-A9 stages no bandwidth number),
+# payload 8*2^10 = 8 KiB (the smallest ladder member — the latency-bound
+# regime the anchor's axis governs; at this size the latency term is
+# exactly 5/12 of CCT here).
+#
+# LATENCY-BUDGET HONESTY: CAL-A9 publishes a budget decomposition, not a
+# collective time series — this run cannot be compared to any anchor
+# CCT (plan §1.1: "Cannot calibrate O-CCT"). Its role is to place the
+# identity AT the anchor-derived budget sum in the append-only store, so
+# the PROPOSED record's placement arithmetic (vs the registry-point twin
+# run_a9_registry200_v1.yaml: delta exactly 2*(200-80) = 240 ns at every
+# op) is backed by run ids. The switch term is "at least ~70 ns": 80 is
+# a one-sided floor, never a central estimate. Design-estimate numbers
+# (paper budget analysis), not silicon measurements.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A9-PAIR80-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a9/workloads/w1_dense_tp_decode_tp8_8kib.yaml
+infra_graph:
+  path: experiments/calibration/a9/topologies/crossbar8_a9_pair80_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a9/profiles/implementation_profile_l0_crossbar_cal_a9_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_a9_pair80_v1 (one non-blocking switch stage; r=8, L=80 ns = CAL-A9 plan-stated one-stage budget sum, B=64 B/ns free registry point)
+  workload: w1_dense_tp_decode tp8, payload 8*2^10 (8 KiB, the latency-bound ladder member)
+  implementation: analytical L0 crossbar identity; CAL-A9 comparison is latency-axis budget placement only (design-estimate breakdown, not a time series) — PROPOSED, review required
+evidence_level_requested: E0

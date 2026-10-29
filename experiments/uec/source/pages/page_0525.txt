@@ -1,0 +1,63 @@
+ 525 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Signal Name Function Description Datatype Unit 
+uet_rx_ack_count CC Counts the number of 
+requests acknowledged (this 
+considers cumulative 
+acknowledgments) 
+uint 1 
+uet_rx_ack_ecn CC, LB ECN flags set in incoming ACK 
+packets 
+uint 1 
+uet_rx_ack_probe CC, LB Probe packet ACK received uint 1 
+uet_rx_ack_rtt CC, LB Round-trip time of incoming 
+ACK packet wrt with respect 
+to the request or control 
+packet triggering them 
+uint 128 ns 
+uet_rx_ack_svc CC Remote service time (at 
+target) 
+uint 128 ns 
+uet_rx_credit CC Credit packet received (query 
+value with 
+uet_signal_get_credit_value()) 
+uint 1 
+uet_rx_credit_req CC Credit request packet 
+received (could be either in 
+control packet or extension 
+header) 
+uint 1 
+uet_rx_credit_req_value CC Value received in last credit 
+request packet 
+uint 1 
+uet_rx_ctl CC Control packet received uint 1 
+uet_rx_nack CC NACK packet received (may be 
+caused by trimming, loss 
+detection, or resource 
+exhaustion at target) 
+uint 1 
+uet_rx_nack_ecn CC, LB ECN flags set in incoming 
+NACK packets 
+uint 1 
+uet_rx_nack_last_hop_trim CC, LB Trim NACK packets indicating 
+trim at the last hop to the 
+destination received 
+uint 1 
+uet_rx_nack_rtt CC, LB Round-trip time of incoming 
+NACK packet wrt with respect 
+to the request or control 
+packet triggering them 
+uint 128 ns 
+uet_rx_nack_trim CC, LB Trim NACK packet received uint 1 
+uet_rx_probe CC, LB Probe packet received  uint 1 
+uet_rx_probe_id CC, LB ID of last probe packet 
+received 
+uint 1 
+uet_rx_req CC Request packet received uint 1 
+uet_rx_req_ecn CC Request packed marked with 
+ECN received 
+uint 1 
+uet_rx_req_trim CC, LB Trimmed request packet 
+received 
+uint 1 

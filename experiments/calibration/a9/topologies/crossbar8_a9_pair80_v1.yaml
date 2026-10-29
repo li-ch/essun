@@ -1,0 +1,57 @@
+# Calibration-ladder A9 topology: fully-connected (crossbar / single
+# non-blocking switch stage) abstraction of 8 ranks at the CAL-A9 ANCHOR
+# POINT pair latency L = 80 ns — the latency-budget sum the calibration
+# plan states for this anchor exactly (§2.1 row A-L0X-LAT: "pair-across-
+# a-switch: ~80 ns CXL-class (CAL-A9 link+switch sum)"). Source numbers
+# (docs/calibration/anchors_staging.md §A9, Berger et al., "Design
+# Tradeoffs in CXL-Based Memory Pools", IEEE Micro 2023): CXL LINKS add
+# ~10 ns per direction; CXL SWITCHES add at least ~70 ns (ports,
+# arbitration, NoC) per switch stage. 10 + 70 = 80.
+#
+# READING DECLARED: the plan's sum uses ONE link term. A physical pair
+# path through one switch crosses TWO CXL links (source -> switch,
+# switch -> target), so a two-link reading of the same staged numbers
+# gives 2*10 + 70 = 90 ns. The plan is the reconciliation authority and
+# states 80; this stage executes 80 as the anchor point and records the
+# 90 ns alternative as a flagged interpretation risk in the calibration
+# record (recorded ambiguity, NOT swept — the sweep stays plan-canonical).
+#
+# SWITCH TERM IS A FLOOR: the anchor words the switch term "at least
+# ~70 ns", so 80 ns is a LOWER BOUND on a one-stage CXL-class pair
+# latency, not an estimate of a central value — the falsification
+# direction is one-sided (a model pair latency BELOW 80 ns contradicts
+# the budget; above it is unconstrained by this anchor).
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0X-LAT), never tuned toward
+# any anchor output; 80 ns is where the sweep's anchor-point row sits,
+# chosen BY THE ANCHOR's own staged arithmetic (via the plan's stated
+# sum). CAL-A9 is a DESIGN-ESTIMATE budget breakdown (paper's own
+# latency-budget analysis), NOT a silicon measurement — pair with CAL-A8
+# (emulated 64/140 ns added memory latency) per the staging doc. B = 64
+# B/ns is the A-L0X-BW registry point, kept FIXED and free: the anchor
+# stages NO bandwidth number, so the bandwidth axis is entirely
+# anchor-free for this stage. r = 8 is the free smoke-default rank count
+# (the anchor pins no collective rank count); it is a power of two and
+# divides every 8*2^k ladder size (A-L0X-DIV accepts, no bracketing).
+topology_id: crossbar8_a9_pair80_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 80
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = link term + switch term
+  (one link + one switch stage at this row), charged once per phase
+  (reduce-scatter, allgather) by the L0 crossbar identity — the pipelined
+  injection convention (t = 2(r-1)/r*M/B + 2L). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: L =
+  80 ns = CAL-A9's staged ~10 ns/link/direction + >=~70 ns/switch-stage,
+  summed exactly as the calibration plan states for A-L0X-LAT (anchor
+  PROPOSED in the anchor registry; design-estimate
+  numbers from the paper's budget analysis, never silicon measurements;
+  one-sided floor per the "at least" wording). B = 64 B/ns is the free
+  A-L0X-BW registry point (anchor-free: CAL-A9 stages no bandwidth).
+  Values are anchor quotes / free registry defaults, never our
+  measurements.

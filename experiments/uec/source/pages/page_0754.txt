@@ -1,0 +1,33 @@
+ 754 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Switch Abstraction Interface (SAI) is widely supported by switch vendors as the abstraction layer to 
+program switch hardware. The following are the benefits of using SAI as an interface specification for 
+UE-capable network switches: 
+• SAI is an abstract API schema consisting of “C” language header files. It has well-defined 
+conventions, and it provides, at its core, a CRUD abstraction based on tables and attributes. 
+• Nearly every switch vendor offers SAI implementation. Using SAI, UE extensions can be 
+implemented in existing switches. 
+• SAI does not impose any restrictions on the kind of network operating system (NOS) using SAI 
+API for any HW programming. 
+• SAI can be programmatically transformed into other schemas such as gNMI, gRPC, etc. 
+• The SAI ecosystem contains numerous tools to parse SAI headers and perform various checks 
+and transformations, such as breaking change detection from previous versions. 
+• The SAI ecosystem has at least two popular test frameworks: SAI-PTF and SAI-Challenger. 
+Thousands of test cases already exist to verify compliance and performance of traditional 
+networking features. Adding test cases for UE enhancements can be a straightforward, 
+incremental effort. 
+To support Ultra Ethernet features requiring UE switch programming, the SAI specification requires 
+augmentation and updates. UEC works on the SAI enhancements for UE specifications and collaborates 
+with the OCP SAI community for adoption. 
+7.3 UE Fabric Management 
+UE fabric management can be viewed as a logical function that sits on top of management interfaces to 
+UE NICs and switches. The UE fabric manager provides a coherent view of a UE fabric and provides a 
+single management entity for creating connections between server NIC endpoints and switch endpoints. 
+Figure 7-2 shows a conceptual view of the UE fabric manager. The specification of UE fabric manager is 
+outside the scope of UE management specifications. 
+In Figure 7-2, the fabric manager manages a UE NIC using an out-of-band interface and/or an in-band 
+interface. The Redfish data model is used to manage UE endpoints when an out-of-band interface is 
+used. The fabric manager uses YANG data models to manage a UE switch. Within the UE switch, the 
+control plane uses SAI to communicate with the data plane. A vendor-specific SDK is used by the layers 
+below SAI to directly communicate with the switch ASIC pipeline. 

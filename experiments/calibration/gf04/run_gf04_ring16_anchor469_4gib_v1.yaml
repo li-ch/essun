@@ -1,0 +1,41 @@
+# Calibration-ladder GF-04 anchor-point RUN (gap-fill
+# anchor): the L0 flat-ring identity at the TWO-NODE leg of the anchor's
+# 8->16 scaling pair — r=16 (2 x H100.8 nodes, the anchor's mpirun -np 2
+# x -g 8 count), B=469.67 B/ns (the anchor's own summary figure "NCCL on
+# two nodes with 16 GPUs | 469.67 GB/s", fetched/verified 2026-10-28;
+# pinned busbw = B mapping), L=200 ns, payload 2^32 (4 GiB) — the COMMON
+# size of the pair (16 divides 2^32, gate ACCEPTS, no bracketing). The
+# hybrid NVSwitch+RoCE fabric is projected onto the uniform ring at the
+# anchor's own reading (A6-convention; no per-leg parameter exists).
+#
+# claim_id is deliberately EMPTY (p1 stage boundary: zero claim edits).
+# Evidence level E0: the comparison itself is PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF04-RING16-ANCHOR469-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp16_4gib.yaml
+infra_graph:
+  path: experiments/calibration/gf04/topologies/ring16_gf04_anchor469_67_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf04/profiles/implementation_profile_l0_ring_cal_gf04_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring16_gf04_anchor469_67_v1 (unidirectional ring, r=16 = the GF-04 two-node count; B=469.67 B/ns = the anchor's own two-node busbw through the pinned mapping; hybrid projected to the uniform anchor reading, declared; L=200 ns free)
+  workload: w1_dense_tp_decode tp16, payload 2^32 (4 GiB) = the common size of the 8->16 pair (gate-accepted, no bracketing)
+  implementation: analytical L0 free-parameter identity; GF-04 comparison is the two-node leg of the first staged multi-rank injection-scaling point (plan gap 8) — PROPOSED, review required
+evidence_level_requested: E0

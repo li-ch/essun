@@ -1,0 +1,25 @@
+# W1 Dense TP Decode — tp_size 8 at payload 8589934592 B = 8*2^30 (8 GiB):
+# the LARGEST member of this stage's 12-size ladder 8*2^k (8 KiB -> 8 GiB,
+# every size divisible by 8 so the A-L0-DIV / A-L0X-DIV / A-L0D-DIV input
+# gates all ACCEPT the exact ladder with no bracketing). Stage A11 is a
+# BANDWIDTH-AXIS / SCALE-OUT-CONTEXT stage (CAL-A11, Meta RoCE production
+# fabric: 400 Gbps optics, congestion/load-balance effects up to 30-40%):
+# the anchor's regime per the calibration plan §1.1 is "large" messages, so
+# the two store runs of this stage execute at this bandwidth-bound member
+# (the sweep still spans the whole ladder). At this size the identity's
+# latency fraction of CCT is ~1.3e-6 — the pure bandwidth regime the
+# anchor's axis speaks to; the anchor-point vs registry-point CCT ratio is
+# within 3e-7 of the asymptotic exact 25/32 = 0.78125 (B-axis placement
+# arithmetic; see the stage's calibration record). Same workload shape as
+# every other W1 file (2 layers x 3 decode steps = 6 AllReduce ops per
+# config). Nothing here is measured or standard-normative; integer byte
+# counts; deterministic by construction. CAL-A11 stages NO per-collective
+# (size -> time) series (its tables live in the paper PDF, unstaged), so
+# no anchor CCT exists in this regime — this file EXECUTES the identity
+# for placement arithmetic only, it calibrates nothing.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal11-a11
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 8589934592   # 8*2^30 (8 GiB); free parameter A-W1-SIZE

@@ -1,0 +1,49 @@
+# Calibration-ladder A10 scale sweep, rung r = 128:
+# where do the three single-port L0 identities sit AT THE ANCHOR'S
+# LATENCY ASSUMPTION as the rank count grows toward the anchor's stated
+# scale ceiling (1024 GPUs)? Grid rung: ring (linear chain 2*(r-1)*L),
+# recursive doubling (log chain 2*log2(r)*L), crossbar (constant chain
+# 2L) — identical wire bytes and bandwidth term 2*(r-1)/r*M/B in all
+# three, so every CCT difference below is PURELY the latency-chain
+# structure at fixed M = 16 KiB, B = 64 B/ns (A-L0-BW / A-L0X-BW /
+# A-L0D-BW registry points), L = 800 ns (CAL-A10's assumption-class 0.8 us
+# NVLink-Network end-to-end figure; docs/calibration/anchors_staging.md
+# §A10; confidence M — search-snippet quote, paywalled parameter table;
+# an ASSUMPTION, not a measurement).
+#
+# Per CALIBRATION_PLAN.md §1.1 row CAL-A10 this anchor CANNOT calibrate
+# O-CCT (a stated assumption, not a measurement) — the stage executes its
+# plan-assigned roles: the assumption value IS the plan's anchored-span
+# upper endpoint (~10-800 ns, §2.1 A-L0-LAT) and the A-L0X-LAT
+# pair-latency span upper; the anchor's own regime contribution is the
+# SCALE claim ("to 1024 GPUs") and the flat-vs-chained small-message
+# direction finding. This rung sweeps the free rank axis at the
+# assumption point.
+#
+# NOTHING IS TUNED: the ladder 8 -> 1024 (power-of-2, ending at the
+# anchor's stated ceiling) and every fixed value were chosen from
+# registry/anchor/plan arithmetic BEFORE any stage output was read. The
+# anchor stages NO completion time, so no delta below can be tuned toward
+# anything. Baseline = the crossbar at this rung: the delta column reads
+# chained-vs-flat at fixed scale. 16384 % 128 == 0 and 128 is a power of
+# two, so all three divisibility/po2 gates ACCEPT — no bracketing.
+sweep: cal_a10_scale_r128_v1
+workload: experiments/calibration/a10/workloads/w1_dense_tp_decode_tp128_16kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a10/topologies/crossbar128_a10_pair800_v1.yaml
+grid:
+  payload_sizes_bytes: [16384]   # 2^14 (16 KiB); registry smoke point; gate-accepted at every rung
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a10/topologies/crossbar128_a10_pair800_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/a10/topologies/exchange128_a10_pair800_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a10/topologies/ring128_a10_hop800_v1.yaml

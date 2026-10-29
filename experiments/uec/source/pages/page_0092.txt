@@ -1,0 +1,38 @@
+ 92 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+When JobIDs are configured at job initialization time by a privileged entity, the provider kernel driver 
+MUST maintain the configured JobID mappings for subsequent use. The privileged entity MAY also pass 
+the JobIDs to user-space applications for use as parameters to subsequent libfabric API calls. 
+A UET provider MUST support at least one JobID per libfabric endpoint and MAY support multiple. When 
+a single JobID per libfabric endpoint is provided, the JobID MAY be carried in the libfabric auth_key 
+attribute (the FI_AV_AUTH_KEY capability MAY also be used to support a single JobID per endpoint). 
+When multiple JobIDs per libfabric endpoint are supported, the JobIDs MUST be inserted into the 
+address vector bound to the endpoint using the fi_av_insert_auth_key() API (i.e., the JobIDs are inserted 
+as authorization keys). The inserted JobIDs MAY then be used for: 
+• Authorization of posted receive buffers, 
+• Authorization of registered memory regions, and 
+• Selection of the JobID used for message transmission operations. 
+ 
+When the auth_key_size attribute is set to FI_AV_AUTH_KEY, all authorization keys are associated with 
+the address vector. The auth_key_size MUST be set to FI_AV_AUTH_KEY when multiple JobIDs are 
+supported. Otherwise, the auth_key_size MUST be set to either 0 or 3. When the auth_key_size is set to 
+0, the UET provider supplies the assigned JobID on behalf of the user. When the auth_key_size is set to 
+3, the JobID MUST be carried in the auth_key attribute. The max_ep_auth_key domain attribute 
+indicates the maximum number of authorization keys that are supported per libfabric endpoint. 
+For notation convenience, the following terms are defined: 
+• Indirect JobID method (auth_key_size = 0) —this is the default behavior 
+• Direct JobID method (auth_key_size = 3) 
+• AV JobID method (auth_key_size = FI_AV_AUTH_KEY) 
+ 
+The HPC profile MUST support the AV JobID method. 
+The AV JobID method MUST support the fi_av_insert_auth_key and the fi_av_lookup_auth_key libfabric 
+APIs. 
+JobID assignment MAY also occur when the libfabric endpoint is created as specified in Section 
+2.2.5.3.5.1 and illustrated in Figure 2-8. 
+2.2.4.2 Fallback JobID Assignment 
+The provider configuration may enable fallback JobID assignment. In this mode, if an endpoint’s JobID 
+cannot be determined through the previous methods it is assigned a fallback JobID. The value of fallback 
+JobID is 16777215. When fallback JobID support is enabled, the Initiator ID of the endpoint is sourced 
+from the UET_PROVIDER_INITIATOR_ID environment variable. If the environment variable is unset, 
+endpoint creation MUST fail.  

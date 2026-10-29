@@ -1,0 +1,35 @@
+ 651 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+By providing CBFC on a per-traffic-class basis, congestion control resources and buffer space can be used 
+only for the traffic classes that can benefit from link-level flow control. 
+5.2.2 CBFC and PFC Relative Advantages 
+CBFC has several advantages over standard PFC, including: 
+• For guaranteed delivery, CBFC can enable more lossless VCs with the same amount of burst 
+absorption buffer. 
+• The sender knows the credit usage by each VC and can use this information for scheduling, load 
+balancing, and adaptive routing. 
+• CBFC is not as sensitive as PFC to cable length, frame size, or response time of the sender. If 
+cable delay is underestimated, PFC can have buffer overflows and dropped packets, but with 
+CBFC the link would only be underutilized. 
+• For virtual channels that do not require full throughput, CBFC can simply allocate fewer credits 
+and thus require less buffer space than PFC. 
+PFC still has certain advantages over CBFC, which include: 
+• XOFF-XON flow control is simpler to implement than credit-based flow control. 
+• PFC can enable more sharing and efficient usage of burst absorption buffer across ports. 
+• PFC is better able to manage multiple resources within a priority class. 
+• PFC provides full use of the link bandwidth (no messaging overhead) when no flow control 
+events are occurring. 
+5.2.3 CBFC Feature List 
+CBFC supports the following features: 
+• Support for up to 32 VCs per port. 
+• Flexible assignment of lossless and best effort VCs. 
+• Lossless packet delivery for each lossless VC. 
+• Enables receiver port buffer sharing across VCs. 
+• Forward progress guarantee (deadlock avoidance) for each VC (see Section 5.2.5.2). 
+• Configurable credit units. 
+• Resiliency to packet loss and CBFC message loss. 
+• CBFC and PFC together can manage multiple switch resources. 
+o CBFC can be used to manage one resource (e.g., the main input buffer). 
+o PFC can be used to manage another resource such as a second buffering point and/or 
+another per-packet resource. 

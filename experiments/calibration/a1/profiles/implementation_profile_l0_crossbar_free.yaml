@@ -1,0 +1,21 @@
+# Implementation profile for the calibration-ladder A1 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A1).
+implementation_profile_id: analytical_l0_crossbar_cal_a1_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); modeling
+  assumptions A-L0X-PORT / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) swept over {20, 50, 64, 900} bytes/ns —
+  the candidate anchor-informed span endpoints [20, 64] (CAL-A12 lower,
+  CAL-A7 upper), the CAL-A1 per-port point 50, and the CAL-A1-derived
+  per-GPU aggregate 900 (18 ports x 50). L fixed at the registry point
+  200 ns (latency axis deferred to its own global stage). Values are
+  anchors/assumptions, never measurements.
+measurement_source: none   # not calibrated; the comparison against CAL-A1 is recorded as PROPOSED evidence in results/calibration/

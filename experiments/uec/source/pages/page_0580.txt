@@ -1,0 +1,44 @@
+ 580 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.7.11.1 Packet Encryption 
+This section describes the encryption and decryption of packets. A reference for the packet encryption is 
+in the UE reference provider git repo in the crypto directory <https://github.com/ultraethernet/uet-ref-
+prov/tree/main/crypto>. 
+3.7.11.1.1 Authentication and Confidentiality Offsets 
+The extent of the authentication and confidentiality depends on the use case and threat model. The 
+authentication offset (Aoff) defines the start of the AAD. The cipher offset (Coff) is used to delineate the 
+boundary between authenticated data (AAD) and the ciphertext. Aoff and Coff are returned from an 
+SDKDB lookup. The AAD is the contiguous set of bytes in the packet referenced by the Aoff and Coff 
+offsets.  Aoff and Coff are both greater than or equal to 0 and therefore cannot overlap. Aoff is an offset 
+from the start of the UET header towards the start of the packet, and Coff is an offset from the start of 
+the UET header towards the end of the packet. See Figure 3-145 for more details on the relative offsets. 
+Note the two lengths reflected in the GMAC portion of AES-GCM is the length of the AAD (A) and 
+ciphertext (C). The AAD length is the byte distance between locations in the packet determined by Aoff 
+and Coff.  The ciphertext length is the byte distance between the location in the packet determined by 
+Coff and the remainder of the UET payload. 
+The AAD MUST include all fields used in the security solution. For example, if the ip.src_addr field is 
+used in the KDF, then ip.src_addr MUST be part of the AAD. The most secure solution SHOULD configure 
+the Coff such that only the TSS header is exposed and the rest of the PDS, SES, UET payload is encrypted. 
+3.7.11.1.2 IV Generation 
+There are several ways of creating the IV from the TSC and fields in the packet. Table 3-136 describes 
+how the IV is generated. 
+ 
+Table 3-136 - IV Construction 
+IV Packet Type ssi-mode tss.sp Kdf modes 
+tss.ssi||tss.tsc IPv4 TRUE TRUE (0b1) All 
+ip.src_addr||tss.tsc IPv4 FALSE FALSE (0b0) All 
+ERROR/Not Valid IPv4 TRUE FALSE (0b0) - 
+ERROR/Not Valid IPv4 FALSE TRUE (0b1) - 
+tss.ssi||tss.tsc IPv6 TRUE TRUE (0b1) All 
+ERROR/Not Valid IPv6 TRUE FALSE (0b0) - 
+ERROR/Not Valid IPv6 FALSE TRUE (0b1) - 
+tss.sdi||tss.tsc IPv6 FALSE FALSE (0b0) Direct KDF mode not 
+supported 
+Note: 
+• The tss.tsc field referenced in this table is the concatenation of the tss.tsc.epoch and tss.tsc.counter fields 
+shown in the TSS header diagrams 
+TSC generation is specified in Section 3.7.5.6. Once the IV is created, it is then XORed with the IVMask 
+from the SDKDB or KDF before it is used by cipher engine. The error cases in Table 3-136 are used to 
+catch misconfiguration between the ssi-mode in the SDKDB and the packet. The TSS implementation 
+MUST detect the IV error cases in Table 3-136 and drop the packet and increment the sdiXXInInvalid. 

@@ -1,0 +1,68 @@
+ 263 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  
+Figure 3-37 - Deferrable Sends, Unexpected Message Case, No Reserved Buffer 
+Implementation Note: 
+Implementation of the expected message case for deferrable sends is relatively straightforward. The 
+unexpected message case—where the deferrable send is deferred—requires a little more care. 
+While there are many choices an implementation can make, this note provides guidance for an 
+implementation that could be used. It is necessary to achieve several things with an implementation: 
+1. The first packet of the deferrable send to arrive at the target must be identified as a new 
+message. 
+2. Subsequent packets of the deferrable send must be correlated with the first transmission of the 
+message. 
+3. It must be possible to identify the first packet of the restarted deferrable send as a restart at the 
+target. 
+Initiator Target
+SEND
+REQUEST
+Buffer Not Found
+SES PDSPDS SES
+Msgs + PacketsMessages Msgs + PacketsPackets Messages
+Send MID 1, Offset 0,
+Token=8,675,309
+Send MID = 1, Off = 0
+Send MID = 1, Off = N
+CC Window 
+Limited
+Send MID 1, Offset N
+...
+Send MID = 3, 
+Off = J
+Send MID = 3, 
+Off = M
+... Send MID 3, Offset 0Token=8,675,309
+Send MID 3
+0 Bytes of 
+Payload Buffered
+Matching Buffer 
+Posted, 
+but not reserved
+Restart
+Init Token=8,675,309
+Target Token=0
+Send MID 1, EOM=1
+Message Tracker 
+for MID 1 
+deallocated
+Buffer Not Found
+Send MID 3, EOM=1
+Message Tracker 
+for MID 3 
+deallocated
+MSG 
+COMPLETION
+SEND 
+COMPLETION
+Send MID = 1, 
+Off = J
+Send MID = 1, 
+Off = M
+... Send MID 1, Offset 0Init Token=8,675,309
+Target Token=0
+Send MID 1, Offset M
+All Packets ReceivedFinal Packet ACK, MID 1
+Matching Buffer 
+PostedRestartInit Token=8,675,309
+Target Token=0

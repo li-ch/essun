@@ -1,0 +1,27 @@
+# Calibration-ladder GF-02 topology: unidirectional ring of 8 ranks at the
+# PER-DIRECTION PHYSICAL point B = 450 B/ns — the ALLGATHER twin of
+# crossbar8_gf02_perdir450_v1: the poster's own "NVLink's peak
+# bi-directional bandwidth is 900 GB/s" split per direction (900/2 = 450;
+# pure anchor arithmetic, no link-count claim load-bearing). The store-run
+# pair (ring plateau360 vs ring perdir450 at identical r, M_total, L)
+# executes the 360/450 = 4/5 relation on the allgather identity — the same
+# executed-bridge structure as the allreduce crossbar pair, one collective
+# per side of the anchor's two-collective statement. Nothing is tuned.
+#
+# GRANULARITY PROJECTION (declared, never silent): same as the plateau
+# sibling — per-hop B set at the aggregate scale (the rate an NVSwitch ring
+# hop may draw toward one neighbor), NOT a single NVLink's per-link rate.
+topology_id: ring8_gf02_perdir450_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 450
+  hop_latency_ns: 200
+notes: >
+  Chunked ring ReduceScatter/AllGather phases over 8 ranks (the anchor's
+  own GPU count); per-hop B = 450 B/ns = 900/2, the per-direction split of
+  the anchor's own bidirectional peak figure (declared aggregate-scale
+  projection, see header). No congestion, no credits, no packetization, no
+  multicast/NVLS; L0 transport model only. Provenance: anchor arithmetic;
+  never our measurement, never tuned. L = 200 ns is the A-L0-LAT registry
+  point (KEEP).

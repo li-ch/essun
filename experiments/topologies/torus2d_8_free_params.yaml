@@ -1,0 +1,22 @@
+# Transport-agnostic analytical topology: 2D torus (ring x ring) of 8 ranks
+# as a 2 x 4 grid. Values are explicit FREE PARAMETERS (A-L0T-BW, A-L0T-LAT)
+# and the sequential-dimension, uniform-link, and shape models are MODELING
+# ASSUMPTIONS (A-L0T-SEQ, A-L0T-UNIF, A-L0T-SHAPE) — not standard-derived,
+# not measured. See experiments/vertical_slice/assumptions_l0.yaml.
+topology_id: torus2d8_free_v1
+topology_class: torus2d_ring_x_ring
+ranks: 8
+grid:
+  dim1_ranks: 2
+  dim2_ranks: 4
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  Two wrapped dimensions; dimension-d rings connect ranks that agree on the
+  other dimension's coordinate (4 rings of 2, then 2 rings of 4). The grid
+  shape is a free design-space parameter; the identity is symmetric in
+  dim1 x dim2. Dimensions execute sequentially over the full message, so
+  each dimension's links are used exclusively (no cross-dimension
+  contention). Both dimensions share B and L. No congestion, no credits, no
+  packetization — L0 transport model only.

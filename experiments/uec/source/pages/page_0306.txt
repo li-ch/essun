@@ -1,0 +1,49 @@
+ 306 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.5.6 Reliability and Ordering 
+Five combinations of reliability and ordering define the packet delivery modes. Each combination is 
+referred to as a delivery mode: 
+• Reliable unordered delivery (RUD) (Section 3.5.7.1) 
+• Reliable ordered delivery (ROD) (Section 3.5.7.2) 
+• Reliable ordered delivery for local networks (RODL) (Section 3.5.7.3) 
+• Reliable unordered delivery of idempotent operations (RUDI) (Section 3.5.7.4) 
+• Unreliable unordered delivery (UUD) (Section 3.5.7.5) 
+The reliable delivery modes RUD, ROD, and RODL are defined in the context of a dynamically established 
+PDC. PDCs are described in Section 3.5.8. The RUDI and UUD modes do not use PDCs. 
+When a PDC is established, the PDC delivery mode remains the same for all packets on that PDC until 
+the PDC is closed. The delivery mode selected for a given SES request is determined by SES. How packets 
+are assigned to a PDC is described in Section 3.5.8.1. More than one PDC between a pair of FEPs is 
+supported. The criteria for deciding when to establish multiple PDCs between a pair of FEPs is 
+implementation specific. There is no ordering guarantee across packets associated with different PDCs. 
+Name Field Type Description 
+Bit is set when a NACK_CCX arrives with 
+pds.nccx_type corresponding to the bit, e.g., 
+if pds.nccx_type = 0 then bit 0 in the field is 
+set. 
+UET_CRC_ERR_COUNT 32-bits Optional: Incremented when a packet with a 
+CRC error is received. 
+PDC_CLOSE_IN_ERR Bit or counter Optional: This is used to indicate (or count) 
+when a PDC is closed in error. 
+PDS_TYPE_INVALID 1-bit to 16-bit 
+counter 
+This counter is incremented when a packet is 
+received with a pds.type field that is not 
+recognized. 1-bit counter is effectively an 
+event flag. 
+PDS_CTL_TYPE_INVALID 16-bit counter This counter is incremented when a CP is 
+received with a pds.ctl_type field that is not 
+recognized. 
+PDC_REQ_ERR Bit Optional: This indicates a packet with 
+pds.flags.req = 3 was received. 
+OUT_OF_WINDOW_PSN  Bit or counter Optional: This indicates a packet with PSN 
+outside of the expected window was 
+received. 
+UNEXPECTED_TRIM Bitmap 
+Counter 
+Optional: This counter is incremented every 
+time a trimmed packet that should not be 
+trimmed arrives. 
+Bitmap indicates which packet types [ACK, 
+NACK_CP] 

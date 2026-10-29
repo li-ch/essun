@@ -1,0 +1,41 @@
+# Calibration-ladder GF-03 topology: fully-connected (crossbar) of 8 ranks
+# at the MEASURED ALLREDUCE PEAK B = 837 B/ns — GF-03's "NCCL allreduce
+# peak ~837 GB/s" ("93% of theoretical"; 837/900 = 93/100 EXACTLY — the
+# anchor's own percentage reconciles; docs/calibration/anchors_gapfill.md
+# §GF-03). This is the anchor's only large-regime aggregate number and
+# therefore the closest thing it offers to an aggregate ANCHOR POINT; it is
+# the baseline of the plateau sweep (sweep_gf03_plateau_v1.yaml) and the
+# reading of the 2 MiB CCT-row anchor-point run (run_gf03_cct_anchor_v1).
+# Decimal units, 1 GB/s = 1 B/ns.
+#
+# CONVENTION NOTE (recorded ambiguity, GF-02's hazard class): 837 is read
+# as an nccl-tests-style busbw plateau. Under the busbw convention the
+# per-rank send rate equals busbw (per-rank bytes 2(r-1)/r*M over time t),
+# so a busbw plateau of 837 against a 900 injection cap is consistent at
+# ANY rank count. If 837 were algbw instead, the implied per-rank send
+# rate at r=8 would be 7/4 x 837 = 1464.75 > 900 — infeasible; the
+# anchor's own "93% of 900" internal consistency supports the busbw
+# reading. Carried as staged; CCT-vs-CCT comparisons below use the
+# declared busbw->CCT conversion (2(r-1)/r*M/busbw), never mixed metrics.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-03 numbers; 837 is the anchor's own measured peak quote, fixed BEFORE
+# any model output was read. L = 200 ns is the A-L0X-LAT registry point
+# (KEEP).
+topology_id: crossbar8_gf03_peak837_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 837
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; single-port injection shared
+  across the 7 peers (A-L0X-PORT; in-domain for the NVSwitch class).
+  Provenance: B = 837 B/ns is the anchor's staged MEASURED NCCL allreduce
+  peak busbw on the B300 system (independent practitioner blog, confidence
+  M; gap-fill anchor, PROPOSED, not yet an integrated anchor row); the spec
+  reading 900 and the nvbandwidth D2D readings 782/717 live in sibling
+  topologies. L = 200 ns free registry point. Values are anchor
+  measurements-as-staged / free-registry points, never our measurements,
+  never tuned.

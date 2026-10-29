@@ -1,0 +1,35 @@
+# UEC TFC credit-window ring at the pod-scale operating point of the D4
+# envelope (experiments/envelopes/uec_vs_ub_window_reversal_v1.yaml): the
+# UEC profile's flagship simulated_behavior — admission law UEC11-FC-R02
+# (UEC 1.1 §3.6.15), binding BIND-UEC11-FC-R02-L0TFC — executed by the
+# landed analytical backend (src/essun/backends/analytical/l0_tfc.py).
+#
+# The ONLY standard-derived value in this comparator is the 256-byte credit
+# unit (UEC11-FC-R05, anchor UEC11-S3.6.15-TFC), carried as the named
+# constant in the backend. Everything below is FREE: link B/L are the
+# shared record's values (A-XDUO-BW/A-XDUO-LAT in
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml) and the tfc block
+# carries the binding's free parameters — window_bytes is granted credit
+# (A-TFC-W, range [256, 1048576]; the envelope sweeps it over exact grid
+# points and overrides this file's value) and credit_return_latency_ns is
+# the free credit-loop return time (A-TFC-CR). The file's base window
+# 25600 = 100 credit units is exactly the bandwidth-delay product at the
+# registered defaults B=64, L+L_cr=400 — the convergence edge where the
+# admission law stops gating; the envelope's grid brackets it from both
+# sides.
+topology_id: uec_tfc_ring1024_v1
+topology_class: unidirectional_ring_tfc_window
+ranks: 1024
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+tfc:
+  window_bytes: 25600         # 100 credit units; envelope axis A-TFC-W overrides
+  credit_return_latency_ns: 200
+notes: >
+  One TFC credit context per ring neighbor pair; the admission law caps
+  each source's steady rate at one window per credit round trip
+  (R_eff = min(B, W/(L+L_cr))). Same ring fabric and equal-chunk
+  construction as uec_free_ring1024_v1 (A-L0-FD, A-TFC-DIV); no congestion,
+  no packetization, no credit-request dynamics — the steady-window
+  analytical identity only. See experiments/vertical_slice/assumptions_tfc.yaml.

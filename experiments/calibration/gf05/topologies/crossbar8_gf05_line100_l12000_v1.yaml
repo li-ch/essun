@@ -1,0 +1,33 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 100 B/ns, L =
+# 12000 ns — the BASE-RTT reading row of the latency sweep (the upper
+# envelope of the anchor's latency numbers): base RTT = 12000 ns
+# exactly (the anchor's own "roughly 84 us = 7 base RTTs" => 84/7 us),
+# consistent with a 6-hop one-way path at 1000 ns/hop (see
+# crossbar8_gf05_line100_l6000_v1). This row charges the FULL round-trip
+# timescale — the round trip a congestion controller reacts on (SMaRTT
+# targets "RTT 1.5x base RTT", clamps its window to "1.5 BDP") — as the
+# per-pair latency of the single-stage abstraction: a DECLARED
+# upper-envelope reading that makes the CC reaction timescale visible
+# as the largest latency reading constructible from the anchor's own
+# numbers. 12000 ns is 6x the registry range upper 2000 ns (A-L0X-LAT
+# free range [10, 2000]) — the base-RTT quantity is NOT a per-hop
+# parameter (the plan's gap §4.2 candidate upper ~800-1000 ns matches
+# the PER-HOP decomposition 1000 ns instead); recorded, registry
+# untouched. Placement arithmetic only, never tuning.
+topology_id: crossbar8_gf05_line100_l12000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 12000
+notes: >
+  Base-RTT reading row (L = 12000 ns = 84 us / 7 base RTTs, the
+  anchor's own control-loop timescale) at GF-05's fixed sim line rate
+  B = 100 B/ns. Identity t = 2(r-1)/r*M/B + 2L. The time-varying CC
+  state (target RTT 1.5x base = 18000 ns, window clamp 1.5 BDP =
+  1,800,000 B, loss-learn in 7 base RTTs) is INEXPRESSIBLE at L0 — no
+  window/credit/reaction key exists; this row bounds what the CC
+  timescale would contribute if charged as static per-pair latency.
+  Provenance: anchor-staged quotes (84 us = 7 base RTTs); never our
+  measurements, never tuned.

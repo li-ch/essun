@@ -1,0 +1,37 @@
+ 621 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+such gaps; if an application-limited flow sending CSIG-tagged packets from an end host goes idle on a 
+long-lived transport connection for some significant period, such a gap may occur. 
+End hosts may also perform averaging over multiple CSIG signal values received in multiple packets 
+over the course of an RTT or longer. 
+ 
+4.2.9 CSIG Signals 
+This section describes each signal, the algorithm for any associated computation, boundary conditions, 
+and the signal’s applicability in example use cases. 
+In the text that follows, we name each signal according to signal type and the comparison function—
+min() or max()—used in CSIG-Compare-and-Update() operations on tags containing that signal. 
+4.2.9.1 min(ABW) 
+When a source FEP sends a packet with a CSIG tag for signal type min(ABW), and that packet traverses a 
+path through the UE fabric, that packet’s CSIG tag records the minimum absolute available bandwidth 
+along the path: among all switches along that packet’s path, the minimum quantized absolute available 
+bandwidth in bytes per second (Bps) at any output physical port traversed by that packet. Both the 
+unquantized and quantized absolute available bandwidth values are represented as integers. 
+4.2.9.1.1 Available Bandwidth Computation 
+The ABW signal uses a simple, time window-based computation to measure traffic rate and, thus, 
+available bandwidth. Given the following definitions: 
+Table 4-10 - Available Bandwidth Computation Terms 
+Formula Term Definition 
+t input: measurement interval (seconds) 
+𝑝 input: output port speed (Bps) 
+𝑚 input: total traffic sent on output port during 𝑡 (Bytes) 
+𝑟 traffic rate (Bps) 
+𝐴 available bandwidth (Bps, integer value) 
+𝑖 quantized available bandwidth (bucket index, integer value) 
+𝑄(𝐴) quantization function for ABW signal type and tag width 
+ 
+Define the traffic rate, available bandwidth, and quantized available bandwidth as follows: 
+𝑟 = 𝑚𝑡  
+𝐴 = (𝑝 − 𝑟) 
+i = Q(A) 
+Update the min(ABW) signal value in the CSIG tag in the packet as follows: 

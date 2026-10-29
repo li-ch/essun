@@ -1,0 +1,16 @@
+# Calibration-ladder A1 topology: crossbar72 at the UPPER endpoint of the
+# anchor-informed per-link span, B = 64 bytes/ns per direction
+# (provenance: CAL-A7, MI300X Infinity Fabric 128 GB/s/link bidirectional
+# => 64 B/ns per direction — the top of the candidate anchored span
+# [20, 64] B/ns in CALIBRATION_PLAN.md §2.1, PROPOSED). Free parameter;
+# NOT tuned toward any output.
+topology_id: crossbar72_a1_span64_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar72_a1_port50_v1 (A-L0X-PORT,
+  A-L0X-LAT, A-L0X-DIV); only the swept free parameter B differs.

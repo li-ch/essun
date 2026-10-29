@@ -1,0 +1,28 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 12.5 B/ns
+# (the GF-06 anchor sim-config point: UET-htsim "100 Gbit/s links"),
+# L = 200 ns — the LATENCY-SWEEP REGISTRY row (A-L0X-LAT / A-L0-LAT
+# assumed value 200, free range [10, 2000]) and the sweep's baseline.
+# GF-06 stages NO latency component for its fat tree (unlike GF-05,
+# whose UET-htsim config quotes 400 ns switch traversal + 600 ns link);
+# its only latency figure is the incast-setup "RTT of ~15 us" — a
+# path-round-trip quantity, executed as a sibling reading row
+# (l15000). This row places the registry default on the axis GF-06's
+# anchor leaves anchor-free: placement, never tuning. Every
+# latency-sweep row pair differs by EXACTLY 2(L1 - L2) ns at every
+# payload size (identity of the crossbar form), so the whole ladder is
+# arithmetic-transparent in L. Nothing tuned.
+topology_id: crossbar8_gf06_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking single-stage abstraction at the GF-06 anchor sim-config
+  bandwidth (12.5 B/ns) and the registry pair-latency default (200 ns —
+  the anchor stages no latency number; the registry point is the free
+  default, range [10, 2000] untouched). Identity
+  t = 2(r-1)/r*M/B + 2L; every row difference vs any sibling L row is
+  exactly 2(L1 - L2) at every size. Provenance: B anchor-staged; L
+  free-registry default. Never our measurements, never tuned.

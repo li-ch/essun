@@ -1,0 +1,42 @@
+ 747 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 6-2 - Expected values of P6, P8, and P10 as a function of UCR 
+6.3.3 Examples 
+6.3.3.1 MTBPE of a large network 
+Consider a network with N=100000 links with 400 Gb/s each, where most links have a UCR of ~1e-20 but 
+K=10 links are barely compliant and have a UCR of 1e-10 (where the UCR is estimated through either of 
+the methods described in 6.3.2). 
+From Table 6-11, the MTBPE of a single bad link (M1) is about 1 minute, and the MTBPE of a single good 
+link (M2) is about 20 thousand years. The frequency of errors in the full network is 
+𝐾
+𝑀1
++
+𝑁−𝐾
+𝑀2
+, and the 
+MTBPE is the reciprocal of this value, about 6 seconds. 
+It can be observed that, for the MTBPE of the network, the worst-case UCR is multiplied by K rather than 
+by N. 
+If the K=10 worst links have a UCR of 1e-16 instead (corresponding to an MTBPE of about 2 years), the 
+MTBPE of the full network becomes about 7 days. In this case, the MTBPE is mostly governed by the 
+total number of links N, and further improvement of the worst links has negligible effect. 
+6.3.3.2 Monitoring a network 
+Consider a network with N=1000 links with 800 Gb/s each. A software agent runs on each node 
+(endpoint or switch) and monitors the PCS FEC counters of each active link. 
+y = 0.356x   1.6584
+y = 0.4841x   1.65  
+y = 0.6128x   1.465 
+ 15
+ 13
+ 11
+  
+  
+ 5
+ 3
+ 28  2  26  25  24  23  22  21  20  1  18  1  16  15  14  13  12  11  10    8
+log10(UCR) 
+log 10(P6)
+log 10(P8)
+log 10(P10)

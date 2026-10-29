@@ -1,0 +1,31 @@
+ 197 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+accelerator). As illustrated in Figure 3-5, a FEP may choose to support only one JobID at a time to 
+effectively remove the first level of indirection. In this model, the FEP is expected to validate that the 
+received JobID is the same as the one JobID using the FEP. In addition, while the PIDonFEP plus Resource 
+Index space is drawn hierarchically, the total number of bits dedicated to this addressing (24 bits) is 
+consistent with implementation as a flat address space, if desired. PIDonFEP and Resource Index select a 
+receive queue at the target, which is a resource that scales based on the messaging patterns rather than 
+the total size of the system (in endpoints or ranks). Thus, similar solutions for direct mapping to 
+resources could be employed. Finally, UET defines return codes and recovery mechanisms for how to 
+cleanly handle transactions that go beyond the resources implemented by a particular device. 
+Informative Text: 
+A libfabric implementation associates multiple types of resources with a libfabric endpoint. This 
+includes things such as completion queues, memory regions, and receive buffers. Because a PIDonFEP 
+combined with a Resource Index is how an endpoint is addressed, this effectively selects a set of 
+resources—some of which are directly addressable from the network (e.g., a memory region) and 
+others which are not (e.g., a completion queue). Within a space selected by a PIDonFEP and Resource 
+Index, a memory key can also address a memory region. Each resource may have an (implementation-
+defined) limited range. 
+ 
+Absolute addressing differs from relative addressing in that the PIDonFEP is an absolute number that 
+spans the process space on the target node instead of being relative to a JobID. This allows a service to 
+exist that is not associated with any job and allows addressing of those services within the UET 
+framework. An absolute address facilitates a client directly addressing a process that is not part of its 
+job, and the authorization model (3.4.2.4.1) enables scalable authorization using the JobID. For example, 
+a client can use this approach to access a service residing at a well-known PIDonFEP (or a PIDonFEP 
+obtained through some form of address resolution) on a server node. The JobID at that point is used 
+ 
+Figure 3-5 - Absolute Addressing 
+ 

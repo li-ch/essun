@@ -1,0 +1,37 @@
+ 494 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+When a new PDC is established that is associated with an existing CCC, and if that CCC has no credit and 
+no additional credit has been requested for that CCC, a source SHOULD send a Credit Request CP 
+requesting more credit. This Credit Request CP MUST be sent using any of the previously existing PDCs 
+associated with that CCC. 
+Informative Text: 
+The new PDC cannot be used to request credit until it is established, and Credit Request CPs are not 
+allowed to establish a PDC at the target. PDS requests, which could establish the PDC and request 
+credit, cannot be sent when the CCC does not have credit. 
+ 
+At the source, one or more PDCs from a source FEP to a destination FEP are associated with a CCC. 
+Credit is allocated to a CCC so that any PDC in that CCC can use that credit to send. The destination 
+(receiver) sends credit either in ACK packets or in Credit CPs. These ACKs or Credit CPs are sent 
+associated with a PDC, but the credit can be used by any PDC associated with the same CCC. 
+The pds.req_cc_state.credit_target field indicates the desired credit associated with the aggregate of 
+PDCs managed by the CCC. For example, when packets are posted to any PDC in the CCC, the 
+pds.req_cc_state.credit_target field is incremented by the size of those packets. 
+In order for the destination to maintain state on a per CCC basis, the source includes a CCC_ID in the 
+pds.req_cc_state.ccc_id field. The CCC_ID identifies the CCC at the destination to which this 
+Credit_Target should be applied. This keeps the scheduler using the credit on the source aligned with 
+the CCC instance allocating credit at the destination. 
+An RCCC CCC MUST be shut down when the last PDC using it is closed. 
+3.6.14.2 RCCC Source State 
+This section contains pseudocode describing the RCCC algorithm. Implementations are not required to 
+precisely follow this pseudocode but SHOULD aim to achieve the same behavior. 
+RCCC defines the following global constants, with the associated default values: 
+As with NSCC, BDP defaults to: 
+BDP = min(sender.linkspeed, receiver.linkspeed) * config_base_rtt 
+BDP is in units of bytes, so linkspeeds above should be measured in units of bytes/second. The 
+destination linkspeed will typically be the same as the source linkspeed. If it is unknown, use the source’s 
+linkspeed. 
+MaxWnd = 1.5 * BDP 
+MaxWnd is in units of bytes. 
+On CCC creation, the following CCC local state is instantiated: 
+ 

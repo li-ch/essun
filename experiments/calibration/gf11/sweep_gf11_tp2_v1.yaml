@@ -1,0 +1,39 @@
+# Calibration-ladder GF-11 sweep #1: the IDENTITY
+# COINCIDENCE at the anchor's DECOMPOSITION rank — r=2, B=64 (registry),
+# L=702 (the derived per-phase reading of the anchor's measured SoL 1404
+# ns = 2x306 + 792), where ALL THREE corpus L0 identities coincide
+# (t = M/B + 2L: ring chain 2(r-1)L = 2L, doubling chain 2*log2(2)L = 2L,
+# crossbar 2L) — algorithm choice vanishes exactly where the anchor
+# measured its algorithm-free speed-of-light bound (2 GB200 GPUs; the
+# backend module's own documented coincidence, here executed against a
+# measured decomposition point).
+#
+# NOTHING IS TUNED: every B/L/rank value was fixed by anchor/registry
+# arithmetic BEFORE any stage output was read. Payload grid {128, 512,
+# 2048, 8192, 32768, 41216, 65536} B: the anchor's 128-B cache-line
+# granularity reading at the base, the plan's small-message regime
+# boundary 64 KiB at the top, 41216 B = the exact r=4 near-optimal
+# crossover (executed for cross-sweep comparability; at r=2 it is simply a
+# grid member); every size divisible by 2 so the divisibility gates accept
+# the exact sizes. The anchor's per-size table is a figure — the grid is a
+# DECLARED probe bracketing the size-reading ambiguity.
+sweep: cal_gf11_tp2_v1
+workload: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp2_128b.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf11/topologies/crossbar2_gf11_b64_l702_v1.yaml
+grid:
+  payload_sizes_bytes: [128, 512, 2048, 8192, 32768, 41216, 65536]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf11/topologies/ring2_gf11_b64_l702_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf11/topologies/crossbar2_gf11_b64_l702_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/gf11/topologies/exchange2_gf11_b64_l702_v1.yaml

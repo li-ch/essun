@@ -1,0 +1,19 @@
+ 159 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• Round toward 0. 
+• Round toward plus infinity. 
+• Round toward minus infinity. 
+2.4.8 INC Libfabric  
+The creation of a communicator is initiated by the ranks calling fi_join_collective() with matching 
+arguments. Figure 2-22 shows the sequence of exchanges between the IM, an exemplary rank, and an 
+INC switch during INC communicator creation. 
+After all ranks send a CommunicatorJoinRequest, the IM allocates fabric resources for the operation of 
+the INC communicator, subject to immediate availability and, optionally, any vendor-specific policies. 
+The IM configures each switch individually and sends a CommunicatorJoinReply to the communicator 
+ranks with the information required to communicate with their adjacent SEPs. 
+The rank then allocates an initiator PDS and performs a UET_INC_BARRIER collective, which forces the 
+establishment of both the initiator and target PDCs. 
+ 
+Figure 2-22 - Example INC Communicator Creation 
+ 

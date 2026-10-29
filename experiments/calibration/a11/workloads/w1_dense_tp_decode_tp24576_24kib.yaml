@@ -1,0 +1,26 @@
+# W1 Dense TP Decode — tp_size 24576 at payload 24576 B = 24576*2^0 (24
+# KiB): the SMALLEST member of this stage's anchor-scale 15-size ladder
+# 24576*2^k (24 KiB -> 384 MiB; every size = 24576*2^k is divisible by
+# the rank count 24576 = 3*2^13, so the A-L0-DIV / A-L0X-DIV input gates
+# ACCEPT the exact ladder with no bracketing). The rank count IS an
+# anchor-stated number: CAL-A11 stages two ~24,576-GPU clusters (RoCE and
+# InfiniBand; Llama 3 trained on 16,000 GPUs of the RoCE one) — the
+# scale-axis execution of this stage runs at that stated cluster scale,
+# the largest rank count any anchor in the set pins. The sweep runner
+# overrides allreduce_bytes per config from the grid, so this file's
+# payload is only the ladder's k=0 member. Same workload shape as every
+# other W1 file (2 layers x 3 decode steps = 6 AllReduce ops per config).
+# HONESTY: a 24,576-rank "fully-connected crossbar" is the NON-BLOCKING
+# SINGLE-STAGE ABSTRACTION of the anchor's two-tier rail-optimized
+# multi-plane spine-leaf fabric — a ceiling row (like CAL-A1/A2 spec
+# ceilings), never a prediction of Meta's fabric, which is subscribed 1:2
+# and congestible; CAL-A11 stages no per-collective time series, so this
+# file EXECUTES the identity for placement arithmetic only, it calibrates
+# nothing. Nothing measured or standard-normative; integer byte counts;
+# deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal11-a11-scale
+tp_size: 24576
+layers: 2
+steps: 3
+allreduce_bytes: 24576   # 24576*2^0 (24 KiB); free parameter A-W1-SIZE

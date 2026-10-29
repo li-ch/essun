@@ -1,0 +1,41 @@
+ 475 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+#PDS may also set AR for other reasons. 
+ack_req = NSCC.AckRequest() 
+return port, entropy, credit_target, ack_req 
+ 
+mark_packet_for_rtx(psn, nominal_pktsize): 
+ #marking the packet for retransmission is a PDC function, but there 
+      #are CC side effects below. Mark the psn for retransmission as soon 
+      #as allowed by cwnd 
+ccc.waiting_rtx += 1 
+ccc.rtx_backlog += nominal_pktsize 
+update_state() 
+ 
+unmark_packet_for_rtx(acked_pkt): 
+#check if we were going to retransmit a packet that was just acked 
+if acked_pkt is marked for retransmission: 
+unmark the packet for retransmission 
+ccc.waiting_rtx -= 1 
+ccc.rtx_backlog -= acked_pkt.size 
+ 
+update_state(): 
+if ccc.backlog == 0 and ccc.waiting_rtx == 0: #no more data to send 
+if ccc.inflight_pkts == 0: 
+ccc.state = IDLE 
+else: 
+ccc.state = PENDING         #still waiting for Acks 
+else if ccc.state == IDLE or ccc.state == PENDING: 
+ccc.state = ACTIVE 
+ 
+can_send = TRUE           #does each active CC algorithm allow sending? 
+if ccc.state == ACTIVE or ccc.state == READY: 
+if nscc:  
+can_send &= NSCC.CanSend() 
+if rccc: 
+can_send &= RCCC.CanSend() 
+ 
+if ccc.state == ACTIVE and can_send: 
+ccc.state = READY   #add CCC to scheduler ready list 
+else if ccc.state == READY and not can_send: 

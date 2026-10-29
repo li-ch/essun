@@ -1,0 +1,40 @@
+ 453 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.5.2 Adoption of Multipath  
+The PDS adopts multipath packet transmission at its core. The approach the PDS adopts is to use packet 
+spraying: Each packet is placed onto a pseudo-randomly chosen path by selecting an appropriate 
+entropy value and placing it in the packet. This unifies the best of HPC’s packet-adaptive routing with 
+Ethernet’s flow hashing. The PDC/CCC uses a configurable and typically large number of entropies (e.g., 
+64-256) and essentially round robins between them; however, when feedback packets indicate that the 
+path associated with a given entropy is congested (e.g., via an ECN mark or a trimmed packet), the 
+source may decide to reduce the number of packets placed on that path. This is similar to packet-
+spraying solutions in datacenters [28] and source-adaptive routing [26]. Details are provided in Section 
+3.6.16.  
+3.6.5.3 Window Based Operation 
+Multipathing helps avoid flow collisions, but congestion can still appear for at least the following reasons: 
+1. Oversubscribed networks. 
+2. Outcast traffic patterns at the source. 
+3. Incast traffic patterns at the destination.  
+To deal with this, the PDS limits the amount of data in flight between any source and destination. 
+Three congestion control mechanisms are specified: 
+1. Network-signal Congestion Control (NSCC): NSCC maintains an explicit congestion window at 
+the source. The source PDS estimates packets in flight. When the congestion window is larger 
+than the number of inflight bytes in packets sent but not yet acknowledged, NACKed, or inferred 
+to be lost (timed out or other mechanism), then the source can send. The source PDS considers 
+packets to have left the network when they are (a) acknowledged by the destination; (b) 
+negatively acknowledged by the destination; or (c) inferred by the source to be lost. The source 
+adjusts the window size based on congestion feedback from the destination. 
+2. Receiver-credit Congestion Control (RCCC): An RCCC sender maintains a pool of credit. It can 
+send whenever there is credit in its credit pool. As it uses credit, the source conveys requests for 
+more credit to the destination via the credit target field in data packets or in Credit Request CPs 
+and receives credit back from the destination in Credit CPs or ACK packets. In the steady state, 
+the amount of credit flowing between the destination and the source constitutes an implicit 
+window. The destination paces out the sending of credit to all its sources so that in aggregate 
+their rate does not cause congestion at the destination’s incoming link(s). Thus, the size of the 
+Informative Text: 
+An alternate approach, not taken by the PDS, is typified by MPTCP[29]. This approach uses a relatively 
+small number of paths (8-16) and keeps state for each path, including congestion state and per-path 
+sequence numbers. This approach permits better loss detection per sub-flow but requires more state 
+to implement. It also creates an upper bound on the number of usable paths due to the size of the 
+window, which results in poorer load balancing in certain cases, and so reduced throughput. 

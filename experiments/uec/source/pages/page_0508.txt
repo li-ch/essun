@@ -1,0 +1,39 @@
+ 508 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+As with RCCC, multiple TFC PDCs may be controlled by the same CCC, or each PDC may be given its own 
+CCC. It is RECOMMENDED that the decision to share a TFC CCC between PDCs be a configurable option. 
+When a CCC controls multiple PDCs, credit allocated to one of the PDCs controlled by the CCC may be 
+used by any of the PDCs controlled by the CCC. 
+The source controls whether multiple PDCs share a CCC. The PDS Request header carries the 
+pds.req_cc_state.ccc_id field. If multiple PDCs between a pair of FEPs are assigned the same CCC_ID, 
+then the destination MUST associate these PDCs with the same CCC. If different CCC_IDs are used, then 
+the PDCs MUST be associated with independent CCC instances. 
+3.6.15.3 TFC CCC Shutdown 
+When the last PDC sharing a TFC CCC is shut down, the CCC is also shut down. Any credit allocated for 
+the CCC is no longer usable by the source to send new data, and any buffers at the destination reserved 
+for the use of that credit may be freed for other uses. 
+At the source, a CCC MUST NOT be reused for a new PDC after the last PDC using that CCC has entered 
+the QUIESCE state in the Single PDC Close State Machine of Figure 3-57. This procedure prevents a 
+potential race where the destination thinks the last PDC using a CCC has been shut down and frees 
+buffers, but the source attempts to start a new PDC using that CCC. 
+3.6.15.4 TFC CCC Credit Timer 
+Like RCCC, TFC CCC requires a credit timer at the source to cover a corner case where packets containing 
+credit can be lost. When a sender enters an active state — that is, it has no credit available, but has data 
+to send — it starts a timer with a timeout equal to the retransmit timeout. When the timer expires, the 
+TFC.OnSourceCreditTimer() pseudocode is executed. 
+TFC.OnSourceCreditTimer(): 
+#either we don’t have any work to do, we have pending packets which 
+#will trigger timeouts or we already have credit. 
+if ccc.state != READY:  
+  return 
+ send_credit_request(ccc.credit_target) 
+3.6.16 Multipath Path Selection  
+This section describes the path selection algorithms used to load-balance the network. It is 
+RECOMMENDED that a UET endpoint performs multipath load balancing for RUD and RUDI traffic, but 
+the choice of precise implementation is left to implementations. 
+The protocol relies on multipath forwarding to distribute packets from flows across multiple network 
+paths. With the exception of the single-path ROD service, packet spraying is typically done using per-
+packet ECMP, which uses hashing of network header fields to spray packets across many paths. This 
+approach can achieve higher throughput and lower flow completion times than what can be achieved by 
+a single path. 

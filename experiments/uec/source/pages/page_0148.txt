@@ -1,0 +1,21 @@
+ 148 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 2-19 - CQ Management 
+ 
+2.3.5.3 Addressing 
+Verbs logically separates addressing data into two components. This separation is aligned with the 
+network layering model where the addressing is used. Addressing data that resides in UET SES headers is 
+referred to as QP-level transport addressing. Addressing information found in underlying headers (e.g., 
+UDP/IP) are referenced as network-level addressing. Network-level addresses are described using GIDs 
+and address handle (AH) attributes. In general, a network-level address identifies a network port. UET 
+QP-level transport addressing includes the JobID, PIDonFEP, Resource Index, and addressing mode. 
+To align with RDMA verbs semantics, UET verbs specify the network-level and QP-level components 
+separately. The network and QP components are then combined in an extended address handle to form 
+the target QP address. 
+2.3.5.3.1 Extended Address Handles 
+An extended address handle in verbs is used to represent both network and transport information 
+required to target a remote service. The information specified in an extended address handle: 
+• Network information 
+o Network port 

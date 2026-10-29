@@ -1,0 +1,42 @@
+ 635 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The LLR_INELIGIBLE frame type is used to send IEEE Std 802.3 format frames without any LLR protection. 
+Pause and PFC frames are always sent as LLR_INELIGIBLE. The LLR_ELIGIBLE frame type is used to send 
+IEEE 802.3 format frames with LLR protection. 
+The receive path interfaces from the MAC to the MAC Control and from the MAC Control to the LLR 
+each require three additional fields to support LLR operation. 
+Table 5-5 - MAC to MAC Control to LLR Receive Path Additional Fields 
+Field Name Description 
+frame_type Indicates the type of frame. 
+Values: LLR_ELIGIBLE, LLR_INELIGIBLE 
+fcs_status Indicates the status of the frame’s FCS. 
+Values: GOOD, POISONED, BAD 
+An FCS status of BAD allows the LLR to send an LLR_NACK to trigger a replay. An 
+FCS status of POISONED will not trigger the sending of an LLR_NACK but will ensure 
+that the error is propagated. 
+llr_field The LLR related control fields that are extracted from the preamble of LLR_ELIGIBLE 
+frames by the MAC. 
+ 
+The receive path interface from the LLR to the MAC client (MCF:MA_DATA.indication) requires one 
+additional field to support UE link operation. 
+Table 5-6 - LLR to MAC Client Receive Path Additional Field 
+Field Name Description 
+frame_bad Indicates that the frame payload data is bad. Frames received with either a 
+poisoned or bad FCS will set the frame_bad flag TRUE. 
+5.1.3 LLR Operation 
+The LLR has two modes of operation: OFF and ON. The OFF mode of operation disables LLR functionality 
+and removes its effects from the IEEE layering model so that a port behaves as an IEEE 802.3 standard 
+port. The ON mode of operation enables the LLR mechanism and provides lossless link-level behavior for 
+LLR-eligible frames, while providing IEEE 802.3 standard behavior for LLR-ineligible frames. 
+When the LLR mode is OFF, all frames are passed through the TX LLR from the MAC client to the MAC 
+control layer and are not stored in the replay buffer or assigned a sequence number. When the LLR 
+mode is OFF, all frames are passed through the RX LLR from the MAC control layer to the MAC client 
+layer without any frames being filtered. 
+When the LLR mode is ON, the LLR mechanism is active. All LLR-ineligible frames are passed through the 
+TX LLR from the MAC client to the MAC control layer and are not stored in the replay buffer or assigned 
+a sequence number, while all LLR-eligible frames are handled as described in the following sections. 
+When the LLR mode is ON, unexpected (sequence number missed or sequence number duplicated) LLR-
+eligible frames are filtered by the RX LLR, while expected LLR-eligible frames and LLR-ineligible frames 
+(not terminated by the MAC control layer) are passed through the RX LLR to the MAC client layer 
+without being filtered. 

@@ -1,0 +1,26 @@
+ 256 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+found a buffer and will be delivered in its entirety. Note that every response in most sequence diagrams 
+carries a semantic header. Some arcs, such as the final arc in Figure 3-30, are not labeled with the 
+semantic response opcode to keep the diagram simple, since many options are possible. 
+3.4.5.2 Requests with Responses That Have Payloads 
+Read requests (UET_READ) generate payload data in the return direction. There are two mechanisms for 
+returning data—as illustrated in Figure 3-31 and Figure 3-32. (Note: Neither figure illustrates PDS 
+acknowledgements.) Both figures illustrate the multi-packet case. For a read request with a request 
+length that is larger than one Payload MTU, SES breaks the read request into one packet (UET_READ) 
+per Payload MTU worth of response data. Each read packet associated with one message contains the 
+same message ID, and each read packet requests one Payload MTU of data—except for the last read 
+request, which can request the final fragment. The sequence is the same for single-packet read 
+requests. The choice between the two sequences is based on the value of PDS_MAX_ACK_DATA. When 
+PDS_MAX_ACK_DATA is greater than the request length or PDS_MAX_ACK_DATA is greater than the 
+Payload MTU, then the sequence in Figure 3-32 is used. Otherwise, the sequence in Figure 3-31 is used. 
+When a fetching atomic request (UET_FETCHING_ATOMIC) is issued, the sequence in Figure 3-32 is 
+always used. A broader discussion of these sequences can be found in the PDS specification 3.5.19. The 
+remainder of this section focuses on the semantic sublayer characteristics of these sequences. 
+When the data that can be carried in an acknowledgment is small, the target issues new messages 
+containing the read payload data. These messages are technically responses; thus, the 
+UET_RESPONSE_W_DATA opcode is used. Reads (optionally) complete at the target when all of the 
+response packets for the read have been acknowledged. Note that the response payload packets 
+ 
+Figure 3-31 - Multipacket Read Request – Standard 

@@ -1,0 +1,38 @@
+ 311 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The following initiator PDC mapping tuples MUST be supported: 
+• {source FA, destination FA, TC, RUD/ROD/RODL}. 
+• {SDI, source FA, destination FA, TC, RUD/ROD/RODL} only if TSS is supported. 
+o tss_context is an example name used in the logical SES-PDS interface for a field passed 
+to PDS by SES which can be used to identify the security domain (SDI). 
+• The ability to include any combination of JobID, destination PIDonFEP, source PIDonFEP, and 
+Resource Index in the tuples when using RUD/ROD. 
+• Separate default tuples for RUD, ROD, and RODL traffic. 
+• If TSS is enabled, include SDI in the tuples. 
+• It may be beneficial to use multiple ROD or RODL PDCs between a pair of FEPs if there is 
+substantial ROD/RODL bandwidth, as ROD PDCs use a single network path. 
+o Mapping of traffic across multiple RODL PDCs to a common destination FEP is left to the 
+implementation. 
+Reserved PDCs are allocated under software control (see Section 3.5.18). 
+The following target tuples MUST be supported for RUD/ROD/RODL delivery modes: 
+• {source FA, destination FA, pds.spdcid} tuple identifies the PDC  
+o The pds.spdcid field is sufficient versus including traffic class and PDC mode, as a FEP 
+uses unique PDCIDs across traffic classes and PDC modes. 
+o When pds.spdcid is used to associate received packets with a PDC, the ip.src_addr field 
+is verified to match the expected value. 
+o Note that the destination FA is a constant within a single FEP and may be omitted in 
+implementations instantiating a single FEP (i.e., {source FA, pds.spdcid} is sufficient for a 
+single FEP). 
+o If TSS is enabled, tss.sdi MUST be included in the tuples. 
+The following CCC_ID mapping tuples MUST be supported: 
+• {destination FA, ip.dscp} 
+• Assign ROD PDCs unique CCC_IDs (cannot be mixed with RUD CCC_IDs) 
+A target generating a return data packet in response to a read request MUST use the same PDC the 
+associated read request arrived on. That is, read response data must use the return direction of the 
+same PDC that carried the read request. 
+The initiator PDS assigns an initiator PDC Identifier (IPDCID) that is carried on the wire. When the target 
+accepts the PDC, it assigns a target PDC Identifier (TPDCID) that is also carried on the wire. PDC 
+Identifiers are described in Section 3.5.11.5. 
+Establishment of multiple PDCs between two FEPs using the same tuple and traffic class is supported to 
+enable both RUD and ROD. Establishing multiple RUD PDCs between two FEPs using the same tuple and 

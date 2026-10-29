@@ -1,0 +1,43 @@
+The OpEx reduction is mainly composed of electricity bill and maintenance cost in the lifetime of the system. UB-mesh reduces OpEx by about 35% compared with Clos, due to its much fewer use of switches and optic modules. According to the estimation of AI system by our Cloud Division, OpEx accounts for around 30% of TCO. Ultimately, UB-Mesh achieves 2.04×\times higher cost-efficiency according to equation 1.
+
+Figure 21. CapEx Comparison
+
+6.5. Linearity Evaluation
+
+The linearity of an AI cluster refers to the extent to which the performance of the cluster scales linearly with the number of NPUs. Specifically, we measure the linearity by the following equation:
+
+(2)Linearity=Per-NPU Perf. on Target ScalePer-NPU Perf. on Base Scale×100%\textit{Linearity}=\frac{\textit{Per-NPU Perf. on Target Scale}}{\textit{Per-NPU Perf. on Base Scale}}\times 100\%
+
+Fig. 22 evaluates the linearity of UB-Mesh under varying cluster scales. The base scales (namely, the 1×1\times scale in the figure) also vary among tasks. Specifically, the LLAMA2-70B uses 128 NPUs, GPT3-175B’s base scale is 512, Dense-1T and GPT4-2T use 1K NPUs.
+
+As we can see, the linearity of UB-Mesh on all tasks exceeds 100% under 1×\times to 32×\times scales, this is because improving the scale provides more high-bandwidth domains and unlocks the potential of searching for a better parallelism strategy to improve MFU. The linearity of GPT4-2T and Dense-1T models drop when under 64×\times scale with 64K NPUs involved, but the linearity is still above 95%.
+
+Figure 22. Linearity Analysis @ Sequence 256K
+
+6.6. Network Reliability Analysis
+
+AI training procedures are sensitive to hardware failures. A classic time-based metric is used to evaluate the reliability of a system:
+
+(3)A​v​a​i​l​a​b​i​l​i​t​y=M​T​B​FM​T​B​F+M​T​T​R×100%Availability=\frac{MTBF}{MTBF+MTTR}\times 100\%
+
+Where MTBF denotes Mean Time Between Failure and MTTR refers to Meam Time to Repair.
+
+As estimated in Table 6, prioritizing the usage of direct-connected electrical cables (E-Cables) over optical fibers and switches result in greatly reduced Annualized Failure Rate (AFR) of network modules. Then we can calculate the MTBF (M​T​B​F=365×24A​F​RMTBF=\frac{365\times 24}{AFR}) of two architectures: the baseline Clos is 13.8 hours for a 8K-NPU cluster, while UB-Mesh achieves 98.5 hours, a 7.14×\times improvement. Ultimately, the availability of UB-Mesh is 98.8% according to Eq.3 (We assume a 75-minute MTTR according to our existing statistics), significantly outperforming Clos’s 91.6% (7.2% improvement).
+
+To further improve availability, we also carefully craft an in-house network monitoring tools, which can quickly identify and locate network failures within 10 minutes and then trigger timely task migration within 3 minutes, greatly reducing MTTR. With such an MTTR optimization, the availability of UB-Mesh can be further improved to 99.78% according our evaluation.
+
+Table 6. MTBF Estimation
+
+Annualized Failure Rate (AFR)MTBF(Hours)
+
+Electrical CableOptical CablesLRSHRSTotal Failure
+
+UB-Mesh5.821.55810.5688.998.5
+
+Clos13.85741827632.813.8
+
+Summary: Compared to the baseline Clos architectures, UB-Mesh achieves 2.042.04×\times higher cost-efficiency at the cost of marginal performance degradation (within 7%). UB-Mesh improves network availability by 7.2% due to the greatly reduced usage of switches and optical modules. UB-Mesh also achieves 95%+ linearity on several LLM training tasks.
+
+7. Discussion
+
+Co-Processor for Collective Communication. It is worth mentioning that, in the UB IO controller there is also a special co-processor called Collective Communication Unit (CCU) for offloading the collective communication tasks. Specifically, CCU executes instructions, actively reads/writes data from/to HBM, initiates inter-NPU transmission and also performs in-line data reduce utilizing on-chip SRAM buffer. It eliminates the redundant data copy from application’s memory buffer to the communication buffer. Such a design effectively alleviates the HBM bandwidth consumption and maintains the deterministic reduce order via a checkbit-based fine-grained synchronization mechanism. CCU can also seamlessly co-operate with compute cores to achieve efficient compute-communication overlap.

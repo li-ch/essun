@@ -1,0 +1,22 @@
+ 671 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o Complete any necessary receiver configuration based on remote LLDP sender fields. 
+o Set Local.R_VC_RTR[x] = 1 
+6. LLDP packet is sent from receiver to sender with R_VC_RTR[x] flag(s) set. 
+7. Enable Lossless Traffic 
+• For each VC[x] with remote.R_VC_RTR[x]==1 and local.S_VC_RTS[x]==1: 
+o Enable transmission of packets for lossless VC[x] using CBFC credits. 
+When CBFC is used in a network, a link is likely to be initialized with one or two best-effort VCs and one 
+or two lossless VCs. Over time, additional traffic classes may be added to the network that require 
+additional lossless VCs to be configured. This can be accomplished while the link is active by restarting 
+the lossless VC initialization process and updating the R_VC_WANT, S_VC_RTS, and R_VC_RTR flags for 
+the new lossless VCs. The receiver per-port TLV values R_CellSize and R_PktOvhd must not be changed 
+when initializing additional lossless VCs while some lossless VCs are already active. The method of 
+setting the credit limits — setting TotalCredits or individual per-VC limits — must follow the method 
+chosen for previously established lossless VCs. The R_TotalCredits value may be increased when adding 
+additional lossless VCs. 
+5.2.8.5 Lossless VC Removal Process 
+A VC can be changed from lossless to best effort by following the lossless VC removal process. This 
+process is described in Figure 5-12. After a lossless VC is removed, it can remain unused or be used as a 
+best-effort VC. 

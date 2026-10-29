@@ -1,0 +1,36 @@
+ 357 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+For best-effort networks, the recommended value of Max_ACK_Data_Size is 16 B. This allows atomics 
+and small software messages to be carried in ACKs, while preventing ACKs—which are not CC-
+controlled—from interfering with the ability of CMS to properly manage congestion. The associated 
+traffic class mapping is specified in Section 3.5.9. 
+3.5.12.2 PDS Acknowledgements 
+Acknowledgements (ACKs) are used to indicate the successful receipt of a packet by the destination PDS, 
+to carry SES responses, and to carry congestion control and load balancing state. ACKs are transmitted 
+only in response to a received packet. This can be a delayed response while PDS waits for SES processing 
+before generating an ACK. ACKs MUST set pds.ack_psn to the pds.psn of the request packet or the CP 
+that triggered the generation of the ACK unless the ACK is triggered by a Probe CP. Refer to Section 
+3.5.16.4.2 for information on building ACKs for Probe CPs. 
+ACK packets triggered by arriving control packets are described in 3.5.16. This type of ACK uses the same 
+base ACK with a CP‑type‑specific payload. 
+Load balancing and congestion control algorithms expect quick ACK responses. A potential issue is that 
+SES processing may take a significant amount of time compared to an RTT. Therefore, SES supports the 
+opcode UET_NO_RESPONSE which allows SES to respond to PDS quickly when processing multi-packet 
+messages. The ‘no response’ concept, described in the SES Section 3.4.4.3, is based on the following: 
+• Most packets are processed successfully, and the initiator needs to know only ‘success’ for 
+these. 
+• If an error occurs on a multi-packet message, it is necessary to report that error to the source 
+on only one of the packets. That is, sending the error response for every packet is not strictly 
+required. 
+• Clear functionality is used to guarantee an error response is received. 
+When SES gets a packet that is part of a multi-packet message and that packet is not the last packet in 
+the message to arrive, and the packet is not marked for delivery complete (ses.dc), then SES can 
+immediately generate a UET_NO_RESPONSE, allowing PDS to transmit an ACK sooner, before SES 
+completes its processing. Note, if SES later determines there is an error related to the packet or 
+message, that stateful SES response is carried in the ACK for the packets in the message arriving after 
+the error is detected.  
+The general structure of an ACK packet is illustrated in Figure 3-79. The ACK type used is determined by 
+the congestion mechanisms in use. Typically, this should be consistent across the set of FEPs in a fabric. 
+An implementation may provide a configuration option to enable/disable each type, e.g., 
+ACK_TYPE_ENB. 

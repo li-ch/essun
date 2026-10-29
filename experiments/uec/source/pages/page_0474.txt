@@ -1,0 +1,41 @@
+ 474 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+OnInferredLoss(pkt_state, nominal_pktsize, pdc_present): 
+if nscc: 
+NSCC.OnInferredLoss(nominal_pktsize) 
+ mark_packet_for_rtx(pkt_state.psn, nominal_pktsize) 
+if rccc: 
+RCCC.OnInferredLoss(pdc_present) 
+process_ev(pkt_state.entropy, TIMEOUT) 
+ccc.inflight_pkts-- 
+update_state() 
+ 
+OnSend(nominal_pktsize, is_rtx): 
+if is_rtx: 
+ccc.waiting_rtx -= 1 
+ccc.rtx_backlog -= nominal_pktsize 
+else: 
+ccc.backlog -= nominal_pktsize 
+if nscc: 
+ NSCC.OnSend(nominal_pktsize) 
+if rccc: 
+RCCC.OnSend(nominal_pktsize) 
+ccc.inflight_pkts++ 
+update_state() 
+ 
+OnNewData(delta_backlog): 
+ccc.backlog += delta_backlog 
+if rccc: 
+RCCC.OnNewData() 
+update_state() 
+ 
+GetSendParams(free_port_list) -> port, entropy, credit_target, ack_req: 
+determine entropy and NIC port 
+if rccc: 
+ 
+credit_target = ccc.credit_target 
+ack_req = FALSE 
+if nscc: 
+#ack_req is TRUE if the CCC would like AR to be set.   

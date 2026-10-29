@@ -1,0 +1,55 @@
+ 558 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.7.3.1.3 Client-Server Model 
+The client-server model is used when several clients communicate to the same server. In this model, 
+within an SD a client can decrypt packets only from the server and is prevented from decrypting other 
+clients’ traffic. The server uses a common key (SDKs) to derive keys for each client. This is similar to how 
+PSP derives keys, except the SDI selects a group instead of it being global to the NIC. To reduce per-
+client overhead at the server, per-client keys are not stored but derived using the server key. This is 
+accomplished using a combination of KDF modes at clients and server. 
+Like the other cases, the process starts with creating an SDI for the secure domain and unique secure 
+source identifiers within the domain. Unlike the other cases, each client is assigned a different key by 
+the server, derived from the single server group key (SDK). This implies the server is distributing keys to 
+the clients or that the SDME is aware of the client-server relationship. The clients use direct KDF mode 
+to encrypt traffic to the server. The server uses cluster KDF mode for traffic received from clients and 
+client-server KDF mode for traffic sent to clients. Client-server communication is asymmetric in that it 
+uses client-server KDF mode for server-transmitted packets and cluster KDF mode for packets received 
+by the server. 
+ 
+The following example shows how two clients A and B communicate with server S in secure domain 
+SDI0. 
+Table 3-132 - Client-Server Key Generation 
+Case Source Key Gen Destination Key Gen Comment 
+A->S A: SDKDB(SDI0) -> SDKa, SSIa 
+JobID-A 
+S: SDKDB(SDI0)->SDKs, KDF(SDKs, 
+SSIa)->SDKa 
+• Direct KDF mode at A 
+• Cluster KDF mode at S 
+B->S B: SDKDB(SDI0) -> SDKb, SSIb 
+JobID-B 
+S: SDKDB(SDI0)->SDKs, KDF(SDKs, 
+SSIb)->SDKb 
+• Direct KDF mode at B 
+• Cluster KDF mode at S 
+S->A S: SDKDB(SDI0) -> SDKs, SSIs 
+KDF(SDKs, SSIa) -> SDKa 
+JobID-Srv or JobID-A 
+A: SDKDB(SDI0)->SDKa • Server KDF mode at S 
+• Direct KDF mode at A 
+S->B S: SDKDB(SDI0) -> SDKs, SSIs 
+KDF(SDKs, SSIb) -> SDKb 
+JobID-Srv or JobID-B 
+B: SDKDB(SDI0)->SDKb • Server KDF mode at S 
+• Direct KDF mode at B 
+Note: 
+• SDI0 is the secure domain used. 
+• A->S is Client A sending to Server S (similar for B) 
+• S->A is Server S sending to Client A (similar for B)  
+Implementation Note: 
+Job identifiers (JobIDs) are added to Table 3-132 for clarity but are not strictly used by TSS. In typical 
+deployments, clients are identified by the server using the JobID. For clients A and B, the JobIDs at the 
+server are JobID-A and JobID-B, respectively. The server can use either a unique server JobID (JobID-
+srv) or the client’s JobID (JobID-A or JobID-B). This use case typically uses absolute addressing in the 
+SES layer. In addition, buffers may be exposed to specific jobs only. 

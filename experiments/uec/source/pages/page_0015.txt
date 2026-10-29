@@ -1,0 +1,45 @@
+ 15 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-67 - Configuration Parameters for Handling NACK and RTO ....................................................... 370 
+Table 3-68 - PDS NACK Codes ................................................................................................................... 371 
+Table 3-69 - Rules for Constructing UET_DEFAULT_RESPONSE ................................................................ 375 
+Table 3-70 - Loss Detection ....................................................................................................................... 376 
+Table 3-71 - Rules for NACK Generation with Trimmed Packets .............................................................. 377 
+Table 3-72 - Early Loss Detection Fields per CCC—OOO Example ............................................................ 378 
+Table 3-73 - UET_HDR_CP_ACK Payload .................................................................................................. 387 
+Table 3-74 - Close Command CP ACK Payload .......................................................................................... 391 
+Table 3-75 - Credit CP Payload .................................................................................................................. 393 
+Table 3-76 - Credit Request CP Payload .................................................................................................... 393 
+Table 3-77 - Negotiation CP Payload - General ......................................................................................... 394 
+Table 3-78 - Negotiation Type (pds.neg_type) ......................................................................................... 395 
+Table 3-79 - Negotiation CP Payload for pds.neg_type = PDS_NEG_ON_OFF ......................................... 396 
+Table 3-80 - Negotiation CP Payload pds.neg_on_off_mask Format ....................................................... 396 
+Table 3-81 - CP ACK Payload Fields for pds.neg_type = PDS_NEG_ON_OFF ............................................ 396 
+Table 3-82 - PDS CP Summary ................................................................................................................... 397 
+Table 3-83 - Reserved PDC Configuration ................................................................................................. 399 
+Table 3-84 - Sequence Diagram Key ......................................................................................................... 400 
+Table 3-85 - UET DSCP Mappings without Trimming ................................................................................ 445 
+Table 3-86 - UET DSCP Mappings with Trimming ..................................................................................... 446 
+Table 3-87 - UET DSCP to TC Mappings for Best Effort Networks ............................................................ 448 
+Table 3-88 - UET Control Packet to TC Mappings for Lossless Networks ................................................. 449 
+Table 3-89 - Header Fields for pds.req_cc_state for RCCC/TFC ................................................................ 461 
+Table 3-90 - pds.ack_cc_state for ACK_CC with CC_TYPE = CC_NSCC ...................................................... 462 
+Table 3-91 - pds.ack_cc_state for ACK_CC with CC_TYPE = CC_CREDIT ................................................... 464 
+Table 3-92 - CSIG Reflection Header Fields for Compact CSIG Tag ........................................................... 465 
+Table 3-93 - CSIG Reflection Header Fields for Wide CSIG Tag ................................................................. 465 
+Table 3-94 - pds.ack_ccx_state for ACK_CCX and CCX_TYPE = NCSS_CSIG .............................................. 466 
+Table 3-95 - pds.ack_ccx_state for ACK_CCX with CCX_TYPE = RCCC_CSIG ............................................. 467 
+Table 3-96 - pds.nack_ccx_state for NCXX_TYPE = CSIG .......................................................................... 467 
+Table 3-97 - Congestion Control Configuration Parameters ..................................................................... 480 
+Table 3-98 - NSCC Source State ................................................................................................................ 482 
+Table 3-99 - NSCC Destination CC State .................................................................................................... 490 
+Table 3-100 - RCCC Source State ............................................................................................................... 495 
+Table 3-101 - RCCC Global Destination State ............................................................................................ 497 
+Table 3-102 - RCCC Per-Source Destination State .................................................................................... 498 
+Table 3-103 - RCCC Global Destination State for Aggregate Rate Control ............................................... 503 
+Table 3-104 - RCCC Aggregate Rate Control Parameters.......................................................................... 503 
+Table 3-105 - YAML Schema Concepts and Primitives .............................................................................. 520 
+Table 3-106 - Mandatory Signal and Global Variable Accumulation Operators ....................................... 522 
+Table 3-107 - Optional Signal Accumulation Operators ........................................................................... 523 
+Table 3-108 - Signal Access and Management Functions ......................................................................... 523 

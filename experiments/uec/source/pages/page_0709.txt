@@ -1,0 +1,58 @@
+ 709 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  } 
+  augment "/lldp:lldp/lldp:port" { 
+    description 
+      "Augments LLDP port with the UE link negotiation options TLV"; 
+    leaf tlvs-tx-org-uec-link-neg-options-enable { 
+      type boolean; 
+    description 
+      "Enable for the UE link negotiation options TLV transmission"; 
+    } 
+    container uel-options-tlv-extension { 
+      description 
+        "The UE link negotiation options TLV"; 
+      uses uel-options-tlv; 
+    } 
+  } 
+  augment "/lldp:lldp/lldp:port/lldp:remote-systems-data" { 
+    description 
+      "Augments the port's remote-systems-data with received UE link  
+       negotiation options TLV"; 
+    container uel-options-tlv-extension { 
+      description 
+        "Holds a received UE link negotiation options TLV"; 
+      uses uel-options-tlv; 
+    } 
+  } 
+} 
+ 
+5.3.3.4.2 YANG Module uec-link-neg-cbfc-tlv 
+ 
+module uec-link-neg-cbfc-tlv { 
+  yang-version "1.1"; 
+  namespace "http://ultraethernet.org/yang/uec-link-neg-cbfc-tlv"; 
+  prefix uel-cbfc-tlv; 
+  import ieee802-dot1ab-lldp { 
+    prefix lldp; 
+  } 
+  organization 
+    "Ultra Ethernet Consortium"; 
+  contact 
+    "UEC-URL: https://ultraethernet.org/ 
+    Contact: UEC Link Layer Working Group Chair"; 
+  description 
+    "UE LLDP extension TLVs for the CBFC feature 
+ 
+    Copyright © UEC (2025). 
+ 
+    This version of this YANG module is part of UE Specification v1.0.  
+    See the specification itself for full legal notices."; 
+  revision 2025-03-14 { 
+    description 
+      "UE LLDP extension TLV for the Credit Based Flow Control 
+      feature."; 
+ reference 
+      "UE Specification v1.0"; 
+  } 

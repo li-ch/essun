@@ -1,0 +1,46 @@
+# Calibration-ladder GF-09 topology: fully-connected crossbar of 8
+# ranks at the BIDIRECTIONAL-AGGREGATE ALTERNATIVE READING of the
+# "400+ Gbps" design class — B = 25 B/ns, L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-09,
+# arXiv:2508.08906; numbers AS STAGED): "designed to operate at high
+# bandwidths (400+ Gbps)". The primary reading (50 B/ns per direction,
+# the Ethernet full-duplex convention) is executed as the envelope
+# carrier crossbar8_gf09_uec50_l200_v1.yaml; this row executes the
+# BIDIRECTIONAL-AGGREGATE alternative (200 Gb/s per direction / 8 =
+# 25 B/ns). The reading ambiguity is itself a factor exactly x2 — the
+# same ambiguity class as GF-08's unstaged direction split (25 vs 12.5)
+# and GF-05's flagged 800 Gbps reading (100 vs 50); the whole GF-09
+# rate pair (50, 25) is exactly 2x the GF-08 pair (25, 12.5) —
+# coincidence recorded, never cross-derived. 25 B/ns is also
+# numerically identical to GF-05's uet-htsim 4:1-oversubscription
+# displacement value (100/4).
+#
+# ROLE: direction-reading ambiguity row of the design-target envelope
+# (asymptotic CCT ratio vs the carrier exactly 2, bandwidth-bound). The
+# ambiguity is ORDERED in the stage record against the anchor's own
+# worked-example factors (4 and 3): an unpinned direction convention
+# moves the row by MORE than either worked example — the stage's
+# largest single ambiguity.
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS placed by anchor/registry
+# arithmetic BEFORE any stage output was read, never tuned. r = 8 free
+# smoke default (GF-09 stages no rank count). Values are anchor design
+# targets / free registry defaults, never our measurements; design-
+# target class — never achieved values (CAL-A1/A2 ceiling discipline,
+# A10 assumption-class discipline).
+topology_id: crossbar8_gf09_agg25_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 200
+notes: >
+  Direction-reading alternative of the GF-09 design-class rate: B =
+  25 B/ns (200 Gb/s per direction / 8 under the bidirectional-aggregate
+  reading of the staged "400+ Gbps"), L = 200 ns registry. Identity
+  t = 2(r-1)/r*M/B + 2L; asymptotic CCT ratio vs the 50 B/ns carrier
+  exactly 2. Placement row only — the anchor stages no measurement of
+  any kind (design-target class, gap-fill anchor PROPOSED, confidence
+  M; public paper by UEC participants, not a spec document).

@@ -1,0 +1,27 @@
+ 518 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4. Control table: A structured table that stores computed adjustments by control mechanisms 
+associated with each congestion control context (CCC). This table dictates transmission 
+scheduling behavior based on dynamically updated control variables, ensuring efficient traffic 
+regulation. 
+Both CC and LB algorithms use local and global state to store and exchange variables between 
+invocations. 
+This logical architecture is designed to be independent of any specific physical implementation, allowing 
+for compatibility with NSCC and RCCC congestion control schemes, as well as optional load balancing 
+mechanisms. The following sections provide a detailed definition of each architectural component and 
+its role in congestion management. Figure 3-3 shows an overview of the architecture. 
+ 
+FEPs that implement PCM support one or more active congestion control algorithms bound to different 
+CCCs. Algorithms operate independently of other active algorithms and can coordinate through global 
+variables. The PCM runtime is responsible for delivering signals to, and applying algorithm-initiated 
+operations to, hardware. 
+A possible algorithm lifecycle can be as follows: 
+• Load: Algorithms are loaded by an implementation-specific PCM tool to a specific FEP. 
+• Instantiate: The PCM tool creates an instance of the algorithm. 
+• Configure: Parameters are setup for an algorithm instance. 
+• Assign: The algorithm instance is assigned to a subset of network traffic. 
+• Activate: The algorithm instance is activated and controls network traffic. 
+ 
+Figure 3-135 - PCM Logical Architecture Overview 
+ 

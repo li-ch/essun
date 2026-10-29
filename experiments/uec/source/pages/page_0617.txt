@@ -1,0 +1,27 @@
+ 617 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 4-8 shows the position of an Ethernet frame’s CSIG tag among the fields of the frame’s Ethernet 
+and IEEE Std 802.1Q headers. In these examples, the CSIG tag is highlighted within the layer 2 Ethernet 
+header. 
+ 
+ 
+ 
+Figure 4-7 - CSIG Reflection Entity Interactions 
+TSS
+CSIG-Term()
+CSIG-Reflect()
+CSIG-Init()
+PDS
+CMS
+SES
+libfabric APIs
+reflect_csig,
+csig_reflection_hdr
+csig_present,csig_info
+packet with csig tag removed
+To Ethernet FabricFrom Ethernet Fabric
+Ultra 
+Ethernet 
+Transport 
+Layer

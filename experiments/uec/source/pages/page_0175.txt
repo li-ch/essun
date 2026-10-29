@@ -1,0 +1,52 @@
+ 175 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 2-54 - Fabric Capabilities 
+gRPC field 
+(Capabilities::…) 
+YANG leaf (capabilities/…) Description 
+bandwidth max-rank-bandwidth The maximum aggregate bandwidth of input or output 
+data streams. 
+operations supported-operations The list of {data type, reduction operator} tuples. 
+collectives supported-collectives The supported collectives. 
+payload_mtu max-payload-mtu The data Payload MTU. 
+ordering supported-ordering-modes A single-switch setup provides corresponding ordering 
+to the communicator as a whole. 
+protocol_types available-protocol-types The list of available data plane protocol types. 
+rounding_modes supported-rounding-modes The supported rounding modes. 
+ 
+Table 2-55 - Switch INC Resources 
+YANG leaf (capabilities/…) Description 
+max-communicators The number of communicators that can concurrently be active on the switch. 
+max-interfaces The maximum number of interfaces that can be employed across all 
+communicators. 
+max-interfaces-per-
+communicator 
+The maximum number of interfaces that can be used in the operation of a 
+communicator. 
+max-peers-per-interface The maximum number of peers with which a local interface can peer. 
+max-peers The maximum number of peers that can take part in collective operations at the 
+same time. 
+max-peers-per-
+communicator 
+The maximum number of peers that can be part of a communicator.  
+max-communicators-per-
+interface 
+The maximum number of communicators that can operate on an interface 
+concurrently. 
+ 
+2.4.17.3 Configuration of an INC Communicator 
+This section describes the process of configuring an INC switch for an INC communicator. To perform 
+this process the following information is produced by or provided to the IM: 
+• The CID. 
+• The data plane protocol2. 
+• The set of involved SEPs and their fabric addresses. 
+• The peering relationships of the SEPs. 
+• The data MTU size to be used by the communicator. 
+• The scalar integer by which the results are divided when performing sum and scale operations. 
+• The TC_low and TC_high traffic classes used by the UET protocol. 
+• The bandwidth at which collectives are to be run. 
+• The operator ordering mode for the communicator. 
+ 
+2 This specification defines a single data plane protocol (see section 2.4.11); however, other vendor-specific 
+protocols are possible. 

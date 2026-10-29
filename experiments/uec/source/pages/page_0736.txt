@@ -1,0 +1,36 @@
+ 736 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Insertion of a CtlOS anywhere in the MII data stream SHALL NOT corrupt any 802.3 packet transfers, 
+regardless of whether the CtlOS interrupts 802.3 packet transmission or falls outside 802.3 packet 
+boundaries. 
+The presence of a CtlOS SHALL NOT impact the Deficit Idle Count (DIC) of the transmit RS. See [1], 
+subclause 81.3.1.4 for details on DIC. 
+6.2.4.2 MII receive functional specifications 
+The receive RS SHALL consider a CtlOS (composed of the CtlOS control character and subsequent seven 
+data octets) arriving in lane 0 on the receive MII as a permissible lane encoding (see [1], subclause 
+81.3.2.2, Table 81-4). 
+A valid receive CtlOS SHALL have no impact on the RS DATA_VALID_STATUS parameter. 
+For setting DATA_VALID_STATUS to DATA_VALID (see [1], subclause 81.1.7.5.3), the RS SHALL skip over 
+(not consider) a CtlOS immediately preceding the reception of a Start control character on lane 0. The 
+RXC<7:0> and RXD<63:0> preceding the CtlOS are used to determine whether DATA_VALID_STATUS is 
+set to DATA_VALID upon reception of a Start control character on lane 0. 
+Table 6-6 - RS Layer CtlOS spacing constraints 
+Parameter Value (bits) 
+RS_CTLOS_MIN_RX_SPACING 2048 
+ 
+For setting DATA_VALID_STATUS to DATA_NOT_VALID (see [1], subclause 81.1.7.5.3), the RS SHALL skip 
+over (not consider) a single occurrence of a CtlOS (not cause DATA_VALID_STATUS to assume the value 
+of DATA_NOT_VALID). Occurrence of multiple CtlOS within a window of RS_CTLOS_MIN_RX_SPACING 
+MII data bits (see Table 6-6) is considered an error, and the RS may set DATA_VALID_STATUS to 
+DATA_NOT_VALID upon reception of a second (and any subsequent) CtlOS received within that window 
+of bits. It is also permissible for the RS to ignore (not cause DATA_VALID_STATUS to assume the value of 
+DATA_NOT_VALID) multiple CtlOS received within that window. 
+6.2.4.3 Link fault signaling 
+When the RS variable link_fault status indicates Local Fault or Remote Fault, the RS does not send CtlOS 
+on the MII. During that time (as described in [1], subclause 81.3.4), the RS sends either Remote Fault (in 
+response to link_fault status of Local Fault) or Idle (in response to link_fault status of Remote Fault). 
+When the link_fault status is set to OK, the transmit RS may send CtlOS on the MII. 
+6.3 FEC statistics for prediction of link quality 
+FEC statistics for prediction of link quality is an OPTIONAL UE feature. A PHY that supports this feature 
+SHALL comply with the requirements in this section. 

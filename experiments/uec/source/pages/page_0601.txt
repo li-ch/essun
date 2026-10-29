@@ -1,0 +1,42 @@
+ 601 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+These ML training and HPC workloads present further challenges in network fabric monitoring and 
+performance analysis. Traditional forms of network telemetry, such as time series of link utilizations or 
+packet drop rates across all links in the fabric, often fall short in explanatory power because they are 
+decoupled from application context. They are labor-intensive to correlate with specific application flows 
+at specific time points, and often are recorded at too coarse a resolution in time to reveal the pathology 
+experienced by a flow (e.g., during an extremely brief traffic burst). Effective performance diagnosis and 
+monitoring at scale require fine-grained network telemetry, both in time and at a per-switch granularity, 
+that closely correlates in-network measurements with a workload’s context—ideally, with the 
+ xp ri nc  of  n  pplic  ion’s individu l p ck  . 
+This specification describes congestion signaling (CSIG), a simple and efficient in-band network 
+telemetry method that collects fine-grained signals that describe the network fabric’s congestion state. 
+The central insight underlying CSIG’s design is that for many telemetry signals useful in congestion 
+control and performance analysis, the result of a simple aggregation function computed over the 
+congestion state at switches along a packet’s path is of interest. For example, for several signal types, 
+the congestion state only at a single switch along a path is of interest, where the switch of interest is the 
+one where a signal’s value is an extremum (maximum or minimum) among the signal’s values at all 
+switches along the path. By leveraging this insight, CSIG offers the following desirable properties: 
+• Targeted, per-switch signal granularity: CSIG can return a signal from the single bottleneck 
+switch along a path and thus exposes congestion state not generally available from end-to-end, 
+whole-path signals. 
+• Space-efficient telemetry collection: While CSIG measures signal data at each switch along a 
+path, a measurement adds only a short, 4-byte (or for increased measurement precision, 8-byte) 
+tag to a packet’s header, regardless of path length in hops. This space efficiency is possible 
+because CSIG tags carry only a single aggregated value (e.g., maximum or minimum value 
+observed thus far along a path, depending on the signal type being measured). 
+• Compute-efficient telemetry collection: The operations a switch must perform to process a 
+CSIG tag are simple and latency-efficient. 
+• In-band collection that captures application/transport context: Because CSIG tags are low in 
+space overhead and in processing overhead at switches, an application or transport may attach 
+them to every packet it transmits. The congestion signals collected by these packets will reflect 
+how switches process that application’s and transport’s actual packets (and not how distinct 
+packets sent by a measurement system, which arrive at different points in time than “native” 
+application traffic, are processed). 
+• Transport- and encapsulation-agnostic: CSIG tags are carried in layer 2 headers and thus switch 
+processing of CSIG tags does not involve processing of transport headers, nor does it incur any 
+complication when used with encrypted transports. 
+• Extensibility: CSIG provides for future specification of additional signal types within the 
+protocol’s framework. 
+ 

@@ -1,0 +1,38 @@
+ 242 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.4.1.3 Matching Operation 
+The requirements in this section apply only to implementations that support matching. Where the 
+behavior varies based on ordering, that is noted in the requirement. Where the behavior varies based 
+on wildcarding, that is noted in the requirements. 
+Messages arriving on a RUD PDC MAY attempt matching in any order, or concurrently across all posted 
+buffers. This is independent of whether the target uses exact matching or wildcard matching. 
+If an implementation supports wildcard matching and a message arriving on a RUD PDC matches more 
+than one buffer that is posted, the implementation SHOULD choose the oldest buffer posted; however, 
+the implementation MAY choose any matching buffer. 
+For implementations that only support exact matching, arriving messages MAY attempt matching in any 
+order—regardless of whether a ROD or RUD PDC was used. The implementation MUST select a matching 
+buffer if a matching buffer is available. If more than one match is found, the implementation MAY select 
+any matching buffer. This specification places no bias on which buffer should be selected if multiple 
+buffers match. If no match is found, the unexpected message procedures are used (3.4.4.6.1). 
+Informative Text: 
+The exact matching semantic was created as a way to enable simplified hardware implementations 
+(e.g., a CAM) to implement matching. While the requirement was relaxed to allow duplicate matches, 
+the desire was to preserve hardware simplicity. Achieving historical definitions of match ordering with 
+multiple matches in a CAM is challenging; thus, no preference in match order is defined for cases 
+where exact matching would return more than one result. Choosing the oldest buffer is marked as a 
+SHOULD, because it typically simplifies the management of software resources if the buffers are 
+consumed in order. 
+ 
+For implementations that support message ordering and wildcard matching, messages arriving on a ROD 
+PDC: 
+1. MUST attempt7 to match buffers in the order the buffers were provided by the application 
+through the libfabric API for a given {JobID, Target PIDonFEP, Resource Index} tuple. 
+2. MUST process headers from a given {JobID, Initiator} tuple in the order that they were sent from 
+the initiating PIDonFEP for a given {JobID, Target PIDonFEP, Resource Index} tuple on a given 
+target FEP. 
+Implementations MAY perform optimizations that preserve the appearance of this ordering. 
+Implementations MAY implement stronger ordering than required at a target. For example, all messages 
+MAY be ordered when attempting matching at a given FEP. 
+ 
+7 “Attempt,” because matching can fail to find a corresponding buffer. 

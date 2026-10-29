@@ -1,0 +1,40 @@
+ 491 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.14 UET Receiver-Credit Congestion Control 
+The UET receiver-credit congestion control (RCCC) service is derived from EQDS[11]. RCCC uses end-to-
+end credit control messages (“pull messages”) sent by the destination at a defined “rate” to all 
+concurrent sources to that destination in order to control their transmissions and so avoid persistent 
+congestion. Under normal conditions, credit will be sent at a rate that matches the destination’s link 
+speed. 
+From the source’s point of view, RCCC is similar to a window-based protocol: Each source starts with an 
+initial amount of credit. Sending a packet consumes that packet’s size in bytes from credit. A source 
+cannot send if credit is less than or equal to zero13. The destination will send credit messages to the 
+source to increase credit and allow the source to send more data. If there is no outcast, an RCCC source 
+can start at line rate by sending up to a BDP of ”speculative packets”. Where multiple sources send to 
+one destination at the same time (incast), this will create congestion at the last-hop switch. 
+To deal with incast, RCCC leverages information available at the destination to make optimal, 
+instantaneous changes to the transmission rate of each of the active sources, as demand to that 
+destination changes. In detail, after the first RTT, the destination leverages backlog information from 
+sources to schedule incoming traffic in the next RTT. It does so by sending credit control packets to the 
+appropriate sources. The credit packets are control packets that are paced such that the data packets 
+they elicit arrive at the destination’s line rate. Typically, a credit packet will carry a few MTUs of credit, 
+so credit packets themselves impose only a small overhead. 
+If there is an outcast, an RCCC source still starts with a BDP of speculative credit, but less than a BDP will 
+be sent before the first ACK packet is returned. At this point the remaining speculative credit is removed 
+so that the source does not burst beyond what the destination can cope with when other PDCs from the 
+outcast stop sending. 
+When RCCC is enabled, ECN should be disabled on the last hop in the network, on the link from the last 
+hop switch to the destination FEP. This permits more accurate load balancing based on the ECN signal to 
+be performed, as last-hop congestion (which cannot be load balanced) no longer is conflated with the 
+ECN load-balancing signal. ECN from the last hop is not required for congestion control, as RCCC directly 
+manages congestion on the last hop. 
+When combined with UET’s packet spraying and load balancing, the mechanisms described above are 
+sufficient to obtain near-optimal performance in a fully provisioned network. Network core congestion 
+can, however, appear when the network core is oversubscribed, either by construction or due to 
+failures. 
+An additional mechanism is required to handle oversubscribed networks. 
+ 
+13 It would be slightly more accurate if there had to be at least nominal_pktsize bytes of credit available, but it is 
+simpler to implement if credit only has to be greater that zero to send. The one packet offset has negligible effect 
+on performance. 

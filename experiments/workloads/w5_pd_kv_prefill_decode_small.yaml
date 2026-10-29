@@ -1,0 +1,19 @@
+# W5 PD/KV Prefill/Decode — smoke configuration (T031 / WS3 ladder, fifth rung).
+# All sizes are integer byte counts; deterministic by construction (no RNG
+# anywhere: placement is q%P / P+q%D round-robin — A-W5-PLACE).
+# Nodes 0-1 prefill, nodes 2-7 decode. Request q: prefill node q%2, decode
+# node 2 + q%6. Per request: 2 chunks x (alloc, write, transfer, visible) +
+# 3 steps x 2 chunk reads + 1 release = 15 ops; 45 ops total.
+# HONEST SCOPE: no registered backend executes memory-semantic KV ops; this
+# workload is rejected loudly by the capability gates and needs an L1/L2
+# memory-semantics fabric model to EXECUTE (see assumptions_w5.yaml notes
+# and reports/p4_T031.md).
+schema_version: "1.1.0"  # first document on the w5-extended generator contract
+workload: w5_pd_kv_prefill_decode
+model_name: pd-kv-prefill-decode-smoke
+tp_size: 8
+prefill_nodes: 2   # A-W5-PLACE: ranks [0, 2) prefill, [2, 8) decode
+requests: 3
+chunks_per_request: 2
+chunk_bytes: 4096   # free parameter A-W5-SIZE, see assumptions_w5.yaml
+decode_steps: 3     # A-W5-STEP: uniform fixed steps per request

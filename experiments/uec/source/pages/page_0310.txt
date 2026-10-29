@@ -1,0 +1,38 @@
+ 310 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+including guaranteed delivery indication, etc.) at the target to provide the PDS service in the forward 
+direction. Each PDC requires a second set of TX and RX state for the return direction. The aggregate of all 
+this state is referred to as a PDC. 
+A single PDC MUST be limited to a single mode—RUD, ROD, or RODL—and a single traffic class for PDS 
+requests. 
+Each PDC uses two PSN spaces that advance independently. One PSN space is for the forward direction 
+with requests transmitted by the initiator. The second PSN space is used to carry return data messages 
+from the target to the initiator. Each PSN MUST monotonically increase by one based on packet 
+transmission and reception. Return direction PDS requests are acknowledged in the same manner as 
+forward-direction PDS requests. 
+The following sub-sections apply only to RUD, ROD, and RODL. RUDI and UUD do not use PDCs. 
+3.5.8.1 PDC Selection and Sharing 
+This section defines how packets are mapped to RUD, ROD, and RODL PDCs, and how a PDC can be 
+shared among packet flows between a pair of FEPs, where a packet flow is defined to be a group of 
+related packets between two processes (PIDonFEP).  
+At the initiator, a packet flow is mapped to a PDC based on the mapping tuple described below. When 
+supporting reserved PDCs (3.5.18), an implementation may provide an API with a PDC handle that allows 
+the user to specify the reserved PDC to use. This handle supersedes the mapping tuple. The mapping 
+tuple is built from network header fields and control information provided by SES. The initiator mapping 
+tuple need not be consistent across FEPs. 
+When using reserved PDCs, packets are assigned based on a handle passed through the SES rather than 
+the mapping tuples. Refer to Section 3.5.18. 
+The mapping tuple determines which sets of packets can be assigned to a common PDC. All packets 
+sharing a PDC have the same value for all fields in the tuple. If a packet matches the mapping tuple, it 
+may use the designated PDC or may be mapped to another PDC between the same pair of FEPs. All 
+packets of a single message MUST use the same PDC. Packets from different messages MUST NOT be 
+interleaved on a single PDC. A message is completely transmitted before transmitting a packet from a 
+different message. 
+ROD traffic has a restriction that packets from the same {JobID, source FA, destination FA, source 
+PIDonFEP, destination PIDonFEP, Resource Index, TC} MUST use the same PDC. 
+Each PDC carries the traffic of exactly one delivery mode (RUD, ROD, or RODL). The destination FA and 
+TC MUST be included in all tuples. 
+Two initiator tuples are defined as required—one each for when TSS is disabled or enabled. Optionally, 
+multiple tuples may be supported for RUD, ROD, and/or RODL PDCs. It is beyond the scope of this 
+specification to define how the tuple is selected for each packet when multiple tuples are supported. 

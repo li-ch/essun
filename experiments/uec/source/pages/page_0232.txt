@@ -1,0 +1,31 @@
+ 232 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.3.5 Atomic Operation Extension Header Format 
+Atomic operations include an atomic header to describe the atomic operation. The memory model for 
+atomic operations is discussed in Section 3.4.9. Atomic headers—shown in Figure 3-22—are carried with 
+every packet of an atomic operation. Atomic headers are used with any of the optimized header formats 
+or the standard header formats. Atomic headers MUST NOT be combined with the rendezvous header 
+format. For non-fetching atomic operations, the number of elements in an atomic operation is 
+determined by the request length of a message (equivalently, the payload length of a packet in the 
+optimized header formats) divided by the size of the atomic datatype. The payload part of messages 
+containing atomic operations should be an integral multiple of the atomic datatype size. In messages 
+where this is not true, an implementation of the target FEP MUST truncate the operation to 0 bytes (i.e., 
+a message with an incorrect length is not performed for any of the bytes in the message). 
+The atomic operation extension header introduces three new types: an atomic opcode, an atomic 
+datatype, and semantic control. Semantic control (Table 3-29) provides additional information for 
+handling of atomic operations. Payload for all atomic operations follow the atomic header. 
+ 
+Figure 3-22 - Atomic Operation Extension Header Format 
+Fetching atomic operations are more limited than general atomic operations. Because fetching atomic 
+operations impose the need to buffer data at the target (i.e., the original data), fetching atomic 
+operations MUST NOT operate on more than one element. That element is of the size of the atomic 
+datatype and follows the atomic header in the packet. 
+A special type of fetching atomic operation is a dual operand fetching atomic. This exists as a compare-
+and-swap or swap-under-mask operation. Dual operand fetching atomics use the packet format shown 
+in Figure 3-23, with the compare or mask value first and the swap value after. The largest supported 
+compare and swap (or masked swap) is 16 bytes. The payload length for a compare and swap operation 
+is exactly 32 bytes, and the atomic datatype defines the total size of the operation. Note that, in the 
+optimized header formats, this means that the request length is set to 32 bytes and the actual length of 
+the operation is inferred from the datatype. The compare/mask values and swap values start in the low 
+order bytes of the respective fields. 

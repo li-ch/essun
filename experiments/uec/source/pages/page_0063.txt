@@ -1,0 +1,54 @@
+ 63 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Handling these two types of traffic in addition to providing high availability make frontend networks 
+quite complex. Switches and NICs need to support complex functionality such as filtering, policing, 
+encapsulation, and security. 
+1.5.1.2 Backend Scale-out Network 
+The backend network is usually a specialized high-performance network of limited scope relative to the 
+frontend network—often deployed across a “cluster” (e.g., a set of rows). It is sometimes also called a 
+“scale-out” network. The backend scale-out network often forms its own layer-3 subnet and is not 
+usually connected directly to the frontend network. Communication between frontend and backend 
+networks often occurs through compute nodes with network interfaces into both networks. 
+The backend scale-out network serves very special purposes. For example, an HPC backend scale-out 
+network enables communication via a message passing interface (MPI), while a deep learning backend 
+scale-out network delivers training traffic. An AI-oriented backend scale-out network might include 
+special-purpose optimizations such as switch support for collective operations over bulk data, while an 
+HPC-oriented backend scale-out network might support latency optimizations only for small collectives.  
+Having two networks may increase the cost of the overall system (i.e., two networks instead of one — 
+separate frontend and backend networks). However, two networks provide a clean separation of traffic 
+(i.e., no interference) and design (i.e., allowing for different architectures and technology deployments). 
+In some classic HPC systems, the backend scale-out network provides all the connectivity and network 
+services for the compute nodes. However, this is achieved by retrofitting traditional transport protocols 
+(e.g., TCP/IP) over the top of the HPC transport (e.g., portals, IPoIB) and accepting the trade-offs that are 
+implied. 
+ 
+ 
+Figure 1-13 - Network Types 
+ 
+ 
+Backend 
+Scale-Out 
+Network
+NIC
+NIC
+XPU
+CPU
+NIC
+NIC
+NIC NIC
+Scale-Up
+Network
+XPU
+XPUXPU
+CPU
+NodeNode
+Node
+Node
+…
+Frontend 
+Network
+PCIe/CXL
+Scale-Up
+Scale-Out
+Frontend

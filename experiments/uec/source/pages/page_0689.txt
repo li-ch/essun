@@ -1,0 +1,41 @@
+ 689 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.3.2.1.4 Subtype 
+The 5-bit subtype value 0 identifies the Options TLV. The UE subtype and version fields together occupy 
+the 1-byte field specified by IEEE Std 802.1AB-2016 subclause 8.6.1 for the organizationally defined 
+subtype. The subtype value 0x1F is reserved for extending the UE TLV subtype field. 
+5.3.2.1.5 Version 
+The 3-bit version value 1 identifies the amended version of the Options TLV, which supports LLR, IPGR, 
+CSIG, and UFH. Version 1 is backward-compatible with version 0, which ignores all flags except LLR and 
+never advertises IPGR, CSIG, or UFH capabilities. When a port with the version 1 options identifies a 
+remote port advertising a version 0 TLV, the version 1 port SHALL operate with only the version 0 
+Options TLV feature set and SHALL NOT enable any feature outside the scope of version 0. 
+Future versions of the Options TLV SHALL be backward-compatible with version 0 and version 1. They 
+can extend the length of the TLV to add additional information and/or provide definitions for currently 
+reserved fields. Older versions ignore any updated reserved fields, unknown code points, or new 
+information provided in the reserved fields of the TLV or in TLV length extensions. 
+5.3.2.1.6 UE Link Options 
+The UE link options field describes the UE link optional capabilities that are available at the port sending 
+the Options TLV. In addition to the listed capabilities, some of the options can be enabled or disabled 
+depending on availability at the remote link end. Enable flags are provided in the UE link options field to 
+allow turning features on and off in synchronization with the remote link partner. An enable value of 
+TRUE(1) indicates that the capability is running at the sender of the Options TLV; an enable value of 
+FALSE(0) indicates that the capability is not running at the sender. A port that advertises it wants an 
+optional capability SHALL enable the feature and set the enable flag to TRUE(1) only if the link partner 
+indicates it wants to use the feature. The capabilities are as defined in the following subclauses. 
+5.3.2.1.6.1 LLR 
+The 2-bit LLR-W field has four possible values. A value of LLR-W = 0 means the capability is not wanted. 
+A value of LLR-W = 3 means the capability is wanted. A version 0 or 1 UE link port SHALL NOT set LLR-W 
+to the values 1 or 2. A version 0 UE link port receiving LLR-W with the values 0, 1, or 2 from the remote 
+port SHALL disable LLR and set LLR-E to FALSE. A version 1 UE link port receiving LLR-W with the values 
+0, 1, or 2 from the remote port SHALL disable LLR by setting LLR-E to zero (0). If LLR-W is set to the value 
+3, the port is LLR-capable and wanting to use bidirectional LLR. For version 0, if the local and remote 
+port’s LLR-W = 3, the local port sets the 1-bit LLR-E flag to TRUE(1). For version 1, if the local and remote 
+port’s LLR-W = 3, the local port sets the 2-bit LLR-E = 3. Note when a version 0 and 1 are on opposite 
+ends of the link, the version 1 implementation will accept LLR-E = 1 as enabled from the remote version 
+0 port. When a version 0 and 1 are on opposite ends of the link, the version 0 implementation will see 
+the remote LLR-E = TRUE(1) when the remote end sets LLR-E = 3. 
+Table 5-33 - UE Link Negotiation Options TLV LLR-W Field Options 
+LLR-W Value UE Link optional capability 
+0 This port does not want to use LLR. 

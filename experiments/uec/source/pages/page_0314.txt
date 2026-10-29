@@ -1,0 +1,42 @@
+ 314 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+iii. Drop the received packet and exit processing of the PDS Request packet. 
+d. Verify the PDC meets establishment criteria — invalid starting PSN check: 
+i. When operating without encryption, there are no checks on the starting PSN.  
+ii. When operating with encryption, refer to Section 3.5.8.2.1—if this check fails, 
+allocate the resources, send a NACK packet as described in the next step, drop the 
+received packet and go to the PENDING state and exit processing of the PDS 
+Request packet. 
+• NACK packet uses pds.nack_code = UET_NEW_START_PSN, 
+pds.payload_start_psn = Start_PSN and pds.spdcid set to allocated SPDCID. 
+iii. Continue to establish the PDC.  
+e. Check if the PDC is ROD or RODL and if the received packet has the Start_PSN—if no: 
+i. Allocate the resources, send NACK, drop the received packet and exit processing of 
+the PDS Request packet. 
+• NACK uses pds.nack_code = UET_ROD_OOO and pds.spdcid set to allocated 
+PDCID. 
+f. If the establishment criteria are met based on the above checks: 
+i. Allocate the PDC resources and TPDCID. 
+ii. Set Start_PSN for return direction to same Start_PSN as the forward direction;  
+The PSNs in each direction are independent but start at the same value. 
+iii. Return TPDCID to initiator in ACK/NACK and exit processing of the PDS Request 
+packet. The TPDCID is returned as the pds.spdcid. 
+4. If pds.flags.syn = 0, perform the following checks 
+a. If pds.dpdcid does not match an active PDCID, send a NACK with pds.nack_code = 
+UET_INV_DPDCID. 
+b. Confirm the network header matches the expected source FA (ip.src_addr); if ip.src_addr 
+doesn’t match then send a NACK with pds.nack_code = UET_PDC_HDR_MISMATCH 
+c. Confirm the delivery mode (RUD/ROD/RODL) matches; if not, drop the packet, record error 
+event and send a NACK with pds.nack_code = UET_PDC_MODE_MISMATCH. 
+d. Check the PSN (pds.psn)—if outside expected window (Section 3.5.12.2), generate a NACK 
+with pds.nack_code = UET_PSN_OOR_WINDOW. 
+i. If the PDC type is ROD or RODL, check if the pds.psn matches the Expected_PSN—if 
+the PSN does not match, transmit a NACK with pds.nack_code = UET_ROD_OOO 
+(See Section 3.5.21.1). 
+e. If the PSN was already received and the pds.flags.retx flag is not set, drop the packet 
+i. A NACK is not generated; this event is counted and reported if a configured 
+threshold is exceeded. 
+A NACK MUST NOT be used to create a PDC except when the target sends a NACK with 
+pds.nack_code = UET_NEW_START_PSN or UET_ROD_OOO.  In those cases, a PDC is created when a 
+packet arrives with pds.flags.syn set and no PDC yet exists. 

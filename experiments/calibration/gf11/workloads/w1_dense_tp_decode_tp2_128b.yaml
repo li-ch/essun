@@ -1,0 +1,27 @@
+# W1 Dense TP Decode — tp_size 2 at payload 128 B: the GF-11
+# decomposition-point payload (calibration ladder; gap-fill
+# anchor GF-11 — "Achieving Near Speed-of-Light Latency in GPU Collectives",
+# arXiv:2607.16100; docs/calibration/anchors_gapfill.md §GF-11; numbers AS
+# STAGED, not re-fetched).
+#
+# WHY THIS PAYLOAD AND RANK (anchor-pinned, not a free probe): the anchor's
+# latency decomposition was measured ON 2 GB200 GPUs — "on 2 GB200 GPUs we
+# measured the LL2_RTT and Lremote_store as 0.306 µs and 0.792 µs" with the
+# speed-of-light AllReduce bound L_SoL = 2*L_LL2_RTT + L_remote_store =
+# 1.404 µs — so r=2 is the DECOMPOSITION system's own rank count. The 128-B
+# payload is the anchor's stated message granularity ("128-B cache-line
+# FP32"): the exact per-size latency table lives in a figure, NOT enumerated
+# in text, so 128 B is the DECLARED size reading of the anchor's small-
+# message AllReduce rows (ambiguity recorded in the stage record; the sweeps
+# bracket the reading with the 7-size grid 128 B -> 64 KiB incl. the exact
+# 41216 B crossover cell). 128 is divisible by 2 so the A-L0X-DIV gate
+# ACCEPTS the exact size — no bracketing. Same workload shape as every other
+# W1 file (2 layers x 3 decode steps = 6 AllReduce ops per config). Nothing
+# here is measured or standard-normative; integer byte counts; deterministic
+# by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf11-tp2
+tp_size: 2
+layers: 2
+steps: 3
+allreduce_bytes: 128   # 128-B cache-line granularity — the anchor's declared small-message size reading (per-size table is a figure)

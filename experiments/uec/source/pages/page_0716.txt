@@ -1,0 +1,38 @@
+ 716 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.4 Optimized Headers and Packet Rate Improvement 
+The standard layering of Ethernet and IPv4/v6 headers emphasizes flexibility for heterogenous inter-
+networking environments. Protocol content is separated across multiple functional layers, and features 
+such as packet fragmentation enable interconnectivity between heterogenous networks. This flexibility 
+comes at the cost of larger packet overheads. 
+Many HPC and AI applications generate a significant volume of small messages where the payload is 
+small relative to packet headers. Examples include applications accessing partitioned memory over 
+single-hop or multi-hop fabrics. For efficient bandwidth utilization and high goodput, it is desirable that 
+the interconnect overhead also be small. 
+Special-purpose network fabrics optimize for this requirement by making assumptions about a 
+homogenous environment, reducing flexibility, simplifying the information carried with a packet, and 
+improving encoding over a link by reducing inter-packet gaps. Such techniques can also be applied to an 
+Ethernet-based high-performance interconnect to improve bandwidth efficiency and packet rates. 
+The current Ethernet and IPv4/v6 header stacks are deeply entrenched, with a rich and diverse 
+ecosystem of tools and silicon built around them. Completely redefining the headers is not practical. 
+Instead, an approach that superimposes information on existing headers is more likely to find 
+acceptance, especially if it enables coexistence with standard Ethernet silicon, tools, and operational 
+practices. 
+This specification defines an optimized header format called the Unified Forwarding Header (UFH) to 
+supplement the common combination of Ethernet MAC and IP headers. The optimization involves: 
+• Removing redundancies across the MAC and IP headers. 
+• Eliminating header fields generally not required in a homogenous, well-controlled fabric. 
+• Retaining features that allow UFH and standard Ethernet + IP frames to coexist on a link. 
+• Retaining features that enable extensibility, a key advantage of Ethernet. 
+UFH is intended for applications in well-contained network domains and is not intended to be a generic 
+replacement for the Ethernet + IP stack. The UFH format defines two variations to match the slightly 
+divergent needs of scale-up and scale-out fabrics. See Section 5.4.4. 
+This specification does not define any new control protocols. Coexistence of UFH and standard Ethernet 
+frames on a link enables the use of standard Ethernet and IP protocols such as LLDP, ICMP, or DHCP to 
+bootstrap and manage endpoints in a network. 
+5.4.1 Requirements and Considerations 
+The UFH definition aligns with the following requirements and considerations: 
+• UFH frames MUST coexist with standard Ethernet frames on a link. This is essential to leveraging 
+the benefits of the Ethernet ecosystem and in accelerating UFH adoption. This implies no 
+changes below the Ethernet MAC layer. 

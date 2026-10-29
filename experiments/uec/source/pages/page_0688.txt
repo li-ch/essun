@@ -1,0 +1,29 @@
+ 688 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+“enabled” and the suffix “-W” to indicate the feature is “wanted.” A UE link feature is negotiated using 
+the information contained in the Options TLV. If the Options TLV is not present at either end of the link, 
+the feature is disabled. If both ends of the link provide an Options TLV, each end of the link will see the 
+”-W”, “-C”, “-E” and ”-S” flags in both their local and remote databases. 
+Each port seeing both the local and remote ”-W” flag TRUE responds by setting the corresponding ”-E” 
+flag to TRUE in their local database. After setting the “-E” flag in the local database, the port SHALL wait 
+to see the corresponding ”-E” in the remote database before beginning to use the feature. The feature 
+SHALL become operational only when both local and remote enables are TRUE.  
+Each optional feature defines how this process applies to the specific case and the steps required before 
+full usage of the feature occurs. For example, the LLR logic uses inputs from the LLDP database to 
+control its internal state machine for enabling or disabling LLR. 
+The current version 1 Options TLV updates the previous version 0 Options TLV to include features for 
+inter-packet gap reduction, congestion signaling, and the unified forwarding header. The version 1 
+Options TLV also expands the LLR-E field to 2 bits, allowing representation of all the possible LLR 
+operating options (see Table 5-33). 
+ 
+ 
+Figure 5-19 - UE Link Negotiation Options TLV (Options TLV) 
+5.3.2.1.1 TLV Type 
+The 7-bit IEEE-assigned TLV type 127 that indicates this TLV is encoded using an organizationally specific 
+identifier format and subtype [1] . 
+5.3.2.1.2 TLV Information String Length 
+The 9-bit TLV information string length indicates the number of bytes following the information string 
+length field. The version 1 Options TLV length is 8 bytes. 
+5.3.2.1.3 Company ID (CID) 
+The 24-bit UEC Company ID (CID) used to identify UE TLVs is FA-7A-CB. 

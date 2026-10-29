@@ -1,0 +1,41 @@
+ 207 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+addresses and JobIDs is covered in Section 3.4.8.1. To prevent server state scalability issues, UET does 
+not require server-side mappings between a secure domain identifier (SDI) and JobID. The JobID is part 
+of the identity of the initiating process in absolute addressing and is part of the shared identity of the 
+initiating process and target process in relative addressing. 
+When encryption is enabled, a secure domain is logically mapped to a service from an application 
+perspective. Only members ‘bound’ to the domain are allowed to use that secure domain. This is 
+achieved by first selecting the endpoint using the {FA, JobID, PIDonFEP, Resource Index} tuple for 
+relative addressing mode, the {FA, PIDonFEP, Resource Index} tuple for absolute addressing mode, or 
+the {FA, JobID} for direct memory addressing mode. When encryption is enabled, the FEP MUST validate 
+that the SDI is allowed to access that endpoint. If this validation fails, the message MUST be dropped 
+and reported as defined in the transport security sublayer (TSS) Section 3.7.4. An SES response MUST 
+NOT be sent in response to this failure. A PDS NACK MUST NOT be sent in response to this failure. 
+Implementation Note: 
+The SES is allowed to respond with UET_NO_RESPONSE before determining that the SDI validation 
+for the endpoint failed. This can cause PDS to later indicate a UET_DEFAULT_RESPONSE for a given 
+packet, but a message that fails SDI validation will never successfully complete. The PDC will not 
+survive this and will eventually be torn down due to the lack of responses. 
+ 
+3.4.2.5 Network Transaction Types 
+Network transactions include various forms of tagged and untagged sends, RMA operations, and atomic 
+operations. Not all transaction types may be supported on all networks. Graceful behaviors are defined 
+for when an unsupported network transaction type is received (3.4.6.4.2). In general, all network 
+transaction types work in conjunction with all variations of relative addressing and absolute addressing. 
+Direct memory addressing is limited to read, write, atomic, and fetching atomic operations. 
+Network transactions that carry bulk payload (i.e., reads, writes, sends, tagged sends) MAY transfer up 
+to 232– 1 bytes (4GB – 1) in a single message. This message size limit is defined by the maximum value 
+that can be represented in the request length in the standard header format. Some header formats are 
+defined that further constrain the size of an individual network transaction based on a narrower 
+request. Individual implementations MAY limit the size of RMA operations and send operations 
+separately. Such a limit is exposed through the max message size capabilities in libfabric. 
+Implementations MUST break data into packets containing payload sizes conforming to a Payload MTU 
+Informative Text: 
+UET is designed to avoid an amount of state that scales with the number of communicating peers 
+(e.g., in a client/server environment, the number of clients of one server). As an example, the security 
+specification includes a mode to allow all clients of a server to use a single SDI to minimize the 
+required key storage state at the server—to make it independent of the number of clients. Having an 
+SDI to JobID mapping would then require that the SDI maintain a list of all client JobID values that 
+could use the SDI, which is an amount of state that scales with the total number of clients. 

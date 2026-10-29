@@ -1,0 +1,54 @@
+ 567 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+b. SDK = KDF(SDKi, label=”U1”, context=”current_epoch|| Rekey   SSI”) where SSI may be 
+ip.src_addr 
+3) Client-server KDF mode:  
+a. Packets sent by server are derived based on destination within a group key. This is used 
+by a server to generate client-specific keys by using the destination SSI (destSSI) in the 
+KDF. Note that the SSI in the frame is still the source (server) SSI. Finally, automatic 
+rekeying is not supported in this mode. 
+i. SDKi = SDKDB[SDI||AN] 
+ii. SDK = KDF(SDKi, label=”U2”, context=” current_epoch 
+||DestSSI/ipv4.dest_addr/ipv6.dest_addr”) 
+b. Packets received by the server are handled as cluster KDF mode packets. 
+The label and context fields in item 2.b above are a text strings that are required by the NIST 
+specifications. 
+Figure 3-142 describes how the SDK lookup and interface to the crypto engines are implemented by the 
+FEP. 
+ 
+Figure 3-142 - SDKDB database and crypto interfaces 
+3.7.8 KDF Construction  
+The KDF MAY be used to derive keys in the cluster and client-server KDF modes. Note that for client-
+server both client and server KDFs are used. The KDF is implemented with single or two input blocks, 
+depending on how the source FEP is represented. The single-input block KDF MUST be used for IPv4 
+packets or when the SSI is explicitly carried in the packet. For IPv6 packets without an explicit SSI, two 
+input blocks MUST be used. 
+The KDF algorithm is specified per security domain using the kdf-algo field. The default KDF construction 
+MUST be implemented per NIST specification SP 800-108 [40] using AES-CMAC-256 and parameters per 
+Table 3-134. Other algorithms and constructions are implementation specific. 
+The default KDF MUST be based on the NIST specification SP 800-108 Section 4.1 [40]. CMAC is used as 
+the associated pseudorandom function (PRF) in counter mode. The CMAC MUST be implemented using 
+SDKDB
+SDI
+(SD+AN)
+Enc Packet
+tsc
+Cipher
+Engine
+ICV
+IV
+kdf-mode
+SSI
+AAD
+SDKDB
+KDF
+SDKi
+algo
+SDK
+valid
+Dec Packet
+Coff
+IP
+SIP
+Aoff

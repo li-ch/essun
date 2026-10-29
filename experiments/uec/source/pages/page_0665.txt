@@ -1,0 +1,41 @@
+ 665 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+configured either through management software or through an information exchange using the IEEE 
+Link Layer Discovery Protocol (LLDP) [5]. 
+5.2.8.1 Network-Level Configuration 
+Higher-level network configuration establishes traffic class (TC) parameters for the entire network. The 
+following CBFC parameters are derived from the network TC parameters for each link based on the 
+capabilities of each link partner: 
+• NumVCs 
+o The number of VCs must be set identically at the sender and receiver. 
+o Sender.NumVCs == Receiver.NumVCs 
+• Lossless VC configuration 
+o VCs must be configured consistently as lossless or best effort at the sender and receiver. 
+• Lossless VC mapping  
+o Sender and receiver must be configured to map the same packet properties to the same 
+VC number. 
+The number of VCs, the mapping of packet fields to VC numbers, and the disposition of a VC as best-
+effort or lossless must be configured consistently between the link partners: sender and receiver. Note 
+that the link partners may be configured differently in each direction of the link; the sender and receiver 
+of a single end station are independent of each other. 
+5.2.8.2 Link-Level Configuration 
+Switch and NIC chip buffer sizes and buffering structures such as the buffer cell size vary between 
+implementations. This makes parameters such as the credit size and number of credits a property of 
+each link and dependent on the receiver implementation. 
+Link-level negotiation can be used to establish these values between the link partners: 
+• CreditSize 
+o Determined by the receiver’s data buffer characteristics. 
+o Receiver: Initially set to the cell size of the port input buffer: 
+▪ Receiver.CreditSize = cell_size 
+▪ May adjust to the sender’s CreditSize after it is set (see 5.2.5.8). 
+o Sender: Ideally set to the same size as at the receiver, but if not possible, then: 
+▪ Sender.CreditSize ≤ Receiver.CreditSize (as close as possible) 
+• TotalCredits 
+o Determined by the receiver’s data buffer characteristics. 
+o Receiver: 
+▪ Receiver.TotalCredits = Receiver(Input buffer size) ÷ Receiver(cell size) 
+o TotalCredits at the sender must be set to the same number: 
+▪ Sender.TotalCredits = Receiver.TotalCredits 
+o When the receiver sets individual per-VC credit limits, TotalCredits is not used at the 
+sender. 

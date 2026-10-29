@@ -1,0 +1,30 @@
+# Calibration-ladder A8 topology: unidirectional ring of 8 ranks at per-hop
+# latency L = 10 ns — the A-L0-LAT registry free-range LOWER ENDPOINT
+# (assumptions_l0.yaml range [10, 2000]). It bounds the stage's L sweep at
+# the bottom of the registered range; it is also numerically the plan's
+# anchored-axis lower endpoint context (CAL-A9's ~10 ns per CXL link per
+# direction design estimate — a DIFFERENT anchor, cited only as the plan
+# §2.1 A-L0-LAT span context; stage A9 owns that anchor's own work).
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0-LAT), never tuned toward any
+# CAL-A8 output. The stage's L span {10, 64, 140, 200, 800, 2000} was
+# fixed by registry/anchor/plan arithmetic BEFORE any stage output was read
+# (see ring8_a8_l64_v1 for every value's provenance). B = 64 B/ns is the
+# A-L0-BW registry point, kept FIXED; r = 8 is the free smoke default rank
+# count (the anchor stages no rank count).
+topology_id: ring8_a8_l10_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 10
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: L = 10
+  ns is the A-L0-LAT registry free-range lower endpoint (the plan's
+  anchored-axis lower endpoint context is CAL-A9's ~10 ns/link CXL design
+  estimate — a different anchor's number, cited as span context only);
+  B = 64 B/ns is the free A-L0-BW registry point; r = 8 is the free smoke
+  default. Values are registry endpoints / defaults, never our
+  measurements.

@@ -1,0 +1,43 @@
+ 447 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+The codepoint DSCP_TRIMMABLE_RTX is used for retransmitted data packets. Using this codepoint is 
+OPTIONAL. If it is not used, the packets SHOULD use the DSCP_TRIMMABLE codepoint (DSCP_NO_TRIM 
+when trimming is not enabled). 
+UET benefits when retransmitted data packets are not dropped or trimmed, as this may cause the 
+packet tracker to run out of space, hitting the PDC MPR limit and causing a performance loss. However, 
+it is NOT RECOMMENDED to place retransmitted data packets in DSCP_CONTROL, because this can delay 
+control packets and confuse the congestion control loop. To reduce their probability of trimming or loss, 
+switches SHOULD be configured with a higher trim threshold for DSCP_TRIMMABLE_RTX than for 
+DSCP_TRIMMABLE (or DSCP_NO_TRIM) packets. 
+3.6.4.7.2 Traffic Classes for Best Effort Networks 
+When using two traffic classes, the traffic classes are referred to as TC_low and TC_high. When using 
+three traffic classes, they are referred to as TC_low, TC_med, and TC_high. Traffic in TC_high SHOULD 
+receive priority treatment over TC_med, and TC_med SHOULD receive priority treatment over TC_low. 
+How such priority treatment is provided in UE switches is implementation specific. For example, this can 
+be provided by appropriate use of variants of weighted round-robin algorithms. UET expects that low-
+rate traffic sent on the TC_high traffic class will experience very small queuing delays irrespective of the 
+load in TC_med and TC_low traffic classes. Similarly, low-rate traffic sent on the TC_med traffic class 
+SHOULD NOT be delayed significantly by TC_low traffic. 
+Implementation Note: 
+Care should be taken in the implementation of priorities. In some traffic patterns, DSCP_CONTROL 
+traffic could represent as much as 40% of the total bandwidth. For example, a basic implementation 
+of the HPC Challenge (HPCC) RandomAccess benchmark [32] sends a single tiny request to each of 
+many destinations. These patterns may not leverage UET-CC as effectively as bulk data flows; 
+however, consideration of these workloads should be given when implementing the handling of 
+DSCP_CONTROL traffic and when setting QoS policies for UET networks. Giving DSCP_CONTROL traffic 
+strict priority or allocating a small fraction of overall bandwidth to DSCP_CONTROL traffic could lead 
+to unforeseen network behaviors. 
+ 
+The recommended mapping of DSCP codepoints to traffic classes is shown in Table 3-87. Separate 
+mappings are shown for using two TCs or three TCs (depending on network configuration). 
+PDS Packet Types 3 DSCP Mapping 4+ DSCP Mapping 
+1. It is advantageous if retransmitted packets are not dropped. To enable this, deployments and 
+implementations MAY use a DSCP_TRIMMABLE_RTX value for retransmitted packets. This would be the 
+fifth DSCP. 
+2. Control packets default to using DSCP_CONTROL. Special use cases —such as those needing sequencing 
+behind other packets—MAY place control packets on DSCP_TRIMMABLE. 
+3. Control packets that are trimmed (due to using DSCP_TRIMMABLE) are dropped at the target. In 
+deployments where it is preferable to drop a control packet that requires sequencing behind data packets, 
+a sixth DSCP may be used: DSCP_NO_TRIM. 

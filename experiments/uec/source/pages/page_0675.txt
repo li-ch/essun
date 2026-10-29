@@ -1,0 +1,34 @@
+ 675 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Type Packet properties Receiver handling in LLR 
+discard window 
+Sender handling in LLR 
+replay window 
+No update to receiver’s CBFC 
+counters. 
+No update to sender’s 
+CBFC counters. 
+D LLR-eligible and CBFC Lossless Packet is discarded. 
+ 
+No update to receiver’s CBFC 
+counters. 
+Packet is replayed. 
+ 
+No update to sender’s 
+CBFC counters. 
+Note: 
+1. CBFC best-effort packets (types A and C) never update any CBFC counters.  
+2. CBFC lossless counters are updated when the packet is first transmitted before the LLR re-transmission is 
+triggered, and therefore must not be updated again during replay.  
+3. The combination of LLR-ineligible and CBFC Lossless is not allowed. 
+ 
+CC_Update packets must always be marked as LLR-eligible so that they carry an LLR sequence number 
+and can be discarded if previous CBFC lossless packets (type D) were discarded just prior to the 
+CC_Update packet arrival. In this case, the CC_Update packet itself triggers the start of the LLR discard 
+window. The three allowed types of data packets in Table 5-26, (A, C, and D) are used in Figure 5-13 and 
+Figure 5-14 to illustrate two examples of the combined LLR and CBFC handling during an LLR re-
+transmission event. In Figure 5-13, the CC_Update packet is received after the LLR-discard window has 
+already been triggered. In Figure 5-14, the CC_Update packet is received as the first “out of sequence” 
+LLR-eligible packet. In both cases, the CC_Update packet is initially discarded by the receiver and it is 
+later replayed. 

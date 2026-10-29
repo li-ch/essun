@@ -1,0 +1,26 @@
+ 257 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+contain the original message ID of the request and the original sequence number. The message ID from 
+target to initiator is only reflected to the target in the acknowledgements; thus, it is entirely within the 
+purview of the target how they are assigned. Specifically, all responses to a single request message are 
+not required to use a single-message ID. 
+As illustrated, Figure 3-31 allows for a semantic response to the UET_RESPONSE_W_DATA carrying the 
+read payload. This makes it possible to carry failure information from the initiator to the target; 
+however, Figure 3-32 does not have this ability to carry failure information. A careful review of Table 
+3-25 shows that very few error responses could possibly apply when a read response returns to the 
+initiator of the read. Implementations of the standard read sequence (Figure 3-31) MUST provide a 
+semantic response to the UET_RESPONSE_W_DATA; however, that semantic response MAY be 
+UET_DEFAULT_RESPONSE in all cases. Indeed, this is what is illustrated in the figure where there is a 
+single cumulative acknowledgement. Implementations of the target MUST be prepared to receive an 
+error response, which implies a guaranteed delivery response, and MUST clear packets that were 
+marked for guaranteed delivery. Target implementations SHOULD deliver any error response provided in 
+the read completion. 
+ 
+Informative Text: 
+Errors related to a UET_RESPONSE_W_DATA can occur when the payload attempts to write memory 
+that does not have a valid translation available. This can occur due to a programming error or due to 
+the application terminating. 
+ 
+ 
+Figure 3-32 - Multi-Packet Read Request – Large PDS_MAX_ACK_DATA  

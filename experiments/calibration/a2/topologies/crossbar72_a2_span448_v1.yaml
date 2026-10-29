@@ -1,0 +1,22 @@
+# Calibration-ladder A2 topology: crossbar72 at the LOWER endpoint of the
+# anchor-informed per-rank aggregate injection span, B = 448 bytes/ns per
+# direction. Provenance: CAL-A7 derived (MI300X 7 Infinity Fabric links x
+# 64 B/ns per direction = 448 B/ns per-rank aggregate; the plan §2.1
+# A-L0X-BW quotes exactly this 448 B/ns MI300X-class point). This is the
+# non-NVIDIA endpoint of the candidate anchored aggregate span
+# [448, 900] B/ns (PROPOSED, review pending). Free parameter;
+# NOT tuned toward any output.
+topology_id: crossbar72_a2_span448_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 448
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar72_a2_ceiling900_v1 (A-L0X-PORT,
+  A-L0X-LAT, A-L0X-DIV); only the swept free parameter B differs. The
+  fabric class stays NVSwitch-abstracted crossbar — this row measures the
+  model's placement at the MI300X injection SCALE, not a full-mesh
+  topology change (per-pair capacity structure is A-L0X-PORT's flagged
+  out-of-domain case, untouched here).

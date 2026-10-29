@@ -1,0 +1,48 @@
+# Calibration-ladder GF-01 SMALL-MESSAGE sweep (gap-fill
+# anchor GF-01 — the first MEASURED staged anchor in exactly the
+# smoke-manifest regime, plan gap §4.3): where do the three single-port L0
+# identities sit relative to the anchor's measured eager/graph small-message
+# band (eager 16.61-16.74 us at 8-64 B, 13.54/13.77 us at 16/64 KiB; graph
+# 16.38/6.32 us at 8/32 B, 9.14 us at 64 KiB)?
+#
+# NOTHING IS TUNED: the executed points were fixed by the anchor's own
+# staged numbers / registry points BEFORE any model output was read —
+# ring B=64 (the anchor's RAW per-link unidirectional rate, = the A-L0-BW
+# registry point), crossbar/doubling B=448 (the raw aggregate 7 x 64,
+# the A7 anchor arithmetic), L=200 ns (A-L0-LAT / A-L0X-LAT /
+# A-L0D-LAT registry point) everywhere. In the small-message regime the
+# bandwidth term is 0.03-1792 ns of 3-5 us identities: the comparison is
+# a LATENCY-CHAIN comparison (14L ring vs 6L doubling vs 2L crossbar), and
+# the record computes implied-effective-L diagnostics FROM the measured
+# times — recorded placement, never parameter values. The measured band is
+# non-monotone in size (eager: 8-64 B rows SLOWER than the 16/64 KiB rows;
+# graph: 8 B slower than 32 B) — an eager/graph launch-overhead effect a
+# fixed-(B,L) identity family cannot express; recorded, not smoothed.
+#
+# Payload grid: the anchor's own reconciling/latency small sizes
+# {8, 32, 64, 16384, 65536} B, all divisible by r=8 (A-L0-DIV / A-L0X-DIV /
+# A-L0D-DIV accept the exact sizes, no bracketing). The mid rows
+# (128 KiB..1 GiB) of the anchor's series do NOT reconcile (staging-doc
+# flag; see the stage record) and are excluded everywhere. Baseline = the
+# per-link ring reading (RCCL's plausible conservative schedule on the
+# mesh), so the delta column reads as identity-choice displacement.
+sweep: cal_gf01_small_v1
+workload: experiments/calibration/gf01/workloads/w1_dense_tp_decode_tp8_16kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/gf01/topologies/ring8_gf01_link64_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 32, 64, 16384, 65536]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf01/topologies/ring8_gf01_link64_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf01/topologies/crossbar8_gf01_agg448_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/gf01/topologies/exchange8_gf01_agg448_v1.yaml

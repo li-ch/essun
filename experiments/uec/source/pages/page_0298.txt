@@ -1,0 +1,43 @@
+ 298 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• Monitoring telemetry signals to detect network and endpoint congestion. 
+• Carrying congestion state between sources and destinations. 
+• Generating signals to control the transmission characteristics of PDS connections. The 
+transmission characteristics are referred to as transmit controls and are based on the following: 
+o The amount of data that can be outstanding on a connection or group of connections 
+(i.e., the window size and/or credit). 
+• Supporting multipath delivery with congestion aware path assignment. 
+UET breaks larger reads at the semantic sublayer into multiple read request packets where a single read 
+request packet is limited to requesting a maximum of one MTU. This is done by the semantic sublayer 
+(SES). Refer to SES Section 3.4.5.2 for details.  
+UET also supports packing multiple messages into a single packet for local networks. This is done in SES 
+and treated by PDS as a single packet. Refer to Section 3.4.3.3. 
+This specification provides a logical interface between PDS and SES that is used to define PDS behavior. 
+The actual interface between PDS and SES is implementation specific. 
+Informative Text: 
+Implementations may choose to merge PDS and SES. 
+ 
+3.5.4 PDS-SES Logical Interface 
+This section contains non-normative text that describes an example of the SES-PDS interface from a 
+logical perspective to illustrate the information that crosses the interface. The interface between PDS 
+and SES is implementation specific. Table 3-34 summarizes an example PDS-SES interface using C 
+function signatures. The example interface is depicted visually in Figure 3-53. This example is presented 
+to provide a framework for better understanding the overall architecture but does use some 
+terminology that is not introduced until subsequent sections. 
+The following defines logical structures and commands passed between SES and PDS. This is intended to 
+describe the concepts without establishing requirements for implementation. The interface includes 
+source FEP fields, which allows multiple FEPs; a single FEP instance would not necessarily pass the 
+source FEP fields with each call. 
+struct uet_ep *src_fep    # ptr to struct with source address, etc. 
+struct uet_ep *dst_fep    # ptr to struct with dest address, etc. 
+uint32_t jobid            # SES passed through JobID 
+uint32_t tss_context      # Transport Security Sublayer context (e.g., SDI),  
+                          #   used to limit pkts on PDC to a common SDI 
+uint8_t mode              # delivery mode = {RUD, ROD, RUDI, UUD} 
+uint16_t rod_context      # identifies a ROD send queue, used to keep packets 
+                          #   from a send queue on same PDC 
+uint16_t rsv_pdc_handle   # used to keep pkts in same reserved PDC;  
+                          #   0 = not to a reserved PDC 
+uint16_t tx_pkt_handle    # SES assigned packet handle at source 
+uint16_t msg_id           # SES assigned message identifier at source 

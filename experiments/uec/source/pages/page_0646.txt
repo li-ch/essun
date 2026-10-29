@@ -1,0 +1,39 @@
+ 646 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+including the frame whose sequence number is the ack_nack_seq. The variable acked_seq is then 
+loaded with ack_nack_seq. 
+If an LLR_NACK is received, the nack_received variable is set to TRUE. When an LLR_ACK is received, the 
+nack_received variable is set to FALSE. The nack_received variable is also set to FALSE when the state 
+machine is in the INIT state or upon entry to the REPLAY state. 
+5.1.9 Control Ordered Set transmission and reception 
+5.1.9.1.1 LLR_INIT CtlOS 
+The LLR_INIT CtlOS is sent periodically when the LLR transmit state machine is in the INIT state. This 
+allows for the loss of the LLR_INIT or LLR_INIT_ECHO CtlOS due to link errors. The CtlOS contains an 
+init_seq value that is equal to the tx_seq variable. When an LLR_INIT CtlOS has been sent, a subsequent 
+LLR_INIT CtlOS is sent after at least four times the number of ctlos_target_spacing bytes have been 
+transmitted. This provides other CtlOS an opportunity to be transmitted while allowing for the loss of 
+the LLR_INIT or LLR_INIT_ECHO CtlOS due to link errors. The init_data field may optionally be used by 
+implementations to compute the link round trip time. The receiver MUST echo that value back, so that it 
+MAY carry a timestamp or identifier for determining the link delay. 
+The use of init_data by the sender is optional; its function is opaque to the receiver. A sender can use it 
+to determine link round-trip time or can use other means. Alternatively, the outstanding_data_max 
+could be set based on the bandwidth delay product for the link plus the PFC activation times, as 
+described in IEEE Std 802.1Q-2022 Annex N, to ensure correct operation of the PAUSE and PFC 
+mechanisms. 
+When an LLR_INIT CtlOS is received, the LLR receiver sets its next_rx_seq variable to the value in 
+init_seq and sets the next_rx_seq_vld variable to TRUE. An LLR_INIT_ECHO CtlOS is also scheduled for 
+transmission, echoing back the init_seq and the init_data from the LLR_INIT. 
+5.1.9.1.2 LLR_INIT_ECHO CtlOS 
+The LLR_INIT_ECHO CtlOS is sent when llr_mode_local is set to ON and the LLR receives an LLR_INIT 
+CtlOS from the link partner. The LLR_INIT_ECHO CtlOS contains a copy of the init_seq and init_data 
+values that were received in the LLR_INIT CtlOS. When an LLR_INIT_ECHO CtlOS is received, the value 
+contained in init_seq is compared to tx_seq. If the values are equal, the init_echo_received is pulsed, 
+which will transition the LLR transmit state machine out of the INIT state. Loss of LLR_INIT_ECHO CtlOS is 
+tolerated. During initialization, LLR_INIT CtlOS is sent repeatedly, and an LLR_INIT_ECHO CtlOS is sent in 
+response to each LLR_INIT CtlOS. 
+5.1.9.1.3 LLR_ACK CtlOS 
+The LLR_ACK CtlOS is sent when the ACK/NACK state machine is in the SEND_ACKS state. The LLR_ACK 
+CtlOS contains the ack_nack_seq value that is equal to next_rx_seq – 1. 
+When an LLR_ACK CtlOS is received, it is processed as described in Section 5.1.8. If an LLR_ACK is lost, 
+the next LLR_ACK will update the ack_seq, allowing the send buffer to be properly emptied. Thus a lost 

@@ -1,0 +1,55 @@
+ 189 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Transaction Description AI 
+Base 
+AI 
+ Full 
+HPC Unified 
+Local 
+Note: 
+1. The libfabric provider advertises the max SEND message size 
+2. Atomic operation support is determined via libfabric capability discovery (see SES Section 3.4.2.5.4). 
+3.3.2 Buffer Addressing Mechanisms 
+Implementations of all profiles MUST conform to all basic buffer addressing schemes (described in SES 
+Section 3.4.2.3) except for matching (described in SES Section 3.4.2.3.5). Implementations of all profiles 
+MUST support the use of memory keys for UET_WRITE operations. All implementations MUST support 
+the use of memory keys for UET_READ and UET_ATOMIC operations if RMA read is supported. Exact 
+matching support may be implemented using wild-card matching. 
+Table 3-2 - Addressing Requirements for Implementations of Profiles 
+ 
+3.3.3 Authorization 
+All profiles MUST implement the authorization semantics (SES Section 3.4.2.4). All profiles MUST be able 
+to insert the JobID according to SES Section 3.4.2.4.1. The profile implementation MUST check the JobID 
+before allowing buffer access. All profiles MUST support at least one JobID per FEP. 
+3.3.4 Buffer Behavior 
+The profiles MUST support the buffer behaviors shown in Table 3-3. 
+Table 3-3 - Profile Buffer Behavior Requirements 
+Transaction Type Notes AI 
+Base 
+AI 
+ Full 
+HPC Unified 
+Local 
+Use-Once RMA  Use-once applicable to RMA operations   MUST  
+Memory Key Full range (standard header) MUST MUST MUST  
+Limited range (optimized header)   MUST  
+Operation Description AI 
+Base 
+AI 
+ Full 
+HPC Unified
+Local 
+Relative Addressing Select libfabric endpoint using: 
+{FA, JobID, PIDonFEP, RI[range]} 
+MUST MUST MUST  
+Absolute 
+Addressing 
+Select libfabric endpoint using: 
+{FA, PIDonFEP, RI[range]} 
+MUST MUST MUST  
+Exact tag match Exact tag match for send operations  MUST MUST  
+Wildcard tag match Wildcard tag match operations   MUST  
+Direct Memory 
+Addressing 
+Select target memory using: {FA, JobID}    MUST 

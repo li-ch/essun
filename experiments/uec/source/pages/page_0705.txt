@@ -1,0 +1,60 @@
+ 705 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  } 
+  revision 2025-03-14 { 
+    description 
+      "LLDP extension TLV for UE link negotiation options. 
+      Included options are Link Layer Retry (LLR). 
+      Published as part of UE Specification v1.0"; 
+    reference   
+      "UE Specification v1.0"; 
+  } 
+  identity llr-want-selector { 
+    description 
+      "Specify if LLR service is wanted by this port."; 
+  } 
+  identity llr-no { 
+    base llr-want-selector; 
+    description 
+      "Indicates LLR service is not wanted by this port. Signaled as the 
+   value 0x0."; 
+  } 
+  identity llr-want { 
+    base llr-want-selector; 
+    description 
+      "Indicates LLR is wanted at the port. Signaled as the value 0x3."; 
+  } 
+  identity llr-resv { 
+    base llr-want-selector; 
+    description 
+      "Reserved LLR selection values 0x1 and 0x2 for future specification."; 
+  } 
+  identity llr-enable-selector { 
+    description 
+      "Specify if LLR service is enabled at this port."; 
+  } 
+  identity llr-disabled { 
+    base llr-enable-selector; 
+    description 
+      "Indicates LLR service is not enabled at this port. 
+      Signaled as the value 0x0."; 
+  } 
+  identity llr-enabled { 
+    base llr-enable-selector; 
+    description 
+      "Indicates LLR is wanted at the port. Signaled as the value 0x3."; 
+  } 
+  identity llr-enable-resv { 
+    base llr-enable-selector; 
+    description 
+      "Reserved LLR selection values 0x1 and 0x2 for future specification."; 
+  } 
+  identity csig-capable-selector { 
+    description 
+      "Specifies the CSIG capability on this port."; 
+  } 
+  identity csig-no { 
+    base csig-capable-selector; 
+    description 
+      "Indicates CSIG service is not available at this port. 

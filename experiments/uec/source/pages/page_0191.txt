@@ -1,0 +1,65 @@
+ 191 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Header 
+Format 
+Description AI 
+Base 
+AI 
+ Full 
+HPC Unified 
+Local 
+Header 
+Response 16 B header with return code MUST MUST MUST  
+Response 
+with Data 
+Variable size header with 20 B response header + data  MUST MUST  
+Optimized 
+Response 
+8 B compact header   MUST  
+Optimized 
+Local 
+Response 
+4 B compact header    MUST 
+Message 
+packing 
+FEP MUST accept and process up to 16 messages in one SES 
+payload (one packet) 
+   MUST 
+Delivery 
+Complete 
+(GO)  
+Delivery complete (DC) as implemented with global 
+observability (GO) 
+MUST MUST MUST MUST 
+ 
+3.3.6 PDS Ordering Modes 
+Table 3-5 lists the PDS ordering modes and network behavior that implementations of each profile 
+MUST support. 
+Table 3-5 - Profile Summary—PDS ordering modes 
+Service Description AI 
+Base 
+AI 
+ Full 
+HPC Unified 
+Local 
+Reliability 
+and 
+Ordering 
+Modes 
+Reliable, unordered delivery (RUD) MUST MUST MUST  
+Reliable, ordered delivery (ROD) 
+ 
+MUST MUST MUST  
+Reliable, ordered delivery for local networks (RODL)    MUST 
+Reliable, unordered delivery for idempotent operations (RUDI)    MUST  
+Unreliable, unordered delivery (UUD) MUST MUST MUST  
+ 
+3.3.7 CMS Congestion Control Algorithms 
+CMS specifies two complementary congestion control algorithms, NSCC and RCCC, and supports 
+programmable congestion management (PCM) for developing additional or experimental congestion 
+control algorithms. For the specified algorithms, the following tables specify the implementation 
+requirements in each profile. Independent requirements are provided for best-effort and lossless 
+networks. Each implemented algorithm must support a mechanism to disable it at deployment time 
+such that either NSCC or RCCC can run in isolation or together if the implementation supports both. 
+ 

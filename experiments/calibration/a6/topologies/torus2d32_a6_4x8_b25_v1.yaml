@@ -1,0 +1,20 @@
+# Calibration-ladder A6 topology: the 4x8 hierarchical twin at the
+# single-port endpoint B = 25 B/ns (one 200 Gbps RoCEv2 port per
+# direction; same provenance as ring32_a6_port25_v1). Everything else
+# identical to torus2d32_a6_4x8_b400_v1 — see that file's header; the
+# honesty statements are inherited verbatim. NOT a fit.
+topology_id: torus2d32_a6_4x8_b25_v1
+topology_class: torus2d_ring_x_ring
+ranks: 32
+grid:
+  dim1_ranks: 4
+  dim2_ranks: 8
+link:
+  bytes_per_ns: 25
+  hop_latency_ns: 200
+notes: >
+  2D torus 4x8 (the anchor's node x GPU shape), uniform B/L across
+  dimensions (A-L0T-UNIF). Provenance: B = 25 B/ns = one 200 Gbps port
+  per direction from the anchor's staged config statement (per-port
+  endpoint of the swept span, never tuned); L = 200 ns free A-L0T-LAT
+  registry point.

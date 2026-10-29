@@ -1,0 +1,46 @@
+ 110 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+#define UET_CTRL_ADDR_REQ_FLAG_IPV6   (1 << 0) /* IPv6 fabric address type */ 
+#define UET_CTRL_ADDR_RESP_FLAG_JOB_V (1 << 0) /* JobID valid */ 
+#define UET_CTRL_ADDR_RESP_FLAG_SEC_V (1 << 1) /* security bindings valid */ 
+  
+struct uet_ctrl_addr_req { 
+             uint8_t flags; 
+             uint8_t reserved[3]; 
+             struct uet_fa fa; 
+             uint32_t os_pid; 
+             char service[UET_MAX_SERVICE_NAME_CHARS+1]; 
+}; 
+  
+struct uet_ctrl_addr_resp { 
+             uint8_t flags; 
+             uint8_t reserved[3]; 
+             uint32_t job_id; 
+             struct uet_addr addr; 
+             struct uet_sec_bindings sec; 
+}; 
+ 
+2.2.5.3.6 fi_getname() API 
+The fi_getname() API is called to retrieve the local UET address of a libfabric endpoint. The call returns 
+an address object that is typically shared with other endpoints of the job. 
+2.2.5.3.7 fi_cq_open() and fi_cntr_open() APIs 
+Completion resources are used to report the results of submitted data transfer operations. The 
+completion resource MAY be a completion queue, which is often implemented in hardware, or a 
+completion counter, which can be implemented in hardware or software. The fi_ep_bind() API is called 
+to bind a completion resource to an endpoint. 
+Completion counters simply return the number of operations that have been completed. Counters are 
+intended as lightweight completion objects that increment whenever an identified type of data transfer 
+has occurred, which avoids the overhead of conveying completion queue entries to the application. 
+Completion counters are used by applications such as MPI. The fi_cntr_open() API is called to open a 
+completion counter. 
+The fi_cq_open() API is called to open a CQ. Multiple pre-defined CQ entry formats are supported. 
+Provider-specific CQ entry formats are also supported. 
+The UET provider MUST support completion queues. 
+The per-profile requirements for completion counters are specified in Table 2-20. 
+Table 2-20 - Completion Counter Requirements 
+Profile Completion Counter Requirements 
+AI Base None 
+AI Full FI_SEND, FI_RECV, FI_READ, FI_WRITE 
+HPC FI_SEND, FI_RECV, FI_READ, FI_WRITE, 
+FI_REMOTE_READ, FI_REMOTE_WRITE 

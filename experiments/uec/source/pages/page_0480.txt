@@ -1,0 +1,89 @@
+ 480 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Receivers MAY dynamically determine Rcv_Cwnd_Pend depending on the degree of destination 
+congestion. The specifics of how the Rcv_Cwnd_Pend is calculated is implementation dependent. 
+The field may be set to 0 if it is not supported by the receiver. 
+The source responds to non-zero values of Rcv_Cwnd_Pend by modifying the congestion control 
+response. This is detailed in apply_cwnd_penalty() in the NSCC pseudocode. 
+Table 3-97 - Congestion Control Configuration Parameters 
+Name Type Default Description 
+config_base_rtt  unsigned 
+integer 
+See Section 
+3.6.13.3 
+The round-trip time in seconds of the 
+longest path across the fabric of an MTU-
+sized packet when no other traffic is 
+present. (Units: seconds, but see the 
+precision discussion in 3.6.13.3) 
+sender.linkspeed unsigned 
+integer 
+NIC linkspeed The maximum achievable bitrate over the 
+source’s link, measured in bytes/second. 
+Receiver.linkspeed unsigned 
+integer 
+NIC linkspeed The maximum achievable bitrate over the 
+receiver’s link, measured in bytes/second. 
+Usually this is the same as the source’s 
+linkspeed. If unknown, set to source’s 
+linkspeed. 
+MTU unsigned 
+integer 
+Payload MTU + 
+Transport 
+Overhead + 40 
+Nominal MTU. An approximation of the 
+MTU using the Payload MTU from the 
+semantic sublayer plus the transport 
+overhead plus 40 bytes. Matches the 
+nominal_pktsize of a full Payload MTU 
+packet. 
+BDP unsigned 
+integer 
+See Section 
+3.6.13.3 
+The nominal bandwidth-delay product 
+needed to achieve high throughput across 
+the longest path in an unloaded network. 
+(units: bytes) 
+MaxWnd unsigned 
+integer 
+1.5 * BDP Upper bound on cwnd. (units: bytes) 
+target_qdelay unsigned 
+integer 
+See Section 
+3.6.13.3 
+Target queueing delay. (Units: seconds, but 
+see the precision discussion in 3.6.13.3) 
+Gamma floating 
+point 
+0.8  
+alpha floating 
+point 
+See Section 
+3.6.13.3 
+ 
+fi floating 
+point 
+5 * MTU * 
+scaling_a 
+Fair increase constant. 
+fi_scale floating 
+point 
+0.25 * 
+scaling_a 
+ 
+max_md_jump floating 
+point 
+0.5 Limit on how much multiplicative decrease 
+can decrease cwnd (unitless). 
+base_BDP unsigned 
+integer 
+150000 The hypothetical BDP of a network with 
+100 Gb/s source and receiver linkspeeds 
+and a 12 µs base RTT. (units: bytes) 
+scaling_a floating 
+point 
+BDP/base_BDP Used to scale to networks with differing 
+linkspeeds or RTT. 

@@ -1,0 +1,37 @@
+ 458 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4. The CCC is contacted again to finalize fields such as the EV, which require late binding because 
+CCC state may have changed since the CCC became ready to send. 
+The interactions between the reliability module, its scheduler, and the CCC are described in more detail 
+in Section 3.6.8.1. 
+3.6.8.1 Abstract interface between PDS and Congestion Control 
+UET PDS and congestion control is typically implemented in the same device in an integrated manner, 
+but for the purposes of specification, they are defined as distinct modules separated by an abstract API. 
+An optimized implementation is not required to implement this API, provided that its externally 
+observable behavior is indistinguishable from the behavior specified by this abstract API. 
+A CCC generally does not need to know of the existence of a particular PDC, or of the transmission or 
+acknowledgment of a packet with a specific sequence number. Rather, the PDC tracks the transmission 
+of packets and their acknowledgment. We define a set of abstract events that communicate state 
+changes between the PDS and the CMS. The API is assumed to be stateful. The PDS keeps track of which 
+CCC is associated with each PDC, whereas the CCC does not know about PDCs. 
+3.6.8.1.1 Source API 
+The PDS MUST allocate a CCC whenever the first PDC to a destination is created, and MAY deallocate it 
+when the last PDC to a destination is destroyed. A CCC MAY be maintained after the last PDC is 
+destroyed to cache congestion state (but see Section 3.6.14.1 regarding closing RCCC CCCs and Section 
+3.6.15.3 regarding closing TFC PDCs). 
+• AllocateCCC(bool:sprayed)  
+The CMS will create a new CCC. 
+The parameter sprayed is TRUE if the CCC will handle sprayed traffic, and FALSE if it will handle 
+single-path traffic. The PDS SHOULD map multiple sprayed PDCs in the same traffic class to the 
+same destination to the same CCC. This is usually transparent to congestion control. 
+• DeallocateCCC()  
+ The CMS will deallocate resources associated with the CCC. 
+When multiple PDCs have data to be sent, the source uses a scheduler to determine access to the 
+outgoing link(s). Notionally, a PDC can be scheduled when it has new data to send or data to retransmit, 
+and its associated CCC is in the READY state. 
+A CCC can be in one of four states: 
+• A CCC is READY if there is data (new or retransmissions) ready to be sent by any of its PDCs and 
+the CCC will permit sending at this time. 
+• A CCC is ACTIVE if there is data not yet sent by any of its PDCs, or data queued for 
+retransmission by any of its PDCs, but the CCC will not permit sending. 

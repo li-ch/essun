@@ -1,0 +1,29 @@
+# Implementation profile for the calibration-ladder A12 runs on the
+# analytical L0 ring backend ( anchor CAL-A12).
+implementation_profile_id: analytical_l0_ring_cal_a12_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)L (see
+  src/essun/backends/analytical/ — the same identity stages A6/A7
+  executed); assumptions A-L0-BW / A-L0-LAT / A-L0-FD / A-L0-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1). Declared PER-LINK
+  granularity reading: per-hop B is ONE NVLink-3's rate — the axis on
+  which the anchor states its 20-vs-25 GB/s figures — not the 12-link
+  aggregate a real ring hop could use (that twin is the crossbar8
+  240/300 pair; the 12x axis gap is recorded, never tuned).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) swept over {16, 20, 25} bytes/ns — the
+  PER-LINK-granularity reading of CAL-A12's own figures: 25 = the
+  physical NVLink-3 per-link per-direction rate, 20 = NCCL's
+  src/graph/topo.h per-link model (exactly 4/5 = 0.8 of physical; the
+  value that IS the plan §2.1 A-L0-BW candidate span's lower endpoint
+  "20 (CAL-A12 NCCL model)" — this stage executes the endpoint on the
+  anchor's own fabric class), and 16 = 0.8^2 x 25 (double-application
+  hazard bracket, mirror of the crossbar 192 row; never a bridge
+  value). L fixed at the A-L0-LAT registry point 200 ns (KEEP).
+  Values are anchor-derived or declared brackets, never measurements.
+measurement_source: none   # not calibrated; the comparison against CAL-A12 is recorded as PROPOSED evidence in results/calibration/

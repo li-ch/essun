@@ -1,0 +1,41 @@
+ 517 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Furthermore, distance-aware congestion management is a critical requirement in Ultra Ethernet (UE) to 
+accommodate the growing diversity of traffic patterns across modern network deployments. Storage 
+traffic is frequently mirrored across multiple datacenters, often spanning distances of thousands of 
+kilometers. The replication process requires congestion management techniques that account for 
+latency and bandwidth constraints associated with mixed short- and long-distance transmission. 
+Similarly, AI and high-performance computing (HPC) systems increasingly operate across distributed 
+datacenter infrastructures [55]. These architectures generate network flows that traverse both short 
+intra-datacenter paths and long inter-datacenter links [56]. To optimize performance and minimize 
+congestion, endpoints are required to differentiate between short-distance and long-distance flows. 
+This distinction enables adaptive congestion control mechanisms that adjust transmission behavior 
+according to the network distance, ensuring efficient data transfer across varying deployment scenarios. 
+By integrating distance-aware congestion management, UE can address the specific needs of storage 
+replication and AI/HPC workloads while maintaining network stability and performance. 
+While baseline algorithms such as NSCC and RCCC provide strong defaults, they are fixed. Evolving site 
+conditions create a need for forward-compatible mechanisms. Operators may need a way to adopt new 
+methods, swap in alternative algorithms, or apply targeted modifications for the new conditions. 
+PCM addresses these gaps by providing a programmable way to extend and adapt congestion policies in 
+the network. PCM provides configurability to network administrators. This approach enables fine-
+grained control over congestion management policies, allowing adjustments to optimize network 
+performance in response to specific deployment requirements and evolving traffic conditions. 
+PCM offers functionality similar to the congestion control mechanisms implemented in the QUIC 
+protocol [54]. However, unlike QUIC, where congestion control operations are managed in software at 
+the transport layer, PCM enables designers to offload these functions entirely to the network hardware 
+at the endpoint. This hardware-based approach ensures low-latency congestion management, reduces 
+computational overhead on hosts, and enables highly efficient and scalable control mechanisms that 
+operate seamlessly within high-performance networking environments. 
+3.6.18.1 PCM Architecture 
+The UE PCM architecture is designed as a logically structured framework composed of four distinct 
+components: 
+1. Incoming signals: Signals that gather information about the current state of the network as well 
+as relevant operational state from the endpoint, form the first component. These signals 
+provide data necessary for congestion analysis and management. 
+2. Congestion control (CC) algorithm: The algorithm, including its state, that processes the 
+collected signals to compute appropriate control actions. By interpreting network conditions 
+and endpoint states, the algorithm determines precise adjustments required to optimize data 
+flow and mitigate congestion. The CC algorithm defines congestion control. 
+3. Load balancing (LB) algorithm: The algorithm that assigns entropy values to transmitted request 
+packets and reacts to network signals when responses for transmitted requests are received. 

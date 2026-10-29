@@ -1,0 +1,31 @@
+# Calibration-ladder A7 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the software-derated bridge B = 358.4 B/ns = 1792/5 —
+# exactly 0.8 x the CAL-A7 aggregate point 448. Provenance: CAL-A12's
+# "~80% of peak" application-level derating (NCCL maintainer guidance on
+# the gap between physical link bandwidth and what the software stack
+# schedules), applied by stage A2 to CAL-A2's 900 as 720; this stage
+# applies the identical bridge to CAL-A7's 448 for symmetry.
+#
+# CROSS-FABRIC CAVEAT (recorded, not smoothed): CAL-A12's derating is an
+# A100 / NVLink-3 / NCCL figure; transferring it to AMD Infinity Fabric
+# (RCCL-class stacks) is an ASSUMPTION of this row, not an anchor fact —
+# the row locates where a CAL-A12-style software-scheduled measurement
+# WOULD sit if the derating transferred. It does not validate anything.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward any
+# model output. Exact value 1792/5 (YAML decimal read through
+# Fraction("358.4") — exact rational arithmetic, no float rounding).
+# L = 200 ns is the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_a7_derated358_4_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 358.4
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar8_a7_agg448_v1 (A-L0X-PORT,
+  A-L0X-LAT, A-L0X-DIV); only the swept free parameter B differs (0.8 x
+  448 = 1792/5 exactly). Provenance: CAL-A7 aggregate x CAL-A12 ~80%
+  software derating (cross-fabric transfer, labeled). Anchor quote /
+  assumption, never our measurement.

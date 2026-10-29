@@ -1,0 +1,27 @@
+# Calibration-ladder GF-04 topology: fully-connected exchange fabric of 8
+# ranks for the RECURSIVE-DOUBLING identity (topology_class
+# fully_connected_exchange is the declared fabric class of
+# allreduce_recursive_doubling; same single-port schema as the crossbar).
+# B = 476.37 B/ns — the anchor's single-node figure (fetched, verified
+# 2026-10-28; pinned busbw = B mapping). Role in this stage: recursive
+# doubling is the only L0 allreduce family whose latency chain
+# 2*log2(r)*L GROWS with rank count (6L at r=8 -> 8L at r=16), so it is
+# the strongest in-family candidate for expressing ANY 8->16 busbw change;
+# executed at r=8 and r=16 to bound what latency-chain structure alone can
+# do (answer at the executed sizes: ~1.7e-5 relative — still ~800x below
+# the measured 1.41% drop). r=8 and r=16 are powers of two (A-L0D-POW2
+# ACCEPTS both natively). HONESTY: B swept free (A-L0D-BW),
+# anchor-stated, fixed BEFORE any model output was read; L = 200 ns
+# A-L0D-LAT registry point (KEEP).
+topology_id: rd8_gf04_anchor476_37_v1
+topology_class: fully_connected_exchange
+ranks: 8
+nic:
+  injection_bytes_per_ns: 476.37
+link:
+  pair_latency_ns: 200
+notes: >
+  Fully-connected exchange fabric of the GF-04 single-node leg at the
+  anchor's own 476.37 B/ns figure, for the recursive-doubling identity
+  (the only rank-scaling latency chain in the L0 family). Anchor-stated,
+  never our measurement, never tuned.

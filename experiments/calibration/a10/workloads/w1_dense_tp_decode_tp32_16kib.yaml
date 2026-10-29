@@ -1,0 +1,21 @@
+# W1 Dense TP Decode — tp_size 32, payload 16384 B (16 KiB): the
+# A-W1-SIZE registry smoke size, i.e. the SMALL-MESSAGE LATENCY-BOUND
+# regime the anchor's finding lives in (CALIBRATION_PLAN.md §1.2 row
+# CAL-A10: "small-message regime implied"; the plan's small-message
+# boundary <= ~64 KiB). The anchor names no message size (its per-size
+# tables are paywalled), so this size is a DECLARED model-side regime
+# choice (the smoke default), not an anchor-derived number. The payload is
+# held FIXED while the rank count sweeps 8 -> 1024: the anchor's scenario
+# is more ranks exchanging the same small per-layer tensors, and 16384 =
+# 2^14 is divisible by every power-of-2 ladder rank, so the A-L0-DIV /
+# A-L0X-DIV / A-L0D-DIV gates all ACCEPT it exactly at every rung — no
+# bracketing anywhere in the stage. Same workload shape as every other W1
+# file (2 layers x 3 decode steps = 6 AllReduce ops per config). Nothing
+# here is measured or standard-normative; integer byte counts;
+# deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal10-a10
+tp_size: 32
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # 2^14 (16 KiB); registry smoke point; free parameter A-W1-SIZE

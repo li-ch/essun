@@ -1,0 +1,36 @@
+# Calibration-ladder GLOBAL stage GLOB-INJ topology: serialized
+# unidirectional ring of 8 ranks (topology_class
+# unidirectional_ring_with_serialization, backend analytical_l05) - the
+# L0.5 mirror of the W1 smoke fabric (experiments/topologies/
+# ring8_l05_free_params.yaml) with the injection-BW free parameter
+# A-L05-INJ (nic.injection_bytes_per_ns) set to 64.
+#
+# Role in this sweep: the A-L05-INJ REGISTRY POINT 64 B/ns = the W1 smoke config's own I (ring8_l05_free_v1; equal to B by the family convention noted in the registry rationale) - this sweep's BASELINE config.
+#
+# This is the THIRD of the four global parameter-class sensitivity
+# stages :
+# I is swept across its REGISTERED range [1, 1024] B/ns on the W1
+# smoke config; B and L are fixed at their A-L05-BW / A-L05-LAT
+# registry points 64 B/ns / 200 ns (KEEP; B was the first global
+# stage's axis, L the second's). Nothing is tuned toward any anchor or
+# measurement - this stage maps the model's own response surface along
+# the registered axis (anchor-informed scale points are context
+# markers, plan section 2.1 A-L0X-BW provenance).
+topology_id: ring8_globinj_i64_v1
+topology_class: unidirectional_ring_with_serialization
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+nic:
+  injection_bytes_per_ns: 64
+notes: >
+  same serialized-ring fabric as ring8_l05_free_v1 (the L0.5 smoke
+  fabric) with only I moved; I is a FREE PARAMETER (A-L05-INJ), not
+  standard-derived and not measured; B = 64 and L = 200 are the shared
+  A-L05-BW / A-L05-LAT registry points (KEEP). The chunk size is the
+  landed equal-chunk construction M/r (A-L05-CHUNK), not a knob; 8
+  divides the smoke payload 16384 so the A-L05-DIV gate accepts every
+  row. No congestion, no credits, no packetization, no relay
+  re-serialization, no overlapped transfers - L0.5 transport model
+  only (A-L05-SER).

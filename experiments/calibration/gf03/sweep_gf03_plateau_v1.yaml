@@ -1,0 +1,49 @@
+# Calibration-ladder GF-03 PLATEAU sweep (gap-fill
+# anchor GF-03): where does the L0 aggregate-reading identity sit relative
+# to the anchor's measured allreduce peak ("~837 GB/s", "93% of
+# theoretical 900") on the post-NVL72 B300 NVLink-5 generation, across
+# the anchor-arithmetic reading set?
+#
+# NOTHING IS TUNED: the swept B values were fixed by the anchor's own
+# staged numbers / cross-anchor arithmetic BEFORE any model output was
+# read — 900 (the anchor's "theoretical" = CAL-A2's per-direction line),
+# 837 (the anchor's MEASURED allreduce peak — the BASELINE), 782 / 717
+# (the anchor's two nvbandwidth unidirectional D2D readings), ring
+# per-link 50 (CAL-A1's NVLink5 per-port arithmetic) — L = 200 ns
+# (registry point) everywhere. Which reading the measurement supports is a
+# recorded comparison OUTCOME (the D2D readings sit 7.0-16.7% BELOW the
+# measured collective peak), not a parameter choice; no topology or
+# manifest value changed anywhere.
+#
+# Payload grid: {2^24, 2^27, 2^30, 2^34} = {16 MiB, 128 MiB, 1 GiB,
+# 16 GiB} — DECLARED free plateau probe sizes (GF-03 stages no size in
+# this regime): powers of two divisible by 8 (gates ACCEPT), spanning the
+# bandwidth-bound regime; 2^34 cross-references GF-01's plateau row on the
+# other fabric class. The plateau comparison is size-independent to
+# 1/B-linear closed form (latency term <= 2,800 ns <= 0.008% of every
+# executed time). The anchor-derived reference per size is the DECLARED
+# busbw->CCT conversion t_ref = 2(r-1)/r*M/837 (NCCL busbw convention
+# inverted — CCT-vs-CCT after conversion, never mixed metrics).
+sweep: cal_gf03_plateau_v1
+workload: experiments/calibration/gf03/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf03/topologies/crossbar8_gf03_peak837_v1.yaml
+grid:
+  payload_sizes_bytes: [16777216, 134217728, 1073741824, 17179869184]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf03/topologies/ring8_gf03_link50_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_d2d717_v1.yaml
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_d2d782_v1.yaml
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_peak837_v1.yaml
+    - experiments/calibration/gf03/topologies/crossbar8_gf03_spec900_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/gf03/topologies/exchange8_gf03_spec900_v1.yaml

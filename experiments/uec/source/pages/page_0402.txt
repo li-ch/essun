@@ -1,0 +1,29 @@
+ 402 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+a. If a message is larger than PDS Max_ACK_Data_Size, then all responses use the return 
+direction even if the last packet carries less than Max_ACK_Data_Size data 
+SES Read sequences operate differently depending on the configuration of Max_ACK_Data_Size. Refer 
+to Section 3.5.12.1. 
+3.5.20.2 Standard Sequences 
+Reliable unordered delivery (RUD) sequences are presented in the form of ladder diagrams. This section 
+specifies the normal sequences (i.e., PDS success cases) for RUD after a PDC is established. 
+3.5.20.2.1 Single-Packet Send Sequence—Non-Guaranteed Delivery 
+Send and write sequences are the same on best-effort and lossless networks. The standard RUD Send 
+sequence for a single-packet message with SES Response not guaranteed delivery is shown in Figure 
+3-97. The sequence in Figure 3-97 proceeds as follows: 
+1. The PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 
+332. 
+a. CLEAR_PSN is automatically incremented when PSN has no guaranteed delivery. 
+2. SES at the initiator transfers a packet to PDS for transmission. 
+3. PDS at the initiator transmits the packet on the PDC with PSN = 333 and marks PSN = 333 as 
+transmitted. 
+4. PDS at the target receives the packet, marks PSN = 333 as received, and delivers the packet to 
+SES. 
+5. SES at the target provides the sematic response to PDS with no guaranteed delivery indication. 
+6. PDS at the target transmits an ACK packet for PSN = 333 that includes the SES Response. 
+a. The ACK pds.flags.req != REQ _CLEAR as a clear is not required. 
+b. CACK_PSN is incremented as SES Response is not guaranteed delivery. 
+c. No state is required to be stored at the target beyond the PSN tracking state (e.g., 
+bitmap/PSN). 
+7. PDS at the initiator receives the ACK packet, delivers it to SES, and frees the state for PSN = 333. 

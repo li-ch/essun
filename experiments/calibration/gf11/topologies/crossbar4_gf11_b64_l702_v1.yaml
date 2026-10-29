@@ -1,0 +1,74 @@
+# Calibration-ladder GF-11 topology: fully-connected (crossbar / single
+# non-blocking switch stage) abstraction of 4 ranks at the GF-11 ANCHOR
+# POINT — B = 64 B/ns, L = 702 ns.
+#
+# Source numbers (docs/calibration/anchors_gapfill.md §GF-11; "Achieving
+# Near Speed-of-Light Latency in GPU Collectives", arXiv:2607.16100;
+# numbers AS STAGED, not re-fetched; confidence H — extracted from HTML,
+# hardware measurements; author-run microbenchmarks, preprint):
+#   - L = 702 ns is DERIVED from the anchor's measured 2-GB200 latency
+#     decomposition by the identity mapping: LL2_RTT = 0.306 µs and
+#     L_remote_store = 0.792 µs give the speed-of-light AllReduce bound
+#     L_SoL = 2*L_LL2_RTT + L_remote_store = 1.404 µs = 1404 ns EXACTLY
+#     (the anchor's own equation, closing to the byte — contrast GF-10's
+#     bisection equation which carried an internal x2). The crossbar
+#     identity charges its latency as 2L (one L per phase:
+#     reduce-scatter, allgather), so equating the identity's latency term
+#     with the measured SoL gives L = 1404/2 = 702 ns per phase — the
+#     DECLARED reading that maps the measured decomposition onto the free
+#     parameter. This is the FIRST current-generation (NVLink5-class,
+#     GB200 NVL72) measured-decomposition-anchored L value in the corpus,
+#     and it is BARE-HARDWARE class (LL2 round-trip + remote-store
+#     components — no CUDA/driver/NCCL software stack), unlike GF-10's
+#     app-level 9000 ns.
+#   - B = 64 B/ns is the A-L0X-BW registry point (KEEP). GF-11 stages no
+#     clean per-rank B: the staged "130 TB/s aggregate" over 72 GPUs
+#     carries an UNSTATED direction split and 2-significant-figure
+#     rounding (130000/72 = 16250/9 per-GPU aggregate-class, 8125/9
+#     per-direction-class) — recorded NOT EXECUTED in the stage record;
+#     the wire term is 3 ns of a 1407 ns total at the 128-B reading, so
+#     the bracket verdict is B-insensitive at the declared size (the
+#     record carries the B-dependent crossover formula).
+#
+# ROLE: the anchor's small-message BRACKET was measured at r=4 — NCCL ring
+# 11.0 µs vs LLBuffer one-shot 2.37 µs — "which bracket what any model may
+# predict without accusing the fabric" (the gap-fill doc's own words). The
+# one-shot pattern (every rank exchanges with every peer once) maps onto
+# the single-stage crossbar abstraction; at this point the identity gives
+# t = 3/2*M/B + 2L = 3 + 1404 = 1407 ns at M=128 — BELOW the near-optimal
+# measured leg by exactly 790/469, i.e. the bare-hardware floor the custom
+# kernel approaches but does not reach; NCCL ring sits 11000/1407 above
+# the same floor. NO tuning: 702 is anchor arithmetic fixed before any
+# stage output was read.
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS (A-L0X-BW / A-L0X-LAT), never
+# tuned toward any anchor output; 702 is a DERIVED READING (SoL/2), its
+# mapping ambiguity (whole-SoL-as-one-phase => L=1404 is the alternative
+# reading, executed as its own row) recorded. The size reading of the
+# anchor's bracket (128-B cache-line granularity; per-size table is a
+# figure) is carried on every CCT comparison; the anchor measurements are
+# the paper's, never ours, never standard-normative values.
+topology_id: crossbar4_gf11_b64_l702_v1
+topology_class: fully_connected_crossbar
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 702
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 702 ns (the GF-11 measured
+  speed-of-light AllReduce bound 1404 ns halved — the identity's 2L
+  latency term mapped onto the anchor's own decomposition equation
+  2 x 306 + 792 = 1404), per-rank single-port injection B = 64 B/ns (the
+  free A-L0X-BW registry point; GF-11 stages no clean per-rank rate),
+  charged once per phase (reduce-scatter, allgather) by the L0 crossbar
+  identity (t = 2(r-1)/r*M/B + 2L = 3M/128 + 1404 at r=4). r=4 is the
+  anchor's bracket system (4 GB200s, NCCL 2.29.1 ring 11.0 µs vs LLBuffer
+  one-shot 2.37 µs). No software stack, no kernel launch, no barrier, no
+  multicast semantics — the bare-hardware floor the anchor's custom
+  kernels approach from above. Provenance: L from GF-11's staged measured
+  decomposition (gap-fill anchor PROPOSED, not yet an integrated anchor row;
+  confidence H, hardware microbenchmarks, preprint), B the free registry
+  default. Values are anchor arithmetic / free registry points, never our
+  measurements.

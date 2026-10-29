@@ -1,0 +1,33 @@
+# Calibration-ladder A9 topology: crossbar of 8 ranks at L = 70 ns — the
+# CAL-A9 SWITCH-STAGE TERM ALONE (Berger et al., IEEE Micro 2023: CXL
+# switches add at least ~70 ns per stage — ports, arbitration, NoC).
+# BUDGET-COMPONENT ROW, not a pair reading: it isolates where the model
+# output sits when ONLY the switch component of the budget is charged
+# (a hypothetical zero-link-latency switch traversal). Together with
+# crossbar8_a9_link10_v1 (link alone) and crossbar8_a9_pair80_v1 (the
+# sum), the three rows execute the anchor's two-component budget
+# decomposition additively: t(80) - t(70) = t(10) - t(0) component-wise
+# (exact per-row identities verified in the stage's calibration record).
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0X-LAT), never tuned; 70 ns
+# is the anchor's own staged switch-stage minimum ("at least ~70 ns" — a
+# floor, one-sided). CAL-A9 is a design-estimate budget breakdown, not a
+# silicon measurement. B = 64 B/ns is the fixed free A-L0X-BW registry
+# point (anchor-free axis); r = 8 the free smoke-default rank count.
+topology_id: crossbar8_a9_switch70_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 70
+notes: >
+  Single non-blocking switch-stage abstraction of 8 ranks with the pair
+  latency set to the CAL-A9 switch-stage component alone (>=~70 ns per
+  switch stage). Budget-decomposition row (zero-link degenerate), not a
+  physically reachable CXL-class pair. L0 transport model only; no
+  congestion, no credits, no packetization. Provenance: L = 70 ns from
+  CAL-A9's staged numbers (anchor PROPOSED in the anchor registry, history-only
+  since ; design estimate; "at least" wording makes it a floor).
+  B = 64 B/ns free A-L0X-BW registry point. Values are anchor quotes /
+  free registry defaults, never our measurements.

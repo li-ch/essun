@@ -1,0 +1,28 @@
+ 255 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.5.1.1 Single-Packet Requests 
+As illustrated in Figure 3-29, a single-packet request has a single-packet response 
+(UET_DEFAULT_RESPONSE) where the semantic ACK is combined with the PDS ACK. The PSN from the 
+PDS ACK is used to identify the original request. Optimized header formats that may be used for a single 
+packet message do not contain the message ID field; thus, they MUST use the PSN as the mechanism to 
+identify the original request. This enables SES to deliver a completion at the initiator. The modified 
+length is equal to the requested length indicating that the entire message is delivered. The semantic ACK 
+also indicates that the message was captured in the expected list. This can then be used to build a 
+lightweight MPI_Ssend(). In this sequence, UET_DEFAULT_RESPONSE SHOULD be used (as illustrated), 
+but UET_RESPONSE MAY be used (not shown). SES MUST NOT return the semantic response to PDS 
+before the packet has been processed through SES. If delivery complete is set (DC=1), the semantic 
+response MUST NOT return until the payload has been made globally observable. The single-packet 
+sequence illustrated applies to a variety of opcodes, including UET_TAGGED_SEND (shown), UET_WRITE, 
+UET_ATOMIC, UET_ SEND, and UET_TSEND_ATOMIC. The UET_TAGGED_SEND shown in Figure 3-29 can 
+use either UET_HDR_REQUEST_STD or UET_HDR_REQUEST_MEDIUM (Figure 3-16). The choice of 
+header has some impact on the addressing operations but does not change the overall sequence. 
+3.4.5.1.2 Multi-Packet Requests 
+Figure 3-30 illustrates some additional concepts that are relevant to multi-packet transactions. For the 
+transaction shown, the first PDS ACK includes a semantic response with the UET_NO_RESPONSE opcode. 
+This indicates that the packet has been received but that the semantic processing is not yet complete. It 
+is allowable for many packets to generate a UET_NO_RESPONSE opcode. In conformance with the 
+requirement that at least one semantic response be generated, a later packet—arriving after semantic 
+processing has completed—generates a UET_DEFAULT_RESPONSE. This is an expected message that has 
+ 
+Figure 3-30 - Multi-Packet Request, Expected Message 

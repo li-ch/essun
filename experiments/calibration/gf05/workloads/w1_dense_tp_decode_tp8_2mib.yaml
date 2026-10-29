@@ -1,0 +1,24 @@
+# W1 Dense TP Decode — tp_size 8 at payload 2097152 B = 2 MiB: the ONLY
+# message size staged in any GF-05 quote's context (the fairness quote:
+# "the FCT of the slowest flow is 65% longer than the fastest flow" under
+# a "2 MiB permutation, 1,024 nodes, 8:1 oversubscription" — SMaRTT+REPS,
+# NSDI 2025, docs/calibration/anchors_gapfill.md §GF-05). It is a
+# per-flow FCT size, NOT a collective size; the stage executes it as the
+# free probe A-W1-SIZE at the r=8 smoke default (the anchor's own node
+# count 1,024 is executed by the stage's scale sweep), and NO
+# FCT-vs-CCT comparison is attempted anywhere (the metric bridge is
+# declared inexpressible at L0 — no per-flow observable exists; see the
+# stage record). 2^21 is divisible by 8 so the A-L0-DIV / A-L0X-DIV /
+# A-L0D-DIV gates ACCEPT the exact size — no bracketing. The B/L envelope
+# and latency sweeps override this payload per grid cell over the same
+# 12-size ladder 8 KiB -> 8 GiB as stages A1/A2/A7/A9/A11 (which includes
+# this 2 MiB member). Same workload shape as every other W1 file
+# (2 layers x 3 decode steps = 6 AllReduce ops per config). Nothing here
+# is measured or standard-normative; integer byte counts; deterministic
+# by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal11-gf05
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 2097152   # 2 MiB; the anchor's staged flow size (fairness-quote context); free parameter A-W1-SIZE

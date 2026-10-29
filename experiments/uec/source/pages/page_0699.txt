@@ -1,0 +1,35 @@
+ 699 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+IEEE LLDP
+Management
+IETF Interface
+Management
+IEEE 802.1CBcv
+Stream Identification
+IETF System
+Management
+... IP
+...
+Stream identification counters
+...
+IEEE 802.1CBdb
+Mask-and-match
+UEC Link Options
+UEC Link CBFC
+...
+ 
+Figure 5-21 - YANG Root Hierarchy with UE Link LLDP Extensions 
+5.3.3.1 Models for UE LLDP Extension TLV YANG Modules  
+A UML-like representation of the management model is provided in the following subclauses. The 
+purpose of the UML-like diagram is to show the model design on a single piece of paper. The structure 
+of the UML-like representation shows the name and type of the object followed by the object 
+accessibility. In the UML-like representation, a box with a white background represents information that 
+comes from sources outside UE. A box with a gray background represents objects that are defined by 
+the UEC. 
+5.3.3.1.1 UE Link Negotiation Options TLV Model 
+The attributes for the UE Link Negotiation Options TLV object set are obtained from both system-wide 
+and per-port objects. A UML-like representation of the management model for the UE Link Negotiation 
+Options TLV is provided in this subclause. The model augments the IEEE LLDP port model. The UML for 
+the UE extension objects is derived from the UML specified in the IEEE Std 802.1AB and is shown in 
+Figure 5-22. 

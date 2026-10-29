@@ -1,0 +1,13 @@
+# Implementation profile for the analytical L0 phase-collectives backend
+# (free-parameter model; ReduceScatter/AllGather as first-class collectives).
+implementation_profile_id: analytical_l0_phase_collectives_free_v1
+status: PROPOSED
+backend: analytical_l0_phase_collectives
+fidelity: L0
+model: >
+  halving ReduceScatter / doubling AllGather on the fully-connected exchange
+  fabric and ring phases on the unidirectional-ring fabric (see
+  src/essun/backends/analytical/l0_phase_collectives.py); the fabric
+  (topology_class) selects the declared family (A-L0P-ALGO).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+measurement_source: none   # not calibrated; values are assumptions, not measurements

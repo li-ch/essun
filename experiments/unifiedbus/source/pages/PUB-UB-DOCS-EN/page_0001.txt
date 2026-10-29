@@ -1,0 +1,133 @@
+UnifiedBus
+
+ID Library
+
+Simulation
+
+Learn
+
+News
+
+中
+
+EN
+
+Vendor ID
+
+Device ID and Module ID
+
+ID Library
+
+Vendor ID
+
+Device ID and Module ID
+
+Simulation
+
+Learn
+
+Video Academy
+
+News
+
+中
+
+EN
+
+UnifiedBus Community
+
+UB Base Specification 2.1 Now Available
+
+New: 224/256 Gbit/s rates | Reliable rerouting | Higher system bandwidth efficiency | Lower multi-path communication latency
+
+UB Compatibility Test Specification 2.0 Now Available
+
+Volume 1: Physical layer, data link layer, and network layer test cases
+
+Feedback for UB Documentation 2.0 Has Concluded. Thank You.
+
+An Interconnect Protocol for SuperPoD
+
+面向超节点的互联协议
+
+Watch Video
+
+UB protocol stack
+
+UB Documents
+
+UnifiedBus™ (UB) Base Specification
+
+Provides a comprehensive overview of the UB architecture, protocol, and programming models. It helps you understand the interaction, interoperability requirements, programming models, and resource management of devices and systems that conform to the base specification.
+
+View
+
+UnifiedBus™ (UB) Firmware Specification
+
+Defines the architecture design, interaction logic, functions, and interfaces of the UB device firmware, ensuring the firmware reliability, security, and compatibility throughout its lifecycle.
+
+View
+
+UnifiedBus™ (UB) Compatibility Test Specification
+
+Defines the specification compatibility test requirements for UB devices, including test cases for each layer. It helps you verify that UB device functions are fully compatible with UnifiedBus™ (UB) Base Specification.
+
+View
+
+UnifiedBus™ (UB) Software Reference Design for Operating Systems
+
+Introduces the architecture, functions, and external interfaces of UB components for operating systems. It helps you understand the components and facilitate your development.
+
+View
+
+Software Resources
+
+UnifiedBus™ (UB) Service Core Software Architecture Reference Design
+
+Describes the UB Service Core architecture, key software modules, and interfaces supporting UB products for both intelligent computing and general-purpose computing. It enables software developers, technical support engineers, enterprise technical leads, and others to effectively use, develop, manage, and maintain the UB products.
+
+View
+
+Software Resources
+
+UnifiedBus™ (UB) Management and O&M Software Architecture and Interface Reference Design
+
+Describes the software architecture and interface functions used for UB-based SuperPoD management and O&M in intelligent and general-purpose computing scenarios. It guides developers of management and O&M systems, O&M engineers, and system administrators in the use, development, management, and maintenance of UB-based products.
+
+View
+
+UnifiedBus™ (UB) SuperPoD Reference Architecture White Paper
+
+Defines the SuperPoD reference architecture that helps you tackle the compute infrastructure challenges in the AI era. The reference architecture features bus interconnect, unified protocol, peer-to-peer coordination, all-resource pooling, large-scale networking, and high availability.
+
+View
+
+DocumentDescriptionOperation
+
+UnifiedBus™ (UB) Base Specification
+
+Provides a comprehensive overview of the UB architecture, protocol, and programming models. It helps you understand the interaction, interoperability requirements, programming models, and resource management of devices and systems that conform to the base specification.
+
+View
+
+UnifiedBus™ (UB) Firmware Specification
+
+Defines the architecture design, interaction logic, functions, and interfaces of the UB device firmware, ensuring the firmware reliability, security, and compatibility throughout its lifecycle.
+
+View
+
+UnifiedBus™ (UB) Compatibility Test Specification
+
+Defines the specification compatibility test requirements for UB devices, including test cases for each layer. It helps you verify that UB device functions are fully compatible with UnifiedBus™ (UB) Base Specification.
+
+View
+
+UnifiedBus™ (UB) Software Reference Design for Operating Systems
+
+Introduces the architecture, functions, and external interfaces of UB components for operating systems. It helps you understand the components and facilitate your development.
+
+View
+
+Software Resources
+
+UnifiedBus™ (UB) Service Core Software Architecture Reference Design

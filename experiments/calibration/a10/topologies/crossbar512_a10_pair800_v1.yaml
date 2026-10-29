@@ -1,0 +1,50 @@
+# Calibration-ladder A10 topology: single non-blocking switch stage of 512
+# ranks at uniform per-pair latency L = 800 ns — the END-TO-END PAIR READING
+# (declared PRIMARY projection: the anchor's figure is stated as END-TO-END
+# latency for NVLink Network, i.e. pair-level across the fabric) on the FLAT
+# single-tier identity, which charges the number exactly 2L per AllReduce
+# regardless of rank count. This identity is the landed structural stand-in
+# for the anchor's "flat UALink pod" side; at r=8 it is numerically the twin
+# of stage A9's crossbar8_a9_pair800_v1 span-endpoint row (where 800 entered
+# as the plan's A-L0X-LAT span context; stage A10 owns the anchor itself).
+#
+# CAL-A10 (HiPC 2025 Workshops, "Communication-Centric UALink and NVLink
+# Comparison for Large Scale AI Training", IEEE CSDL 453800a068): staged
+# quote "NVIDIA does not publish end-to-end latency for NVLink Network; we
+# assume 0.8 us, consistent with 'sub-us' positioning for NVSwitch hops"
+# (docs/calibration/anchors_staging.md §A10; confidence M — quote via public
+# search snippet, full text paywalled, wording re-verify at owner
+# integration). 800 ns is a STATED ASSUMPTION in a peer-reviewed analytical
+# model — peer review certifies the plausibility of the USAGE, never the
+# value; it is not a measurement, and the quote's own premise (NVIDIA
+# publishes no such number) means no L value anywhere can be falsified
+# against it.
+#
+# ROLE IN THE STAGE: the crossbar is the CONSTANT latency chain 2L — the
+# flat-pod reference against which the chained identities' deltas are read
+# at every rung of the swept rank ladder 8 -> 1024 (the anchor's stated
+# scale ceiling). Payload 16384 = 2^14 is divisible by every ladder rank,
+# so the A-L0X-DIV gate ACCEPTS exactly — no bracketing.
+#
+# HONESTY: L is a FREE PARAMETER (A-L0X-LAT) held at the anchor's
+# assumption point, never tuned (the anchor stages no completion time). B =
+# 64 B/ns is the fixed A-L0X-BW registry point (the anchor's bandwidth
+# values are not staged). r is the swept free model-side axis.
+topology_id: crossbar512_a10_pair800_v1
+topology_class: fully_connected_crossbar
+ranks: 512
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 800
+notes: >
+  r ranks pairwise adjacent through one non-blocking switch stage; each
+  rank injects through a single port of bandwidth B shared across r-1
+  peers (A-L0X-PORT). Reduce-scatter + allgather each charge the pair
+  latency once: latency chain exactly 2L, independent of r. No congestion,
+  no credits, no packetization, no multi-port injection — L0 transport
+  model only. Provenance: L = 800 ns from CAL-A10's stated assumption
+  (assumption, not a measurement; confidence M, paywalled parameter
+  table); B = 64 B/ns free A-L0X-BW registry point; r = 512 on the
+  anchor-scale power-of-2 ladder. Values are anchor assumption quotes /
+  registry defaults, never our measurements.

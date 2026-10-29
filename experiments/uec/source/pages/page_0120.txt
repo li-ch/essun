@@ -1,0 +1,54 @@
+ 120 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.2.5.4.5 Collective APIs 
+A collective operation is a group communication exchange that involves multiple peers exchanging data 
+with other peers participating in the collective call. Collective operations can be thought of as 
+coordinated atomic operations between a set of peer endpoints. 
+The collective APIs are required to support UET INC. UET INC support is optional for all profiles. When 
+UET INC is supported, the UET provider MUST advertise the FI_COLLECTIVE capability. When UET INC is 
+not supported, the UET provider SHOULD NOT advertise the FI_COLLECTIVE capability. 
+A provider that supports INC MUST be able to communicate with the INC manager. The 
+UET_IM_URL_PRIMARY and UET_IM_URL_SECONDARY environment variables specify URLs used to 
+communicate with the INC manager. 
+2.2.5.5 Other APIs 
+This section summarizes requirements for the set of other libfabric APIs that have not been described 
+elsewhere in this specification. 
+Table 2-27 shows libfabric APIs for which support is NOT required. 
+Table 2-27 - Libfabric APIs for which Support is Not Required 
+API Group Support is Not Required Description 
+fi_av fi_av_insertsvc, fi_av_insertsym  
+fi_cm All APIs in fi_cm API Group except 
+fi_getname 
+Connection-oriented APIs are not 
+needed by UET 
+fi_domain fi_domain2, fi_open_ops, fi_set_ops  fi_domain2 for opening peer domain 
+fi_endpoint fi_endpoint2 
+fi_passive_ep, fi_pep_bind 
+ 
+fi_scalable_ep, fi_scalable_ep_bind 
+ 
+fi_srx_context, fi_stx_context 
+fi_rx_size_left, fi_tx_size_left 
+fi_endpoint2 for peer transfers 
+Connection-oriented APIs are not 
+needed by UET 
+Scalable endpoint support is not 
+required 
+Shared context support is not required 
+Deprecated by libfabric 
+fi_mr fi_mr_raw_attr, fi_mr_map_raw, 
+fi_mr_unmap_key, 
+fi_hmem_ze_device 
+Raw memory region key support is not 
+required 
+fi_peer All APIs in fi_peer() API Group Peer APIs are experimental, and support 
+is not required 
+fi_trigger fi_trigger  
+ 
+Table 2-28 shows libfabric API options (e.g., flags, operations, parameters, etc.) for which support is NOT 
+required. 
+Table 2-28 - Libfabric API Options for which Support is Not Required 
+API Group Support is Not Required 
+fi_av FI_SYMMETRIC flag 
+fi_cq FI_COMMIT_COMPLETE flag 

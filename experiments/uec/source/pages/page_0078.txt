@@ -1,0 +1,27 @@
+ 78 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.1.1.3 In-Network Collectives (INC) 
+Various collective operations are utilized in both AI and HPC workloads and *CCL and MPI libraries. 
+These operations can be offloaded to the fabric or FEPs to gain performance benefits, such as reduced 
+latency or increased throughput, or to gain efficiency benefits such as reduced processing or memory 
+utilization. The INC feature requires the specification of software entities and APIs. An INC solution 
+includes participation between end-point agents (part of the UEC libfabric provider), an INC manager 
+(IM), and switch agents. Ranks interact with the IM using a gRPC API. This interface identifies fabric 
+capabilities, supports error handling, and allows members to join and leave collective groups. 
+The IM interacts with switch agents using a gRPC API. This interface is used by the IM to identify switch 
+capabilities, allocate and deallocate resources for a collective group, and support error handling and 
+telemetry. 
+2.1.2 Software Components and Interfaces 
+UE software spans components and interfaces in user space and (Linux) kernel space. The complete 
+scope of the work is illustrated in Figure 2-1 and summarized in Table 2-1. 
+ 
+Table 2-1 - UE Software Components and Interfaces 
+Interface or Component Functionality Scope of Work 
+• libfabric application API User space application API • Definition and implementation 
+of changes and extensions 
+required of libfabric and 
+extensions. 
+ 
+Figure 2-1 - Components and Interfaces Defined By UEC 
+ 

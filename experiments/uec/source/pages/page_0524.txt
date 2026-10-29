@@ -1,0 +1,44 @@
+ 524 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Function Name Description 
+int uet_signal_set(unsigned int 
+signal_index, uet_int_t value); 
+Set a signal to an absolute value, optional 
+int uet_signal_update(unsigned 
+intsignal_index, uet_int_t update); 
+Apply the signal’s configured accumulation operator, optional 
+ 
+Informative Text: 
+Signal Mnemonics: Even though the signal_index fields are all integers for simple compiler 
+optimization based on constants, it is recommended to use mnemonic representations such as 
+macros to refer to signals in the source code. The function interface allows compiler developers to 
+easily replace any function invocation, e.g., with a simple load or store to a special address. Those 
+functions may be defined in the header file as inline functions to permit implementation-specific 
+optimization. Replacing such function invocations is significantly simpler than replacing accesses to 
+structures, for example. 
+In this and the following functions, signal_index can be accessed by a mnemonic macro defined in the 
+YAML configuration (see Section 3.6.18.8.5). 
+Signal Wraparound: Algorithms SHOULD be robust to signal value wraparound. In situations where 
+wraparound is not acceptable, algorithms may be supported by using counters wide enough to 
+guarantee wraparound will not occur for the lifetime of any given connection in the use case. 
+3.6.18.4.3 Mandatory Signals 
+Table 3-109 defines the set of mandatory signals that MUST be supported. Signals are triggered by 
+transmitted (tx) or received (rx) packets or timer events (time). Packets fall in the following three 
+categories: request (req) packets send data (from initiator to target for write and send, or from target to 
+initiator for read), acknowledgment (ack/nack) packets carry information about previous request 
+packets, and control (ctl) or credit packets are used for transport-specific controls (e.g., check the status 
+of a packet at the receiver or the state of a path). 
+The naming convention follows the format uet_<tx/rx/time>_<packet-type>_<name> for all packet-
+triggered signals and uet_<name> for all others. Note that the bit-width of all signals can be selected in 
+the YAML configuration. 
+Table 3-109 - Mandatory Signals 
+Signal Name Function Description Datatype Unit 
+uet_rx_ack CC, LB ACK packet received uint 1 
+uet_rx_ev LB Entropy value (EV) of received 
+packet 
+uint 1 
+uet_rx_ack_bytes CC Number of bytes 
+acknowledged in last ACK (at 
+sender) 
+uint 256 B 

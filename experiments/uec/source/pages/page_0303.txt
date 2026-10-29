@@ -1,0 +1,79 @@
+ 303 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The two pools are distinguished by adding a three-letter acronym to the start of the name. GEN refers to 
+the general pool. RSV refers to the reserved pool. For example, Gen_Max_ACK_Data_Size and 
+Rsv_Max_ACK_Data_Size. 
+These parameters are configured with the specified units. The required range is described in Table 3-35 
+and larger ranges may be supported. The indicated quanta is shown and finer-grain quanta may be 
+supported. The default values shown are for reference for a best-effort network using UET-CC with 
+packet trimming.  Table 3-36 MUST be supported by each FEP. 
+Table 3-35 - PDS Configuration Parameters 
+Name Required Range Description 
+UET_Over_UDP Boolean 
+Default: 1 
+This determines if UET runs over UDP (when 
+UET_Over_UDP is set) or directly over IP (when 
+UET_Over_UDP is cleared). 
+UDP_Dest_Port 0—216-1 
+Default: 4793 
+When UET is running over UDP, this number in the 
+UDP destination port indicates the following protocol 
+is UET. 
+IP_Proto_Nxt_Hdr 0—255 
+Default: N/A1 
+This value is used when UET is run directly over IP. 
+Until an IP protocol number is assigned for UET, an 
+experimental number (253–254) can be used2. 
+UET_Data_Protect 
+ 
+0—3 
+Default: 1 
+Global configuration – across an entire fabric domain 
+0 = Neither CRC nor TSS enabled 
+1 = CRC enabled 
+2 = TSS enabled 
+3 = Reserved 
+Refer to Section 3.5.25.7 
+Limit_PSN_Range Boolean 
+Default: TRUE 
+When set, a PDC will close when the PSN reaches 
+Start_PSN  + 231. This is an optional security feature. 
+Refer to Section 3.5.8.2.2. 
+Default_MPR 1—255 
+Default: 8 
+The default MPR assumed when creating a PDC. 
+Zero is not valid for the default setting; if set to 0, use 
+1. Refer to Section 3.5.12.4.4. 
+Max_ACK_Data_Size 0—8 KB  
+Unit: bytes 
+Quanta: 16 B 
+Default: 16 B 
+Maximum amount of return data that can be carried 
+with a PDS ACK sent in response to a PDS Request sent 
+in the forward direction  
+(i.e., from target to initiator in response to a read 
+request from the initiator). 
+Refer to Section 3.5.12.1 
+Trimmable_ACK_Size 0—10 KB 
+Units: bytes 
+Quanta: 16 B 
+Default: 10 KB 
+ACK packets carrying read response data which are 
+larger than this size use a trimmable DSCP. 
+Support for trimmed ACK packets is optional. If not 
+supported, set this to a value larger than the 
+maximum ACK MTU. 
+ACK_On_ECN Boolean 
+Default: TRUE 
+TRUE: reception of a packet that is ECN marked 
+triggers an ACK generation. 
+FALSE: ACK generation is not based on whether a 
+received packet is ECN marked or not. 
+Enb_ACK_Per_Pkt 
+(optional—required if 
+coalesced ACKs is supported) 
+Boolean 
+Default: FALSE 
+FALSE: Use coalesced ACKs. 
+TRUE: Use ACK per packet. 

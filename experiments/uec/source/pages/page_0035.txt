@@ -1,0 +1,57 @@
+ 35 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+availability between a transmitter 
+and the link peer. Packets may be 
+dropped due to insufficient 
+buffering. 
+Cluster A set of nodes connected by one 
+or more fabric planes. 
+Congestion control context (CCC) Used to control the rate of data 
+transfer between two FEPs for 
+RUD and ROD traffic. In some 
+cases, a CCC is shared by one or 
+more PDCs. 
+Congestion management sublayer 
+(CMS) 
+The part of the Ultra Ethernet 
+Transport (UET) protocol 
+responsible for managing 
+congestion. 
+Entropy value (EV) The value of the field within a 
+packet header (e.g., UDP source 
+port) used to load balance packets 
+across paths within the fabric 
+Fabric One or more fabric planes. 
+Fabric address (FA) IPv4 (RFC 791) or IPv6 (RFC 8200) 
+address. When using UFH headers, 
+the fabric addresses are in the 
+ufh.dst_addr and ufh.src_addr 
+fields. 
+Fabric endpoint (FEP) A logical entity addressable by a 
+single (assigned) FA. The UE 
+transport protocol, including the 
+optional security context, 
+terminates at a FEP. A FEP 
+connects to a fabric using a port 
+and can be used only by a single 
+OSI. A FEP can have multiple ports 
+using a single FA, as long as the 
+ports are each connected to 
+completely isolated fabric plane. A 
+node can have one or more FEPs.  
+Fabric path or path An ordered set of links (hops 
+between nodes and/or switches) 
+through which a specific packet is 
+transmitted from a source FEP to a 
+destination FEP. Packets can be 
+routed along multiple paths or 
+planes between two FEPs. 
+Fabric plane or plane A set of FEPs connected with links 
+and switches (optionally) allowing 
+any FEP to communicate with 
+other FEPs in the same set. 
+Communication between FEPs on 
+different fabric planes is beyond 
+the scope of this specification. 

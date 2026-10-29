@@ -1,0 +1,51 @@
+ 585 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Parameter Description Scope Imp 
+authFailThreshold When sdiXXInAuthFailPkts is greater than this value, 
+packets for the SDI are dropped. 
+SDI/Global M 
+ssi-mode A boolean value that indicates how to identify the SSI. A 
+value of TRUE means use the SSI.  A value of FALSE 
+means use the source IP address. 
+SDI/Global O 
+rxMaxEpochLifetime Max lifetime for epoch-based rejection SDI/Global O 
+epochBasedRejection Enable for epoch-based rejection (dropping) SDI/Global O 
+Rekey_Mask Rekey mask used to generate Rekey SDI/Global O 
+Rekey_Shift Rekey shift used to generate Rekey SDI/Global O 
+maxSDI Maximum number of supported SDIs Global M 
+baseSDI Base SDI number, provisioned by SDME Global M 
+kdfModes Supported KDF modes 
+• 0bxx1: Direct  
+• 0bx1x: Cluster  
+• 0b1xx: Client-server 
+Global/Mask M 
+maxCoff Maximum Coff configuration SDI/Global M 
+maxAoff Maximum Aoff configuration SDI/Global M 
+Note:  
+• M=mandatory, O=Optional 
+ 
+Table 3-139 describes the events or errors the TSS layer can generate. 
+Table 3-139 - TSS Security Events/Errors 
+Event Description Scope Imp 
+invokeWarn Invoke warning limit SDI M 
+invokeFatal Invoke fatal limit SDI M 
+authFail When sdiXXInAuthFailPkts is greater than this value, 
+packets for the SDI are dropped 
+SDI M 
+Note:  
+• M=mandatory, O=Optional 
+ 
+3.8 References 
+[1] T. Hoefler, D. Roweth, K. Underwood, B. Alverson, M. Griswold, V. Tabatabaee, M. Kalkunte, S. 
+Anubolu, S. Shen and A. Kabbani, "Datacenter ethernet and rdma: Issues at hyperscale," arXiv 
+preprint arXiv:2302.03337, 2023.  
+[2] IETF RFC 6040, "Tunnelling of Explicit Congestion Notification," 2010. [Online]. Available: 
+https://datatracker.ietf.org/doc/html/rfc6040. 
+[3] B. Rothenberger, K. Taranov, A. Perrig and T. Hoefler, "{ReDMArk}: Bypassing {RDMA} security 
+mechanisms," in 30th USENIX Security Symposium (USENIX Security 21), 2021.  
+[4] IETF RFC 3692, "Assigning Experimental and Testing Numbers Considered Useful," 2004. [Online]. 
+Available: https://www.rfc-editor.org/rfc/rfc3692.html. 
+[5] R. Brightwell, W. W. Schonbein, K. Pedretti, K. S. Hemmert, A. B. Maccabe, R. E. Grant, B. W. 
+Barrett, K. Underwood, R. Riesen and T. Hoefler, "The Portals 4.3 Network Programming 
+Interface," 2022. 

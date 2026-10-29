@@ -1,0 +1,20 @@
+# Transport-agnostic analytical topology: fully-connected crossbar of 64 ranks.
+# Values are explicit FREE PARAMETERS (A-L0X-BW, A-L0X-LAT) and the port model
+# is a MODELING ASSUMPTION (A-L0X-PORT: single-port injection) — not
+# standard-derived, not measured. See experiments/vertical_slice/assumptions_l0.yaml.
+# Rank-64 mirror of crossbar4/crossbar8/crossbar16/crossbar32_free_params.yaml
+# for the design-space atlas (G2 / D-025); B and L equal every other atlas
+# topology.
+topology_id: crossbar64_free_v1
+topology_class: fully_connected_crossbar
+ranks: 64
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency. Each rank injects through ONE port shared across its 63 peers
+  (single-port model). B lives under `nic` because it is a property of the
+  rank's injection port, not of any pair link. No congestion, no credits, no
+  packetization — L0 transport model only.

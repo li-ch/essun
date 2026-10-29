@@ -1,0 +1,16 @@
+ 265 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 3-38 illustrates two sync groups (42 and 2112) associated with 8 and 6 write operations 
+respectively. The messages are logically posted in order at the initiator. When the first packet arrives at 
+the target, a new sync group is allocated in a local sync group tracking resource (implementation 
+dependent). Subsequent write messages for sync group 42 increment the counter allocated to sync 
+group 42. When the synchronized write immediate operation arrives, the final count (ses.sync_group) 
+and header data (immediate data) are stored in the tracker. The same sequence of messages is done for 
+sync group 2112. Once the operation count is reached for the sync group, the completion using the 
+stored header data is posted. Note that in this example sync group 2112 completes before sync group 
+42 even though it was logically posted first. 
+ 
+ 
+ 
+Figure 3-38 - Synchronized Operation Sequence with Write with Data 

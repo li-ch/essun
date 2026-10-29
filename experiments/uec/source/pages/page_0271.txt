@@ -1,0 +1,27 @@
+ 271 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+part of the completion (i.e., a non-RC_OK return code) or occasionally as part of the request (i.e., by 
+setting ses.ie) and signaled with implementation-defined mechanisms at the endpoint. 
+ 
+3.4.6 Error Handling 
+Errors in UET have three possible scopes: message level, PDS level, or device level. Error conditions fall 
+into three broad categories: recoverable errors, unrecoverable errors, and informational errors. Within 
+each category, errors are further subdivided into synchronous and asynchronous errors. The UET 
+Semantic specification covers only errors that are communicated by the semantic sublayer and have a 
+message-level scope. PDS level errors MAY have message-level scope; however, PDS-level errors are 
+documented in the PDS specification. Device-level errors are beyond the scope of this specification. 
+3.4.6.1 Error Precedence 
+In general, UET uses a first-error model of error precedence. That is, the first error encountered is the 
+error reported. If multiple errors are encountered for a message (i.e., different packets encounter 
+different errors), it is the return code (RC) associated with the first error that is returned in the semantic 
+response. If a single packet encounters multiple errors, the error contribution of that packet can be any 
+of the return codes associated with an error the packet encountered. The first error encountered may or 
+may not occur on the first packet (in packet sequence number order) of a message, since packets may 
+be received out of order. 
+ 
+Figure 3-46 - Unified Local UET_READ 
+ 
+ 
+Figure 3-45 - Unified Local UET_WRITE with ses.dc=1 
+ 

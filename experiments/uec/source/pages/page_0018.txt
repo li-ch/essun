@@ -1,0 +1,21 @@
+ 18 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 5-43 - Efficiency Comparison ........................................................................................................... 726 
+Table 6-1 - Ethernet standard sequence ordered sets on MII .................................................................. 732 
+Table 6-2 - Ethernet standard 64B/66B sequence ordered set encoding ................................................ 733 
+Table 6-3 - Ordered set format on MII ...................................................................................................... 733 
+Table 6-4 - Modified 64B/66B PCS encoding for ordered sets ................................................................. 733 
+Table 6-5 - PCS stateless decoder rules for 100GBASE-R without FEC error overwrite marking ............. 735 
+Table 6-6 - RS Layer CtlOS spacing constraints ......................................................................................... 736 
+Table 6-7 - Ethernet-specified FLR and resulting MTBPE.......................................................................... 738 
+Table 6-8 - CIR and CG sizes ...................................................................................................................... 739 
+Table 6-9 - UCR to FLR conversion factors ................................................................................................ 740 
+Table 6-10 - Codeword times .................................................................................................................... 740 
+Table 6-11 - MTBPE to UCR conversion .................................................................................................... 741 
+Table 6-12 - Number of codewords received in one minute, Ntotal (approximate) ................................... 742 
+Table 6-13 - Calculation of UCRest2 from CCR ............................................................................................ 743 
+Table 6-14 - Mapping from UCR to P6, P8, and P10 assuming uncorrelated errors................................. 746 
+Table 7-1 - OCP Ethernet NIC profile use cases ........................................................................................ 756 
+ 
+  

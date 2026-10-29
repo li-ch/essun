@@ -1,0 +1,16 @@
+# W2 Dense TP Prefill — tp_size 8, ONE chunk per layer (3 layers x 1
+# chunk = 3 ReduceScatter+AllGather pairs = 6 phase ops per config), for
+# atlas cell 8r-phases (G2 / D-025). The 3x1 shape preserves the atlas
+# convention of 6 collective ops per config (the W1 cells' 2 layers x
+# 3 steps = 6 AllReduces), now as 3 phase pairs. chunk_bytes is the
+# atlas-wide shared-grid payload M = 16384 B (A-L0P-MSG: M is the per-rank
+# input for ReduceScatter and the total gathered size for AllGather); the
+# run path has no grid-override mechanism, so the ladder is one workload
+# file per grid point. Integer byte count, divisible by 4096 hence by the
+# rank count 8, so the A-L0P-DIV guard never rejects it.
+workload: w2_dense_tp_prefill
+model_name: dense-tp-prefill-atlas-8r
+tp_size: 8
+layers: 3
+chunks_per_layer: 1
+chunk_bytes: 16384   # free parameter A-W2-CHUNK, see assumptions_l0.yaml

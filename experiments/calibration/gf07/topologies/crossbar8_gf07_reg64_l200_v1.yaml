@@ -1,0 +1,32 @@
+# Calibration-ladder GF-07 topology: crossbar r=8 REGISTRY TWIN row —
+# B = 64 B/ns, L = 200 ns (both free A-L0X-BW / A-L0X-LAT registry
+# points; NO GF-07 provenance — this row is the placement reference the
+# run pair executes against the carrier row).
+#
+# ROLE: GF-07 stages no absolute (size -> time) series, so there is no
+# CCT-class target to compare against; what the stage CAN place is
+# WHERE the registry defaults sit relative to the anchor's fabric rates
+# and its measured congestion envelope. On the B axis the registry
+# point 64 falls INSIDE the measured envelope band — between the
+# steady-incast displacement 60 (factor 5/3) and the bursty-alltoall
+# displacement 70 (factor 10/7): an L0 run at registry defaults
+# produces CCTs numerically indistinguishable from a 25-40% congested
+# collective on the anchor's fabrics (a placement fact, recorded;
+# asymptotic CCT ratio vs the carrier exactly 100/64 = 25/16 = 1.5625).
+# This file is the topology of the run_gf07_registry_v1.yaml store run
+# (payload 16 MiB = the anchor's maximum staged vector, same as the
+# carrier run — the SAME payload isolates the B axis). Everything else
+# as in crossbar8_gf07_rate100_l200_v1.yaml. B/L are free registry
+# defaults; never tuned toward any anchor output.
+topology_id: crossbar8_gf07_reg64_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the free registry defaults B = 64, L = 200
+  (A-L0X-BW / A-L0X-LAT; the run-pair twin of the GF-07 carrier row at
+  the same 16 MiB payload). Registry defaults, no anchor provenance on
+  either value; placement arithmetic only, never tuned.

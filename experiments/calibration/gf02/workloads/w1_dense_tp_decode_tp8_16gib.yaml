@@ -1,0 +1,17 @@
+# W1 Dense TP Decode — tp_size 8 (the GF-02 anchor's own rank count: one
+# 8-GPU H100 node) at 17179869184 B = 2^34 (16 GiB): the TOP row of the
+# anchor's measured regime — the poster's commands are
+# "./build/all_reduce_perf -b 128M -e 16384M -f 2 -g 8" (verified verbatim
+# 2026-10-28), i.e. sizes 128 MiB..16384 MiB stepping by 2, and the body's
+# "~360 GB/s" saturation statement is made AT this size ("although I am
+# using fairly large data size (16GB)"). 2^34 is divisible by 8
+# (A-L0-DIV / A-L0X-DIV accept the exact size, no bracketing). Same
+# workload shape as every W1 file (2 layers x 3 decode steps = 6 AllReduce
+# ops per config). Nothing measured or standard-normative here; integer
+# byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-gf02
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 17179869184   # 2^34 (16 GiB); GF-02 plateau row; free parameter A-W1-SIZE

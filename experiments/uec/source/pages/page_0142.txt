@@ -1,0 +1,36 @@
+ 142 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Addressing 
+Model 
+Memory Key Type Header Format MR Access MR Binding 
+Non-optimized 
+Unrestricted { Device, PD } 
+Job restricted { Device, PD, JobID } 
+RI restricted { Device, PD, QP } 
+RI job restricted { Device, PD, QP, JobID } 
+Non-optimized Non-optimized 
+unrestricted { Device, PD } 
+Job restricted { Device, PD, JobID } 
+RI restricted { Device, PD, QP } 
+RI job restricted { Device, PD, QP, JobID } 
+Relative 
+Addressing 
+Optimized 
+Optimized 
+non-matching 
+RI restricted { Device, JobID, PD, QP } 
+Non-optimized 
+Unrestricted { Device, JobID, PD } 
+RI restricted { Device, JobID, PD, QP } 
+Non-optimized Non-optimized 
+Unrestricted { Device, JobID, PD } 
+RI restricted { Device, JobID, PD, QP } 
+ 
+Support for the different MR access restrictions is device-specific and exposed through device capability 
+flags. 
+2.3.3.1 Absolute Addressing Model 
+ 
+Informative Text: 
+The absolute addressing model targets client/server where a server can communicate with many 
+clients. Note that a single parallel job is considered a single client. It is anticipated that servers will 

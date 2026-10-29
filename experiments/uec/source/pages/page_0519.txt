@@ -1,0 +1,38 @@
+ 519 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• Stop/Deactivate: The instance is quiesced and no longer controls data traffic. 
+• Destroy: The instance is torn down and all per-instance resources and state are released. 
+• Unload: When all instances of the algorithm have been stopped, the algorithm may be 
+unloaded. 
+These steps illustrate a typical algorithm lifecycle. It is not mandated that these steps are explicitly 
+followed by any particular implementation. Tools may merge or skip steps (e.g., stop and unload). 
+This specification defines how to use floating-point datatypes. Implementations MUST offer integer 
+datatypes and MAY offer floating-point types. If floating-point types are not supported, the compilation 
+of a program using floating point MUST fail. Integer datatypes MAY be used to approximate floating 
+point. 
+3.6.18.2 Congestion Management Algorithm Specification and Invocation 
+Congestion management algorithms are a fundamental component of the UE PCM framework, 
+responsible for dynamically regulating congestion through interactions with system signals and CC 
+controls. They can be triggered by defined signals or timers, potentially allowing invocation for each 
+incoming acknowledgment (ACK) packet to ensure prompt responsiveness to network conditions. These 
+algorithms can both read and modify signals and controls, enabling adaptive congestion management 
+strategies. 
+At the time of algorithm invocation, the system captures a snapshot of all relevant signal values. These 
+values remain fixed for the duration of the algorithm’s execution. Signals arriving after the invocation 
+timestamp do not affect the current execution and are queued for processing during the next invocation 
+cycle. 
+Informative Text: 
+PCM programs may assume that the algorithm is invoked immediately after the timed or control 
+trigger occurs. Delays could lead to inconsistent signal observations and reduced algorithm fidelity. 
+The exact details depend on the implementation. 
+ 
+3.6.18.3 Load Balancing Algorithm Specification and Invocation 
+Like congestion management algorithms, load balancing algorithms are invoked by data path transmit, 
+ACK/NACK, and retransmit timeout events. Implementations may use triggers to modulate the 
+frequency of these events on a per-CCC basis. LB algorithms are logically distinct from CC algorithms and 
+are expressed as independent programs with their own entry point, accumulators, and triggers. 
+PCM supports two distinct LB implementation models: per-packet and EV table. 
+3.6.18.3.1 Per-Packet 
+In the per-packet model, LB algorithms are invoked for every transmitted and received packet, and the 
+data path does not maintain any EVs or EV state. Algorithms can associate per-packet private state with 

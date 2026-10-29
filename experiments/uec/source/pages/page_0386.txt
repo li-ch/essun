@@ -1,0 +1,38 @@
+ 386 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.15.5.1 Loss Detection for Guaranteed Delivery ACKs 
+CACK_PSN can be used as a method for inferring lost ACKs when the missing ACK carries a guaranteed 
+delivery SES response. At the source, the following indicates the PSN has a guaranteed delivery SES 
+response: 
+• The pds.sack_bitmap field shows a PSN arrived at the destination AND 
+• CACK_PSN is set to one less than that PSN 
+For example, if the received pds.sack_bitmap indicates PSN = N arrived and CACK_PSN = N-1, then PSN = 
+N is guaranteed delivery. This is true since CACK_PSN would be set to N or greater if that packet didn’t 
+need a guaranteed response. Refer to Section 3.5.12.4.4. 
+In this scenario when using ROD or RODL PDCs, the loss of the ACK can be inferred immediately upon 
+reception of the next ACK, since ACKs arrive in PSN order. 
+When using RUD, the ACKs may arrive out of order, and a mechanism such as a timer or monitoring an 
+ACK bitmap can be used to infer the ACK loss. The time-out period should be larger than the network 
+RTT plus an adjustment to account for SES processing at the destination. 
+When the source determines the ACK is lost, it MUST transmit an ACK Request CP or retransmit the 
+original request packet. The source SHOULD generate the ACK Request CP unless the missing ACK is 
+carrying read response data (refer to Section 3.5.16.2). I.e., it was an SES Read Request. 
+3.5.15.5.2 OOO-Based Loss Detection of ACKs 
+If using an OOO-based method as described in Section 3.5.15.4.1, when the loss recovery mode is 
+triggered, if Src_Lowest_Not_Rcvd_PSN > CACK_PSN then it is likely the ACK associated with 
+CACK_PSN+1 is guaranteed delivery and that is was lost. The source should send an ACK Request CP or, 
+if the packet was a read request, retransmit the original packet. 
+If additional guaranteed delivery ACKs have been lost, this can be determined by monitoring how 
+CACK_PSN advances when the first ACK (for PSN = CACK_PSN+1) arrives. If CACK_PSN advances to 
+another PSN that is lower than recovery_psn, repeat this process (send an ACK Request CP or retransmit 
+the original packet) until CACK_PSN is equal to or greater than recovery_psn. 
+3.5.16 Control Packet (CP) 
+The PDS uses CPs on RUD, ROD, and RODL PDCs. All CP types specified in Table 3-82 MUST be supported. 
+CPs may use the traffic class of either PDS Request or PDS ACKs; refer to the CMS Section 3.6.4.7. The 
+guidelines for assigning CPs to traffic classes are: 
+• CPs that are allocated a unique PSN on a ROD/RODL PDC MUST use the PDS Request traffic 
+class. 
+• Refer to CMS Section 3.6.4.7 for information on mapping packet types to traffic classes. 
+This section specifies each type of CP and their expected use. The pds.ctl_type field identifies the CP, as 
+defined in Section 3.5.10.9. The packet format is illustrated in Figure 3-88. 

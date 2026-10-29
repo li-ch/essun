@@ -1,0 +1,137 @@
+# Shared free-parameter record for the FIRST cross-design same-workload L0
+# comparison: UEC-flavored vs UnifiedBus-paper-flavored L0.
+#
+# HONESTY RULE (absolute): the UnifiedBus side of this comparison is a
+# paper-derived design profile, NOT a normative standard profile. The
+# UnifiedBus specification track stays license-gated (pending license review). The
+# UEC side carries values derived from the public-read UEC 1.1 specification
+# (STD-UEC-11) via the UEC registry ladder — but UEC 1.1 anchors NO numeric L0 value
+# either (the registry extracted transport/reliability/congestion semantics;
+# free-parameter reconciliation vs these L0 assumptions is pending),
+# so at L0 today BOTH sides run on the SAME shared free parameters below.
+#
+# Equal-free-parameter bar (stage prompt): B and L are taken from THIS ONE
+# record and consumed unchanged by every flavor topology file in the sweep
+# experiments/sweeps/cross_design_uec_vs_ub_paper_l0_v1.yaml. Differences
+# between the flavors in that table may come ONLY from anchored structure
+# (the UB rack scale UBP-P17 = 64 and the crossbar identity it maps to);
+# they never come from anchored physics, because no public source on either
+# side anchors a per-lane rate or a per-hop latency usable as an L0 input
+# (UBP-F01/UBP-F02 mark the UB silence; the UEC 1.1 spec fixes neither).
+assumptions_id: assumptions_uec_vs_ub_l0_v1
+status: PROPOSED
+assumptions:
+  - id: A-XDUO-BW
+    parameter: link.bytes_per_ns | nic.injection_bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      SHARED free parameter, one value for BOTH flavors and all four L0
+      knob spellings (ring/torus link.bytes_per_ns, crossbar
+      nic.injection_bytes_per_ns). Not standard-derived, not measured; same
+      convention value as A-L0-BW/A-L0X-BW/A-L0T-BW so this table compares
+      against the landed design-space sweep under identical parameters.
+      UB side: B is structured as 72 x per-lane rate (UBP-P07,
+      PAPER_REPORTED) with the per-lane rate FREE (UBP-F01 — no public
+      per-lane Gbit/s exists; the 224/256 Gbit/s highlight and the 1.6
+      Tbit/s port figure are recorded anchored candidates, scope unstated,
+      and are NOT used here). UEC side: UEC 1.1 anchors no line rate for
+      this purpose (PHY rates live outside the spec core).
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: profile
+    review: PROPOSED
+  - id: A-XDUO-LAT
+    parameter: link.hop_latency_ns | link.pair_latency_ns
+    value: 200
+    unit: ns
+    range: [10, 2000]
+    rationale: >
+      SHARED free parameter, one value for BOTH flavors and all L0 latency
+      knob spellings. Not standard-derived, not measured; same convention
+      value as A-L0-LAT/A-L0X-LAT/A-L0T-LAT. UB side: per-hop/per-pair
+      latency is FREE (UBP-F02 — only end-to-end RTT claims are public and
+      they are OUTCOME figures, calibration targets only, never L0 inputs).
+      UEC side: free; the UEC 1.1 congestion-management RTT envelope found
+      by the registry is context for validity, not an L0 input.
+    sensitivity: high for O-CCT at small messages, zero for O-CONSERVATION
+    owner: profile
+    review: PROPOSED
+  - id: A-XDUO-TP
+    parameter: workload tp_size = topology ranks
+    value: 64
+    unit: ranks
+    range: [2, 1024]
+    rationale: >
+      The one load-bearing ASYMMETRY of this comparison, stated loudly: 64
+      is ANCHORED on the UnifiedBus side (UBP-P17: 64 NPUs per rack,
+      PAPER_REPORTED, anchor UBP-UBMESH-3.3.1-RACK-64NPU) and FREE on the
+      UEC side (UEC 1.1 fixes no rank count; a 64-wide W1 TP group is a
+      plain modeling choice here, plausible as a TP group and equal to the
+      UB rack so the same-workload gate holds). The sweep runner enforces
+      one workload file, hence one tp_size for every config; UB-anchored
+      structures at other scales (16-NPU switch-free UBP-P06, 1024-NPU pod
+      UBP-P18) are therefore EXCLUDED from this same-workload table by the
+      platform's own gate and are recorded in the registry notes as
+      anchored context, not results.
+    sensitivity: high for O-CCT (every L0 identity), zero for O-CONSERVATION
+    owner: profile
+    review: PROPOSED
+  - id: A-XDUO-PAYLOAD
+    parameter: grid.payload_sizes_bytes
+    value: [16384, 1048576]
+    unit: bytes
+    range: [1024, 16777216]
+    rationale: >
+      Free payload sizes, identical to the landed design-space sweep
+      (l0_allreduce_design_space_v1) so both tables read under the same
+      axes; divisible by 64 and by the 8x8 torus shape so every equal-chunk
+      L0 identity is physically realizable (A-L0-DIV family).
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: profile
+    review: PROPOSED
+  - id: A-XDUO-IDUEC
+    parameter: uec-flavor L0 identity choice
+    value: free_stand-ins_ring_crossbar_torus2d
+    unit: none
+    range: [free_stand-ins_ring_crossbar_torus2d, anchored_identity_when_q1_lands_one]
+    rationale: >
+      MODELING choice for the UEC flavor: UEC 1.1 does not mandate a
+      topology (§1.5.3.3 is informative — topology sets diameter/bisection,
+      no class required), so the ring / crossbar / 2D-torus entries are
+      transport-agnostic free stand-ins, not UEC claims. The single-tier
+      non-blocking crossbar stand-in is consistent with the informative
+      scale-up context anchor UEC11-S1.5.1.3-LOCAL-SCALE-UP ("single or
+      limited tier of switches or possibly no switch at all"). No UEC
+      semantic object constrains any numeric value here; a later reconciliation may
+      replace these stand-ins with spec-reconciled ones.
+    sensitivity: high for O-CCT (identity choice), zero for O-CONSERVATION
+    owner: profile
+    review: PROPOSED
+  - id: A-XDUO-IDUB
+    parameter: ub-flavor L0 identity choice
+    value: crossbar_identity_rack_full_mesh
+    unit: none
+    range: [crossbar_identity_rack_full_mesh, flat_ring_pod_when_scale_allows]
+    rationale: >
+      ANCHORED STRUCTURE, carried from the S3 platform map: the UB-paper
+      rack (64 NPUs in an intra-rack 2D full-mesh behind the LRS plane,
+      UBP-P17 PAPER_REPORTED) maps to the fully-connected crossbar identity
+      at ranks=64 — the identity assumes the LRS plane's non-blocking
+      function; the switch-free 16-NPU adjacency precedent is UBP-P06
+      (VENDOR_CLAIMED, HC26). Everything else architecturally distinctive
+      about UB (hierarchical full-mesh, asymmetric per-level widths,
+      memory semantics, APR routing, 64+1) is L1/L2 or UNSUPPORTED per the
+      map and appears NOWHERE in the sweep numbers. The flavor label on
+      this one row is exactly as strong as this anchor chain: paper-derived
+      design profile, NOT a normative standard profile.
+    sensitivity: high for O-CCT (identity choice), zero for O-CONSERVATION
+    owner: profile
+    review: PROPOSED
+notes: >
+  No normative value from any license-gated document appears here. The UB
+  side cites only the five PUBLIC_READ sources anchored in the registry; the UEC side
+  cites the public-read UEC 1.1 spec anchors registered by the UEC registry ladder.
+  Whether this paper-derived UB profile can satisfy the public-release
+  gate's "2 distinct standards" leg is an owner decision (the normative path
+  awaits license review), not decided here

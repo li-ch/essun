@@ -1,0 +1,27 @@
+# W1 Dense TP Decode — tp_size 1024 at payload 1024 B (1 KiB, the ladder
+# base; overridden per grid cell): the GF-06 SCALE-SWEEP workload at the
+# anchor's STATED host count — PCM deploys on "the packet-level Ultra
+# Ethernet transport simulator (UET-htsim)" over a "1,024-host three-tier
+# fat tree" (docs/calibration/anchors_gapfill.md §GF-06) — the SAME host
+# count as GF-05's 1,024-node fat trees (the second independent UET-htsim
+# user; cross-check role). Payload grid: 18-size ladder 1024*2^k (1 KiB ->
+# 128 MiB) — every size divisible by r=1024 (A-L0-DIV / A-L0X-DIV
+# accept, no bracketing), including the shared 2 MiB member (k=11), the
+# staged workload-range upper 16 MiB (k=14), and executed rows bracketing
+# the ring regime boundary M* = L*B*r = 1000*12.5*1024 = 12,800,000 B
+# (8 MiB below, 16 MiB above — at M*-relative position identical to
+# GF-05's 64/128 MiB bracket of ITS M* = 102,400,000 B, because
+# M*(GF-06) = M*(GF-05)/8 at equal L and r; the ring/crossbar ratio at
+# equal M*-relative position is B-invariant — recorded in the stage
+# record). r=1024 is a power of two (A-L0D-POW2 native). NOTHING here is
+# a prediction of the paper's fat tree: no congestion, no
+# programmable-CM semantics, no packetization exists at L0 — the rows
+# execute STRUCTURAL placement and contrast arithmetic only. Nothing
+# measured or standard-normative; integer byte counts; deterministic by
+# construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal11-gf06-tp1024
+tp_size: 1024
+layers: 2
+steps: 3
+allreduce_bytes: 1024   # 1 KiB ladder base (overridden per grid cell); free parameter A-W1-SIZE

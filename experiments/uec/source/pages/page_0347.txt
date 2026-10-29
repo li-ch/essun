@@ -1,0 +1,37 @@
+ 347 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.11.1 pds.type 
+The UET pds.type field indicates whether the following header is a TSS or a PDS header. If the header is 
+for PDS, the pds.type fields defines the reliability mode (RUD, ROD, RODL, RUDI, UUD) and PDS packet 
+type (Request, Response, ACK, NACK, CP) as defined in Section 3.5.10. 
+If a packet is received with a pds.type value that is not recognized, the error 
+counter PDS_TYPE_INVALID MUST be incremented and the packet MUST be dropped without 
+generating a response. 
+3.5.11.2 pds.next_hdr 
+The pds.next_hdr field is reserved for use by SES. This field is passed to PDS by SES. When a PDC creates 
+a packet autonomously (i.e., not at the behest of SES, such as an ACK or CP), this field is set to 
+UET_HDR_NONE. There is no interaction with SES in this case. 
+3.5.11.3 pds.ctl_type 
+PDS CPs carry a control type, pds.ctl_type, indicating the type of CP. CPs are defined in Section 3.5.16. 
+If a CP arrives that uses a pds.ctl_type field that is not recognized, an error counter, 
+PDS_CTL_TYPE_INVALID, MUST be incremented. The packet MUST be dropped without generating a 
+response packet. The PDC state is not affected. 
+Unknown types are dropped rather than NACK’d, because some CPs use PSN = 0 and NACK relies on a 
+valid PSN. 
+3.5.11.4 Packet Sequence Numbers 
+RUD, ROD, and RODL reliable delivery modes use PSNs—packet sequence numbers—to uniquely identify 
+packets, assure delivery, eliminate duplicate packets, and establish packet ordering. PDS uses multiple 
+PSNs to track packets, including a unique PSN per PDS Request, an acknowledgement PSN (ACK_PSN), a 
+cumulative acknowledgement PSN (CACK_PSN), and a clear PSN (CLEAR_PSN).  
+Informative Text: 
+The PSNs and associated offsets denoted in italic font (e.g., ACK_PSN, CACK_PSN, CLEAR_PSN) are 
+referencing the local working variable versions of the PSNs used by each PDC.  When the PSN fields of 
+the packet are referenced, they are denoted in bold font (e.g., pds.psn, pds.clear_psn_offset) 
+ 
+The full 32-bit range of packet sequence numbers is used. At 800 Gbps, a 4194 B Ethernet packet with 
+takes roughly 42 nsec to transmit. A 32-bit PSN will wrap around in 180 seconds. Minimum size frames 
+could lead to wrap in under 4 seconds. The 32-bit size enables future increases in link speed beyond 
+800 Gbps without wrapping within a 100 millisecond RTT. 
+In the above example, the packet size is determined as follows: Ethernet (14 B) + IPv4 (20 B) + UDP (8 B) 
++ PDS (12 B) + SES (44 B) + UET payload (4096 B) = 4194 B. 

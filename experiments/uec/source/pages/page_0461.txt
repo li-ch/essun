@@ -1,0 +1,40 @@
+ 461 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.9 UET-CC Header Formats and Fields  
+The congestion control state is carried in PDS headers. The following fields are defined in this section:  
+• pds.req_cc_state 
+• pds.ack_cc_state 
+• pds.ack_ccx_state 
+• pds.nack_ccx_state 
+The pds.req_cc_state field is used for RCCC and TFC. The pds.ack_cc_state field is used by NSCC, RCCC, 
+and TFC. 
+The pds.ack_cc_state field is 64 bits when using ACK_CC and is 128 bits when using ACK_CCX (extended 
+length). The currently defined formats for NSCC, RCCC, and TFC use pds.type = ACK_CC and pds.cc_type 
+= CC_NSCC or CC_CREDIT. The field setting pds.cc_type = CC_NSCC is used whenever NSCC is enabled. 
+3.6.9.1 pds.req_cc_state—RCCC and TFC 
+This 32-bit field is carried in the PDS request packets. The bits are globally configured; there is no type 
+field in the header to enable parsing. One type is defined for RCCC and TFC, as illustrated in Figure 
+3-127, to carry the pds.req_cc_state.credit_target field as well as the source’s CCC context identifier 
+(pds.req_cc_state.ccc_id). 
+ 
+Figure 3-127 - pds.req_cc_state Header Format for RCCC / TFC 
+Table 3-89 - Header Fields for pds.req_cc_state for RCCC/TFC 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+ccc_id 8 Identifier assigned by source 
+credit_target 24 Estimate of the amount of data the source 
+CCC has to send 
+• Units: 256 bytes 
+• Wraps to 0x0 at 0xFFFFFF 
+ 
+pds.req_cc_state.ccc_id is defined in Section 3.6.14.1 and is used to identify the source’s CCC context to 
+the destination. 
+The pds.req_cc_state.credit_target field represents the cumulative number of bytes at the source that 
+have been made ready to transmit in 256 B units. The amount of work is the sum of all work ever posted 
+to the PDCs sharing the CCC. When the source increases pds.req_cc_state.credit_target, this serves as a 
+request to the destination for more credit. A CC algorithm MAY restrict how quickly the 

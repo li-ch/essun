@@ -1,0 +1,46 @@
+# Calibration-ladder GF-11 sweep #2: the LATENCY-CHAIN
+# FAMILY vs the anchor's measured small-message BRACKET at r=4 — the three
+# single-port L0 identities (ring 6L, doubling 4L, crossbar 2L — same wire
+# term 2(r-1)/r*M/B = 3M/128) at the SAME (B=64 registry, L=702 derived)
+# against the anchor's measured pair on 4 GB200s: NCCL 2.29.1 ring
+# 11.0 µs vs LLBuffer one-shot 2.37 µs ("which bracket what any model may
+# predict without accusing the fabric").
+#
+# NOTHING IS TUNED: 702 = measured SoL 1404/2 (the anchor's own equation
+# 2x306 + 792), fixed BEFORE any stage output was read. Executed
+# placements at the 128-B reading: crossbar 1407 ns sits 790/469 BELOW the
+# near-optimal leg (the bare floor the custom kernel approaches from
+# above); doubling 2811 ns sits 937/790 ABOVE it; ring 4215 ns sits 281/158
+# above it and 2200/843 below the NCCL leg — the bare identity family
+# BRACKETS the near-optimal leg between its two shortest chains, and the
+# measured ring-vs-one-shot ratio 1100/237 ~ 4.64 exceeds the family's
+# full chain ratio 6L/2L = 3 (the implementation gap is not spannable by
+# chain choice alone). The 41216 B cell hits the near-optimal leg exactly
+# (t = 966 + 1404 = 2370 ns on the crossbar) — the size-reading
+# crossover, executed.
+#
+# Payload grid {128, 512, 2048, 8192, 32768, 41216, 65536} B: base = the
+# anchor's 128-B cache-line granularity reading, top = the plan's
+# small-message boundary 64 KiB, 41216 = the exact crossover; every size
+# divisible by 4. The anchor's per-size table is a figure — the grid
+# brackets the declared size reading.
+sweep: cal_gf11_tp4_v1
+workload: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp4_128b.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l702_v1.yaml
+grid:
+  payload_sizes_bytes: [128, 512, 2048, 8192, 32768, 41216, 65536]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf11/topologies/ring4_gf11_b64_l702_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l702_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/gf11/topologies/exchange4_gf11_b64_l702_v1.yaml

@@ -1,0 +1,39 @@
+# Calibration-ladder A12 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the PHYSICAL point of CAL-A12's own system — B = 300
+# bytes/ns per rank per direction. Provenance is the anchor's own numbers
+# (docs/calibration/anchors_staging.md §A12; NCCL GitHub issue #1054,
+# "The total nvlink bandwidth obtained by NCCL topo is not the actual
+# total bandwidth"): an 8-GPU A100 NVLink-3 server where `nvidia-smi
+# nvlink -s` reports 300 GB/s total NVLink bandwidth = 12 links x 25 GB/s
+# per link per direction (issue body, verified verbatim 2026-10-28 by two
+# independent fetches of the thread). 12 x 25 = 300 B/ns is the per-GPU
+# aggregate per-direction PHYSICAL rate — the ceiling NCCL's internal
+# model derates FROM.
+#
+# This stage works the anchor itself: the 0.8-derating bridge that stages
+# A2 (720 = 0.8 x 900), A6 (320 = 0.8 x 400) and A7 (358.4 = 0.8 x 448)
+# already used is THIS anchor's number (20/25 GB/s per link, exactly 4/5),
+# and this topology is the physical side of that bridge at the anchor's
+# own fabric granularity (per-GPU aggregate).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward any
+# measurement. 300 B/ns is fixed by the anchor's own system-report
+# arithmetic (nvidia-smi total over 12 links), not by any achieved
+# bandwidth; the issue's point is precisely that NCCL models LESS than
+# this. L = 200 ns is the A-L0X-LAT registry point (KEEP; latency axis
+# deferred to its own global stage).
+topology_id: crossbar8_a12_physical300_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 300
+link:
+  pair_latency_ns: 200
+notes: >
+  Single-port crossbar AllReduce identity (A-L0X-PORT: one shared
+  injection port of B bytes/ns per rank); the NVSwitch fat-tree class of
+  the anchor's 8-GPU A100 server abstracted exactly as stages A2 (NVL72)
+  and A7 (MI300X) abstracted their fabrics. B = 300 = 12 links x 25 B/ns
+  per link per direction — the anchor's own physical total (nvidia-smi
+  reading staged in anchors_staging.md §A12). Free parameter; provenance
+  anchor-derived, never measured by us.

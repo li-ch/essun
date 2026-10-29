@@ -1,0 +1,93 @@
+# Calibration-ladder GF-06 sweep #1: the R3
+# CONGESTION-EFFECTS ENVELOPE + the R1 rate-class ladder — where do the
+# L0 crossbar rows sit on the B axis (GF-06: PCM, arXiv:2610.13130,
+# Oct 2026 — programmable congestion management on the UET-htsim
+# Ultra Ethernet simulator, UCCL, ConnectX-8;
+# docs/calibration/anchors_gapfill.md §GF-06)?
+#
+# The anchor's outcome numbers are per-flow FCTs / goodput / drop /
+# processing figures, NEVER collective CCTs, and its FCT tables are
+# unstaged — NOTHING below is compared to any anchor time. What is
+# extractable and executed is (a) the anchor's own sim-config and
+# hardware rate classes on the free B axis and (b) envelope MAGNITUDES
+# as effective-bandwidth displacements (stage A11's technique, extended
+# by GF-05): programmable congestion control, load balancing, packet
+# drops, fairness, reaction delays, callback budgets, and
+# packetization have NO input key in the L0 loader surface and BOTH
+# backends declare "congestion" among explicitly_unsupported
+# capabilities — the mechanism is inexpressible; only the magnitude can
+# enter, as a free-scalar displacement.
+#
+# NOTHING IS TUNED: the B ladder was fixed by anchor/registry
+# arithmetic BEFORE any stage output was read —
+#   200 = the UCCL per-server line 2x800 Gbit/s ConnectX-8 under the
+#        DECLARED per-server-aggregate reading (1600/8; pair-aggregate
+#        alternative recorded) — the first staged rate above GF-05's
+#        100 B/ns point (the plan §2.1 anchored span [20, 64] is now
+#        bracketed from above at 3.125x its upper);
+#   195 = the UCCL goodput "1.56 Tbit/s" = 200 x 39/40 EXACTLY — the
+#        anchor's ONLY representable outcome displacement (goodput/line
+#        derating 97.5%, near-coincident with GF-04's ~97.5% sustained/
+#        line rate; recorded, never cross-derived);
+#   100 = the ConnectX-8 per-NIC line (800 Gbit/s / 8) AND GF-05's
+#        UET-htsim sim point — the executed x8 two-user sim-config
+#        cross-check (asymptotic CCT ratio vs the anchor row exactly 8);
+#   65  = the "3x speedup of maximum FCT" incast envelope displaced
+#        from the 195 goodput carrier (195/3; DECLARED carrier transfer
+#        — the sim-carrier reading 25/6 is non-representable, recorded;
+#        this row's asymptotic ratio vs the 195 row is EXACTLY 3, the
+#        technique's consistency property);
+#   64  = A-L0X-BW / A-L0-BW registry point (placement; asymptotic CCT
+#        ratio vs the anchor row exactly 128/25 = 5.12);
+#   12.5 = THE ANCHOR POINT: UET-htsim "100 Gbit/s links" = 25/2
+#        exactly — the first staged anchor OWN sim line rate BELOW the
+#        plan's anchored span [20, 64] (GF-05's below-span 12.5 was a
+#        displacement; GF-06's is the anchor's own config), and exactly
+#        1/8 of GF-05's sim point (baseline row);
+#   12.1875 = the 39/40 goodput derating transferred DIMENSIONLESS onto
+#        the sim point (12.5 x 39/40 = 195/16; asymptotic ratio vs the
+#        anchor row exactly 40/39 — a 2.5% goodput shortfall's 2.56%
+#        CCT shadow).
+# Non-representable envelope displacements RECORDED NOT EXECUTED (exact
+# fractions in the stage record): 25/6 (the 3x quote at the sim
+# carrier), 1250/151 and 1250/261 (REPS+ECMP "improves maximum FCT by
+# 1.51-2.61x"), 1250/111 and 625/66 (reaction-delay "Maximum FCT
+# increases by 1.11x and 1.32x") — the prime structure of GF-06's
+# quoted percentages (3, 151, 261, 111, 33) admits NO finite-decimal
+# displacement at the 12.5 carrier: an honest representability finding,
+# not a gap in technique.
+#
+# L fixed at the DECLARED IMPORT of GF-05's staged UET-htsim per-hop
+# decomposition 1000 ns (600 link + 400 switch traversal; GF-06 stages
+# NO latency component — the import exists so the two UET-htsim configs
+# contrast on B alone; the L axis itself is swept by
+# sweep_gf06_latency_v1.yaml, where every GF-06-provenance L reading
+# lives).
+#
+# Payload grid: 12-size ladder 2^k (8 KiB -> 16 MiB) — chosen for THIS
+# anchor: it includes the staged 64 KiB chunk-level-control size (2^16)
+# and the staged workload-range upper 16 MiB (2^24) exactly, and keeps
+# the shared 2 MiB member (2^21, the run-pair size) for cross-stage
+# comparability with GF-05's sweeps; r=8 divides every size (k >= 3),
+# so the A-L0-DIV / A-L0X-DIV gates accept the exact ladder with NO
+# bracketing.
+sweep: cal_gf06_envelope_v1
+workload: experiments/calibration/gf06/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf06/topologies/crossbar8_gf06_simline12_5_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_simline12_5_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_srvline200_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_goodput195_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_nicline100_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_incast65_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_reg64_v1.yaml
+    - experiments/calibration/gf06/topologies/crossbar8_gf06_simline12_1875_v1.yaml

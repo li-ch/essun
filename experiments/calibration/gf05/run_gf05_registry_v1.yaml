@@ -1,0 +1,48 @@
+# Calibration-ladder GF-05 registry-twin RUN (gap-fill
+# anchor): the SAME crossbar identity and payload as
+# run_gf05_anchor_sim_v1.yaml at BOTH free-registry points — r=8,
+# B=64 B/ns (A-L0X-BW), L=200 ns (A-L0X-LAT), payload 2 MiB — so the
+# run pair isolates the COMBINED-axis placement of the registry
+# defaults against the anchor's own sim-config point: t(registry)/
+# t(anchor) = 57744 / (967504/25) = 90225/60469 ~ 1.492 exactly at this
+# payload (pure-B asymptotic component exactly 25/16 = 1.5625; latency
+# terms 400 vs 2000 ns), delta exactly 476096/25 ns. Placement
+# arithmetic only, never tuning: the registry values and ranges are
+# untouched by this stage (the GF-05 anchor point 100 B/ns sits ABOVE
+# the plan §2.1 A-L0-BW candidate anchored span [20, 64] — recorded for
+# the owner, the first staged anchor value above the span).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits).
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF05-REGISTRY-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf05/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf05/topologies/crossbar8_gf05_registry_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf05/profiles/implementation_profile_l0_crossbar_cal_gf05_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf05_registry_v1 (one non-blocking switch stage; r=8, B=64 B/ns and L=200 ns — both free registry points, the twin of crossbar8_gf05_line100_v1)
+  workload: w1_dense_tp_decode tp8, payload 2^21 (2 MiB, identical to the anchor-point run)
+  implementation: analytical L0 crossbar identity; GF-05 comparison is registry-vs-anchor placement on both free axes only — PROPOSED, review required
+evidence_level_requested: E0

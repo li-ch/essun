@@ -1,0 +1,38 @@
+# Calibration-ladder GF-02 topology: unidirectional ring of 8 ranks at the
+# anchor's MEASURED PLATEAU point B = 360 B/ns — the ALLGATHER side of the
+# anchor ("I ran all_gather and all_reduce ... saturated at ~360 GB/s for
+# busbw", verified verbatim 2026-10-28). The allgather executes on the L0
+# phase-collectives ring family (A-L0P-ALGO pairing; the machinery's only
+# first-class AllGather identities), identity t_ag = (r-1)/r*M_total/B +
+# (r-1)L with A-L0P-MSG semantics (M_total = total gathered size = r x
+# per-rank contribution). Under the pinned nccl-tests conventions
+# (all_gather_perf: algbw = (size x nranks)/t, busbw = algbw x (r-1)/r,
+# verified from src/all_gather.cu fetched 2026-10-28), the identity's
+# asymptotic busbw IS its B parameter for AllGather too — the SAME 360
+# reading as the allreduce side, one B point for both collectives, exactly
+# as the anchor states them. Never tuned.
+#
+# GRANULARITY PROJECTION (declared, never silent): the ring identity
+# carries ONE per-hop rate B, set here to the anchor's own aggregate-scale
+# plateau figure — NOT to a single NVLink's per-link rate. On an NVSwitch
+# fabric a ring hop toward one neighbor may draw the sender's full
+# per-direction aggregate, so the aggregate-scale reading is the honest
+# projection for this fabric class (the inverse of stage A12's declared
+# per-link projection, which existed because THAT anchor states per-link
+# figures). docs/calibration/anchors_gapfill.md §GF-02 (gap-fill anchor,
+# PROPOSED, not yet an integrated anchor row). Decimal units, 1 GB/s = 1 B/ns.
+topology_id: ring8_gf02_plateau360_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 360
+  hop_latency_ns: 200
+notes: >
+  Chunked ring ReduceScatter/AllGather phases over 8 ranks (the anchor's
+  own GPU count); per-hop B = 360 B/ns = the GF-02 anchor's measured busbw
+  plateau read through the pinned allgather busbw = B asymptotic mapping
+  (declared aggregate-scale projection, see header). No congestion, no
+  credits, no packetization, no multicast/NVLS (explicitly unsupported);
+  L0 transport model only. Provenance: anchor-staged figure verified by
+  two independent fetch methods 2026-10-28; anchor-derived, never our
+  measurement. L = 200 ns is the A-L0-LAT registry point (KEEP).

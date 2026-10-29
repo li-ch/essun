@@ -1,0 +1,40 @@
+ 497 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+if ccc.credit > 0: 
+ccc.credit = 0 
+#If no PDC is present, preserve an MTU of credit because 
+#we have to do something to establish the PDC 
+if pdc_present == FALSE 
+  ccc.credit = MTU 
+ 
+RCCC.computeCreditTarget(): 
+#if nscc is not used, both ccc.max_wnd and ccc.cwnd will be MaxWnd 
+#in this calculation 
+delta = min(ccc.backlog + ccc.rtx_backlog, ccc.max_wnd, ccc.cwnd + mtu)  
+– ccc.credit 
+if ((ccc.speculating or delta > 0) and delta < mtu))delta = mtu; 
+return (ccc.cumulative_credit + (delta >> 8)) 
+ 
+RCCC.OnSourceCreditTimer(): 
+#either we don’t have any work to do, we have pending packets which 
+#will trigger timeouts or we already have credit. 
+if ccc.state != READY:  
+  return 
+ RCCC.stopSpeculating()  
+ send_credit_request(ccc.credit_target) 
+ ccc.credit_target_sent = TRUE 
+ 
+3.6.14.5 RCCC Destination State 
+A “sender” as referenced in sections 3.6.14.5.1 and 3.6.14.5.2 is associated with a sending FEP and an 
+associated CCC_ID (Section 3.6.14.1). All PDCs from the same source associated with the same CCC are 
+mapped to the same sender in the pseudocode of 3.6.14.6. If more than one CCC is established from the 
+same sending FEP (as indicated by CCD_ID), then these CCCs correspond to separate senders. 
+3.6.14.5.1 RCCC Global Destination State 
+On FEP initialization, the following state is established: 
+Table 3-101 - RCCC Global Destination State 
+Name Type Default Description 
+active_senders List of 
+sources 
+empty This is a list of sources that have currently requested 
+additional credit that has not yet been satisfied. 

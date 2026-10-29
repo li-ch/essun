@@ -1,0 +1,47 @@
+ 261 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+current achievable bandwidth should be outstanding when a response returns from the target. In Figure 
+3-35, the deferrable send (UET_DEFERRABLE_SEND) finds that the matching buffer is available at the 
+target. This causes a semantic response (UET_DEFAULT_RESPONSE) indicating RC_OK and a modified 
+length equal to the request length. The deferrable send proceeds as any normal send. 
+The goal for deferrable sends is that the expected cases (seen in Figure 3-35) will return the semantic 
+response just in time to keep the wire fully saturated. In conjunction with the congestion management 
+sublayer, this should be achievable. In this case, there is little difference for any of the processing from a 
+simple send transaction. 
+  
+Figure 3-35 - Deferrable Sends, Expected Message Case 
+In the transaction illustrated in Figure 3-36, the semantic ACK (UET_RESPONSE) indicates that the 
+message is to be deferred by setting the ses.return_code field to RC_OK and the modified length to 0. 
+This response is marked for guaranteed delivery, since it does not use the default set of response values. 
+Later, a restart token (8675309) is used to restart the message using UET_DEFERRABLE_RTR. In the 
+illustrated example, the target has chosen to buffer J bytes of the original message. Thus, the ready-to-
+restart (RTR) message indicates that the restart should start at message offset J. The restarted message 
+MUST be delivered to the matching buffer that was provided. The target MUST remember J using some 
+mechanism (see Implementation Note), since it is not carried in the restarted message. 
+A second notable feature in Figure 3-36 is that the first message for the unexpected deferrable send 
+MUST be completed using a packet with ses.eom set. This allows the target to deallocate state 
+associated with that message. 
+ 
+Initiator Target
+SEND
+REQUEST
+Buffer Found
+SES PDSPDS SES
+Msgs + PacketsMessages Msgs + PacketsPackets Messages
+Send MID 1, Offset 0
+Send MID = 1, Off = 0
+Send MID = 1, Off = N
+CC Window 
+Limited
+Send MID 1, Offset N
+MSG 
+COMPLETIONSEND COMPLETION
+...
+Send MID = 1, 
+Off = N+MTU
+Send MID = 1, 
+Off = M
+... Send MID 1, Offset N+MTU
+Send MID 1, Offset M
+All Packets ReceivedFinal Packet ACK, MID 1

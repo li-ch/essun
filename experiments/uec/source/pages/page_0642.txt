@@ -1,0 +1,45 @@
+ 642 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Variable name Description 
+4) If the data_age_timer reaches data_age_timer_max, it has expired. It is 
+then held at data_age_timer_max until the LLR state machine enters the 
+FLUSH state or is reset by rules 1 or 3 being met. 
+The data_age_timer SHOULD have a resolution better than 100 ns. The size 
+of the data_age_timer SHOULD allow the timer to count to 4 seconds.  
+data_age_timer_expired Set TRUE when the data_age_timer is equal to data_age_timer_max. 
+LLR_status Indicates the link status pertaining to LLR-eligible frames. 
+When the llr_mode_remote is OFF, LLR_status takes the same value as 
+PCS_status (i.e., PCS_status is passed through the LLR to the management 
+agent unchanged). 
+When the llr_mode_remote is ON, LLR_status takes the value of TRUE when 
+the state machine is in the ADVANCE or REPLAY states, and it takes the value 
+of FALSE when in all other states. The LLR link stays up during LLR replays 
+that are occurring over a PCS loss of status (loss of alignment) event. 
+ 
+The TX LLR handles LLR-desired frames passed to it from the MAC client in the manner described below. 
+Three styles of behavior are permitted: 
+• DISCARD: The LLR takes LLR-desired frames from the MAC client and discards them without 
+passing them to the MAC control layer. These discards are counted in the tx_discards 
+counter. 
+• BLOCK: The LLR does not take any LLR-desired frames from the MAC client and effectively 
+blocks data transmission of LLR-desired frames from the higher layers. This mode of 
+operation guarantees lossless data delivery but might have undesirable effects on the higher 
+layers. 
+• BEST_EFFORT: The LLR takes LLR-desired frames from the MAC client and passes them to 
+the MAC control layer in the same manner as if the llr_mode_remote were OFF. That is, the 
+frames are not placed in the LLR replay buffer or assigned a sequence number, and the 
+frame_type is set to LLR_INELIGIBLE. 
+When the TX state machine is in the LLR_OFF state, then the TX LLR uses the BEST_EFFORT style for TX 
+LLR-desired frames. When the TX state machine is in the INIT state, then the TX LLR uses the 
+llr_init_behavior configuration to control how it handles TX LLR-desired frames. When the TX state 
+machine is in the FLUSH state, then the TX LLR uses the llr_flush_behavior configuration to control how 
+it handles TX LLR-desired frames. When the TX state machine is in the ADVANCE or REPLAY state, then 
+the TX LLR handles LLR-desired frames as follows: 
+• The TX LLR will not accept a new LLR-desired frame for transmission from the MAC client if 
+the state machine is not in the ADVANCE state. 
+• The TX LLR will not accept a new LLR-desired frame for transmission from the MAC client if 
+the outstanding_seq value is greater than or equal to outstanding_seq_max (where 
+outstanding_seq_max is <= 524288). Note that an implementation is not required to 
+support 524288 unacknowledged frames and may have an outstanding_seq_max value that 
+is considerably less than 524288. The maximum number of outstanding_seq that an 

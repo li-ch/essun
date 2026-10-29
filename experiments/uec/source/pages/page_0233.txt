@@ -1,0 +1,31 @@
+ 233 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 3-23 - Compare and Swap Operation Atomic Header and Payload Format 
+3.4.3.6 Synchronized Operation Extension Header Format 
+Two opcodes are defined for synchronized operations: UET_SYNC_WRITE and UET_SYNC_ATOMIC (see 
+Table 3-23). All synchronized operations utilize the extension header format shown in Table 3-15 and 
+Figure 3-24. This extension header follows the base header type and may be used with any base header 
+type supported by the profile, including UET_HDR_REQUEST_SMALL (Figure 3-15), 
+UET_HDR_REQUEST_MEDIUM (Figure 3-16), and UET_HDR_REQUEST_STD (Figure 3-11). 
+When UET_SYNC_WRITE is used as a synchronized completing operation, it MUST set ses.hd. When 
+UET_SYNC_ATOMIC is used, the maximum ses.request_length supported is 8 bytes, and the message 
+MUST NOT set ses.hd. The UET_SYNC_ATOMIC opcode MAY be used with any data type that is 
+supported by the device that is 8 bytes or less. The UET_SYNC_ATOMIC opcode MAY be used with any 
+atomic operation opcode supported by the device that is non-fetching. UET_AMO_READ, 
+UET_AMO_MSWAP, and all variations of UET_AMO_CSWAP are prohibited. 
+The extension header contains two fields: ses.sync_group and ses.sync_count. The ses.sync_group field 
+is the group number that the message is associated with. At the target FEP, the ses.sync_group field is 
+scoped to the initiator FEP. That is, the tuple {ip.src_addr, ses.sync_group} is used to lookup the context 
+for the synchronized group. At the initiator, the scope MAY be global to the FEP or scoped per target 
+FEP. The ses.sync_count field is valid only for completing operations encoding the count of the total 
+number of operations in the synchronized group, including the synchronized completing operation. The 
+ses.sync_count MUST be set to zero for all sync write operations. 
+Table 3-15 - Synchronized Operation Extension Header Format 
+Field Name Size  
+(in bits) 
+Description 
+sync_group 16 The synchronized group number this message is associated with. 
+sync_count 16 This has two encodings: 
+Non-completing operations (synchronized write): MUST be 0. 

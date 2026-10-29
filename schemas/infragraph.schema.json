@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/essun/infragraph.schema.json",
+  "title": "Infrastructure graph",
+  "description": "Draft contract for infrastructure descriptions referenced by the experiment manifest's infra_graph role (T004 / G4). Repo-level contract: lives outside Scale-up_Agent_Handoff/ per the handoff fence; promotion into the handoff schema set is an owner/ADR decision. Three dialects are recognized: an explicit node/link graph (handoff example style), an analytical free-parameter topology (experiments/topologies/*.yaml: ring, 2D torus, crossbar, recursive-doubling exchange), and the phase-collectives algorithm/transport config (experiments/topologies/phase_collectives8_free_params.yaml). The dialects are disjoint by their identity key (infra_id / topology_id / config_id). schema_version changes on every public change to this contract.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of this document contract; optional because the existing experiment inputs predate it."
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/explicitGraph"
+    },
+    {
+      "$ref": "#/$defs/analyticalTopology"
+    },
+    {
+      "$ref": "#/$defs/phaseCollectivesConfig"
+    }
+  ],
+  "$defs": {
+    "explicitGraph": {
+      "type": "object",
+      "description": "Handoff example style: explicit graph of endpoints, switches, links, implementation profiles, and routes.",
+      "required": [
+        "infra_id",
+        "nodes",
+        "links"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "infra_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "synthetic": {
+          "type": "boolean",
+          "description": "True when the fabric is illustrative, not derived from a real deployment."
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "type"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "enum": [
+                  "xpu",
+                  "switch"
+                ],
+                "description": "Observed node inventory; extending this set requires a schema_version bump."
+              },
+              "implementation_profile": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Key into implementation_profiles."
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "links": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "src",
+              "dst"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "src": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Node id at one end."
+              },
+              "dst": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Node id at the other end."
+              },
+              "rate_gbps": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "propagation_ns": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "implementation_profiles": {
+          "type": "object",
+          "description": "Named implementation profiles referenced by nodes; values are free parameters unless anchored to a source.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "buffer_kib": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "scheduler": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pipeline_ns": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "e.g. assumption, when the values are free parameters."
+                  },
+                  "values": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "src",
+              "dst",
+              "path"
+            ],
+            "properties": {
+              "src": {
+                "type": "string",
+                "minLength": 1
+              },
+              "dst": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "Node id sequence from src to dst, inclusive."
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "analyticalTopology": {
+      "type": "object",
+      "description": "Repo analytical style: transport-agnostic L0 topology with explicit free parameters, as used by the analytical backends.",
+      "required": [
+        "topology_id",
+        "topology_class",
+        "ranks"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "topology_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Identity referenced by backends and phase-collectives configs, e.g. ring8_free_v1."
+        },
+        "topology_class": {
+          "enum": [
+            "unidirectional_ring",
+            "torus2d_ring_x_ring",
+            "fully_connected_crossbar",
+            "fully_connected_exchange",
+            "unidirectional_ring_with_serialization",
+            "unidirectional_ring_tfc_window"
+          ],
+          "description": "Committed analytical topology classes; extending this set requires a schema_version bump. Extended with unidirectional_ring_with_serialization in contract 0.2.0 (second frontier F1: the L0.5 serialized ring, experiments/topologies/ring8_l05_free_params.yaml); extended with unidirectional_ring_tfc_window in contract 0.3.0 (flagship slice: the TFC credit-windowed ring executing UEC requirement UEC11-FC-R02, experiments/topologies/ring8_tfc_window_v1.yaml)."
+        },
+        "ranks": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "grid": {
+          "type": "object",
+          "required": [
+            "dim1_ranks",
+            "dim2_ranks"
+          ],
+          "properties": {
+            "dim1_ranks": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "dim2_ranks": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": true,
+          "description": "Torus grid shape; present only for torus2d_ring_x_ring."
+        },
+        "link": {
+          "type": "object",
+          "properties": {
+            "bytes_per_ns": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Free parameter (e.g. A-L0-BW / A-L0T-BW): link bandwidth."
+            },
+            "hop_latency_ns": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Free parameter (e.g. A-L0-LAT / A-L0T-LAT): per-hop latency."
+            },
+            "pair_latency_ns": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Free parameter (e.g. A-L0X-LAT / A-L0D-LAT): uniform per-pair latency."
+            }
+          },
+          "additionalProperties": true
+        },
+        "nic": {
+          "type": "object",
+          "properties": {
+            "injection_bytes_per_ns": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Free parameter (e.g. A-L0X-BW / A-L0D-BW): per-rank single-port injection bandwidth."
+            }
+          },
+          "additionalProperties": true
+        },
+        "tfc": {
+          "type": "object",
+          "description": "UEC TFC credit context per ring neighbor pair (topology_class unidirectional_ring_tfc_window, contract 0.3.0). Carries the parameters of requirement binding BIND-UEC11-FC-R02-L0TFC (src/essun/specir/bindings.py): window_bytes is granted credit (free deployment parameter, integral number of 256-byte credit units per UEC11-FC-R05), credit_return_latency_ns the free credit-loop return time.",
+          "properties": {
+            "window_bytes": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "description": "Free parameter (A-TFC-W): granted TFC credit in bytes; must be an integral multiple of the 256-byte credit unit (UEC11-FC-R05)."
+            },
+            "credit_return_latency_ns": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Free parameter (A-TFC-CR): credit-loop return latency; the UEC spec does not fix credit-return timing."
+            }
+          },
+          "additionalProperties": true
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "phaseCollectivesConfig": {
+      "type": "object",
+      "description": "Repo analytical style: phase-collectives algorithm/transport pairing (P2 stage S4) — not a new fabric; ring-family phases reference a ring topology, halving/doubling phases a fully-connected exchange topology.",
+      "required": [
+        "config_id",
+        "collectives"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "config_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collectives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "collective",
+              "algorithm",
+              "topology"
+            ],
+            "properties": {
+              "collective": {
+                "enum": [
+                  "reducescatter",
+                  "allgather"
+                ],
+                "description": "First-class phase collectives; composed AllReduce is expressed via composition, not as an entry."
+              },
+              "algorithm": {
+                "enum": [
+                  "ring",
+                  "recursive_halving",
+                  "recursive_doubling"
+                ]
+              },
+              "topology": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Referenced analyticalTopology topology_id."
+              },
+              "identity": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Pre-registered closed-form identity the backend must reproduce."
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "composition": {
+          "type": "object",
+          "properties": {
+            "allreduce_from_phases": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

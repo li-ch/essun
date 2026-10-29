@@ -1,0 +1,60 @@
+# Implementation profile for the calibration-ladder A11 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A11).
+implementation_profile_id: analytical_l0_crossbar_cal_a11_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. FABRIC-CLASS ROLE per
+  plan §1.1 row CAL-A11: Meta's fabric is a SCALE-OUT rail-optimized
+  RoCE spine-leaf (r ~ 24,576 GPUs), not a GPU-to-GPU scale-up fabric —
+  the crossbar is the landed NON-BLOCKING SINGLE-STAGE ceiling
+  abstraction of it (the role CAL-A1/A2 spec ceilings play), never a
+  prediction of the fabric. The anchor's headline effects (congestion,
+  ECMP load balancing, QP scaling) are OUT of this input space by the
+  backend's own capability declaration ("congestion" listed among
+  explicitly_unsupported) and by the loader surface (no path-count /
+  queueing / subscription key exists) — the stage's central
+  expressiveness finding, recorded in results/calibration/.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) swept over {35, 50, 64} B/ns at r=8,
+  fixed by anchor/registry arithmetic BEFORE any stage output was read:
+  50 = CAL-A11's 400 Gbps optics per direction per link under the
+  declared decimal + IEEE per-direction reading (THE ANCHOR POINT and
+  the B-axis sweep baseline); 35 = 0.7 x 50, the anchor's ">30%
+  path-pinning degradation" mapped onto the free B axis as an
+  effective-bandwidth envelope row (mechanism itself out of model
+  scope; magnitude located, never tuned); 64 = the A-L0X-BW / A-L0-BW
+  registry point (placement row; asymptotic CCT ratio vs the anchor
+  row exactly 25/32 = 0.78125). L (link.pair_latency_ns) FIXED at the
+  A-L0X-LAT registry point 200 ns: CAL-A11 stages NO latency number,
+  so the latency axis is anchor-free for this stage (the exact mirror
+  of stage A9, which swept L at fixed B). Message sizes: the same
+  12-size ladder 8*2^k (8 KiB - 8 GiB) as stages A1/A2/A7/A9;
+  r=8 divides every size (A-L0X-DIV accepts, no bracketing).
+  SCALE AXIS: the same anchor link class B=50, L=200 executed at the
+  anchor's STATED cluster scale r = 24,576 (two ~24,576-GPU clusters
+  staged) on a 15-size ladder 24576*2^k (24 KiB - 384 MiB) — a
+  ceiling row: the bandwidth coefficient 2(r-1)/r = 24575/12288 sits
+  within 1/21504 (~0.0047%) of the asymptote 2, exactly (8/7)*(r-1)/r
+  = 24575/21504 ~ 1.1428 above the r=8 default (structural rank-count
+  effect <= +1/7 for ANY r). NO parameter was tuned toward any anchor
+  output — CAL-A11 stages no (size -> time) series (its tables live in
+  the paper PDF, unstaged); the sweeps measure WHERE the identities
+  sit relative to the anchor's link class, cluster scale, and
+  congestion/load-balance envelope magnitude.
+measurement_source: >
+  CAL-A11 staged numbers (A. Gangidi et al., "RDMA over Ethernet for
+  Distributed AI Training at Meta Scale", ACM SIGCOMM 2024, public PDF
+  + engineering blog; docs/calibration/anchors_staging.md §A11; anchor
+  PROPOSED in the anchor registry; confidence M-H —
+  production measurements, but the scale-up-relevant per-collective
+  throughput tables live in the paper PDF; the staged numbers above
+  were verified from the public blog + abstract) — a SCALE-OUT fabric
+  used by this stage as SECONDARY SANITY CONTEXT exactly as plan §1.1
+  assigns; compared as PROPOSED evidence in results/calibration/; not
+  our testbed, no E3/E4 language.

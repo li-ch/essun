@@ -1,0 +1,46 @@
+ 702 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+control model [7]  provides the means to restrict access for particular NETCONF users to a preconfigured 
+subset of all available NETCONF protocol operations and content. 
+It is the responsibility of a system’s implementor and administrator to ensure that the protocol entities 
+in the system that support NETCONF, and any other remote configuration protocols that make use of 
+these YANG modules, are properly configured to allow access only to those principals (users) that have 
+legitimate rights to read or write data nodes. This standard does not specify how the credentials of 
+those users are to be stored or validated. 
+Several management objects defined in the uec-link-neg-options-tlv and uec-link-
+neg-cbfc-tlv YANG modules are configurable (i.e., read-write) and/or operational (i.e., read-only). 
+Such objects may be considered sensitive or vulnerable in some network environments. A network 
+configuration protocol such as NETCONF can support protocol operations that can edit or delete YANG 
+module configuration data (e.g., edit-config, delete-config, copy-config). If this is done in a non-secure 
+environment without proper protection, it is possible to result in negative effects on the network 
+operation. 
+5.3.3.3 Schema for UE LLDP Extension YANG Modules  
+A simplified graphical representation of the data model is used in this document. The meaning of the 
+symbols in these diagrams is as follows: 
+• Brackets “ ” and “ ” enclose list keys. 
+• Abbreviations before data node names: “rw” means configuration (read-write), and “ro” means 
+state data (read-only). 
+• Symbols after data node names: “?” means an optional node, “ ” means a presence container, 
+and “*” denotes a list and leaf-list. 
+• Parentheses enclose choice and case nodes, and case nodes are also marked with a colon (“:”). 
+• Ellipsis (“...”) stands for contents of subtrees that are not shown. 
+5.3.3.3.1 UE Link Negotiation Options TLV Schema  
+ 
+module: uec-link-neg-options-tlv 
+ 
+  augment /lldp:lldp/lldp:port: 
+    +--rw tlvs-tx-org-uec-link-neg-options-enable?   boolean 
+    +--rw uel-options-tlv-extension 
+       +--rw llr-want?          identityref 
+       +--ro llr-enable?        identityref 
+       +--rw ipgr-capable?      boolean 
+       +--rw csig-capable?      identityref 
+       +--rw ufh-capable?       identityref 
+       +--ro ufh-status?        identityref 
+       +--ro ufh-32-version?     identityref 
+       +--ro ufh-32-rr?          uint32 
+       +--rw ufh-32-addr-bits?   uint32 
+       +--ro ufh-16-version?     identityref 
+       +--ro ufh-16-rr?          uint32 
+       +--rw ufh-16-addr-bits?   uint32 

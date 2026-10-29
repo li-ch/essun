@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why essun exists — essun</title>
+<meta name="description" content="Why essun exists: fabric decisions made on vendor slides and one-off simulators, and the two rules that answer them — every number traces to an immutable run record, and when simulators disagree, classify rather than tune.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html" aria-current="page">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">The problem</p>
+    <h1>Fabric decisions, answered with numbers anyone can re-derive</h1>
+    <p class="tagline">essun is built around one idea: a single executable specification drives every fidelity, from closed-form analytical models to discrete-event simulation — with explicit observables, validity domains, and recorded provenance.</p>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="problem">
+  <p class="kicker">The situation today</p>
+  <h2>Vendor slides and one-off simulators</h2>
+  <div class="prose">
+    <p>Companies choose among scale-up fabrics — which protocol to adopt, which topology to wire, which collective algorithm to schedule — using one-off simulators and vendor numbers. Those comparisons are not apples-to-apples, and published comparisons rarely state their inputs completely enough to reproduce.</p>
+    <p>essun's answer is a specification, not a benchmark number: the experiment manifest and its input files are the executable specification, and every fidelity reads the same one.</p>
+  </div>
+</section>
+
+<section id="rules">
+  <p class="kicker">Two rules, house law</p>
+  <h2>What follows from that idea</h2>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit, minmax(17rem,1fr))">
+    <div class="card">
+      <p class="card-kicker">Rule one</p>
+      <h3>Every number traces to an immutable run record</h3>
+      <p>Runs are content-addressed: the same manifest, inputs, and code always produce the same run id and byte-identical records. Paper-facing numbers stay <code>[RESULT: metric, experiment, status]</code> placeholders until such a record exists.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">Rule two</p>
+      <h3>When simulators disagree, classify — do not tune</h3>
+      <p>The cross-backend difference engine decomposes gaps into declared modeling differences with an anti-tuning gate; a plausible curve is never treated as semantic correctness.</p>
+    </div>
+  </div>
+</section>
+
+<section id="vision">
+  <p class="kicker">Where this goes</p>
+  <h2>The end game</h2>
+  <blockquote class="vision" style="font-size:1.04rem">
+    <p>Fabric decisions in AI infrastructure are still made from vendor slides and one-off simulators. We want to end that. ESSUN's answer is a portable contract between four things: what a specification says, what an implementation may choose, what a simulator actually models, and what the resulting evidence supports. One experiment manifest drives every fidelity, every emitted number traces to a content-addressed run record, and every claim carries an evidence label — so fabric decisions can be answered with numbers anyone can re-derive.</p>
+    <p class="endgame" style="font-size:1.04rem">The strategy is profile-led and engine-plural: profiles, semantic bindings, and evidence records should matter more than which engine executes them. A project becomes infrastructure only when others depend on it and can maintain it — the roadmap is an experiment in earning that dependence, with falsifiable exit conditions at every phase. The end game: scale-up fabric evolution becomes evidence-driven, the way model development became benchmark-driven. <a href="roadmap.html">Read the full vision and roadmap</a>.</p>
+  </blockquote>
+</section>
+
+<section id="placement">
+  <p class="kicker">Not a replacement</p>
+  <h2>Where essun sits</h2>
+  <div class="prose">
+    <p>essun does not replace general-purpose network simulators — two of its discrete-event backends are pinned, credited external simulators run under one manifest. For a factual side-by-side with ASTRA-sim, ns-3, OMNeT++, HTSim, and Batfish, including where each is the stronger tool, see the <a href="comparison.html">Comparison page</a>.</p>
+    <p>The two rules above are enforced mechanically rather than by convention; the <a href="evidence.html">Evidence page</a> documents the machinery, and the <a href="quickstart.html">Quickstart page</a> shows both rules firing in a real run.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

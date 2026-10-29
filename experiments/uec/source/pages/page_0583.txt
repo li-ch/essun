@@ -1,0 +1,42 @@
+ 583 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• If kdf-mode is Direct-KDF. 
+o The selected SDKi is used directly in the cipher operation for the packet. 
+• If kdf-mode is KDF cluster/client-server. 
+o The selected SDKi is used in the KDF operation for the packet. 
+o tss.ssi or ip.src_addr is used in KDF to construct SDK based on SDKDB.ssi-mode field. 
+o Rekey is calculated based on tss.tsc.counter and used in the KDF (see Section 3.7.5.2). 
+o The epoch from tss.tsc.epoch is used in the KDF. 
+• Epoch-based rejection. 
+o SDKDB.current_epoch is compared to tss.tsc.epoch according to rules in Section 3.7.10. 
+If the check fails, the packet MUST be dropped and the sdiXXInLatePkts counter MUST 
+be incremented. 
+• Packet Decryption. 
+o The IV is created per Table 3-136 and XORed with the IVMask from the SDKDB or from 
+the output of the KDF before it is used in the cipher. 
+o The AAD and ciphertext are constructed based on Aoff and Coff from the SDKDB per 
+Section 3.7.11.1.1. 
+o The packet is decrypted according to the process in Section 3.7.11.1. 
+o The ICV from the UET trailer is used to authenticate packet according to the process in 
+Section 3.7.11.1.3. 
+▪ Packets that fail authentication MUST be dropped and the sdiXXInAuthFailPkts 
+counter MUST be incremented. 
+▪ If the sdiXXInAuthFailPkts > authFailThreshold then the authentication failure 
+threshold had been exceeded, and the packet MUST be dropped and the SDME 
+MUST be notified. Note that the sdiXXInAuthFailPkts counters increments for all 
+enabled AN (RxActiveAN). An implementation MUST reset this counter after a 
+key rotation is complete. 
+▪ Packets that pass authentication MUST be passed to PDS with rx_auth set to 
+TRUE and the sdiXXInAuthPkts counter MUST be incremented. 
+▪ If an encrypted trimmed packet is received it cannot be authenticated, but the 
+beginning of the packet can be decrypted. An implementation MAY chose 
+packet drop the packet or pass it to the PDS with the rx_auth set to FALSE. The 
+reception of a trimmed packet MUST NOT increment the sdiXXInAuthFailPkts 
+counter. 
+• The SDKDB statistics are updated as follows: 
+o The sdiXXInAuthPkts counter is updated for frames that are properly authenticated 
+(described in the Packet Decryption list item above). 
+o Packets bypassing the receive crypto process (e.g., pds.type=UET_PDS) MUST cause the 
+inPPRxEncryptionBypassPkts counter to be incremented, and when passed to PDS the 
+rx_auth flag MUST be set to FALSE. 

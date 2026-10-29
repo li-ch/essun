@@ -1,0 +1,381 @@
+# Assumption registry for the L0 vertical-slice increment.
+# Handoff rule: every assumption has a range, rationale, sensitivity, owner and review status.
+assumptions_id: assumptions_l0_v1
+status: PROPOSED
+assumptions:
+  - id: A-L0-BW
+    parameter: link.bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Free parameter for the analytical ring only. Chosen to be a round
+      number; not standard-derived and not measured.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0-LAT
+    parameter: link.hop_latency_ns
+    value: 200
+    unit: ns
+    range: [10, 2000]
+    rationale: >
+      Free parameter for the analytical ring only. Not standard-derived and
+      not measured.
+    sensitivity: high for O-CCT at small messages, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-W1-SIZE
+    parameter: workload.allreduce_bytes
+    value: 16384
+    unit: bytes
+    range: [1024, 16777216]
+    rationale: >
+      Smoke-scale payload (16 KiB) representing one TP-decode AllReduce.
+      Model-derived in a real deployment; a free parameter here.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS3
+    review: PROPOSED
+  - id: A-L0-FD
+    parameter: model.link_duplexity
+    value: full_duplex_uniform_per_direction
+    unit: none
+    range: [full_duplex_uniform_per_direction, half_duplex, heterogeneous_links]
+    rationale: >
+      Duplexity assumption (O2 honesty note, increment 5a): the ring
+      bandwidth term carries a single T/B — send and receive proceed at B
+      simultaneously on every link, with uniform per-direction bandwidth
+      across links. Half-duplex links would add receive-side serialization
+      (a second T/B term) and heterogeneous links would change the term per
+      link; both are different identities. The 2D-torus model composes ring
+      dimensions and inherits this assumption; the crossbar/doubling
+      fabrics state their port sharing explicitly instead (A-L0X-PORT).
+    sensitivity: high for O-CCT if violated (half-duplex doubles the bandwidth term), zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Divisibility assumption (O1 honesty fix, increment 5a): the
+      chunked-ring construction behind the L0 ring identities is physically
+      realizable with equal chunks only when the rank count r divides the
+      payload M (chunk = M/r integral byte counts). The Fraction arithmetic
+      would stay exact for any M, but a non-divisible payload has no
+      equal-chunk construction behind it; the backend rejects such ops at
+      execution time instead of silently computing a fractional-chunk
+      schedule. Ragged or padded-chunk variants are different identities
+      and are not evaluated.
+    sensitivity: input gate only; zero for O-CONSERVATION and O-CCT on accepted inputs
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0X-PORT
+    parameter: model.port_assumption
+    value: single_port
+    unit: none
+    range: [single_port, multi_port]
+    rationale: >
+      Modeling assumption (P2 stage S1 crossbar): each rank injects into the
+      non-blocking crossbar through one port of total bandwidth B shared
+      across all r-1 peers; per-pair latency is uniform and charged once per
+      collective phase. A multi-port model (full B per pair) is a different
+      identity and is declared unsupported by the backend capabilities.
+    sensitivity: high for O-CCT bandwidth and latency terms, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0X-BW
+    parameter: nic.injection_bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Free parameter for the analytical crossbar only (per-rank single-port
+      injection bandwidth, A-L0X-PORT). Round number; not standard-derived
+      and not measured.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0X-LAT
+    parameter: link.pair_latency_ns
+    value: 200
+    unit: ns
+    range: [10, 2000]
+    rationale: >
+      Free parameter for the analytical crossbar only: uniform per-pair
+      transfer latency, charged once per phase (reduce-scatter or allgather),
+      not per peer. Not standard-derived and not measured.
+    sensitivity: high for O-CCT at small messages, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0X-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Divisibility assumption (O1 honesty fix, increment 5a, crossbar): each
+      phase of the single-port crossbar AllReduce sends r-1 chunks of M/r
+      bytes, so the construction is physically realizable only when r
+      divides M. The Fraction arithmetic would stay exact for any M, but a
+      non-divisible payload has no equal-chunk construction behind it; the
+      backend rejects such ops at execution time. Ragged or padded-chunk
+      variants are different identities and are not evaluated.
+    sensitivity: input gate only; zero for O-CONSERVATION and O-CCT on accepted inputs
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0T-SEQ
+    parameter: model.dimension_execution
+    value: sequential_full_message
+    unit: none
+    range: [sequential_full_message, overlapped, interleaved_rs_ag]
+    rationale: >
+      Modeling assumption (P2 stage S2 2D torus): AllReduce decomposes into a
+      full-message ring AllReduce per dimension, executed one dimension after
+      the other, so completion time is the sum over dimensions. Overlapped
+      dimensions or the interleaved decomposition (reduce-scatter dim1,
+      AllReduce of the M/r1 chunk dim2, allgather dim1) follow different
+      identities and are declared unsupported by the backend capabilities.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0T-UNIF
+    parameter: model.dimension_uniformity
+    value: uniform
+    unit: none
+    range: [uniform, per_dimension]
+    rationale: >
+      Modeling assumption (P2 stage S2 2D torus): both torus dimensions share
+      one link bandwidth B and one per-hop latency L. Per-dimension
+      heterogeneous link parameters are a different identity and are declared
+      unsupported by the backend capabilities.
+    sensitivity: high for O-CCT if violated, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0T-SHAPE
+    parameter: grid.dim1_ranks x grid.dim2_ranks
+    value: 2x4
+    unit: ranks
+    range: factorizations r1*r2=r with r1,r2 >= 2
+    rationale: >
+      Free design-space parameter (P2 stage S2): how r ranks factor into a
+      grid. Round shape chosen for the committed topology; the identity is
+      symmetric in dim1 x dim2. Not standard-derived and not measured.
+    sensitivity: high for O-CCT (latency chain 2*(r1+r2-2)), high for
+      per-rank wire traffic 2*(2-1/r1-1/r2)*M
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0T-BW
+    parameter: link.bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Free parameter for the analytical 2D torus only (uniform across both
+      dimensions, A-L0T-UNIF). Equal to the ring/crossbar values so designs
+      compare under shared parameters; not standard-derived and not measured.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0T-LAT
+    parameter: link.hop_latency_ns
+    value: 200
+    unit: ns
+    range: [10, 2000]
+    rationale: >
+      Free parameter for the analytical 2D torus only (uniform per-hop
+      latency). Equal to the ring/crossbar values so designs compare under
+      shared parameters; not standard-derived and not measured.
+    sensitivity: high for O-CCT at small messages, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0T-DIV
+    parameter: model.chunk_divisibility
+    value: both_dim_ranks_divide_payload
+    unit: none
+    range: [both_dim_ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Divisibility assumption (O1 honesty fix, increment 5a, 2D torus): each
+      dimension's ring phase moves chunks of M/r_d bytes, so the
+      construction is physically realizable only when BOTH dimension sizes
+      r1 and r2 divide the payload M (this does not require r = r1*r2 to
+      divide M). The Fraction arithmetic would stay exact for any M, but a
+      non-divisible payload has no equal-chunk construction behind it; the
+      backend rejects such ops at execution time. Ragged or padded-chunk
+      variants are different identities and are not evaluated.
+    sensitivity: input gate only; zero for O-CONSERVATION and O-CCT on accepted inputs
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0D-POW2
+    parameter: model.rank_schedule
+    value: power_of_two_doubling
+    unit: none
+    range: [power_of_two_doubling, ragged_non_power]
+    rationale: >
+      Modeling assumption (P2 stage S3 recursive doubling): the halving and
+      doubling partner schedules (rank XOR 2^(i-1) at step i) require a
+      power-of-two rank count; non-powers are rejected at load time. Ragged
+      splitting for non-power groups follows a different identity and is
+      declared unsupported by the backend capabilities.
+    sensitivity: high for O-CCT (latency chain 2*log2(r)), zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0D-STEP
+    parameter: model.step_execution
+    value: serialized_single_partner_steps
+    unit: none
+    range: [serialized_single_partner_steps, overlapped]
+    rationale: >
+      Modeling assumption (P2 stage S3 recursive doubling): each step
+      exchanges with exactly one partner at cost chunk_i/B + L; steps and the
+      two phases (reduce, broadcast) serialize with no overlap. Overlapped
+      steps or phases, and multi-partner steps, follow different identities
+      and are declared unsupported by the backend capabilities.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0D-BW
+    parameter: nic.injection_bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Free parameter for the analytical recursive-doubling backend only
+      (per-rank injection bandwidth; each step has exactly one partner, so
+      port and per-step link bandwidth coincide). Equal to the ring/crossbar/
+      torus values so designs compare under shared parameters; not
+      standard-derived and not measured.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0D-LAT
+    parameter: link.pair_latency_ns
+    value: 200
+    unit: ns
+    range: [10, 2000]
+    rationale: >
+      Free parameter for the analytical recursive-doubling backend only:
+      uniform per-pair exchange latency, charged once per step (log2(r) steps
+      per phase). Equal to the ring/crossbar/torus values so designs compare
+      under shared parameters; not standard-derived and not measured.
+    sensitivity: high for O-CCT at small messages, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0D-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Divisibility assumption (O1 honesty fix, increment 5a, recursive
+      doubling): the halving schedule sends chunks M/2^i and the doubling
+      schedule sends chunks 2^(i-1)*M/r, so the construction is physically
+      realizable only when the (power-of-two) rank count r divides the
+      payload M — which also keeps every M/2^i integral. The Fraction
+      arithmetic would stay exact for any M, but a non-divisible payload has
+      no equal-chunk construction behind it; the backend rejects such ops at
+      execution time. Ragged or padded-chunk variants are different
+      identities and are not evaluated.
+    sensitivity: input gate only; zero for O-CONSERVATION and O-CCT on accepted inputs
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0P-ALGO
+    parameter: model.phase_algorithm_fabric_pairing
+    value: ring_phases_on_ring_fabric_and_doubling_phases_on_exchange_fabric
+    unit: none
+    range: [ring_on_ring, halving_doubling_on_exchange, other_pairings]
+    rationale: >
+      Modeling assumption (P2 stage S4 phase collectives): ring
+      ReduceScatter/AllGather run on the unidirectional-ring fabric (per-hop
+      latency, (r-1) hops per phase) and recursive-halving ReduceScatter /
+      recursive-doubling AllGather run on the power-of-two fully-connected
+      exchange fabric (log2(r) steps per phase). Other pairings are different
+      identities and are declared unsupported by the backend capabilities;
+      crossbar first-class phases are outside this stage's pre-registered
+      content. Committed pairing config: phase_collectives8_free_v1.
+    sensitivity: high for O-CCT (sets the latency chain), zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0P-MSG
+    parameter: model.phase_message_size_semantics
+    value: rs_input_per_rank_ag_input_total
+    unit: none
+    range: [rs_input_per_rank_ag_input_total, other_readings]
+    rationale: >
+      Modeling assumption (P2 stage S4): M is the per-rank input size for
+      ReduceScatter (every rank ends with M/r reduced bytes) and the TOTAL
+      gathered size for AllGather (every rank contributes M/r and ends with M
+      bytes). Under this reading AllReduce(M) = ReduceScatter(M) +
+      AllGather(M) with the same M; other readings break the composition and
+      are different identities.
+    sensitivity: high for result bytes and phase composition, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0P-COMP
+    parameter: model.phase_composition
+    value: serialized_rs_then_ag
+    unit: none
+    range: [serialized_rs_then_ag, overlapped]
+    rationale: >
+      Modeling assumption (P2 stage S4): phases execute back-to-back with no
+      overlap; a composed AllReduce's completion time is the sum of the phase
+      times, which reproduces the landed ring (l0) and recursive-doubling
+      (l0d) AllReduce identities exactly. Overlapped ReduceScatter/AllGather
+      is a different identity and is declared unsupported by the backend
+      capabilities.
+    sensitivity: high for composed O-CCT, zero for O-CONSERVATION
+    owner: WS2
+    review: PROPOSED
+  - id: A-L0P-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Divisibility assumption (O1 honesty fix, increment 5a, phase
+      collectives): every ReduceScatter/AllGather phase moves (r-1) chunks
+      of M/r bytes and ReduceScatter leaves each rank with M/r reduced
+      bytes, so the construction is physically realizable only when r
+      divides M. The Fraction arithmetic would stay exact for any M, but a
+      non-divisible payload has no equal-chunk construction behind it; the
+      backend rejects such ops at execution time. Ragged or padded-chunk
+      variants are different identities and are not evaluated.
+    sensitivity: input gate only; zero for O-CONSERVATION and O-CCT on accepted inputs
+    owner: WS2
+    review: PROPOSED
+  - id: A-W2-CHUNK
+    parameter: workload.chunk_bytes
+    value: 16384
+    unit: bytes
+    range: [1024, 16777216]
+    rationale: >
+      Free parameter for the W2 dense TP prefill smoke workload (P5): one
+      activation chunk, carried by BOTH the chunk's ReduceScatter and its
+      AllGather (S4 phase semantics A-L0P-MSG), so a chunk pair composes
+      AllReduce(chunk_bytes) exactly (A-L0P-COMP). Model-derived in a real
+      deployment; a free parameter here.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: WS3
+    review: PROPOSED
+  - id: A-W2-DAG
+    parameter: model.dependency_semantics
+    value: serialized_rs_ag_chain
+    unit: none
+    range: [serialized_rs_ag_chain, overlapped, chunk_parallel]
+    rationale: >
+      Modeling assumption (W2 dense TP prefill, P5): direct dependencies
+      only — the AllGather of chunk c in layer k depends on the chunk's
+      ReduceScatter (serialized phases, A-L0P-COMP); the ReduceScatter
+      depends on the immediately preceding op (the previous chunk's
+      AllGather within a layer; the previous layer's final AllGather for
+      the first chunk). Total serial order, the DAG is a chain in emission
+      order. Overlapped or chunk-parallel schedules are different
+      identities and are not generated.
+    sensitivity: high for the critical-path time, zero for O-CONSERVATION
+    owner: WS3
+    review: PROPOSED
+notes: >
+  No normative values are used anywhere in this increment. When UEC semantics
+  land (T011), every standard-derived value must carry a source anchor
+  (version, section, hash) and these placeholders give way to profile values.

@@ -1,0 +1,42 @@
+ 626 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4.2.9.4 max(nQD) 
+When a source FEP sends a packet with a CSIG tag for signal type max(nQD), and that packet traverses a 
+path through the UE fabric, that packet’s CSIG tag will record the maximum normalized queue depth at 
+packet dequeue encountered along the path: among all switches along that packet’s path, the maximum 
+queue depth (in bytes) normalized by the output port’s speed (in bytes per second) at any one switch. 
+Both the unquantized and quantized normalized queue depth values are represented as integer values 
+in nanoseconds; note that queue depth in bytes normalized by port speed in bytes per second yields a 
+unit of time. 
+In deployments with heterogeneous output port speeds, absolute queue depths at queues for output 
+ports of different speeds are not directly comparable as indicators of the extent of congestion. For 
+example, a shorter absolute queue depth in front of a slower link might take longer to drain than a 
+longer absolute queue depth in front of a faster link. In such a case, a shorter absolute queue depth 
+might indicate more severe congestion than a longer absolute queue depth. For this reason, to render 
+queue depths across potentially heterogeneous port speeds comparable, the max(nQD) signal 
+normalizes queue depth by output port speed. 
+max(nQD) is a leading indicator of congestion and corresponds to “expected delay” rather than 
+“experienced delay”: Queue depth is measured instantaneously at the point when a CSIG-tagged packet 
+is dequeued for onward forwarding. In this sense, this signal is analogous to ECN marks, but with a 
+multi-bit indication of the extent of queueing, as opposed to ECN’s single-bit, thresholded queue depth 
+indication. 
+Informative Text: 
+While normalizing by output port speed addresses heterogeneous port speeds, other considerations 
+may arise in some deployments that make comparison of nQD values across switches problematic. 
+For example, in a deployment that uses multiple traffic classes of different priorities, if CSIG-nQD-
+tagged packets travel in a traffic class at any priority other than the top priority, the drain rate for 
+those packets from that traffic class’s queue will vary over time, depending on the time-varying load 
+in any higher-priority traffic class(es). As such, the correctness of the max(nQD) signal’s value—
+accumulated along a path as an indicator of the point of greatest congestion along that path—relies 
+on the absence of unpredictable, time-varying load in traffic classes of higher priority than the traffic 
+class in which a CSIG-nQD-tagged packet travels. 
+ 
+4.2.9.4.1 Normalized Queue Depth Computation 
+A switch computes the local nQD value by normalizing the instantaneous queue depth at the time of 
+dequeue by a base port speed. 
+// iQD: the instantaneous queue depth (in bytes) at the time of dequeue 
+// PortSpeed: the current port’s speed 
+// BasePortSpeed: the slowest port speed in the network 
+PortSpeedRatio = PortSpeed / BasePortSpeed 
+PortSpeedRatioLog2 = log2(PortSpeedRatio) 

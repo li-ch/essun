@@ -1,0 +1,40 @@
+ 264 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4. It must be possible to reconcile the restarted deferrable send to the original message 
+information. 
+5. Subsequent packets of the restarted deferrable send must be reconciled to the ongoing 
+message. 
+6. Because of inherent race conditions in the sequence, the original deferrable send and multiple 
+restarts of the deferrable send could hypothetically have packets in the network concurrently. 
+ 
+These operations can be accomplished using various mechanisms. To establish (1), the FEP can 
+examine the target restart token and note that it is 0. This indicates this is not a restarted message, 
+or, if it is a restarted message, it does not have a reserved buffer at the target that it must select. 
+Because this is the first packet of a deferrable send that does not have a reserved buffer at the 
+target, the FEP can proceed with semantic processing. Semantic processing indicates that the 
+message is to be deferred, and a tracker is associated with the MID = 1. Packets associated with MID 
+= 1 will be discarded, and the tracker will be discarded when a packet for MID = 1 with ses.eom set is 
+received. 
+ 
+Later, a restart is initiated. Before sending the restart, the target FEP can allocate a table entry 
+indexed by 505. 505 is then placed in the target restart token in the ready-to-restart message. The 
+restarted message would contain (505) with the initiator restart token 8675309. This table could 
+indicate where the restarted message would land in memory. For example, if the base address of the 
+matching buffer was 42, then the start address of the restarted transfer would be 42+J. Alternatively, 
+when the restart is initiated, the target FEP may not allocate a table entry. In this case, it populates 
+the target restart token with 0 so that the restarted message is handled like a new message. 
+ 
+When the restarted message arrives at the target FEP, if it finds that the target restart token was not 
+zero, it uses the target restart token to index the table. The restarted message always has a different 
+message ID (e.g., MID = 3) from prior in-flight iterations of this deferrable send. It would then find 
+that the restart token table contained 8675309 at entry 505. It would use this information to 
+establish a tracker for MID = 3 and start delivering payload into the target memory. Subsequent 
+packets of MID = 3 would find this MID tracking entry.  
+ 
+3.4.5.5 Synchronized Operation Sequences 
+Synchronized operations group write operations together with a completing action. The completing 
+action can be either a write completion with header data (immediate data) or a non-fetching atomic 
+operation. When all writes in the sync group have been placed, the completing action is performed. It is 
+important to note that the sync group is finished only when the completing action is finished. No 
+ordering between sync groups or writes within a group is maintained. 

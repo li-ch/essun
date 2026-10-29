@@ -1,0 +1,46 @@
+ 535 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Function Name  Description 
+int uet_trigger_drop_mask(uint32_t *trigger_mask); Deliver all triggers for which events have been dropped 
+ 
+3.6.18.5.7 Load Balancing Support 
+3.6.18.5.7.1 Per-EV Triggers 
+Per-EV triggers enable LB algorithms to react to events associated with specific EVs in the CCC EV table. 
+By evaluating conditions and updating state locally in hardware, these triggers eliminate the overhead of 
+frequent software callbacks. 
+Per-EV triggers are defined using the YAML signal construct configuration schema; the scope field MUST 
+be set to EV for every per-EV signal. Multiple EV triggers are supported within a single algorithm 
+configuration. Triggers defined in this manner are automatically attached to every EV index in the CCC 
+EV table. It is not possible to bind triggers to individual EV indices; the association is uniform across all 
+slots in the EV table for the lifetime of the CCC. 
+Per-EV signals are evaluated whenever a packet associated with a given EV is transmitted or received. 
+On invocation, an algorithm can determine whether any per-EV trigger has fired by checking the macro 
+name against the output of uet_trigger_mask(). 
+Algorithms can further iterate through the set of fired per-EV triggers using the functions below: 
+Table 3-116 - Per-EV Access and Manipulation APIs 
+Function Name Description 
+int uet_ev_trigger_next(unsigned int signal_id) 
+ 
+Advances the iterator to the next EV index whose per-EV 
+trigger fired for the specified signal_id.  
+int uet_ev_trigger_iter_reset(unsigned int 
+signal_id) 
+Reset the per-EV iterator for signal_id. 
+int uet_ev_signal_id(unsigned int ev_signal_id, 
+unsigned int ev_idx) 
+ 
+Returns the per-EV signal identifier for the given signal and 
+EV index. The output of this function is used in 
+uet_signal_*() and uet_trigger_*() calls. 
+ 
+3.6.18.5.7.2 Per-Packet Operation Mode 
+Trigger support for per-packet LB mode MUST support triggers configured as follows: 
+Table 3-117 - Per-Packet Operation Mode 
+Property Value 
+op * 
+opval N/A 
+mode EVENT-COUNT 
+mode_val 1 
+action INVOKE-ALGORITHM 
+enable TRUE 

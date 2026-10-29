@@ -1,0 +1,46 @@
+# Calibration-ladder GF-10 bandwidth row: DGX-2 PER-GPU-PAIR AGGREGATE —
+# crossbar r=8, B = 150 B/ns, L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# DGX-2 (16x V100, 6x NVSwitch) with "per-link 50 GB/s bidirectional
+# (25 GB/s per direction), 6 switches => 300 GB/s per GPU pair" — the
+# per-GPU aggregate over all six switch uplinks: 6 x 50 = 300 GB/s
+# bidirectional => 6 x 25 = 150 B/ns per direction (decimal convention
+# 1 GB/s = 1 B/ns; the anchor STATES the direction split itself — no x2
+# ambiguity here). This row reads that aggregate as the single-port
+# injection B — the A-L0X-PORT abstraction's intended scale for a
+# switched fabric (every GPU's traffic to the fabric leaves through its
+# own uplink aggregate).
+#
+# INTERNAL CONSISTENCY (the anchor's own arithmetic, exact): the DGX-2
+# baseboard bisection is staged as "25 GB/s x 8 links/switch x 6 switches
+# = 2.4 TB/s" = 2400 B/ns, and 2400 = 16 x 150 exactly — the staged
+# bisection equals the per-direction per-GPU aggregate times all 16 GPUs.
+# The bisection is a FABRIC aggregate, never an L0 per-pair row; it is
+# recorded in the stage record as exact scale arithmetic.
+#
+# PLACEMENT: 150 B/ns sits ABOVE the plan §2.1 A-L0-BW anchored span
+# [20, 64] — a V100-era aggregate (the plan's modern aggregates run
+# 448-900 B/ns; 150 is one generation earlier); the free registry range
+# [1, 1024] contains it; the registry point 64 sits 64/150 = 32/75 of
+# this row. DGX-2's rank count (16) is NOT executed — the staged DGX-2
+# numbers are per-link/per-pair rates and a qualitative homogeneity fact,
+# none of which pins the collective identity's rank dependence (r=8 is
+# carried by the DGX-1-anchored latency axis; recorded in the record).
+topology_id: crossbar8_gf10_b150_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 150
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction: per-rank single-port
+  injection B = 150 B/ns (GF-10's staged DGX-2 per-GPU-pair aggregate:
+  6 switches x 25 GB/s per link per direction = 150 B/ns, direction
+  split stated by the anchor) with the registry L = 200 ns, charged once
+  per phase by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). The
+  aggregate reading of the anchor's per-link rate on the B axis; the
+  per-link reading (25) is the latency sweep's carrier. Value is an
+  anchor measurement/derivation, never our measurement; r=8 declared
+  (DGX-2 is r=16 — the aggregate rate is rank-independent).

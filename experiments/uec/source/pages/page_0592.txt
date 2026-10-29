@@ -1,0 +1,49 @@
+ 592 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+disable trimming for smaller packets, transport protocols SHOULD mark such packets as non-trimmable 
+by using an appropriate DSCP. 
+After trimming, the switch MUST set the DSCP header field in the IP header to the corresponding 
+DSCP_TRIMMED codepoint associated with the DSCP_TRIMMABLE codepoint in the original packet. This 
+allows the endpoint to detect that the packet was trimmed and will signal to downstream processing 
+that the packet was trimmed. 
+After trimming, the trimmed packet MUST be a valid IP packet; thus, the switch updates the IP total 
+length field to reflect the new size and updates the IP header checksum to ensure subsequent switches 
+do not inadvertently drop the resulting packet. The Ethernet frame check sequence (FCS) field MUST 
+also be updated such that it is a valid FCS. 
+The trimmed packet MUST be treated as a new incoming packet for DSCP_TRIMMED for any subsequent 
+processing within the switch performing trimming, which means that it obeys buffer admission rules for 
+the queue associated with DSCP_TRIMMED codepoint on the appropriate egress port. If buffer 
+admission fails for the queue associated with DSCP_TRIMMED, the normal procedure for queue 
+overflow should be followed (e.g., typically the packet will be dropped).  
+The following pseudocode describes switch behavior when trimming IPv4 / IPv6 packets: 
+// A switch has two queues per port: queue_trimmable and queue_trimmed. 
+// queue_trimmable and queue_trimmed SHOULD be mapped to different physical 
+// queues. While not recommended, queue_trimmable and queue_trimmed MAY be 
+// mapped to the same queue, but with smaller drop thresholds for TRIMMABLE 
+// packets. 
+ 
+OnRX(pkt): //switch ingress pipeline processing 
+ 
+if pkt.IP.DSCP == DSCP_TRIMMED:  //already trimmed packets 
+    if (queue_trimmed.size < queue_trimmed.drop_threshold):  
+        enqueue(pkt,queue_trimmed) 
+    else:  
+        drop(pkt) 
+else if pkt.IP.DSCP == DSCP_TRIMMABLE:  
+    if queue_trimmable.size < queue_trimmable.drop_threshold:  
+        //queue_trimmable is the relevant queue associated with 
+DSCP_TRIMMABLE 
+   enqueue(pkt,queue_trimmable) 
+    else: //trim the packet 
+   trim(pkt) 
+   if (queue_trimmed.size < queue_trimmed.drop_threshold):  
+            enqueue(pkt,queue_trimmed) 
+        else: 
+            drop(pkt) 
+else:  
+    //all other packets—normal processing applies:  
+    //e.g. enqueue or drop on failed admission checks, etc. 
+  
+trim(pkt): 
+    pkt.IP.DSCP = DSCP_TRIMMED  

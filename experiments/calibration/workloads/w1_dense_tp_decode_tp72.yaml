@@ -1,0 +1,24 @@
+# W1 Dense TP Decode — tp_size 72, the NVL72 rank count pinned by CAL-A1's
+# own port arithmetic (anchor CAL-A1, docs/calibration/anchors_staging.md:
+# 72 GPUs served by 18 NVLink5 switch chips of 72 ports each). Shared by
+# the calibration-ladder stages that need the NVL72 rank class.
+#
+# Same workload shape as every other W1 file (2 layers x 3 decode steps =
+# 6 AllReduce ops per config). The default payload below is 72 * 2^25 B
+# (2.25 GiB decimal-binary mixed ladder step; divisible by 72 so the
+# A-L0X-DIV guard never rejects it) and sits in the bandwidth-bound regime
+# where a capacity ceiling (the only thing a spec anchor can normalize) is
+# meaningful. Sweep manifests override it per config via
+# grid.payload_sizes_bytes; this file default is what the anchor-point RUN
+# manifests execute.
+#
+# tp_size 72 is anchor-derived (CAL-A1 arithmetic) but the workload itself
+# remains a free-parameter model configuration — nothing here is measured
+# or standard-normative. All sizes are integer byte counts; deterministic
+# by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal72
+tp_size: 72
+layers: 2
+steps: 3
+allreduce_bytes: 2415919104   # 72 * 2^25 = 2.25 GiB; free parameter A-W1-SIZE (see assumptions_l0.yaml)

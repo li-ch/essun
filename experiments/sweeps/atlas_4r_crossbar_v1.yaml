@@ -1,0 +1,47 @@
+# Atlas cell 4r-crossbar (design-space atlas ladder, G2 / ):
+# rank class 4 x algorithm family crossbar.
+#
+# E0 evidence only: every table value is the output of a closed-form L0
+# analytical identity under explicit FREE PARAMETERS (B = 64 bytes/ns,
+# L = 200 ns, shared with every other atlas topology file; ranks = 4;
+# payload sizes below). The sweep tables compare analytical identities,
+# not empirical performance — no value is measured on hardware and no
+# standard-derived number appears here. Relative deltas emitted by the
+# runner are arithmetic facts of the identities (same workload shape,
+# same payload size).
+#
+# Message-size grid (the atlas-wide shared grid, identical to
+# atlas_4r_ring_v1.yaml): 12 sizes spanning 4 KiB -> 64 MiB as the
+# maximally even power-of-two ladder — exponents
+# {12,13,14,16,17,18,20,21,22,24,25,26}, i.e. the 14 doublings between
+# 2^12 and 2^26 spread as evenly as possible over 11 intervals (ratio
+# pattern x2,x2,x4 repeating; eight x2 and three x4 steps). Every size
+# is divisible by 4096, hence by every atlas rank count (4..64) and
+# every torus factorization — the divisibility guards (A-L*-DIV) never
+# reject a grid point, so all atlas cells share this exact grid.
+#
+# The rank-class baseline (allreduce_ring x ring4_free_v1, the 4r-ring
+# cell) is included as a grid config because the runner computes the
+# delta column against a config that must be present at every payload
+# size; its delta row is exactly 0 and the crossbar row carries this
+# cell's content. The crossbar family has exactly ONE declared identity
+# at 4 ranks: allreduce_crossbar over a single-port fully-connected
+# fabric (multi-port injection is explicitly unsupported — a different,
+# undeclared identity).
+sweep: atlas_4r_crossbar_v1
+workload: experiments/workloads/w1_dense_tp_decode_tp4.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring4_free_params.yaml
+grid:
+  payload_sizes_bytes: [4096, 8192, 16384, 65536, 131072, 262144, 1048576, 2097152, 4194304, 16777216, 33554432, 67108864]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/topologies/ring4_free_params.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/topologies/crossbar4_free_params.yaml

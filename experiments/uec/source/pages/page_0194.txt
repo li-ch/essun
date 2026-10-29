@@ -1,0 +1,40 @@
+ 194 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+implementation between hardware and software is not defined. Several details of the libfabric 
+implementation requirements are not defined by the wire protocol. The libfabric mapping specification 
+covers some additional requirements for achieving interoperable providers. 
+3.4.1.2 Support for Local Scale-up Networking 
+To support local scale-up networking within a consistent framework, SES leverages concepts, header 
+fields, and opcodes from the semantics defined to support libfabric. Specific adaptations are 
+incorporated to reduce header overhead while meeting the semantic requirements of the Unified Local 
+profile.  UE does not specify any particular API above SES to support the Unified Local profile. 
+Local scale‑up use cases typically require much lighter‑weight endpoints than scale‑out deployments. 
+This is often because they leverage endpoints incorporated into processing units to deliver substantially 
+higher bandwidth. To support lightweight endpoints, scale‑up use cases typically sacrifice multi-tenancy 
+and scale (operating in the hundreds or thousands of endpoints rather than tens or hundreds of 
+thousands). Throughout the SES definition, semantics concepts are defined in the context of libfabric 
+and then specialized for the Unified Local profile. 
+3.4.2 Definition of Semantic Concepts 
+This section articulates the semantics provided by the UET to support AI and HPC applications. Fields 
+within the header are articulated in this section, and the proper semantic handling of those fields is 
+described; additional normative text is found in Section 3.4.4. The section starts by describing 
+addressing: how is a buffer selected. This is followed by a discussion of authorization: the process of 
+determining whether a message is allowed to access a buffer. In addition, this section covers the 
+network operation types, how the ordering modes interact with the semantics provided, and network 
+protocol security. 
+3.4.2.1 Operations, Messages, and Transactions 
+A “transaction” is composed of all of the packets needed to eventually deliver the payload desired by 
+the user and implement the libfabric request. A “message” consists of a set of packets sharing a single 
+message ID. A transaction consists of one or more messages and supporting packets. As an example, a 
+32 KB libfabric fi_send() would be transmitted in eight packets, all sharing the same message ID that 
+identifies the send transaction. A send transaction would include the acknowledgments and semantic 
+responses to the send message packets. A more complex example would be a large fi_send() using 
+rendezvous (3.4.5.3). This would consist of one or more packets as part of an eager message plus one or 
+more packets as part of the read message (a second message). Each of those messages would have 
+Informative Text: 
+Throughout the semantic section, the text refers to “buffers” or “data buffers.” In this specification, 
+the term buffer is used generically to refer to an addressable section of memory. This includes a 
+libfabric “memory region” (i.e., the target of an RMA operation) as well as the pointers passed into an 
+fi_tsend()/fi_trecv() that refer to memory to send from or receive into. It includes areas described by a 
+scatter/gather list as well.  

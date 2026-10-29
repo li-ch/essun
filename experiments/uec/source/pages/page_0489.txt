@@ -1,0 +1,38 @@
+ 489 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ccc.cwnd = min(ccc.cwnd, ccc.inflight) 
+ccc.cwnd = max(mtu, ccc.cwnd – window_decrease) 
+else if Restore_Cwnd and ccc.saved_cwnd > 0: 
+ccc.cwnd = ccc.saved_cwnd 
+ccc.saved_cwnd = 0 
+ return Rcv_Cwnd_Pend > 0 
+The average delay is used in multiplicative decrease and quick_adapt(). How this should be calculated is 
+an implementation-specific decision. For example, an implementation that updates a stored running 
+average when update_delay() is called, and returns that value when get_avg_delay() is called, would 
+suffice. Other methods to reduce the per-ACK computation costs are also permitted.   
+It is a requirement that get_avg_delay() be callable multiple times per RTT and still produce an 
+appropriate average. 
+update_delay(delay): 
+ add this sample to the delay averaging state 
+ 
+get_avg_delay(): 
+ return the average delay over the last base_rtt.  
+3.6.13.7 Initializing base_rtt  
+The fairness of NSCC depends on getting a good low RTT sample to seed base_rtt. This is especially the 
+case when a local flow starts up and competes with a pre-existing longer-distance flow. Under these 
+circumstances, the local flow may not get a good measurement of base_rtt, leading to unfairness against 
+the longer distance flow. 
+When a new NSCC CCC to a destination is established, a source SHOULD send a Probe CP on the control 
+traffic class using the DSCP_CONTROL diffserv codepoint to obtain a good sample of base_rtt. As a Probe 
+CP cannot bring up a PDC, if this Probe CP is sent immediately using the control traffic class, it is likely to 
+arrive before the first data packet of the PDC and would then be discarded. Thus the source SHOULD 
+wait until the first ACK or NACK is received before sending the Probe CP. If an implementation knows no 
+more data will be sent after the second RTT, this Probe CP MAY be safely omitted. 
+Sending a Probe CP is unnecessary if a source has a cached base_rtt from a previous CCC, can reliably 
+estimate base_rtt, or is handling a PDC that is known to transmit little data (typically around one BDP). 
+3.6.13.8 NSCC Destination State 
+NSCC is primarily a sender-based algorithm. It depends on the Rcvd_Bytes value calculated at the 
+destination to drive its ACK-clock. Rcvd_Bytes is maintained per PDC. 
+An NSCC destination maintains the following CC state. 
+ 

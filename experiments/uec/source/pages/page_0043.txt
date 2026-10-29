@@ -1,0 +1,53 @@
+ 43 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+routines are accessed in a low-
+level hardware-dependent format. 
+Application programming interface 
+(API) 
+A type of software interface. An 
+API offers a service to other pieces 
+of software and provides a way for 
+two or more computer programs 
+or components to communicate. 
+Collective Communications Library 
+(*CCL) 
+One of any number of Collective 
+Communication Libraries that 
+implement collective operations 
+common in parallel computing 
+(e.g., Broadcast, AllReduce, 
+AllGather, etc).  An accelerator 
+vendor commonly provides a 
+proprietary *CCL implementation 
+that supports the vendor’s 
+accelerator capabilities. 
+Kernel mode driver (KMD) A component of the operating 
+system that runs in the privileged 
+kernel mode, allowing code to 
+access the system memory and 
+hardware directly. 
+Libfabric address vector (AV) A mapping of higher-level 
+addresses, which may be more 
+natural for an application to use, 
+into fabric-specific addresses. See 
+libfabric 
+<https://ofiwg.github.io/libfabric/v
+1.20.1/man/fi_av.3.html>. 
+Libfabric completion queue (CQ) High-performance event queues 
+used to report the completion of 
+data transfer operations. See 
+libfabric 
+<https://ofiwg.github.io/libfabric/v
+1.20.1/man/fi_cq.3.html>. 
+Libfabric endpoint (EP) A communication endpoint using 
+the libfabric API that can listen for 
+connection requests and perform 
+data transfers. Endpoints are 
+configured with specific 
+communication capabilities and 
+data transfer interfaces. See 
+libfabric 
+<https://ofiwg.github.io/libfabric/v
+1.20.1/man/fi_endpoint.3.html>. 

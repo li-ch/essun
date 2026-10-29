@@ -1,0 +1,38 @@
+ 500 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+destination variable. The range of values of credit_rate is (0,1), where 1 is the default and means that 
+credit is sent at (near) linkspeed. The credit rate must be lower, bounded to a value strictly larger than 0. 
+Two cases where reducing the credit rate is useful is described in sections 3.6.14.7.1 and 3.6.14.7.2, but 
+there may be other cases where an implementation might choose to dynamically adjust the credit rate. 
+An RCCC destination MAY dynamically change the credit rate for any implementation-specific purpose. 
+3.6.14.7.1 RCCC Destination Flow Control 
+If a receiving FEP is unable to keep up with the arrival rate of data, a backlog of data will build at the 
+destination. NSCC destination flow control uses Rcv_Cwnd_Pend to modify NSCC’s cwnd, but RCCC 
+does not use this mechanism. 
+To control the size of the backlog, an RCCC destination MAY adapt the credit_rate to reduce the arrival 
+rate of data from all sources. UET-CC does not mandate a specific algorithm to set credit_rate, as 
+destination congestion is implementation specific, but the following proportional control algorithm MAY 
+be used. 
+The max _backlog variable is set to the maximum buffer size available. The crtBacklog() function returns 
+the size of the current backlog of received data in bytes. 
+OnRx(pkt) [or periodically]: 
+if crtBacklog() < MaxWnd: 
+credit_rate = 1 
+else if crtBacklog() > max_backlog * 95 / 100: 
+credit_rate = 0.001 
+else  
+credit_rate =  
+    (max_backlog - crtBacklog())/(max_backlog - MaxWnd) 
+ 
+3.6.14.7.2 RCCC Aggregate Rate Control 
+In multi-tier oversubscribed networks, there can be cases where the load on the network core exceeds 
+capacity. In such cases RCCC might provide suboptimal performance due to receivers providing credit at 
+line rate, which in turn allows senders to transmit at line rate in aggregate to that receiver. One option 
+to avoid this issue is to enable NSCC in conjunction with RCCC, as described in Section 3.6.14. 
+When enabling NSCC together with RCCC is not possible or not desirable, the receiver MAY reduce its 
+total credit dynamically, based on observed congestion for its incoming traffic. In this case, the 
+algorithm described in this specification SHOULD be used. 
+3.6.14.7.2.1 Goals and Approach 
+The goal of this algorithm is to avoid persistently trimming packets in oversubscribed networks and to 
+share fairly the oversubscribed network core under persistent congestion. 

@@ -1,0 +1,53 @@
+ 34 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+1.2.2.2 Terms 
+Class Term Description 
+Operating System Communication CPU Central processing unit; a generic 
+processor for arbitrary 
+computation functions. 
+Memory An electronic holding place for the 
+instructions and data used by CPUs 
+and accelerators.  
+Operating system instance (OSI) An instance of an operating system 
+(e.g., a virtual machine). 
+Process An instance of a program 
+executing on an OSI owned by a 
+specific user and having a private 
+virtual address space (VAS). A 
+process is identified by a process 
+ID unique to the OSI it runs in. 
+Process address space ID (PASID) A unique identifier for a VAS within 
+each OSI. A target PASID can be 
+determined based on a 
+combination of JobID and 
+PIDonFEP. 
+Process ID (PID) Operating system-assigned 
+identifier for a process. 
+User An entity with access privileges to 
+nodes of a cluster capable of 
+executing compute processes. 
+Virtual address space (VAS) Process-specific virtual address for 
+memory allocation. 
+Fabric Communication Absolute addressing A mode of addressing a resource 
+within the client/server job model. 
+Includes three complementary 
+parts of the destination address: 
+(1) an FA identifying a FEP, (2) a 
+PIDonFEP interpreted without a 
+JobID, and (3) a Resource Index. 
+Accelerator A compute module or device 
+designed for the efficient 
+execution of specific functions. 
+Acknowledgment packet (ACK)  A packet used by the UET to 
+implement reliability. ACKs are 
+transmitted by the destination PDC 
+to the source PDC to indicate 
+successful reception of packets at 
+the PDS layer. ACKs can carry a 
+semantic response. 
+Best-effort network A network (as opposed to a 
+lossless network) where packets 
+are sent on at least some links 
+without any explicit 
+communication of buffer 

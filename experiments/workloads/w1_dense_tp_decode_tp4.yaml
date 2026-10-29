@@ -1,0 +1,11 @@
+# W1 Dense TP Decode — tp_size 4, for atlas rank class 4 (G2 / D-025).
+# All sizes are integer byte counts; deterministic by construction.
+# The per-config payload size is OVERRIDDEN by the sweep grid
+# (grid.payload_sizes_bytes); the allreduce_bytes below is only the
+# file default, recorded in table.json for provenance.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-atlas-4r
+tp_size: 4
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # free parameter A-W1-SIZE (16 KiB), see assumptions_l0.yaml

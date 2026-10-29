@@ -1,0 +1,47 @@
+ 173 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The modules can be found at the following URL: <https://github.com/ultraethernet/uec-
+inc/tree/main/yang>. 
+The schema of the main module, uec-uet-inc, is depicted below: 
+ 
+module: uec-uet-inc 
+  +--rw communicators 
+  |  +--rw communicator* [job-id communicator-id] 
+  |     +--rw job-id             -> ../config/job-id 
+  |     +--rw communicator-id    -> ../config/communicator-id 
+  |     +--rw config 
+  |     |  +--rw communicator-id?   inc:communicator-id 
+  |     |  +--rw payload-mtu?       inc:payload-mtu 
+  |     |  +--rw admin-status?      enumeration 
+  |     |  +--rw dscp-low?          inet:dscp 
+  |     |  +--rw dscp-high?         inet:dscp 
+  |     |  +--rw job-id?            inc:job-id 
+  |     |  +--rw scale-factor?      uint32 
+  |     |  +--rw protocol-type?     identityref 
+  |     |  +--rw bandwidth?         uint32 
+  |     |  +--rw ordering-mode?     inc:ordering-mode 
+  |     |  +--rw rounding-mode?     identityref 
+  |     +--ro state 
+  |     |  +--ro (same as ../config/) 
+  |     |  +--ro oper-status?           enumeration 
+  |     |  +--ro failure-description?   string 
+  |     |  +--ro counters 
+  |     +--rw peers 
+  |        +--rw peer* [id] 
+  |           +--rw id        -> ../config/id 
+  |           +--rw config 
+  |           |  +--rw id?                      uint32 
+  |           |  +--rw remote-fabric-address?   inet:ip-address 
+  |           |  +--rw role?                    identityref 
+  |           |  +--rw flow-control-info 
+  |           |  |  +--rw enabled?           boolean 
+  |           |  |  +--rw cell-size?         uint16 
+  |           |  |  +--rw packet-overhead?   uint16 
+  |           |  +--rw remote-pid-on-fep?       inc:pid-on-fep 
+  |           |  +--rw remote-resource-index?   inc:resource-index 
+  |           |  +--rw interface?                
+  |           |  |     -> /oc-if:interfaces/interface/name 
+  |           |  +--rw subinterface? 
+  |           |  |     -> /oc-if:interfaces/ 
+  |           |  |        interface[oc-if:name=current()/../interface]/ 

@@ -1,0 +1,32 @@
+ 628 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Informative Text: 
+In some cases, such as in multi-tenancy, when an operator deploys a mix of switches in the UE fabric, 
+some of which support only the compact tag format and some of which support both the compact 
+and wide tag formats, some applications MAY use CSIG with wide tags on those paths where switches 
+support them and others MAY use compact tags. In these cases, those flows using wide tags benefit 
+from the greater precision and/or signal type variety of wide tags on paths where they are available. 
+Such behavior is outside the scope of this specification, as are the mechanisms and policies FEPs use 
+to configure the choice of compact or wide tags in sent traffic. Whether a congestion control scheme 
+works correctly when CSIG-compact-tagged flows and CSIG-wide-tagged flows share a bottleneck 
+depends on the specifics of the congestion control scheme. 
+In some cases, when an operator deploys a mix of switches in the UE fabric, some of which support 
+CSIG and some of which do not, the operator MAY wish to use CSIG as feedback in congestion control 
+on those paths that support CSIG, while CSIG will not be used on those paths that do not support 
+CSIG. Such behavior is outside the scope of this specification. This specification contemplates only the 
+scenarios in which congestion control for all flows uses CSIG feedback and in which congestion control 
+for no flows uses CSIG feedback. Whether a congestion control scheme works correctly when CSIG-
+feedback-enabled flows and non-CSIG-feedback-enabled flows share a bottleneck depends on the 
+specific details of the congestion control scheme. 
+ 
+4.2.10.1 Deployment of New Signal Types 
+New CSIG signal types may be introduced in the future. When a new signal type is introduced in a 
+deployment, it is recommended that use of that signal type be enabled only after all switches and FEPs 
+support that signal type, as indicated in global configuration state. When support for a new signal type is 
+heterogeneous across FEPs and switches in a deployment, how FEPs determine when to use the new 
+signal type is outside the scope of this specification. 
+ 
+Figure 4-11 - CSIG Domain 
+ 

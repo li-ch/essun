@@ -1,0 +1,40 @@
+ 253 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+This response MUST contain the current generation. A tagged or untagged message using a ROD PDC 
+that encounters resource exhaustion at the semantic level that prevents accepting the message MUST 
+disable the target Resource Index. The message MUST receive a semantic response indicating that the 
+message encountered a disabled index (RC_DISABLED_GEN). The index MUST remain disabled until 
+additional resources are available and the generation number is incremented. 
+The implementation—whether in the provider layer or hardware—MUST retransmit messages that 
+encounter a disabled index. When the message is retransmitted, the implementation SHOULD 
+increment the index generation before retransmitting the message; however, the implementation MAY 
+retransmit using the same index until it receives a generation mismatch response. If the implementation 
+chooses to retransmit the message with an incremented generation, it MUST retransmit only one 
+message (the oldest message needing retransmission) until it has received a successful semantic 
+acknowledgement. This avoids a race where the generation could be incremented between the first 
+retransmitted message and second retransmitted message reaching the target. A message encountering 
+a disabled index SHOULD defer retransmit using an exponential back-off scheme. 
+The implementation MUST retransmit messages that encounter a generation mismatch. The 
+retransmitted message MUST use the new generation returned in the generation mismatch response. A 
+message encountering a generation mismatch MAY be retransmitted immediately. 
+Informative Text: 
+This mechanism is named “client/server buffer exhaustion” because it requires a state per-peer 
+process. Most of the specification goes through great lengths to avoid per-peer-process state in the 
+fast path of messaging libraries for compute applications. 
+ 
+Implementation Note: 
+RC_DISABLED_GEN is a scenario similar to traditional resource exhaustion concepts (e.g., receiver 
+not ready). Because the target cannot easily track the full list of initiators that have encountered 
+RC_DISABLED_GEN, initiators can rely only on traditional retransmit heuristics to determine when to 
+retransmit the message. 
+ 
+3.4.4.8 Synchronized Operation Processing 
+Each group of synchronized operations consists of up to 216-2 write messages using the 
+UET_SYNC_WRITE opcode. Each group of synchronized operations MUST include exactly one 
+synchronized completing operation—either a UET_SYNC_WRITE with the ses.hd bit set or a 
+UET_SYNC_ATOMIC. After sending the synchronized completing operation, the initiator MUST wait for 
+all messages in the group to complete—that is, receive all acknowledgements at the initiator—before 
+reusing the ses.sync_group value. 
+The target MUST track each in-progress sync group until it completes. The target MUST honor the 
+ordering rules defined in 3.4.2.7.4 and 3.4.9.6. The payload associated with a UET_SYNC_WRITE MUST 

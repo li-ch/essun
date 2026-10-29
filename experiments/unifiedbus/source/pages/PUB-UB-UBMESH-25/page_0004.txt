@@ -1,0 +1,47 @@
+LLM training is the largest scale and most computation and communication intensive parallel computing application ever (Shoeybi et al., 2019; Huang et al., 2019; Ren et al., 2023; Touvron et al., 2023; Zeng et al., 2023; Rasley et al., 2020; Rajbhandari et al., 2022; OpenAI et al., 2024). Obeying the so-called scaling laws (Kaplan et al., 2020; Clark et al., 2022; An et al., 2024), the performance of LLM models is improved via scaling-up the model parameters and training data. Consequently, LLMs are demanding increasing numbers of AI accelerators to finish training within a reasonable time. For example, the open-sourced LLAMA-3.1 models are trained on 16K GPUs (Dubey et al., 2024), and the next-generation LLM models are using 100K GPUs for training (Semianalysis, 2024; WCCFtech, 2024).
+
+A standard training procedure entails the repetition of training iterations, where each iteration comprises a forward pass to calculate losses, a backward pass to determine gradients, and an optimizer step to adjust the model parameters. To fully utilize distributed computation power, LLM training splits the data, model and activations to tens of thousands of NPUs via various parallelism strategies. Within each iteration, the NPUs frequently exchange data with each other to distribute input data, synchronize activations and gradients, etc. As the training system scales, data movement becomes the most expensive part of the system (Qian et al., 2024; Gangidi et al., 2024). Without strong inter-NPU communication capabilities, the training process is easily bottle-necked by the "Communication Wall".
+
+2.2. Locality of Data Traffic in LLM Training
+
+As illustrated in Fig.2, LLM training typically involves multiple parallelism techniques, which are introduced as follows:
+
+Tensor Parallelism: TP splits model layers in a row-wise or column-wise manner and places sub-layers on multiple NPUs that compute in parallel (Shoeybi et al., 2019). It mainly involves AllReduce operations to merge the distributed partial results.
+
+Sequence Parallelism: SP (also referred to as Context Parallelism in some papers) is usually adopted to split sequences to multiple NPUs to realize parallel processing. SP relies on Ring-Attention (Liu et al., 2023) techniques and can employ AllGather operations to gather partial results in different NPUs.
+
+Figure 2. Parallelism in LLM Training
+
+Table 1. Analysis of Data Traffic in LLM Training
+
+Parallism
+
+Techniques
+
+Communication
+
+Pattern
+
+Data Volume
+
+Per Transfer
+
+Total TransferTotal VolumeData Traffic
+
+TPAllReduce360 MB49921775 GB52.9%
+
+SPAllGather180/360 MB4992/16641462.5 GB44.08%
+
+EPAlltoAll10.5 MB499251.19 GB1.54%
+
+PPP2P192 MB264.875 GB0.14%
+
+DPAllReduce711.75 MB6444.48 GB1.34%
+
+Expert Parallelism: For LLM models adopting Mix-of-Experts (MoE) techniques, dense MLP layers are replaced by MoE layers, where each layer contains several "Experts". Experts are sparsely activated during execution. EP distributes experts on different NPUs. The input tokens are dynamically sent to target experts via All2All communication.
+
+Pipeline Parallelism: Unlike TP that splits each model layer, PP distributes layers to multiple devices, and execute forwards and backwards in a pipelined manner. PP involves low-overhead P2P communication for transmitting activations across layers, but requires efficient scheduling algorithms (Narayanan et al., 2019; Huang et al., 2019) to minimize bubbles.
+
+Data Parallelism: DP replicates models and optimizer states across multiple NPUs. Each replica processes a portion of input batches in parallel. AllReduce operations are necessary to synchronize gradients during the training procedure.
+
+These parallelism techniques collectively distribute training tasks across thousands of NPUs. It is important to note that not all parallelism techniques generate equal volumes of data traffic. According to our analysis based on an in-house MoE-2T model, as detailed in Table 1, communication intensity is hierarchical and exhibits strong locality. Specifically, TP and SP account for approximately 97% of the total traffic, while the remaining parallelism techniques typically generate less than 2% of the total traffic. Other model architectures may exhibit slightly different data traffic distributions but also demonstrate strong locality (Wang et al., [n. d.]). Therefore, the architecture design should prioritize a hierarchical approach to network bandwidth provisioning.

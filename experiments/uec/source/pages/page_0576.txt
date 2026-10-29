@@ -1,0 +1,8 @@
+ 576 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The header layout for UET over native IPv4 transport is shown in Figure 3-146. 
+ 
+ 
+Figure 3-146 - TSS with Native IPv4 Transport 
+ 

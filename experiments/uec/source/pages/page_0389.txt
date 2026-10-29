@@ -1,0 +1,44 @@
+ 389 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+An ACK Request CP SHOULD be generated when the SACK bitmap and CACK_PSN indicate a guaranteed 
+delivery response is missing and when a trimmed ACK is received with the pds.flags.req field set to 
+REQ_CLEAR. The exception is when the associated packet is a read request of size  
+Max_ACK_Data_Size. 
+If the missing response is associated with a read request of size  Max_ACK_Data_Size, then the original 
+packet using that PSN MUST be retransmitted. Because the target does not save read data, the initiator 
+reissues the read. 
+The destination responds as follows: 
+if received PSN is processed by SES { 
+    switch (SES response) { 
+        case not guaranteed delivery: 
+            send ACK with default SES response 
+            break 
+        case read response data: 
+            send NACK with pds.nack_code = UET_ACK_WITH_DATA 
+            break 
+        case guaranteed and response is available: 
+            send ACK with SES response 
+            break 
+        case guaranteed and response is not available 
+            send NACK with pds.nack_code = UET_GTD_RESP_UNAVAIL 
+            break 
+        default: 
+            fatal_error() // Not possible 
+            break 
+    } 
+} 
+ 
+If received PSN is still being processed by SES { 
+    Send NACK with pds.nack_code = UET_RCVD_SES_PROCG 
+} else { 
+    // The PSN was not received 
+    Send NACK with pds.nack_code = UET_PKT_NOT_RCVD 
+} 
+        
+When an ACK is determined to be lost, implementations may choose to send an ACK Request CP or 
+retransmit the original packet. 
+If an ACK Request CP is received with a PSN less than CLEAR_PSN, the packet MUST be silently dropped. 
+This can happen due to network reordering where the packet is retransmitted before the ACK for the 
+original packet arrives and then another packet carrying the clear passes the retransmitted packet. This 
+event may be counted for diagnostic purposes. 

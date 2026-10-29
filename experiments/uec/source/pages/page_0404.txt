@@ -1,0 +1,28 @@
+ 404 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+c. The SES Response is stored at the target. 
+7. PDS at the initiator receives the ACK packet, delivers it to SES, and frees state for PSN = 333. 
+8. PDS at the initiator sends CLEAR_PSN = 333 to the target using either of the following: 
+a. CLEAR_PSN is carried in the next PDS Request packet. 
+b. A Clear Command CP may be used if there is no PDS Request packet to send; see Section 
+3.5.16.3 for details on when Clear CPs are generated. 
+9. PDS at the target frees the SES Response state for PSN = 333. 
+a. CACK_PSN is incremented to 333 upon receiving CLEAR_PSN. 
+ 
+   
+3.5.20.2.3 Multi-Packet Send Sequence—Non-Guaranteed Delivery 
+Send and write sequences are the same on best-effort and lossless networks. The standard RUD Send 
+sequence for a multi-packet message is shown in Figure 3-99. The sequence in Figure 3-99proceeds as 
+follows: 
+1. The RUD send sequence for multi-packet messages is the same as the RUD send sequence for a 
+single-packet message. 
+a. The single-packet sequence is repeated for each packet of the multi-packet message. 
+b. Packets may arrive out of order at the destination. 
+c. Acknowledgements may be cumulative—the figure shows an ACK every two packets; 
+however, ACK generation events vary when cumulative ACKs are used; see Section 
+3.5.12.2. 
+ 
+Figure 3-98 - Standard RUD Send Sequence for Single- Packet Message, Guaranteed Delivery 
+ 
+ 

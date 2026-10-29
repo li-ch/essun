@@ -1,0 +1,30 @@
+ 27 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Role Name Affiliation 
+Contributor Nicholas Lurski Microsoft 
+Contributor Kingshuk Mandal Keysight 
+Contributor Orr Mazor NeuReality 
+Contributor Antonios Michaloliakos Meta 
+Contributor Guglielmo Morandin Broadcom 
+Contributor Shawn Nicholl AMD 
+Contributor Svyatoslav Nikita ViraSemi 
+Contributor Abhiram Ravi Google 
+Contributor Vedvyas Shanbhogue Meta 
+Contributor Kapil Shrikhande  Marvell 
+Contributor Ramesh Sivakolundu Cisco 
+Contributor Ashkan Sobhani Huawei 
+Contributor Chris Sommers Keysight 
+Contributor Jerome Tollet Cisco 
+Contributor Daniel Verkamp Meta 
+Contributor Mike Vildibill HPE 
+Contributor Michael Wilkins Cornelis Networks 
+Contributor Jianxin Xiong Intel 
+Contributor Aibing Zhou Juniper 
+Contributor Yan Zhuang  Huawei 
+Contributor Nazar Zibilyuk ViraSemi 
+Editor Paul Congdon Linux Foundation 
+Program Manager Rob Craig Linux Foundation 
+ 
+ 
+ 

@@ -1,0 +1,25 @@
+# Implementation profile for the calibration-ladder A2 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A2).
+implementation_profile_id: analytical_l0_crossbar_cal_a2_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); modeling
+  assumptions A-L0X-PORT / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) swept over {448, 720, 900} bytes/ns — the
+  candidate anchor-informed per-rank AGGREGATE injection span [448, 900]
+  of CALIBRATION_PLAN.md §2.1 A-L0X-BW (NARROW scale: every modern anchor
+  sits at 448–900 B/ns aggregate): 448 = CAL-A7-derived MI300X-class
+  lower endpoint (7 links x 64 B/ns/dir), 720 = CAL-A2 ceiling 900 x
+  CAL-A12's ~80% software derating (the spec-to-measured bridge the plan
+  §1.1 CAL-A12 row makes mandatory), 900 = CAL-A2 per-GPU per-direction
+  ceiling (the stage's anchor point). L fixed at the registry point
+  200 ns (latency axis deferred to its own global stage). Values are
+  anchors/assumptions, never measurements.
+measurement_source: none   # not calibrated; the comparison against CAL-A2 is recorded as PROPOSED evidence in results/calibration/

@@ -1,0 +1,42 @@
+ 235 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Size Description Section Ref 
+JobID 24 JobID of the original request 3.4.2.3.1, 
+3.4.2.4.1 
+modified_length 32 Indicates the number of bytes of the target buffer 
+that will be modified by this transaction. For 
+example, some message may be truncated because 
+no buffer is available. 
+ 
+ 
+Two variations on the semantic response with data are used. The first (Figure 3-26) mimics the basic 
+semantic response and adds a payload length—to indicate the number of bytes in the packet—and a 
+message offset—to indicate where within the message this packet falls. The message ID is used to 
+identify the original read request. At the semantic level, all operations—including read operations—are 
+packetized based on the Payload MTU. A multi-packet fi_read(), for example, will use the same message 
+ID in each packet and use that to issue a single completion at the initiator. This format MUST be used for 
+responses with data to requests that include a request length larger than the Payload MTU. This format 
+MUST NOT be used to respond to optimized request headers (Figure 3-15), because various fields are 
+not available in that request to generate this response. 
+Table 3-17 - Response with Data Header Fields 
+Field Size Description Section Ref 
+list 2 Indicates if the payload was delivered to the 
+expected or unexpected list. 
+3.4.7.3 
+opcode 6 Indicates type of response (e.g., semantic ACK, 
+response with payload, etc.). 
+3.4.7.2 
+version (ver) 2 Semantic protocol version: Set to 0 in the 
+initial version. 
+ 
+return_code 6 Indicates success conditions and some types of 
+error conditions detected at the semantic 
+sublayer. 
+3.4.7.3 
+response_message_id 16 Message ID of the response. 3.4.2.14 
+rsvd 8 Reserved  
+JobID 24 JobID of the original request. 3.4.2.3.1, 3.4.2.4.1 
+ 
+Figure 3-26 - Semantic Response with Data Header Format (UET_HDR_RESPONSE_DATA) 
+ 

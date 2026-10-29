@@ -1,0 +1,48 @@
+ 162 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• TSS functions 
+2.4.11 INC Transport  
+INC leverages existing UET services and introduces a compact extension field to a semantic sublayer 
+header to carry INC‑specific information. This extension field conveys fields such as the communicator 
+ID, collective sequence number, and operation type. 
+2.4.11.1 Semantic Operation 
+INC uses UET_DEFERRABLE_SEND and UET_DEFERRABLE_RTR operations for data exchange. All 
+necessary information for the collective operation is encoded in the 64-bit ses.inc_info field (see Figure 
+2-24). 
+The UET_HDR_REQUEST_STD (Figure 3-11 and Figure 3-12) is used for deferrable send operations. In 
+UET_HDR_REQUEST_STD packets, the ses.match_bits field is replaced by the 64-bit ses.inc_info field. 
+While the ses.match_bits fields in traditional send operations inform the destination where to place 
+data and match messages, the ses.inc_info field informs the SEP how to process the data. 
+Informative Text: 
+The ses.inc_info field is overlayed upon the ses.match_bits field and it is difficult for an independent 
+third party (e.g., a wireshark packet capture) to disambiguate the contents of these fields.  A switch 
+understands how to process the ses.inc_info because it is aware of the {FA, JobID, PIDonFEP, RI} tuple 
+in the request. 
+ 
+ 
+Table 2-52 - INC Operation ses.inc_info Encoding 
+Field Name Size (bits) Description Reference 
+ver 2 INC protocol version number (set to 0x00).  
+rt 1 
+Used only for operations with a single output (e.g., 
+UET_INC_REDUCE) or single input (e.g., 
+UET_INC_SYNCBCAST). The rank that solely receives the 
+output, or solely provides the input, sets this bit to one; all 
+other group members set it to zero. 
+ 
+ip 1 
+When set to one, the operation is in place, and the send and 
+receive buffers at the FEP are the same. This flag indicates 
+that once output data has been delivered to at least one 
+rank, any duplicate messages carrying the corresponding 
+input data may no longer contain valid data. 
+ 
+ 
+Figure 2-24 - INC Operation ses.inc_info Encoding 
+0 rt ip fo
+data_type reduce_opcid csn
+ver
+inc_info format
+Byte 0 Byte 1 Byte 2 Byte 3
+op_type cidrsvd

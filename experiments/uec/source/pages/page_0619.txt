@@ -1,0 +1,25 @@
+ 619 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4.2.7 CSIG Profiles 
+We define two CSIG configuration profiles: a base profile, which describes the set of signals that all CSIG-
+capable devices MUST support, and an extended profile, which describes a further set of signals, any 
+subset of which (including the null subset) CSIG-enabled devices MAY optionally support. We envision 
+that the extended profile may grow over time to include further signals as the need arises. Table 4-9 
+summarizes the signals for these profiles. 
+4.2.7.1 CSIG Base Profile 
+All CSIG-enabled devices MUST support the base profile, which includes the following signals: 
+• ABW 
+• ABW/C 
+• Delay 
+These signals are useful inputs to the NSCC congestion control algorithm, for which UEC mandates 
+support. They are also broadly useful telemetry signals for network performance analysis. 
+4.2.7.2 CSIG Extended Profile 
+The extended profile augments the base profile with further signal types and provides for extending 
+CSIG with additional signal types in future revisions of this specification. CSIG-enabled devices MAY 
+support any subset of these further signal types (including none of them): 
+• nQD 
+• Experimental 
+ 
+Figure 4-9 - Example CSIG Tag Position with MACSec 
+ 

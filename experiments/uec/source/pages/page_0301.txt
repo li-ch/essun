@@ -1,0 +1,65 @@
+ 301 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Function Name Direction Description and Parameters 
+pds_ses_rx_req() PDS to SES 
+at target 
+PDS reception of SES request 
+rx_pkt_handle, pkt, pkt_len, next_hdr,  
+orig_pdcid, orig_psn 
+• orig_psn is the PSN from the received packet that is used by SES for 
+some read responses; this is only valid for packets received on the 
+forward direction. 
+ 
+ses_pds_tx_ret() 
+ 
+ 
+SES to PDS 
+at target 
+SES return data for PDS Transmission  
+src_fep, dst_fep, jobid, mode, next_hdr, tc, som, eom, tx_pkt_handle, pkt, 
+pkt_len, msg_id, return_data, orig_pdcid, rsv_pdc_handle 
+• When return_data is TRUE, this packet is a read response, and the 
+packet must use the same PDC as the associated read request 
+(orig_pdcid).  
+• An implementation may integrate this into a single ses_pds_tx_req() 
+function. 
+pds_ses_rx_ret() 
+ 
+PDS to SES 
+at initiator 
+PDS reception of SES return data 
+rx_pkt_handle, pkt, pkt_len 
+• An implementation may integrate this into a single pds_ses_rx_req() 
+function. 
+ 
+ses_pds_tx_rsp() 
+ 
+SES to PDS 
+PDS transmission of SES Response 
+src_fep, dst_fep, rx_pkt_handle, gtd_del, ses_nack, rsp, rsp_len 
+pds_ses_rx_rsp() PDS to SES PDS reception of SES Response 
+tx_pkt_handle, rsp, rsp_len  
+ses_pds_unlock() SES to PDS SES unlocks the PDC, allowing the PDC to be torn down 
+msg_id 
+• The lock_pdc parameter to the ses_pds_tx_req() function indicates 
+that the PDC may not be closed until the return data for the read 
+request has been returned on the PDC. The PDC maintains a counter 
+that is incremented each time a ses_pds_tx_req() function is invoked 
+with the lock_pdc parameter set.  The ses_pds_unlock() function 
+decrements that counter.  If the counter is non-zero, the PDC cannot 
+be closed. 
+ses_pds_eager_req() SES to PDS SES request for estimate of appropriate eager size at Initiator 
+src_fep, dst_fep, mode, tc, eager_id 
+• Eager data is used only for rendezvous. 
+• PDS reliability determines if a CCC  exists for this dst_fep, tc, and 
+mode tuple. If yes then CMS calculates the eager size for that CCC. 
+Otherwise it returns the default eager value. 
+pds_ses_eager_size() PDS to SES PDS response with estimate of appropriate eager size at Initiator (return 
+for ses_pds_eager_req) 
+eager_id, eager_size 
+• Estimated the eager size value. 
+pds_pause() PDS to SES PDS indication to SES that resources are temporarily not available 
+pdc_pause, rudi_pause 
+• No RUD or ROD request packets are passed to PDS while pds_pause 
+is TRUE. No RUDI packets are passed to PDS while rudi_pause is 

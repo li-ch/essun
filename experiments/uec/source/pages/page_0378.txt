@@ -1,0 +1,52 @@
+ 378 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A PDC SHOULD maintain a timer or timestamp per outstanding packet and retransmit an 
+unacknowledged packet when its associated timer/timestamp expires (i.e., one timer per 
+outstanding/unacknowledged packet). Alternatively, a per PDC timer may be used. 
+The time for declaring a lost packet is programmable via the RTO_INIT_TIME parameter and is settable 
+in the range of 0 µsec to 8 sec. Exponential backoff (multiplicative increase) in time between retry 
+attempts SHOULD be provided each time the packet is retransmitted until Max_RTO_Retx_Cnt is 
+reached. A packet’s RTO_TIMER is restarted to its last value without exponential increase when a NACK 
+is received for that packet. The timer may be suspended during a Probe CP transmission. How 
+retransmission and exponential backoff coexist with RTO and the reception of NACKs is described in 
+Section 3.5.12.7. 
+3.5.15.4 Early Loss Detection — Requests 
+Early loss detection for PDS requests refers to determining if a packet was lost before the RTO_TIMER 
+expires. This may occur if trimming is not used or if a link failure occurs. Some capability for early loss 
+detection of PDS requests SHOULD be supported. The method(s) used are implementation specific. This 
+section provides several example methods. 
+3.5.15.4.1 OOO-based Loss Detection 
+The OOO-based method for early loss detection involves monitoring the out-of-order count 
+(pds.ack_cc_state.ooo_count) that the destination received.  Table 3-72 lists the local variables used in 
+the OOO-based loss detection method. No attempt is made to compress the fields in this example. Some 
+fields could be reduced in size based on the maximum number of outstanding packets supported or 
+because the field uses units of 256 bytes, or other criteria, etc. Some detection fields are required for 
+every PDC and some are per CCC or global, as indicated in the field size column of Table 3-72. 
+Two variations of the approach are described. One relies on pds.ack_cc_state.ooo_count from the 
+destination as carried in ACK_CC or ACK_CCX headers. Because this field is optional, the alternative is to 
+calculate OOO_COUNT at the source. The pds.ack_cc_state.rcvd_bytes field, a count of all bytes 
+received on a CCC, is described in the CMS Section 3.6.9.2.1. 
+Table 3-72 - Early Loss Detection Fields per CCC—OOO Example 
+Field Name Field Size Description 
+FIELDS FROM CMS  Used in NSCC algorithm 
+cwnd 32 bits 
+(per CCC) 
+Number of bytes, calculated by the CC algorithm  
+prev_rcvd_pdc_bytes 
+ 
+32 bits 
+ 
+(per PDC) 
+Highest pds.ack_cc_state.rcvd_bytes received on 
+the PDC over previously received ACKs, multiplied by 
+256 for units = bytes. This can be a 24-bit count since 
+the least significant 8 bits are always 0. 
+Monotonically increasing count of the number of 
+bytes received on a PDC incremented when a packet 
+is received and wraps at max. 
+inflight_ccc_bytes 32 bits 
+(per CCC) 
+Counter of bytes transmitted on the CCC but not yet 
+acknowledged, across all PDCs in CCC 
+RECEIVED PACKET FIELDS  Fields from the received packet @source 

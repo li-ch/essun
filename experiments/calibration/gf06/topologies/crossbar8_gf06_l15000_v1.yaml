@@ -1,0 +1,29 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 12.5 B/ns,
+# L = 15000 ns — the INCAST-RTT reading row: GF-06's incast setup has
+# "RTT of ~15 us" = 15000 ns, a PATH-ROUND-TRIP quantity. Reading class
+# (the GF-05 base-RTT pattern): a path RTT is NOT a per-pair latency —
+# charging it as L is a declared upper-envelope surrogate that dominates
+# every mid-size payload (at the anchor's staged 64 KiB chunk size the
+# latency term is ~76.6% of CCT under this reading; ~1.3% at the staged
+# 16 MiB range upper). OUTSIDE the free range [10, 2000] (as GF-05's
+# 12000 base RTT was) — recorded, the registry range untouched. Cross-
+# config note, recorded never cross-derived: GF-05's UET-htsim base RTT
+# (derived 84 us / 7 = 12000 ns) sits at exactly 4/5 of GF-06's 15000 —
+# the two independent UET-htsim users' RTT-class figures differ by the
+# clean fraction 5/4 (different topologies/rates; coincidence class,
+# recorded). Nothing tuned.
+topology_id: crossbar8_gf06_l15000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 15000
+notes: >
+  Non-blocking single-stage abstraction at the GF-06 anchor sim-config
+  bandwidth (12.5 B/ns) with L set to the anchor's staged incast-setup
+  RTT (~15 us = 15000 ns — a path-round-trip quantity charged as a
+  per-pair latency under the DECLARED upper-envelope surrogate reading;
+  outside the free range [10, 2000], recorded). Identity
+  t = 2(r-1)/r*M/B + 2L. Provenance: anchor-staged RTT quote; reading
+  declared. Never our measurements, never tuned.

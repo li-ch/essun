@@ -1,0 +1,18 @@
+# Transport-agnostic analytical topology: unidirectional ring of 4 ranks.
+# Atlas cell 4r-ring (design-space atlas ladder, G2 / decision D-025).
+#
+# Same shape and the SAME free parameters as ring8_free_params.yaml /
+# torus2d_8_free_params.yaml (B = 64 bytes/ns, L = 200 ns) so every atlas
+# cell compares under shared free parameters (the atlas fairness rule).
+# Link values are explicit FREE PARAMETERS (A-L0-BW, A-L0-LAT) — not
+# standard-derived, not measured. See
+# experiments/vertical_slice/assumptions_l0.yaml.
+topology_id: ring4_free_v1
+topology_class: unidirectional_ring
+ranks: 4
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently.
+  No congestion, no credits, no packetization — L0 transport model only.

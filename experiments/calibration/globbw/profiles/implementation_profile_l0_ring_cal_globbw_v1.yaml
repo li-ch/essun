@@ -1,0 +1,28 @@
+# Implementation profile for the calibration-ladder GLOBAL stage GLOB-BW
+# runs on the analytical L0 ring backend ( parameter
+# class: link bandwidth, A-L0-BW).
+implementation_profile_id: analytical_l0_ring_cal_globbw_v1
+status: PROPOSED   # global sensitivity candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml
+  (KEEP verdicts per docs/calibration/CALIBRATION_PLAN.md section 2.1).
+  This stage is NOT an anchor comparison: it maps the model's own
+  response surface along the REGISTERED A-L0-BW axis [1, 1024] B/ns on
+  the W1 smoke config, so the owner can see how much of the registered
+  range the smoke observable can even feel.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) swept over {1, 2, 4, 8, 16, 20, 25, 32, 50, 64,
+  128, 256, 512, 1024} B/ns - the powers of two spanning the whole
+  registered range [1, 1024] (1/1024 = the registered endpoints, 64 = the
+  registry point = the W1 smoke value = the delta baseline) plus the
+  three anchor-informed span context markers 20/25/50 (plan section 2.1
+  A-L0-BW candidate span [20, 64] interior; context only, never an
+  anchor comparison in this stage). L fixed at the A-L0-LAT registry
+  point 200 ns (KEEP). Values are registry-range points and declared
+  context markers, never measurements; nothing is tuned.
+measurement_source: none   # not calibrated; the global sensitivity record is stored as PROPOSED evidence in results/calibration/

@@ -1,0 +1,39 @@
+ 625 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• Timestamping in these stages includes only queueing and pipeline delays. 
+4.2.9.3.3 Point in Packet for Timestamping 
+SOP indicates the start-of-packet event at a switch port. A UE CSIG-capable switch MUST measure the 
+delay experienced by a packet by timestamping the packet at the SOP event at the ingress port and at 
+the SOP at the egress port, then taking the difference between the latter timestamp and the former 
+one. This approach does not include any extraneous delay proportional to a packet’s length in the 
+measurement and is compatible with cut-through switch fabrics. A switch MAY subtract a fixed value 
+from this measurement to account for the switch’s uncongested forwarding delay. 
+4.2.9.3.4 UET Congestion Control Use Cases 
+The max(Delay) signal is a trailing indicator of congestion: a packet must traverse a switch’s queue 
+before a measurement of the delay incurred at that queue can be calculated. The value of this signal as 
+an input to delay-based congestion control algorithms, such as NSCC, stems from its more targeted 
+measurement of congestion than is possible with total end-to-end path delay. max(Delay) reveals the 
+queueing delay experienced by a packet at a path’s single most constrained bottleneck, whereas whole-
+path delay measurements, such as those used as input by NSCC, sum the queueing delays from all 
+congested queues along a packet’s path. 
+The more targeted congestion measurements enabled by max(Delay) can materially improve the 
+bandwidth fairness of delay-based congestion control protocols. Previously published work [1]  
+demonstrates that when two flows traverse the same congested queue, if one of the two flows 
+encounters no other congested queues along its path and the other flow encounters one or more 
+additional congested queues along its path, delay-based congestion control schemes that use whole-
+path delay measurements exhibit bandwidth unfairness between the two flows. Such congestion control 
+schemes reduce a flow’s sending rate in proportion to the amount that the flow’s total path delay 
+exceeds a target path delay. 
+Because the flow traversing multiple congested queues experiences greater total path delay, even 
+though only a single queue along a path can be the most constrained bottleneck for any flow, its sending 
+rate will be reduced proportionally more than that of the flow traversing only one congested queue. 
+Poseidon, a delay-based congestion control algorithm that uses CSIG max(Delay)-like feedback [1] , 
+improves fairness for such flow pairs by enabling the control loops for each of the two flows to respond 
+to congestion only at that flow’s single true bottleneck (most congested) queue, such that the flow that 
+traverses multiple congested queues is not disproportionately penalized. 
+The max(Delay) signal should offer similar bandwidth fairness improvements to NSCC congestion 
+control. Exploratory simulations of a version of NSCC modified to replace whole-path delay signals with 
+CSIG max(Delay) signals demonstrate material bandwidth fairness improvements over baseline NSCC in 
+scenarios in which multiple flows traverse a shared congested queue, while distinct flows among them 
+traverse varying numbers of congested queues. 

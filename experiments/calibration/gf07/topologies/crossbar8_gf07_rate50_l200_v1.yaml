@@ -1,0 +1,37 @@
+# Calibration-ladder GF-07 topology: crossbar r=8 LEONARDO CARRIER row
+# — B = 50 B/ns, L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-07;
+# arXiv:2604.11432, AS STAGED): Leonardo (HDR IB Dragonfly+) is staged
+# at "400 Gb/s/node": 400/8 = 50 B/ns under the plan's decimal
+# convention (per-node rate mapped onto the per-rank single-port
+# injection B — A-L0X-PORT first-order; no direction split staged,
+# flagged). ROLE: the SECOND staged per-node fabric rate, executed as
+# an alternative CARRIER for the anchor's own Leonardo collapse factor
+# (5x, the staged ratio 0.2) in the carrier sweep — the cross-fabric
+# transfer probe: at a FIXED congestion factor, the observed CCT ratio
+# at finite size DEPENDS on the carrier rate (through the latency
+# fraction 2L/t), converging to the factor only in the bandwidth-bound
+# limit; congestion magnitudes measured on one fabric class do NOT
+# transfer onto another at finite size. Cross-anchor coincidence,
+# recorded never cross-derived: 50 B/ns is numerically identical to
+# CAL-A1's derived NVLink5 per-port rate, CAL-A5's staged ICI rate, and
+# CAL-A11's 400G optics rate (the GF-05 record noted the same
+# coincidence class). L = 200 ns = registry (GF-07 stages no latency
+# number; A11 precedent). r = 8 free smoke default. Asymptotic CCT
+# ratio vs the LUMI-rate carrier exactly 100/50 = 2 (a cross-fabric
+# scale contrast, not a congestion factor). B fixed by anchor
+# arithmetic BEFORE any stage output was read; never tuned.
+topology_id: crossbar8_gf07_rate50_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at GF-07's Leonardo staged per-node rate:
+  B = 50 = 400 Gb/s / 8, L = 200 ns registry. Alternative carrier for
+  the cross-fabric factor-transfer probe (the anchor's own 0.2 collapse
+  factor is executed at this rate by crossbar8_gf07_leo10_l200_v1.yaml).
+  Anchor quote / registry default, never our measurement; never tuned.

@@ -1,0 +1,43 @@
+ 116 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+fi_tagged() API Description Requirements SES Opcode 
+fi_tsendmsg Like fi_sendmsg() but with 
+tag 
+Same as fi_tsend() Same as fi_tsend() 
+fi_tinject Like fi_inject() but with tag Same as fi_tsend() Same as fi_tsend() 
+fi_tsenddata Like fi_senddata() but with 
+tag 
+Same as fi_tsend() Same as fi_tsend() 
+ 
+2.2.5.4.2.1 Tagged Message Initiator ID Matching 
+The SES header for received tagged messages includes a ses.initiator field used as part of the matching 
+criteria. The Initiator ID associated with a posted tagged buffer is determined based on the src_addr 
+parameter of the fi_tagged() APIs. If the src_addr parameter is not set to FI_ADDR_UNSPEC, the posted 
+tagged buffer MUST be matched only when the tag matches the ses.match_bits field in the SES header, 
+and the ses.initiator field in the SES header matches the Initiator ID component of the UET address 
+referenced by the src_addr parameter. Other components of the UET address referenced by the 
+src_addr parameter MAY be used to direct received messages to specific buffers according to the 
+FI_TAGGED_DIRECTED_RECV semantics. If the src_addr parameter is set to FI_ADDR_UNSPEC, the 
+ses.initiator field MUST NOT be used as part of the matching criteria.  
+Implementations of the AI Full and HPC profiles MUST support the use of FI_ADDR_UNSPEC with the 
+fi_tagged() APIs. Implementations of the AI Full profile SHOULD support setting the src_addr parameter 
+of the fi_tagged() APIs to reference a specific source UET address. Providers can indicate that 
+FI_ADDR_UNSPEC is not supported and that setting the src_addr parameter to reference a specific 
+source UET address is supported via the FI_EXACT_DIRECTED_RECV capability. Implementations of the 
+HPC profile MUST support setting the src_addr parameter of the fi_tagged() APIs to reference a specific 
+source UET address. 
+ 
+2.2.5.4.2.2 Tagged Message Rendezvous 
+The tagged message rendezvous requirements are similar to the message rendezvous requirements 
+specified in Section 2.2.5.4.1.2. 
+For the AI Full profile, tagged messages with sizes >= UET_PROVIDER_TAG_RENDEZVOUS_SIZE bytes 
+SHOULD be sent with the UET_DEFERRABLE_TSEND semantic opcode. 
+For the HPC profile, tagged messages with sizes >= UET_PROVIDER_TAG_RENDEZVOUS_SIZE bytes 
+SHOULD be sent with the UET_RENDEZVOUS_TSEND semantic opcode. 
+The amount of eager data sent as part of a UET_RENDEZVOUS_TSEND operation MUST be <= 
+UET_PROVIDER_MAX_EAGER_SIZE bytes. 
+Informative Text: 
+When used with FI_AV_TABLE, the value of ses.initiator on the wire should be the index to the table. 
+The Initiator ID component of the src_addr should just be the CCL/MPI rank here, and the two should 
+match. 

@@ -1,0 +1,40 @@
+ 695 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+where n is the number of receive VCs listed by this port, the string length is n*6+20. The maximum CBFC 
+TLV information string length is 212 bytes. The maximum total TLV length is 214 bytes. 
+5.3.2.2.3 Company ID (CID) 
+The 24-bit UEC Company ID (CID) used to identify UE TLVs is FA-7A-CB. 
+5.3.2.2.4 Subtype 
+The 5-bit subtype value 1 identifies the CBFC TLV. The UE subtype and version fields together occupy the 
+1-byte field specified by IEEE Std 802.1AB-2016 subclause 8.6.1 for the organizationally defined subtype. 
+The subtype value 0x1F is reserved for extending the UE TLV subtype field. 
+5.3.2.2.5 Version 
+The 3-bit version used to identify the initial version of the CBFC TLV is 0. Future versions of the TLV 
+SHALL be backward-compatible with version 0. They can extend the length of the TLV to add additional 
+information and definitions for reserved fields. Older versions ignore any updated reserved fields, code 
+points, or TLV length extensions. 
+5.3.2.2.6 Error_Code 
+The 4-bit Error_Code is used by the CBFC sender to indicate error conditions to the remote CBFC 
+receiver. If no error is detected the Error_Code = 0. The error codes are: 
+Table 5-36 - UE Link Negotiation CBFC Error Codes 
+Value CBFC Sender Meaning 
+0x0 No error. 
+0x1 CBFC sender is unable to support the receiver cell size. 
+0x2 CBFC sender is unable to support a requested VC. 
+0x3 CBFC sender is unable to support the credit pool size. 
+0x4 CBFC sender is unable to support a requested VC credit limit. 
+0x5 CBFC sender and CBFC receiver packet identification do not match. 
+0x6 Other error condition. 
+0x7-0xF Reserved for future UE specification. 
+ 
+5.3.2.2.7 S_CreditSize 
+The 12-bit S_CreditSize field identifies the number of bytes in a single credit at the sending port. When 
+S_CreditSize = 0, the CBFC sender has not yet set its credit size. A CBFC sending port waits to see the 
+CBFC receiver cell size, R_CellSize, in the remote LLDP database before selecting its credit size. The 
+S_CreditSize SHALL be valid when any of the S_VC_RTS[x] flags are TRUE. While any S_VC_RTS[x] flag is 
+TRUE, the S_CreditSize SHALL NOT change. 
+5.3.2.2.8 S_PacketOverhead 
+The 8-bit S_PacketOverhead field identifies the number of overhead bytes per packet at the sending 
+port. The S_PacketOverhead SHALL be valid when any of the S_VC_RTS[x] flags are TRUE. While any 
+S_VC_RTS[x] flag is TRUE, the S_PacketOverhead SHALL NOT change. 

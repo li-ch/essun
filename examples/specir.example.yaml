@@ -1,0 +1,79 @@
+standard:
+  name: ExampleScaleUp
+  version: '1.0'
+  document_sha256: <illustrative-not-a-real-document>
+  license_review:
+    status: approved
+    scope: internal_simulation_example
+requirements:
+- id: REQ-0042
+  normativity: MUST
+  source:
+    source_id: EXAMPLE-SOURCE
+    section: '5.1'
+    page: 100
+    table: 5-2
+messages:
+  RemoteWrite:
+    fields:
+    - name: destination
+      bits: 16
+      source: REQ-0042
+    - name: payload_bytes
+      bits: 24
+      source: REQ-0042
+state_machines:
+  Sender:
+    states:
+    - IDLE
+    - WAIT_CREDIT
+    - WAIT_ACK
+    transitions:
+    - from: IDLE
+      event: write_arrival
+      to: WAIT_CREDIT
+      source: REQ-0042
+semantics:
+  RemoteWrite:
+    events:
+    - request
+    - data_visible
+    - response
+    - completion
+    preconditions:
+    - destination_mapped
+    ordering: same_address_ordered
+    visibility_before_completion: true
+    free_parameters:
+    - switch_pipeline_ns
+    - completion_delay_ns
+observables:
+- id: O-CAUSAL
+  kind: exact
+  events:
+  - data_visible
+  - completion
+- id: O-CREDIT
+  kind: invariant
+  expr: 0 <= credit <= capacity
+- id: O-CCT
+  kind: distribution
+  metric: collective_completion_time
+refinement:
+- pair:
+  - L1
+  - L2
+  preserve_exactly:
+  - O-CAUSAL
+  - O-CREDIT
+  bounded_in_validity_domain:
+  - O-CCT
+validity_domain:
+  topology: example_topology_only
+  workload: example_workload_only
+  implementation: example_implementation_only
+tests:
+- id: CREDIT-NEVER-NEGATIVE
+  type: invariant
+- id: WRITE-COMPLETION-AFTER-VISIBLE
+  type: scenario

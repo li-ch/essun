@@ -1,0 +1,40 @@
+ 548 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.7 Transport Security Sublayer (TSS) 
+This section defines an optional method of end-to-end confidentiality, integrity, and basic service 
+protection for UET. The extent of this security solution is FEP to FEP. Mapping from the FEP to other 
+security infrastructure (e.g., OCP SIOV, PCIe SRIOV, or CXL/PCIe TDISP) within the node is out of scope of 
+this document. The specification has been inspired by sRDMA [33] and ReDMArk [3] and adopts some of 
+their approaches in order to allow efficient prevention of all documented attacks. In addition, this 
+specification builds heavily on from PSP, IPSec, and MACSec specifications. 
+3.7.1 Introduction 
+Many good choices exist for transport security. However, having a large number of dynamic endpoints 
+makes traditional point-to-point encryption protocols (e.g., TLS, IPsec) difficult to deploy due to the 
+large session state (keys) required. In addition, the ephemeral nature of the PDS layer creates issues in 
+using a connection-oriented protocol. Google’s PSP [34] is a new protocol that makes a number of 
+simplifications with respect to IPsec. One of PSP’s key simplifications is utilizing a key derivation function 
+(KDF) to derive per-security association keys from a single, receiver-based, primary key. This reduces the 
+amount of key storage required at the receiver. However, it still requires a key exchange and storage for 
+each connection at the sender. The Transport Security Sublayer (TSS) described here addresses this 
+problem for large-scale HPC or AI/ML deployments with a large number of endpoints. One of the key 
+reasons for this secure protocol definition is to solve the transmitter state scaling issue and provide an 
+efficient mapping to the UET. 
+3.7.2 Security Model 
+3.7.2.1 Trust Model 
+A ”zero trust” security architecture is used. This implies an end-to-end solution where elements of the 
+transport network (e.g., switches) are not trusted. For purposes of this standard, a portion of the FEP 
+hardware responsible for the transport security processing is trusted and MUST form the trust anchor 
+for the solution. 
+3.7.2.2 Threat Model 
+The threat model describes attacker tools, threats, and mitigations of in-scope threats. 
+Table 3-127 - Threat Model Definitions 
+Term Definition 
+Attacker Entity that wants to extract information from a communication or modify 
+communicated data. 
+Ciphertext The packet data containing the encrypted plaintext that is sent on the wire between 
+sender and receiver. 
+Information Data or properties of the data exchanged between two participants that would allow 
+the attacker to take or cause an adverse action. Examples include cryptographic keys, 
+decisions of the FEP processing, etc. 
+Intermediary/switch An entity that routes or forwards packets to a receiver. 

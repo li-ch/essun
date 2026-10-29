@@ -1,0 +1,22 @@
+# Transport-agnostic analytical topology: 16 ranks fully reachable from one
+# another, AllReduce by recursive halving (reduce) + recursive doubling
+# (broadcast). Values are explicit FREE PARAMETERS (A-L0D-BW, A-L0D-LAT) and
+# the power-of-two schedule and serialized-step execution are MODELING
+# ASSUMPTIONS (A-L0D-POW2, A-L0D-STEP) — not standard-derived, not measured.
+# See experiments/vertical_slice/assumptions_l0.yaml.
+topology_id: rdoubling16_free_v1
+topology_class: fully_connected_exchange
+ranks: 16
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Same single-port non-blocking fully-connected fabric as the crossbar
+  topology (crossbar16_free_v1); the ranks count must be a power of two for
+  the doubling partner schedule (rank XOR 2^(i-1) at step i), and non-power
+  variants are explicitly unsupported. Each step exchanges with exactly one
+  partner; steps and phases serialize. B lives under `nic` because it is a
+  property of the rank's injection port, and is equal to the ring/crossbar/
+  torus values so designs compare under shared parameters. No congestion, no
+  credits, no packetization — L0 transport model only.

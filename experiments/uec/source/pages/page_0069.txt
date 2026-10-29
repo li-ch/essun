@@ -1,0 +1,84 @@
+ 69 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+incorporate queuing resources and forwarding mechanisms that enable the differentiated forwarding 
+of packets identified by the differentiated services code point (DSCP). The DSCP can identify 64 
+distinct differentiated services, 16 of which are available for local definition and use. Implementations 
+provide a variety of ways to configure the mapping of packets identified by DSCP to traffic classes at 
+the endpoint link and switch level. There is no current standard identified or defined by UE to perform 
+this mapping. In some cases, multiple DSCP values may map to the same traffic class (see the UET 
+DSCP mappings table in the CMS Section 3.6.4.7). UE features depend upon the consistent 
+configuration and use of traffic classes at the endpoint and across the fabric. UE recommends a 
+consistent mapping, and the network operator is responsible for assuring this consistency. 
+ 
+Figure 1-15 shows the mapping of application requested traffic classes to traffic classes available at the 
+link layer on endpoints and switches. Items depicted within the dashed boxes are configuration values 
+available to the UE operator at different layers of the UE solution stack. Applications can specify the 
+desired libfabric traffic class using the fi_domain() library API. If unspecified, the UE libfabric mapping 
+Section 2.2 provides default DSCP values to use for requests. The CMS specification provides a table of 
+DSCP to Traffic Class mapping in Section 3.6.4.7. This table describes how different classes of DSCP 
+values are mapped to traffic classes at the link. 
+The DSCP values provided for message requests from the libfabric layer are passed through and 
+categorized as either DSCP_TRIMMABLE or DSCP_NO_TRIM. The UET protocol includes DSCP values for 
+generated ACKs, NACKs, and control packets that are categorized as DSCP_CONTROL. The UET protocol 
+can also categorize retransmitted data packets with DSCP_TRIMMABLE_RETX. All these DSCP categories 
+are mapped into the link-level traffic classes TC_high and TC_low that are prioritized higher and lower 
+with respect to one another. 
+ 
+Figure 1-15 - Traffic Class Mapping 
+ 
+                                             
+    
+                 
+                 
+               
+                      
+                     
+               
+            
+          
+                   
+              
+            
+                   
+            
+            
+                    
+                  
+             
+                
+                               
+                        
+                
+           
+                  
+                         
+              
+                 
+      
+    
+                 
+                 
+               
+                      
+                     
+               
+            
+                       
+                   
+                     
+                            
+        
+           
+      
+       
+          
+          
+              
+          
+        
+       
+      
+      
+           
+          

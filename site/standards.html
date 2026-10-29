@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standards — essun</title>
+<meta name="description" content="How essun ingests scale-up network standards honestly: the UEC 1.1 semantic profile (80 anchors, 445 requirement objects, 67 free parameters), the not-normative UnifiedBus paper-derived profile, and the free-parameter discipline. License review precedes ingestion.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html" aria-current="page">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">Standard profiles</p>
+    <h1>Standard semantics, separated from modeling assumptions</h1>
+    <p class="tagline">essun never invents a normative value. Every standard-derived value keeps a source anchor (version, section, hash); where a standard does not fix a number, the model uses an explicit free parameter. License review precedes ingestion of any standard text, and restricted texts are never fed into any pipeline.</p>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="discipline">
+  <p class="kicker">Three rules</p>
+  <h2>The discipline</h2>
+  <div class="prose">
+    <ul>
+      <li><strong>Separation rule.</strong> Standard targets, implementation profiles, and modeling assumptions are three different things; the repository keeps them in separate files, and the reconciliation ladder checks every model assumption against the standard profile explicitly.</li>
+      <li><strong>Anchor integrity.</strong> Each anchor in a registry carries a verbatim quote, page number, and page sha256; the test suite recomputes page hashes and quote matches (a permanent license-gate test).</li>
+      <li><strong>Free parameters stay free.</strong> After the UEC 1.1 reconciliation, still no numeric L0/L0.5 model value is standard-derived: link bandwidth/latency and workload sizes remain explicit free parameters in the assumptions registries (<code>assumptions_l0.yaml</code>, 26 entries; <code>assumptions_l05.yaml</code>, 6 entries; all <span class="label label-proposed">PROPOSED</span> pending review).</li>
+    </ul>
+  </div>
+</section>
+
+<section id="uec">
+  <p class="kicker">The one license-cleared normative profile</p>
+  <h2>UEC 1.1 semantic profile</h2>
+
+  <div class="stats">
+    <div class="stat"><span class="n">764</span><span class="d">pages of the Ultra Ethernet Specification 1.1, license-gated ingestion</span></div>
+    <div class="stat"><span class="n">80</span><span class="d">anchors, each page-hash- and verbatim-quote-verified</span></div>
+    <div class="stat"><span class="n">445</span><span class="d">typed requirement objects across five mechanism modules</span></div>
+    <div class="stat"><span class="n">67</span><span class="d">free parameters — values the standard does not fix</span></div>
+  </div>
+
+  <dl class="facts">
+    <dt>Source</dt>
+    <dd>Ultra Ethernet Specification 1.1 (764 pages), license-gated ingestion under <code>experiments/uec/</code> with the license terms recorded in <code>source_record.yaml</code>; quotes are short, attributed, and the PDF itself never enters git.</dd>
+    <dt>80 anchors</dt>
+    <dd>Each page-hash- and verbatim-quote-verified; the anchor-integrity tests recompute both on every <code>make test</code>.</dd>
+    <dt>445 typed requirement objects + 67 free parameters</dt>
+    <dd>Across five mechanism modules: link/transport, reliability/ordering, congestion management, credits/flow control, and F07 mechanisms.</dd>
+    <dt>Reconciliation ladder S0–S6 — complete</dt>
+    <dd>Over all 32 L0/L0.5 assumption ids: <strong>24 STAYS_FREE / 3 SPEC_ANCHORED / 5 OUT_OF_SCOPE / 0 CONTRADICTED</strong>. Headline: the profile anchors message-level bounds and mechanism laws, while no numeric model value is standard-derived.</dd>
+    <dt>Label</dt>
+    <dd><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> (specification complete; expert review passed 2026-10-28)</dd>
+  </dl>
+</section>
+
+<section id="unifiedbus">
+  <p class="kicker">Second standard for comparison — honestly not normative</p>
+  <h2>UnifiedBus paper-derived profile</h2>
+  <dl class="facts">
+    <dt>Source</dt>
+    <dd>5 public papers and vendor posts only (PUBLIC_READ), same anchor-integrity tests as the UEC registry. The UnifiedBus specification track is license-gated and was never fetched.</dd>
+    <dt>53 anchors, 54 typed parameters</dt>
+    <dd>Every parameter carries a mechanical evidence grade — PAPER_REPORTED, VENDOR_CLAIMED, or OFFICIAL_PUBLIC_PAGE — so vendor figures cannot launder as measurements.</dd>
+    <dt>Platform map</dt>
+    <dd>Code-enforced: L0_READY 8 / L1_L2_REQUIRED 28 / UNSUPPORTED 26.</dd>
+    <dt>Role</dt>
+    <dd>Carries public-gate leg 2 (a second standard for comparison) with its honest not-normative label. Feeds the cross-standard comparison grid.</dd>
+    <dt>Label</dt>
+    <dd><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> (not normative; public-gate leg 2)</dd>
+  </dl>
+</section>
+
+<section id="cross-standard">
+  <p class="kicker">Read this one honestly</p>
+  <h2>The cross-standard comparison — delta zero, by construction</h2>
+  <div class="callout warn">
+    <p class="callout-title">Delta zero, by construction</p>
+    <p>The grid <code>experiments/sweeps/cross_design_uec_vs_ub_paper_l0_v1.yaml</code> compares the UEC-flavored and paper-derived-UnifiedBus-flavored columns on shared L0 free parameters. Both columns share the same free parameters, so the UnifiedBus row coincides exactly with the identity-matched UEC control: delta 0 is an arithmetic fact of the construction, not a measured difference between standards. A real cross-standard numeric comparison becomes possible only when standard-derived values exist — which today none do.</p>
+  </div>
+</section>
+
+<section id="scope">
+  <p class="kicker">Boundaries</p>
+  <h2>What is deliberately out of scope today</h2>
+  <div class="prose">
+    <ul>
+      <li><strong>UALink and CXL</strong> are license-restricted and were never ingested. The normative upgrade of public-gate leg 2 stays blocked on the license review; UEC remains the only license-cleared normative profile.</li>
+      <li><strong>No FLIT-level standard semantics</strong> are modeled yet; the UEC profile binds documentation and L1 contracts today — it does not change any L0 number.</li>
+      <li>Where a standard fixes no value, the repo records an explicit free parameter rather than guessing one — the divisibility guards, bandwidth, latency, and injection rates are all yours to set, and the run id changes when you do.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>). Extracted standard text keeps its own terms; see <code>LICENSES.md</code> in the repository.</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

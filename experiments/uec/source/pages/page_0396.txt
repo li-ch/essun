@@ -1,0 +1,39 @@
+ 396 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-79 - Negotiation CP Payload for pds.neg_type = PDS_NEG_ON_OFF 
+Field Name Size  
+(in bits) 
+Description 
+neg_type 8 Type of this Negotiation CP = PDS_NEG_ON_OFF 
+neg_length 8 Set to 2 as this payload is 8 bytes 
+Reserved 16 Reserved 
+neg_on_off_mask 32 A 32-bit mask of requested features. Each bit corresponds to a single 
+feature as defined in Table 3-80. Any number of bits may be set in a 
+single negotiation request. 
+ 
+ 
+Table 3-80 - Negotiation CP Payload pds.neg_on_off_mask Format 
+Mnemonic Bit 
+Position 
+Description 
+SYN_RETX_TRANSFER 0 Request that the target allow the initiator to pass control of tracking the 
+Syn_Retx_Safety_Time to the target. 
+Reserved 1-31 Reserved 
+ 
+The format of the payload field for the CP ACK to the Negotiation CP when pds.neg_type = 
+PDS_NEG_ON _OFF is illustrated in Figure 3-95. Only bits defined in Table 3-81 may be set. All reserved 
+fields are set to zero and ignored upon receipt. 
+ 
+Table 3-81 - CP ACK Payload Fields for pds.neg_type = PDS_NEG_ON_OFF 
+Field Name Size  
+(in bits) 
+Description 
+neg_type 8 8-bit negotiation type echoed from the negotiation packet. 
+reserved 8 Reserved 
+neg_on_off_mask_response 32 Bitmap field where each bit indicates that the 
+corresponding feature request is supported. See Table 
+3-80. A bit is set only if the corresponding bit was set in the 
+pds.payload of the Negotiation CP. 
+ 
+Figure 3-95 - Format of CP ACK Payload (pds.neg_type = PDS_NEG_ON_OFF) 

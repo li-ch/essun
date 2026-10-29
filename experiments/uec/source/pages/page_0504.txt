@@ -1,0 +1,57 @@
+ 504 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.14.7.2.2 RCCC Aggregate Rate Control Algorithm 
+When RCCC Aggregate Rate Control is enabled, the following OnRX(pkt) code must be run on each 
+packet arrival in addition to the OnRX(pkt) packet processing described in Section 3.6.14.6. The code 
+updates the credit_rate (a FEP global variable, see Table 3-102), which is used to control the frequency 
+of credit creation at the receiver as specified in the OnCreditTimer() pseudocode in Section 3.6.14.6). 
+OnRX(pkt):   
+    if (pkt.csig.t== “max(Delay)”):   
+        //UPDATE average delay based on CSIG signal maxDelay 
+        average_delay = g * quant_reverse_lookup_for_maxDelay(pkt.csig.s) + 
+                       (1-g) * average_delay 
+    else: 
+        est_delay = 0 
+        if (pkt is trimmed): 
+            est_delay = trim_delay 
+        elif (pkt.ECN marked): 
+            est_delay = max_thresh_delay 
+        else : 
+            est_delay = min_thresh_delay 
+ 
+        average_delay = f * est_delay + (1-f) * average_delay 
+ 
+    delta = now() - last_update 
+ 
+    if (delta > CC_INVOCATION_DELTA): 
+        DoOversubscribedCC() 
+        last_update = now() 
+ 
+     
+DoOversubscribedCC(): 
+    u = average_delay / base_rtt + 1 
+ 
+    update_interval = UPDATE_INTERVAL * base_rtt +  
+                      max(average_delay, base_rtt) 
+    updateWc = now() >= next_rate_change 
+ 
+    if (u >= target_u || increment_stage >= MAX_INCREMENT_STAGE): 
+        credit_rate = reference_rate / (u / target_u) + rai 
+ 
+        if (credit_rate > 1): 
+            credit_rate = 1 
+        if (credit_rate < min_rate): 
+            credit_rate = min_rate 
+ 
+        if (updateWc): 
+            increment_stage = 0 
+            reference_rate = rate 
+            next_rate_change = now() + update_interval 
+    else: 
+        credit_rate = reference_rate + rai 
+ 
+        if (credit_rate > 1): 
+            credit_rate = 1 
+        if (credit_rate < min_rate): 
+            credit_rate = min_rate 

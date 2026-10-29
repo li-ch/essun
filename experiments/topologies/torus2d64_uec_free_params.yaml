@@ -1,0 +1,29 @@
+# UEC-flavor stand-in for the cross-design L0 comparison (Q6 stage S4).
+#
+# HONESTY: no UEC-derived numeric value exists at L0 today — UEC 1.1
+# (STD-UEC-11, public read; Q1 ladder) fixes no line rate, hop latency,
+# rank count, or grid shape usable as an L0 input. Every value below is an
+# explicit FREE parameter from the shared record
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml (A-XDUO-BW,
+# A-XDUO-LAT, A-XDUO-TP); the 8x8 grid shape is a free design-space
+# choice (A-L0T-SHAPE pattern). The identity (2D torus) is a free
+# transport-agnostic stand-in (A-XDUO-IDUEC), not a UEC topology claim.
+# It is included as the structural (two-ring-level) bracket around the
+# flat ring and single-tier crossbar rows — deliberately NOT the
+# UnifiedBus pod structure: the UB 64x16 structural stand-in belongs to
+# UBP-P18's 1024-NPU pod scale, which the same-workload gate excludes
+# from this table (A-XDUO-TP).
+topology_id: uec_free_torus2d64_v1
+topology_class: torus2d_ring_x_ring
+ranks: 64
+grid:
+  dim1_ranks: 8
+  dim2_ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  Same torus identity and modeling assumptions as torus2d8_free_v1
+  (A-L0T-SEQ, A-L0T-UNIF, A-L0T-SHAPE, A-L0T-DIV), scaled to the shared
+  comparison rank count 64 as an 8x8 grid. No congestion, no credits, no
+  packetization, no UEC semantics — transport model only.

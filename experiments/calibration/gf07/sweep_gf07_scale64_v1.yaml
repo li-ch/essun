@@ -1,0 +1,64 @@
+# Calibration-ladder GF-07 sweep #3: the SCALE leg
+# at the anchor's largest STAGED exact node count — r = 64, the
+# bursty-incast configuration ("bursty incast 64 nodes") and the top of
+# the Leonardo collapse range ("32–64 nodes") (GF-07, arXiv:2604.11432;
+# docs/calibration/anchors_gapfill.md §GF-07).
+#
+# Rows (all fixed by anchor/registry arithmetic BEFORE any stage output
+# was read):
+#   crossbar B=100 — the NON-BLOCKING CEILING abstraction at the
+#     anchor's own scale (LUMI's staged per-node aggregate; the role
+#     CAL-A1/A2 spec ceilings and GF-05's 1,024-node row play);
+#   crossbar B=4 — the SAME ceiling displaced by the anchor's WORST
+#     measured factor 25 (CRESCO8 "slowdowns up to 25x"): the
+#     ceiling-vs-worst contrast at the configuration where the anchor
+#     measured its 0.08-ratio bursty-incast point;
+#   ring B=100 — the SCHEDULE-STRUCTURE contrast pole: same bandwidth
+#     coefficient 63/32 as the crossbar, latency chain 2*(r-1)*L =
+#     25,200 ns vs the crossbar's 400 ns; ring-minus-crossbar exactly
+#     2*(r-2)*L = 24,800 ns at every size. Feeds the stage record's
+#     confounder ordering: at this scale the schedule effect
+#     (ring/crossbar ratio, ~2.18 at 1 MiB falling to ~1.07 at 16 MiB)
+#     sits INSIDE the anchor's measured 1.05 -> 25 envelope — the
+#     REVERSE of GF-05's 1,024-node ordering where structure dominated
+#     the CC effects.
+#
+# Structural facts recorded in the stage record: the bandwidth
+# coefficient 2*(r-1)/r = 63/32 at r=64 is exactly (63/32)/(7/4) = 9/8
+# (+12.5%) above the r=8 default — rank-count structure sits INSIDE
+# the envelope's lower band, inseparable from the 20/19..4/3 rows in a
+# raw reading; the ring regime boundary M* = L*B*r = 200*100*64 =
+# 1,280,000 B (the payload where the ring's latency chain equals its
+# bandwidth term) is bracketed by the 1 MiB and 2 MiB ladder members.
+#
+# NOTHING IS TUNED; L = 200 the registry point (GF-07 stages no latency
+# number); no anchor time is compared anywhere. DOMAIN HONESTY: the
+# anchor's 64-node fabrics are congestible Dragonfly+/fat-tree/RoCE
+# structures with blocking (CRESCO8's staged 1.67:1) and congestion
+# management — the crossbar rows are a NON-BLOCKING CEILING
+# abstraction and its displacement, never predictions.
+#
+# Payload grid: 19-size ladder 64*2^k (64 B -> 16 MiB) — every size
+# divisible by r=64 (A-L0-DIV / A-L0X-DIV accept, no bracketing),
+# ending exactly at the anchor's maximum staged vector 16 MiB and
+# including 2 MiB (the AllReduce-class regime) and the standard
+# ladder's in-range members (8 KiB, 32 KiB, 128 KiB, 512 KiB, 2 MiB,
+# 8 MiB). 64 is a power of two (A-L0D-POW2 native).
+sweep: cal_gf07_scale64_v1
+workload: experiments/calibration/gf07/workloads/w1_dense_tp_decode_tp64_64b.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf07/topologies/crossbar64_gf07_rate100_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf07/topologies/crossbar64_gf07_rate100_l200_v1.yaml
+    - experiments/calibration/gf07/topologies/crossbar64_gf07_worst4_l200_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/gf07/topologies/ring64_gf07_rate100_l200_v1.yaml

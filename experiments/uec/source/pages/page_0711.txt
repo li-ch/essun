@@ -1,0 +1,60 @@
+ 711 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+    base error-code-selector; 
+    description 
+   "The sender cannot support the credit pool size. 
+   Signaled as value 3."; 
+  } 
+  identity error-credit-limit { 
+     base error-code-selector; 
+    description 
+   "The sender cannot support the credit 
+   limit. Signaled as value 4."; 
+  } 
+  identity error-packet-id { 
+    base error-code-selector; 
+    description 
+   "The sender packet identification does not 
+   match the receiver. Signaled as value 5."; 
+  } 
+  identity error-other { 
+    base error-code-selector; 
+    description 
+   "Other CBFC error detected by sender. 
+      Signaled as value 6."; 
+  } 
+  grouping uel-cbfc-tlv { 
+    description 
+      "UE Link CBFC TLV data"; 
+    reference 
+      "UE 1.0 Specification"; 
+    leaf s-error-code { 
+      type identityref { 
+          base error-code-selector; 
+      } 
+      description 
+        "Indicates either no error or the type of error 
+  detected at the sender."; 
+    } 
+    leaf s-credit-size { 
+      type uint16 { 
+        range "0..4094"; 
+      } 
+      config false; 
+      description 
+        "The credit size used by the sender for credit accounting. 
+        When the value is 0 the sender has not configured a 
+        credit size. The receiver cannot proceed until the 
+        sender sets its credit size based on the receiver's 
+        credit size. The sender credit size is valid when 
+ s-vc-rts != 0, meaning some VC[x] flag(s) are true."; 
+    } 
+    leaf s-packet-overhead { 
+      type int8 { 
+        range "-127..127"; 
+      } 
+      config false; 
+      description 
+        "The packet overhead used by the sender for credit 
+        accounting. The receiver cannot proceed until the 

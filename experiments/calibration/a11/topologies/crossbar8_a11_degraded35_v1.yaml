@@ -1,0 +1,50 @@
+# Calibration-ladder A11 topology: the same 8-rank crossbar identity at
+# B = 35 B/ns = 0.7 x 50 — the anchor's CONGESTION/LOAD-BALANCE ENVELOPE
+# mapped onto the free bandwidth axis. Source numbers
+# (docs/calibration/anchors_staging.md §A11): path-pinning "degraded
+# training performance up to more than 30%"; E-ECN + QP scaling gave "up
+# to 40% improvement for the AllReduce collective". NEITHER mechanism
+# exists in the L0 input space (the backend declares congestion
+# explicitly unsupported; there is no ECMP / path-count / queueing key
+# anywhere in the loader surface), so this row is NOT a model of the
+# mechanism: it locates the envelope's MAGNITUDE in model terms — where
+# a fabric whose effective bandwidth sits 30% below the 400G line
+# (50 x 0.7 = 35) lands on the CCT axis. In the bandwidth-bound limit
+# the CCT ratio vs the anchor row is exactly 50/35 = 10/7 ~ 1.4286
+# (+42.86%): 1/(1-0.3) = 10/7 EXACTLY, i.e. the anchor's ">30%
+# degradation" and its "up to 40% improvement" are the same boundary
+# read from opposite directions (1/1.4 = 5/7 ~ 0.7143 vs 0.7, mutually
+# consistent within 50/49 ~ 2.04%) IF their (unstated) baselines
+# coincide — recorded as anchor-internal consistency arithmetic, both
+# quotes one-sided ("up to" / "more than"), never equated. The exact
+# pre-E-ECN implied baseline 50/1.4 = 250/7 ~ 35.714 B/ns is recorded
+# in the stage's calibration record, NOT swept (non-integer; the row
+# executes the clean 0.7 reading).
+#
+# HONESTY: nothing is tuned. The row was fixed by anchor arithmetic
+# BEFORE any stage output was read; B stays a free parameter
+# (A-L0X-BW); L fixed at the registry point 200 ns (CAL-A11 stages no
+# latency number); r = 8 the free smoke default. The demonstrated
+# signature — CCT ratio -> 10/7 asymptotically, latency term constant —
+# is the ONLY way this model family can express a load-balance swing:
+# as a displacement of one free scalar. WHERE inside the [35, 50]
+# effective-B envelope a production fabric actually sits is decided by
+# mechanisms the model declares out of scope (the stage's central
+# sanity finding for the owner).
+topology_id: crossbar8_a11_degraded35_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 35
+link:
+  pair_latency_ns: 200
+notes: >
+  Envelope row: the CAL-A11 path-pinning degradation (">30%") expressed
+  as an effective-bandwidth displacement on the free B axis (50 x 0.7 =
+  35 B/ns per direction). Mechanism explicitly out of model scope
+  (congestion / ECMP / QP scaling are not inputs; the backend declares
+  congestion among explicitly_unsupported capabilities). Provenance: B
+  = 35 B/ns = 0.7 x CAL-A11's 50 B/ns anchor point, anchor-internal
+  arithmetic only; L = 200 ns free A-L0X-LAT registry point
+  (anchor-free axis). Values are anchor-derived arithmetic / registry
+  defaults, never our measurements.

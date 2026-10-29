@@ -1,0 +1,41 @@
+ 243 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.4.1.4 Accesses with Direct Memory Addressing 
+RMA operations in header formats designed for the Unified Local profile carry only a JobID and address. 
+The JobID MUST select the addressing context used to interpret the address conveyed over the wire. 
+The address MUST begin at the base associated with the addressing context. Implementations MAY 
+support only a single JobID, in which case the addressing context corresponds to the entire address 
+space of the local node. 
+3.4.4.2 Buffer Authorization 
+Buffer authorization is a function of the target FEP implementation, including the libfabric provider 
+implementation associated with the target FEP. Implementations MUST validate the JobID provided in 
+the packet to determine whether it is allowed to access the buffer found through buffer selection 
+(3.4.4.1). Two options for buffer authorization based on JobID MUST be supported. First, 
+implementations MUST allow an option for a buffer to be exposed for exactly one JobID where the JobID 
+is authorized as specified in 3.4.2.4.1. Second, implementations MUST allow an option for a buffer to be 
+exposed for “any” JobID such that the JobID check for that buffer is effectively ignored. 
+A buffer that is addressed using matching criteria effectively limits the access of that buffer using an 
+initiator check. 
+3.4.4.3 Scale-out Response Generation 
+Each message MUST receive at least one semantic response. For many messages, this may take the form 
+of a UET_DEFAULT_RESPONSE using the format in Figure 3-25. The semantic response for the last packet 
+received MUST NOT be returned until all prior packets have completed semantic processing. 
+Implementation Note: 
+The requirement to wait until all packets have completed semantic processing before returning the 
+semantic response for the last packet received is known to require some implementation effort; 
+however, the congestion management sublayer (CMS) requires early acknowledgements on most 
+packets. By guaranteeing that any semantic information will be returned no later than the 
+acknowledgement for the last packet to arrive for the message, it is possible to allow early 
+acknowledgements of other packets in the message.  
+ 
+Informative Text: 
+There was a trade-off between number of packets on the wire and the need to wait until all semantic 
+processing had completed before returning the semantic response for the last packet. The congestion 
+management sublayer needs acknowledgements to be generated quickly in many cases. Other 
+schemes were considered to meet this goal (e.g., a fast ACK scheme at the packet delivery sublayer), 
+but those schemes led to two acknowledgements per packet in typical scenarios.  
+ 
+A UET_DEFAULT_RESPONSE contains a ses.JobID, a ses.message_id, a ses.modified_length field that is 
+equal to the request length, a ses.list field set to UET_EXPECTED, a ses.ri_generation field set to the 
+generation of the request, and a  ses.return_code set to RC_OK. Usage of UET_DEFAULT_RESPONSE 

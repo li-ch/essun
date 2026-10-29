@@ -1,0 +1,41 @@
+ 67 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+plane does not control or manage the UET FEPs. This layer comprises a lower-level abstraction of the 
+switch hardware and is responsible for forwarding packets according to the forwarding information 
+provided by the control plane. 
+1.5.3.1.3 Management Plane 
+The management plane is responsible for ensuring that the switch fabric is operational, reliable, and 
+secure. Management systems and associated protocols perform software upgrades, monitoring, and 
+other administrative activities. The management plane interacts with the control plane using standard 
+interfaces such as Netconf, gNMI, SNMP, and others. The managed objects manipulated by the 
+management plane are defined by standardized data models such as YANG and supported by vendor-
+neutral software such as OpenConfig (see: <https://openconfig.net>). 
+ 
+1.5.3.2 UE Switch Operation in Physical Networks 
+A UE-compliant switch operates in two types of physical networks:  
+1. UE data plane network: A network connecting FEPs to one another through UE switches. This 
+network carries application traffic for various workloads and is optimized for UE specifications. 
+ 
+2. Switch management network: Every switch provides at least one dedicated Ethernet port to 
+connect non-fabric endpoints such as SDN controllers, fabric managers, telemetry collectors, 
+SNMP servers, and other devices responsible for managing the infrastructure. This network is 
+not latency-sensitive and typically has low bandwidth requirements. However, some new 
+capabilities, such as the INC manager (IM) interface and associated protocol operations, may be 
+latency sensitive. 
+Informative Text: 
+Management functions such as the INC manager and fabric management running over the switch 
+management network are within the scope of UE; however, the characterization of protocols used for 
+these activities, such as the transport or link layer, are out of scope of UE. 
+ 
+1.5.3.3 Topologies 
+Topology is a critical part of an AI and HPC fabric as it sets the performance bounds by establishing the 
+network diameter and bisection bandwidth. Deployments need to consider the optimal system cost in 
+terms of energy consumption and physical aspects such as cable costs. 
+Congestion management in this specification targets Clos networks, while not excluding other 
+topologies. However, no optimization or performance objectives are set for topologies other than a 
+Informative Text: 
+Traditionally the management of endpoints has been separated from the management of the fabric. 
+UE follows the traditional separation that industry and organizations are accustomed to. The UEC 
+management working group is responsible for ensuring full functionality, performance, and 
+interoperability of UE-compliant devices. 

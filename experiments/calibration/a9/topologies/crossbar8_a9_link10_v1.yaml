@@ -1,0 +1,36 @@
+# Calibration-ladder A9 topology: crossbar of 8 ranks at L = 10 ns — the
+# CAL-A9 LINK TERM ALONE (Berger et al., IEEE Micro 2023: CXL links add
+# ~10 ns per direction). BUDGET-COMPONENT ROW, not a pair reading: no
+# CXL-class pair path exists without a switch stage (or without at least
+# the second link), so this row isolates where the model output sits when
+# ONLY the link component of the budget is charged — the decomposition's
+# zero-switch degenerate point. It is also numerically the A-L0X-LAT
+# registry free-range LOWER ENDPOINT (assumptions_l0.yaml range
+# [10, 2000]); and it coincides NUMERICALLY with the ASTRA-sim adapter's
+# endpoint-delay feasibility value 10 ns (A-AS2-DELAY-POS) — a DIFFERENT
+# mechanism (wire delay vs endpoint processing), already classified
+# KEEP / OUT-OF-DOMAIN by the plan §2.2; the coincidence is recorded as
+# a placement fact only.
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0X-LAT), never tuned; 10 ns
+# is the anchor's own staged link term. CAL-A9 is a design-estimate
+# budget breakdown, not a silicon measurement. B = 64 B/ns is the fixed
+# free A-L0X-BW registry point (anchor-free axis for this stage); r = 8
+# the free smoke-default rank count.
+topology_id: crossbar8_a9_link10_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 10
+notes: >
+  Single non-blocking switch-stage abstraction of 8 ranks with the pair
+  latency set to the CAL-A9 link component alone (~10 ns per direction
+  per CXL link). Budget-decomposition row (zero-switch degenerate), not
+  a physically reachable CXL-class pair. L0 transport model only; no
+  congestion, no credits, no packetization. Provenance: L = 10 ns from
+  CAL-A9's staged numbers (anchor PROPOSED in the anchor registry, history-only
+  since ; design estimate). B = 64 B/ns free A-L0X-BW registry
+  point. Values are anchor quotes / free registry defaults, never our
+  measurements.

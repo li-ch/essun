@@ -1,0 +1,42 @@
+ 523 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+In addition, the optional accumulation operators are defined in Table 3-107. 
+Table 3-107 - Optional Signal Accumulation Operators 
+Accumulation Operation Description 
+uet_op_ewma Exponentially weighted moving average for newly samples x defined as  
+ewma = x * s + ewma * (1-s) 
+with s being a configurable smoothing factor 
+ 
+This accumulation operator conceptually requires floating point support, and all 
+variable types are float. Implementations MAY use integer or fixed-point to 
+approximate the floating-point computations. 
+ 
+When a new update to a congestion signal is received, the update is integrated into the current signal 
+value using the predefined accumulation operation. The update occurs atomically, meaning that each 
+signal update is applied without interruption, preserving data integrity and preventing partial 
+modifications. Additionally, the update order is undefined, as PCM assumes associative operators, 
+allowing updates to be applied irrespective of sequencing constraints. This may affect the accuracy of 
+some operators that are not actually associative such as uet_op_ewma(). 
+Furthermore, all signal updates originating from a specific source, such as an acknowledgment (ACK) 
+packet, are processed atomically. This guarantees that multiple updates contained within a single packet 
+are applied simultaneously before any subsequent packet influences the corresponding signals. For 
+instance, if a packet carries updates to both an explicit congestion notification (ECN) signal and a round-
+trip time (RTT) signal, both updates are applied at the same instant, ensuring consistency before any 
+other packet modifies either of those signals. This atomic handling mechanism maintains consistency in 
+congestion signal processing within UE's congestion management framework. 
+Multiple accumulation operations (e.g. uet_op_last() and uet_op_sum()) may be defined for the same 
+signal. 
+3.6.18.4.2 Accessing and Managing Signals 
+Signals are accessed and configured through the predefined functions listed in Table 3-108. Note that 
+the signal_index, which selects a specific signal, is configured in the YAML definition specified in Section 
+3.6.18.8.5 and used as a macro in the program. 
+The function uet_signal_get() MUST be supported while the functions uet_signal_set() and 
+uet_signal_update() MAY be supported by an implementation. 
+Table 3-108 - Signal Access and Management Functions 
+ 
+Function Name Description 
+uet_int_t uet_signal_get(unsigned int 
+signal_index) 
+Read a signal value 

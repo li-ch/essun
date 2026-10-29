@@ -1,0 +1,60 @@
+# Implementation profile for the calibration-ladder A10 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A10 —
+# HiPC 2025 Workshops UALink-vs-NVLink analytical comparison,
+# docs/calibration/anchors_staging.md §A10).
+implementation_profile_id: analytical_l0_crossbar_cal_a10_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. FABRIC-CLASS ROLE per
+  plan §1.1 row CAL-A10: the crossbar is the landed identity whose
+  topology class (one non-blocking switch stage between any pair, uniform
+  per-pair latency charged once per phase, CONSTANT in rank count) is the
+  structural stand-in for the anchor's "flat UALink pod" side; the anchor
+  itself is an analytical model whose UALink-side parameters are paywalled
+  and model-only until silicon (plan §1.1: "UALink-side parameters remain
+  model-only"), so this identity EXECUTES the flat-chain structure at the
+  anchor's NVLink-side latency assumption — it does not reproduce the
+  anchor's model.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  RANK COUNT r is the swept free axis, on the power-of-2 ladder 8, 16, 32,
+  64, 128, 256, 512, 1024 ending at the anchor's own stated scale ceiling
+  ("scales to 1024 GPUs" — the only anchor-derived regime number in this
+  stage; the ladder's start 8 is the free smoke default). L
+  (link.pair_latency_ns, A-L0X-LAT) held at 800 ns = CAL-A10's
+  assumption-class 0.8 us figure under the DECLARED PRIMARY reading
+  (end-to-end pair-level latency — the quote's own wording "end-to-end
+  latency for NVLink Network"); a SECONDARY per-hop reading on the ring
+  identity is executed in the same sweeps and the dual-reading spread is
+  quantified in the record — the anchor's model equations are paywalled,
+  so which reading their model charges is UNVERIFIABLE from staged
+  material and is NOT adjudicated here. B
+  (nic.injection_bytes_per_ns) FIXED at the registry point 64 B/ns: the
+  anchor's bandwidth values are not staged (UALink side paywalled;
+  NVLink5 side belongs to different anchors' spec ceilings). Payload
+  FIXED at 16384 B (the A-W1-SIZE registry smoke point, the plan §1.2
+  small-message regime; divisible by every ladder rank — A-L0X-DIV
+  accepts, no bracketing). NOTHING was tuned: the anchor stages NO
+  completion time; the sweeps measure WHERE the identities sit relative
+  to the anchor's assumption point and scale claim, never toward any
+  anchor output.
+measurement_source: >
+  CAL-A10 staged material ("Communication-Centric UALink and NVLink
+  Comparison for Large Scale AI Training", IEEE/ACM HiPC 2025 Workshops,
+  IEEE CSDL 453800a068; docs/calibration/anchors_staging.md §A10; anchor
+  PROPOSED in the anchor registry; confidence M) — an
+  ASSUMPTION-CLASS external analytical study: the 0.8 us figure is a
+  stated model assumption (quote via public search snippet; full text
+  paywalled; exact parameter table NOT extracted; wording re-verify at
+  owner integration), and the anchor's outputs are QUALITATIVE direction
+  statements (flat UALink pod reduces small-message step-time
+  contribution at scales up to 1024 GPUs; NVLink 5 keeps a
+  bandwidth-bound advantage) — no completion-time number is staged
+  anywhere. Recorded as PROPOSED evidence in results/calibration/; not
+  our testbed, no E3/E4 language; peer review certifies the USAGE of the
+  assumption, never its value.

@@ -1,0 +1,38 @@
+ 395 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+The negotiation types for the Negotiation CP are defined in Table 3-78. The payload field is reserved 
+when pds.neg_type = PDS_NEG_NO_NEG. Section 3.5.16.7.1 describes the PDS_NEG_ON_OFF 
+negotiation packet. 
+Table 3-78 - Negotiation Type (pds.neg_type) 
+Mnemonic Constant Description 
+PDS_NEG_NO_NEG 0x00 No negotiation request. The pds.neg_length field is set to 0x0, and 
+the remainder of the pds.payload field MUST be 0x0. This type is 
+always ACKed with the same ACK format used for PDS requests 
+(ACK, ACK_CC or ACK_CCX). 
+PDS_NEG_ON_OFF 0x01 Simple on-off feature negotiation. A 32-bit mask of features request 
+is provided. Only features with a simple “on or off” mechanism can 
+use this negotiation type, and no additional negotiated parameters 
+are included for these features. 
+Reserved 0x02-
+0xFF 
+Reserved 
+ 
+If negotiation is not supported, the Negotiation CP triggers an ACK with pds.next_hdr = 
+UET_HDR_NONE. 
+If negotiation is supported, the Negotiation CP triggers an ACK with pds.next_hdr = UET_HDR_CP_ACK.  
+The format of the payload field when pds.cp_ack_type = Negotiation is dependent on the pds.neg_type 
+field. 
+3.5.16.7.1 On Off Feature Negotiation 
+The PDS_NEG_ON_OFF negotiation packet is illustrated in Figure 3-94. This Negotiation CP supports 
+querying the availability of up to 32 capabilities using a 32-bit mask, pds.neg_on_off_mask. The list of 
+negotiated capabilities is defined in Table 3-80. 
+ 
+ 
+ 
+ 
+ 
+ 
+Figure 3-94 - Negotiation CP Payload Format 
+ 

@@ -1,0 +1,29 @@
+# UEC-flavor stand-in for the cross-design L0 comparison (Q6 stage S4),
+# and the sweep's identity-matched CONTROL row: under the shared free
+# parameters this config is numerically indistinguishable from the
+# UB-flavored crossbar row (their O-CCT deltas are exactly 0 — the table's
+# honesty anchor that L0 separates these flavors by anchored structure
+# only, never by anchored physics).
+#
+# HONESTY: no UEC-derived numeric value exists at L0 today — UEC 1.1
+# (STD-UEC-11, public read; Q1 ladder) fixes no line rate, pair latency,
+# or rank count usable as an L0 input. Every value below is an explicit
+# FREE parameter from the shared record
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml (A-XDUO-BW,
+# A-XDUO-LAT, A-XDUO-TP). The single-tier non-blocking identity is a free
+# stand-in (A-XDUO-IDUEC) consistent with the informative UEC scale-up
+# context (anchor UEC11-S1.5.1.3-LOCAL-SCALE-UP: scale-up fabrics "often
+# come with only a single or limited tier of switches or possibly no
+# switch at all") — it is not a UEC requirement.
+topology_id: uec_free_crossbar64_v1
+topology_class: fully_connected_crossbar
+ranks: 64
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Same crossbar identity and modeling assumptions as
+  crossbar8_free_v1 (A-L0X-PORT single-port injection, A-L0X-LAT,
+  A-L0X-DIV), scaled to the shared comparison rank count 64. No congestion,
+  no credits, no packetization, no UEC semantics — transport model only.

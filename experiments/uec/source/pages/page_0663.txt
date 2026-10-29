@@ -1,0 +1,40 @@
+ 663 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2.6.2 CC_Update Messages 
+CC_Update messages are less frequent and take the form of an MAC frame. A single CC_Update packet 
+can contain 16 S_VC_CC[x] values for VC[0..15] or VC[16..31]. The UE message type field is used to 
+distinguish the two flavors of CC_Update packet. 
+Table 5-22 - CC_Update Message Packet Fields 
+Packet Field Name Size Description 
+MACDA MAC Destination Address 6 B Set to 01-80-C2-00-00-01 or the 
+48-bit individual address of the 
+destination station 
+MACSA MAC Source Address 6 B Set to the 48-bit individual address 
+of the source station. 
+Eth Type EtherType 2 B 0x8808 
+Opcode MAC Control Opcode 2 B 0xFFFE (Extension opcode) 
+CID Company ID 3 B UEC CID (FA-7A-CB) 
+Msg Type UE Message Type 1 B 0x01 = CC_Update for VC[0:15] 
+0x02 = CC_Update for VC[16:31] 
+All other values are reserved. 
+Data 16 per-VC Credits Consumed 
+values 
+40 B 16 CC counter values (20 bits each 
+counter): 
+{S_VC_CC 0 , S_VC_CC 1 , … 
+S_VC_CC[15]} 
+or 
+{S_VC_CC[16], S_VC_CC[17], … 
+S_VC_CC[31]}  
+FCS Frame Check Sequence 4 B CRC32 
+Note: 
+• This is a 64 B MAC frame. 
+• The S_VC_CC[x] value for any unused or best-effort VC SHALL be set to 0. 
+ 
+The values and format for the MACDA, MACSA, EtherType, and MAC control opcode fields ,as well as the 
+UEC CID, are chosen to be compatible with IEEE Std 802.3-2022 Clause 31 “MAC Control” and its 
+Annexes [1]. It is recommended to make the MACDA, MACSA, and CID values configurable at both the 
+sender and receiver. Because the CC_Update packet is exchanged only between link partners, and not 
+forwarded, the MACDA and MACSA are not required to identify it. It can be identified solely by matching 
+the EtherType, Opcode, CID, and Msg Type combined with a good FCS. 

@@ -1,0 +1,25 @@
+ 412 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3. When a PDS Request with PSN = 333 is received at the target PDS, an out-of-packet buffer 
+condition is encountered. 
+4. PDS at the FEP-B generates a NACK 333 packet and sends it to FEP-A. 
+a. The PDS Request packet is dropped at FEP-B. 
+5. PDS at FEP-A is responsible for retransmitting PSN = 333. 
+6. Based on the NACK code (i.e., pds.nack_code field), the FAP-A waits for the configured time and 
+retransmits PSN = 333 
+a. If Max_NACK_Retx_Cnt is exceeded, PDS declares an error and SES completes the 
+packet and message in error. 
+b. PDS at the initiator is responsible for retransmitting PSN = 333 even if the PDS NACK is 
+lost; in this case an RTO_TIMER expiration will trigger retransmission up to 
+Max_RTO_Retx_Cnt times. 
+  
+The PDS NACK sequence for a RUD Send of a multi-packet message is the same as for a single-packet message. Similarly, the 
+PDS NACK sequence for RUD Reads is the same as for RUD Sends. 
+3.5.20.3.2 NACK Sequence for Lost PDS Requests and ACKs 
+PDS at the initiator is responsible for retrying transmissions when packets are dropped in the network, 
+including in the following situations: 
+• A PDS request transmitted by initiator is dropped—does not arrive at destination. 
+ 
+Figure 3-104 - PDS NACK Sequence for RUD Send of Single-Packet Message 
+ 

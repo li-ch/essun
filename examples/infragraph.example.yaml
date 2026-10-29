@@ -1,0 +1,39 @@
+schema_version: 0.1.0
+infra_id: INFRA-EXAMPLE-2X1
+synthetic: true
+nodes:
+- id: endpoint0
+  type: xpu
+- id: endpoint1
+  type: xpu
+- id: switch0
+  type: switch
+  implementation_profile: example_switch_profile
+links:
+- id: link0
+  src: endpoint0
+  dst: switch0
+  rate_gbps: 100
+  propagation_ns: 500
+- id: link1
+  src: endpoint1
+  dst: switch0
+  rate_gbps: 100
+  propagation_ns: 500
+implementation_profiles:
+  example_switch_profile:
+    buffer_kib: 1024
+    scheduler: strict_priority_example
+    pipeline_ns:
+      kind: assumption
+      values:
+      - 25
+      - 50
+      - 100
+routes:
+- src: endpoint0
+  dst: endpoint1
+  path:
+  - endpoint0
+  - switch0
+  - endpoint1

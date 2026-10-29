@@ -1,0 +1,43 @@
+# Calibration-ladder GF-10 latency row: DGX-1 MANUAL-ROUTING PAIRS, 2x —
+# crossbar r=8, B = 25 B/ns (the GF-10 carrier), L = 18000 ns.
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# DGX-1 GPU pairs that need manual routing show P2P latency "increased
+# by about 2x for P100-DGX-1"; the doc's own derivation arrow gives
+# "~18 µs". DERIVATION CAVEAT (recorded): the 2x multiplier is the
+# P100-DGX-1 figure while the staged baseline "around 9 µs" is the
+# DGX-1 (V100-class) direct-pair value — the P100 direct-pair baseline
+# itself is NOT staged as a number, so 18000 = 2 x 9000 follows the
+# gap-fill doc's own parenthetical ("=> ~18/~27 µs") and is a derived,
+# prose-approximate value (like every GF-10 number, confidence M-H).
+#
+# ROLE: with the 27000 row, this executes the anchor's measured PAIR
+# HETEROGENEITY on DGX-1 — direct pairs at 9 µs vs manual-routing pairs
+# at 2x-3x — as uniform rows on the shared carrier. The finding for the
+# model: "nonuniform_pair_latency" is explicitly_unsupported at L0, so
+# the identity cannot express a fabric where different pairs sit at
+# 9000/18000/27000 simultaneously; each row is the homogeneous reading
+# of one pair class. The DGX-1 evidence CONTRA-indicates the uniform-L
+# abstraction on hybrid-cube topologies (up to exactly 3x spread), while
+# DGX-2's switched fabric shows homogeneous latency across ALL pairs
+# ("two-hop vs one-hop difference very small, almost negligible" —
+# supporting the uniform abstraction on NVSwitch-class fabrics): the
+# anchor itself brackets the uniformity assumption by topology class.
+# 18000 ns sits 9x ABOVE the declared free-range upper 2000 (recorded;
+# app-level quantity class — bound, not equality).
+topology_id: crossbar8_gf10_b25_l18000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 18000
+notes: >
+  Single non-blocking switch-stage abstraction: uniform per-pair latency
+  L = 18000 ns (GF-10's staged manual-routing pair class at "about 2x",
+  derived 2 x 9000 per the gap-fill doc's own parenthetical; app-level)
+  at the measured carrier B = 25 B/ns, charged once per phase by the L0
+  crossbar identity (t = 2(r-1)/r*M/B + 2L). Heterogeneous-tail row of
+  the DGX-1 pair spread (direct 9 µs -> manual 18 µs, exactly 2x by
+  construction); 9x the declared free-range upper. Value is a derived
+  anchor number, never our measurement.

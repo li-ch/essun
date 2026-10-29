@@ -1,0 +1,46 @@
+# Implementation profile for the calibration-ladder GF-07 scale sweep's
+# RING row (gap-fill anchor GF-07, arXiv:2604.11432,
+# measured collective slowdowns across 5 HPC fabrics).
+implementation_profile_id: analytical_l0_ring_cal_gf07_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  unidirectional-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L
+  (see src/essun/backends/analytical/l0.py); assumptions A-L0-BW /
+  A-L0-LAT / A-L0-FD / A-L0-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. ROLE: the
+  schedule-structure CONTRAST pole of the GF-07 scale sweep at the
+  anchor's largest staged exact node count r=64 (the bursty-incast
+  configuration) — the anchor's fabrics span Dragonfly+/fat-tree/
+  Slingshot-dragonfly/RoCE classes whose only L0-expressible contrast
+  is schedule structure (non-blocking single stage vs multi-hop
+  chain). Structural facts: same bandwidth coefficient 63/32 as the
+  crossbar; latency chain 2*(r-1)*L = 25,200 ns vs the crossbar's
+  2L = 400 ns; ring-minus-crossbar exactly 2(r-2)L = 24,800 ns at
+  every size; regime boundary M* = L*B*r = 1,280,000 B bracketed by
+  the 1 MiB / 2 MiB ladder members. The row feeds the stage record's
+  confounder ordering: at GF-07's scale the schedule effect
+  (ring/crossbar ratio ~2.18 at 1 MiB falling to ~1.07 at 16 MiB) sits
+  INSIDE the anchor's measured congestion envelope, unlike GF-05's
+  1,024-node ordering where structure dominated the CC effects.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B = link.bytes_per_ns = 100 (GF-07's staged LUMI 4x200 Gb/s
+  per-node aggregate, declared per-node-aggregate -> per-direction
+  single-link reading) and L = link.hop_latency_ns = 200 (A-L0-LAT
+  registry point; GF-07 stages NO latency number) at r = 64 over the
+  64*2^k ladder (64 B -> 16 MiB, 19 sizes). Fixed by anchor/registry
+  arithmetic BEFORE any stage output was read; never tuned toward any
+  anchor output.
+measurement_source: >
+  GF-07 staged numbers (arXiv:2604.11432;
+  docs/calibration/anchors_gapfill.md §GF-07; numbers AS STAGED, not
+  re-fetched; gap-fill anchor, NOT yet an integrated anchor row; confidence
+  H — extracted from the paper HTML). CAVEAT CLASSES: measurements on
+  HPC SCALE-OUT fabrics (labeled proxy, CAL-A11 rule), not GPU
+  scale-up; the anchor measures collective bandwidth ratios, not ring
+  AllReduce CCTs — this row is a structural probe, never a prediction
+  of any anchor fabric; no comparison against any anchor time is
+  attempted. Compared as PROPOSED evidence in results/calibration/;
+  not our testbed, no E3/E4 language.

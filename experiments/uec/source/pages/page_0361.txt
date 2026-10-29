@@ -1,0 +1,52 @@
+ 361 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-62 - Triggers for Generating an ACK 
+Trigger Event Description 
+First packet is received that creates/allocates a 
+new PDC 
+New PDC so let the initiator know and provide CC state as soon 
+as possible. 
+ECN marked packet is received Send EV congestion state to load balancing function as quickly as 
+possible; see the pds.flags.m flag in Section 3.5.11.8.5. 
+This trigger is enabled when ACK_On_ECN is set and disabled 
+when ACK_On_ECN is cleared. See Section 3.5.11.8.5. 
+Byte/packet threshold is reached 
+(ACK_Gen_Trigger) 
+Cumulative trigger indicating a number of packets/bytes have 
+arrived so an ACK will be transmitted, see Section 3.5.12.4.1. 
+AR flag is set in the arriving request packet The pds.flags.ar flag is set based on CC control.  
+Certain CPs set this flag—see Section 3.5.16.9. 
+SES generates a guaranteed delivery response Send the SES Response. 
+Last packet before the source goes idle The packet may be the last packet sent for a while; see Section 
+3.5.12.4.2. 
+ 
+3.5.12.4.1 Packet/Byte Threshold ACK Trigger—Coalesced ACKs 
+When using coalesced ACKs, this packet/byte threshold is used to trigger an ACK every several packets. 
+A counter is maintained such that when a configured number of packets or bytes is received, an ACK is 
+transmitted. The following configuration parameters and local variables are used: 
+Table 3-63 - ACK Configuration Parameters 
+Name Type Definition 
+ACK_GEN_COUNT Local variable (counter) Counter that is incremented when packets arrive 
+and cleared when an ACK is generated 
+ACK_Gen_Min_Pkt_Add Configuration parameter Defines the smallest value added to 
+ACK_GEN_COUNT when a packet is received 
+ACK_Gen_Trigger Configuration parameter Defines the threshold at which ACK_GEN_COUNT 
+triggers an ACK generation 
+ 
+It operates as follows: 
+if pkt arrives { 
+    length = uet_payload_length(pkt) 
+    if length < ACK_GEN_MIN_PKT_ADD 
+        length = ACK_GEN_MIN_PKT_ADD 
+    ACK_GEN_COUNT += length 
+} 
+ 
+if (ACK_GEN_COUNT >= ACK_Gen_Trigger) { 
+    Transmit ACK 
+} 
+ 
+if (ACK is transmitted) { 
+    ACK_GEN_COUNT = 0 
+} 
+ 

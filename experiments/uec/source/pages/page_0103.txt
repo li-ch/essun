@@ -1,0 +1,43 @@
+ 103 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+int fi_cntr_open(struct fid_domain *domain, struct fi_cntr_attr *attr, 
+           struct fid_cntr **cntr, void *context); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_cntr.3.html> 
+ 
+ 
+int fi_av_open(struct fid_domain *domain, struct fi_av_attr *attr, 
+         struct fid_av **av, void *context); 
+ 
+int fi_av_insert(struct fid_av *av, void *addr, size_t count,  
+           fi_addr_t *fi_addr, uint64_t flags, void *context); 
+ 
+<https://ofiwg.github.io/libfabric/main/man/fi_av.3.html> 
+2.2.5.3.1 fi_fabric() API 
+The fi_fabric() API is called to open a fabric network provider object. A fabric represents a collection of 
+hardware and software resources that access a single physical or virtual network. A pointer to a fabric 
+attributes structure is a parameter to fi_fabric(). The fi_info structure returned by the fi_getinfo() API 
+contains a pointer to a fabric attributes structure. 
+2.2.5.3.2 fi_eq_open() API 
+The fi_eq_open() API is called to create a new event queue for the fabric. EQs are for control operations 
+and are not for completion of data transfer operations such as sends and receives. EQs are used to 
+collect and report the completion of asynchronous control operations and events. EQs are used for 
+control events that are not directly associated with data transfer operations such as:  
+• Asynchronous completion of libfabric control API calls 
+o Some libfabric control APIs support either synchronous or asynchronous operation 
+• Asynchronous error notification for problems with fabric resources such as completion queues 
+or endpoints 
+EQs are typically implemented completely in software. 
+An EQ MAY also be bound to a domain using the fi_domain_bind API. 
+UET providers MUST support event queues. A minimum of one event queue per libfabric endpoint MUST 
+be supported. 
+2.2.5.3.3 fi_domain() API 
+The fi_domain() API is called to open an access domain on the fabric. A domain is a logical connection 
+into a fabric, often corresponding to a physical or virtual NIC. The fi_domain() API takes a pointer to a 
+fi_info structure as a parameter. The fi_info structure returned by the fi_getinfo() API contains a pointer 
+to a domain attributes structure. 
+2.2.5.3.4 fi_mr_reg() and fi_mr_key() APIs 
+A memory buffer MUST be registered with a resource domain before it can be used as the target of a 
+remote RMA or atomic data transfer. Additionally, a fabric provider MAY require that data buffers be 
+registered before being used in local transfers (e.g., the buffer is the source for a write operation or the 

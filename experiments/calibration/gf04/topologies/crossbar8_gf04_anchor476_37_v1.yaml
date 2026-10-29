@@ -1,0 +1,33 @@
+# Calibration-ladder GF-04 topology: fully-connected (crossbar)
+# abstraction of 8 ranks at the anchor's SINGLE-NODE figure — B = 476.37
+# B/ns per-rank single-port injection ("NCCL on single node with 8 GPUs |
+# 476.37 GB/s", Oracle OCI blog summary row, fetched and verified
+# 2026-10-28; pinned busbw = B asymptotic mapping from stage GF-02's
+# nccl-tests source fetch). The single-node leg of the anchor is an
+# NVSwitch fabric — the KEEP domain of A-L0X-PORT (per-GPU aggregate
+# injection cap), so the crossbar is the registered abstraction for this
+# rank count, executed alongside the ring projection (the A6-convention
+# uniform twin) so the record can show the scaling-null statement is
+# family-independent.
+#
+# GF-02 classification carried: 476.37 exceeds the 450 B/ns physical
+# per-direction aggregate by 5.86% — in-network-computing/NVLS class,
+# inexpressible at physical B under single-port injection (declared
+# unsupported); this stage works the 8->16 ratio, not the absolute class.
+#
+# HONESTY: B swept free (A-L0X-BW), anchor-stated, fixed BEFORE any model
+# output was read; L = 200 ns A-L0X-LAT registry point (KEEP). Decimal
+# units, 1 GB/s = 1 B/ns. docs/calibration/anchors_gapfill.md §GF-04.
+topology_id: crossbar8_gf04_anchor476_37_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 476.37
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction of the GF-04 single-node
+  8-GPU H100 leg; single-port injection B = 476.37 B/ns = the anchor's
+  own single-node busbw summary figure through the pinned busbw = B
+  mapping (GF-02 above-ceiling classification recorded in the header).
+  Anchor-stated, never our measurement, never tuned.

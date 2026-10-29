@@ -1,0 +1,94 @@
+# FIRST D4 envelope + reversal artifact (design doc D4, 2026-10-29):
+# named-profile comparators over operating-point grids on DECLARED freedom
+# ranges, with exact-Fraction reversal detection.
+#
+# COMPARISON (two existing profiles, one stated operating point):
+#   - UEC side: the UEC profile's flagship executed semantic — the TFC
+#     admission law (UEC11-FC-R02, binding BIND-UEC11-FC-R02-L0TFC) on the
+#     free ring stand-in (A-XDUO-IDUEC) at the top of the declared rank
+#     freedom (A-XDUO-TP range [2,1024] -> 1024; UEC 1.1 fixes no rank
+#     count). The credit window W is the binding's declared free parameter
+#     (A-TFC-W, experiments/vertical_slice/assumptions_tfc.yaml): the spec
+#     anchors only the 256-byte credit UNIT (UEC11-FC-R05), never the
+#     amount — W is exactly the kind of permitted choice D4 makes a grid.
+#   - UnifiedBus-paper side: the profile's permitted pod-scale flat-ring
+#     stand-in (A-XDUO-IDUB second range value "flat_ring_pod_when_
+#     scale_allows") at the anchored pod scale 1024 (UBP-P18,
+#     PAPER_REPORTED). The five public UB sources are silent on any
+#     flow-control mechanism (UBP-F04), so this side carries NO window —
+#     that silence is the profile's declared state, not a modeling
+#     shortcut.
+#
+# RANKS/SYMMETRY NOTE: the envelope's same-workload gate pins ONE tp_size,
+# so the UB side's rack-scale anchored identity (crossbar@64, UBP-P17) is
+# excluded from THIS artifact by the platform's own gate (it belongs to a
+# different operating point); the pod-scale corner is where BOTH profiles'
+# declared freedom contains a ring identity, which is what makes this a
+# within-freedom two-profile comparison rather than an anchored-vs-free
+# one.
+#
+# SHARED-PARAMETER BAR (unchanged from the committed cross-design sweep):
+# B and L are the ONE shared record's values (A-XDUO-BW/A-XDUO-LAT,
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml) consumed by BOTH
+# flavors; differences between the comparators may come ONLY from the
+# window term (the UEC semantic) — never from anchored physics, because no
+# public source on either side anchors a per-lane rate or per-hop latency
+# usable at L0 (UBP-F01/UBP-F02; UEC 1.1 anchors neither).
+#
+# EVIDENCE LEVEL E0, status PROPOSED. Every value is a closed-form
+# analytical identity executed by its landed backend at exact operating
+# points; the artifact ranks MODEL IDENTITIES under declared freedom and
+# says nothing about any measured system. Expected detector outcome,
+# stated BEFORE the run: uec_ring_free and ub_flat_ring_pod are
+# numerically identical (delta exactly 0 at every point — the honesty
+# anchor); uec_tfc_ring ties both exactly at windows covering the
+# bandwidth-delay product W >= B*(L+L_cr) = 25600 bytes (100 credit units)
+# and ranks strictly worse below it — the ranking reversal the detector
+# must find, with the exact boundary W* = 25600.
+envelope: uec_vs_ub_window_reversal_v1
+workload: experiments/workloads/w1_dense_tp_decode_pod1024.yaml
+assumption_registries:
+- experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml   # shared B/L, ranks, payload ranges
+- experiments/vertical_slice/assumptions_tfc.yaml        # window W + credit-return ranges
+observable: O-CCT
+payload_assumption: A-XDUO-PAYLOAD
+ranks_assumption: A-XDUO-TP
+fixed:
+- assumption: A-XDUO-BW        # shared link bandwidth (both flavors)
+  value: 64
+- assumption: A-XDUO-LAT       # shared per-hop latency (both flavors)
+  value: 200
+- assumption: A-TFC-CR         # credit-loop return time (UEC binding only)
+  value: 200
+- assumption: A-XDUO-TP        # operating point: pod-scale corner of the rank freedom
+  value: 1024
+- assumption: A-XDUO-PAYLOAD   # 1 MiB: within range, divisible by 1024
+  value: 1048576
+axes:
+- assumption: A-TFC-W          # the UEC admission law's declared freedom
+  points: [256, 6400, 12800, 25600, 51200, 102400, 256000, 1048576]
+models:
+- model: uec_ring_free         # UEC flavor, free ring stand-in, NO window (control)
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring1024_uec_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+- model: uec_tfc_ring          # UEC profile flagship: TFC admission law executed
+  algorithm: envelope_tfc_ring
+  topology: experiments/topologies/ring1024_tfc_window_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+    A-TFC-W: tfc.window_bytes
+    A-TFC-CR: tfc.credit_return_latency_ns
+- model: ub_flat_ring_pod      # UB paper profile: permitted pod-scale flat ring, no window
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring1024_ub_flat_pod_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+reversal_pairs:
+- [uec_tfc_ring, ub_flat_ring_pod]   # the two-profile flagship pair
+- [uec_tfc_ring, uec_ring_free]      # UEC-side control: same flip against the unwindowed stand-in
+- [uec_ring_free, ub_flat_ring_pod]  # honesty anchor: delta exactly 0 everywhere, no reversal

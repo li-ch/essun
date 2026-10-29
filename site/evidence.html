@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence — essun</title>
+<meta name="description" content="How every essun number stays traceable: content-addressed run records, byte-identical replay, golden tests, the paper-claims checker, the calibration ladder (23 anchors, 26 E1-candidate records), and the property-checking campaign. Nothing is calibrated against hardware.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html" aria-current="page">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">Reproducibility</p>
+    <h1>Evidence: run id or it didn't happen</h1>
+    <p class="tagline">Every execution stores a content-addressed record — <code>run.json</code> + <code>observations.json</code> under <code>results/&lt;run_id&gt;/</code>, the id a SHA-256 over the run's content. Same manifest, inputs, and code: same id, byte-identical records. A different id means different inputs. That property is what makes an id citable.</p>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="labels">
+  <p class="kicker">The vocabulary</p>
+  <h2>The evidence ladder</h2>
+  <p class="prose">Five labels, equal status, one line each. The two upper rungs carry a <span class="notyet">not yet attained</span> mark — that mark is itself a statement about repository state, and it comes off only with an evidence record to cite.</p>
+
+  <div class="ladder on-light" role="img" aria-label="Evidence ladder with five rising rungs: PROPOSED, IMPLEMENTED_UNVERIFIED, VERIFIED, CALIBRATED, EXTERNALLY_REPRODUCED. The repository ceiling today is IMPLEMENTED_UNVERIFIED; CALIBRATED and EXTERNALLY_REPRODUCED are not yet attained.">
+    <div class="rung r-proposed">
+      <div class="meter"></div>
+      <span class="rname">PROPOSED</span>
+    </div>
+    <div class="rung r-unverified">
+      <div class="meter"></div>
+      <span class="ceiling">ceiling today ▾</span>
+      <span class="rname">IMPLEMENTED_<wbr>UNVERIFIED</span>
+    </div>
+    <div class="rung r-verified">
+      <div class="meter"></div>
+      <span class="rname">VERIFIED</span>
+    </div>
+    <div class="rung r-calibrated notyet">
+      <div class="meter"></div>
+      <span class="ny">not yet attained</span>
+      <span class="rname">CALIBRATED</span>
+    </div>
+    <div class="rung r-external notyet">
+      <div class="meter"></div>
+      <span class="ny">not yet attained</span>
+      <span class="rname">EXTERNALLY_<wbr>REPRODUCED</span>
+    </div>
+  </div>
+  <div class="ladder-axis on-light" aria-hidden="true" style="color:var(--muted)">
+    <span>weaker evidence</span><span class="arrow"></span><span>stronger evidence</span>
+  </div>
+
+  <div class="cards labelsgrid" style="margin-top:1.4rem">
+    <div class="card">
+      <p><span class="label label-proposed">PROPOSED</span></p>
+      <p>Design only, no result claimed.</p>
+    </div>
+    <div class="card">
+      <p><span class="label label-unverified">IMPLEMENTED_<wbr>UNVERIFIED</span></p>
+      <p>Code runs; semantic checks incomplete.</p>
+    </div>
+    <div class="card">
+      <p><span class="label label-verified">VERIFIED</span></p>
+      <p>Checks pass in declared scope. In this repository's usage: reproduced outside the author's working tree (a human or CI, from a fresh clone).</p>
+    </div>
+    <div class="card card-notyet">
+      <p><span class="label label-calibrated">CALIBRATED</span> <span class="notyet">not yet attained</span></p>
+      <p>Held-out empirical validation inside a stated domain. Unused by essun today — nothing in the repository is calibrated against hardware.</p>
+    </div>
+    <div class="card card-notyet">
+      <p><span class="label label-external">EXTERNALLY_<wbr>REPRODUCED</span> <span class="notyet">not yet attained</span></p>
+      <p>Independent reproduction from released artifacts. Unused by essun today.</p>
+    </div>
+  </div>
+  <p class="prose">The ceiling for the entire repository today is <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span>. A result may carry different labels for different claims; commits are read as claims and carry the label in their title. When a document cites earlier labeled work, it reproduces the label it carried — a citing party cannot upgrade it.</p>
+  <p class="note">Run records additionally request an evidence <em>level</em> E0–E4: E0 = identities and determinism (no empirical claim), E1 = calibration candidate, upward toward external reproduction. Everything demonstrated on this site is E0.</p>
+</section>
+
+<section id="replay">
+  <p class="kicker">The machinery</p>
+  <h2>Byte-identical replay and goldens</h2>
+  <div class="prose">
+    <ul>
+      <li><strong>Determinism is a house rule:</strong> fixed tie-breaking, partitioned RNG streams, integer byte counts; seed, topology, hashes, and config stored with every run. Reruns are replays, not new measurements.</li>
+      <li><strong>Golden tests spell expected values in the test source</strong>, derived by hand from closed-form identities — never pasted back from the implementation's output. <code>tests/golden/</code> holds the pattern; <code>tests/determinism/</code> replays runs and sweeps.</li>
+      <li><strong>Goldens are pinned by run id:</strong> <code>make demo</code> fails outright unless the L0 run reproduces <code>146ba565…</code> (pinned in <code>experiments/vertical_slice/w1_decode_smoke.GOLDEN.md</code>) and the discrete-event twin reproduces the id pinned in <code>tools/make_figure.py</code> (ASTRA twin <code>c6dc87eb…</code>, uet twin <code>fbb46d16…</code>).</li>
+      <li><strong>One command demonstrates the chain:</strong> <code>make demo</code> runs bootstrap-if-needed → schema checks → the test suite → both golden-run equality checks → a design-space sweep → figure registration → the paper-claims check, and exercises its own cold-tree (<code>git archive HEAD</code>) rebuild on every run. A cold-tree run completes in ~11 s with Docker, ~10 s in no-Docker mode.</li>
+      <li><strong>Claim links:</strong> every stored run is claim-linked in the append-only, content-addressed evidence store (<code>src/essun/evidence/store.py</code>), with classified counterexamples and content-addressed figure registration.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="claims">
+  <p class="kicker">Words under discipline</p>
+  <h2>Claims discipline</h2>
+  <div class="prose">
+    <ul>
+      <li>The paper skeleton carries <code>[RESULT: metric, experiment, status]</code> placeholders; numbers appear only when an immutable run record exists.</li>
+      <li><code>make paper-check</code> enforces the discipline mechanically: fabricated-number detection, a frozen hype vocabulary (checked in every inflection the review rounds added), and figure-reference rules — over <code>paper/</code> and the README gate section.</li>
+      <li>The counterexample policy is <code>minimize_then_refine</code>: when backends disagree, minimize and classify the counterexample before any parameter is touched. Verification is not validation.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="calibration">
+  <p class="kicker">Planned, candidates recorded, not executed</p>
+  <h2>Calibration ladder</h2>
+
+  <div class="stats">
+    <div class="stat"><span class="n">23</span><span class="d">public-measurement anchors integrated (12 core + 11 gap-fill) as citations</span></div>
+    <div class="stat"><span class="n">26</span><span class="d">content-addressed calibration records approved as E1 candidates</span></div>
+    <div class="stat"><span class="n">0</span><span class="d">observables calibrated — the CALIBRATED label is unused</span></div>
+  </div>
+
+  <div class="prose">
+    <ul>
+      <li><strong>23 public-measurement anchors integrated</strong> (12 core + 11 gap-fill) as citations: spec ceilings, measured NCCL series on an NVLink-class fabric, peer-reviewed sim-vs-hardware error bands, latency budgets — each staged with numbers, units, and measurement context in <code>docs/calibration/</code>.</li>
+      <li><strong>26 content-addressed calibration records</strong> (per-anchor sweeps, global parameter-class sweeps, and a four-class sensitivity synthesis) — adjudicated 2026-10-29 and approved as <strong>E1 candidates</strong>, with zero shipped-manifest, claim, or label changes.</li>
+      <li><strong>One documented gap (GF-06):</strong> a provider-side content filter blocks one anchor's extraction; the gap is documented, the material preserved untracked, and nothing is paraphrased.</li>
+      <li><strong>Nothing is CALIBRATED.</strong> The plan (<code>docs/calibration/CALIBRATION_PLAN.md</code>) is <span class="label label-proposed">PROPOSED</span>; no E2/E3 step has run. Calibration data is never used as final validation data.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="property-campaign">
+  <p class="kicker">Property checking</p>
+  <h2>Seeded property-checking campaign</h2>
+  <p class="prose">A time-boxed campaign over 25 seeds and 34 properties — traffic and time identities, phase composition, L0.5 convergence, conservation exactness, byte-identical replay, and manifest fuzzing, all in exact-<code>Fraction</code> arithmetic:</p>
+
+  <div class="stats">
+    <div class="stat"><span class="n">169,193,578</span><span class="d">distinct valid configurations across the seeds</span></div>
+    <div class="stat"><span class="n">2,561,989,637</span><span class="d">exact-Fraction property checks, cumulative</span></div>
+    <div class="stat"><span class="n">0</span><span class="d">model-identity findings</span></div>
+  </div>
+
+  <div class="prose">
+    <p>The single seed-1 finding was environment-class, classified — not a model or contract defect.</p>
+    <p>Evidence label: <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> (deterministic identities under free parameters; no empirical claim).</p>
+  </div>
+</section>
+
+<section id="limits">
+  <p class="kicker">Stated plainly</p>
+  <h2>What the demo does not show</h2>
+  <div class="prose">
+    <p>Stated plainly, because softening any of these while the state is unchanged would make the site dishonest — each line flips only with an evidence record to cite:</p>
+    <ul>
+      <li>The UEC profile's semantics bind documentation and L1 contracts today; they do not yet change any L0 number — every numeric model value stays an explicit free parameter.</li>
+      <li>The cross-standard table (UEC vs paper-derived UnifiedBus) is parameter-flavored: both columns share the same free parameters, so its delta is zero by construction.</li>
+      <li>Nothing is calibrated against hardware: the evidence ceiling is <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> and the calibration plan is unexecuted.</li>
+      <li>A normative second standard is blocked on license review (UALink/OCP/CXL restricted texts were never fetched).</li>
+      <li>The automated counterexample-guided refinement loop is design on paper; blind evaluation has not been run.</li>
+      <li>"Implemented and tested" means code exists and tests exercise it. It does not mean agreement with any physical fabric.</li>
+      <li>Workload coverage is the dense tensor-parallel family (W1 decode, W2 prefill). Executing MoE (W3) and PD/KV (W5) traffic needs L1/L2 backends that do not exist yet; their manifests are rejected loudly.</li>
+      <li>UALink and CXL are license-restricted and were never ingested; license review precedes ingestion of any standard text.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

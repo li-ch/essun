@@ -1,0 +1,28 @@
+# Calibration-ladder GF-10 bandwidth row: SUMMITDEV PINNEDMEM-GPUDIRECT
+# — crossbar r=8, B = 14 B/ns, L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# PinnedMem-GPUDirect "more than 14 GB/s" — a STRICT LOWER BOUND (an
+# inequality, not an equality: the true peak is somewhere above 14 B/ns;
+# the row executes the bound value itself and the record carries the
+# inequality). Same labeled-proxy class as the 12 B/ns RDMA row
+# (host-path transport, not a GPU scale-up fabric) and the same
+# SummitDev system. PLACEMENT: 14/12 = 7/6 = exactly 1.1667x above the
+# RDMA peak — the pinned-memory speedup the anchor measures on the same
+# transport; below the plan §2.1 anchored span [20, 64]; ratio to the
+# carrier: 25/14.
+topology_id: crossbar8_gf10_b14_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 14
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction: per-rank single-port
+  injection B = 14 B/ns (GF-10's staged PinnedMem-GPUDirect figure
+  "more than 14 GB/s" — a strict LOWER BOUND, inequality recorded) with
+  the registry L = 200 ns, charged once per phase by the L0 crossbar
+  identity (t = 2(r-1)/r*M/B + 2L). Labeled proxy row (host-path
+  transport); below the anchored B span. Value is an anchor bound, never
+  our measurement.

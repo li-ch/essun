@@ -1,0 +1,24 @@
+ 164 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.4.12 INC Data Plane Overview 
+This section specifies the INC data plane protocol. The IM controls the initial creation phase of the INC 
+communicator. Once the INC communicator is created, collective operations may be issued repeatedly 
+without additional setup. The IM also controls the destruction of the INC communicator. Refer to 
+Section 2.4.8 for an overview of the command flows. 
+2.4.12.1 Data Plane Sequences 
+Once the communicator is active, with all PDCs established, collective operations can be performed. 
+Figure 2-25 shows an example of executing a CCL allreduce operation. Each packet carries an integer 
+number of elements and sufficient information for the SEP to perform the operation autonomously. The 
+state required at the SEP is primarily the INC communicator membership and root FEP for reduce 
+operations. 
+TFC may be used if the switch has limited buffering and needs to limit the amount of data each member 
+FEP sends. In some deployments, CBFC may be adequate and TFC is not necessary. 
+The initialization phase is not shown in Figure 2-25. 
+In an allreduce operation, every member FEP receives output data. Other collective operations, such as 
+reduce, may produce output data only for a designated root FEP. In those cases, the acknowledgement 
+from the SEP that all input data has been received indicates completion of the collective operation. 
+Figure 2-26 shows the flow when a member FEP receive buffer is not available. This condition causes all 
+traffic on the INC communicator to pause. 
+ 
+Figure 2-25 - Allreduce Sequence 

@@ -1,0 +1,40 @@
+ 612 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+packets. Rather than potentially overwrite the CSIG tag with an unrepresentative signal from the higher-
+priority queues at subsequent switches along the path, this approach preserves the signal value in the 
+tag prior to the trimming of the packet, which reflects the representative congestion state of lower-
+priority queues along the path prior to trimming. 
+Some deployments MAY set the csig.d bit under other circumstances than at packet trim time to 
+prevent a CSIG tag from being updated by specific switches in the fabric. Those use cases and their 
+configuration are outside the scope of this specification. 
+4.2.4.1.9 Reserved (csig.r) 
+The csig.r bits SHALL be set to 0 by the FEP that initializes and inserts a CSIG tag on a packet for 
+transmission (see 4.2.5.2).  The csig.r bits are ignored upon receipt. 
+4.2.5 Functionality Within the CSIG Domain 
+The CSIG domain is defined as the set of UE fabric elements that participate in CSIG tag processing. The 
+following sections describe the functionality implemented at devices within the CSIG domain. 
+4.2.5.1 Capability Discovery 
+UE 1.1 Link Negotiation (Section 5.3) provides support for negotiating CSIG capability over each link 
+using the UE Link Negotiations Options Organization Specific LLDP TLV. End-to-end CSIG configuration is 
+done through other local or system-wide management capabilities such as the UE Switch Abstraction 
+Interface (SAI) and the UE RedFish interfaces. The LLDP capabilities provided allow the ports of a link to 
+indicate if they are capable of processing only compact CSIG tags, capable of processing both compact 
+and wide CSIG tags, or not capable of processing CSIG tags. 
+A host or switch that is CSIG-capable MUST support the compact tag and the base profile. The host or 
+switch MAY additionally support wide tags and MAY additionally support the extended profile. For a 
+switch to be capable of processing CSIG tags at a port it MUST be able to forward the CSIG tag 
+information through the switch along with the data packet to any other switch port and update the CSIG 
+tag at the egress port. In addition, a host or switch that is CSIG-capable MUST be able to strip the CSIG 
+tag formats it supports. 
+4.2.5.1.1 CSIG LLDP Transmit and Receive States 
+When a device that supports CSIG determines that a peer device on a link does not support CSIG, that 
+device performs the CSIG-Strip-and-Forward() function (see Section 4.2.5.4) when forwarding CSIG-
+tagged packets on that link. When a device supports compact CSIG tags but the peer does not, it MUST 
+strip the compact CSIG tag from the packet before transmitting it on the link, irrespective of the csig.d 
+bit’s value. When the device supports wide CSIG tags but the peer does not, it will strip the wide CSIG 
+tag from the packet before transmitting it on the link, irrespective of the csig.d bit’s value. 
+The local and remote LLDP database values of the csig-capable object are used in conjunction with the 
+presence or absence of the csig-capable object and with the local management configuration settings to 
+determine the forwarding of CSIG tags at the port. Table 4-7 describes how transmission and reception 
+of CSIG-tagged packets are processed at a port controlled using LLDP. 

@@ -1,0 +1,24 @@
+ 177 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The switch otherwise waits for the necessary INC resources to become ready for use and sets oper-
+status to UP. 
+The IM considers the switch configuration to be finished when the communicator’s oper-status is set to 
+UP. It is RECOMMENDED that the IM set a gNMI subscription to the oper-status node at this point. 
+2.4.17.4 Monitoring INC Communicator Status 
+Switches report communicator failures by setting the oper-status node to FAILED. The IM monitors the 
+oper-status node and reports the INC communicator as failed if any switch reports a failure. It is 
+RECOMMENDED that the IM set a gNMI subscription to the oper-status node. 
+When an INC communicator’s oper-status node changes to FAILED, the failure-description leaf SHOULD 
+contain a human-readable description of the failure. 
+2.4.17.5 INC Communicator Destruction 
+The IM can destroy an INC communicator by deleting the communicator node. 
+2.4.18 References 
+ 
+[1] R. L. Graham, D. Bureddy, P. Lui, H. Rosenstock, G. Shainer, G. Bloch, D. Goldenerg, M. Dubman, S. 
+Kotchubievsky and V. Koushnir, "Scalable hierarchical aggregation protocol (SHArP): A hardware 
+architecture for efficient data reduction," in First International Workshop on Communication 
+Optimizations in HPC (COMHPC), 2016. 
+ 
+ 
+  

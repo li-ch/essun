@@ -1,0 +1,30 @@
+# Calibration-ladder A3 topology: fully-connected crossbar of 72 ranks at
+# B = 720 B/ns per rank per direction — CAL-A2's 900 B/ns ceiling x CAL-A12's
+# ~80% software-effective derating (NCCL models NVLink at 20 GB/s/link vs 25
+# physical and application-level bandwidth typically reaches ~80% of peak;
+# anchor CAL-A12, confidence M pending reply-text verification by the owner).
+# This is the spec-to-measured BRIDGE point of the plan §1.1 CAL-A12 row:
+# where a CAL-A12-style software-scheduled measurement would sit relative to
+# the CAL-A3 series (stage A3 = the ladder's first MEASURED O-CCT target,
+# docs/calibration/anchors_staging.md §A3).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), not tuned toward any
+# CAL-A3 output; 720 was fixed by the CAL-A2 x CAL-A12 arithmetic at stage
+# A2, before CAL-A3's times were read. Evaluating the anchor against this
+# row LOCATES the measurement in the free-parameter space; it does not
+# validate the derating. L = 200 ns is the A-L0X-LAT registry point.
+topology_id: crossbar72_a3_derated720_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 720
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency; single-port injection shared across the 71 peers. No congestion,
+  no credits, no packetization — L0 transport model only. Provenance:
+  B = 720 = 0.8 x 900 (CAL-A2 ceiling x CAL-A12 ~80% derating; the derating
+  is itself an M-confidence staged figure); L = 200 ns is the free
+  A-L0X-LAT registry point. Values are anchor specs/assumptions, never
+  measurements.

@@ -1,0 +1,44 @@
+ 174 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+  |           |  |        subinterfaces/subinterface/index  
+  |           |  +--rw local-fabric-address?    inet:ip-address 
+  |           |  +--rw local-pid-on-fep?        inc:pid-on-fep 
+  |           |  +--rw local-resource-index?    inc:resource-index 
+  |           |  +--rw assoc-index?             uint16 
+  |           +--ro state 
+  |              +--ro (same as ../config/) 
+  |              +--ro counters 
+  +--ro capabilities 
+     +--ro max-groups?                        uint32 
+     +--ro max-rank-bandwidth?                uint32 
+     +--ro supported-operations* [data-type reduction-operator] 
+     |  +--ro data-type             identityref 
+     |  +--ro reduction-operator    identityref 
+     +--ro max-payload-mtu?                   inc:payload-mtu 
+     +--ro max-interfaces?                    uint32 
+     +--ro max-interfaces-per-communicator?   uint32 
+     +--ro max-peers-per-interface?           uint32 
+     +--ro max-peers?                         uint32 
+     +--ro max-peers-per-communicator?        uint32 
+     +--ro max-communicators-per-interface?   uint32 
+     +--ro available-protocol-types*          identityref 
+     +--ro max-outstanding-collectives?       uint32 
+     +--ro supported-ordering-modes*          inc:ordering-mode 
+     +--ro supported-rounding-modes*          identityref 
+     +--ro supported-collectives*             identityref 
+     +--ro flow-control-info 
+        +--ro enabled?           boolean 
+        +--ro cell-size?         uint16 
+        +--ro packet-overhead?   uint16 
+ 
+2.4.17.2                     ’              
+The capabilities node holds information regarding switch capabilities. The IM uses these capabilities to 
+determine if an INC switch is eligible to be used for INC offload for a particular communicator. The IM 
+reads the switch capabilities and performs the following: 
+• The IM ensures that at least one of the protocol types included in the available-protocol-types 
+node is supported by all the other switches used by the communicator. 
+• The IM verifies that the set of capabilities provided by the switch matches the set of capabilities 
+required by the ranks. The capabilities are listed in Table 2-54. 
+• The IM verifies that the resources listed in Table 2-55 are available on the switch. 
+ 

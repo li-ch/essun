@@ -1,0 +1,38 @@
+ 217 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The RUDI mode—reliable unordered delivery for idempotent messages—has specific constraints in the 
+way it is utilized. With RUDI, PDS provides reliable delivery but does not provide deduplication. This 
+means that certain scenarios (e.g., lost acknowledgements) can lead to the duplicate delivery of packets 
+at the target. RUDI is designed for semantics that are idempotent. For example, fi_read() and fi_write() 
+are idempotent when they do not deliver a target completion. Semantics that have side effects are not 
+“safe” when using RUDI. This includes send and tagged send, since both consume a buffer at the target. 
+Similarly, fi_atomic() would be exposed to delivering the operation to the target twice. 
+The RODL delivery mode is a variant of ROD optimized for lossless service andnetworks using the Unified 
+Local profile. RODL supports only the semantic header formats (UET_HDR_REQUEST_LCL and 
+UET_HDR_RESPONSE_DATA_LCL) and associated operations designated in the Unified Local profile. 
+3.4.2.14 Message Identifiers and Message Construction 
+Each multi-packet message contains a message identifier (ses.message_id). Single-packet read request 
+(UET_READ) messages using the standard header (Figure 3-11) MUST include a message ID for the 
+ses.message_id field. Other single-packet requests that have the ses.message_id field MUST include a 
+message ID or set the value to 0 if no message ID is provided. The message ID for a 
+UET_DATAGRAM_SEND must be set to 0. The message ID MUST be unique across all messages in flight 
+from one initiator FEP to a given target FEP using a given target PDC. The message ID MAY be globally 
+unique for a given initiator FEP. 
+If a message ID was present in the request, the read responses (UET_RESPONSE_W_DATA) carry the 
+original message ID from the read request in the ses.read_request_message_id field. Otherwise, the 
+ses.read_request_message_id field is set to 0. These responses also carry their own response message 
+ID (ses.response_message_id). The response message ID does not have the same uniqueness 
+requirements as the message ID in the request. 
+ 
+3.4.2.15 Original Request PSN 
+Certain optimized header formats for RMA operations do not carry a message ID. These formats use the 
+PSN from the original PDS Request packet to identify the original request state at the initiator. This 
+allows an initiator to associate return data with the original SES read request when the original message 
+ID is not present. 
+Informative Text: 
+The initiator can track all the information needed to implement read transactions without requiring 
+uniqueness in ses.response_message_id. This frees the target implementation to leverage the 
+response message ID in whatever way it desires. This includes the full range of implementation 
+options, from always populating the ses.response_message_id with 0 to inserting a random value to 
+having a unique response message ID that is used for all responses to a given read. 

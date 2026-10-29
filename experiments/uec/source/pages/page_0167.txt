@@ -1,0 +1,60 @@
+ 167 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+import "google/protobuf/empty.proto"; 
+ 
+package uec_uet_inc_im.v1; 
+ 
+service INCMembership { 
+  // Register a rank with the IM. 
+  rpc Register(RegistrationRequest) returns (RegistrationReply); 
+  // De-register a rank from the IM. 
+  // Also leaves any communicators that the rank is part of. 
+  rpc Deregister(RegistrationRequest) returns (google.protobuf.Empty); 
+ 
+  // Query the INC capabilities of the fabric. 
+  // Until a specific communicator is formed, the final capabilities may not 
+  // be known if the fabric consists of switches with different 
+  // capabilities. 
+  rpc GetCapabilities(google.protobuf.Empty) returns (CapabilitiesResponse); 
+ 
+  // Join a communicator. 
+  // A communicator is established after all ranks have attempted to join. 
+  // Communicator creation MUST fail if the required network resources and/or 
+  // capabilities is not provided. 
+  // This RPC is idempotent and safe to call again in case of a timeout. 
+  // The rank must be registered before calling this. 
+  rpc CommunicatorJoin(CommunicatorJoinRequest) returns 
+(CommunicatorJoinReply); 
+  // Leave a communicator. 
+  // This is irrevocable and kills the communicator. 
+  // The rank must be registered before calling this. 
+  rpc CommunicatorLeave(CommunicatorLeaveRequest) returns 
+(CommunicatorLeaveReply); 
+ 
+  // Fetch the list of failed communicators. 
+  // The rank must be registered before calling this. 
+  rpc CommunicatorStatus(AddressingInfo) returns (CommunicatorStatusReply); 
+  // Fetch the list of failed communicators and receive streaming updates as 
+  // communicators fail. 
+  // Leaving the stream open is the suggested way of generating heartbeats. 
+  // The rank must be registered before calling this. 
+  rpc StreamingCommunicatorStatus(AddressingInfo) 
+    returns (stream CommunicatorStatusReply); 
+} 
+ 
+// Local addressing information for one entity participating in INC 
+message AddressingInfo { 
+  uint32 job_id = 1; 
+  //The IP address of the FEP. Can be either v4 or v6. 
+  bytes ip = 2; 
+  uint32 pid_on_fep = 3; 
+  uint32 resource_index = 4; 
+  uint32 initiator_id = 5; 
+} 
+ 
+enum Collective { 
+  BARRIER = 0; 
+  BCAST = 1; 
+  SYNCBCAST = 2; 

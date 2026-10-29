@@ -1,0 +1,27 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 12.5 B/ns,
+# L = 332 ns — the PACKET-SERIALIZATION reading row: GF-06's staged
+# UET-htsim config pairs "100 Gbit/s links" with "4,150 B packets", so
+# one packet serializes in 4150/12.5 = 332 ns EXACTLY (anchor's own
+# numbers; no interpretation beyond the division). This row charges one
+# packet serialization AS the per-pair latency — a READING, not a claim
+# (packetization itself has no L0 input key; the row locates the
+# timescale of the anchor's own packet on the free L axis the same way
+# GF-05 bounded its 40.96 ns MTU serialization). Cross-config note,
+# recorded never cross-derived: GF-05's UET-htsim serializes its 4,096 B
+# at 100 B/ns in 40.96 ns — GF-06's packet costs 2075/256 ~ 8.11x more
+# serialization time (exactly 8 x 4150/4096; the two packet sizes differ
+# by 2075/2048 ~ +1.3%, the rates by x8). Nothing tuned.
+topology_id: crossbar8_gf06_l332_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 332
+notes: >
+  Non-blocking single-stage abstraction at the GF-06 anchor sim-config
+  bandwidth (12.5 B/ns) with L set to one packet serialization of the
+  anchor's own staged packet size (4150 B / 12.5 B/ns = 332 ns exactly —
+  a declared reading; packetization has no L0 input key). Identity
+  t = 2(r-1)/r*M/B + 2L. Provenance: anchor-staged packet size and link
+  rate; reading declared. Never our measurements, never tuned.

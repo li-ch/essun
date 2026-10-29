@@ -1,0 +1,42 @@
+ 615 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+T Signal  Math Function Initial Value 
+2 Delay max All ‘0b’ 
+3 nQD max All ‘0b’ 
+ 
+4.2.5.3 Tag Transit 
+UE fabric switch elements perform the CSIG transit function. 
+The transit function entails: 
+• When the received CSIG tag’s csig.d bit is set to zero: 
+o Perform CSIG-Compare-and-Update() with the received CSIG tag in accordance with the 
+signal type csig.t 
+• When the received CSIG tag’s csig.d bit is set to one: 
+o Do not update the CSIG tag; leave it unchanged when forwarding the packet. (See Section 
+4.2.4.1.8 for the full discussion of the csig.d bit and trimmed packets.) 
+Example CSIG-Compare-and-Update() sequence: 
+Compare-and-Update(pkt.csig.signal, pkt.csig.lm)  
+if (pkt.csig->t == “min-ABW[/C]”) { 
+  if (local_abw[/c] at packet egress port < pkt.csig.signal) { 
+    pkt.csig->signal = local_abw[/c] at packet egress port; 
+    pkt.csig->lm = local_lm; 
+  } 
+} 
+if (pkt.csig->t == “max-Delay”) { 
+  if (local_delay > pkt.csig.signal) { 
+    pkt.csig->signal = local_delay; 
+    pkt.csig->lm = local_lm; 
+  } 
+} 
+ 
+Note that in the pseudocode above, local values are quantized so that they are comparable to the 
+quantized values in the received CSIG tag. 
+4.2.5.4 Strip and Forward 
+The CSIG-Strip-and-Forward() function at a switch strips the CSIG tag from a packet and forwards the 
+packet without the tag. When a switch learns through LLDP that a peer switch on some link cannot 
+process CSIG tags, that switch MUST invoke CSIG-Strip-and-Forward() on CSIG-tagged packets before 
+forwarding them on that link to ensure that these packets are not dropped by the non-CSIG-capable 
+receiving peer. This action is performed regardless of the value of the packet’s CSIG tag’s csig.d bit. 
+4.2.5.5 Tag Termination  
+The destination FEP consumes received CSIG tags by performing the termination (Term) function, 
+thereby ending the forward path of the CSIG domain. 

@@ -1,0 +1,57 @@
+ 40 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+In-scope threat Threat that is explicitly addressed 
+by TSS and that has defined 
+mitigations. 
+Intermediary/switch An entity that routes or forwards 
+packets to a receiver. 
+Out-of-scope threat A threat that is not considered or 
+addressed in this specification. 
+Plaintext The original data that needs to be 
+encrypted by the sender before 
+transmission and the resulting data 
+after it is decrypted by the 
+receiver. 
+Protocol secrets UET secrets that are protected 
+from users of the protocol and/or 
+attackers to maintain the trusted 
+connection. 
+Side channel A method for an attacker to 
+extract information without the 
+knowledge of the sender or 
+receiver. 
+Threat Damage or danger that could 
+expose protocol secrets, allow the 
+leaking of packet data, or degrade 
+the integrity of the network. 
+Threat mitigation How TSS specifically addresses the 
+possible threat. 
+Trusted entity The portion of the FEP entrusted 
+to handle key material and 
+perform cryptographic functions. 
+Privileged entity A portion of the FEP and kernel 
+driver that is responsible for 
+assigning transport-critical 
+information such as JobID and 
+security context. 
+User entity User application that uses a UET 
+transport service. 
+Transport Security Additional authentication data 
+(AAD) 
+The additional data authenticated 
+with the ciphertext. Used in 
+conjunction with an AEAD cipher. 
+Association number (AN) Selects between one of the two 
+active keys (SDK) for an SD. The 
+active AN is carried in the TSS 
+header allowing the use of both 
+the old and new keys until the key 
+rotation is complete. The AN is 
+used for key rotation. 
+Authenticated Encryption with 
+Associated Data (AEAD) 
+A symmetric cryptographic scheme 
+that combines confidentiality and 
+authenticity. 

@@ -1,0 +1,46 @@
+ 498 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Name Type Default Description 
+idle_senders List of 
+sources 
+empty This is a list of sources that have not currently requested 
+additional credit. 
+credit_timer Timer unset Timer used to trigger the sending of Credit CPs. 
+credit_rate floating point 1 Used to dynamically modulate the total credit rate sent 
+by the destination. 
+ 
+3.6.14.5.2 Per-Source Destination State 
+On CCC start (as indicated by the establishment of a PDC with a new CCC ID) the state shown in Table 
+3-102 is established and associated with the source. 
+Table 3-102 - RCCC Per-Source Destination State 
+Name Type Default Description 
+sender.cumulative_credit unsigned 
+integer 
+0 The highest credit given to this source. (units: 256 bytes) 
+sender.credit_target unsigned 
+integer 
+0 Largest value of credit_target (corresponding to 
+cumulative demand) from this source. (units: 256 bytes) 
+ 
+3.6.14.6 RCCC Destination Algorithm 
+On receipt of a data packet or trimmed data packet, OnRX() is performed. 
+OnRX(pkt): 
+if pkt.credit_target > sender.credit_target: 
+sender.credit_target = pkt.credit_target 
+if sender not in active_senders  
+   and sender.cumulative_credit < sender.credit_target: 
+#previously inactive source has unsatisfied demand. 
+#insert the source at the end of the source list 
+active_senders.insert_at_back(sender) 
+if sender in idle_senders: 
+idle_senders.remove(sender) 
+ else if pkt.type == credit_request 
+# if a credit_request was received with a credit_target <= 
+# sender.credit then send a credit packet with current value 
+# of sender.cumulative_credit 
+send credit(cumulative_credit = sender.cumulative_credit) 
+ 
+OnCreditTimer() is designed to issue credit at a rate where the amount sent within a given time period 
+matches the amount of data the destination can receive in that time period. Typically, k is a small 
+constant such as four, so that each credit message allows the transmission of four MTUs of data. Smaller 

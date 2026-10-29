@@ -1,0 +1,20 @@
+# W1 Dense TP Decode — tp_size 8 (the GF-01 anchor's own rank count: one
+# MI300X node) at 17179869184 B = 2^34 (16 GiB): the LARGEST row of the
+# anchor's measured series and one of its three RECONCILING
+# time-and-busbw rows (eager 94,254.55 us / busbw 318.98 GB/s; graph-mode
+# busbw 319.22 GB/s) — the bandwidth-bound plateau point of the large-
+# message target. 2^34 is divisible by 8 (A-L0-DIV / A-L0X-DIV /
+# A-L0D-DIV accept the exact size, no bracketing). The anchor's mid rows
+# (128 KiB..1 GiB) do NOT reconcile (time vs busbw inconsistency under
+# the RCCL 2(r-1)/r convention at r=8 — staging-doc flag, recorded and
+# EXCLUDED in the stage record per the FAIL clause); the payload ladder
+# therefore uses only reconciling/latency rows. Same workload shape as
+# every W1 file (2 layers x 3 decode steps = 6 AllReduce ops per
+# config). Nothing measured or standard-normative here; integer byte
+# counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal4-gf01
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 17179869184   # 2^34 (16 GiB); reconciling GF-01 plateau row; free parameter A-W1-SIZE

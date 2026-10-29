@@ -1,0 +1,62 @@
+ 482 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+target_qdelay, qa_threshold, and adjust_period_threshold all measure time. They are expressed here in 
+units of seconds for the purposes of consistency in these formulae. Implementations should maintain 
+target_qdelay to the nearest 128 ns or better to match the tx_timestamp precision. 
+target_qdelay defaults to: 
+config_base_rtt * 0.75 when trimming is used 
+config_base_rtt * 1.0 when trimming is not used 
+The parameter qa_threshold is used when trimming is disabled; it should be set to a high value to 
+disable it when trimming is used. The quick_adapt() action needs to be triggered before tail dropping 
+occurs in the network; thus, qa_threshold is a derivative of the tail drop threshold. The qa_threshold 
+parameter should be set to (drop threshold/Plane_BDP -1)*configure_base_RTT. Using the 
+recommended tail drop threshold of 5*Plane_BDP, this yields a qa_threshold of 4*target_qdelay. See 
+Section 3.6.17 for details on the recommended switch settings. 
+3.6.13.4 NSCC Source State 
+When an NSCC CCC is initialized, the following per-CCC state is initialized: 
+ 
+Table 3-98 - NSCC Source State 
+Name Type Default Description 
+ccc.cwnd unsigned 
+integer 
+MaxWnd Congestion window that constrains the in-flight 
+data. (units: bytes) 
+ccc.inflight signed 
+integer 
+0 The amount of unacknowledged data still 
+thought to be in transit. (units: bytes) 
+ccc.saved_cwnd unsigned 
+integer 
+0 Original value of cwnd saved when destination 
+flow control starts. 
+ccc.base_rtt unsigned 
+integer 
+config_base_rtt Base RTT for the CCC. Starts at config_base_rtt, 
+but is reduced if an RTT sample is lower. (units: 
+128 ns) 
+ 
+ccc.achieved_bytes unsigned 
+integer 
+0 Achieved received bytes from past RTT for 
+quick adapt. (units: bytes) 
+ccc.received_bytes unsigned 
+integer 
+0 Achieved received bytes to trigger 
+fulfill_adjustment(). (units: bytes) 
+ccc.fi_count unsigned 
+integer 
+0 Count of packet bytes that see no ECN-CE and 
+also see an RTT that is around base_rtt. (units: 
+bytes) 
+ccc.trigger_qa boolean FALSE Set to TRUE to trigger quick_adapt() when the 
+deadtime since the last call to quick_adapt() 
+has expired. 
+ccc.qa_endtime unsigned 
+integer 
+0 The time value of the end of Quick_Adapt time 
+window. (units: local time units) 
+ccc.bytes_to_ignore unsigned 
+integer 
+0 Used after quick_adapt() to keep track of how 
+much data to ignore. (units: bytes) 

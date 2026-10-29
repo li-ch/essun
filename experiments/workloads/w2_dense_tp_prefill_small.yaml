@@ -1,0 +1,10 @@
+# W2 Dense TP Prefill — smoke configuration (P5 / WS3 ladder, second rung).
+# All sizes are integer byte counts; deterministic by construction.
+# Dependency semantics are frozen in A-W2-DAG (assumptions_l0.yaml):
+# per chunk ReduceScatter -> AllGather, chained across chunks and layers.
+workload: w2_dense_tp_prefill
+model_name: dense-tp-prefill-smoke
+tp_size: 8
+layers: 2
+chunks_per_layer: 2
+chunk_bytes: 16384   # free parameter A-W2-CHUNK (16 KiB), see assumptions_l0.yaml

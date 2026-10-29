@@ -1,0 +1,42 @@
+ 590 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4 UE Network Layer  
+4.1 Packet Trimming 
+Network switches store packets in buffers prior to forwarding them on busy egress ports. Available 
+buffer memory in modern switches is scarce as it is typically implemented as SRAM and is limited by chip 
+area. If the buffer is unable to accommodate an arriving packet, a switch either drops the packet or 
+signals the upstream port to pause the flow of traffic. Both solutions are known to have performance 
+issues. 
+This specification defines a mechanism that responds to buffer shortage in switches: In short, switches 
+trim the packet payload and use a different traffic class to forward the resulting header to the 
+destination. 
+This specification focuses only on sending the trimmed packet to the destination. Sending a trimmed 
+packet back to the source, as proposed in [2] , [4]  is not part of this specification. 
+Informative text: Motivation 
+In modern data centers, switch buffers are under pressure for a few reasons. Chip bandwidth is 
+doubling every 18 months, but chip cost/area and power consumption are not scaling equivalently, 
+constraining the total amount of buffer available. Certain datacenter traffic patterns, on the other 
+hand, are synchronized and often involve line-rate bursts from multiple senders to the same 
+destination (a pathology called incast), placing pressure on limited switch buffers. 
+Today, switches commonly operate in two modes: best effort and lossless. 
+In best-effort mode, when a packet arrives and it does not fit in the available buffer on the switch, the 
+packet is dropped. This approach simplifies the handling of switch buffer overload scenarios but poses 
+challenges for transport protocols, which must detect lost packets and handle their retransmission. 
+In single-path transport protocols, this typically involves setting a threshold for out-of-order received 
+packets—such as TCP’s three duplicate ACKs—to determine if a packet has been lost. This works if the 
+dropped packet does not happen at the tail of a transmission; in such cases probes may be needed to 
+avoid expensive retransmit timeouts. 
+For a packet-spraying transport such as UET, detecting packet loss using an out-of-order degree 
+threshold is more challenging. Packets may be buffered on congested paths and arrive significantly 
+later, necessitating a large out-of-order degree threshold to prevent spurious retransmissions. For 
+packet-spraying transports, packet loss detection can still use probes, sent on each possible path, but 
+this comes at a higher cost. 
+In lossless mode, when a packet arrives and the receive buffer utilization exceeds a threshold, the 
+switch sends a PFC message on the ingress port where the packet was received, causing the upstream 
+switch to pause further transmission until the receive buffer has sufficient space to store packets. 
+Lossless mode has the advantage of reducing packet loss to a minimum (loss will generally occur only 
+due to bit errors uncorrected by Ethernet FEC or when the PFC headroom fills up), but it brings its 
+own problems: congestion spreading, tree saturation, and a risk of deadlocks (e.g. see [1] for a 
+description of some of the issues encountered in a production network). 
+ 

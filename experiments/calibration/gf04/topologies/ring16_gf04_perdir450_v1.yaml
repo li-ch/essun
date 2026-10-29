@@ -1,0 +1,17 @@
+# Calibration-ladder GF-04 topology: unidirectional ring of 16 ranks at
+# the physical per-direction NVLink reading B = 450 B/ns (= 900/2, GF-02's
+# axis point) — the r=16 ceiling row of the swept span. Same anchor-anchor
+# arithmetic provenance as ring8_gf04_perdir450_v1 (staged GF-02 figure,
+# fixed before any model output was read); same uniform-projection,
+# honesty, and L = 200 ns registry statements (inherited verbatim).
+# docs/calibration/anchors_gapfill.md §GF-04; GF-02 axis point.
+topology_id: ring16_gf04_perdir450_v1
+topology_class: unidirectional_ring
+ranks: 16
+link:
+  bytes_per_ns: 450
+  hop_latency_ns: 200
+notes: >
+  Unidirectional ring of 16 ranks at the physical per-direction NVLink
+  aggregate 450 B/ns (GF-02's 900/2 axis point, carried to the two-node
+  rank count). Anchor-anchor arithmetic; never our measurement.

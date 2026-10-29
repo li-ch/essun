@@ -1,0 +1,63 @@
+ 281 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Mnemonic Constant Description 
+3. As specified in the OCP 8-bit Floating Point Specification (OFP8), Revision 1.0: 
+<https://www.opencompute.org/documents/ocp-8-bit-floating-point-specification-ofp8-revision-1-0-2023-
+12-01-pdf-1> 
+ 
+ 
+Table 3-29 - AMO Semantic Control 
+Field Size Description 
+UET_AMO_CTRL_CACHEABLE 1 This AMO operation may be cached by the target 
+device. 
+UET_AMO_CPU_COHERENT 1 This operation should be performed in a way that is 
+coherent with CPU accesses. 
+Reserved 3 Reserved 
+ 
+VENDOR_DEFINED[0-2] 3 Vendor-defined encoding space. 
+ 
+ 
+The matrix of supported operation types versus datatype is shown in Table 3-30. The tables use ⚫ to 
+denote a supported operation on a given datatype and  to indicate an optional operation. Blank cells 
+indicate an unsupported operation. Notable trends in the tables are that product is optional across all 
+datatypes, and “hard” operations (e.g., 128-bit integer sum) are left as optional. Similarly, only the most 
+basic operations are required on the complex floating-point formats. Nonsensical operations (e.g., 
+logical operations on floating-point numbers) are excluded. 
+Table 3-30 - Valid Combinations of Operations and Datatypes (Alternative) 
+ 
+Min 
+Max 
+Sum 
+Diff 
+Prod 
+LOR 
+LAND 
+BOR 
+BAND 
+LXOR 
+BXOR 
+READ 
+WRITE 
+CSWAP 
+CSWAP_NE 
+CSWAP_LE 
+CSWAP_LT 
+CSWAP_GE 
+CSWAP_GT 
+MSWAP 
+UET_TYPE_INT8 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_UINT8 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_INT16 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_UINT16 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_INT32 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_UINT32 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_INT64 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_UINT64 ⚫ ⚫ ⚫ ⚫  ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ ⚫ 
+UET_TYPE_INT128                     
+UET_TYPE_UINT128                     
+UET_TYPE_FLOAT                     
+UET_TYPE_DOUBLE                     
+Informative Text: 
+Typical programming interfaces (e.g., MPI, SHMEM) are silent on the details of handling NaN in 
+floating-point arithmetic and define it as platform-specific. 

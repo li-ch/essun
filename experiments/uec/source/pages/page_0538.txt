@@ -1,0 +1,52 @@
+ 538 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+packet—including all protocol headers—remains small. Of this total, 2 bytes are reserved for the 
+telegram type header and other control fields, leaving 30 bytes available for actual payload data. 
+ 
+The PCM runtime delivers received telegrams to algorithms through the algorithm’s registered callback 
+function. A single telegram is delivered per invocation. Algorithms determine the telegram type using 
+the uet_get_tgm_type() function and the invocation context using the uet_invoke_ctx() function. 
+Telegram field values are accessed using the telegram field access functions. Fields MUST be delivered 
+to the algorithm in the PCM implementation’s native endian order. 
+Table 3-121 - Telegram Type Controls 
+Function Name  Description 
+int uet_set_tgm_type(int tgm_type)  Set the telegram message type. 
+  
+This function sets the telegram message type as 
+defined in the YAML. The input tgm_type is an 
+appropriate tgm macro value.  
+ 
+Table 3-122 - Telegram Field Access Controls 
+Function Name (Argument(s)) Description 
+int uet_get_field_int(int field_index, int32_t 
+*value) 
+Get the integer field at field_index. 
+ 
+The field_index argument is an appropriate field 
+macro identifier as defined in the YAML.  
+int uet_get_field_uint(int field_index, uint32_t 
+*value) 
+Get the unsigned integer field at field_index.   
+ 
+The field_index argument is an appropriate field 
+macro identifier as defined in the YAML. 
+int uet_get_field_float(int field_index, float *value) Get the float field at field_index.   
+ 
+The field_index argument is an appropriate field 
+macro identifier as defined in the YAML. 
+int uet_set_field_int(int field_index, int32_t value) Set the integer field at field_index. 
+ 
+The field_index argument is an appropriate field 
+macro identifier as defined in the YAML. 
+int uet_set_field_uint(int field_index, uint32_t 
+value) 
+Set the unsigned integer field at field_index.   
+ 
+The field_index is an appropriate field macro 
+identifier as defined in the YAML. 
+int uet_set_field_float(int field_index, float value) Set the float field at field_index.   
+ 
+The field_index is an appropriate field macro 
+identifier as defined in the YAML. 
+ 

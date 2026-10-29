@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vision and roadmap — essun</title>
+<meta name="description" content="The essun vision: a portable contract between what a specification says, what an implementation may choose, what a simulator models, and what the evidence supports. The roadmap in five phases with falsifiable exit conditions — an experiment in earning institutional dependence, not a countdown to inevitability.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html" aria-current="page">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">Where this is going</p>
+    <h1>Vision and roadmap</h1>
+    <blockquote class="vision" style="margin:1.2rem 0 0">
+      <p>Fabric decisions in AI infrastructure are still made from vendor slides and one-off simulators. We want to end that. ESSUN's answer is a portable contract between four things: what a specification says, what an implementation may choose, what a simulator actually models, and what the resulting evidence supports. One experiment manifest drives every fidelity, every emitted number traces to a content-addressed run record, and every claim carries an evidence label — so fabric decisions can be answered with numbers anyone can re-derive.</p>
+      <p class="endgame">The strategy is profile-led and engine-plural: profiles, semantic bindings, and evidence records should matter more than which engine executes them, and a consortium can own its official profile while the common substrate stays neutral. A project becomes infrastructure only when others depend on it and can maintain it — so this roadmap is an experiment in earning institutional dependence, with falsifiable exit conditions at every phase, not a countdown to inevitability. The end game: scale-up fabric evolution becomes evidence-driven, the way model development became benchmark-driven. If the institutional thesis fails, the honest fallback is a valuable research comparison tool.</p>
+    </blockquote>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="strategy">
+  <p class="kicker">The strategy</p>
+  <h2>Profile-led, engine-plural</h2>
+  <div class="prose">
+    <p>ESSUN's strongest position is not another simulator competing for attention. It is the lowest-cost credible way to turn a network specification into an evaluable engineering claim:</p>
+  </div>
+  <div class="callout">
+    <p class="callout-title" style="font-family:var(--mono); font-size:0.92rem">specification says&nbsp;→&nbsp;implementation may choose&nbsp;→&nbsp;simulator models&nbsp;→&nbsp;evidence supports</p>
+    <p>Anchored requirements, explicit free parameters, one manifest, reproducible runs, multiple engines, and honest evidence labels are the pieces of that contract. What is missing — and what the roadmap below is built to earn — is external dependence: independent users, executed calibration, distributed maintenance, and a normative profile that changes simulation outputs rather than documenting them.</p>
+  </div>
+  <div class="prose">
+    <p>Three commitments follow. The decisive constituency is a small coalition of independent evaluation teams, including at least one infrastructure buyer — not consortium endorsement. The pitch to a working group is ambiguity exposure and executable examples, never a vendor ranking. And the core stays neutral: a consortium can own its official profile without owning the cross-standard substrate.</p>
+  </div>
+</section>
+
+<section id="roadmap">
+  <p class="kicker">Future tense, on purpose</p>
+  <h2>The roadmap in five phases</h2>
+  <p class="prose">Time ranges are aspirations measured from public launch. A phase passes when its exit conditions are met with evidence — never because its deadline arrived.</p>
+
+  <div class="cards phases">
+    <article class="card phase">
+      <span class="when">Phase 0 · now → launch</span>
+      <p class="phase-line"><strong class="phase-label">Make the thesis testable.</strong> License review for everything published; honest capability and evidence matrices; breadth frozen to one workload and one semantic wedge; the profile contract with per-requirement dispositions; a small UEC-linked behavioral or constraint path implemented; independent launch testers recruited; upstream maintainers contacted about adapter boundaries.</p>
+      <p class="card-kicker">Exit conditions</p>
+      <ul class="exits">
+        <li>the semantic slice changes a tested observable, or rejects an invalid experiment</li>
+        <li>a deliberately wrong binding is caught</li>
+        <li>two outsiders run the small example without private help</li>
+      </ul>
+      <p class="note">If not: launch as a disciplined experimental tool — not the stronger positioning.</p>
+    </article>
+
+    <article class="card phase future">
+      <span class="when">Phase 1 · launch → month 6</span>
+      <p class="phase-line"><strong class="phase-label">Prove independent usefulness.</strong> A small, relevant subset of the calibration plan executed, including a held-out case; independent reproductions; one real evaluation question supported; upstream fixes rather than forks; a stable versioned artifact and a concise technical account.</p>
+      <p class="card-kicker">Exit conditions</p>
+      <ul class="exits">
+        <li>two or more independent organizations reproduce relevant results</li>
+        <li>an external team reuses ESSUN for its own question</li>
+        <li>the semantic slice is verified within its declared scope</li>
+        <li>three or more calibration cases executed, one held out, limits published</li>
+        <li>three substantive external contributors; a second person can cut a release</li>
+      </ul>
+    </article>
+
+    <article class="card phase future">
+      <span class="when">Phase 2 · months 6–12</span>
+      <p class="phase-line"><strong class="phase-label">Form a credible coalition.</strong> Repeat use by two decision teams; a second normative profile once publication rights are resolved; multi-organization review; release and backend-update competence transferred; committed maintenance support; the paper written around demonstrated results; a bounded working-group pilot offered.</p>
+      <p class="card-kicker">Exit conditions</p>
+      <ul class="exits">
+        <li>two external teams use ESSUN repeatedly, at least one buyer-side</li>
+        <li>the second normative profile is legally distributable with an executable, tested scope</li>
+        <li>three people — two outside the owner's control — perform critical maintenance tasks</li>
+        <li>a year of support committed in money or staff time</li>
+        <li>a working group accepts a defined pilot, not a conversation</li>
+      </ul>
+    </article>
+
+    <article class="card phase future">
+      <span class="when">Phase 3 · months 12–18</span>
+      <p class="phase-line"><strong class="phase-label">Enter the specification production loop.</strong> A real draft or revision delta exercised with permission; ambiguities resolved through recorded review; release-candidate compatibility tests; a modest public reproduction round; neutral hosting only if operational commitments exist by then.</p>
+      <p class="card-kicker">Exit conditions</p>
+      <ul class="exits">
+        <li>a working group uses ESSUN in an actual revision process</li>
+        <li>a substantive interpretation or draft issue is resolved through that process</li>
+        <li>a profile update is produced by someone other than the owner</li>
+        <li>the owner's absence does not block a release</li>
+      </ul>
+    </article>
+
+    <article class="card phase future">
+      <span class="when">Phase 4 · months 18–24 and beyond</span>
+      <p class="phase-line"><strong class="phase-label">Make the default self-reproducing.</strong> The draft-to-profile workflow repeated across independent ecosystems; maintenance and profile ownership institutionalized; third parties initiating profiles without owner-led persuasion.</p>
+      <p class="card-kicker">Exit conditions</p>
+      <ul class="exits">
+        <li>new-profile work begins outside the owner's initiative</li>
+        <li>multiple specification organizations use the contract</li>
+        <li>maintenance survives personnel turnover</li>
+      </ul>
+      <p class="note">No honest plan promises this phase within two years. The two-year test is whether the mechanism works.</p>
+    </article>
+  </div>
+</section>
+
+<section id="endgame">
+  <p class="kicker">What success would actually look like</p>
+  <h2>The measurable endgame</h2>
+  <div class="prose">
+    <p>ESSUN is a de facto evaluation standard when relevant actors routinely assume its profile/evidence contract must be addressed — even if they choose a different engine or challenge the reference model. Concretely, all of the following would need to hold:</p>
+  </div>
+  <dl class="facts">
+    <dt>Release behavior</dt>
+    <dd>Across three or more successive specification-release events, spanning two or more independent ecosystems, third parties initiate ESSUN profiles or compatible updates — available at release or within a predefined short interval where publication rights permit, with at least two updates not owner-led.</dd>
+    <dt>Institutional behavior</dt>
+    <dd>Two or more working groups reference ESSUN in minutes, technical documents, or issue resolutions — actual technical use, not endorsement.</dd>
+    <dt>Contributor independence</dt>
+    <dd>Twelve or more substantive external contributors over a rolling year, across five or more organizations, with three or more non-owner maintainers of critical tasks; no single employer controls technical acceptance.</dd>
+    <dt>Engineering behavior</dt>
+    <dd>Engineers from three or more vendors file substantive issues or corrections; two or more independent infrastructure buyers use the substrate repeatedly; backend maintainers can implement against a published compatibility contract.</dd>
+    <dt>Research behavior</dt>
+    <dd>In a representative rolling sample of cross-fabric evaluation papers, at least half use the contract or explicitly compare against it.</dd>
+  </dl>
+  <div class="callout warn">
+    <p class="callout-title">What does not count as adoption</p>
+    <p>Stars, followers, site visits, supportive messages, cosmetic pull requests, owner-assisted demonstrations, downloads, sponsor money, or an introductory working-group meeting. Confidential use counts only as a permissioned attestation or reviewed summary — never as unverifiable "major-company adoption".</p>
+  </div>
+</section>
+
+<section id="outcomes">
+  <p class="kicker">Falsifiable, not inevitable</p>
+  <h2>Three legitimate outcomes</h2>
+  <div class="cards" style="grid-template-columns:repeat(auto-fit, minmax(15rem,1fr))">
+    <div class="card">
+      <p class="card-kicker">If the loop closes</p>
+      <h3>Double down on standard positioning</h3>
+      <p>Justified when technical validity, repeated decision use, distributed maintenance, and draft-cycle integration reinforce each other.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">If researchers stay, buyers don't</p>
+      <h3>The research comparison tool</h3>
+      <p>Justified when researchers repeatedly use and cite ESSUN but buyers and consortia do not depend on it — important, publishable, sustainable, at a narrower scope and budget.</p>
+    </div>
+    <div class="card">
+      <p class="card-kicker">If adoption does not follow</p>
+      <h3>Stop the standard narrative</h3>
+      <p>Justified when the software is useful but institutional adoption does not materialize. Let demonstrated demand set the scope; do not manufacture inevitability through branding.</p>
+    </div>
+  </div>
+  <p class="note">The decisive milestone is not launch, a foundation, a paper, or an endorsement. It is an independent team making a repeated decision on a causally executable, appropriately calibrated profile — and a second team able to reproduce, challenge, and improve it without the founder mediating everything.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

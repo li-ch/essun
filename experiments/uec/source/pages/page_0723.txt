@@ -1,0 +1,52 @@
+ 723 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.4.6 UFH Termination and Forwarding 
+UFH packets appear as legal L2 frames on the wire but cannot be forwarded by standard Ethernet 
+bridges as defined in IEEE 802.1. A UFH-capable switch needs to mask out non-address portions of the 
+DA and SA when implementing forwarding behaviors and support additional capabilities defined by the 
+UFH header. A conceptual view of a UFH endpoint and switch is shown in Figure 5-28. 
+The MAC layer at an endpoint identifies received UFH packets and forwards them to an upper layer 
+through a “MAC Service Access Point.” The upper layer validates and terminates UFH packets addressed 
+to the endpoint and passes them to the transport protocol identified in the header stack. 
+Packets addressed to other endpoints are directed to a UFH switch that implements UFH-specific 
+forwarding functions. The forwarding function looks up the UFH destination address to identify an 
+egress interface, maps the encoded COS to a queue, and applies ECN and hop-limit updates analogous 
+to those applied by an IP router. The forwarding function must ignore any opaque fields and reserved 
+flags in the header. 
+UFH defines 32-bit and 16-bit address container variants to support different deployment needs. These 
+header variants are known as UFH_32 and UFH_16 respectively. While use of IP addresses is preferred 
+with the 32-bit address variant, this specification intentionally does not mandate the use of a specific 
+address family with either variant. The address fields are viewed as “containers” to which an 
+implementation can map a suitable address namespace and conform to its forwarding rules. This 
+flexibility is to help bespoke HPC and scale-up fabrics migrate to Ethernet. 
+The address namespace used by an implementation might need fewer than 32 or 16 address bits, and 
+the addresses must be LSB-aligned within an address container. UFH endpoints and switches MUST be 
+configured to ignore unused upper bits of a container when using the address for any function. For 
+ 
+Figure 5-28 - Conceptual Layering of UFH 
+ 
+PHY
+MAC
+LLC
+UFH UL
+Transport
+PHY
+MAC
+LLC
+UFH UL
+Transport
+802.1Q 
+Bridge
+UFH Switch
+UFH is a legal Ethernet MAC frame with locally assigned addresses
+UFH upper layer interfaces through a MAC Service Access 
+Point (MSAP). UFH packets are identified and forwarded 
+to the UFH upper layer. This is analogous to layer 3 
+packet processing.
+Transport layer interfaces to UFH and not to the MAC layer.
+Standard 802.1Q bridges CANNOT learn and forward UFH 
+as there is no capability to mask out non-address bits in 
+DA/SA. Can use filters to ignore UFH.
+UFH switch forwards packets to remote endpoints or 
+terminates them and sends to an upper layer transport.

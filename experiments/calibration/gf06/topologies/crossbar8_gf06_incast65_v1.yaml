@@ -1,0 +1,37 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 65 B/ns,
+# L = 1000 ns (declared import) — the INCAST 3x ENVELOPE row: the anchor
+# quotes "incast-tuned initial windows give a 3x speedup of maximum FCT"
+# (and "avoids 98.6% of baseline packet drops" — drops have NO L0
+# observable at all; recorded only, factor exactly 493/500 of baseline
+# drops avoided). Mapping discipline (A11/GF-05 technique): the FCT
+# factor 3 is dimensionless, t_baseline = 3 x t_PCM, mapping to
+# effective-B displacement B_baseline = B_carrier/3. CARRIER AMBIGUITY,
+# DECLARED: GF-06 stages no per-platform attribution for the incast
+# quotes; the primary sim-config carrier (12.5) gives 12.5/3 = 25/6 —
+# NOT a representable finite decimal (prime 3 in the denominator),
+# recorded in the stage record; the UCCL goodput carrier 195 (the
+# anchor's other headline platform figure) gives 195/3 = 65 exactly —
+# representable, EXECUTED here as the declared carrier-transfer reading
+# (same class as GF-05's dimensionless HW-factor transfer onto its sim
+# point). Consistency property (by construction): this row's asymptotic
+# CCT ratio vs the goodput row (195) is EXACTLY 3 — the executed grid
+# reproduces the anchor's own quoted factor as a pure 1/B asymptote.
+# Asymptotic CCT ratio vs the anchor row (12.5) exactly 26/5. Nothing
+# tuned; no anchor FCT is compared to any CCT anywhere.
+topology_id: crossbar8_gf06_incast65_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 65
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the anchor's 3x max-FCT
+  incast envelope displaced from its UCCL goodput carrier (195/3 = 65 —
+  the only representable carrier for this factor; the sim-carrier
+  reading 25/6 is recorded, not executed). Identity
+  t = 2(r-1)/r*M/B + 2L, L = 1000 ns declared import. The incast-window
+  MECHANISM (initial windows, drop avoidance 493/500) is inexpressible
+  at L0 — magnitude only, asymptotic ratio exactly 3 vs the 195 carrier.
+  Provenance: anchor-staged outcome factor on the declared carrier;
+  never our measurements, never tuned.

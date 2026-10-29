@@ -1,0 +1,85 @@
+# Calibration-ladder GF-06 topology: fully-connected (crossbar /
+# single non-blocking switch stage) abstraction of 8 ranks at the GF-06
+# ANCHOR SIM-CONFIG POINT — B = 12.5 B/ns (= 25/2 exactly,
+# decimal-representable), L = 1000 ns (DECLARED IMPORT, see below).
+#
+# Source numbers (docs/calibration/anchors_gapfill.md §GF-06; PCM:
+# "Programmable Congestion Management for Terabit RDMA", arXiv:2610.13130
+# (Oct 2026); numbers AS STAGED, not re-fetched; confidence H — extracted
+# from the paper HTML; NOT yet peer-review-verified): PCM is deployed on
+# "the packet-level Ultra Ethernet transport simulator (UET-htsim)" over
+# a "1,024-host three-tier fat tree, 100 Gbit/s links, 4,150 B packets".
+# Under the declared decimal reading (the plan's convention 1 GB/s = 1
+# B/ns; link rates are per-direction quantities): 100 Gbit/s / 8 = 12.5
+# GB/s = 12.5 B/ns per link per direction. 12.5 = 25/2 is exactly
+# representable, so the anchor point EXECUTES (no representability
+# escape needed, unlike most GF-06 outcome factors).
+#
+# THE SIM-CONFIG CROSS-CHECK (the gap-fill doc's assigned role: "a
+# UET-htsim second user (sim-config cross-check with GF-05)"): GF-05's
+# UET-htsim config runs 800 Gbps links (= 100 B/ns, stage GF-05's anchor
+# point); GF-06's runs 100 Gbit/s links (= 12.5 B/ns, this row). The two
+# independent users of the SAME simulator family differ by EXACTLY x8 on
+# the bandwidth axis — and 12.5 B/ns is NUMERICALLY IDENTICAL to GF-05's
+# 8:1 oversubscription displacement row (a cross-anchor coincidence GF-05
+# already recorded from its side; recorded again here from GF-06's side,
+# never cross-derived: GF-06 stages NO oversubscription ratio — its fat
+# tree is "three-tier" with no subscription quote). 12.5 is the FIRST
+# staged anchor OWN sim line rate BELOW the plan §2.1 A-L0-BW candidate
+# anchored span [20, 64] B/ns (GF-05's below-span 12.5 was a
+# DISPLACEMENT; GF-06's is the anchor's own config). Registry point 64
+# sits 5.12x above it (asymptotic CCT ratio exactly 128/25).
+#
+# L = 1000 ns is a DECLARED IMPORT from GF-05's own staged UET-htsim
+# per-hop decomposition (600 ns link + 400 ns switch traversal,
+# arXiv:2404.01630): GF-06 stages NO latency component for its fat tree
+# (its only latency figure is the incast-setup "RTT of ~15 us" = 15000
+# ns, a path-round-trip quantity of a different class, executed as a
+# latency-sweep reading, not this row). The import exists so the two
+# UET-htsim configs contrast on B ALONE (same L, same identities); it is
+# an INTERPRETATION, never a derivation — the latency sweep
+# (sweep_gf06_latency_v1.yaml) exists precisely because GF-06's anchor
+# has nothing to say about L, and the 2(L1-L2) identity makes the import
+# choice arithmetic-transparent (every row difference is exact and
+# L-independent in the bandwidth term).
+#
+# DOMAIN HONESTY: GF-06's subject is PROGRAMMABLE CONGESTION MANAGEMENT
+# (PCM vs native Swift / CX-8 DOCA PCC) — the P4/programmability axis the
+# L0 backends declare out of scope ("congestion" in explicitly_unsupported)
+# and for which NO input key exists (no CC / PCC-program / ECMP /
+# queueing / window / reaction-delay / fairness / drop-count key in the
+# loader surface). This row places the identity at the anchor's sim-config
+# point only; envelope magnitudes live in the stage's envelope sweep and
+# record. The anchor's outcome numbers (FCT deltas, goodput, callback
+# budgets) are NOT comparable to this row's CCT (metric bridge declared
+# inexpressible).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW) placed at the anchor's
+# staged sim-config number, never tuned toward any anchor output; r = 8
+# is the free smoke-default rank count (the anchor's host count 1,024 is
+# executed by the scale sweep); 8 divides every 2^k ladder size with
+# k >= 3. Values are anchor sim-config quotes / declared imports /
+# free-registry defaults, never our measurements.
+topology_id: crossbar8_gf06_simline12_5_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 1000
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 1000 ns (DECLARED IMPORT of
+  GF-05's UET-htsim per-hop decomposition 600+400; GF-06 stages no latency
+  component), per-rank single-port injection B = 12.5 B/ns (GF-06's staged
+  UET-htsim "100 Gbit/s links" under the declared per-direction decimal
+  reading), charged once per phase (reduce-scatter, allgather) by the L0
+  crossbar identity (t = 2(r-1)/r*M/B + 2L). No congestion control, no
+  programmable CC, no ECMP, no packetization (the 4,150 B packet size has
+  no input key — serialization 4150/12.5 = 332 ns per packet is
+  inexpressible, recorded as arithmetic in the stage record). Provenance:
+  B from GF-06's staged UET-htsim config; L imported from GF-05's staged
+  config of the same simulator family (gap-fill anchors PROPOSED, not yet
+  integrated anchor rows; confidence H; sim-config class, not silicon
+  measurements). Values are anchor quotes / declared imports / free
+  registry defaults, never our measurements.

@@ -1,0 +1,21 @@
+# W1 Dense TP Decode — tp_size 8, payload 16777216 B (16 MiB = 2^24): the
+# A-W1-SIZE registry range's upper endpoint, used by stage A8 as the
+# BANDWIDTH-BOUND CONTRAST regime. CAL-A8 (Pond ASPLOS 2023) is a
+# latency-axis anchor: the stage's question for this size is not placement
+# against any staged number (none exists) but WHERE the anchor's axis
+# disappears from model output — in the bandwidth-bound regime the L term
+# is a ~0.6% share of CCT (vs 66.7-86.2% at the 16 KiB smoke size), so the
+# CXL-class latency points the anchor contributes are invisible in O-CCT
+# here. This size is a DECLARED model-side regime choice (the registry
+# range upper endpoint), not an anchor-derived number.
+#
+# 16777216 = 2^24 is divisible by r = 8 = 2^3, so the A-L0-DIV gate
+# ACCEPTS the size exactly — no bracketing. Same workload shape as every
+# other W1 file (2 layers x 3 steps = 6 AllReduce ops per config); integer
+# byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal8-a8
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 16777216   # 2^24 (16 MiB); registry range upper endpoint; free parameter A-W1-SIZE

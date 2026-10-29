@@ -1,0 +1,62 @@
+ 526 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Signal Name Function Description Datatype Unit 
+uet_rx_req_last_hop_trim CC, LB Trimmed request packet 
+indicating trim at the last hop 
+to the destination received 
+uint 1 
+uet_time_current CC, LB Current timestamp uint 128 ns 
+uet_time_last_update CC, LB Timestamp of last signal 
+update of any configured 
+signal 
+uint 128 ns 
+uet_tx_backlog_bytes CC Backlog size at sender (how 
+much data to be sent) 
+uint 1 B 
+uet_tx_req CC Request packet sent uint 1 
+uet_rx_req_bytes CC Number of bytes in a received 
+request packet 
+uint 1 B 
+uet_tx_req_bytes CC Number of bytes in a sent 
+request packet 
+uint 1 B 
+uet_tx_rto CC, LB Re-transmit timeout uint 1 
+uet_tx_cookie LB Used exclusively by per-
+packet LB architectures to 
+associate up to 32 bits of 
+algorithm-private state with 
+this transmitted. 
+uint 1 
+uet_rx_cookie LB Used exclusively by per-
+packet LB architectures to 
+retrieve the algorithm-private 
+cookie associated with a 
+corresponding transmitted 
+packet when its ACK or NACK 
+is received. 
+uint 1 
+uet_tx_ev LB Entropy value (EV) of 
+transmitted packet 
+uint 1 
+uet_tx_inflight_bytes CC Inflight byte count uint 1 
+uet_tx_cwnd CC Current congestion window uint 1 
+uet_tx_send_rate CC Sending rate in bytes/s uint 128 MiB/s 
+uet_tx_ack_per_packet CC If true, ACK every packet (local 
+at RX engine) 
+bool bool 
+uet_tx_remote_ack_per_packet CC If true, request an ACK per 
+packet from target 
+bool bool 
+uet_rx_ack_gen_bytes CC Byte count to trigger ACK 
+packet after (local at RX) 
+uint 1 B 
+uet_rx_ack_gen_timer CC Timer after which ACKs trigger 
+(local at RX) 
+uint 128 ns 
+uet_rx_cwnd_penalty CC Receiver congestion window 
+penalty of UE’s default 
+congestion control  
+uint 1 
+uet_tx_fep_credit_rate CC Set the FEP’s credit rate uint 0.01 (1% 
+increments) 

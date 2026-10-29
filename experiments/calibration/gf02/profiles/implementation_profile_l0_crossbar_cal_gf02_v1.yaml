@@ -1,0 +1,49 @@
+# Implementation profile for the calibration-ladder GF-02 allreduce runs on
+# the analytical L0 crossbar backend (gap-fill anchor
+# GF-02; docs/calibration/anchors_gapfill.md §GF-02).
+implementation_profile_id: analytical_l0_crossbar_cal_gf02_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. The 8xH100 NVSwitch
+  class is the KEEP domain of A-L0X-PORT (per-GPU aggregate injection cap),
+  unlike the full-mesh out-of-domain case of stages A7/GF-01. The anchor's
+  metric is nccl-tests busbw; the pinned mapping (busbw = algbw x 2(r-1)/r,
+  algbw = M/t, verified from NVIDIA/nccl-tests src/all_reduce.cu fetched
+  2026-10-28) makes the identity's asymptotic busbw exactly its B, so
+  every CCT-vs-CCT comparison in this stage goes through that written-down
+  algebraic mapping (plan §3 targets rule), never mixed metrics.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) executed at the four anchor-arithmetic
+  points {360 = the anchor's measured plateau (baseline; the anchor's own
+  "~360 GB/s" figure), 450 = 900/2 (the per-direction split of the
+  poster's own bidirectional peak figure), 476.37 = GF-04's staged
+  8-GPU H100 busbw (open-discrepancy bracket; exceeds 450, in-network-
+  computing class — never averaged with 360), 900 = the poster's
+  bidirectional figure used unsplit (declared counting-convention hazard
+  bracket; predictions 2.5x too fast, never a bridge value)}; L fixed at
+  the A-L0X-LAT registry point 200 ns. NOTHING was tuned toward the GF-02
+  measurements; every swept value was fixed by anchor/staging arithmetic
+  BEFORE any model output was read, and every delta below is a recorded
+  comparison outcome, not a parameter choice.
+measurement_source: >
+  GF-02 staged numbers (NVIDIA/nccl-tests GitHub issue #326, "all gather /
+  all reduce showing unidirectional bandwidth peak performance", posted
+  2025-06-23, 8 H100 GPUs + NVLink, all_reduce_perf/all_gather_perf
+  -b 128M -e 16384M -f 2 -g 8; thread fetched and verified 2026-10-28 by
+  two independent methods — see the stage record's verification block for
+  the verbatim quotes AND for the staging-doc glosses the fetch corrected:
+  no "480 GB/s per-direction expectation" and no "half of 480 in each
+  direction" sentence exists in the fetched thread; the only "480" there
+  is an unrelated third-party "480MB (80MB x 6)" total-bytes figure, and
+  no NCCL version is stated anywhere in the thread). Community-reported,
+  maintainer-confirmed ("360 GB/s is exactly what we'd expect on H100",
+  sjeaugey 2025-06-24); result tables are screenshots, so per-size rows
+  are NOT text-extractable — the plateau statement and the command-line
+  regime are the extractable targets. Compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

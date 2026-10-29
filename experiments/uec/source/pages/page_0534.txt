@@ -1,0 +1,47 @@
+ 534 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+The function uet_trigger_mask() returns an unsigned integer that can be used to identify the trigger that 
+invoked the algorithm. It can be compared to macros defined for each defined signal in the YAML 
+configuration corresponding to the signal. 
+Informative Text (example for uet_trigger_mask()): 
+Imagine an algorithm is set up with two triggers with the following YAML file: 
+- signal: 
+  name: “uet_time_current” 
+  macro: “t_time” 
+  accumulator: “uet_last” 
+     trigger: 
+       op:wc 
+       op_val: 0 
+      ...   
+   
+- signal: 
+  name: “uet_rx_ack” 
+  macro: “c_acks” 
+  accumulator: “uet_sum” 
+     trigger: 
+      op: gte 
+      op_val: <integer> 
+     ...   
+ 
+void algorithm() { 
+  uet_trigmask_t fired_triggers; 
+  uet_trigger_mask(&fired_triggers); 
+  if(fired_triggers & t_time) { 
+    // algorithm was triggered by timer 
+  }  
+  if(fired_triggers & c_acks) { 
+    // algorithm was triggered by ack count received 
+  }  
+} 
+ 
+Informative Text: 
+Implementations SHOULD ensure that the function uet_trigger_mask() is implemented in a fast and 
+lightweight manner appropriate for the platform. The specific mechanism used to achieve this 
+efficiency is implementation-defined. 
+ 
+3.6.18.5.6 Detecting and Recovering from Dropped Events 
+As outlined in Section 3.6.18.9, PCM can drop a subset of event types. Algorithms can detect and 
+recover from dropped events by using the function in Table 3-115. 
+Table 3-115 - Dropped Event Detection Functions 

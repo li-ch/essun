@@ -1,0 +1,37 @@
+ 468 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.10.1 Extracting Entropy from packets 
+The working variable Entropy is extracted from received packets depending upon how they are 
+encapsulated.  When native IPv4 and IPv4 encapsulations are used the packet includes the PDS Entropy 
+Header (see Section 3.5.10.1) and the Entropy value is extracted from the pds.entropy field. When UDP 
+encapsulation is used, the Entropy value is extracted from the udp.source_port field.   In the following 
+sections, when Entropy is referenced, it is assumed to have been extracted from the packets or updated 
+by the CC algorithms. 
+3.6.10.2 ACK Preprocessing for Congestion Control 
+UET ACK packets may contain ACK CC_STATE in the pds.ack_cc_state field. The following two types of 
+ACK CC_STATE are defined: 
+• When pds.cc_type=CC_NSCC. The pds.ack_cc_state field contains data used for the NSCC 
+congestion control mechanism. 
+• When pds.cc_type =CC_CREDIT. The pds.ack_cc_state field contains data used for TFC flow 
+control and (optionally) for RCCC congestion control. 
+Preprocessing of ACK CC_STATE is described in sections 3.6.10.3 and 3.6.10.4. 
+The Entropy value and the pds.flags.m field (indicating congestion) from the ACK are used for active load 
+balancing between paths. Before processing the ACK pds.ack_cc_state field (if present), the source 
+should update the path state it holds. 
+if pds.flags.m==1: 
+process_ev(Entropy, ECN) 
+else 
+process_ev(Entropy, NO_ECN) 
+ 
+If the CCC is in TFC mode or is for a ROD CCC, this step does not apply. 
+3.6.10.3 ACK CC_STATE Preprocessing for pds.cc_type=CC_NSCC 
+An ACK arriving on a PDC can indicate the cumulative total of bytes received by the peer on that PDC in 
+the pds.ack_cc_state.rcvd_bytes field. The CCC does not specifically know about PDCs, so the source 
+performs the following calculations to determine the number of newly received bytes at the destination 
+on this PDC: 
+newly_rcvd_bytes = 0 
+if pds.ack_cc_state.rcvd_bytes > pdc.prev_rcvd_bytes: 
+newly_rcvd_bytes = (pds.ack_cc_state.rcvd_bytes–  
+pdc.prev_rcvd_bytes) << 8  
+pdc.prev_rcvd_bytes = pds.ack_cc_state.rcvd_bytes 

@@ -1,0 +1,34 @@
+ 556 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+TSS does not have the concept of a controlled/uncontrolled port that supports transition between 
+protected (encrypted/authenticated) and normal traffic. All TSS security parameters are exchanged as 
+part of the initialization of the service. Mixing of services with and without TSS MUST be supported 
+simultaneously. Other non-UE packets (e.g., TCP/IP) that do not use TSS services MUST be ignored and 
+passed along to upper layers. 
+ 
+ 
+ 
+3.7.3.1 Use Cases 
+The following section describes the common use cases considered in the development of this 
+specification. Other uses cases are possible but not considered and are out of scope. In these use cases, 
+a FEP MAY contain multiple jobs and groups of processes related to a single OS instance. Finally, a node 
+MAY contain one or more FEPs. 
+KDF modes are defined in Section 3.7.7. For clarity, the possible KDF modes for each use case are 
+specified. The SSI MAY be carried explicitly in the frame using the SSI field or source IP address 
+depending upon configuration. 
+3.7.3.1.1 Single Job Within a Secure Domain  
+A single job may contain several processes across multiple nodes. An SD is created for the job, and an 
+SDI is assigned that is used by all FEPs that are part of that job. Note that there is no security-level 
+isolation between processes within the job or secure domain. All KDF modes MAY be used with this use 
+case. 
+Once all processes of the job are complete on all nodes, the SD MAY be removed. 
+Implementation Note: 
+The security model requires cooperation with the SES layer and libfabric mapping. A service is 
+mapped to an endpoint in libfabric. The SES layer maps the endpoint to a JobID and Resource Index, 
+which is mapped to a security context that contains the keys and secure domain (SDI). In addition, 
+replay protection relies on PDS services. See Section 3.4.2.3. 
+ 
+Figure 3-137 - TSS Architecture 
+ 
+ 

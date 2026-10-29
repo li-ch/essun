@@ -1,0 +1,38 @@
+ 205 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ses.memory_key). If a memory key is not used, the {JobID, PIDonFEP, Resource Index} tuple MUST 
+uniquely select one buffer. Note that the Resource Index space used for untagged operations, tagged 
+operations, and RMA operations are three separate spaces. 
+A message that uses absolute addressing selects a set of resources associated with a libfabric endpoint 
+using a PIDonFEP and Resource Index combination. Within this set of resources, addressing proceeds in 
+the same way as it does for relative addressing. 
+A message that uses direct memory addressing carries only the JobID and address. A single address 
+space is visible per JobID on a target FEP. This address space is not required to be dense and linear, 
+though implementations may choose to do that. 
+3.4.2.3.8 Addressing and libfabric [Informative] 
+This section is informational and provides the design intent for the addressing modes and how they are 
+used in libfabric. Addressing for libfabric utilizing a UET provider is standardized in the libfabric mapping 
+specification (see Section 2.2.5.1). 
+A libfabric endpoint is part of one or more JobIDs. It exists only in the context of one OS process, and it 
+would typically exist on one PIDonFEP. A libfabric endpoint may allocate one or more values of Resource 
+Index. 
+A libfabric endpoint is likely to utilize one or more {JobID, PIDonFEP, Resource Index} tuples. At least one 
+motivation is to provide a control channel within the provider. Here, a control channel is defined as a 
+mechanism through which two instances of a provider in different processes can exchange control 
+information. 
+In libfabric, the fi_addr_t (e.g., dest_addr) determines whether relative addressing or absolute 
+addressing is used. 
+For an fi_send(), the {JobID, PIDonFEP, Resource Index} tuple selects a set of resources in a libfabric 
+endpoint that is similar to a shared receive queue. 
+For an fi_tsend(), the {JobID, PIDonFEP, Resource Index} tuple selects a construct similar to a shared 
+receive queue in a libfabric endpoint. Within the resources selected by that tuple, the matching criteria 
+(ses.match_bits plus ses.initiator) select a buffer based on the corresponding matching criteria provided 
+in the fi_trecv(). It is expected that libfabric will be extended to allow an endpoint to specify that it 
+supports only exact matching (i.e., that all of the ignore bits must be 0). Exact matching is a property of 
+the libfabric endpoint—particularly the target libfabric endpoint—and not the wire protocol itself. The 
+exact matching semantic is defined as not allowing a wildcard to be applied to the match field. It is 
+intended to be used with exactly one copy of the matching criteria (ses.match_bits plus ses.initiator) in 
+flight at any given time on the wire and exactly one copy of the match bits in use in the tagged receive 
+list; however, that is not required. If these criteria are violated, then the order in which buffers are 
+matched is undefined. 

@@ -1,0 +1,31 @@
+ 325 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.9 PDS Event State Machine 
+This section describes the function of PDS as a set of state machines. The RUD protocol is the focus of 
+these state machines. The implementation described is not required. 
+A state is represented as a block with associated processing within the block and arrows showing the 
+possible next steps. Arrows from IDLE or ESTABLISHED are labeled with the event that triggers the move 
+to the next functional block. Arrows from a functional block are labeled with the condition that 
+determines which path to take. Some arrows use an unconditional transition designated as UCT. 
+Following a state machine figure are descriptions of the notable processing within each block. The 
+abbreviations req and rsp are used for request and response, respectively. PDS behavior is described by 
+the following four state machines: 
+• Top Level  - Shows how the state machines are connected 
+• Manager State Machine - Controls PDC allocation and closing, resource management, and 
+any errors that are not associated with an active PDC 
+• Initiator State Machine - PDC state machine when acting as an initiator 
+• Target State Machine - PDC state machine when acting as a target 
+The initiator and target state machines are illustrated primarily as processing sequences from the 
+ESTABLISHED state—the largest rectangle in the center of the diagram. From there, events occur that 
+lead to a series of processing steps and back to the ESTABLISHED state. Each line is labeled with the 
+event that triggers the processing. 
+The PDC establishment state machines in Section 3.5.8 show the states through which a PDC moves. The 
+PDC event state machines in this section shows how events are handled. Most of these events occur in 
+all of the PDC establishment states shown in the PDC establishment state machines. Therefore, the PDC 
+state is reflected as a variable (State) in these event state machines. 
+3.5.9.1 PDS Top Level 
+Figure 3-59 illustrates the relationship between the PDS manager state machine and individual PDC 
+state machines, including the interface events to PDS from SES and TSS. The per-PDC state machines 
+shown in Figure 3-59 include the initiator and target state machines described in sections 3.5.9.3 and 
+3.5.9.4. 

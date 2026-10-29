@@ -1,0 +1,20 @@
+ 266 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 3-39 illustrates the use of a non-fetching atomic as the synchronized completing action. The 
+group is allocated in the same fashion as the write header data case. When the atomic operation is 
+received for the sync group, the atomic operation and atomic data are stored instead of the write 
+header data. When all operations for the sync group are received, the non-fetching atomic stored for 
+the sync group is executed. Note that in this example the atomic sync group 2112 is executed before 
+sync group 42 even though it is logically posted second. 
+3.4.5.6 Additional Unexpected Message Sequences 
+Unexpected messages are common in both AI and HPC and are a requirement as part of the libfabric 
+provider. To achieve interoperability, various compatible unexpected message sequences are provided. 
+This includes mechanisms supporting the RUD and RUDI protocols that enable a simple back-off and 
+retry approach (Figure 3-40) (3.4.4.7.1.1) as well as mechanisms that can be used with the ROD protocol 
+to preserve ordering requirements (3.4.4.7.2.1 and 3.4.4.7.2.2). Further mechanisms are defined to 
+support recovering from resource exhaustion with the ROD protocol while preserving ordering (Figure 
+3-41) (3.4.4.7.3). The buffering schemes do not change the wire behavior, other than the insertion of the 
+list field; thus, they are not illustrated. 
+ 
+Figure 3-39 - Synchronized Operation Sequence with Atomic 

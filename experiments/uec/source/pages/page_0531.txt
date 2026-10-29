@@ -1,0 +1,40 @@
+ 531 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+CSIG signal values may be 5 bits wide when extracted from the 4-byte compact CSIG tag or20 bits wide 
+when extracted from the 8-byte wide CSIG tag. The CSIG signal returned to PCM is of a fixed width that 
+can support both 5-bit and 20-bit values. 
+CSIG values exposed in PCM for algorithms SHALL carry the quantized bucket index s as an opaque 
+unsigned integer together with {t, m, d}. PCM implementations SHALL supply de‑quantization 
+parameters via a YAML file, and SHOULD provide a utility function csig_dequantize(t, s) that returns the 
+representative raw value. 
+Table 3-112 - Optional Signals 
+Signal Name Description Datatype Unit 
+uet_rx_csig_d Do-not-modify bit uint 1 
+uet_rx_csig_m Locator metadata uint 1 
+uet_rx_csig_s Quantized value uint 1 
+uet_rx_csig_t Received signal type uint 1 
+uet_rx_csig_type Source is CSIG-TERM = 0, or CSIG-Reflect = 1 bool 1 
+uet_rx_restore_cwnd Value of ACK_CC_STATE the restore cwnd (rc) bit 
+pds.ack_cc_state.rc 
+uint 1 
+uet_rx_staging_buffer_occ Occupancy of the local receiver staging buffer (value 
+between 0 and 100 in percent) 
+uint 1 
+3.6.18.4.6 Vendor-specific Signals 
+Any implementation MAY support vendor-specific signals. Their names MUST be prefixed with <vend>, a 
+vendor-specific alias encoded in the variable name, e.g., uet_tx_ack_vend_<signal_name> or 
+uet_rx_req_vend_<signal_name>. The <signal_name> MAY encode any additional information such as 
+vendor name. 
+3.6.18.5 Triggers 
+Algorithms request invocation when an accumulator matches their criteria, as determined by triggers. 
+Every trigger is associated with a single accumulator instance and is identified by a trigger identifier. The 
+set of triggers available to an algorithm, and their association with accumulation functions and signals, is 
+defined by the algorithm’s YAML configuration profile. Triggers cannot be created or deleted at runtime, 
+but an algorithm can modify them to change their configuration and match criteria. 
+Triggers are defined in the YAML specification and given a macro name to reference them from the 
+algorithm code. 
+3.6.18.5.1 Trigger Definition 
+Triggers are state machines that determine when to take an action based on a unified count-or-time 
+condition. 
+Each trigger is defined by the following configuration fields: 

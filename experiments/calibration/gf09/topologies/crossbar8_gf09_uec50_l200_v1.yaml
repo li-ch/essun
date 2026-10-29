@@ -1,0 +1,72 @@
+# Calibration-ladder GF-09 topology: fully-connected (crossbar / single
+# non-blocking switch stage) abstraction of 8 ranks at the ULTRA
+# ETHERNET 1.0 DESIGN-CLASS RATE — B = 50 B/ns, L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-09; "Ultra
+# Ethernet's Design Principles and Architectural Innovations",
+# arXiv:2508.08906, Hoefler et al., Aug 2025; numbers AS STAGED, not
+# re-fetched): UE "is designed to operate at high bandwidths (400+
+# Gbps) over medium-length (10-150m) links". Under the DECLARED reading
+# (decimal units, the plan's convention 1 GB/s = 1 B/ns; Ethernet link
+# rates are conventionally quoted per direction on full-duplex links —
+# the bidirectional-aggregate alternative 25 B/ns is executed as its
+# own row, the reading ambiguity being a factor exactly x2): 400 Gb/s
+# / 8 = 50 B/ns. The "+" makes this the FLOOR of an open-ended design
+# CLASS, never a per-link achieved rate.
+#
+# ROLE: GF-09 is the R1 DESIGN-TARGET-class anchor — the UEC transport
+# design targets and protocol constants stated by the consortium's own
+# public design-principles paper. Per the plan §1.1, targets of this
+# class are used exactly the way CAL-A1/A2 spec ceilings are (never as
+# achieved values), and CAL-A10's assumption-class discipline applies
+# (zero falsification power against model outputs; placement only).
+# L = 200 ns = the A-L0X-LAT registry point — the anchor's
+# "sub-microsecond latency" target and "target round-trip times of
+# 10 us" are swept as their own rows in sweep_gf09_latency_v1.yaml.
+#
+# DOMAIN HONESTY: this row is a design-class placement on the free B
+# axis, not a prediction of any UEC system (no UEC 1.x silicon
+# measurement exists publicly — gap-fill doc "Gaps that remain" #1).
+# The UEC transport semantics the paper describes (NSCC congestion
+# control, CBFC credit loop, SACK-based retransmission) have NO input
+# key in the L0 loader surface; "congestion" and "credit_flow_control"
+# are declared explicitly_unsupported by the backend.
+#
+# Cross-anchor coincidences, recorded never cross-derived: 50 B/ns is
+# numerically identical to CAL-A1's derived NVLink5 per-port
+# per-direction rate, CAL-A5's ICI per-link rate, and GF-05's flagged
+# alternative reading of the uet-htsim 800 Gbps line rate; 25 B/ns is
+# numerically identical to GF-08's Falcon carrier; the registry point
+# 64 sits 64/50 = 32/25 = 1.28x above the design-class floor.
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS (A-L0X-BW / A-L0X-LAT),
+# placed at the anchor's staged design-class floor / the registry
+# default BEFORE any stage output was read, never tuned toward any
+# anchor output. r = 8 is the free smoke-default rank count (GF-09
+# stages NO rank count); 8 divides every standard-ladder size. Values
+# are anchor design targets / free registry defaults, never our
+# measurements, never standard-normative values.
+topology_id: crossbar8_gf09_uec50_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 200 ns (the A-L0X-LAT
+  registry point), per-rank single-port injection B = 50 B/ns (the GF-09
+  staged "400+ Gbps" design-class floor under the declared decimal +
+  per-direction Ethernet-rate reading), charged once per phase
+  (reduce-scatter, allgather) by the L0 crossbar identity
+  (t = 2(r-1)/r*M/B + 2L). No congestion control, no credit loop, no
+  SACK/retransmission, no packet semantics — the UEC transport the
+  design paper describes is inexpressible here by capability
+  declaration; only the design-target axes enter. Provenance: B from
+  GF-09's staged design targets (gap-fill anchor PROPOSED, not yet an
+  integrated anchor row; confidence M — design targets and worked examples,
+  not measurements; public arXiv paper by consortium participants, not
+  a spec document, nothing ingested from ultraethernet.org); L =
+  registry default. Values are anchor design targets / free registry
+  defaults, never our measurements.

@@ -1,0 +1,20 @@
+ 231 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.4.3.4 Rendezvous Extension Header Format 
+The wire protocol includes the option for rendezvous transactions. Rendezvous transactions leverage an 
+extension header shown in Figure 3-21. This extension header includes a 32-bit eager length. The eager 
+length indicates how much message payload is being pushed with the request. The remaining fields 
+correspond exactly to the addressing information needed to issue a read operation. Details of how these 
+fields are used to generate a read are discussed in Section 3.4.4.5. 
+The rendezvous extension header is used immediately following Figure 3-11. It is used when a 
+rendezvous send or Tsend opcode is used. Rendezvous does not require any additional headers or 
+operation types. A rendezvous extension header should be placed on every packet using a rendezvous 
+opcode (UET_RENDEZVOUS_SEND, UET_RENDEZVOUS_TSEND). 
+ 
+Figure 3-21 - Rendezvous Extension Header Format 
+ 
+Figure 3-20 - Unified Local Semantic Header with ac=1, ext_hdr > 0, and atomic operation 
+ 
+ 

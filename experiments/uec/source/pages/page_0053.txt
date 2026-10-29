@@ -1,0 +1,72 @@
+ 53 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Two different computing models are differentiated in terms of addressing: parallel job and client/server. 
+A single FEP may be designed to support the traffic type of both or just one computing model. Both 
+modes can operate simultaneously over a single FEP. Figure 1-7 and Figure 1-8 are overviews of the two 
+different computing models within a cluster. 
+A parallel job is a collection of processes running and communicating on a cluster that belongs to the 
+same user. A job is often started collectively and is uniquely identified by a JobID within a cluster. JobIDs 
+are used for addressing and authorization purposes. Jobs consist of one or more ranks, which are 
+processes that cooperate to compute a particular workload. A job can spawn multiple ranks on each OSI, 
+and an OSI can host ranks of multiple jobs. If a job globally contains R processes/ranks, then they are 
+numbered with RankIDs from 0 to R-1. In the parallel job model, the local PIDonFEP addressing ranges 
+from 0 to P-1 where P processes are associated with a FEP for a given job. If each FEP has the same 
+number of processes associated with it, each endpoint can easily compute the PIDonFEP of a particular 
+RankID. As an example, assume a job runs on R ranks across N nodes, where each node has F FEPs. The 
+RankID range is 0 to R-1, the ranks per node is R/N, and the ranks per FEP is R/N/F. In this case, P is 
+R/N/F and the PIDonFEP range is 0 to P-1, or 0 to R/N/F-1. 
+A server is a software entity on a node that provides a service to one or more clients. Clients and servers 
+communicate through FEPs. A server PIDonFEP identifies a service available on a specific FEP, and a 
+Resource Index identifies a resource within that service. The same FEP may be used by multiple servers 
+(on a single OSI), and a single server may offer services through multiple PIDonFEPs on a FEP. A 
+client/server JobID is conceptually the same as an “N to 1” connection in that it is used for authorization 
+ 
+Figure 1-7 - Parallel Job Model 
+ 
+OSI
+FEP
+FA=
+x.x.x.x
+Rank0
+PIDonFEP
+=X
+Cluster
+Port
+Fabric Interface
+User 1 Node
+Rank1
+PIDonFEP
+=Y
+Rank0
+PIDonFEP
+=Z
+Port
+ Port
+FEP
+FA
+=
+y
+.
+y
+.
+y
+.
+y
+Port
+Fabric Interface
+Node
+Switch
+JobID=K
+JobID=P
+User 2
+OSI
+Rank2
+PIDonFEP
+=X
+Rank3
+PIDonFEP
+=Y
+Rank1
+PIDonFEP
+=Z

@@ -1,0 +1,100 @@
+# Implementation profile for the calibration-ladder GF-06 runs/sweeps
+# on the analytical L0 crossbar backend (gap-fill
+# anchor GF-06, PCM — programmable congestion management for Terabit
+# RDMA, arXiv:2610.13130, Oct 2026; UET-htsim + UCCL + ConnectX-8 +
+# Microsoft 1P DPU platforms).
+implementation_profile_id: analytical_l0_crossbar_cal_gf06_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. ROLE per the gap-fill
+  doc §GF-06: GF-06 is the R3 (congestion-management effects at UEC
+  scale) row PLUS "a UET-htsim second user (sim-config cross-check with
+  GF-05)". The crossbar rows execute (a) the anchor's OWN simulator
+  config on the free bandwidth axis — UET-htsim "100 Gbit/s links" =>
+  B = 12.5 B/ns per direction (= 25/2 exactly, the first staged anchor
+  OWN sim line rate BELOW the plan §2.1 candidate anchored span
+  [20, 64]; exactly 1/8 of GF-05's 800 Gbps UET-htsim point, the
+  two-user spread executed), (b) its staged HARDWARE rate classes
+  (per-server line 2x800 Gbit/s ConnectX-8 => 200 B/ns; per-NIC
+  800 Gbit/s => 100 B/ns), (c) its outcome magnitudes as
+  effective-bandwidth displacements under the A11/GF-05 technique
+  (goodput 1.56 Tbit/s = 195 = 200 x 39/40 exactly — the ONLY
+  representable executed displacement, plus its dimensionless transfer
+  onto the sim point 12.5 x 39/40 = 12.1875, and the 3x max-FCT incast
+  envelope displaced from the goodput carrier 195/3 = 65 under a
+  DECLARED carrier transfer), (d) its reaction-delay/RTT/packet
+  timescales as DECLARED static-latency surrogate readings on the L
+  axis (15000 ns incast RTT; 291000/582000 ns reaction delays whose
+  static semantics the anchor's own 1.11-1.32x factors falsify;
+  332 ns packet serialization), at r=8 (free smoke default) and r=1,024
+  (the anchor's stated host count; non-blocking ceiling abstraction +
+  the GF-05 cross-check row + the ring schedule contrast).
+  PROGRAMMABLE CONGESTION MANAGEMENT ITSELF — the anchor's subject — is
+  OUT of this input space by the backend's own capability declaration
+  ("congestion" among explicitly_unsupported) and by the loader surface
+  (no CC / PCC-program / ECMP / queueing / window / reaction-delay /
+  fairness / drop-count / packetization key exists); the L0 per-flow
+  spread is exactly 0 by construction. The stage's central
+  expressiveness finding is recorded in results/calibration/.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) and L (link.pair_latency_ns) fixed by
+  anchor/registry arithmetic BEFORE any stage output was read. Envelope
+  sweep (r=8, L=1000 declared import from GF-05's staged UET-htsim
+  per-hop decomposition — GF-06 stages no latency component; the import
+  exists so the two UET-htsim configs contrast on B alone): B in {200 =
+  UCCL per-server line 2x800 Gbit/s under the declared per-server
+  aggregate reading, 195 = UCCL goodput 1.56 Tbit/s = 200 x 39/40
+  exactly (the anchor's only representable outcome displacement), 100 =
+  ConnectX-8 per-NIC 800 Gbit/s line = GF-05's UET-htsim sim point (the
+  executed x8 two-user cross-check), 65 = the 3x max-FCT incast
+  envelope displaced from the 195 carrier (DECLARED carrier transfer;
+  the sim-carrier reading 25/6 is non-representable, recorded), 64 =
+  A-L0X-BW registry point (asymptotic CCT ratio vs the anchor row
+  exactly 128/25), 12.5 = THE ANCHOR POINT (UET-htsim 100 Gbit/s links
+  = 25/2; baseline), 12.1875 = the 39/40 goodput derating transferred
+  onto the sim point (= 195/16)}. Latency sweep (r=8, B=12.5 fixed):
+  L in {200 = A-L0X-LAT registry point (baseline), 332 = one packet
+  serialization 4150 B / 12.5 B/ns exactly, 15000 = the incast-setup
+  "RTT of ~15 us" (path-RTT class), 291000 and 582000 = the CM
+  reaction delays at N=256/512 (static surrogate readings, declared
+  and honestly falsified as static semantics by the anchor's own
+  sub-linear 1.11x/1.32x factors; 582000 = 2 x 291000 exactly, per-flow
+  coefficient 36375/32 ns identical at both points)}. Non-representable
+  envelope displacements recorded NOT executed: 25/6 (3x max-FCT at
+  the sim carrier), 1250/151 and 1250/261 (REPS+ECMP 1.51-2.61x),
+  1250/111 and 625/66 (reaction-delay FCT factors 1.11x/1.32x) —
+  exact-fraction arithmetic in the stage record. Scale sweep: r=1,024
+  at B=12.5 (non-blocking ceiling), B=100 (the GF-05 UET-htsim
+  cross-check), and the ring at B=12.5 (schedule contrast) on the
+  18-size ladder 1024*2^k (1 KiB -> 128 MiB, bracketing the ring regime
+  boundary M* = L*B*r = 12,800,000 B). Message sizes for the r=8
+  sweeps: 12-size ladder 2^k (8 KiB -> 16 MiB) including the anchor's
+  staged 64 KiB chunk size (2^16), the shared 2 MiB member (2^21, the
+  run-pair size), and the staged workload-range upper 16 MiB (2^24).
+  NO parameter was tuned toward any anchor output — the anchor stages
+  no (size -> time) series in any CCT-comparable metric class (FCT
+  tables unstaged; workloads incast/RDMA-writes/permutation 150 KB -
+  16 MiB); the sweeps measure WHERE the identities sit relative to the
+  anchor's sim config, hardware rate classes, envelope magnitudes,
+  processing-budget timescales, and stated scale.
+measurement_source: >
+  GF-06 staged numbers (PCM: Programmable Congestion Management for
+  Terabit RDMA, arXiv:2610.13130 (Oct 2026);
+  docs/calibration/anchors_gapfill.md §GF-06; numbers AS STAGED, not
+  re-fetched; gap-fill anchor, NOT yet an integrated anchor row — the owner
+  integrates accepted rows; confidence H — extracted from the paper
+  HTML). CAVEAT CLASSES carried by this profile: very recent preprint,
+  NOT yet peer-review-verified; every outcome number is a per-flow FCT
+  / goodput / packet-drop / processing figure, NEVER a collective CCT —
+  no collectives are benchmarked (workloads incast/RDMA-writes/
+  permutation, 150 KB - 16 MiB), so the FCT->CCT regime bridge is an
+  EXPLICIT extrapolation and is declared inexpressible at L0 (no
+  per-flow observable); NO comparison against any anchor FCT is
+  attempted; compared as PROPOSED evidence in results/calibration/;
+  not our testbed, no E3/E4 language.

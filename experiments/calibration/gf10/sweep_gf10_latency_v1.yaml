@@ -1,0 +1,70 @@
+# Calibration-ladder GF-10 sweep #1: the MEASURED
+# HOP/PAIR LATENCY AXIS — where do the L0 crossbar rows sit on the L
+# axis relative to Li et al.'s staged app-level P2P measurements
+# (GF-10, arXiv:1903.04611; docs/calibration/anchors_gapfill.md §GF-10;
+# numbers AS STAGED, not re-fetched)?
+#
+# GF-10 is the FIRST MEASURED anchor on the latency axis (plan gap 2 —
+# until now the axis carried only CAL-A8/A9 CXL-class design estimates
+# and CAL-A10's assumption-class 0.8 µs). NOTHING is compared to any
+# collective anchor time: GF-10 stages P2P microbenchmarks, not a
+# (size -> time) collective series — the FAIL clause is applied to the
+# collective target (recorded, skipped honestly).
+#
+# NOTHING IS TUNED: the L ladder was fixed by anchor/registry arithmetic
+# BEFORE any stage output was read —
+#   200  = A-L0X-LAT registry point (the placement reference; every
+#          other row differs from it by exactly 2(L-200) ns at every
+#          payload, an identity);
+#   800  = CAL-A10's assumption-class 0.8 µs NVLink end-to-end value
+#          (integrated anchor) — the check the gap-fill doc
+#          stages GF-10 for: measured 9000 vs assumed 800 = exactly
+#          45/4 = 11.25x ("an order above the assumption", quantified);
+#   5000 = NV-SLI local access ~5 µs (the anchor's lowest measured
+#          value — still 2.5x above the declared free-range upper 2000);
+#   8000 = NV-SLI remote ~8 µs;
+#   9000 = NVLink directly-connected pairs, DGX-1, "around 9 µs" —
+#          THE MEASURED HEADLINE (45x the registry point);
+#   13000 = PCIe remote ~13 µs (the anchor's transport-class top;
+#          labeled proxy — PCIe is not a GPU scale-up fabric);
+#   18000 = manual-routing pairs "about 2x" (derived 2 x 9000 per the
+#          doc's own ~18 µs; the P100-baseline caveat is recorded);
+#   27000 = manual-routing pairs "3x" for V100-DGX-1 (derived 3 x 9000
+#          per the doc's own ~27 µs; same system as the baseline —
+#          exactly 3x within one chassis, the anchor's full
+#          pair-heterogeneity spread).
+#
+# QUANTITY-CLASS CAVEAT on every row (the doc's own): app-level P2P
+# latency includes the software stack; L is a bare per-pair fabric
+# parameter — the rows BOUND, they do not equal. The one-way vs
+# round-trip reading of the P2P numbers is not staged (x2 ambiguity
+# recorded). B fixed at the anchor's measured per-link per-direction
+# NVLink-2 carrier 25 B/ns (the anchor STATES the direction split —
+# no x2 ambiguity on the rate; sweep_gf10_bandwidth_v1.yaml owns the
+# B axis).
+#
+# Payload grid: the standard 12-size ladder of stages
+# A1/A2/A7/A9/A11/GF-05/GF-09 (8 KiB -> 8 GiB) — DECLARED FREE PROBE;
+# r=8 divides every size (no bracketing). r=8 is DGX-1's own GPU count
+# (the 9 µs system) — anchor-anchored rank.
+sweep: cal_gf10_latency_v1
+workload: experiments/calibration/gf10/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l200_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l800_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l5000_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l8000_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l9000_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l13000_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l18000_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l27000_v1.yaml

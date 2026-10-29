@@ -1,0 +1,45 @@
+ 595 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+When a trimmed packet is given to the destination FEP or a switch, it MUST have a DSCP_TRIMMED 
+codepoint regardless of any intermediate representations or encapsulations used in the network. When 
+the trimmed packet uses IPv4, the header checksum field MUST be valid. 
+Trimmed packets are typically consumed by upper layer protocols to ensure fast retransmission of lost 
+packets. As such, these protocols MUST be trimming-aware when trimming is enabled and MUST be 
+able to identify the original packet based on the trimmed packet they received. To enable this 
+identification, MIN_TRIM_SIZE MUST be set to a value large enough to provide enough information for 
+the upper layer protocol to identify the original packet that was trimmed. 
+For example, to support trimming with UET, MIN_TRIM_SIZE MUST be configured to a value that 
+ensures that, after trimming, all the headers up to and including the PDS request/response header are 
+kept, to preserve path entropy (for load balancing), the tunnel encapsulation information (if present—
+for host transport demultiplexing), as well as the PSN and PDC identifiers (to identify the packet). 
+When multiple encapsulation types are simultaneously used within the same network, the 
+MIN_TRIM_SIZE value MUST be set to the maximum size needed to preserve all relevant transport 
+headers. Switches MAY dynamically determine the appropriate MIN_TRIM_SIZE based on the 
+encapsulation type of each packet. 
+Table 4-1 summarizes the requirements for MIN_TRIM_SIZE. 
+Table 4-1 - Trim Size Requirements for Various Transport Protocols15 
+Transport protocol Transport layer fields to be kept after trimming MIN_TRIM_SIZE 
+Ultra Ethernet Transport/IP Entropy header (4 B), PDS request header (16 B) 20 B 
+Ultra Ethernet Transport/UDP/IP UDP (8 B), PDS request header (16 B) 24 B 
+UET/IPv4 over VXLAN UDP (8 B), VXLAN (8 B), Ethernet (14 B), IP (20 B), 
+entropy header (4 B), PDS request header (16 B) 
+70 B 
+UET/UDP/IPv4 over VXLAN UDP (8 B), VXLAN (8 B), Ethernet (14 B), IPv4 (20 B), UDP 
+(8 B), PDS request header (16 B) 
+74 B 
+UET/UDP/IPv6 over VXLAN UDP (8 B), VXLAN (8 B), Ethernet (14 B), IPv6 (40 B), UDP 
+(8 B), PDS request header (16 B) 
+94 B 
+ 
+The numbers in Table 4-1 make several assumptions about the header stack of received packets.  For 
+example, the table assumes security is not enabled for UET. If security is enabled, the UET security 
+header sits before the PDS header; thus the MIN_TRIM_SIZE is increased with the size of the UET 
+security header (16 B).  The table assumes the inner packet carried within a VXLAN tunnel does not 
+include VLAN tags.  Additionally, the table assumes no IP options exist, and other headers have no 
+optional extensions. 
+4.1.4 Mapping DSCPs to traffic classes for Ultra Ethernet transport 
+Tables in Section 3.6.4.7 provide a mapping of DSCP values to traffic classes for UET. The traffic classes 
+are generically named TC_low, TC_med, and, TC_high, and their use depends upon the type of UET 
+ 
+15 When IP version is not specified, the value applies to both IPv4 and IPv6. 

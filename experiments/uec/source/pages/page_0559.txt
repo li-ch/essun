@@ -1,0 +1,38 @@
+ 559 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.7.3.1.4 FaaS (Function-as-a-Service) 
+FaaS refers to Function-as-a-Service workloads such as an AI inference system where the same cluster of 
+accelerators might be serving different models from different tenants. This MAY be implemented using 
+client-server KDF mode. 
+3.7.4 Secure Domains 
+A secure domain is a collection of FEPs that can communicate with confidentiality and authenticity 
+guarantees with a shared secret. A secure domain uses a common symmetric key and optionally a KDF 
+to secure communication. FEPs within a secure domain MUST be assigned a unique secure source 
+identifier (SSI) or an IP address provided it is unique within the domain. Each secure domain MUST be 
+assigned a secure domain indicator (SDI) that MUST be unique within the reachable network. 
+Figure 3-140 shows a secure domain key (SDKx) is used for all members of the secure domain (i.e., the 
+figure shows direct kdf-mode). The SSIs are unique within the secure domain and assigned to FEPs 0 
+through 3. 
+ 
+Figure 3-140 - Secure Domain with Four FEPs 
+Secure domains are administered by a secure domain management entity (SDME). The SDME MAY 
+perform its responsibilities in conjunction with or be contained with other parts of the job launch 
+services. The communication mechanism between the SDME and the FEP is out of scope of this 
+specification. 
+A security association defines the initial secure domain key (SDKi), which is found using the secure 
+domain identifier (SDI) and association number (AN) along with the SDKDB. 
+SDx
+SSI2
+SSI1
+SSI0
+FEP0
+SDKx
+FEP2
+SDKx
+FEP1
+SDKx
+FEP3
+SDKx
+SSI3
+SDME

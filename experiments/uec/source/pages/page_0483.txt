@@ -1,0 +1,55 @@
+ 483 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Name Type Default Description 
+ccc.bytes_ignored unsigned 
+integer 
+0 Used after quick_adapt() to count how many 
+bytes have been ignored so far. (units: bytes) 
+ccc.inc_bytes unsigned 
+integer 
+0 Used to accumulate window increase for later 
+application. 
+ccc.last_adjust_time unsigned 
+integer 
+now The last time that accumulated cwnd changes 
+were applied. (units: local time units) 
+ccc.increase_mode boolean FALSE Latches TRUE when entering fast_increase 
+mode. Cleared to FALSE to exit fast_increase 
+mode. 
+ccc.last_dec_time unsigned 
+integer 
+now The last time that multiplicative_decrease was 
+performed. (units: local time units) 
+ccc.max_wnd unsigned 
+integer 
+MaxWnd The scaled version of MaxWnd based on 
+measured RTT. 
+ccc.csig_missing_cnt unsigned 
+integer 
+0 Counts missing CSIG data in OnACK() calls 
+ 
+ccc.inflight maintains the total number of bytes (including packet headers, as calculated by nominal 
+packetsize) that the CCC has recorded as being sent and not yet been notified that have been ACKed, 
+NACKed, timed out, or otherwise inferred to be lost on all PDCs associated with this CCC. Under some 
+circumstances inflight temporarily can go slightly negative, so inflight SHOULD be stored as a signed 
+integer. 
+3.6.13.5 NSCC Source Algorithm 
+ 
+NSCC.OnACK(newly_rcvd_bytes, M_Flag, pkt_tx_state, ack_arrival_time,  
+Service_Time, Retx_Flag, Rcv_Cwnd_Pend, Restore_Cwnd, 
+csig_refl_data): 
+ccc.inflight -= newly_rcvd_bytes 
+ccc.bytes_ignored += newly_rcvd_bytes 
+ccc.received_bytes += newly_rcvd_bytes 
+ccc.achieved_bytes += newly_rcvd_bytes 
+ 
+rcv_limit_mode =  
+apply_cwnd_penalty(Rcv_Cwnd_Pend, Restore_Cwnd, newly_rcvd_bytes) 
+ 
+if (!csig_maxdelay_enable  
+    || ccc.csig_missing_cnt > csig_missing_threshold): 
+rtt_sample = calculate_rtt(pkt_tx_state, ack_arrival_time, 
+                               Service_Time, Retx_Flag) 
+if rtt_sample != INVALID_RTT: 
+update_base_rtt(rtt_sample) 

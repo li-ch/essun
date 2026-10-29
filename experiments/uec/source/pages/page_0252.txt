@@ -1,0 +1,43 @@
+ 252 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.4.4.7.3.1 Scalable Parallel Application Deployments 
+For the most scalable applications, a mechanism is provided to allow a low-state recovery from resource 
+exhaustion events while still preserving message ordering (i.e., while using a ROD PDC). It is preferable 
+not to require any per-target tracking at the initiator; thus, the client/server mechanism is less 
+preferred. The scalable mechanism is simple at a transport level. When resources are exhausted, the 
+associated target {FA, JobID, PIDonFEP, Resource Index} tuple is disabled. RC_DISABLED is returned for 
+the target {FA, JobID, PIDonFEP, Resource Index} tuple. All subsequent operations to that target tuple 
+MUST receive an RC_DISABLED response. That tuple remains in a disabled state until re-enabled by 
+software. Before being re-enabled, software MUST guarantee that no operations are in flight (i.e., on 
+the wire) to guarantee that ordering is not violated. Once this condition is met, software MUST re-
+enable the tuple at the target. After the target is re-enabled, all initiators MUST retransmit all 
+operations that received an RC_DISABLED response in their original order. 
+Informative Text: 
+In Portals 4, a flow control solution was proposed where the equivalent of a libfabric endpoint (a 
+portal table entry) is placed into a disabled state. Subsequent operations to that portal table entry 
+would complete with a bad return code at the initiator until the portal table entry was re-enabled. 
+Before a portal table entry could be re-enabled, the target with the disabled portal table entry must 
+first confirm that there were no initiators that were in the middle of an ordered stream. That is, it 
+must first confirm that no initiators had a message that had been rejected and yet still had other 
+messages in flight. The proposed solution was to use a barrier amongst all participating processes.  
+This solution is modeled after that proposal. 
+ 
+3.4.4.7.3.2 Client/Server Buffer Exhaustion 
+In client/server interactions, the server cannot trust the client to check-in after receiving an 
+RC_DISABLED response. UET introduces the concept of a “generation” for a Resource Index as a 
+separate field carried in the header when using tagged or untagged messaging. At the target, a Resource 
+Index MAY be configured to use a generation. If it is not configured to use a generation, the generation 
+MUST be zero. A message that arrives at the target MUST contain the correct generation, or the 
+message MUST receive a semantic response indicating a generation mismatch (RC_BAD_GENERATION). 
+Informative Text: 
+Why not receiver not ready (RNR)? Verbs uses an RNR to address this problem. In RNR, a destination 
+QP enters an RNR state. Recovery uses the process-to-process QP sequence numbering to restore 
+message ordering. To enhance scalability, UET does not have process-to-process sequence numbers. 
+Hypothetically, the PDC sequence numbers could be used instead; however, that has several 
+undesirable characteristics.  First, it couples the reliability logic and semantic logic at the target in a 
+way that makes it hard to achieve high message rates on a single PDC. Second, it couples the 
+reliability logic and semantic logic at the initiator in a way that stalls the PDC until the semantic 
+resource issue is resolved. Finally, resource exhaustion on one process using a PDC stalls all other 
+users of that PDC.  

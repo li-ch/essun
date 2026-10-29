@@ -1,0 +1,40 @@
+ 737 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Ethernet specifies the link quality in terms of frame loss ratio (FLR). FLR is defined at the MAC/PLS 
+service interface and is measurable in the MAC. An example of FLR requirements can be found in 
+subclause 167.1.1 of IEEE Std 802.3db-2022 [2] and its amendment in IEEE Std 802.3df-2024 [4]. 
+For a 100 Gb/s Ethernet Physical Layer, the required FLR is less than 6.2e-10 (equivalent to BER of 1e-12 
+for a link that has no error correction and randomly occurring errors). For 200, 400, and 800 Gb/s, and 
+for 1.6 Tb/s Ethernet Physical Layers, the required FLR for 64-octet frames with minimum interpacket 
+gap is less than 6.2e-11 (equivalent to BER below 1e-13 for a link that has no error correction and 
+randomly occurring errors). 
+Informative Text: 
+Although not written explicitly in the IEEE Std 802.3 PHY specifications, it is generally expected that 
+the actual FLR in most network links is several orders of magnitude lower than the values above. This 
+is especially true for large networks typical of UE applications. The maximum FLR that is acceptable is 
+application dependent. This specification is intended to help in defining and verifying FLR 
+requirements. Some examples are provided in 6.3.3. 
+ 
+For Ethernet types supported by UE (see Section 6.1), the link is always protected by Reed-Solomon 
+forward error correction (RS-FEC) code, denoted RS(544,514). Three variations of RS-FEC using the 
+RS(544,514) code are defined in clauses 91, 119, and 161 of the Ethernet standard. 
+Measuring FLR is impossible in the PHY and is not always practical at the MAC. Additionally, the required 
+measurement times depend on link utilization level, which may be unknown. However, the FLR 
+requirements of Ethernet types supported by UE can be translated to an uncorrectable codeword ratio 
+(UCR), which is independent of traffic and measurable at the PHY level. The relationship between UCR 
+and FLR is described in 6.3.1.1. 
+The effect of UCR on application performance in a large network is easier to comprehend by converting 
+it to a metric in units of time, the mean time between PHY errors (MTBPE). In this context, a PHY error is 
+an event of an uncorrectable RS-FEC codeword, which can cause one or more consecutive MAC frames 
+to be discarded. 
+Informative Text: 
+MTBPE is unrelated to the mean time to false 802.3 packet acceptance (MTTFPA). In a compliant 
+Ethernet link, the probability of having an uncorrectable RS-FEC codeword that is not detected as 
+such is extremely small, and the probability of false 802.3 packet acceptance is even smaller. As a 
+result, the MTTFPA for a single link that meets the FLR requirements is many billions of years. 
+ 
+The worst-case MTBPE for a single link that meets the FLR requirements is different across Ethernet link 
+rates due to the different RS-FEC interleaving schemes and FLR specifications. The resulting MTBPE 
+values are summarized in Table 6-7. The calculation of MTBPE is based on the relationship between 
+performance metrics described in 6.3.1. 

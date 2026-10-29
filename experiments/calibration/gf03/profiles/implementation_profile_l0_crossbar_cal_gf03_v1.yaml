@@ -1,0 +1,45 @@
+# Implementation profile for the calibration-ladder GF-03 anchor-point
+# runs on the analytical L0 crossbar backend (gap-fill
+# anchor GF-03; docs/calibration/anchors_gapfill.md §GF-03).
+implementation_profile_id: analytical_l0_crossbar_cal_gf03_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. DOMAIN NOTE: unlike the
+  GF-01 xGMI full-mesh stage, the single-port abstraction is the DECLARED
+  IN-DOMAIN reading for the NVSwitch fabric class this anchor measures
+  (plan §2.1 A-L0X-PORT: KEEP for NVSwitch-class validity domains) —
+  B is the per-GPU aggregate injection cap, exactly the quantity the
+  anchor's "theoretical 900 GB/s" and measured "837 GB/s" peak quote.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) fixed at 837 B/ns for the CCT-row
+  anchor-point run — GF-03's OWN measured NCCL allreduce peak ("~837
+  GB/s", "93% of theoretical 900") — and at 900 B/ns for the
+  plateau-spec anchor-point run (the anchor's own theoretical quote =
+  CAL-A2's per-direction line); L fixed at the A-L0X-LAT registry point
+  200 ns. NOTHING was tuned toward the GF-03 numbers. The sweep
+  companions (sweep_gf03_band_v1.yaml, sweep_gf03_plateau_v1.yaml)
+  execute the full anchor-arithmetic reading set — crossbar {717, 782
+  nvbandwidth D2D, 837 measured peak (plateau baseline), 900 theoretical}
+  + ring per-link 50 (CAL-A1 arithmetic) + doubling at 900 — across the
+  2 MiB band sizes and the plateau probe sizes; every delta vs the
+  measured numbers is a recorded comparison outcome, not a parameter
+  choice. The plateau payload 2^34 is a DECLARED free probe (GF-03 stages
+  no size in that regime).
+measurement_source: >
+  GF-03 staged numbers ("B300 Field Notes (for the AI Infra/Performance
+  Engineer)", sixrackunits Substack, independent practitioner blog, NCCL
+  allreduce/broadcast + nvbandwidth on a B300 Blackwell Ultra NVLink-5
+  system; docs/calibration/anchors_gapfill.md §GF-03; gap-fill anchor,
+  PROPOSED, deliberately NOT integrated into
+  the calibration anchor registry — the owner integrates accepted
+  rows; confidence M — methodology context light: rank count and NCCL
+  version not cleanly captured; partial paywall possible — numbers used
+  as staged by the gap-fill doc, not re-fetched) — external MEASURED
+  numbers, compared as PROPOSED evidence in results/calibration/; not our
+  testbed, no E3/E4 language.

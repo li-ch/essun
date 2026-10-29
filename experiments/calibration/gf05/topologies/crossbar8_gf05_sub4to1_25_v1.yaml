@@ -1,0 +1,27 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 25 B/ns, L =
+# 1000 ns — the 4:1 OVERSUBSCRIPTION displacement row (100/4 = 25; the
+# anchor simulates 2:1/4:1/8:1 oversubscribed fat trees). Same declared
+# structural effective-bandwidth reading as the 2:1 row: first-order
+# capacity displacement only, queueing inexpressible. Asymptotic CCT
+# ratio vs the anchor row exactly 4. 25 sits at the BOTTOM edge of the
+# plan §2.1 A-L0-BW candidate anchored span [20, 64] (inside it). The
+# envelope sweep's executed rows now bracket the anchored span from
+# both sides (12.5 below, 100 above) — the oversubscribed UEC-class
+# regime extends BELOW the span while the line rate extends ABOVE it;
+# recorded as a placement fact for the owner, the registry range is
+# untouched. Nothing tuned.
+topology_id: crossbar8_gf05_sub4to1_25_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the 4:1 oversubscription
+  displacement of GF-05's sim line rate (100/4 = 25 B/ns). Identity
+  t = 2(r-1)/r*M/B + 2L with L = 1000 ns (GF-05 per-hop decomposition).
+  No congestion/queueing/subscription structure — magnitude only
+  (asymptotic CCT factor exactly 4). Provenance: anchor-staged
+  oversubscription ratio applied to the anchor-staged line rate; never
+  our measurements, never tuned.

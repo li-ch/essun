@@ -1,0 +1,26 @@
+# W1 Dense TP Decode — tp_size 8 at payload 2097152 B = 2 MiB: the GF-10
+# run-pair payload (calibration ladder; gap-fill anchor
+# GF-10 — Li et al., "Evaluating Modern GPU Interconnect: PCIe, NVLink,
+# NV-SLI, NVSwitch and GPUDirect", IEEE TPDS 32(1) 2020/2019,
+# arXiv:1903.04611; docs/calibration/anchors_gapfill.md §GF-10; numbers
+# AS STAGED, not re-fetched).
+#
+# WHY THIS PAYLOAD (declared free probe): GF-10 stages P2P/pair-level
+# measurements — app-level P2P latencies (µs-class), per-link and per-pair
+# bandwidth rates, a latency-flat region boundary, and a bandwidth
+# saturation point — NOT a collective (size -> time) series. The run pair
+# therefore pins the payload at the 2 MiB member of the sweeps' standard
+# 12-size ladder (8 KiB -> 8 GiB of stages A1/A2/A7/A9/A11/GF-05/GF-09),
+# the same run-pair payload GF-05 and GF-09 used — the cross-stage
+# comparability point (the registry twin at this point reproduces the
+# exact 57744 ns CCT of the GF-05/GF-09 registry twins). 2 MiB = 2^21 is
+# divisible by 8 so the A-L0X-DIV gate ACCEPTS the exact size — no
+# bracketing. Same workload shape as every other W1 file (2 layers x 3
+# decode steps = 6 AllReduce ops per config). Nothing here is measured or
+# standard-normative; integer byte counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf10-tp8
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 2097152   # 2 MiB — ladder member; free parameter, declared free probe (GF-10 stages no collective size series)

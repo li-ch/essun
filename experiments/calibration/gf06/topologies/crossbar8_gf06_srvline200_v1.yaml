@@ -1,0 +1,41 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 200 B/ns,
+# L = 1000 ns (declared import, see crossbar8_gf06_simline12_5_v1.yaml) —
+# the UCCL PER-SERVER LINE row: GF-06's staged hardware config is "2 AMD
+# EPYC 9124 servers, 2x 800 Gbit/s ConnectX-8 each"; under the DECLARED
+# per-server-aggregate reading (one rank = one server; decimal units,
+# per-direction NIC rates): 2 x 800 Gbit/s = 1600 Gbit/s = 200 B/ns per
+# server. FLAGGED READING AMBIGUITIES, recorded not adjudicated: (a) if
+# the goodput quote's reference were the 2-server pair's four NICs
+# (3.2 Tbit/s = 400 B/ns) the derating fraction doubles — recorded
+# arithmetic only; (b) a single-NIC reading is impossible for the 1.56
+# Tbit/s goodput (195 B/ns > 100 B/ns single-NIC line), which is why the
+# per-server reading is declared. B = 200 is also exactly 2x GF-05's
+# 100 B/ns UET-htsim sim point (coincidence recorded, never
+# cross-derived). This row is the CARRIER for the anchor's only
+# representable executed outcome displacement: the UCCL goodput 1.56
+# Tbit/s = 195 B/ns = 200 x 39/40 exactly (sibling row
+# crossbar8_gf06_goodput195_v1) — a 97.5% goodput/line fraction
+# (near-coincident, never cross-derived, with GF-04's ~97.5%
+# sustained/line-rate per-NIC figure). 200 is the FIRST staged rate point
+# ABOVE GF-05's 100 B/ns (the plan §2.1 anchored span [20, 64] is now
+# bracketed from above by rates at 3.125x its upper). Asymptotic CCT
+# ratio vs the GF-06 anchor row (12.5) exactly 16. Nothing tuned; the
+# anchor's goodput is an OUTCOME never compared to any CCT (metric
+# bridge inexpressible) — the row places magnitudes only.
+topology_id: crossbar8_gf06_srvline200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 200
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the per-server aggregate line
+  rate of GF-06's UCCL platform (2x 800 Gbit/s ConnectX-8 per server =
+  200 B/ns under the declared per-server, per-direction, decimal
+  reading). Identity t = 2(r-1)/r*M/B + 2L with L = 1000 ns (declared
+  import from GF-05's staged UET-htsim per-hop decomposition; GF-06
+  stages no latency component). No congestion, no programmable CC, no
+  NIC-parallelism structure (the two physical NICs enter only as the
+  aggregate rate). Provenance: anchor-staged hardware config, config
+  class; never our measurements, never tuned.

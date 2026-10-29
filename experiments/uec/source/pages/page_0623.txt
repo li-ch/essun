@@ -1,0 +1,38 @@
+ 623 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 4-11 - Available Bandwidth /C Computation Terms 
+Formula Term Definition 
+𝑝 Input: output port speed (Bps) 
+𝐴 Input: available bandwidth (Bps, integer value, from ABW signal value)  
+𝐹 available fraction of capacity (integer percentage) 
+𝑖 quantized available bandwidth (bucket index) 
+𝑄(𝐹) quantization function for ABW/C signal type and tag width 
+ 
+Define the traffic rate, available fraction of capacity, and quantized normalized available bandwidth as 
+follows: 
+F = 100 (𝐴𝑝) 
+i = Q(F) 
+Update the min(ABW/C) signal value in the CSIG tag in the packet as follows: 
+𝑝𝑘𝑡 → 𝑚𝑖𝑛𝐴𝐵𝑊𝐶 = 𝑚𝑖𝑛(𝑖, 𝑝𝑘𝑡 → 𝑚𝑖𝑛𝐴𝐵𝑊𝐶) 
+All network devices in a CSIG domain SHOULD be configured with the same value for t and the same 
+quantization function(s)—for each of the compact and/or wide CSIG tag formats they support—for use 
+with the min(ABW/C) signal type. Undesirable behavior may result if measurement intervals t differ 
+across devices. 
+4.2.9.2.2 Load Accounting 
+Outbound traffic measurements performed for the min(ABW/C) signal are subject to the same 
+constraints as those applied to measurements for the min(ABW) signal, as described in Section 4.2.9.1.2. 
+4.2.9.2.3 UET Congestion Control Use Cases 
+A central problem in congestion control is prompt allocation of newly spare capacity on a link to flows 
+that can use it. For example, when a flow releases its share of a bottleneck link, it is desirable for other 
+flows that share the same bottleneck to rapidly claim the newly freed capacity. In this situation, a sender 
+faces a trade-off. It can increase its rate slowly and conservatively by probing, which risks leaving 
+capacity unused for multiple RTTs and lengthening flow completion time. Alternatively, it can increase 
+its rate aggressively, and risk overshooting the spare capacity, which incurs congestive delay and packet 
+losses. 
+NSCC incorporates a fast_increase() mechanism that reclaims spare capacity aggressively when path 
+queueing delay is modest and many ACKs have returned in the recent past without an ECN mark, both of 
+which indicate that a path is lightly loaded. While fast_increase() successfully helps flows reclaim spare 
+capacity rapidly, it is heuristic in nature in the sense that it is oblivious to the explicit measure of spare 
+capacity at a bottleneck on a path: it increases a sender’s congestion window a constant two MTUs per 
+returning ACK. 

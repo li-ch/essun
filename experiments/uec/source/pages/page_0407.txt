@@ -1,0 +1,44 @@
+ 407 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The sequence in Figure 3-101 proceeds as follows: 
+1. The PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 
+332. 
+2. SES receives a read request from the provider and generates an SES Request with MID = 1. 
+a. When using a standard SES Request header, SES assigns the read a unique message ID 
+that allows FEP-A to associate the read response with the corresponding read request. 
+i. SES medium and small headers do not include a message ID—see Section 
+3.5.20.2.6. 
+ii. An implementation should make the message ID globally unique across all PDCs, 
+allowing the initiator to efficiently identify read responses in the return 
+direction (i.e., using a direct lookup on the message ID in the return direction). 
+iii. Message IDs are unique per PDC. 
+3. The initiator transmits the SES Read to the target as a PDS Request with PSN = 333. 
+4. The target transmits an ACK for PSN = 333. 
+a. The ACK carries the SES Response, which in this example is RC_OK — not guaranteed 
+delivery — meaning the read request was accepted; the requested data is not in the 
+ACK. 
+b. The reception of this ACK completes the initiator SES processing of the read transaction. 
+5. The target SES processes the read and generates a request to PDS to send a packet back to FEP-
+A. 
+a. This packet carries an SES UET_HDR_RESPONSE_DATA header and includes the data 
+along with the original message ID (MID = 1 in this example) assigned by FEP-A. 
+b. Optionally, the target SES may assign its own message ID. The target SES tracks the read 
+transaction either as: 
+i. A single transaction with locally assigned message ID (MID = 9 in this example), 
+tracking when all return data packets in the transaction are sent and 
+acknowledged; this allows a local libfabric counter to be incremented (an 
+optional libfabric feature). A target-assigned message ID is efficient for this. 
+ii. Individual packets where each packet is processed totally independently; the 
+libfabric counter is not supported. A target-assigned message ID may or may not 
+be used in this case; it is an implementation-specific choice. 
+6. The target transmits a PDS Request using PSN = 48. 
+a. This packet carries the requested read data. 
+b. This packet uses the return direction of the same PDC on which the associated request 
+arrived; see Section 3.5.8.1. 
+c. SES header fields carries the original message ID (ses.read_request_message_id) and 
+carry a target-assigned message ID (ses.response_message_id) when one is assigned by 
+the target; refer to the Semantics specification Section 3.4.2.14. 
+i. The example shows a target-assigned MID = 9, which is echoed back in the ACK 
+(when not coalesced). 
+7. After receiving a packet with PSN = 48, FEP-A transmits an ACK for PSN = 48. 

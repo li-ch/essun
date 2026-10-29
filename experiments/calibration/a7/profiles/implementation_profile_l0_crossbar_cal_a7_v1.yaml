@@ -1,0 +1,40 @@
+# Implementation profile for the calibration-ladder A7 runs on the
+# analytical L0 crossbar backend ( anchor CAL-A7).
+implementation_profile_id: analytical_l0_crossbar_cal_a7_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. DOMAIN LABELING per
+  plan §2.1 A-L0X-PORT: the single-port abstraction is OUT-OF-DOMAIN as
+  a PHYSICAL description of CAL-A7's non-switched full mesh (7 dedicated
+  per-pair links); it is executed here as the AGGREGATE reading, whose
+  exact term-by-term coincidence with the (unimplemented) multi-port
+  mesh identity for the symmetric uniform-chunk collective — and whose
+  7x single-pair expressiveness loss — are proven in the stage's
+  calibration record.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) swept over {64, 358.4, 448} bytes/ns at
+  r=8, fixed by anchor arithmetic BEFORE any stage output was read: 448 =
+  the CAL-A7 aggregate anchor point (7 links x 64 B/ns per direction);
+  64 = the per-pair rate read as a shared single port (per-pair-cap
+  conservative reading — understates parallel injection 7x in this
+  identity); 358.4 = 1792/5 = 0.8 x 448, the CAL-A12 ~80% software
+  derating bridge (cross-fabric transfer from A100/NCCL to Infinity
+  Fabric, labeled as an assumption, mirroring stage A2's 720 = 0.8 x
+  900). Message sizes: the same 12-size ladder 8*2^k; r=8 divides every
+  size (A-L0X-DIV accepts, no bracketing). L fixed at the registry point
+  200 ns. NO parameter was tuned toward any anchor output — the anchor
+  stages no time series; the sweep measures WHERE the aggregate reading
+  sits relative to the anchor's 448 B/ns spec ceiling.
+measurement_source: >
+  CAL-A7 staged numbers (AMD Instinct MI300X Platform Data Sheet; AMD Hot
+  Chips 2024; Lenovo LP1943; docs/calibration/anchors_staging.md §A7;
+  anchor PROPOSED in the anchor registry; confidence H
+  for transcription) — a vendor SPECIFICATION, not a measurement;
+  compared as PROPOSED evidence in results/calibration/; not our
+  testbed, no E3/E4 language.

@@ -1,0 +1,45 @@
+ 13 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 2-38 - Summary of Semantic Header Formats ................................................................................ 130 
+Table 2-39 - Mappings for Standard Request (UET HDR_REQUEST_STD) ................................................ 131 
+Table 2-40 - Mappings for Optimized Non-Matching (UET HDR_REQUEST_SMALL) ............................... 131 
+Table 2-41 - Criteria for Small Message Header (UET HDR_REQUEST_SMALL)........................................ 131 
+Table 2-42 - Mappings for Small Message (UET HDR_REQUEST_SMALL) ................................................ 132 
+Table 2-43 - Mappings for Small RMA (UET HDR_REQUEST_MEDIUM) ................................................... 132 
+Table 2-44 - Libfabric Mappings for Rendezvous Send Extension Header ............................................... 133 
+Table 2-45 - Verb Objects.......................................................................................................................... 136 
+Table 2-46 - UET Verbs Objects ................................................................................................................. 139 
+Table 2-47 - Memory Region Binding Requirements ................................................................................ 141 
+Table 2-48 - SES Field Mapping to UET Verbs ........................................................................................... 144 
+Table 2-49 - INC Collective Operations ..................................................................................................... 156 
+Table 2-50 - INC Reduction Operations .................................................................................................... 157 
+Table 2-51 - Required Datatype Combinations ......................................................................................... 158 
+Table 2-52 - INC Operation ses.inc_info Encoding .................................................................................... 162 
+Table 2-53 - Dataplane Participation ........................................................................................................ 165 
+Table 2-54 - Fabric Capabilities ................................................................................................................. 175 
+Table 2-55 - Switch INC Resources ............................................................................................................ 175 
+Table 3-1 - Profile Requirements for Supporting UET Transaction Types ................................................ 188 
+Table 3-2 - Addressing Requirements for Implementations of Profiles ................................................... 189 
+Table 3-3 - Profile Buffer Behavior Requirements .................................................................................... 189 
+Table 3-4 - Profile Summary—SES header formats .................................................................................. 190 
+Table 3-5 - Profile Summary—PDS ordering modes ................................................................................. 191 
+Table 3-6 - Profile Summary—Best Effort ................................................................................................. 192 
+Table 3-7 - Profile Summary—Lossless ..................................................................................................... 192 
+Table 3-8 - Profile Summary—INC ............................................................................................................ 192 
+Table 3-9 - Standard Header Format Fields when ses.som is 1 ................................................................ 219 
+Table 3-10 - Standard Header Format Fields when ses.som is 0 .............................................................. 221 
+Table 3-11 - Optimized Header Format Fields .......................................................................................... 225 
+Table 3-12 - Unified Local Semantic Header with ac=0 (UET_HDR_REQUEST_LCL) ................................. 227 
+Table 3-13 - Unified Local Semantic Header with ac=1 (UET_HDR_REQUEST_LCL) ................................. 230 
+Table 3-14 - Target Address and Offset when ses.ac=1 ............................................................................ 230 
+Table 3-15 - Synchronized Operation Extension Header Format ............................................................. 233 
+Table 3-16 - Response Header Fields ........................................................................................................ 234 
+Table 3-17 - Response with Data Header Fields ....................................................................................... 235 
+Table 3-18 - Optimized Response with Data Header Fields ...................................................................... 236 
+Table 3-19 - Unified Local Semantic Header Response Header (UET_HDR_RESPONSE_DATA_LCL) ....... 238 
+Table 3-20 - Parsing Guide ........................................................................................................................ 238 
+Table 3-21 - Header Formats and Legal Opcodes ..................................................................................... 239 
+Table 3-22 - Next Header Enumeration .................................................................................................... 275 
+Table 3-23 - Supported Request Messages (Opcode) ............................................................................... 276 
+Table 3-24 - Supported Response Messages (Opcode) ............................................................................ 276 

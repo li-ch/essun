@@ -1,0 +1,90 @@
+Describes the UB Service Core architecture, key software modules, and interfaces supporting UB products for both intelligent computing and general-purpose computing. It enables software developers, technical support engineers, enterprise technical leads, and others to effectively use, develop, manage, and maintain the UB products.
+
+View
+
+Software Resources
+
+UnifiedBus™ (UB) Management and O&M Software Architecture and Interface Reference Design
+
+Describes the software architecture and interface functions used for UB-based SuperPoD management and O&M in intelligent and general-purpose computing scenarios. It guides developers of management and O&M systems, O&M engineers, and system administrators in the use, development, management, and maintenance of UB-based products.
+
+View
+
+UnifiedBus™ (UB) SuperPoD Reference Architecture White Paper
+
+Defines the SuperPoD reference architecture that helps you tackle the compute infrastructure challenges in the AI era. The reference architecture features bus interconnect, unified protocol, peer-to-peer coordination, all-resource pooling, large-scale networking, and high availability.
+
+View
+
+Help Better Our Docs
+
+Your advice is important to better our docs. We will periodically review these opinions and improve future updates.
+
+Feedback
+
+Latest Updates
+
+Groundbreaking SuperPoD Interconnect: Leading a New Paradigm for AI Infrastructure
+
+News
+
+2025/09/18
+
+Huawei Unveils World's Most Powerful SuperPoDs and SuperClusters
+
+News
+
+2025/09/18
+
+View More
+
+UB Mailing List
+
+UB Specifications
+
+For technical discussions on UB specifications, including the base specification, firmware specification, and software reference design for operating systems. It is ideal for hardware architects, chip design engineers, OS developers, cluster system developers, cluster O&M developers, standards organization experts, etc.
+
+ub-spec@lists.unifiedbus.com
+
+SubscribeUnsubscribe
+
+Subscribe
+
+Unsubscribe
+
+SuperPod Reference Architecture
+
+For discussions on UnifiedBus SuperPoD reference architecture, including technical exchanges on both existing and new architectures. It is suitable for cluster design and development engineers.
+
+superpod-ref@lists.unifiedbus.com
+
+SubscribeUnsubscribe
+
+Subscribe
+
+Unsubscribe
+
+General Discussions
+
+For community discussions, including inquiries, suggestions, and feedback on ecosystem partnerships
+
+ub-discuss@lists.unifiedbus.com
+
+SubscribeUnsubscribe
+
+Subscribe
+
+Unsubscribe
+
+UB Community (Under Preparation) Ecosystem Partnership
+
+Listed in no particular order
+
+contact@unifiedbus.com
+
+Copyright © 2026 UnifiedBus. All rights reserved. Y. A2-20044005-313
+
+Y.G.W.A.B. No. 44030002008214
+
+Privacy Statement|Terms of Use|Cookies
+

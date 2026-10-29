@@ -1,0 +1,49 @@
+ 172 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+syntax = "proto3"; 
+ 
+package uec_uet_inc_im.v1; 
+ 
+service INCManagement { 
+  // Configures the IM for operation within a new job. 
+  rpc CreateJob(JobCreationRequest) returns (JobCreationReply); 
+  // Destroys a job. 
+  // All gRPC streams to the ranks are also closed. 
+  rpc DestroyJob(JobDestructionRequest) returns (JobDestructionReply); 
+} 
+ 
+message JobCreationRequest { 
+  // The Job ID. 
+  uint32 job_id = 1; 
+  // A list of X.509 certificates used by the ranks for authentication. 
+  // If empty, no authentication is required. Otherwise, ranks must 
+  // authenticate. 
+  repeated bytes certificates = 2; 
+} 
+ 
+message JobCreationReply { 
+} 
+ 
+message JobDestructionRequest { 
+  // The Job ID. 
+  uint32 job_id = 1; 
+} 
+ 
+message JobDestructionReply { 
+}  
+ 
+2.4.17 IM and INC Switches 
+The IM communicates with INC switches to perform the following operations:  
+• Query INC capabilities. 
+• Allocate and free switch resources for an INC communicator. 
+• Query the configuration that is in place. 
+• Monitor the status of an INC communicator. 
+• Collect statistics for troubleshooting. 
+For this purpose, each switch exposes a gNMI server to the IM. The mechanisms by which the IM 
+discovers the INC switches and establishes connectivity to them are beyond the scope of this document. 
+2.4.17.1 YANG Schema 
+The YANG model of the data communicated between the IM and INC switches is made up of two 
+modules: 
+• uec-uet-inc, and 
+• uec-uet-inc-types. 

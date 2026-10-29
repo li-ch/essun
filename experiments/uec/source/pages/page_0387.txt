@@ -1,0 +1,33 @@
+ 387 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A unique PSN is assigned to a CP when the packet requires guaranteed delivery. These CPs are allocated 
+the next PSN in the PSN space in the direction the packet is sent (i.e., forward or return). When using a 
+unique PSN, the pds.flags.retx bit is set when the packet is retransmitted. The pds.flags.retx bit may 
+also be set when retransmitting a probe CP. Refer to the summary table at the end of this section. 
+Reception of a CP with unique PSN always triggers an ACK packet. The CP ACK may use the same ACK 
+format used for PDS requests (e.g., ACK, ACK_CC or ACK_CCX). In this case pds.next_hdr is set to 
+UET_HDR_NONE. 
+Some CP ACK packets carry a payload specific to the type of control packet. In this case, the 
+pds.next_hdr is set to UET_HDR_CP_ACK. These use the ACK header with a payload that is unique to the 
+CP type. This general CP ACK format is illustrated in Figure 3-87. The fields are defined in Table 3-73. The 
+UET_HDR_CP_ACK next header enumeration MUST NOT be used with a PDS ACK_CC or ACK_CCX. 
+ 
+Table 3-73 - UET_HDR_CP_ACK Payload 
+Field Name Size  
+(in bits) 
+Description 
+cp_ack_type 8 Set to pds.cp_type in a packet that triggers the ACK 
+cp_ack_length 8 Length of negotiation payload in 4 B units, starting with and including 
+pds.cp_ack_type 
+reserved variable Defined by the pds.cp_ack_type 
+ 
+CPs are normally transmitted over an established PDC. However, the NOOP and Negotiation CPs MAY be 
+transmitted before a PDC is established; in these cases, the pds.flags.syn bit MUST be set. All other CPs 
+MUST NOT be transmitted until the PDC has been established. 
+CPs MUST NOT be marked as trimmable. Trimmed CPs are dropped. The reception of a trimmed CP 
+SHOULD be counted. 
+ 
+ 
+Figure 3-87 - UET_HDR_CP_ACK Payload Format 
+ 

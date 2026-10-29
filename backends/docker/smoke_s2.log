@@ -1,0 +1,111 @@
+# P2 / Stage S2 — ASTRA-sim analytical smoke run in container
+# Date: 2026-10-27T03:51:46Z  Host: darwin arm64  Docker: 29.8.2
+# Image: essun/astra-sim-analytical:s1  Id: sha256:bb02b612c0dcd13eaa388a0ba05616b1c89e83468702a54f523f7742b02c9c8b (linux/arm64)
+#
+# Documented example run (verbatim run line from upstream
+# examples/run_scripts/analytical/congestion_unaware/Ring_reducescatter_4npus.sh;
+# the script's 'build.sh' preamble is already satisfied by the S1 image build):
+#   AstraSim_Analytical_Congestion_Unaware \
+#     --workload-configuration=examples/workload/microbenchmarks/reduce_scatter/4npus_1MB/reduce_scatter \
+#     --system-configuration=examples/system/native_collectives/Ring_4chunks.json \
+#     --remote-memory-configuration=examples/remote_memory/analytical/no_memory_expansion.json \
+#     --network-configuration=examples/network/analytical/Ring_4npus.yml
+
+=== EXECUTED COMMAND (host) ===
+docker run --name essun-s2 essun/astra-sim-analytical:s1 bash -c 'mkdir -p /tmp/astra-s2 && cd /tmp/astra-s2 && <binary> --workload-configuration=... --system-configuration=... --remote-memory-configuration=... --network-configuration=...'
+
+=== EXECUTED COMMAND (in-container, exact) ===
+mkdir -p /tmp/astra-s2 && cd /tmp/astra-s2 &&
+  /opt/astra-sim/build/astra_analytical/build/bin/AstraSim_Analytical_Congestion_Unaware \
+    --workload-configuration=/opt/astra-sim/examples/workload/microbenchmarks/reduce_scatter/4npus_1MB/reduce_scatter \
+    --system-configuration=/opt/astra-sim/examples/system/native_collectives/Ring_4chunks.json \
+    --remote-memory-configuration=/opt/astra-sim/examples/remote_memory/analytical/no_memory_expansion.json \
+    --network-configuration=/opt/astra-sim/examples/network/analytical/Ring_4npus.yml ; rc=$? ; echo ASTRA_EXIT=$rc
+
+=== STDOUT/STDERR (docker run) ===
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [workload] [info] sys[0] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0], Comm time: 22240
+[2026-10-27 03:51:46.979] [workload] [info] sys[1] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1], Comm time: 22240
+[2026-10-27 03:51:46.979] [workload] [info] sys[2] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2], Comm time: 22240
+[2026-10-27 03:51:46.979] [workload] [info] sys[3] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3], Comm time: 22240
+[2026-10-27 03:51:46.979] [system] [warning] Exiting
+ASTRA_EXIT=0
+--- artifacts in /tmp/astra-s2 ---
+/tmp/astra-s2:
+total 0
+drwxr-xr-x 1 root root  6 Oct 27 03:51 .
+drwxrwxrwt 1 root root 16 Oct 27 03:51 ..
+drwxr-xr-x 1 root root 28 Oct 27 03:51 log
+
+/tmp/astra-s2/log:
+total 4
+drwxr-xr-x 1 root root   28 Oct 27 03:51 .
+drwxr-xr-x 1 root root    6 Oct 27 03:51 ..
+-rw-r--r-- 1 root root    0 Oct 27 03:51 err.log
+-rw-r--r-- 1 root root 2473 Oct 27 03:51 log.log
+
+=== EXIT CODE ===
+docker run exit code: 0 (propagates ASTRA-sim exit via trailing ls; ASTRA_EXIT=N above is the binary's own exit status)
+
+=== EXPECTED ARTIFACTS (exported from container) ===
+Exported to host: backends/docker/smoke_s2_artifacts/ (log/log.log, log/err.log)
+total 8
+-rw-r--r--@ 1 li  staff     0 Oct 27 11:51 err.log
+-rw-r--r--@ 1 li  staff  2473 Oct 27 11:51 log.log
+fb93012c7f9ce0b8460b4d03f469d39f260261c076ececbee4e2e080bd8ad484  backends/docker/smoke_s2_artifacts/log/log.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  backends/docker/smoke_s2_artifacts/log/err.log
+
+--- log/log.log (full) ---
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 4 index in ring: 0 offset: 1 total nodes in ring: 4
+[2026-10-27 03:51:46.979] [workload] [info] sys[0] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[0], Comm time: 22240
+[2026-10-27 03:51:46.979] [workload] [info] sys[1] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[1], Comm time: 22240
+[2026-10-27 03:51:46.979] [workload] [info] sys[2] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[2], Comm time: 22240
+[2026-10-27 03:51:46.979] [workload] [info] sys[3] finished, 22240 cycles, exposed communication 22240 cycles.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3]. Post statistics processing start.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3]. Post statistics processing end.
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3], Wall time: 22240
+[2026-10-27 03:51:46.979] [statistics] [info] sys[3], Comm time: 22240
+[2026-10-27 03:51:46.979] [system] [warning] Exiting
+--- log/err.log (full) ---
+(end of err.log — 0 bytes, no errors)
+
+=== DETERMINISM SPOT-CHECK (same example, fresh container run) ===
+command: identical to the run above (container essun-s2b)
+ASTRA_EXIT(run2)=0
+4
+=== VERDICT ===
+PASS: documented example (Ring_reducescatter_4npus, congestion-unaware analytical) exited 0 and emitted its expected artifacts (stdout statistics report + log/log.log + log/err.log).

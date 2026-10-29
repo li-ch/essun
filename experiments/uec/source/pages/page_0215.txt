@@ -1,0 +1,40 @@
+ 215 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.2.7.3 Ordering of Response Data 
+For the ROD and RODL protocols, a read response (UET_RESPONSE_W_DATA) MUST be generated in the 
+order that the read requests were received for a given PDC. 
+3.4.2.7.4 Synchronized Completion Ordering 
+Synchronized completion ordering is like completion ordering (3.4.2.7.1.4) in that there is no guarantee 
+on completion ordering. Synchronized completing operations result in either a completion notification 
+to the host or an atomic operation to host memory. Synchronized write with header data (immediate 
+data) operations deliver a completion notification at the target after all synchronized operations have 
+completed. Synchronized atomic operations perform an atomic operation after all synchronized 
+operations have completed. Completion notifications from synchronized completing operations are not 
+ordered relative to other synchronized completing operations. Atomic operations that result from 
+synchronized atomic operations are not performed in any defined order relative to any other atomic 
+operations. There are no changes to sender completion processing. 
+3.4.2.8 Protocol Isolation Mechanisms 
+SES provides mechanisms for isolation between jobs on a system. This consists of controlling access to 
+buffers using device-enforced identities. A FEP is validated as being within a given security domain using 
+either cryptographic methods (see Section 3.7.4) or other site-specific methods beyond the scope of 
+UET. In a client/server environment, however, this does not indicate which buffers a message may 
+access. Buffer access authorization depends on the identify information in a UET header (3.4.2.4) being 
+properly enforced (3.4.8.1). 
+3.4.2.9 Header Data 
+Libfabric defines completion data that can have a size up to 64 bits. UET supports this with a field called 
+ses.header_data that is 64 bits in size. In libfabric, completion data is delivered as part of the 
+completion queue entry and does not consume an entry from the receive queue. Header data is 
+provided only in the start of message packet, and only if the ses.hd bit indicates that it was provided by 
+software. 
+3.4.2.10 Additional Control Fields 
+Some additional bits of control are included in the UET header (Table 3-9). There are two bits of version 
+information (ses.ver). Multi-packet messages include a ses.message_length field that describes the 
+entire length of the payload to be delivered. One bit (ses.dc) is included to request that the semantic 
+response indicates that the packet has been made globally observable (3.4.9.3). One bit is used to 
+indicate that the message encountered an error at the source (ses.ie) and should terminate the message 
+in error. As an example, a PCIe transaction may fail in the middle of a packet in the middle of a message. 
+Similarly, an address translation may fail for a packet in the middle of a message. One bit indicates 
+relative or absolute addressing (ses.rel). 
+For transactions using the Unified Local profile, a control bit (ses.mm) enables multiple semantic 
+messages to be placed in a single packet. A second control bit (ses.ac) identifies semantic headers 

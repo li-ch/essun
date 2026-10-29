@@ -1,0 +1,43 @@
+ 133 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The criteria and requirements for use of the rendezvous send operation are specified in Section 2.2.5.4. 
+The libfabric mappings for the rendezvous send extension header, which follows 
+UET_HDR_REQUEST_STD, are shown in Table 2-44. 
+Table 2-44 - Libfabric Mappings for Rendezvous Send Extension Header 
+Request Field Libfabric Source 
+eager_length <= UET_PROVIDER_MAX_EAGER_SIZE 
+read_PIDonFEP PIDonFEP component of UET address assigned to source libfabric endpoint 
+read_resource_index Resource Index component of UET address assigned to source libfabric 
+endpoint 
+read_ri_eneration Managed by provider in accordance with SES specification 
+read_offset • Offset of source buffer parameter from the send API within a registered 
+local memory region (memory region is determined using desc 
+parameter of send API) 
+• The source buffer MUST be associated with a local memory region 
+registered for remote read access in order to perform a rendezvous send  
+• This offset reflects the start of the message within the memory region 
+and, therefore, MAY be used to read the entire message 
+read_memory_key RKEY of the local memory region associated with the source buffer 
+ 
+The atomic extension header is used in conjunction with the fi_atomic() APIs and MAY follow 
+UET_HDR_REQUEST_STD or either of the optimized headers. The atomic extension header includes an 
+ses.atomic_opcode field and an ses.atomic_datatype field. A UET provider MUST map the atomic 
+operation and atomic datatype specified in the fi_atomic() API to the associated SES header atomic 
+mnemonics, which are defined in the UET SES specification. 
+The compare and swap extension header is a specialized header used with compare and swap atomic 
+operations. In addition to the ses.atomic_opcode and ses.atomic_datatype fields, the extension also 
+contains the compare value and the swap value parameters from the associated fi_compare_atomic() 
+API. These parameters map to the ses.compare_value and ses.swap_value fields respectively. The size 
+of the compare and swap parameters MUST be <= 16 bytes. 
+2.2.11 Linux Implementation of UET Control API 
+The Linux implementation of the UET Control API described in this section is a proposal to the upstream 
+community. It is expected that changes and feedback will be incorporated as a part of the upstream 
+process. The definitive location of the interfaces will be in a Linux include file. 
+Multiple UET Control API messages between the provider KMD and management entities have been 
+defined previously in this specification. More specifically, the following: 
+• UET Control API JobID mapping request message (see Section 2.2.4.1) 
+• UET Control API address assignment request message (see Section 2.2.5.3.5.1) 
+• UET Control API address assignment response message (see Section 2.2.5.3.5.1) 
+• UET Control API security rekey message (see Section 2.2.9) 
+• UET Control API security rekey request message (see Section 2.2.9 

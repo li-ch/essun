@@ -1,0 +1,44 @@
+ 25 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Acknowledgments  
+This specification is developed under the Process, Procedures, and Guidelines of the Ultra Ethernet 
+Consortium (UEC). The organization would like to thank all that are involved. A special acknowledgment 
+goes out to the following individuals for their leadership, authoring, and technical contributions to this 
+specification. 
+Steering Committee at Time of Publication 
+Role Name Affiliation 
+Chair J Metz AMD 
+Vice Chair Abdul Kabbani Microsoft 
+TAC Chair Tom Emmons Arista 
+TAC Vice Chair Brad Matthews  Marvell 
+ 
+Working Group Leadership at Time of Publication 
+Working Group Name Affiliation 
+Physical Layer WG Jannik Hammel Nielsen Huawei 
+Adee Ran Cisco 
+Link Layer WG Bob Alverson HPE 
+Yan Zhuang Huawei 
+Transport Layer WG Torsten Hoefler Microsoft 
+Karen Schramm Broadcom 
+Software Layer WG Rip Sohan Broadcom 
+Jianxin Xiong Intel 
+Management WG Ravindranath Kanakarajan Marvell 
+Hemal Shah Broadcom 
+Compliance & Test WG Dave Estes Viavi Solutions 
+Cliff Tavares Keysight 
+Performance & Debug WG Rajalaxmi Angadi Intel 
+Nathan Hanford Lawrence Livermore NL 
+Storage WG Venkat Goli Broadcom 
+Claudio DeSanti Dell 
+ 
+Specification Development 
+Role Name Affiliation 
+Author Cedell Alexander Broadcom 
+Author Bob Alverson HPE 
+Author Surendra Anubolu Broadcom 
+Author Jeremias Blendin AMD 
+Author Paul Bottorff HPE 
+Author Josh Collier Intel 
+Author Eric Davis Broadcom 
+Author Mark Handley Broadcom 

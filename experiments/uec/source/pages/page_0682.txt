@@ -1,0 +1,49 @@
+ 682 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2.12 CBFC Message Examples (Informative) 
+5.2.12.1 CBFC CF_Update Message 
+CBFC CF_Update messages are formatted as an 8-byte CtlOS on the xMII as described in Section 5.2.6.1. 
+In the following example, the CF_Update message contains the R_VC_CF counter values for two lossless 
+VCs. The first VC, number 4, has an R_VC_CF value of 123, and the second VC, number 11, has an 
+R_VC_CF value of 14203. As described in Table 5-21, this corresponds to CF1_VC_index=4, 
+CF1_count=123 (0x7B), CF2_VC_index=11, and CF2_count=14203 (0x377B). The CF_Update CtlOS is 
+formatted on the xMII as shown in Figure 5-15. 
+ 
+Figure 5-15 - Example CF_Update CtlOS 
+Each data byte on the xMII interface is transmitted from LSBit to MSBit, and from TXD<0> to TXD<63>. 
+5.2.12.2 BFC CC_Update Message 
+CBFC CC_Update messages are formatted as a 64-byte MAC frame as described in Section 5.2.6.2 and 
+contain the S_VC_CC counter values for 16 VCs. For this example, the CC_Update fields have values as 
+described below, which are formatted into eight data transfers of 8 bytes each on the xMII interface, as 
+shown in Figure 5-16. Note that the frame data transfers are preceded by a single xMII transfer with the 
+preamble+SFD and are followed by a single xMII transfer with the terminate (/T/) control character and 
+seven idle (/I/) control characters. 
+This example uses these field values as defined in Table 5-22: 
+• MACDA = 01-80-C2-00-00-01 
+• EtherType = 0x8808 and Opcode = 0xFFFE 
+• CID = 0xFA7ACB 
+• CC_Update packet type = 0x01 
+The MACSA field is normally the MAC address of the source port as specified in Section 5.2.6.2.  The 
+value used here is for this example only: 
+• MACSA = 0A-0B-0C-0D-0E-0F 
+The 16 S_VC_CC values for this example are shown in decimal and hexadecimal format in Table 5-31. 
+ 
+MII Fields:
+bit position: 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0 7 6 5 4 3 2 1 0
+CF_Update fields:
+example (dec):
+example (hex):
+example (bin): 0 1 0 1 1 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 1 1 0 1 1 0 0 1 0 1 1 0 1 1 0 1 1 1 0 1 1 1 1 0 1 1 0 0 0 0
+MII Fields:
+MII bytes:
+TXD<0> to <63>: 0 0 1 1 1 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 0 0 0 0 0 1 1 0 1 1 0 1 1 1 0 1 1 0 1 0 1 1 1 0 1 1 1 0 0 0 0 0 1 1 0 1
+CF2_count <rsvd>Control Character Type CF1_VC CF1_count O-code CF2_VC
+D0 D1 D2 D3 D4 D5 D6 D7
+14203 0
+0x5C 0x10 0x4 0x007B 0x6 0xB 0x377B 0x0
+92 16 4 123 6 11
+TXD<0:63>
+D6 D7
+0x5C 0x10 0x20 0x07 0xB6 0x5B 0x77 0xB0
+D0 D1 D2 D3 D4 D5

@@ -1,0 +1,45 @@
+ 670 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• For each VC[x] that the receiver wants to initialize as a lossless VC: 
+o Local.R_VC_Want[x] = 1 
+o Local.R_VC_RTR[x] = 0 (not yet ready to receive packets using credits) 
+o Reset the receiver’s VC x  counters 
+▪ R_VC_CC[x] = 0 
+▪ R_VC_CF[x] = 0 
+o Optional: 
+▪ Local.R_VC_CreditLimit[x] = per-VC credit limit (or 0 if TotalCredits != 0) 
+▪ Local.R_PKTID_Sel[x] and R_PKTID[x] 
+2. LLDP packet is sent from receiver to sender with the receiver’s new TLV values and is used to 
+update the remote LLDP database at the sender. 
+3. CBFC sender Initialization: 
+CBFC management entity at the sender station, based on the remote LLDP database update, 
+initializes the CBFC sending port and local LLDP database. 
+• Set sender port configuration and parameters S_TotalCredits, S_CreditSize, S_PktOvhd 
+based on remote receiver’s LLDP values and its own supported feature set. 
+• For each VC[x] with Remote.R_VC_Want[x] == 1 and Local.S_VC_RTS[x] == 0: 
+o Distribute S_TotalCredits across all lossless VCs (set per-VC credit limits) or use 
+Remote.R_VC_CreditLimit[x] to set the per-VC credit limits. 
+o Disable transmission of all packets for VC[x]. 
+o Reset the sender’s VC x  counters17 
+▪ S_VC_CC[x] = 0 
+▪ S_VC_CF[x] = 0 
+▪ S_VC_CU[x] = 0 
+• Ensure observance of any new credit limits. 
+o If the receiver has set credit limits using port-based TotalCredits: 
+▪ Wait until S_P_CU ≤ S_P_CL 
+▪ Any additional implementation-specific credit limits must also be followed 
+accordingly. 
+o If the receiver has set credit limits using per-VC credit limits: 
+▪ Wait until S_VC_CU i  ≤ S_VC_CL i , for all lossless VC i . 
+• Update TLV values in Local LLDP database: 
+o Local.S_CreditSize = S_CreditSize 
+o Local.S_PktOvhd = S_PktOvhd 
+o Local.S_VC_RTS[x] = 1 (for all VC[x] with Remote.R_VC_Want[x] == 1) 
+4. LLDP packet is sent from sender to receiver with the sender’s updated TLV values and is used to 
+update the remote LLDP database at the receiver. 
+5. CBFC receiver completes initialization: 
+CBFC management entity completes lossless VC initialization. 
+• For each VC[x] with remote.S_VC_RTS[x]==1 and local.R_VC_RTR[x]==0: 
+ 
+17 The port-based counter, S_P_CU, must be reset to zero only when the port is reset.  

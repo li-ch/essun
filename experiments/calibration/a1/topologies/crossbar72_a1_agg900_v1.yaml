@@ -1,0 +1,22 @@
+# Calibration-ladder A1 topology: crossbar72 at the AGGREGATE injection
+# scale, B = 900 bytes/ns per rank per direction. Provenance is CAL-A1's
+# own port arithmetic, not CAL-A2's product page: 2 chips/tray x 9 trays =
+# 18 chips x 72 ports = 1296 ports serving 72 GPUs => 18 ports per GPU;
+# 18 x 50 B/ns per port per direction = 900 B/ns per-GPU aggregate
+# (matches CAL-A2's quoted 900 GB/s per direction — consistency note, not
+# an extra anchor input). This mapping abstracts all 18 chips as one
+# non-blocking fabric; the model-implied per-direction fabric aggregate
+# 72 x 900 = 64800 B/ns equals the anchor's rack aggregate 18 x 3600.
+# Free parameter at the anchored scale required by CALIBRATION_PLAN.md
+# §2.1 A-L0X-BW (NARROW scale); NOT tuned toward any output.
+topology_id: crossbar72_a1_agg900_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 900
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar72_a1_port50_v1 (A-L0X-PORT,
+  A-L0X-LAT, A-L0X-DIV); only the swept free parameter B differs, here at
+  the per-GPU aggregate scale the anchor's own port count implies.

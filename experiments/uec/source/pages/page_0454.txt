@@ -1,0 +1,39 @@
+ 454 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+credit window between a single source and its destination varies depending on how many 
+sources are sending to that destination. 
+3. Transport Flow Control (TFC): TFC maintains a pool of credit. It can send whenever there is 
+credit in its credit pool. As it uses credit, the source may convey requests for more credit to the 
+destination via the credit target field in data packets. The source receives credit back from the 
+destination in either Credit CPs or ACKs. The destination sends credit based on available receive 
+buffer resources to avoid packet drops. This mechanism differs from RCCC in that it is intended 
+for point-to-point services with limited buffering and low tolerance for packet loss. Multipath 
+may or may not be used with TFC. 
+Note that the window-based approaches are in contrast to a rate-based approach, such as 
+RoCE/DCQCN. The window-based approach is preferable because of its inherent stability due to packet 
+clocking: In severe congestion events, a window-based source will stop transmission as it waits for 
+explicit confirmation that packets have left the network. In contrast, in a rate-based approach such as 
+DCQCN, lack of feedback is implied to be a sign of appropriate network operation, and the rate is 
+increased. This approach works in lossless networks, where PFC kicks in as a backstop, but in best-effort 
+networks where packets may be silently discarded due to congestion, increasing throughput in response 
+to a lack of congestion feedback results in poor performance. 
+3.6.5.4 UET CC Startup Behavior 
+In the case of NSCC, the congestion window is dynamically adjusted by the congestion control algorithm; 
+it is increased when there is no congestion to discover and use spare network capacity and it is 
+decreased to cope with congestion. Traditionally, protocols such as TCP would start with a conservative 
+window (e.g., 10 packets) and then increase until congestion is detected. This ensures that flows can 
+reach a steady state after a number of round-trip times. 
+In the context of datacenters, there are at least three reasons that the standard congestion control 
+approach is suboptimal: 
+1. Many flows are around one bandwidth-delay product (BDP) or less, meaning that they can never 
+reach steady state. 
+2. The network is well provisioned meaning that, in many cases, flows can operate at line rate. 
+3. The BDP of the idle network is well known. 
+(3) implies that the maximum size of the window (MaxWnd) can be restricted to around 1.5 BDPs. This 
+allows enough for a source to fill the path to a destination (requiring 1 BDP with no queues) and for just 
+enough queueing to ensure high multipath utilization. There is no reason to have a window larger than 
+this bound. 
+(1) and (2) taken together imply that new flows should, by default, start at line rate, using a window 
+around MaxWnd. The alternative — starting with a smaller window and dynamically increasing it in the 
+absence of congestion — would inflate the flow completion time of small flows. 

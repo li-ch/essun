@@ -1,0 +1,40 @@
+# Implementation profile for the calibration-ladder A9 latency-chain
+# contrast row on the analytical L0 ring backend (
+# anchor CAL-A9). Used by the ring topology of sweep_a9_pair_latency_v1
+# only (the two store runs of this stage are crossbar runs).
+implementation_profile_id: analytical_l0_ring_cal_a9_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml.
+  ROLE for anchor CAL-A9: the ring is the ring ALGORITHM EMBEDDED in a
+  CAL-A9-class switched fabric — every hop one single-switch-stage
+  traversal at the plan-stated budget sum L = 10 + 70 = 80 ns — so the
+  identity charges the anchor's per-stage budget 2*(r-1) = 14 times per
+  AllReduce against the crossbar's 2 (once per phase). The ring/crossbar
+  pair therefore brackets the latency-chain multiplicities {2, 14} of one
+  budget sum; at equal B their CCT difference is exactly
+  2*(r-1-1)*L = 12*L at every size (an identity of the two backends,
+  verified on executed sweep rows in the stage's calibration record). No
+  schedule is claimed to be THE CXL behavior (the anchor analyzes
+  memory-pool fabrics, not collective schedules).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  L (link.hop_latency_ns) at the single CAL-A9 anchor point 80 ns (the
+  plan-stated one-stage sum); B (link.bytes_per_ns) at the A-L0-BW
+  registry point 64 B/ns, FIXED (CAL-A9 stages no bandwidth number —
+  anchor-free axis); r = 8 the free smoke-default rank count (power of
+  two; divides every 8*2^k ladder size, A-L0-DIV accepts). NO parameter
+  was tuned toward any anchor output — the row exists to execute the
+  chain-multiplicity contrast, and its deltas vs the crossbar baseline
+  are arithmetic facts of the two identities at equal B.
+measurement_source: >
+  CAL-A9 staged numbers (Berger et al., IEEE Micro 2023;
+  docs/calibration/anchors_staging.md §A9; anchor PROPOSED in
+  the anchor registry; confidence H for transcription)
+  — DESIGN-ESTIMATE numbers from the paper's latency-budget analysis,
+  NOT silicon measurements; compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

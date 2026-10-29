@@ -1,0 +1,27 @@
+So the two nests must fit with no gap. Where a layer fails to match, the step scatters: in the protocol, in the software, in the network between racks. No matter how many parallel units are placed, they cannot deliver.
+
+This nest follows the same recursive, fractal logic as the physical world: farther out, larger scale, longer distance, lower bandwidth, higher latency; farther in, smaller scale, shorter distance, higher bandwidth, lower latency.
+
+We are continuing von Neumann’s idea: building this hierarchically nested parallel computing system. The principle does not change. What changes is how large the computer is, how many layers it nests, and how far a single command can reach. Distant memory must feel as natural as memory at hand. Chips are soldiers, and the computer is the whole army—from package to autonomous zone—that answers to one command set.
+
+3 Six Things for Unified Bus Hardware: Turn the Cliff into a Slope
+
+The principle is clear. We now turn to the hardware that realizes it, and to where past technology fell short.
+
+Begin by setting the target. Farther out means longer distance, lower bandwidth, higher latency: that is physics, and it is accepted. The real past failure was not a “gentle slope”—it was a “cliff.” One step past the chassis, bandwidth dropped by an order of magnitude and latency rose several-fold. Inside the rack it behaved like one machine; outside the rack, everyone went their own way. The job of the critical technology is to pave that cliff into a slope, so that command passes down without a single layer dropped.
+
+First: one protocol, the same inside the rack and outside it.
+
+The past used two. Inside the box, a bus was fast and nanosecond-class, but born for short reach and unable to leave the chassis. Outside the box, a network could reach far, but every boundary was a toll booth—unpack, inspect, re-pack. One language was used inside the rack and another between racks, every boundary required a transfer. In large clusters, more than 80% of energy goes to moving data, and a large share of that is lost at these transfers. Unified Bus merges “bus” and “unified” into a single protocol from the package all the way to the autonomous zone, end to end, with no transfers.
+
+Second: make distant memory feel like memory at hand.
+
+Moving data used to mean climbing layer by layer to the application, then converting across protocols. A TCP/IP round trip cost tens of microseconds, mostly in software. RDMA improved that sharply, but at heart it was still “send a message, wait for a reply.” Barriers and reductions all stuck here, and the larger the scale, the worse the stick. We switched to memory semantics: native load and store, with consistency handled in hardware. One communication round trip fell from tens of microseconds to around a hundred nanoseconds, approximately five hundred times; per-chip I/O bandwidth reaches the 7.2 Tbps class.
+
+Third: tear down master–slave, the foundation of peer equality.
+
+In the past, the host commanded and the device obeyed, namely everything went through a center. That master–slave pattern is not an accident of one product line; it is the default pattern of traditional computer design: the CPU as master with accelerators as slaves, the host as master with devices as slaves, and a control plane that owns initiation while everyone else waits. The larger the army, the more the center clogs. Adding soldiers does not add strength—one plus one is less than two. This design puts CPU, NPU, memory, storage, and NICs on the same bus as peers: anyone can initiate, anyone can respond. Barrier and aggregation at every Nested BSP layer need not report back to a center for every act. Without that equality, the nested battle plan collapses back into a queue at the master; with it, the Nested Parallel von Neumann Architecture can scale without a single throat.
+
+Fourth: copper near, optics far, but the language does not change.
+
+Copper has hit its wall. Push up the data rate per wire, and the wire gets thicker and its reach get shorter; bundle thousands of copper cables and they become too thick to install. So first-generation Unified Bus was designed for both electrical and optical: copper nearby to protect latency, optics farther out to protect scale, with the protocol unchanged when the medium changes. On the optical side we chose near-package optics (NPO). Of more than twenty decibels of loss on a full electrical path, NPO removes nine to eleven in one step; co-packaged optics (CPO) can take only about three more. What is gained: optical engines that can be built, tested, and replaced as single modules. Latency at the ten-nanosecond class and overall cost more than 40% below CPO. This path is now an OIF project, pursued by dozens of partners [7].

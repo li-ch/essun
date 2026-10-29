@@ -1,0 +1,39 @@
+ 444 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+When trimming is used with UET-CC, MIN_TRIM_SIZE MUST configured large enough for trimmed 
+packets to include the UET PDS Request header and any optional CC_State included in the header —
+taking into account any encapsulations that may occur. 
+When trimming occurs on the last hop in the network, a different code point, 
+DSCP_TRIMMED_LASTHOP, MAY be set to indicate to the destination where the congestion occurred, as 
+last hop congestion due to incast may be handled differently from other congestion. In the switch, 
+DSCP_TRIMMED_LASTHOP should be treated the same as DSCP_TRIMMED. In the receiving FEP, 
+DSCP_TRIMMED_LASTHOP indicates that the packet should be processed in the same way as a 
+DSCP_TRIMMED packet, except: 
+• It is not used as an input to the load-balancing algorithm (at either the sending or receiving FEP) 
+because no alternate path is available. 
+• It is not used as a congestion signal to NSCC when RCCC is also enabled, because RCCC can 
+handle last-hop congestion by itself. 
+The UET-CC algorithms in this specification assume that either all data packets sent on a particular PDC 
+are marked as eligible for trimming (using DSCP_TRIMMABLE) or none are. Mixing trimmable and non-
+trimmable data packets in a PDC is NOT RECOMMENDED. Similarly, it is recommended that all sprayed 
+PDCs in a traffic class are marked as eligible for trimming, or none are. Although it is not required that 
+all PDCs sent in a specific traffic class are marked as eligible for trimming, care should be taken when 
+mixing trimmable and non-trimmable PDCs in the same network to avoid the potential for unfair 
+sharing of the network. 
+3.6.4.5 Priority Flow Control 
+Priority flow control (PFC) is defined in clause 36 of IEEE Std 802.1Q-2022 [15]. PFC uses a queue buffer 
+depth threshold. When the threshold is crossed, a PFC is sent to the attached device. All traffic on the 
+specified traffic class(es) is paused until another PFC message clears the pause or a timer expires. These 
+messages are generated and accepted by Ethernet switches and NICs. 
+UET-CC is designed for operation in a best-effort network and assumes that PFC is not enabled for end-
+to-end UET traffic on switch-to-switch links in the network. Enabling PFC on such links is likely to reduce 
+performance, as it will violate the latency assumptions of the CC algorithms. PFC SHOULD NOT be used 
+anywhere in a best-effort network. 
+3.6.4.6 Credit-based Flow Control  
+The UE Link Layer specification defines credit-based flow control (CBFC) that operates hop-by-hop in the 
+network to provide more fine-grained flow control than can be provided by PFC. CBFC allows a receiving 
+NIC or downstream Ethernet switch to regulate traffic of the specified traffic classes sent to it by an 
+upstream NIC or Ethernet switch. CBFC is specified in Section 5.2.  
+As with PFC, UET-CC assumes that CBFC is not enabled for end-to-end UET traffic on switch-to-switch 
+links in the network. Enabling CBFC on such links is likely to violate the latency assumptions of the CC 

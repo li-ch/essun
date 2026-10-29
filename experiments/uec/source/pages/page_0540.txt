@@ -1,0 +1,66 @@
+ 540 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+o Contains the telegram-specific field values associated with the indicated type_id. 
+o The encoding, ordering, and semantics of these fields are defined by the telegram type. 
+o If the telegram-specific payload is shorter than 30 bytes, the remaining bytes MUST be set 
+to 0x0 by the sender and MUST be ignored by the receiver. 
+Regardless of whether the telegram is forwarded locally or to a peer, field values MUST be transmitted 
+in big-endian format and packed in accordance with the YAML specification for the structure 
+3.6.18.6.4 Control Packets 
+PCM algorithms can trigger control packets such as probe packets or credit packets to the peer. Those 
+packets are scheduled through the current CCC and thus use the associated window, rate, and EV. 
+Table 3-124 - Control Packet Sending 
+Function Name (Argument(s)) Description 
+int uet_send_ctrl_probe(unsigned int id, unsigned int ev)  Send probe control packet with the specified 
+opaque ID. 
+int uet_send_ctrl_credit(unsigned int credit)  Send credit control packet with credit amount. 
+ 
+3.6.18.6.5 Load Balancing 
+PCM provides the LB controls for EV table implementations in Table 3-125: 
+Table 3-125 - Load Balancing Controls 
+Function Name (Argument(s)) Description 
+int uet_get_ev_field_int(uint32_t ev_idx, int 
+field_index, uet_int_t *value); 
+Generic EV field accessor function for integer EV fields. 
+field_index is YAML-defined per-EV field macro. 
+int uet_get_ev_field_uint(uint32_t ev_idx, int 
+field_index, uet_uint_t *value); 
+Generic EV field accessor function for unsigned integer EV 
+fields. field_index is YAML-defined per-EV field macro. 
+int uet_get_ev_field_float(uint32_t ev_idx, int 
+field_index, uet_float_t *value); 
+Generic EV field accessor function for float EV fields. 
+field_index is YAML-defined per-EV field macro. 
+int uet_set_ev_field_int(uint32_t ev_idx, int 
+field_index, uet_int_t value); 
+Generic EV field setter function for integer EV fields. 
+field_index is YAML-defined per-EV field macro. 
+int uet_set_ev_field_uint(uint32_t ev_idx, int 
+field_index, uet_uint_t value); 
+Generic EV field setter function for unsigned integer EV 
+fields. field_index is YAML-defined per-EV field macro 
+int uet_set_ev_field_float(uint32_t ev_idx, int 
+field_index, uet_float_t value) 
+Generic EV field setter function for float EV fields. field_index 
+is YAML-defined per-EV field macro 
+int uet_get_ccc_field_int(int field_index, 
+uet_int_t *value); 
+Generic CCC field accessor function for integer  
+CCC fields. field_index is YAML-defined per-CCC field macro 
+int uet_get_ccc_field_uint(int field_index, 
+uet_uint_t *value); 
+Generic CCC field accessor function for unsigned integer CCC 
+Fields. field_index is YAML-defined per-CCC field macro 
+int uet_get_ccc_field_float(int field_index, 
+uet_float_t *value); 
+Generic CCC field accessor function for float CCC fields. 
+field_index is YAML-defined per-CCC field macro 
+int uet_set_ccc_field_int(int field_index, 
+uet_int_t value); 
+Generic CCC field setter function for integer CCC fields. 
+field_index is YAML-defined per-CCC field macro 
+int uet_set_ccc_field_uint(int field_index, 
+uet_uint_t value); 
+Generic CCC field setter function for unsigned integer CCC 
+fields. field_index is YAML-defined per-CCC field macro 

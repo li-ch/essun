@@ -1,0 +1,23 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 100 B/ns
+# (anchor sim line rate), L = 200 ns — the A-L0X-LAT / A-L0-LAT
+# REGISTRY POINT row of the latency sweep (placement row; B fixed at
+# the anchor point so this row isolates the L axis against
+# crossbar8_gf05_line100_v1 at L=1000). The registry latency is 5x
+# BELOW the anchor's own per-hop decomposition (1000 ns = 600 link +
+# 400 switch traversal); at the anchor's 2 MiB flow size the registry
+# row's latency term is 400 ns vs the anchor row's 2000 ns. Placement
+# arithmetic only (t = 2(r-1)/r*M/B + 2L), never tuning. See
+# crossbar8_gf05_line100_v1.yaml for the full GF-05 provenance.
+topology_id: crossbar8_gf05_line100_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 200
+notes: >
+  Registry-latency placement row (L = 200 ns free registry default,
+  A-L0X-LAT) at GF-05's fixed sim line rate B = 100 B/ns. Identity
+  t = 2(r-1)/r*M/B + 2L. No congestion/credits/ECMP/packetization.
+  Provenance: L = free registry point; B = GF-05 staged sim config;
+  values are registry defaults / anchor quotes, never our measurements.

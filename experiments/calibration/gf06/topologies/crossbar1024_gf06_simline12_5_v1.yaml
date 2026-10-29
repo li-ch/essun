@@ -1,0 +1,38 @@
+# Calibration-ladder GF-06 topology: fully-connected crossbar of 1,024
+# ranks at B = 12.5 B/ns (the GF-06 anchor sim-config link rate:
+# UET-htsim "100 Gbit/s links"), L = 1000 ns (declared import from
+# GF-05's staged per-hop decomposition; GF-06 stages no latency
+# component) — the NON-BLOCKING CEILING row at the anchor's STATED host
+# count: PCM's UET-htsim deployment is a "1,024-host three-tier fat
+# tree". This row is the landed non-blocking single-stage abstraction of
+# that topology (the role CAL-A1/A2 spec ceilings and GF-05's
+# crossbar1024 row play) — a CEILING, never a prediction of the fat
+# tree (no tiers, no queueing, no congestion, no packetization exist at
+# L0). It executes the structural rank-count fact at the anchor's
+# scale: the bandwidth coefficient 2(r-1)/r = 1023/512 sits within
+# 1/896 (~0.11%) of its maximum +1/7 = +14.29% above the r=8 smoke
+# default (identical to GF-05's scale sweep — the SAME structural class;
+# GF-06 stages the SAME host count 1,024 as GF-05's node count, the
+# second UET-htsim user to do so). r=1024 is a power of two
+# (A-L0D-POW2 native); every 1024*2^k ladder size divides exactly.
+# Nothing tuned; the anchor stages no (size -> time) series in any
+# metric class comparable to CCT (its FCT tables are unstaged), so no
+# CCT comparison is attempted.
+topology_id: crossbar1024_gf06_simline12_5_v1
+topology_class: fully_connected_crossbar
+ranks: 1024
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-switch-stage abstraction at GF-06's stated scale
+  (r = 1024 hosts) and sim-config link rate (B = 12.5 B/ns from "100
+  Gbit/s links", declared per-direction decimal reading); L = 1000 ns
+  declared import from GF-05's staged UET-htsim per-hop decomposition
+  (GF-06 stages no latency component). Identity
+  t = 2(r-1)/r*M/B + 2L; coefficient 1023/512 ~ 1.998. Provenance:
+  anchor-staged host count and sim-config link rate; ceiling
+  abstraction only — never a prediction of the three-tier fat tree.
+  Values are anchor quotes / declared imports / registry defaults,
+  never our measurements.

@@ -1,0 +1,35 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 195 B/ns,
+# L = 1000 ns (declared import) — the UCCL GOODPUT row, the anchor's
+# ONLY representable executed outcome displacement: "In UCCL, it matches
+# native Swift's 1.56 Tbit/s goodput with 64 KiB chunk-level control".
+# Under the declared decimal per-server reading: 1.56 Tbit/s / 8 =
+# 195 B/ns, and 195 = 200 x 39/40 EXACTLY (200 = the per-server line
+# 2x800 Gbit/s) — a goodput/line-rate fraction of exactly 39/40 = 97.5%.
+# Mapping discipline (stage A11/GF-05's envelope technique): goodput
+# ratios are dimensionless outcomes, so goodput/line = 39/40 maps to an
+# effective-B displacement B = 200 x 39/40 = 195 — the MECHANISM (chunk-
+# level control at 64 KiB, Swift vs PCM CC behavior) is inexpressible at
+# L0; only the MAGNITUDE enters, as a free-scalar displacement. The
+# "matches native Swift" semantics cut BOTH ways for calibration (PCM's
+# cost is invisible at the goodput level — its costs are the callback
+# ns figures) — recorded, not interpreted. Reading ambiguities flagged
+# in crossbar8_gf06_srvline200_v1.yaml (pair-aggregate alternative
+# 39/80 recorded only). Asymptotic CCT ratio vs the anchor row (12.5)
+# exactly 78/5. Nothing tuned; no anchor time is compared anywhere.
+topology_id: crossbar8_gf06_goodput195_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 195
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at GF-06's staged UCCL goodput
+  (1.56 Tbit/s = 195 B/ns = the per-server line 200 x 39/40 exactly —
+  the only GF-06 outcome quote whose envelope displacement is a
+  representable finite decimal). Identity t = 2(r-1)/r*M/B + 2L, L =
+  1000 ns declared import. The 64 KiB chunk-level-control granularity
+  itself has no input key (no segmentation key exists; the 65536 B size
+  appears in the sweep ladder as a PAYLOAD member only). Provenance:
+  anchor-staged outcome mapped by the declared dimensionless
+  displacement reading; never our measurements, never tuned.

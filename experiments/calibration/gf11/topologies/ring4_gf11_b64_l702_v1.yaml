@@ -1,0 +1,30 @@
+# Calibration-ladder GF-11 topology: UNIDIRECTIONAL RING of 4 ranks at the
+# GF-11 anchor point — B = 64 B/ns, L = 702 ns per hop.
+#
+# ROLE: the anchor's stock baseline is NCCL 2.29.1 RING AllReduce on 4
+# GB200s at 11.0 µs small-message — the ring identity (t = 2(r-1)/r*M/B +
+# 2(r-1)*L = 3M/128 + 6L at r=4) is the corpus's native map of a ring
+# schedule, so this row executes the stock-NCCL leg of the bracket on the
+# SAME (B, L) as the one-shot/crossbar twin: latency chain 6L = 4212 ns,
+# t = 4215 ns at M=128 — the identity sits 2200/843 ~ 2.61x BELOW the
+# measured NCCL leg (the stock stack's overhead, inexpressible at L0),
+# while the measured ring-vs-one-shot ratio 11000/2370 = 1100/237 ~ 4.64
+# EXCEEDS the identity family's full chain ratio 6L/2L = 3 at r=4 — no
+# shared-(B, L) identity pair spans the measured implementation gap. The
+# per-hop charge of the per-pair 702 is a DECLARED reading (a ring hop is
+# one pair exchange); never tuned. r=4 is the anchor's bracket system.
+topology_id: ring4_gf11_b64_l702_v1
+topology_class: unidirectional_ring
+ranks: 4
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 702
+notes: >
+  Unidirectional ring of 4 ranks, per-direction link bandwidth B = 64 B/ns
+  (free A-L0-BW registry point) and per-hop latency L = 702 ns (the GF-11
+  derived per-pair reading = measured SoL 1404/2; declared reading: one
+  ring hop = one pair exchange). Identity t = 3M/128 + 4212 at r=4 (chain
+  2 x 3 x L). The stock-NCCL leg of the GF-11 bracket comparison; the
+  measured 11.0 µs NCCL ring carries the software stack this identity
+  cannot express. Values are anchor arithmetic / free registry points,
+  never ours, never tuned, never standard-normative.

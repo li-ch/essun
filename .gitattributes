@@ -1,0 +1,3 @@
+# Binary figures must never be text-normalized.
+# (A bundle-scoped -text rule left with the internal bundle, 2026-10-28.)
+*.png -text

@@ -1,0 +1,53 @@
+ 39 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+each OSI, and an OSI can host 
+ranks of multiple jobs. 
+RankID An assigned rank number per job 
+starting from 0. 
+Client-Server Communication Client A software entity on a node that 
+communicates to a server through 
+FEPs. 
+Client/server job model A mode of cluster operation in 
+which clients connect to servers, 
+e.g., storage or Function as a 
+Service (FaaS). The client/server 
+execution typically runs the server 
+for an indefinite time, serving an 
+indefinite number of clients (often 
+with complex reliability and 
+availability guarantees). 
+Discovery The process of finding servers 
+using static fabric addresses or a 
+discovery service such as DNS or 
+LLDP. 
+Resource Index (RI) Identifies resources within a 
+process such as a service, library, 
+or other entity (e.g., MPI vs. *CCL). 
+Server A software entity on a node that 
+provides a service to one or more 
+clients. 
+Server PIDonFEP In combination with a Resource 
+Index, a server PIDonFEP identifies 
+a service available on a specific 
+FEP. The same FEP may be used by 
+multiple servers (on a single OSI), 
+and a single server may offer 
+services through multiple 
+PIDonFEPs in combination with 
+resource indices on multiple FEPs. 
+Security Threat Model Attacker An entity that wants to extract 
+information from a communication 
+or modify communicated data. 
+Ciphertext The packet data containing the 
+encrypted plaintext that is sent on 
+the wire between sender and 
+receiver. 
+Information Data or properties of the data 
+exchanged between two 
+participants that would allow the 
+attacker to take or cause an 
+adverse action. Examples include 
+cryptographic keys, decisions of 
+the FEP, etc. 

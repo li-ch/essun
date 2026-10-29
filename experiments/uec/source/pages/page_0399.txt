@@ -1,0 +1,38 @@
+ 399 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+deallocated under software control. When using RUD or ROD, two reserved PDCs are required for 
+bidirectional FEP-FEP data transfer. 
+PDS MUST allow reservation of a configured number of PDC and CCC resources for use by the reserved 
+service as described in Table 3-83. The number of reserved PDCs and CCCs SHOULD be at least 16. 
+Reserved PDCs MUST  be allocated and deallocated under the control of software and MUST NOT be 
+closed dynamically due to resource limitations. That is, unlike normal PDCs, the PDC remains in the 
+ESTABLISHED state until the associated context is destroyed explicitly. 
+Table 3-83 - Reserved PDC Configuration 
+Field Name Type Description 
+Num_Rsv_PDC Configuration Number of PDCs in the reserved PDC pool 
+Num_Rsv_CCC Configuration Number of CCCs in the reserved CCC pool 
+ 
+The following paragraphs use the terminology from the PDS_SES logical interface in Section 3.5.4. 
+When a reserved CCC is allocated for an initiator PDC, a handle is generated (e.g., rsv_ccc_handle). The 
+handle may be the ccc_id or may be opaque. 
+When a reserved PDC is allocated for an initiator, a PDC handle is generated (e.g., rsv_pdc_handle). 
+During allocation, the reserved PDC is associated with a reserved CCC using the rsv_ccc_handle if 
+congestion control is enabled. Traffic is sent on the reserved PDC when the SES passes the 
+rsv_pdc_handle with the SES transmit request. 
+Packets associated with a rsv_pdc_handle MUST use the same PDC and CCC. Only packets associated 
+with a rsv_pdc_handle may use the associated PDC. During creation of a reserved PDC, the initiator 
+MUST set the pds.pdc_info.use_rsvd_pdc flag. This assures a reserved PDC will be used at the target. 
+Target reserved PDC and CCC resources are not explicitly allocated by software. Determining the state of 
+target PDCs requires a software query and deallocate service. This is needed to cover scenarios where 
+the peer initiator FEP fails without closing the PDC. 
+If a packet arrives with the pds.flags.syn = 1, pds.pdc_info.use_rsvd_pdc = 1, and a new PDC is to be 
+allocated, then a reserved target PDC and CCC are allocated. The CCC is only allocated if CCC is enabled 
+for the associated traffic class. If pds.flags.syn = 1 and pds.pdc_info.use_rsvd_pdc = 0, a newly allocated 
+PDC and CCC resource MUST NOT be taken from the reserve pool. 
+Transmit scheduler services for reserved PDCs are further described in Section 3.5.14. 
+Informative Text: 
+Reserved PDCs can be established by sending a UET_NO_OP or other semantic request to the 
+destination FEP. The PDC follows the common establishment method, including supporting secure 
+PSNs. 
+ 

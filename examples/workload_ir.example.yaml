@@ -1,0 +1,45 @@
+schema_version: 0.1.0
+workload_id: WK-EXAMPLE-TP-DECODE
+trace_kind: synthetic
+portability:
+  absolute_compute_timing: false
+  collective_algorithm: true
+  router_decisions: true
+  arrival_process: true
+model:
+  layers: 2
+  hidden_dimension: 1024
+  precision_bytes: 2
+serving:
+  continuous_batching: true
+  slo: example_only
+events:
+- id: req0
+  type: RequestArrival
+  depends_on: []
+- id: decode0
+  type: DecodeStep
+  depends_on:
+  - req0
+  tokens: 1
+- id: ar0
+  type: AllReduce
+  depends_on:
+  - decode0
+  participants:
+  - 0
+  - 1
+  message_bytes: 2048
+  logical_collective: example_allreduce
+  realized_algorithm: ring
+- id: kv0
+  type: KVTransfer
+  depends_on:
+  - ar0
+  bytes: 4096
+  source: endpoint0
+  destination: endpoint1
+- id: done0
+  type: Completion
+  depends_on:
+  - kv0

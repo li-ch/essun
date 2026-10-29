@@ -1,0 +1,45 @@
+ 739 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+A single RS-FEC codeword has a payload of 5140 bits, corresponding to 80 PCS blocks or 640 octets (as 
+observed at the MII interface). A block of codewords that are interleaved together is referred to as a 
+codeword group (CG). 
+The default behavior of Ethernet RS-FEC is that an uncorrectable codeword causes all data in the CG that 
+this codeword is in to be marked as error by the PCS and discarded. As a result, any MAC frame fully or 
+partially included in a CG that includes an uncorrectable codeword will not be delivered to the MAC and 
+will be lost. 
+The Ethernet FLR requirements are stated for 64-octet frames with minimum interpacket gap (IPG), 
+which creates 84 octets in total per frame (including IPG and preamble). This condition (maximum 
+utilization with smallest frames) results in up to 8 frames per codeword (FPC), which is the maximum 
+possible number. Due to possible misalignment of frame and codeword boundaries, the maximum 
+number of frames that can be lost due to a single codeword error is 𝐶𝐼𝑅 ⋅ 𝐹𝑃𝐶 + 1. 
+Informative Text: 
+The maximum number of frames that can be lost due to a single codeword error is not necessarily 
+dependent on link utilization, since frames with minimum IPG can occur even with low utilization. 
+ 
+Table 6-8 shows the size of a CG in octets and the maximum number of frames that can be lost due to a 
+single uncorrectable codeword as a function of the CIR. 
+Table 6-8 - CIR and CG sizes 
+ 100 GbE with RS-FEC 
+(Clause 91) 
+200 GbE and 400 GbE (Clause 119), 
+100 GbE with RS-FEC-Int 
+(Clause 161) 
+800 GbE 
+(Clause 172) 
+and 1.6 TbE 
+(Clause 175) 
+CIR 1 2 4 
+CG size 640 octets 1280 octets 2560 octets 
+Max. frames lost due to 
+uncorrectable codeword  
+9 17 33 
+ 
+The conversion factor from UCR to FLR is: 
+𝑭𝑳𝑹
+𝑼𝑪𝑹 =  𝑪𝑰𝑹 ⋅ 𝑭𝑷𝑪 + 𝟏 𝑭𝑷𝑪 = 𝑪𝑰𝑹 + 𝟏𝑭𝑷𝑪 (Equation 1) 
+As the average frame size increases, FPC decreases, and the conversion factor from UCR to FLR changes 
+accordingly, as shown in Table 6-9. 
+ 
+ 
+ 

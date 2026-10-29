@@ -1,0 +1,91 @@
+ 54 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+of a client toward a server, but it may be ephemeral in that it exists only while traffic is active. The 
+combination of server PIDonFEP and Resource Index is conceptually the same as a TCP/UDP port. 
+UET servers can use well-known server PIDonFEP values and a set of resource indices for specific 
+services, and UET clients may use either preconfigured static server FAs or various discovery 
+mechanisms to resolve a server’s hostname or alias to an FA, such as DNS or a ‘hosts’ file, allowing 
+clients to establish communications with a server. Additionally, UET clients and servers can choose to 
+utilize non-UET discovery methods such as first establishing a TCP/IP connection and subsequently 
+exchanging UET capabilities, addresses, and identifiers. 
+UET has relative, absolute, and direct memory endpoint addressing modes (see Figure 1-9). The relative 
+addressing mode provides consecutive addressing within the parallel job model to ensure scalability to 
+largest process counts. Absolute addressing is used in the client/server model. Direct memory 
+addressing is available only for the Unified Local profile. 
+In the relative addressing mode, UET defines four complementary parts of a destination address:  
+1. An FA identifying a FEP. 
+2. A JobID uniquely identifying a job in a cluster. 
+3. A PIDonFEP ranging from 0 to P-1. 
+4. A Resource Index (RI) identifying a service, library, or other entity within the target process (e.g., 
+MPI vs. *CCL). 
+When a packet arrives at a destination FEP, the target PASID can be determined based on a combination 
+of JobID and PIDonFEP. 
+ 
+Figure 1-8 - Client/Server Job Model 
+ 
+OSI
+Cluster
+User 1 Node
+Port
+ Port
+OSI
+Client
+PIDonFEP
+=X
+Node
+Switch
+User 2
+FEP
+FA=
+x.x.x.x
+Port
+Fabric Interface
+Port
+Server
+PIDonFEP
+=X
+PIDonFEP
+=Y
+Server
+PIDonFEP
+=X
+OSI
+Client
+PIDonFEP
+=X
+Client
+PIDonFEP
+=Y
+Port
+JobID=K
+JobID=P
+FEP
+FA=
+x.x.x.x
+Port
+Fabric Interface Node
+FEP
+FA
+=
+y
+.
+y
+.
+y
+.
+y
+Port
+Fabric Interface
+FEP
+FA
+=
+w
+.
+w
+.
+w
+.
+w
+Port
+Fabric Interface

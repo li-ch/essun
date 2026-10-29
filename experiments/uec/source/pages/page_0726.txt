@@ -1,0 +1,42 @@
+ 726 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+VxLAN and SRv6. These applications are possible as a side effect of retaining the Ethernet MAC 
+structure, and the capability may be useful in special scenarios. 
+This specification does not describe any methods to ascertain if a sender can use UFH to communicate 
+with a destination. Methods for assigning UFH addresses to endpoints or distributing routes within a 
+domain are also outside the scope of this specification. 
+ 
+5.4.12 UFH Efficiency Calculations 
+Packet efficiency for different header permutations is calculated using the equation below: 
+𝐸 = 𝑃𝑎𝑦𝑙𝑜𝑎𝑑 𝑆𝑖𝑧𝑒𝑃𝑎𝑦𝑙𝑜𝑎𝑑 𝑆𝑖𝑧𝑒 + 𝐻𝑒𝑎𝑑𝑒𝑟 𝑂𝑣𝑒𝑟ℎ𝑒𝑎𝑑  
+The header overhead adds all L2, L3, and L4 headers, with IPG and preamble ignored for simplicity. 
+Opaque fields are not included in the overhead. A common transport size is assumed for all, and the 
+resulting efficiency numbers in tabular and chart form are as below. For small payloads and compressed 
+headers, the minimum Ethernet frame size is 64 B. 
+Table 5-42 - Header Overhead 
+Format L2 L3 L4 FCS Total Notes 
+Custom (8 B) 8  16 4 28 Address scale 216 
+Ethernet + IPv4 14 20 16 4 54 Address scale 232 
+UFH_32 13 16 4 33 Address scale 232 
+UFH_16 8.5 16 4 28.5 Address scale 216 
+ 
+Table 5-43 - Efficiency Comparison 
+Payload Size 32 64 128 256 512 1024 2048 4096 
+Custom (8 B) 53.33 69.57 82.05 90.14 94.81 97.34 98.65 99.32 
+Ethernet + IPv4 37.21 54.24 70.33 82.58 90.46 94.99 97.43 98.70 
+UFH_32 49.23 65.98 79.50 88.58 93.94 96.88 98.41 99.20 
+UFH_16 50.00 69.19 81.79 89.98 94.73 97.29 98.63 99.31 
+ 
+Figure 5-29 - UFH Domains 
+ 
+X
+ X
+S
+ D1
+ D2
+UFH Domain External Domain
+UFH 
+UFH UFH Standard Headers 
+Standard Headers 
+Gateway Switch Gateway Switch

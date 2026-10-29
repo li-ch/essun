@@ -1,0 +1,47 @@
+# Calibration-ladder A10 topology: unidirectional ring of 128 ranks at
+# per-hop latency L = 800 ns — the PER-HOP READING (declared projection) of
+# CAL-A10's 0.8 us assumption on the CHAINED identity, which charges the
+# number 2*(r-1) = 254 times per AllReduce. At r=8 this is numerically
+# the twin of stage A8's ring8_a8_l800_v1 (where 800 entered as the plan's
+# span-context row; stage A10 owns the anchor itself).
+#
+# CAL-A10 (HiPC 2025 Workshops, "Communication-Centric UALink and NVLink
+# Comparison for Large Scale AI Training", IEEE CSDL 453800a068): staged
+# quote "NVIDIA does not publish end-to-end latency for NVLink Network; we
+# assume 0.8 us, consistent with 'sub-us' positioning for NVSwitch hops"
+# (docs/calibration/anchors_staging.md §A10; confidence M — quote via public
+# search snippet, full text paywalled, wording re-verify at owner
+# integration). 800 ns is a STATED ASSUMPTION in a peer-reviewed analytical
+# model — peer review certifies the plausibility of the USAGE, never the
+# value; it is not a measurement, and the quote's own premise (NVIDIA
+# publishes no such number) means no L value anywhere can be falsified
+# against it.
+#
+# ROLE IN THE STAGE: the ring is the linear-extreme latency chain
+# 2*(r-1)*L; the stage's swept axis is the RANK COUNT r, on the power-of-2
+# ladder 8 -> 1024 ending at the anchor's own stated scale ceiling
+# ("scales to 1024 GPUs" — the only anchor-derived regime number in this
+# stage). Payload 16384 = 2^14 is divisible by every ladder rank, so the
+# A-L0-DIV gate ACCEPTS exactly at every rung — no bracketing.
+#
+# HONESTY: L is a FREE PARAMETER (A-L0-LAT) held at the anchor's assumption
+# point, never tuned (nothing is tuned toward it — the anchor stages no
+# completion time at all). B = 64 B/ns is the fixed A-L0-BW registry point
+# (the anchor's bandwidth values are not staged; UALink side paywalled,
+# NVLink side would be different anchors' spec ceilings). r is the swept
+# free model-side axis.
+topology_id: ring128_a10_hop800_v1
+topology_class: unidirectional_ring
+ranks: 128
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 800
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance:
+  L = 800 ns from CAL-A10's stated assumption (assumption, not a
+  measurement; confidence M, paywalled parameter table); B = 64 B/ns free
+  A-L0-BW registry point; r = 128 on the anchor-scale power-of-2 ladder.
+  Values are anchor assumption quotes / registry defaults, never our
+  measurements.

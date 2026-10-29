@@ -1,0 +1,60 @@
+ 707 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+    description 
+      "Indicates both 32-bit and 16-bit format.  
+      Signaled as the value 0x3."; 
+  } 
+  grouping uel-options-tlv { 
+    description 
+      "UE link negotiation options TLV"; 
+    reference 
+      "UE Specification v1.1"; 
+    leaf llr-want { 
+      type identityref { 
+        base llr-want-selector; 
+      } 
+      description 
+        "Indicates if Link Layer Retry service is wanted at this port."; 
+    } 
+    leaf llr-enable { 
+      type identityref { 
+        base llr-enable-selector; 
+      } 
+      config false; 
+      description 
+        "Indicates if Link Layer Retry is enabled on this port."; 
+    } 
+    leaf ipgr-capable { 
+      type boolean; 
+      description 
+        "Indicates this port is capable of receiving reduced 
+         Interpacket Gaps."; 
+    } 
+    leaf csig-capable { 
+      type identityref { 
+        base csig-capable-selector; 
+      } 
+      description 
+        "Indicates the CSIG capability available at this port."; 
+    } 
+    leaf ufh-capable { 
+      type identityref { 
+        base ufh-selector; 
+      } 
+      description 
+        "Indicates the capabilities of this port. 
+         A 0 indicates this port is not capable of processing the Unified 
+         Forwarding Header (UFH). A 1 indicates this port is UFH_32 
+         encode capable. A 2 indicates this port is UFH_16 encode 
+         capable. A 3 indicates this port is both UFH_32 and UFH_16 
+         capable."; 
+    } 
+    leaf ufh-status { 
+      type identityref { 
+        base ufh-selector; 
+      } 
+      config false; 
+      description 
+        "Indicates the current operating configuration of this port. 
+         A 0 indicates this port is not configured to process the Unified 

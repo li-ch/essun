@@ -1,0 +1,41 @@
+ 440 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• UET-CC may provide improved performance if packet trimming is supported and enabled in 
+switches. 
+• UET-CC supports multipathing through the use of adaptive packet spraying. 
+• Some unsprayed UET-CC traffic may be present, but it is intended that the majority of traffic is 
+sprayed. UET-CC is designed to support the co-existence of sprayed and a minority of unsprayed 
+traffic. 
+o High-bandwidth AI workloads have been shown to benefit significantly from 
+multipathing. 
+• UET-CC is designed to provide at least a moderate level of fairness. Strict fairness between 
+competing UET-CC sessions for network capacity is not a requirement. 
+o In particular, short-term imbalance (transient unfairness) in bandwidth or latency 
+between connections is less important than reducing tail latency. 
+o Complete blocking (starvation) of any connection must be avoided. 
+• UET-CC aims to provide fairness between competing congestion control contexts (CCCs). Each 
+CCC may provide congestion control for multiple PDCs. Fairness between multiple PDCs within a 
+CCC is left to implementations. When two competing CCCs contain different numbers of PDCs, it 
+is not a goal of UET-CC to provide fairness at the PDC level. 
+3.6.2 Congestion Control Algorithms 
+UET-CC introduces three congestion control algorithms that can be implemented by devices targeting 
+best-effort networks. Network signal congestion control (NSCC) MUST be implemented. Receiver-credit 
+congestion control (RCCC) is an optional algorithm that may be used in conjunction with NSCC, or in a 
+stand-alone capacity. Transport flow control (TFC) is designed to provide a point-to-point flow-
+controlled channel. TFC is an optional CC mechanism. 
+3.6.3 Congestion Control Algorithm Design Targets 
+UET-CC is designed to operate on best-effort networks and address: 
+• Network congestion 
+• Incast at the target 
+• Bulk-data messaging using requests (e.g., UET_WRITE, UET_SEND, etc. of messages greater than 
+one BDP in size or a stream of such operations between a pair of FEPs aggregating to more than 
+one BDP in size) 
+• Moderate-bandwidth interfering flows in the network 
+• Flow control (using TFC) for point-to-point protocols 
+Additional use cases (e.g., bulk data UET_READ transactions) are believed to be addressed, but were not 
+the primary design point; however, some use cases (e.g., lossless networks) are specifically not covered 
+in the initial design. 
+3.6.4 Telemetry and Network Switch Services 
+This section describes the supported telemetry mechanisms for monitoring the congestion state in the 
+network, including the endpoint. Due to the guiding decision that the protocol must work on existing 

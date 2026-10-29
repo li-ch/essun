@@ -1,0 +1,42 @@
+ 410 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.20.2.7 Single-Packet Read Sequence Optimization 
+Read responses that are Max_ACK_Data_Size or smaller use the PDC ACK to carry the SES Response with 
+data. This is efficient for small reads and fetching atomics. The sequence is the same as the single-packet 
+send sequence with guaranteed delivery as described in Section 3.5.20.2.2. 
+3.5.20.2.8 Multi-Packet Read Sequence 
+Multi-packet reads (when an application requests a read larger than one MTU) are similar to single-
+packet reads, repeated once for each packet. 
+Figure 3-103 shows an example of a RUD sequence for a multi-packet read. The sequence in Figure 
+3-103 proceeds as follows: 
+1. PDC is idle with all previous packets successfully delivered, PSN = ACK_PSN = CLEAR_PSN = 332. 
+2. FEP-A SES issues three packets to PDS, where two packets are a 1 MTU read and the third packet 
+is a small read (less than Max_ACK_Data_Size). 
+a. These packets are for a single SES message and carry the same message identifier (= 88). 
+3. FEP-B generates an ACK for the first two packets arriving at the target. In this example, 
+cumulative ACKs are used (i.e., there is no packet with ACK = 333, rather the PSN = 333 
+acknowledgement is determined at FEP-A using CACK_PSN = 334). 
+a. pds.cack_psn = 334, pds.ack_psn_offset = 0. 
+b. This ACK is not guaranteed delivery as it carries a default SES response. 
+4. FEP-B generates a second ACK for the third packet with pds.psn = 335. 
+a. The SES response is set to RC_OK indicating the read request was accepted and read 
+responses will be provided on the return direction. This packet is also not guaranteed 
+delivery so CACK is advanced. 
+b. pds.cack_psn = 335, pds.ack_psn_offset = 0. 
+5. FEP-A issues a PDS write request. This is a new message and uses a different message (= 879). 
+a. This request packet encodes CLEAR_PSN = 335 in the pds.clear_psn_offset and pds.psn 
+fields using pds.clear_psn_offset = -1 and pds.psn = 336. 
+6. FEP-B SES generates responses to the first two read requests and passes these to the PDS. 
+a. These are carried in PDS Request packets using pds.psn = 48 and pds.psn = 49 in the 
+return direction. 
+7. FEP-A PDS sends a cumulative ACK for the two SES responses. 
+a. pds.cack_psn = 49 and pds.ack_psn_offset = 0. 
+8. FEP-B PDS acknowledges the write request message 879 using pds.cack_psn = 336 and 
+pds.ack_psn_offset = 0. 
+9. FEP-B SES generates the return data for the third read packet and PDS sends a request with 
+pds.psn = 50 and pds.clear_psn_offset = -3. The pds.clear_psn_offset is -3 because the ACK for 
+PSN = 48 and PSN = 49 has not yet arrived at FEP-B. 
+10. FEP-A PDS receives the packet with pds.psn = 50 and generates an ACK that includes clearing 
+PSN 48 through 50. 
+a. pds.cack_psn = 50 and pds.ack_psn_offset = 0. 

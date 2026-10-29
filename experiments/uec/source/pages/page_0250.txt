@@ -1,0 +1,41 @@
+ 250 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.4.4.7.1.1 Back-off and Retry 
+One solution point for unexpected messages is for the target to respond with a semantic response that 
+indicates that the message could not be matched and was dropped (ses.return_code = RC_NO_MATCH). 
+If RC_NO_MATCH is set, the ses.modified_length field MUST be set to 0. If a semantic response has an 
+RC_NO_MATCH return code, the initiator MUST retransmit the message. This retransmit can happen in 
+hardware or can be performed in software (e.g., inside the provider implementation). The appropriate 
+back-off time is unknowable, and aggressively short retry times (a few RTT or less) will substantially 
+increase wasted network bandwidth. 
+All implementations MUST support the back-off and retry mechanism with RUD PDCs for all types of 
+send and tagged send operations. 
+3.4.4.7.2 Unexpected Messages with Buffering 
+Buffering at the target can be used to implement unexpected messages for both RUD and ROD PDCs. 
+Buffering effectively creates the illusion that messages arrived after the receive call from libfabric 
+instead of before it; thus, buffering of unexpected headers or messages is expected to conform to the 
+ordering semantics of the underlying PDC. When buffers are exhausted, RUD PDCs can easily fallback to 
+a back-off and retry scheme; however, a ROD PDC requires more complex handling (3.4.4.7.3). 
+3.4.4.7.2.1 Buffered Headers 
+In situations where the payload is recoverable, an implementation SHOULD choose to buffer semantic 
+information associated with message headers that arrive and drop the payload when unexpected 
+messages are encountered. The response in this case MUST be RC_OK with a modified length of 0. If an 
+implementation chooses this mechanism, these message headers MUST be compared against new 
+receive operations—that is, calls to fi_recv() or fi_trecv()—that were provided. There are two times 
+when this can occur: when sends utilize rendezvous sends or deferrable sends. 
+When rendezvous sends are used with a buffered header mechanism, the buffered header MUST 
+include the information needed to issue the read. When a new receive matches the buffered header, 
+the rendezvous operation MUST be completed by issuing the read using the information provided in the 
+rendezvous send. When deferrable sends are used with a buffered header mechanism, the buffered 
+header MUST include the initiator restart token. When a new receive matches the buffered header, the 
+ready-to-restart message MUST be generated using the initiator restart token. 
+Without buffered headers, an implementation cannot generate an RTR and cannot generate a 
+rendezvous read; thus, failing to support buffered headers substantially defeatures both schemes (this is 
+inherent to the definition of these operations). This scheme MUST ONLY be used in conjunction with 
+rendezvous or deferrable sends. 
+3.4.4.7.2.2 Buffered Unexpected Messages 
+An implementation MAY choose to buffer both the message header and the message payload when 
+unexpected messages are encountered. The response in this case MUST be RC_OK with a modified 
+length equal to the request length for eager messages. Implementations choosing this mechanism MUST 
+buffer the entire payload for eager messages. If an implementation chooses this mechanism, the 

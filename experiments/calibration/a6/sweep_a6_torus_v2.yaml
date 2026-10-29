@@ -1,0 +1,49 @@
+# Calibration-ladder A6 sweep, hierarchical twin identity # step 3): the L0 family's only multi-level identity — the 2D torus in
+# the anchor's OWN shape 4 x 8 (dim1 = 4 nodes = the RoCE rail dimension,
+# dim2 = 8 GPUs per node = the intra-node NVLink dimension) — under the
+# same swept B span as the primary ring sweep. Purpose: quantify the
+# A-L0T-UNIF uniform-B blindness against this anchor. The real hybrid has
+# FAST intra-node NVLink legs and SLOW rail legs; the identity forces BOTH
+# dimensions onto the same B, so at every swept value either the rail
+# dimension is over-rated or the NVLink dimension is under-rated — the
+# heterogeneity is inexpressible by any (B, L, shape) choice. The identity
+# also moves 13/4 = 3.25 times M per rank (each dimension reduces the
+# FULL message, A-L0T-SEQ) vs the flat ring's 62/32 = 1.9375 — wire ratio
+# 52/31 = 1.677 — a different algorithm, executed for the structural
+# demonstration, never a competing fit.
+#
+# NOTHING IS TUNED: identical B span {25, 320, 400} and provenance as
+# sweep_a6_ring_v1 (per-port endpoint / CAL-A12 derated bridge / the
+# anchor point = the staged rail arithmetic). Payload grid identical and
+# exact (32 | 2^30, 32 | 2^34 — no bracketing). L = 200 ns registry
+# point. Every delta is an arithmetic fact of
+# t_2d = t_ring(M,4) + t_ring(M,8), t_ring = 2(k-1)/k*M/B + 2(k-1)*L.
+# Expected placement (quantified exactly in the record from these rows):
+# +53.3% to +105.0% vs the anchor times across B = 320..400, orders of
+# magnitude off at the B = 25 single-port endpoint — the structural
+# demonstration this sweep exists for, never a fit.
+#
+# Baseline = the anchor point (B = 400 rail) so the delta columns read
+# directly as placement vs the anchor's own config arithmetic.
+# v2 note: identical grid to the first drafting pass; the revision is a
+# provenance-comment correction in torus2d32_a6_4x8_b400_v1.yaml (the
+# placement-range sentence), which changes the topology file's sha256 and
+# therefore the table bytes — the name bump re-ids the sweep per the
+# store's byte-drift fence. No semantic input changed: same grid, same
+# topologies' values, same workload.
+sweep: cal_a6_torus_v2
+workload: experiments/calibration/a6/workloads/w1_dense_tp_decode_tp32_16gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_torus2d
+  topology: experiments/calibration/a6/topologies/torus2d32_a6_4x8_b400_v1.yaml
+grid:
+  payload_sizes_bytes: [1073741824, 17179869184]   # CAL-A6's staged 1 GiB and 16 GiB, exact, gate-accepted
+  algorithms:
+  - algorithm: allreduce_torus2d
+    topologies:
+    - experiments/calibration/a6/topologies/torus2d32_a6_4x8_b25_v1.yaml
+    - experiments/calibration/a6/topologies/torus2d32_a6_4x8_b320_v1.yaml
+    - experiments/calibration/a6/topologies/torus2d32_a6_4x8_b400_v1.yaml

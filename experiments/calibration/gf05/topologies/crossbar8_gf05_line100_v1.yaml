@@ -1,0 +1,72 @@
+# Calibration-ladder GF-05 topology: fully-connected (crossbar /
+# single non-blocking switch stage) abstraction of 8 ranks at the GF-05
+# ANCHOR SIM-CONFIG POINT — B = 100 B/ns, L = 1000 ns.
+#
+# Source numbers (docs/calibration/anchors_gapfill.md §GF-05; SMaRTT and
+# REPS, NSDI 2025, arXiv:2404.01630; numbers AS STAGED, not re-fetched;
+# simulator code = github.com/ultraethernet/uet-htsim — the SAME family
+# pre-pinned as this repo's third backend): the paper's packet-level
+# simulation config is quoted "4KiB MTU size, a 800 Gbps network
+# bandwidth, and a 400ns switch traversal latency" with "link latency
+# 600 ns". Under the DECLARED per-direction reading (decimal units, the
+# plan's convention 1 GB/s = 1 B/ns; full-duplex per-direction line
+# rate): 800 Gbps / 8 = 100 GB/s = 100 B/ns per direction. FLAGGED
+# ALTERNATIVE READING, recorded not swept: if "800 Gbps" were a
+# bidirectional aggregate, the per-direction figure is 50 B/ns — which
+# is NUMERICALLY IDENTICAL to CAL-A1's derived NVLink5 per-port rate,
+# CAL-A5's staged ICI per-link rate, and CAL-A11's 400G optics rate
+# (coincidence recorded in the stage record, never cross-derived; the
+# owner adjudicates at integration). L = 1000 ns = the anchor's own
+# per-hop decomposition link 600 ns + switch traversal 400 ns (one link
+# + one switch stage per hop — the DECLARED reading of pair latency for
+# the single-stage abstraction; the 6-hop path readings 6000/12000 ns
+# live in sibling topologies).
+#
+# ROLE (gap-fill doc §GF-05 "Anchors:"): "uet-htsim parameters: 800
+# Gbps, 400 ns switch traversal, 4 KiB MTU are themselves anchor-able
+# sim-config provenance" — this row lands the UEC-class simulator's own
+# config onto the L0 free axes as PROVENANCE (config-class inputs, not
+# measurements): B=100 is the FIRST staged point ABOVE the plan §2.1
+# A-L0-BW candidate anchored span [20, 64] B/ns (100 = 2 x 50; registry
+# point 64 sits 36% below it, asymptotic CCT ratio exactly 16/25). It
+# calibrates nothing by itself; every placement delta below is an
+# arithmetic fact of t = 2(r-1)/r*M/B + 2L.
+#
+# DOMAIN HONESTY: GF-05's subject is a CONGESTION-CONTROL algorithm
+# (SMaRTT = "the algorithm that forms the basis of the UEC NSCC
+# specification") evaluated against Swift/RoCE/MPRDMA/EQDS — exactly
+# the axis the L0 backends declare out of scope ("congestion" in
+# explicitly_unsupported) and for which NO input key exists (no CC / ECMP
+# / queueing / MTU / window key in the loader surface). This row places
+# the identity at the anchor's sim-config point only; the envelope
+# magnitude mapping lives in the stage's envelope sweep and record.
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS (A-L0X-BW / A-L0X-LAT),
+# placed at the anchor's staged sim-config numbers, never tuned toward
+# any anchor output; the anchor's outcome numbers (FCT deltas) are NOT
+# comparable to this row's CCT (metric bridge declared inexpressible).
+# r = 8 is the free smoke-default rank count (the anchor's node count
+# 1,024 is executed by the scale sweep); 8 divides every 8*2^k ladder
+# size. Values are anchor sim-config quotes / free-registry defaults,
+# never our measurements.
+topology_id: crossbar8_gf05_line100_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 100
+link:
+  pair_latency_ns: 1000
+notes: >
+  Single non-blocking switch-stage abstraction: every rank pair adjacent
+  with a uniform per-pair transfer latency L = 1000 ns (GF-05's own
+  per-hop decomposition: 600 ns link + 400 ns switch traversal), per-rank
+  single-port injection B = 100 B/ns (GF-05's 800 Gbps sim line rate per
+  direction, declared reading), charged once per phase (reduce-scatter,
+  allgather) by the L0 crossbar identity (t = 2(r-1)/r*M/B + 2L). No
+  congestion control, no credits, no ECMP, no packetization (the 4 KiB
+  MTU has no input key — serialization 4096/100 = 40.96 ns per packet is
+  inexpressible, recorded as arithmetic in the stage record). Provenance:
+  B, L from GF-05's staged uet-htsim config (gap-fill anchor PROPOSED,
+  not yet an integrated anchor row; confidence H — numbers extracted from the
+  paper HTML; sim-config class, not silicon measurements). Values are
+  anchor quotes / free registry defaults, never our measurements.

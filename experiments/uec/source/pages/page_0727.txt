@@ -1,0 +1,31 @@
+ 727 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+ 
+5.4.13 References 
+[1] IETF RFC 8948, "Structured Local Address Plan (SLAP) Quadrant Selection Option for DHCPv6," 2020. 
+[Online]. Available: https://www.rfc-editor.org/rfc/rfc8948. 
+[2] IEEE Std 802-2024, "IEEE Standard for Local and Metropolitan Area Networks: Overview and 
+Architecture," 2024. [Online]. Available: https://ieeexplore.ieee.org/document/10935844. 
+ 
+  
+ 
+Figure 5-30 - Efficiency Comparison 
+ 
+0.00
+10.00
+20.00
+30.00
+40.00
+50.00
+60.00
+70.00
+80.00
+90.00
+100.00
+32 64 128 256 512 1024 2048 4096
+WIRE EFFICIENCY
+PAYLOAD SIZE
+Baseline (8B) Ethernet + IPv4 (34B) UFH_32 UFH_16

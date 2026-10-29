@@ -1,0 +1,47 @@
+# Calibration-ladder GF-09 topology: fully-connected crossbar of 8
+# ranks at the 150 m PROPAGATION-FLOOR ROW — B = 50 B/ns (the design-
+# class carrier), L = 750 ns.
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-09,
+# arXiv:2508.08906; numbers AS STAGED): "medium-length (10-150m)
+# links". Under the DECLARED fiber-class constant 5 ns/m (free physical
+# context constant, never anchor/standard-derived): 150 m x 5 ns/m =
+# 750 ns one-way propagation. The vacuum-c exact bound is recorded in
+# the stage record: 150 m one-way = 75000000000/149896229 ~ 500.346 ns.
+#
+# ROLE: propagation-only LOWER bound on L at the design class's MAXIMUM
+# reach. Placement facts it lands (the stage's central latency-axis
+# finding): (a) 750 ns = 15/16 = 93.75% of the plan §2.1
+# NARROW(range upper) candidate ~800 ns — pure propagation at the UEC
+# design max reach nearly exhausts the plan's proposed range upper
+# BEFORE any switching or processing is added, independent support for
+# the plan's NARROW verdict (recorded; the registry range is
+# untouched); (b) INTERNAL DESIGN-TARGET CONSISTENCY: a one-way
+# reading of the "sub-microsecond latency" target holds at 150 m
+# (750 < 1000, margin exactly 1/4), while a same-link round-trip
+# reading FAILS at 150 m (1500 > 1000, exceeding the boundary by
+# exactly 1/2) — the two staged targets are mutually consistent only
+# under a one-way (or single-crossing) reading at fiber velocity; (c)
+# a 150 m round trip 1500 ns = 3/20 = 15% of the "10 us" target RTT,
+# so 85% of the CC design RTT budget is non-propagation at max reach
+# (99% at 10 m).
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS placed by anchor +
+# DECLARED physics BEFORE any stage output was read, never tuned. The
+# 5 ns/m constant is a declared engineering round value, flagged; r = 8
+# free smoke default. Design-target class — never achieved values.
+topology_id: crossbar8_gf09_uec50_l750_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 750
+notes: >
+  Propagation-floor row at the design-class maximum reach: B = 50
+  B/ns, L = 750 ns = 150 m x 5 ns/m (DECLARED fiber-class constant;
+  the vacuum-c exact bound 75000000000/149896229 ~ 500.346 ns is
+  recorded in the stage record). Identity t = 2(r-1)/r*M/B + 2L; the
+  row differs from the L=200 registry row by exactly +1100 ns at
+  every payload. Propagation-only lower bound — placement, never
+  tuned.

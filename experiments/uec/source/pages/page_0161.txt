@@ -1,0 +1,41 @@
+ 161 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.4.8.1 Composite Collective Operations 
+The libfabric provider decomposes an offloaded collective operation into multiple INC operations in the 
+following cases: 
+1. Allgather operations (fi_allgather()) are performed as a series of broadcast operations where 
+each member is designated as the source of the input data for one of the broadcast operations. 
+2. Reducescatter operations (fi_reduce_scatter()) are performed as a series of reduce operations 
+where each member is designated as the destination for the output data for one of the reduce 
+operations. 
+2.4.9 Libfabric Provider Extensions 
+An application utilizing INC collectives provides a 16-byte unique ID when the address vector (AV) set is 
+created, by passing a structured communication key (comm_key) parameter of the AV set attributes. 
+The communication key is passed in the fi_av_set() API call within the attr parameter. 
+The structure of the comm_key for INC collectives is: 
+/* 
+ * UET INC comm_key 
+ */ 
+struct uet_inc_comm_key { 
+    uint8_t version; 
+    uint8_t unique_id[16]; 
+} __attribute__((packed)); 
+ 
+ 
+For INC collectives, the INC comm_key MUST be used and the comm_key_size parameters MUST be set 
+to the key’s size (i.e., sizeof(struct uet_inc_comm_key)). The communication key MUST be filled as 
+follows: 
+• version: set to 1. 
+• unique_id: set to a Unique ID chosen for the communicator. 
+2.4.10 INC Switch Required and Optional Capabilities 
+A switch MUST support the following capabilities to be INC switch compliant: 
+• SES functions:   
+o Header types: UET_HDR_REQUEST_STD, UET_RESPONSE 
+o Opcodes: UET_DEFERRABLE_SEND, UET_DEFERRABLE_RTR 
+• PDS functions: 
+o Reserved ROD PDCs 
+▪ ROD_REQ,  ACK, NACK, CP (close commands) 
+o UET CRC 
+A switch MAY support the following capabilities: 
+• CMS functions: TFC 

@@ -1,0 +1,40 @@
+ 566 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Size/type Description 
+IVMask1 96 bits IVMask for AN1. Only for direct KDF mode (generated per packet, 
+otherwise via KDF) 
+current_epoch 16 bits Current epoch to use for transmitted packets and epoch-based 
+rejection 
+kdf-algo enum KDF algorithm; the default is AES-CMAC-256 
+The SSI MAY be explicitly carried within the packet (i.e., The SSI present bit, tss.sp=1) or the source IP 
+address (ip.src_addr) MAY be used. The ssi-mode field MAY be a global or per SDI configuration. 
+Rekey is created using the Rekey_Mask and Rekey_Shift fields and MAY be used to automatically rekey 
+via the KDF as described in Section 3.7.5.2. Rekey is disabled by setting the Rekey_Mask to zero. 
+Coff and Aoff are used to configure the AAD plaintext data for the packet. These offsets are 0 or greater 
+and are relative to the layer3/layer4 payload depending on encapsulation. AAD refers to the 
+authenticated but not encrypted portion of the packet. Refer to Section 3.7.11 for an illustration of the 
+authenticated and encrypted portions of the packet. 
+ 
+Each SDKDB has two associated keys (SDKiAN0, SDKiAN1) that correspond to each AN0 and AN1, 
+respectively. The RxActiveAN is used to enable each AN key. If a packet arrives with a disabled AN, an 
+invalid AN error is generated to PDS and the packet is dropped. For direct KDF mode, IVMask is 
+determined by selecting IVMask0 or IVMask1 from the SDKDB using the same mechanism as the SDKBD 
+keys. Other KDF modes use the output of the KDF for the IVMask. 
+ 
+A secure domain MUST use a consistent packet encapsulation as defined by the encap-type field in the 
+SDKDB. 
+3.7.7 KDF Modes 
+The three defined KDF modes are direct, cluster, and client-server. Direct KDF mode MUST use the SSI 
+(ssi-mode=TRUE) if the packet is IPv6 to guarantee IV uniqueness. Other modes MAY use SSI or IP 
+addresses to convey source information, provided they meet uniqueness criteria. 
+If a packet arrives with an SSI and the SDKDB is not configured to use SSIs, then the packet is dropped 
+and the sdiXXInInvalid is incremented. Implementations MUST support direct KDF mode and SHOULD 
+support both cluster and client-server KDF modes. An implementation MUST indicate which modes are 
+supported via kdfModes parameter. 
+The following outline summarizes the kdfModes: 
+1) Direct KDF mode: Uses the key directly from the SDKDB. 
+a. SDK = SDKDB[SDI||AN] 
+2) Cluster KDF mode: Sender and receiver derive keys based on source from group key (SDKi). The 
+same derivation is used for both sending and receiving packets. 
+a. SDKi = SDKDB[SDI||AN] 

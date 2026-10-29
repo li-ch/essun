@@ -1,0 +1,53 @@
+ 674 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2.9 Interactions Between CBFC, PFC, and LLR 
+When an LLR retransmission is triggered due to a lost packet, it creates several possible hazards that 
+could affect the CFBC credit counters due to: 
+1. Not all data packets are retransmitted by LLR. LLR considers packets either “retransmit eligible” 
+(LLR-eligible) or “retransmit ineligible” (LLR-ineligible). The LLR protocol requires that all LLR-eligible 
+packets are discarded at the receiver between the time of LLR-NACK generation and the reception 
+of the first retransmitted packet with the correct sequence number (call this the “LLR discard 
+window”). LLR-ineligible packets are accepted by the receiver during the LLR discard window. The 
+LLR protocol also requires the sender to retransmit LLR-eligible packets within an “LLR replay 
+window”.  An LLR replay is initiated at the sender upon reception of an LLR-NACK. The LLR replay 
+window includes the time to retransmit all LLR-eligible packets from the first non-ACK’d packet up to 
+the last LLR-eligible packet sent before the reception of the LLR-NACK. LLR-ineligible packets may be 
+interspersed among the retransmitted packets. Normal transmission of both LLR-eligible and LLR-
+ineligible packets resumes after the LLR replay window. 
+2. The S_P_CU and S_VC_CC[x] counters are already incremented for all transmitted packets from the 
+time that the first lost packet is transmitted until the LLR-NACK is received at the sender, but these 
+packets are discarded at the receiver if they are LLR-eligible. The R_VC_CC[x] counters must not be 
+incremented for the discarded packets, since they will be updated later when the packets are 
+accepted during retransmission. This also means that the retransmission of LLR-eligible packets 
+during the LLR replay window must not update the S_VC_CC counters (again). 
+3. A CC_Update packet may have been in-flight during or just prior to the “LLR discard window”. The 
+sender’s S_VC_CC x  and the receiver’s R_VC_CC x  counters can become uncorrelated due to the 
+dropping of LLR-eligible packets during the LLR discard window. Therefore, CC_Update packets 
+received during the LLR discard window must always be dropped and must not cause any changes to 
+the R_VC_CC[x] counters. To resolve this issue, CC_Update packets must be marked as LLR-eligible 
+and data packets of type B are not allowed when both features are enabled. 
+Because LLR and CBFC are independent features, any given packet might have any combination of LLR 
+eligibility and CBFC lossless behavior when both features are enabled. These combinations are 
+summarized for data packets in Table 5-26 along with the actions required at the receiver during the LLR 
+discard window and at the sender during the LLR replay window. 
+Table 5-26 - LLR and CBFC Combined Handling for Data Packets 
+Type Packet properties Receiver handling in LLR 
+discard window 
+Sender handling in LLR 
+replay window 
+A LLR-ineligible and CBFC Best 
+Effort1,2 
+Packet is accepted.  
+No update to receiver’s CBFC 
+counters. 
+Packet is not replayed. 
+B LLR-ineligible and CBFC 
+Lossless3 
+N/A N/A 
+C LLR-eligible and CBFC Best 
+Effort1,2 
+Packet is discarded. 
+ 
+Packet is replayed. 
+ 

@@ -1,0 +1,47 @@
+ 192 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 3-6 - Profile Summary—Best Effort 
+Service Description AI 
+Base 
+AI 
+ Full 
+HPC Unified Local 
+NSCC Network-signal-based 
+congestion control 
+MUST MUST MUST  
+RCCC Receiver-controlled 
+congestion control 
+    
+ 
+Table 3-7 - Profile Summary—Lossless 
+Service Description AI 
+Base 
+AI 
+ Full 
+HPC Unified Local 
+NSCC Network-signal-based 
+congestion control 
+    
+RCCC Receiver-controlled 
+congestion control 
+    
+ 
+3.3.8 INC Support 
+INC is an optional feature in UE. All features related to INC are to be implemented only on NICs with INC 
+support.  
+Table 3-8 - Profile Summary—INC 
+Service Description AI 
+Base 
+AI 
+ Full 
+HPC Unified Local 
+Reserved PDCs Reserved PDCs for INC     
+TFC Transport flow control     
+3.3.9 Encapsulation 
+Many of the transport components of all profiles inherently rely on consistent lower-level protocol 
+encapsulation (e.g., IPv4 vs. IPv6 as network layer encapsulation, UFH_16 vs. UFH_32 for the Unified 
+Local Profile, and native UET vs. UDP encapsulation at the transport layer). For example, TSS uses 
+confidentiality and encryption offsets for the secure domain specific to the encapsulation type, and CMS 
+uses a nominal packet size to calculate bandwidth. An implementation SHOULD use consistent 
+encapsulations on all packets on a FEP, PDC, and TSS security domain.  

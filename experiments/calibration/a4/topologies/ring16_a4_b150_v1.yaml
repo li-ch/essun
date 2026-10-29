@@ -1,0 +1,36 @@
+# Calibration-ladder A4 topology: unidirectional ring of 16 ranks at the
+# CAL-A4 ANCHOR POINT B = 150 B/ns — the NVLink rate the anchor quotes for
+# the second of "two real systems ... 4 and 16 NVIDIA V100 GPUs using a
+# Ring topology with 150 GB/s NVLink" (ASTRA-sim 2.0, ISPASS 2023,
+# simulator-vs-hardware validation; docs/calibration/anchors_staging.md
+# §A4). Same declared reading as ring4_a4_b150_v1: per-GPU per-direction
+# NVLink rate feeding the single ring successor link (decimal units,
+# 1 GB/s = 1 B/ns).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward any
+# anchor output; the stage-A4 span {25, 50, 150} was fixed by anchor
+# arithmetic BEFORE any stage output was read (150 = CAL-A4 quote / anchor
+# point; 25 = per-link split 150/6 over the V100 NVLink-2 6-link
+# structure; 50 = CAL-A1 NVLink5 per-port). L = 200 ns is the A-L0-LAT
+# registry point (KEEP; latency axis = plan gap §4.2, its own global
+# stage).
+#
+# Structural gate note (contrast with stage A3): r = 16 is a power of two
+# and every stage-A4 payload is a multiple of 16, so the A-L0-DIV input
+# gate ACCEPTS every exact anchor-regime size — no bracketing (verified
+# programmatically in the stage's calibration record).
+topology_id: ring16_a4_b150_v1
+topology_class: unidirectional_ring
+ranks: 16
+link:
+  bytes_per_ns: 150
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: B =
+  150 B/ns is CAL-A4's staged NVLink quote for the validated V100 systems
+  (a hardware capability quoted by a peer-reviewed simulator-validation
+  paper — not a completion-time measurement); L = 200 ns is the free
+  A-L0-LAT registry point. Values are anchor quotes / assumptions, never
+  our measurements.

@@ -1,0 +1,37 @@
+ 95 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Libfabric provides many APIs that are currently documented in the groups summarized by Table 2-9. 
+Table 2-9 - Libfabric API Groups 
+API Group Name Description 
+fi_atomic Remote atomic operations 
+fi_av Address vector operations 
+fi_av_set Address vector set operations 
+fi_cm Connection management operations 
+fi_cntr Completion and event counter operations 
+fi_collective Collective operations 
+fi_control Fabric resource operations 
+fi_cq Completion queue operations 
+fi_domain Fabric domain operations 
+fi_endpoint Fabric endpoint operations 
+fi_eq Event queue operations 
+fi_errno Fabric error operations 
+fi_fabric Fabric network operations 
+fi_getinfo Fabric discovery operations 
+fi_msg Message data transfer operations 
+fi_mr Memory region operations 
+fi_peer Provider to provider operations 
+fi_poll Polling and wait set operations (being deprecated by libfabric) 
+fi_provider Provider operations 
+fi_rma Remote memory access operations 
+fi_tagged Tagged data transfer operations 
+fi_version Library interface version operations 
+ 
+Each individual API is not explicitly covered in this specification. Instead: 
+• Detailed coverage is limited to the key APIs in each of the four main API categories identified in 
+Section 2.2 (i.e., control, communication, completion, and data transfer). 
+• Requirements for other libfabric APIs are specified in Section 2.2.5.5. 
+• Unless explicitly stated otherwise, all libfabric APIs SHOULD be supported. 
+Some of the libfabric APIs also have parameters that were not covered by the UET profile parameter 
+requirements specified in Section 2.2.2, and a subset of those parameters require special handling by a 
+UET provider. An effort has been made to identify such parameters and specify the required handling. 

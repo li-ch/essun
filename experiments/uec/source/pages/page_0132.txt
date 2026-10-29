@@ -1,0 +1,45 @@
+ 132 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The libfabric mappings for the small message SES header are shown in Table 2-42. 
+Table 2-42 - Mappings for Small Message (UET HDR_REQUEST_SMALL) 
+Request Field Libfabric Source 
+opcode UET_TAGGED_SEND 
+delivery complete (dc) Same as standard Format 
+relative (rel) Same as standard format 
+header data present (hd) Same as standard format 
+resource_index Same as standard format 
+ri_generation Same as standard format 
+JobID Same as standard format 
+PIDonFEP Same as standard format 
+request_length Length of payload provided on associated libfabric API call 
+header_data Same as standard format 
+initiator Same as standard format 
+match_bits Tag 
+ 
+The criteria and requirements for the small RMA use case are specified in Section 2.2.5.3.4.1. The same 
+criteria MUST be applied for atomic operations. The small RMA SES header SHOULD be used for RMA or 
+atomic operations that satisfy the specified criteria. The libfabric mappings for the small RMA SES 
+header are shown in Table 2-43. 
+Table 2-43 - Mappings for Small RMA (UET HDR_REQUEST_MEDIUM) 
+Request Field Libfabric Source 
+opcode Same as standard format 
+delivery complete (dc) Same as standard format 
+relative (rel) Same as standard format 
+header data present (hd) MUST be 0 
+resource_index Same as standard format 
+ri_generation Same as standard format 
+JobID Same as standard format 
+PIDonFEP Same as standard format 
+request_length Length of payload provided on associated libfabric API call 
+buffer_offset Same as standard format 
+initiator Same as standard format 
+match_bits Memory key 
+ 
+The criteria and requirements for use of the deferrable send operation are specified in Section 2.2.5.4. 
+The deferrable send SES header format is similar to UET_HDR_REQUEST_STD except the 
+ses.buffer_offset field is replaced by provider-supplied ses.initiator_restart_token and 
+ses.target_restart_token fields.   The ready-to-restart (RTR) message in the deferrable send sequence 
+also carries the ses.iniator_restart_token and ses.target_restart_token fields. The restart tokens are 
+used to identify the operation that is being restarted. The provider MUST ensure that all active restart 
+tokens are unique at the initiating FEP. 

@@ -1,0 +1,43 @@
+ 108 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The steps shown in Figure 2-8 are: 
+1. UET provider makes an address assignment request to the kernel driver. 
+2. The kernel driver relays the request to the privileged user process via the UET Control API. 
+3. The privileged user process communicates with a provisioning system and returns the requested 
+address information. 
+4. The kernel driver programs the JobID validation information and security bindings into the NIC 
+hardware. 
+5. The kernel driver relays the response, without the security bindings, to the UET provider. 
+Requirements associated with this architecture are: 
+• A UET provider MUST send address assignment requests to the kernel driver. 
+• The address assignment request MUST contain the following information: 
+o FEP IP address 
+▪ The FEP IP address is a parameter of the address assignment request from the 
+UET provider. 
+▪ The FEP IP address parameter is used as part of the UET address. 
+▪ The UET address assignment request does not configure IP addresses of NIC 
+interfaces. 
+o OS process ID 
+o Service name 
+• In Linux implementations, the UET provider SHOULD use a Netlink interface for address 
+assignment communication with the kernel driver. 
+• The kernel driver MUST relay the address assignment request to a privileged user process using 
+the UET Control API. 
+• The privileged user process MUST return the address assignment response to the kernel driver 
+using the UET Control API. 
+o In Linux implementations, the kernel driver MUST accept responses only from a 
+privileged process running as root. 
+• If not provided at job initialization time (see Section 2.2.4), the address assignment response 
+MUST include the following information: 
+o JobID  
+▪ If the requesting process was configured with a single JobID at job initialization 
+time, a JobID provided in the response SHOULD take precedence. 
+▪ If the requesting process was configured with multiple JobIDs at job initialization 
+time and the FI_AV_AUTH_KEY capability is enabled, a JobID provided in the 
+response SHOULD be ignored. 
+o Address mode 
+o PIDonFEP 
+o Initiator ID 
+• The address assignment response MAY optionally include the following information: 
+o Security bindings for crypto operations (see Section 2.2.9) 

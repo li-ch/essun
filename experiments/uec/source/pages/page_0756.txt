@@ -1,0 +1,34 @@
+ 756 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+UE NIC endpoint manageability shall be prescribed by extending the OCP Ethernet NIC profile. The OCP 
+Ethernet NIC profile prescribes basic manageability that includes: 
+• Usage guide: Use-case table that shows request-response interaction. 
+• Profile (JSON): Profile reflects the usage guide and normatively prescribes the Redfish model 
+elements required in implementation. The UE NIC profile extends the OCP Ethernet NIC profile 
+and prescribes UE specific manageability. Table 7-1 lists the use cases covered by the OCP 
+Ethernet NIC profile. 
+Table 7-1 - OCP Ethernet NIC profile use cases 
+Use Case Management Task Requirement 
+NIC Configuration Get NIC information Mandatory 
+ Get device function information Mandatory 
+ Get port information Mandatory 
+ Get PCIe information Mandatory 
+ Get PCIe function information Mandatory 
+ Set NIC information Mandatory 
+ Set device function information Mandatory 
+ Set port information Mandatory 
+ Set NIC settings to default Mandatory 
+NIC Hardware Get FRU information Mandatory 
+System NIC Get system NIC information Mandatory 
+Telemetry Get NIC metrics Mandatory 
+ Get device function metrics Mandatory 
+ Get port metrics Mandatory 
+Firmware Update Get firmware version Mandatory 
+ Update firmware Mandatory 
+ 
+7.5 YANG Model for UE Network Manageability 
+7.5.1 Network Switch Planes 
+As shown in Figure 7-4, network switches operate on different planes: management, control, and data 
+planes. 
+ 

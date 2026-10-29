@@ -1,0 +1,85 @@
+ 376 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+3.5.15 Loss Detection and Recovery 
+PDS MUST detect the loss of packets using the methods listed in Table 3-70. The following subsections 
+provide additional information on each method. 
+Table 3-70 - Loss Detection  
+Method Requirement Summary Description 
+Trimming MUST Trim indicates packet was lost—generate a NACK when trim arrives 
+NACK MUST NACK indicates a packet was lost—accept NACK and process associated PSN 
+as lost 
+RTO MUST Timer at source that is sent on transmit and cleared on ACK 
+Early Loss 
+Detection for 
+Requests 
+SHOULD Provide one or more methods to determine if a packet was lost sooner than 
+RTO 
+Loss Detection 
+for ACKs 
+SHOULD Provide one or more methods to determine if an ACK was lost sooner than 
+RTO 
+ 
+3.5.15.1 Trimming 
+Packet trimming is used by UET to provide an explicit indication of packet loss and to enhance 
+congestion control performance. If the packet is validated using the UET CRC or authenticated using TSS 
+and the packet was not actually trimmed because it is shorter than MIN_TRIM_SIZE, the packet can be 
+accepted for normal processing. 
+ 
+Figure 3-85 - Example Transmit Scheduler 
+ 
+ 
+ 
+PDC → {JobID, dest IP address, TC 
+PDC → {JobID, dest IP address, TC, Rank, INC_GroupID 
+Port Scheduler,
+MAC/PHY,
+etc.
+PID 0
+Send Queue   RSV Context B
+Send Queue   RSV Context  ...
+Shared RX Target
+Comple on Queue
+Send Queue   RSV Context A
+SES
+RSV_PDC 0
+Conges on Control
+TFC CCCNSCC/RCCCCCC
+RSV_PDC 1
+RSV_PDC y
+RX Q Tagged MR
+PDC → {JobID, dest IP address, TC, RUD/ROD 
+...
+...
+...
+TRAFFIC CLASS y
+TRAFFIC CLASS x
+TRAFFIC CLASS z
+Transmit 
+Packet
+             
+ACK
+REQ
+Send Queue
+PID n
+Shared RX Target
+Comple on Queue
+RX Q Tagged MR
+...
+RR
+Scheduler
+RR
+Scheduler
+WFQ 
+Scheduler
+ACK 
+Processing
+PDC m n
+PDC m
+PDC m 1
+Example send queue con gura on   actual con gura on is speci c to the 
+libfabric provider implementa on
+Send Queue
+...

@@ -1,0 +1,39 @@
+ 606 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+The field definitions for the Compact CSIG tag format are shown in Table 4-2. 
+Table 4-2 - 4-Byte Compact CSIG Tag Field Definitions 
+Bit Offset Width (in bits) Field Name Comments 
+0-15 16 csig_tpid_compact Configured EtherType 
+16-18 3 t Type of signal 
+19 1 r Reserved 
+20-24 5 s Quantized signal value 
+25-30 6 lm Locator metadata 
+31 1 d Do not modify the CSIG tag 
+ 
+The 8-byte wide CSIG tag fields are wider and arranged in a different order, as shown in Table 4-3. 
+Table 4-3 - 8-Byte Wide CSIG Tag Field Definitions 
+Bit Offset Width (in bits) Field Name Comments 
+0-15 16 csig_tpid_wide Configured EtherType 
+16-30 15 lm Locator metadata 
+31 1 d Do not modify the CSIG tag 
+32-35 4 t Signal type 
+36-55 20 s Quantized signal value 
+56-63 8 r Reserved 
+ 
+4.2.4.1.1 CSIG Tag Protocol Identifier 
+The CSIG tag protocol identifier (csig.tpid) is a fixed, constant, two-octet EtherType that identifies the 
+CSIG tag. The compact and wide CSIG tags are identified by distinct EtherTypes to distinguish between 
+the compact and wide CSIG tag formats, to simplify hardware, and to make best use of the tag formats’ 
+limited bits. 
+This specification refers to the EtherType value identifying compact CSIG tags as csig.csig_tpid_compact, 
+and the EtherType value identifying wide CSIG tags as csig.csig_tpid_wide. 
+Until permanent assignments of CSIG EtherTypes are obtained, CSIG implementations MUST support 
+configurable EtherType values for the compact and wide tags. EtherType values used for the compact 
+tag and wide tag (if supported) MUST be distinct and MUST NOT conflict with any other EtherTypes in 
+use in the CSIG deployment domain. 
+ 
+Figure 4-4 - 8-Byte Wide CSIG Tag 
+ 
+ 

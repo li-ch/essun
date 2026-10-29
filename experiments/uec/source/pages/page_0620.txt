@@ -1,0 +1,41 @@
+ 620 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+CSIG-capable devices that support any signals in the CSIG extended profile beyond those in the CSIG 
+base profile MUST support indicating which of those extended-profile signals they support. The CSIG SAI 
+specification describes interrogation of which extended-profile signals a CSIG-capable device supports. 
+Table 4-9 - CSIG Profiles 
+Profile Signals Supported 
+Base ABW, ABW/C, Delay 
+Extended (all of Base, and additionally, 
+any subset) 
+nQD, Experimental 
+ 
+Informative Text: 
+UE devices that support CSIG MUST support the base profile. 
+4.2.8 CSIG Traffic Rate Measurement Interval 
+The CSIG ABW and ABW/C signal types involve the measurement of a traffic rate. Such a measurement 
+is taken over some time interval. Because congestion control algorithms at end systems typically 
+consume congestion signals measured at path-RTT granularity, CSIG-capable devices SHOULD choose an 
+interval for traffic-rate measurement that is no longer than the unloaded RTT for the shortest-
+propagation-delay path within the fabric. 
+Comparisons of traffic rates measured at distinct switches and carried in CSIG tags are valid when 
+switches along a CSIG-tagged packet’s path use the same measurement interval. Toward ensuring that 
+all switches along a path support at least one common measurement interval, a CSIG-capable switch 
+SHOULD support a measurement time interval t of 102.4 µs and default to this value at boot. Further, a 
+CSIG-capable switch SHOULD support as many values as an implementation permits of the 
+measurement time interval t drawn from the range of values [128 ns, 1024 ms] with an increment of 
+128 ns. A switch SHOULD support the same measurement intervals for both the ABW and ABW/C signal 
+types and MUST configure the same measurement intervals across all switches in the fabric. 
+A switch constrained by its arithmetic capabilities can choose to approximate the time interval. In such 
+cases the time interval MUST be within the bounds of loss of precision during quantization. 
+Implementation Note: 
+For signals that measure a traffic rate (e.g., ABW and ABW/C), implementors should take note of the 
+interaction between the spacing in time of CSIG-tagged packets within a flow and the time interval 
+over which a device measures a traffic rate. For CSIG-tagged packets within a flow to obtain 
+representative traffic rate measurements that cover traffic dynamics over time, it is essential they 
+arrive at a device at least once per the measurement interval in use by that device. If the gap between 
+successive CSIG-tagged packet arrivals at the device is significantly longer than the device’s traffic rate 
+measurement interval, the signal values written by that device into passing CSIG-tagged packets will 
+not cover traffic volumes measured during such gaps. It is not generally possible to choose a traffic 
+rate measurement interval at devices to ensure CSIG-tagged packets will arrive often enough to avoid 

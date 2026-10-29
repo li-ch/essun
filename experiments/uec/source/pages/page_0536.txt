@@ -1,0 +1,42 @@
+ 536 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Runtime trigger modification (3.6.18.5.5) is not supported. 
+3.6.18.6 Control Operations 
+The following control operations are available to algorithms: 
+3.6.18.6.1 CCC Controls 
+CCC controls include setting the window size, sending rate, or the EV to use for the CCC. Table 3-118 
+defines mandatory control functions. The control outputs are defined as macros in uet_pcm.h. 
+Table 3-118 - Mandatory CCC Control Functions 
+Function Name  Description 
+int uet_set_cwnd(unsigned int value) Set the CCC congestion window 
+ 
+Table 3-119 shows optional CCC control functions that architectures MAY support. If the rate control is 
+supported, the rate limit SHOULD apply in tandem with the cwnd limit. 
+Table 3-119 - Optional CCC Control Functions 
+Function Name  Description 
+int uet_set_send_rate(unsigned int value) Set CCC send rate 
+int uet_set_ack_per_packet(unsigned int value) Set ack-per-packet property; non-zero signifies every packet 
+should be ACKed 
+int uet_set_ack_gen_bytes(unsigned int value) Set byte threshold for ACK generation 
+int uet_set_ack_gen_timer(unsigned int value) 
+ 
+Set timer value for ACK generation 
+int uet_set_rx_cwnd_penalty(unsigned int 
+value) 
+Set the local RX congestion window penalty value 
+ 
+3.6.18.6.2 State Controls 
+The functions shown in Table 3-120 are used to access algorithm variables. Variables can be local or 
+global and are defined as such in the YAML configuration. Local and global variables form the 
+algorithm’s state. Local variables are guaranteed to be unchanged during algorithm invocations, while 
+global variables can be accessed and updated by algorithms in other CCCs. Global variables are 
+presented as a snapshot at invocation time (similar to signals) and the variables are not updated during 
+the algorithm execution. Global variables cannot be set but can be updated using an accumulation 
+operator defined in the YAML configuration. 
+Table 3-120 - Local and Global State Controls 
+Function Name  Description 
+int uet_get_variable_int(unsigned int 
+variable_index, uet_int_t *value)  
+Get the integer variable at the specified index. 

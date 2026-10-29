@@ -1,0 +1,29 @@
+ 186 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Because UET uses a standard IP packet carried over Ethernet, it is implicitly possible for UET to be 
+tunneled using standard technologies such as VXLAN and NVGRE. 
+Within a UET packet, there is an optional encryption header followed by a reliability header and then a 
+semantic header. The encryption and reliability headers both leverage a next-header encoding so as not 
+to prohibit the UET definition from evolving to allow other traffic—including RoCE or TCP—to be layered 
+within the encryption and reliability mechanisms. While the initial design of UET does not consider such 
+encapsulations, the packet layering is provisioned to enable this as a future option. 
+3.2.6 Sublayer Interfaces 
+The sublayers of UET are modularized to specify roles and responsibilities of functionality rather than 
+indicate implementation requirements. Actual implementations are free to choose whatever modularity 
+is appropriate, as long as the external observable behavior of the implementation is compliant with the 
+normative directives in the specification. Interfaces between the UET components and the users of UET, 
+both above and below, are described in the specification to further delineate the roles and 
+responsibilities of the modular functionality. 
+Figure 3-3 depicts the UET components and component interfaces. The UET libfabric provider is the 
+primary application-facing layer of UE. It is responsible for mapping libfabric API calls to the UET 
+semantic sublayer to support the communication needs of the libfabric endpoint. Send and completion 
+queues are the primary means of interfacing between the UET libfabric provider and the semantics 
+layer. 
+  
+SES connects the UET libfabric provider to the PDS. SES packetizes messages at the source of the data 
+and deposits the received data into memory at the target. In addition, it implements various higher-level 
+protocols, such as rendezvous or deferrable sends, to synchronize initiator and target. SES in turn makes 
+ 
+Figure 3-3 - Component Interface Overview 
+ 

@@ -1,0 +1,28 @@
+ 153 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.3.11.4 User RKeys 
+UET verbs will allow for application selected RKey values. Support for user RKeys is device-specific and 
+exposed through a device capability flag. An application that makes use of user RKeys is responsible for 
+ensuring that the RKey value is usable for any transport that may access the MR. 
+2.3.11.5 64-bit LKeys and RKeys 
+Devices that support UET MUST return a 64-bit RKey value that adheres to the UET specified RKey 
+format. A multi-transport device may also return a valid 32-bit RKey for use with legacy RDMA 
+transports. A 64-bit LKey MUST be returned if a 64-bit RKey is returned. The number of LKey bits that 
+are non-zero is vendor-specific. 
+2.3.12 QP Semantics 
+QP semantics define a set of device queryable attributes, which can be modified by the application and 
+provided into QP creation. QP semantics define message and data ordering semantics implemented by a 
+QP type over a specific transport. This includes various combinations of: 
+• [Send | Read | Write] after [Send | Read | Write] 
+RDMA verbs require that a developer reference RDMA specifications to understand data transfer 
+ordering. UET verbs exposes data ordering as new QP attributes. Additionally, applications can remove 
+unneeded ordering requirements prior to creating a QP. Vendors that are able can optimize transfers 
+around necessary ordering semantics. 
+UET devices SHOULD use the QP ordering semantics to guide protocol selection between ROD or RUD. 
+UET verbs QP semantics are aligned with libfabric endpoint attributes. 
+2.3.13 References 
+[1] InfiniBand Trade Association, InfiniBand Architecture Specification, Volume 1, Release 2.1, 
+Beaverton, OR, USA, 2025. 
+ 
+  

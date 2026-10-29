@@ -1,0 +1,47 @@
+ 220 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Size  Description  Section Ref 
+be used together to determine if the message 
+fits in the target buffer. The access address of 
+a given packet is Buffer Base Address (from 
+the memory region) + Buffer Offset + the 
+offset within the message (taken from the 
+header data field for packets on which 
+ses.som=0). 
+Special use case for deferrable send requests: 
+carries the restart token. All active restart 
+tokens must be unique at the initiating FEP. 
+The upper 32 bits of the restart token are 
+allocated by the initiator, and the lower 32 bits 
+are set to 0. 
+Usage of FI_MR_VIRT_ADDR: Some 
+implementations may support the setting of 
+FI_MR_VIRT_ADDR in the libfabric API. In 
+these cases, the buffer offset field of the 
+packet carries the absolute virtual address 
+where the payload is delivered. 
+initiator 32 Initiator ID used as part of matching criteria.  3.4.2.3.4 
+match_bits / 
+memory_key 
+64 Used for tagged matching or as a memory key, 
+depending on the opcode being used. In 
+ready-to-restart requests 
+(UET_DEFERRABLE_RTR), this field carries the 
+upper 32 bits of the restart token that was 
+part of the deferrable send request as well as 
+32 bits allocated by the target in the lower 32 
+bits. 
+3.4.2.3.5 
+header_data 64 This is the completion data to deliver at the 
+target when this operation completes when 
+ses.som=1. If ses.hd=0, this field is ignored. 
+See Table 3-10 for usage when ses.som=0. 
+3.4.2.11 
+request_length 32 Length of the payload to be transferred (in 
+bytes). 0 is a legal transfer size (0 byte 
+write/read). Maximum size is 232-1. The 
+request length field MUST be populated both 
+when ses.som=1 and ses.som=0. 
+ 
+ 

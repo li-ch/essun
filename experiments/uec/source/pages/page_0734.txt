@@ -1,0 +1,39 @@
+ 734 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The sync field (bits 0:1) and block type field (bits 2:9) are transmitted as 10_11010010, where the 
+leftmost bit is transmitted first19. Starting with bits 10:17, each remaining byte is transmitted, starting 
+with its least significant bit. 
+In the PCS decoder, MII D1 through D7 are taken from bits 10 to 65, while the control character (MII D0) 
+is decoded from the O code in bits 34:37. For an O code value 0x0, MII D0 is set to 0x9C. For an O code 
+value 0x6, MII D0 is set to 0x5C. 
+The Ethernet standard’s state-based PCS encoder and decoder discard any non-data blocks that occur 
+between the Start and Terminate blocks of an 802.3 packet. However, CtlOS are allowed to preempt 
+regular 802.3 packet transmission and can occur at any point in the sequence of MII blocks. 
+In order to support 802.3 packet preemption, the following requirements apply to the PCS 64B/66B 
+encoder and decoder: 
+6.2.3.1 PCS 64B/66B Decoder 
+For 200GBASE-R or 400GBASE-R PHYs using the PCS defined in Clause 119 of [1], 800GBASE-R PHYs using 
+the PCS defined in clause 172 of [4], and 1.6TBASE-R PHYs using the PCS defined in clause 175 of [5], the 
+PCS SHALL use the stateless 64B/66B decoder specified in subclause 119.2.5.8.2 of [5], with the 
+corresponding requirements from the Reed-Solomon decoder in subclause 119.2.5.3 of [5]. 
+For 100GBASE-R PHYs, which use the PCS defined in Clause 82 of [1], the following requirements apply. 
+The sublayer below the 100GBASE-R PCS is either RS-FEC (as defined in Clause 91 of [1]) or RS-FEC-Int (as 
+defined in Clause 161 of  3 ). The term “FEC” is used to refer to either of these sublayers. The specified 
+behavior of the FEC includes marking of received codewords that are uncorrectable by altering the sync 
+headers of certain 66-bit blocks within the codewords (as specified in 91.5.3.3 of [1] and in 161.5.3.3 of 
+[3]). This is different from the specification of the Reed-Solomon decoder within the PCS in 119.2.5.3 of 
+[1], where the whole content of a received uncorrectable codeword is replaced with error blocks 
+(EBLOCK_R). 
+In a PCS implementation that is integrated with the FEC, the combined PCS+FEC can perform error 
+marking by setting every 66-bit block within an uncorrected codeword (when Clause 91 RS-FEC is used) 
+or two associated uncorrected codewords (when Clause 161 RS-FEC-Int is used) to an error block, as 
+done in the Clause 11  PCS. This behavior is referred to within this specification as “FEC error overwrite 
+marking.” 
+Informative Text: 
+The FEC error overwrite marking behavior may seem to deviate from the RS-FEC and RS-FEC-Int 
+specifications. However, if the interface between FEC and the PCS is not observable, then this 
+behavior is indistinguishable from the specified one. This is considered a valid implementation choice. 
+ 
+ 
+19 Per the convention in IEEE Std 802.3, the LSB of the hexadecimal value 0x4B in bits 2:9 is transmitted first.  

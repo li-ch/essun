@@ -1,0 +1,23 @@
+ 160 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The communication between the libfabric provider and the IM is specified in Section 2.4.15. The 
+communication between the IM and the switch is specified in Section 2.4.17. 
+After all collective operations of the communicator have completed, the ranks request that the IM tear 
+down the INC communicator. Figure 2-23 depicts the sequence of steps taken by the IM, a rank, and an 
+INC switch. 
+The IM first waits for all ranks to produce a CommunicatorLeaveRequest to allow for all collectives to 
+complete. Afterward, it starts independent procedures at both the rank and the switch. 
+The rank receives a CommunicatorLeaveReply, whereupon the initiator PDC is closed. 
+The INC switch is directed to terminate the INC communicator. Following this, the switch adjusts its 
+internal configuration, disabling INC offload for the communicator, and closes the SEP’s initiator PDC. 
+The libfabric provider MAY implement a mechanism to release target PDCs that the switch failed to 
+close. Such a mechanism is beyond the scope of this document. 
+The IM can also tear down an INC communicator for any of the following reasons: 
+• A rank signals an error. 
+• Conditions are detected that preclude continued INC communicator operation (e.g., link 
+failures). 
+• Administrative action or policy. 
+ 
+Figure 2-23 - Example INC Communicator Teardown 
+ 

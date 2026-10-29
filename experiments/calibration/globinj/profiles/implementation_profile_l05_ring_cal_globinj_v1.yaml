@@ -1,0 +1,36 @@
+# Implementation profile for the calibration-ladder GLOBAL stage
+# GLOB-INJ runs on the analytical L0.5 serialized-ring backend (parameter class: injection bandwidth, A-L05-INJ).
+implementation_profile_id: analytical_l05_ring_cal_globinj_v1
+status: PROPOSED   # global sensitivity candidate inputs; review pending
+backend: analytical_l05
+fidelity: L0.5
+model: >
+  serialized pipelined-ring AllReduce identity t_L05 = 2*(r-1)*
+  (c/I + c/B + L) with c = M/r (see src/essun/backends/analytical/
+  l05.py); assumptions A-L05-BW / A-L05-LAT / A-L05-INJ / A-L05-SER /
+  A-L05-CHUNK / A-L05-DIV from experiments/vertical_slice/
+  assumptions_l05.yaml. Expanded against the landed L0 ring identity:
+  t_L05 = t_L0 + 2*(r-1)/r*M/I - the whole L0-vs-L0.5 disagreement is
+  the serialization term, and the I -> infinity limit (null I)
+  evaluates to the landed L0 identity exactly (the convergence anchor
+  pinned by tests). This stage is NOT an anchor comparison: it maps
+  the model's own response surface along the REGISTERED A-L05-INJ
+  axis [1, 1024] B/ns on the W1 smoke config, so the owner can see
+  how much of the registered range the smoke observable can even
+  feel.
+free_parameters_source: experiments/vertical_slice/assumptions_l05.yaml
+free_parameters_swept: >
+  I (nic.injection_bytes_per_ns) swept over {1, 2, 4, 8, 16, 32, 64,
+  128, 256, 448, 512, 720, 900, 1024} B/ns - the powers of two
+  spanning the whole registered range [1, 1024] (1/1024 = the
+  registered endpoints, 64 = the registry point = the W1 smoke value =
+  the delta baseline, equal to B by the family convention) plus the
+  three anchor-informed scale context markers 448/720/900 (plan
+  section 2.1 A-L0X-BW anchored aggregate injection scale; context
+  only, never an anchor comparison in this stage) - PLUS the I ->
+  infinity convergence limit (null) executed as the 15th, twin
+  cross-check row OUTSIDE the registered range. B and L fixed at the
+  A-L05-BW / A-L05-LAT registry points 64 B/ns / 200 ns (KEEP).
+  Values are registry-range points and declared context markers, never
+  measurements; nothing is tuned.
+measurement_source: none   # not calibrated; the global sensitivity record is stored as PROPOSED evidence in results/calibration/

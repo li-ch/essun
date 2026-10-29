@@ -1,0 +1,29 @@
+ 290 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The rendezvous queue works as follows: 
+• The rendezvous queue is a set of N descriptor rings, one per rank. 
+o Each ring contains entries for sending to a particular rank. 
+o The entries are produced by receivers and read by senders in FIFO order. 
+o The sender maintains a tail index for each ring that is used for consuming entries. 
+o The receiver maintains a head index for each rank that is used for producing entries. 
+o The receiver is also responsible for managing the case where a ring is full. 
+• When a *CCL receiver of rank R posts a receive buffer for a given sender of rank S: 
+o The receiver writes a receive entry for the buffer to the rendezvous queue of rank S. 
+o The entry is written to the ring associated with rank R using the head index for rank S 
+that is maintained at rank R. 
+• When a *ccl_send API is called by rank S to send to rank R: 
+o The sender uses the ring associated with rank R. 
+o The sender accesses the ring entry at the tail index. 
+o If there is a valid receive entry at the tail index, thenthe sender uses the information in 
+the entry to write the message data to the receiver’s buffer. 
+o If there is not a valid receive entry at the tail index, then the sender waits for valid 
+receive entry to be written at the tail index. 
+A sequence diagram for write-based *CCL send and receive operations is shown in Figure 3-50. 
+ 
+Figure 3-50 - Write-Based Sequence for *CCL Send and Receive 
+The write-based sequence proceeds as follows: 
+• An application call is made to the *ccl_recv() API by rank R to post a receive buffer for rank S. 
+• The *CCL at rank R consults the rendezvous queue data structures and calls the libfabric 
+fi_writedata() API to generate an RMA write with immediate transaction for the purpose of 
+writing a receive entry for the posted buffer to rank S. 

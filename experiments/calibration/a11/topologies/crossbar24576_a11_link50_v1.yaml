@@ -1,0 +1,49 @@
+# Calibration-ladder A11 topology: the single non-blocking crossbar
+# abstraction at the anchor's STATED CLUSTER SCALE — r = 24,576 ranks
+# (CAL-A11: two ~24,576-GPU production clusters, one RoCE one
+# InfiniBand; Llama 3 trained on 16,000 GPUs of the RoCE one), at the
+# anchor link class B = 50 B/ns per direction (400 Gbps optics,
+# declared per-direction reading) and L = 200 ns (registry point;
+# CAL-A11 stages no latency number).
+#
+# CEILING-ROW HONESTY: Meta's fabric is a two-tier rail-optimized
+# multi-plane spine-leaf, NOT a 24,576-way non-blocking crossbar; its
+# RTSW uplink capacity runs at "1:2 under-subscription vs downlink"
+# (direction of the ratio ambiguous in the staging — recorded in the
+# stage's calibration record), and it is congestible. This row is the
+# NON-BLOCKING CEILING abstraction at the anchor's scale and link class
+# (the same role CAL-A1/A2 spec ceilings play), never a prediction of
+# Meta's fabric; the anchor stages no per-collective time series, so
+# nothing here is compared to any anchor CCT.
+#
+# WHAT THE ROW EXECUTES (identity arithmetic, run-id-backed): the
+# bandwidth coefficient 2(r-1)/r at r = 24,576 equals 24575/12288 =
+# 1.9999186... — within 1/21504 ~ 0.0047% of the algebraic asymptote 2.
+# Against the r=8 smoke default (coefficient 7/4 = 1.75) the structural
+# rank-count effect is EXACTLY (8/7)*(r-1)/r = 24575/21504 ~ 1.14281:
+# at most +1/7 ~ +14.29% for ANY r, reached to within 1/r by both
+# anchor scales (r = 16,000: 15999/14000 ~ 1.14279). A ~14% structural
+# scale effect and the anchor's 30-40% congestion envelope are the same
+# order of magnitude — the two are INSEPARABLE in a raw scale-out CCT
+# measurement read through an L0 lens (the stage's second sanity
+# finding). Payload divisibility: every grid size 24576*2^k divides
+# exactly (A-L0X-DIV accepts, no bracketing).
+topology_id: crossbar24576_a11_link50_v1
+topology_class: fully_connected_crossbar
+ranks: 24576
+nic:
+  injection_bytes_per_ns: 50
+link:
+  pair_latency_ns: 200
+notes: >
+  Anchor-scale non-blocking-ceiling row: r = 24,576 = CAL-A11's stated
+  cluster size (largest rank count any anchor pins), B = 50 B/ns
+  (400 Gbps optics per direction, declared reading), L = 200 ns free
+  registry point. Identity t = 2(r-1)/r*M/B + 2L with
+  2(r-1)/r = 24575/12288. No congestion, no subscription ratio, no
+  rail/plane structure — those are explicitly out of the L0 input
+  space (the 1:2 under-subscription fact is recorded as an
+  expressiveness gap in the stage's calibration record). Provenance:
+  rank count and link class from CAL-A11's staged numbers (confidence
+  M-H; verified from the public blog + abstract); values are anchor
+  quotes / registry defaults, never our measurements.

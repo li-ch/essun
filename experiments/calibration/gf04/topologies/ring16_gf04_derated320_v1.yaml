@@ -1,0 +1,21 @@
+# Calibration-ladder GF-04 topology: the CAL-A12 DERATED-BRIDGE point of
+# the swept span at r = 16 — B = 320 B/ns = 0.8 x 400 (the anchor's own
+# rail arithmetic x the CAL-A12 ~80% application-level derating that plan
+# §1.1 row CAL-A12 makes mandatory normalization whenever spec ceilings
+# are compared with measured series; the exact construction of stage A6's
+# derated320 topology on this anchor's config). NOT a fit: no GF-04 figure
+# was read to choose 320; it is ceiling x the CAL-A12 derating constant,
+# executed so the record can place the anchor's measured two-node figure
+# (469.67, which sits ABOVE even the underated 400 ceiling) relative to
+# the derated rail reading. L = 200 ns registry point (KEEP).
+topology_id: ring16_gf04_derated320_v1
+topology_class: unidirectional_ring
+ranks: 16
+link:
+  bytes_per_ns: 320
+  hop_latency_ns: 200
+notes: >
+  Unidirectional ring of 16 ranks at CAL-A12's ~80% derating x the
+  anchor's 400 B/ns rail arithmetic (anchor-informed span point, never
+  tuned toward any measured figure); everything else identical to
+  ring16_gf04_rail400_v1 (projection and honesty statements inherited).

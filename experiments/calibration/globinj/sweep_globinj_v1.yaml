@@ -1,0 +1,86 @@
+# Calibration-ladder GLOBAL stage GLOB-INJ sweep (the
+# third of the four global parameter-class stages): sensitivity of the
+# model's own outputs to the injection-BW free parameter A-L05-INJ
+# (nic.injection_bytes_per_ns, the L0.5 serialized ring's per-chunk
+# serialization rate) across its REGISTERED range [1, 1024] B/ns, on
+# the W1 smoke config exactly as shipped .
+#
+# W1 smoke config, verbatim: workload experiments/workloads/
+# w1_dense_tp_decode_small.yaml (W1 Dense TP Decode, tp8, 2 layers x 3
+# steps = 6 AllReduce ops), payload 16384 B (16 KiB, the A-W1-SIZE smoke
+# value; 8 divides it so the A-L05-DIV gate accepts every row), fabric
+# the L0.5 smoke ring (unidirectional_ring_with_serialization, r=8), B
+# and L fixed at the A-L05-BW / A-L05-LAT registry points 64 B/ns /
+# 200 ns (KEEP - the link-BW and hop/pair-latency axes were the first
+# and second global stages' own axes). Only I moves.
+#
+# Swept I ladder (14 registered-range points, every value a FREE
+# PARAMETER, nothing tuned): the powers of two covering the whole
+# registered range 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 (1 and
+# 1024 = the registered ENDPOINTS; 64 = the registry point and smoke
+# value, the BASELINE, equal to B by the family convention) plus three
+# anchor-informed scale CONTEXT markers 448/720/900 (plan section 2.1
+# A-L0X-BW anchored aggregate injection scale 448-900 B/ns: CAL-A7-
+# derived MI300X, CAL-A12 ~80% software-effective derating of CAL-A2's
+# NVL72 figure, CAL-A2 NVL72; context only, the anchor comparisons
+# themselves were the per-anchor stages' job) - PLUS one 15th config
+# OUTSIDE the registered range: ring8_globinj_inone_v1.yaml, the I ->
+# infinity convergence limit (null I), the model's own pinned
+# convergence anchor where t_L05 == the landed L0 identity exactly;
+# executed as the twin cross-check row, never as a registered-range
+# point.
+#
+# Expected identity under sweep (E0 arithmetic fact, cross-checked by
+# the stage record builder on every row): t_L05(I) = t_L0 +
+# 2*(r-1)/r*M/I = 3248 + 28672/I ns at finite I (t_L0 = 28672/64 +
+# 2800 = 3248 at the shared B/L); t_L05(inf) = 3248 exactly; per-rank
+# wire 28672 B constant in I (serialization moves no bytes);
+# O-CONSERVATION exact at every I including the limit. Balance points
+# of the axis: the serialization term equals the ring's own bandwidth
+# term exactly at I = B = 64 (ON the grid - the registry point itself,
+# by the family convention I = B); equals the latency chain at I =
+# 256/25 = 10.24 B/ns (the SAME value as GLOB-BW's B*, bracketed by
+# grid points 8 and 16); and equals the whole landed t_L0 at I** =
+# 256/29 ~ 8.83 B/ns (also bracketed 8 < I** < 16) - below I** more
+# than half the model's output is serialization term.
+#
+# EXECUTION VEHICLE (structural note, the 4r/8r/16r-l05 atlas pattern):
+# the L0.5 module is deliberately unregistered in BOTH run-path
+# registries per its own scope fence - the sweep runner rejects
+# allreduce_ring_l05 ("unknown algorithm(s)") and the run path
+# rejects analytical_l05 ("unknown backend(s)"); both rejections are
+# re-exercised LIVE by this stage's vehicle before it executes. The
+# vehicle is experiments/calibration/globinj/run_globinj_sweep.py
+# (module-direct, mirrors the sweep runner's gates, no src/ change);
+# classified, not fixed.
+#
+# claim linkage: none - a PROPOSED global sensitivity candidate must not
+# link to any claim (the sweep vehicle records no claims by construction).
+sweep: cal_globinj_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring_l05
+  topology: experiments/calibration/globinj/topologies/ring8_globinj_i64_v1.yaml
+grid:
+  payload_sizes_bytes: [16384]   # the W1 smoke payload (A-W1-SIZE), unchanged
+  algorithms:
+  - algorithm: allreduce_ring_l05
+    topologies:
+    - experiments/calibration/globinj/topologies/ring8_globinj_i1_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i2_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i4_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i8_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i16_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i32_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i64_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i128_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i256_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i448_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i512_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i720_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i900_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_i1024_v1.yaml
+    - experiments/calibration/globinj/topologies/ring8_globinj_inone_v1.yaml

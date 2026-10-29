@@ -1,0 +1,71 @@
+# Calibration-ladder GF-09 sweep #2: the R1
+# DESIGN-TARGET LATENCY AXIS — where do the L0 crossbar rows sit on the
+# L axis relative to the Ultra Ethernet design paper's staged latency
+# targets and reach class (GF-09, arXiv:2508.08906; docs/calibration/
+# anchors_gapfill.md §GF-09; numbers AS STAGED, not re-fetched)?
+#
+# GF-09 is the first staged anchor that speaks to the latency axis
+# THREE ways at once: a reach class (10-150 m), a local-network latency
+# target ("sub-microsecond"), and a CC design RTT ("target round-trip
+# times of 10 us"). NOTHING is compared to any anchor time (no
+# measurement exists — the paper's CM evaluation is deferred to the
+# simulation study it cites, i.e. the GF-05 material, which this stage
+# does not open). A10's assumption-class discipline applies to all
+# three: targets, never achieved values; placement only.
+#
+# NOTHING IS TUNED: the L ladder was fixed by anchor/registry/declared-
+# physics arithmetic BEFORE any stage output was read —
+#   200  = A-L0X-LAT registry point (the placement reference; every
+#          other row differs from it by exactly 2(L-200) ns at every
+#          payload, an identity);
+#   50   = 10 m x 5 ns/m — propagation floor at the design class's
+#          MINIMUM reach, under the DECLARED fiber-class engineering
+#          constant 5 ns/m (~2/3 c; a free physical context constant,
+#          never anchor/standard-derived, never a measurement; the
+#          vacuum-c exact bound 5000000000/149896229 ~ 33.356 ns is
+#          recorded in the stage record);
+#   750  = 150 m x 5 ns/m — propagation floor at the MAXIMUM reach.
+#          Placement findings: 750 = 15/16 = 93.75% of the plan §2.1
+#          NARROW(range upper) candidate ~800 ns (propagation alone
+#          nearly exhausts it); and the INTERNAL CONSISTENCY check —
+#          one-way 750 < 1000 (sub-us holds, margin exactly 1/4) but
+#          same-link round-trip 1500 > 1000 (exceeds the boundary by
+#          exactly 1/2), so the design targets are mutually consistent
+#          only under a one-way reading at fiber velocity;
+#   1000 = the "sub-microsecond latency" target BOUNDARY edge (target
+#          upper bound, never achieved; end-to-end vs per-pair reading
+#          ambiguity recorded, not adjudicated — A10's declared-reading
+#          duty);
+#   5000 = the "10 us" target RTT charged as the identity's 2L term
+#          (2L = 10000 exactly) with the GF-05 QUANTITY-CLASS caveat
+#          (a path round-trip is not a per-pair parameter; GF-05
+#          executed its staged 12000 ns base RTT the same way —
+#          cross-anchor: 12000/10000 = exactly 6/5, two independently
+#          staged UEC-family RTT scales one fifth apart). L = 5000
+#          sits 2.5x above the declared free-range upper bound 2000 —
+#          recorded, the range untouched.
+#
+# B fixed at the design-class carrier 50 (sweep_gf09_envelope_v1.yaml
+# owns the B axis).
+#
+# Payload grid: the standard 12-size ladder of stages
+# A1/A2/A7/A9/A11/GF-05 (8 KiB -> 8 GiB) — DECLARED FREE PROBE; r=8
+# divides every size (no bracketing).
+sweep: cal_gf09_latency_v1
+workload: experiments/calibration/gf09/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l200_v1.yaml
+    - experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l50_v1.yaml
+    - experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l750_v1.yaml
+    - experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l1000_v1.yaml
+    - experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l5000_v1.yaml

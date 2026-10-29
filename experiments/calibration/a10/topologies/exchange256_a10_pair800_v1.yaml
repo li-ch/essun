@@ -1,0 +1,52 @@
+# Calibration-ladder A10 topology: fully-connected EXCHANGE fabric of 256
+# ranks at uniform per-pair exchange latency L = 800 ns — recursive
+# halving/doubling AllReduce (backend analytical_l0_recursive_doubling),
+# the LOGARITHMIC middle point of the L0 latency-chain spectrum the
+# backend family exists to expose (ring 2*(r-1)*L linear, doubling
+# 2*log2(r)*L = 16L at r=256, crossbar 2L constant; identical wire
+# bytes and bandwidth term 2*(r-1)/r*M/B in all three). The anchor's
+# hierarchical NVLink-Network side is itself a chained fabric; the log
+# chain places a second chained structure between the extremes so the
+# stage's spread statement is a property of the chain exponent, not a ring
+# artifact.
+#
+# CAL-A10 (HiPC 2025 Workshops, "Communication-Centric UALink and NVLink
+# Comparison for Large Scale AI Training", IEEE CSDL 453800a068): staged
+# quote "NVIDIA does not publish end-to-end latency for NVLink Network; we
+# assume 0.8 us, consistent with 'sub-us' positioning for NVSwitch hops"
+# (docs/calibration/anchors_staging.md §A10; confidence M — quote via public
+# search snippet, full text paywalled, wording re-verify at owner
+# integration). 800 ns is a STATED ASSUMPTION in a peer-reviewed analytical
+# model — peer review certifies the plausibility of the USAGE, never the
+# value; it is not a measurement, and the quote's own premise (NVIDIA
+# publishes no such number) means no L value anywhere can be falsified
+# against it.
+#
+# ROLE IN THE STAGE: 8 partner-exchange steps per phase (XOR schedule;
+# log2(256) = 8), latency chain 2*8*L = 12800 ns at the
+# assumption point, on the same swept rank ladder 8 -> 1024. 256 is a
+# power of two, so the A-L0D-POW2 gate accepts it natively; 16384 = 2^14
+# is divisible by 256, so the A-L0D-DIV gate ACCEPTS exactly — no
+# bracketing.
+#
+# HONESTY: L is a FREE PARAMETER (A-L0D-LAT) held at the anchor's
+# assumption point, never tuned. B = 64 B/ns is the fixed A-L0D-BW
+# registry point (the anchor's bandwidth values are not staged). r is the
+# swept free model-side axis.
+topology_id: exchange256_a10_pair800_v1
+topology_class: fully_connected_exchange
+ranks: 256
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 800
+notes: >
+  Every rank pair adjacent with uniform per-pair exchange latency; one
+  partner per rank per step (XOR schedule), log2(r) = 8 steps per
+  phase, 2*8*L latency chain total. No congestion, no credits, no
+  packetization, no overlapped phases — L0 transport model only.
+  Provenance: L = 800 ns from CAL-A10's stated assumption (assumption,
+  not a measurement; confidence M, paywalled parameter table); B = 64
+  B/ns free A-L0D-BW registry point; r = 256 on the anchor-scale
+  power-of-2 ladder. Values are anchor assumption quotes / registry
+  defaults, never our measurements.

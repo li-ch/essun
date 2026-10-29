@@ -1,0 +1,430 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/essun/workload_ir.schema.json",
+  "title": "Workload IR",
+  "description": "Draft contract for workload descriptions referenced by the experiment manifest's workload_ir role (T004 / G4). Repo-level contract: lives outside Scale-up_Agent_Handoff/ per the handoff fence; promotion into the handoff schema set is an owner/ADR decision. Two dialects are recognized: an explicit event-DAG form (handoff example style: request arrivals, decode steps, collectives, KV transfers with depends_on edges) and a generator-parameter form (experiments/workloads/*.yaml: parameters for the W1/W2/W3/W5 deterministic generators). The dialects are disjoint by their identity keys (workload_id vs workload). Integer byte counts only (handoff determinism rules). schema_version changes on every public change to this contract. Version record: 2026-10-28 (T030) added w3_moe_dispatch_combine to the generator ladder; documents on the extended contract declare schema_version 1.0.0 (the first explicitly versioned generator-form documents). 2026-10-28 (T031) added w5_pd_kv_prefill_decode (PD/KV memory-semantic event generator) and made `layers` kind-conditional: required for the w1/w2/w3 kinds, forbidden for w5 (W5's positional structure is requests/chunks/steps, not transformer layers); documents on the further-extended contract declare schema_version 1.1.0.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of this document contract; optional because the existing experiment inputs predate it."
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/eventDagForm"
+    },
+    {
+      "$ref": "#/$defs/generatorParamsForm"
+    }
+  ],
+  "$defs": {
+    "eventDagForm": {
+      "type": "object",
+      "description": "Handoff example style: explicit event DAG with portability declarations.",
+      "required": [
+        "workload_id",
+        "events"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "workload_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trace_kind": {
+          "enum": [
+            "synthetic",
+            "captured"
+          ],
+          "description": "Synthetic by construction, or captured from a real serving system (trace ingestion is pending a human decision)."
+        },
+        "portability": {
+          "type": "object",
+          "description": "Which timing/decision details are claims about reality vs portable structure.",
+          "properties": {
+            "absolute_compute_timing": {
+              "type": "boolean"
+            },
+            "collective_algorithm": {
+              "type": "boolean"
+            },
+            "router_decisions": {
+              "type": "boolean"
+            },
+            "arrival_process": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "model": {
+          "type": "object",
+          "properties": {
+            "layers": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "hidden_dimension": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "precision_bytes": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "serving": {
+          "type": "object",
+          "properties": {
+            "continuous_batching": {
+              "type": "boolean"
+            },
+            "slo": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/event"
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "event": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "depends_on"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "RequestArrival",
+            "DecodeStep",
+            "AllReduce",
+            "KVTransfer",
+            "Completion"
+          ],
+          "description": "Observed event inventory; extending this set requires a schema_version bump."
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Direct predecessor event ids; may be empty."
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "DecodeStep: tokens produced in this step."
+        },
+        "participants": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "Collective: participating rank indices."
+        },
+        "message_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Collective: payload M in integer bytes."
+        },
+        "logical_collective": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Collective: logical operation name."
+        },
+        "realized_algorithm": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Collective: algorithm realizing the logical operation, e.g. ring."
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "KVTransfer: payload in integer bytes."
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "description": "KVTransfer: source endpoint id."
+        },
+        "destination": {
+          "type": "string",
+          "minLength": 1,
+          "description": "KVTransfer: destination endpoint id."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "AllReduce"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "required": [
+              "participants",
+              "message_bytes"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "KVTransfer"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "required": [
+              "bytes",
+              "source",
+              "destination"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "DecodeStep"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "required": [
+              "tokens"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": true
+    },
+    "generatorParamsForm": {
+      "type": "object",
+      "description": "Repo generator style: deterministic parameters for the W1/W2/W3/W5 workload generators (essun.workload.w1/w2/w3/w5).",
+      "required": [
+        "workload",
+        "model_name",
+        "tp_size"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "workload": {
+          "enum": [
+            "w1_dense_tp_decode",
+            "w2_dense_tp_prefill",
+            "w3_moe_dispatch_combine",
+            "w5_pd_kv_prefill_decode"
+          ],
+          "description": "Committed workload kinds (WORKLOAD_KIND in essun.workload); extending the ladder requires a schema_version bump. w3 (T030) issues all-to-all ops and w5 (T031) issues memory-semantic KV ops (kv_alloc/kv_write/kv_transfer/kv_visible/kv_read/kv_release); no registered backend executes either op class: W3/W5 manifests are rejected loudly by the capability gates and need L1/L2 to run."
+        },
+        "model_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tp_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "layers": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W1 only: number of decode steps."
+        },
+        "chunks_per_layer": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W2 only: activation chunks per layer."
+        },
+        "allreduce_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W1 only: free parameter (A-W1-SIZE), integer bytes."
+        },
+        "chunk_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W2 only: free parameter (A-W2-CHUNK), integer bytes."
+        },
+        "experts_per_layer": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W3 only: number of experts per MoE layer."
+        },
+        "top_k": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W3 only: experts routed per token (distinct; must be <= experts_per_layer)."
+        },
+        "tokens_per_rank": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W3 only: activation tokens held per rank entering each layer."
+        },
+        "token_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W3 only: free parameter (A-W3-SIZE), integer bytes per token per expert visit, identical in dispatch and combine."
+        },
+        "routing": {
+          "enum": ["shares", "table"],
+          "description": "W3 only: routing input mode (A-W3-ROUTE) — shares matrix with deterministic apportionment, or explicit routing table. Never learned or stochastic."
+        },
+        "expert_shares": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "description": "W3 only: per-layer integer skew matrix (layers x experts, A-W3-SHARES); the free-parameter routing-skew input."
+        },
+        "expert_placement": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "W3 only: expert -> rank placement table (A-W3-PLACE); omitted means round-robin expert % tp_size."
+        },
+        "routing_table": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "description": "W3 only: explicit deterministic routing table (routing='table'): [layer][rank][token] -> top_k distinct expert ids (A-W3-ROUTE)."
+        },
+        "prefill_nodes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W5 only: number of prefill nodes P (A-W5-PLACE); ranks [0, P) prefill, [P, tp_size) decode; must leave at least one decode node."
+        },
+        "requests": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W5 only: number of served requests (placed round-robin q%P prefill, P+q%D decode)."
+        },
+        "chunks_per_request": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W5 only: KV chunks per request (each chunk: alloc, write, transfer, visible lifecycle)."
+        },
+        "chunk_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W5 only: free parameter (A-W5-SIZE), integer bytes per KV chunk, identical on write/transfer/read."
+        },
+        "decode_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W5 only: uniform fixed decode steps per request (A-W5-STEP); each step reads every chunk once."
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "workload": {
+                "enum": [
+                  "w1_dense_tp_decode",
+                  "w2_dense_tp_prefill",
+                  "w3_moe_dispatch_combine"
+                ]
+              }
+            },
+            "required": ["workload"]
+          },
+          "then": {
+            "required": ["layers"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "workload": {
+                "const": "w5_pd_kv_prefill_decode"
+              }
+            },
+            "required": ["workload"]
+          },
+          "then": {
+            "not": {
+              "required": ["layers"]
+            },
+            "description": "layers is ambiguous on a W5 document (W5's positional structure is requests/chunks/steps, not transformer layers) — rejected, matching the loader."
+          }
+        }
+      ],
+      "additionalProperties": true
+    }
+  }
+}

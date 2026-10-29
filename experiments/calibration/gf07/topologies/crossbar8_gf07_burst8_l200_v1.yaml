@@ -1,0 +1,34 @@
+# Calibration-ladder GF-07 topology: crossbar r=8 BURSTY-INCAST row —
+# B = 8 B/ns = carrier 100 x 2/25, L = 200 ns (registry).
+#
+# Anchor quote (docs/calibration/anchors_gapfill.md §GF-07;
+# arXiv:2604.11432, AS STAGED): bursty incast 64 nodes: "a ratio of
+# approximately 0.08 (i.e., 12x slower)". RECORDED AMBIGUITY — the two
+# staged numbers are MUTUALLY INCONSISTENT: the exact-decimal reading
+# 0.08 = 2/25 gives a CCT factor of 1/0.08 = 25/2 = 12.5 EXACTLY, while
+# the paper's own gloss "12x" gives factor 12 (ratio 1/12 = 0.0833...).
+# EXECUTED here is the exact-0.08 reading: displacement 100 x 2/25 = 8
+# (finite decimal); the 12x reading's displacement 100/12 = 25/3 is NOT
+# a finite decimal and is RECORDED NOT EXECUTED in the stage record
+# (exact fraction, both readings kept side by side, never conflated).
+# CLASS CAVEAT: bursty incast victims, no L0 counterpart; DECLARED
+# dimensionless displacement; "approximately" marks an envelope edge.
+# Everything else as in crossbar8_gf07_rate100_l200_v1.yaml (L=200
+# registry; r=8 smoke default; the anchor's 64-node configuration is
+# executed by the scale sweep). Asymptotic CCT ratio vs the carrier row
+# exactly 25/2 = 12.5. B fixed by anchor arithmetic BEFORE any stage
+# output was read; never tuned.
+topology_id: crossbar8_gf07_burst8_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 8
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the GF-07 bursty-incast displacement under
+  the EXACT-0.08 reading: B = 8 = 100 x 2/25 (CCT factor exactly 25/2;
+  the paper's "12x" gloss would give 100/12 = 25/3, recorded not
+  executed), L = 200 ns registry. Incast victims have no L0
+  counterpart; magnitude only. Anchor quote / registry default, never
+  our measurement; never tuned.

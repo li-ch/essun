@@ -1,0 +1,30 @@
+# Calibration-ladder GF-04 topology: the SCALING-NULL twin — the SAME
+# B = 476.37 B/ns (the anchor's single-node figure) carried unchanged to
+# r = 16. This file exists to execute the model-side counterfactual of the
+# anchor's 8->16 scaling claim: at fixed uniform B every L0 allreduce
+# identity is asymptotically rank-invariant in busbw (busbw -> B), so the
+# run pair (ring8 vs ring16 at 476.37, same payload) measures EXACTLY how
+# much rank-count structure the identity family can express on its own
+# (answer at the executed sizes: |busbw(16)/busbw(8) - 1| <= 3e-5, from
+# the a(r) = 2(r-1)/r traffic factor and the latency chains alone). The
+# anchor measures 469.67/476.37 = 0.9859 — the entire 1.41% drop lives
+# outside this input space (hybrid-leg asymmetry / protocol class).
+#
+# HONESTY: this is a declared counterfactual bracket, NOT a physical
+# reading (at B = 476.37 the uniform ring would drive the inter-node hops
+# above the 400 B/ns rail aggregate — infeasible on the anchor's own
+# fabric; the physically-projected rail-bound twin is
+# ring16_gf04_rail400_v1). Free parameter A-L0-BW at the anchor's own
+# single-node figure; L = 200 ns registry point (KEEP).
+topology_id: ring16_gf04_anchor476_37_v1
+topology_class: unidirectional_ring
+ranks: 16
+link:
+  bytes_per_ns: 476.37
+  hop_latency_ns: 200
+notes: >
+  Unidirectional ring of 16 ranks carrying the anchor's single-node
+  476.37 B/ns unchanged — the scaling-null counterfactual leg of the
+  8->16 pair (declared bracket, not a physical reading; header). Never
+  tuned; the value is the anchor's own figure fixed before any model
+  output was read.

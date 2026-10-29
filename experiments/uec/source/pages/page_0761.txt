@@ -1,0 +1,30 @@
+ 761 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+8 UE Compliance 
+To assist implementors in efforts to comply to this UE specification, the UEC provides test collateral 
+including profile matrices, compliance checklists, and a best practices document describing suggestions 
+for establishing a testbed.  The profile matrix and compliance checklist should be used by implementors 
+to self-attest for compliance.   
+These documents are located at: https://ultraethernet.org/compliance/ 
+The profile matrix states which features are mandatory, conditional, or optional for each Ultra Ethernet 
+profile.  UE defines three profiles: AI Base, AI Extended, and HPC.  The profile matrix also specifies which 
+items in the compliance checklist need to be tested if the feature or technology is implemented.  Figure 
+8-1 shows an excerpt from the profile matrix. 
+The compliance checklist contains a list of the items to test for each specification. The checklist includes 
+the TestID, TestName, Criteria, and the reference to the specification.  Figure 8-2 shows an excerpt from 
+the compliance checklist, each row identifying a testable item. 
+In order to attest compliance to the specification, implementers should run tests to confirm the 
+behavior that is targeted by the checklist items, either by themselves or with the help of a third party.  
+Implementers making a compliance statement should provide the information listed in the Compliance 
+Statement as follows, to indicate that they have tested and are compliant to the profile and features 
+they are claiming support for. 
+8.1 Compliance Statement 
+A vendor can claim UE support by performing a self-attestation and declaring the supported features 
+and profiles in their product literature. 
+ 
+Figure 8-2 - Example of Compliance Checklist 
+ 
+ 
+Figure 8-1 - Example of Profile Matrix 
+ 

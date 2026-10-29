@@ -1,0 +1,50 @@
+ 87 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Structure Field Value(s) Required Notes 
+AI 
+BASE 
+AI 
+FULL 
+HPC 
+ comp_order 0 Y Y Y Field being deprecated 
+by libfabric 
+fid_nic All fields supported 
+by the platform 
+should be set 
+ Y Y Y  
+Note: 
+1. Exact match versus wildcard tags are distinguished by the ‘ignore’ parameter of the fi_tagged() APIs; see 
+Section 2.2.5.4.2. 
+2. The level of required support for FI_DIRECTED_RECV/FI_TAGGED_DIECTED_RECV is limited to the authorization 
+requirements specified in Section 2.2.4.3 and the initiator ID matching requirements specified in Section 
+2.2.5.4.2.1. 
+3. A libfabric provider indicates the atomic operations that it supports via fi_atomic() APIs; fetching and non-
+fetching atomics are different operations; see Section 2.2.5.4.4. 
+4. If scalable receive queues are supported, consecutive indices must be allocated for the endpoint with one index 
+for each receive queue. The allocation of consecutive indices can be accomplished using the service 
+configuration file described in Table 2-7 or by the provisioning system as described in Section 2.2.5.3.5.1. 
+5. Max PDU is the maximum payload of a single frame (i.e., UET payload) per definition in UE SES specification.  
+ 
+Libfabric v2.0 has added the capability to separately set the maximum message size for RMA operations 
+via the fi_setopt() API. The UET requirements for all profiles are: 
+1 GB <= UET Maximum RMA Message Size <= (4GB – 1) 
+ 
+The per-profile requirements for completion counters are specified in Section 2.2.5.3.7. 
+Table 2-5 contains a mapping of the application use cases shown in Table 2-3 to UET profiles. 
+Table 2-5 - Application Use Case Mapping to UET Profiles 
+Application Use Case UET Profile(s) with Optimal Use-Case Support 
+*CCL Any of AI Base, AI Full, or HPC 
+*MPI HPC 
+SHMEM Either AI Full or HPC 
+UD Any of AI Base, AI Full, or HPC 
+ 
+2.2.2.1 Profile Negotiation and Inter-Profile Interoperability 
+ A logical priority, shown in Table 2-6, is associated with each profile to resolve conflicts when source 
+and destination FEPs have overlapping profile support. 
+Table 2-6 - Profile Logical Priorities 
+Profile Logical Priority 
+AI Base 0 
+AI Full 1 
+HPC 2 
+ 

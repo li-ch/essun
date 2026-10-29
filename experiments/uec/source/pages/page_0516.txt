@@ -1,0 +1,36 @@
+ 516 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Based on the above methodology, the recommended trim and drop thresholds with their derived, 
+RECOMMENDED bottom-of-the-bottom-bucket to top-of-the-top-bucket boundaries are: 
+• With trimming: 
+o queue_low.trim_threshold: 1.5 * Plane_BDP  
+o Bucketization range: [0, 3 × config_base_rtt] 
+• Without trimming:  
+o queue_med.drop_threshold, queue_high.drop_threshold: At least 2 * Plane_BDP and at 
+most 5 * Plane_BDP  
+o Bucketization range: at least [0, 4 × config_base_rtt] at most [0, 10 × config_base_rtt] 
+Intermediate bucket boundaries SHOULD be distributed linearly between the minimum and maximum 
+values. 
+When CSIG is enabled for multiple traffic classes, it applies the settings uniformly across all of them. The 
+maximum trim or drop thresholds among all affected traffic classes within the port SHOULD be used as 
+the reference values for bucket boundary calculation. 
+3.6.18 Programmable Congestion Management 
+Ultra Ethernet programmable congestion management (PCM) provides support for alternative 
+congestion control (CC) and load balancing (LB) algorithms within the transport architecture. PCM is 
+designed to support algorithms that reduce congestion and efficiently utilize network resources across 
+multiple paths. 
+CC support in UE PCM is categorized into two primary mechanisms. The first mechanism governs the 
+sending of data within the network by restricting the number of bytes in flight, through either a send 
+window or credit scheme. The second optional mechanism limits the send rate. While hybrid 
+approaches are possible, the baseline congestion control specified herein limits the number of bytes in 
+the network only by using windows for NSCC and credits for RCCC. 
+LB support is provided through two approaches: per-packet load balancing, where algorithms are 
+invoked for every transmitted and acknowledged request packet, and EV table-based load balancing, 
+which relies on a hardware-maintained table of entropy values (EV table). PCM algorithms manipulate 
+this table to optimize traffic distribution dynamically. 
+A robust congestion management framework must be capable of operating across endpoints handling a 
+diverse range of traffic types. Large AI systems frequently encounter mixed workloads consisting of both 
+AI and storage traffic. These mixed workloads necessitate an approach that provides fundamental 
+quality-of-service (QoS) mechanisms not only within the network at each switch buffer, but also at the 
+endpoints to ensure appropriate traffic differentiation and prioritization. 

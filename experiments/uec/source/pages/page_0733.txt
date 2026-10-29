@@ -1,0 +1,53 @@
+ 733 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The PCS 64B/66B encoding translates the MII Lane 0 sequence ordered set control code, 0x9C, to a block 
+type of 0x4B plus the 4-bit O code value of 0x0, as shown in Table 6-2.  
+Table 6-2 - Ethernet standard 64B/66B sequence ordered set encoding 
+Field name Sync Block type D1 D2 D3 O code D4[7:4] D5 D6 D7 
+Bit positions 0:1 2:9 10:17 18:25 26:33 34:37 38:41 42:49 50:57 58:65 
+Local Fault ‘b10 0x4B 0 0 1 0 0 0 0 0 
+Remote Fault ‘b10 0x4B 0 0 2 0 0 0 0 0 
+Link Interrupt ‘b10 0x4B 0 0 3 0 0 0 0 0 
+Note: 
+• O code in bits [34:37] = 0x0 for the defined fault codes. 
+6.2.2 Control ordered sets format 
+On the MII bus between the RS and PCS, control ordered sets have a Lane 0 (TXD<7:0>) control 
+character with value 0x5C. This distinguishes them from Sequence ordered sets. 
+Table 6-3 - Ordered set format on MII 
+Ordered set Lane 0 
+(D0, control 
+character) 
+Lane 1 
+(D1) 
+Lane 2 
+(D2) 
+Lane 3 
+(D3) 
+Lane 4 
+(D4) 
+Lane 5 
+(D5) 
+Lane 6 
+(D6) 
+Lane 7 
+(D7) 
+Sequence 0x9C 0 0 D3 0 0 0 0 
+Control 0x5C Type D2 D3 {D4[7:4], 0x6} D5 D6 D7 
+For a CtlOS, D4[3:0] SHALL be set to 0x6. 
+CtlOS uses the same Lane 0 control character as the “signal ordered set" defined in [1], subclause 
+49.2.4.6, Table 49-1; however, the value 0x6 is different from the one used by the signal ordered set. 
+The CtlOS Type field is used to identify each CtlOS message type. See the UE Link Layer specification 
+Section 5.2.11.1 for all defined CtlOS type values and the specific data format of D2-D7 for each message 
+type. 
+6.2.3 PCS required modifications 
+The PCS 64B/66B encoding is updated to translate an MII lane 0 control character of 0x5C to a block 
+type of 0x4B, with bits 10 to 65 taken from D1 through D7 (where the 4 least significant bits of D4 are 
+0x6), as shown in Table 6-4. 
+Table 6-4 - Modified 64B/66B PCS encoding for ordered sets 
+Bit positions 0:1 2:9 10:17 18:25 26:33 34:37 38:41 42:49 50:57 58:65 
+Ordered set 
+Content 
+‘b10 0x4B D1 D2 D3 O code D4[4:7] D5 D6 D7 
+ 
+The O code value is 0x0 for sequence ordered sets and 0x6 for UE control ordered sets. 

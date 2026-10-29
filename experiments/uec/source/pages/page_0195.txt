@@ -1,0 +1,40 @@
+ 195 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+associated responses and acknowledgments. All of these together would make up the rendezvous 
+transaction. 
+The term “operation” is reserved for the behavior implemented at the endpoint. The operation is 
+encoded in the opcode (3.4.7.2) and specifies operations such as reads and writes to memory, sending 
+of messages, and atomic operations on memory. Operation is also used in a handful of cases when 
+referring to libfabric concepts (e.g., a receive operation). 
+3.4.2.2 Services and Resources 
+A “service” is a libfabric-level construct that encapsulates all of the resources associated with a higher-
+level library (e.g., *CCL, MPI). Resources can include constructs such as buffers, completion queues, and 
+completion counters. A “Resource Index” is an addressing construct used to select an addressable set of 
+resources within a service. Three Resource Index spaces exist, corresponding to three operation types: 
+RMA, SEND, and TAGGED. That is, Resource Index 0 for an RMA opcode (e.g., UET_WRITE) has a 
+different meaning from Resource Index 0 for a SEND opcode (e.g., UET_DEFERRABLE_SEND). Similarly, 
+TAGGED opcodes (e.g., UET_RENDEZVOUS_SEND) have a third meaning for Resource Index 0. 
+ 
+3.4.2.3 Addressing 
+Addressing describes the entire process of selecting a target and identifying a data buffer at the target. 
+This may be the destination of data (e.g., for a Send (3.4.2.5.1)– or a Write (3.4.2.5.2), the source of the 
+data (e.g., for a Read (3.4.2.5.3), or both a source and destination of data (e.g., for atomic operations). 
+There are three types of addressing: relative addressing, absolute addressing, and direct memory 
+addressing. The first two types rely on a Fabric Address (FA), PIDonFEP (3.4.2.3.2), and set of Resource 
+Index (3.4.2.3.3) values to select a libfabric endpoint. They differ in how a PIDonFEP is interpreted. In 
+relative addressing, the PIDonFEP is relative to the JobID (0). In absolute addressing, the PIDonFEP is 
+interpreted without a JobID. The libfabric endpoint has a variety of resources that can include such 
+things as a receive queue for send/receive operation, a set of matching buffers, RMA resources, and 
+completion delivery—both completion queues and counters. This list does not attempt to be exhaustive, 
+and the exact types and nature of the resources are not intended to be prescriptive. 
+For each matching, nonmatching, or RMA operation that an implementation supports, separate 
+resources are identified by the combination of a Resource Index and operation type. Buffers provided 
+for different operation types are addressed independently, as illustrated throughout the following 
+examples. 
+Informative Text: 
+Tagged and untagged messages inherently require two different “lists” at the target, which requires 
+two different addressing points. The original mechanism considered was to have a single opcode (e.g., 
+UET_PUT) for all, with the target resources addressed based on the configuration of the target 
+resource. An alternative mechanism considered was to have each resource index be configured for 
+what type of operation could be performed on it and reject operations of other types. 

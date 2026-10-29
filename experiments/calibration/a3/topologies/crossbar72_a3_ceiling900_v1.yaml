@@ -1,0 +1,38 @@
+# Calibration-ladder A3 topology: fully-connected crossbar of 72 ranks at
+# the CAL-A2-derived 900 B/ns per-GPU per-direction injection line — the
+# anchor-point row of stage A3 (CAL-A3, the ladder's first MEASURED O-CCT
+# target: NCCL 2.28.3 allreduce on a GB200 NVL72 rack, 72 GPUs,
+# docs/calibration/anchors_staging.md §A3). Stage A2 established the 900
+# line from CAL-A2's staged 1.8 TB/s bidirectional per-GPU quote (split
+# stated by the staging doc, flagged there as interpretation risk if quoted
+# as measured; decimal units, 1 GB/s = 1 B/ns).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# CAL-A3 measurements. The value 900 was fixed by CAL-A2's own staged
+# arithmetic BEFORE CAL-A3's times were read (stage A2's normalization
+# demonstration already showed CAL-A3's 32 GiB busbw sitting +0.77% above
+# this line); this stage CLASSIFIES that flag, it does not move B. L = 200
+# ns is the A-L0X-LAT registry point (KEEP; the latency axis belongs to its
+# own global stage). The single-port model (A-L0X-PORT) is a modeling
+# assumption the plan keeps for NVSwitch-class fabrics.
+#
+# Structural gate note: CAL-A3's message sizes are powers of two
+# (2 GiB .. 32 GiB), which are never divisible by 72 = 8*9, so the
+# A-L0X-DIV input guard rejects the anchor's exact sizes at r=72. Stage
+# A3 therefore runs the run path at the 72-divisible bracketing sizes
+# (floor/ceil around each anchor size, relative offset <= 2.7e-8) and
+# records the exact-size identity evaluation in the calibration record.
+topology_id: crossbar72_a3_ceiling900_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 900
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency; single-port injection shared across the 71 peers. No congestion,
+  no credits, no packetization — L0 transport model only. Provenance: B =
+  900 B/ns is CAL-A2's staged per-GPU per-direction quote (the normalization
+  line, never an achieved value); L = 200 ns is the free A-L0X-LAT registry
+  point. Values are anchor specs/assumptions, never measurements.

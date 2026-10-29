@@ -1,0 +1,44 @@
+# Calibration-ladder A7 anchor-point RUN: the L0 ring
+# identity at the CAL-A7 PER-LINK anchor point — r=8 (one MI300X baseboard
+# domain), B=64 B/ns per direction (the anchor's per-link per-direction
+# rate: 128 GB/s bidirectional per dedicated Infinity Fabric link, split
+# per the plan §2.1 unit convention; also exactly the A-L0-BW registry
+# point), L=200 ns (A-L0-LAT registry point), payload 8*2^26 = 512 MiB
+# (a bandwidth-bound member of the stage's 12-size ladder; no measured
+# MI300X series exists to neighbor — CAL-A7 is a spec).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A7-LINK64-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a7/workloads/w1_dense_tp_decode_tp8_512mib.yaml
+infra_graph:
+  path: experiments/calibration/a7/topologies/ring8_a7_link64_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a7/profiles/implementation_profile_l0_ring_cal_a7_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_a7_link64_v1 (ring algorithm embedded in the CAL-A7 full mesh; r=8, B=64 B/ns per-link anchor point, L=200 ns free)
+  workload: w1_dense_tp_decode tp8, payload 8*2^26 (512 MiB, bandwidth-bound ladder member)
+  implementation: analytical L0 ring identity; CAL-A7 comparison is per-link spec placement only (spec, not a time series) — PROPOSED, review required
+evidence_level_requested: E0

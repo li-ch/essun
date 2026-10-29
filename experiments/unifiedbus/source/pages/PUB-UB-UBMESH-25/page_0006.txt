@@ -1,0 +1,53 @@
+Secondly, unlike Clos-based architectures that demand extensive switching, this direct-connected topology provides great potential of reducing transmission distance. Combined with data placement and collective communication optimization (Sec.5.2), most transmissions (typically involving TP or SP as per Table 1) can be completed in 0-2 hops, substantially minimizing the data movement overhead.
+
+Thirdly, compared to other popular topologies like Clos, the nD-FullMesh topology mitigates the reliance on high-bandwidth switches and long-range optical interconnections. Instead, it maximizes the use of short-range direct interconnects. For example, as estimated in Table 2, short-range passive electrical cables account for 86.7% of the total consumed cables according to our estimation. This design substantially reduces the cost of switches and optical modules, while also enhancing system reliability, as electrical cables and connectors are more stable than optical modules.
+
+Figure 5. High-Dimensional Topology and Flexible Bandwidth Allocation333
+
+The number of ports and their allocation in the figure is just for illustration rather than real implementation.
+
+Table 2. Usage Estimation of Different Types of Links
+
+DimensionDistanceLink TypeRatio
+
+X​YXY∼1\sim 1 mPassive Electrical Cable86.7%
+
+ZZ∼10\sim 10 mActive Electrical Cable7.2%
+
+α\alpha∼102\sim 10^{2} mOptical Cable4.8%
+
+β​γ\beta\gamma …∼103\sim 10^{3} mOptical Cable1.2%
+
+Table 3. Main Building Blocks of UB-Mesh.
+
+HardwareNPUCPULRSHRS
+
+Illustration
+
+FunctionsAI computeHost CPULow-radix switchingHigh-radix switching
+
+IO CapabilityUB x72UB x32UB x72UB x512
+
+Lastly, unlike the 3D-Torus topology, which is not well-suited for complex collective communication operations like all-to-all, the full-mesh topology can efficiently support these operations, which will be discussed in Sec. 5.
+
+3.2. Building Blocks of UB-Mesh
+
+The proposed nD-FullMesh topology offers several theoretical advantages, but its practical implementation and the enhancement of system performance present new challenges, necessitating a comprehensive consideration of various engineering constraints and tradeoffs. To address these, we have designed and manufactured a series of hardware modules that serve as the fundamental building blocks of UB-Mesh. These modules are interconnected through a novel interconnection mechanism called Unified Bus (UB). The details are as follows:
+
+3.2.1. Hardware Modules.
+
+Table 3 enumerates the primary components of UB-Mesh. At its core, the NPU serves as the AI compute unit. The NPU equips two UB IO controllers, which collectively provide x72 UB lanes. The CPU, responsible for executing host programs, is also equipped with one UB IO controller, offering a UB x32 IO.
+
+Although UB-Mesh prioritizes direct interconnects, switching capabilities remain essential to meet specific requirements. For example, it is better to aggregate the ZZ and α​β​γ\alpha\beta\gamma-dimension NPU IOs in Fig. 3 to facilitate efficient inter-rack interconnection. Additionally, we expect that the CPU-NPU ratios and their binding relationships can be flexibly adjusted to realize efficient NPU and memory resource pooling, which can be realized via switching.
+
+To provide cost-efficient switching capabilities within UB-Mesh-Pod, we develop LRS, which are lightweight, low-radix switches. It has low manufacturing cost and efficiently aggregates inter-rack IO bandwidth and enables CPU-NPU communication.
+
+Despite that UB-Mesh can be implemented using low-radix switches alone, practical network constraints often limit its scope to a certain size (UB-Mesh-Pod). Therefore, UB-Mesh also includes high-radix switches (HRS) that offer a UB x512 IO capacity for Pod-level switching. Detailed architecture design and considerations of UB-Mesh are introduced in Sec. 3.3.
+
+3.2.2. The Unified Bus (UB) Interconnects.
+
+Figure 6. The Unified Bus Interconnects VS. Traditional Hybrid Interconnects
+
+Figure 7. Architecture Design of UB-Mesh
+
+Connecting these heterogeneous hardware modules requires specific interconnect techniques. As illustrated in Fig.6-(a), traditional GPU-based LLM training systems(Qian et al., 2024; Gangidi et al., 2024) typically adopt hybrid interconnects: PCIe for CPU-GPU and CPU-NIC interconnection, NVLink for intra-server GPU interconnection, and InfiniBand/RoCE for inter-server interconnection. As shown in Fig. 6-(b), unlike previous designs, we introduce the Unified Bus (UB) interconnect444

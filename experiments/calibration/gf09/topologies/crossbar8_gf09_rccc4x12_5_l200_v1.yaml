@@ -1,0 +1,51 @@
+# Calibration-ladder GF-09 topology: fully-connected crossbar of 8
+# ranks at the RCCC WORKED-EXAMPLE FAIR-SHARE DISPLACEMENT —
+# B = 12.5 B/ns (= 50/4), L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-09,
+# arXiv:2508.08906; numbers AS STAGED): the paper's worked congestion
+# example — RCCC "assigns 25% of the bandwidth to each" of 4 incast
+# flows. Per-flow share exactly 1/4; as an effective-B displacement at
+# the design-class carrier: 50/4 = 12.5 B/ns (asymptotic CCT ratio vs
+# the carrier exactly 4, bandwidth-bound).
+#
+# WORKED-EXAMPLE CLASS (honesty): this is DESIGN-DOC ALGEBRA — a
+# pedagogical example of the fair-share arithmetic, not a measurement
+# and not even a target; it is executed with the same declared
+# dimensionless-proxy technique as GF-05/GF-07/GF-08's factor rows,
+# with the class mismatch carried on the row (an incast fair-share is
+# not a collective CCT). STRUCTURAL TWIN (identity arithmetic, recorded
+# in the stage record, not executed as a run): the L0 single-port
+# crossbar identity at r = 5 has exactly r-1 = 4 peers serialized
+# through the ONE shared port B — each peer's average share of B is
+# exactly 1/4, the worked example's own arithmetic; the bandwidth
+# coefficient there is 2(r-1)/r = 8/5. A DECLARED structural
+# correspondence only — the allreduce reduce-scatter phase is not an
+# incast workload.
+#
+# Cross-anchor coincidence, recorded never cross-derived: 12.5 B/ns is
+# numerically identical to GF-05's uet-htsim 8:1-oversubscription
+# displacement value (100/8) and GF-08's bidirectional-aggregate
+# Falcon reading.
+#
+# HONESTY: B and L are SWEPT FREE PARAMETERS placed by anchor/registry
+# arithmetic BEFORE any stage output was read, never tuned. r = 8 free
+# smoke default (GF-09 stages no rank count). Design-target /
+# worked-example class — never achieved values.
+topology_id: crossbar8_gf09_rccc4x12_5_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 200
+notes: >
+  Worked-example displacement row: B = 12.5 B/ns = 50/4 (the GF-09
+  staged RCCC example — 4 incast flows each assigned exactly 25% of
+  the bandwidth — mapped as an effective-B displacement at the
+  design-class carrier), L = 200 ns registry. Identity
+  t = 2(r-1)/r*M/B + 2L; asymptotic CCT ratio vs the carrier exactly
+  4. The row sits BELOW the plan §2.1 A-L0-BW anchored span [20, 64]
+  — the worked-example displacements extend below the anchored band,
+  as GF-05's oversubscription rows did. Placement only, never tuned;
+  worked-example class (design-doc algebra, not a measurement).

@@ -1,0 +1,46 @@
+ 638 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Variable name Description 
+outstanding_seq_max A configuration for the maximum permitted value of outstanding_seq.  
+Values: 0 to 524288 
+The absolute maximum permitted value for outstanding_seq_max is 524288, 
+which is equivalent to consuming half of the total sequence number space.  
+An implementation is permitted to support a significantly lower maximum for 
+outstanding_seq_max than the absolute maximum value. Setting this register to a 
+value that is greater than an implementation’s own maximum is not allowed. 
+outstanding_data_max A configuration for the maximum permitted value of outstanding_data.  
+This SHOULD be set to the bandwidth delay product for the link to ensure correct 
+operation of the pause and PFC mechanisms. 
+replay_timer_max A configuration to set the value of replay_timer at which replay_timer_expired is 
+set and a replay is initiated. 
+Values: 0 to 65535 ns with a resolution better than 10 ns. 
+replay_ct_max A configuration to set the maximum number of times a replay is performed 
+before the LLR mechanism gives up and enters the FLUSH state. A value of 255 
+(i.e., all-ones) is used to indicate that there is no maximum. 
+Values: 0 to 255  
+pcs_lost_status_timer_max The value at which the pcs_lost_status_timer is considered to have expired. See 
+pcs_lost_status_timer and pcs_lost_status_timer_expired. 
+Values: 0 to 4.29 s with a resolution better than 100 ns. 
+data_age_timer_max The value at which the data_age_timer is considered to have expired. See 
+data_age_timer and data_age_timer_expired. 
+Values1: 0 to 4.29 s with a resolution better than 100 ns. 
+llr_init_behavior Configures the behavior of the TX LLR when the TX state machine is in the INIT 
+state. 
+Values: DISCARD, BLOCK, BEST_EFFORT 
+llr_flush_behavior Configures the behavior of the TX LLR when the TX state machine is in the FLUSH 
+state. 
+Values: DISCARD, BLOCK, BEST_EFFORT 
+re_init_on_discard Configures the behavior in the event of an LLR replay failure.  
+Values: TRUE, FALSE 
+When the value is TRUE, then the LLR will attempt to re-initialize. 
+When the value is FALSE, then the LLR will wait for management intervention.  
+ctlos_target_spacing A configuration indicating the target number of bytes between transmission of 
+successive LLR_ACK / LLR_NACK CtlOS. Values 400 to 16384 with suggested value 
+2048. 
+Note: 
+1. The minimum usable value is implementation dependent and affected by link round trip time . 
+5.1.5 LLR transmit path operation 
+The LLR TX path is controlled by the state machine shown in Figure 5-3. 
+In addition to the state machine, the LLR TX path maintains the following variables to control its 
+operation, as shown in Table 5-10: 

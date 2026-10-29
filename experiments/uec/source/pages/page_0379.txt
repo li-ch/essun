@@ -1,0 +1,87 @@
+ 379 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Field Name Field Size Description 
+ack.rcvd_bytes 24 bits 
+(per PDC) 
+ack.rcvd_bytes refers to the 
+pds.ack_cc_state.rcvd_bytes field in an ACK packet, 
+multiplied by 256 for units = bytes 
+ack.ooo_count 16 bits 
+(per PDC) 
+See OOO_COUNT in this table 
+LOCAL CONFIGURATION  Configuration for OOO loss detection 
+loss_retx_factor 8 bits 
+(global) 
+Configured value used to approximate a number of 
+RTTs 
+min_retx_factor 32 bits 
+(global) 
+Minimum threshold in bytes 
+LOSS DETECTION STATE  State for OOO_COUNT loss detection 
+OOO_COUNT (@destination) 16 bits 
+(per PDC) 
+Number of PSNs received at destination beyond the 
+first missing PSN (i.e., past the first hole in the 
+bitmap) 
+Dest_Lowest_Not_Rcvd_PSN 
+(@destination) 
+32 bits 
+(per PDC) 
+Lowest PSN not yet received 
+avg_tx_pkt_size (@source) 16 bits 
+(per CCC) 
+Calculated average size of packet in bytes—
+implementation-specific calculation—or may be set 
+to a constant if the workload is known 
+Src_Lowest_Not_Rcvd_PSN 
+(@source) 
+32 bits 
+(per PDC) 
+Lowest PSN not yet ACK’d by SACK bitmap, distinct 
+from CACK_PSN in that clear is not considered 
+inflight_pdc_bytes 
+(for each PDC in the CCC) 
+32 bits 
+(per PDC) 
+Count of bytes transmitted on the PDC but not yet 
+acknowledged—used to scale cwnd per PDC in these 
+calculations 
+last_rtx_psn (@source) 32 bits 
+(per PDC) 
+Snapshot of Src_Lowest_Not_Rcvd_PSN when 
+entering loss recovery mode 
+recovery_psn (@source) 32 bits 
+(per PDC) 
+Snapshot of highest sent PSN when entering loss 
+recovery mode 
+highest_sent_psn 
+(@source) 
+(aka HPSN) 
+32 bits 
+(per PDC) 
+Highest PSN that was already sent into the network 
+DYNAMIC FIELDS  Temporary fields—used during calculations 
+loss_threshold_bytes 32 bits 
+(per CCC) 
+Calculated value (dynamic threshold) used to 
+determine if a packet is likely lost per this method 
+loss_threshold_pkts 16 bits 
+(per CCC) 
+Calculated using avg_tx_packet_size 
+cwnd_pkts 16 bits 
+(per CCC) 
+Calculated using avg_tx_packet_size 
+newly_rcvd_bytes 24 bits 
+(per PDC) 
+Number of bytes newly acknowledged in the ACK 
+just received (i.e., the difference between the 
+previous pds.ack_cc_state.rcvd_bytes and just 
+arrived pds.ack_cc_state.rcvd_bytes, adjusted to 
+units = bytes) 
+loss_recovery_mode Boolean 
+(per PDC) 
+Indicates if PDC is currently in loss recovery mode. 
+Because a CCC may include more than one PDC, stats are maintained at both the PDC and CCC level. The 
+algorithm proportionally allocates cwnd to each PDC in the calculation based on the ratio of PDC bytes 
+to CCC bytes inflight. 

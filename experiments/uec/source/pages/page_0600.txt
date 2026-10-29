@@ -1,0 +1,39 @@
+ 600 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+4.2 Congestion Signaling (CSIG) 
+Contemporary machine learning (ML) training and high-performance computing (HPC) workloads 
+compute across a switched network fabric in closely coupled, synchronous fashion. As a result, they 
+demand short flow completion times, even at the tail of the distribution. For these workloads, overall 
+application progress can stall when even a single flow’s completion is delayed. 
+When a flow completes, it abruptly releases the capacity it had previously consumed at links along its 
+path. Other flows that share those links must be able to increase their rates rapidly to put that newly 
+idle capacity to use promptly. Moreover, achieving low tail flow completion times requires effective 
+multi-path spreading of flows across the fabric’s many paths. 
+In oversubscribed workloads, stretching of tail completion times for “losing” flows can become a 
+bottleneck for overall application performance. These performance constraints demand unprecedented 
+responsiveness from congestion control protocols, and in turn call for new inputs to congestion control 
+that offer fine-grained and timely information about the congestion state of the network fabric. 
+End-host congestion control has long employed simple end-to-end signals, such as round-trip time (RTT) 
+and packet loss events, to summarize the extent of congestion on a full path. Using explicit congestion 
+notification (ECN) marks, switches directly provide a simple, Boolean indication to end hosts of whether, 
+short of a drop, a packet encounters more than some threshold queue length at one or more hops along 
+its path. These established signals are coarse grained: as end-to-end, path-summary metrics, RTT, and 
+packet-loss event counts reflect the total congestion along a full path and do not reveal conditions at 
+any individual switch. 
+An ECN mark offers only a single-bit quantification of congestion, and as a path summary, reports only 
+the presence of congestion along any extent of the full path, or its absence along all of it. These signals 
+do not meet the finer-grained congestion control needs of contemporary ML and HPC workloads. For 
+example, to increase a flow’s sending rate rapidly to match the abruptly released capacity on a link 
+precisely, a sender would benefit from discovering the available bandwidth at the single most 
+constrained link along a path: the link with the minimum available bandwidth. 
+While per-link available bandwidth is readily measurable by individual switches, it is not directly 
+observable by end hosts. Absent finer-grained signals, status-quo congestion control approaches are 
+limited to searching conservatively for a path’s available bandwidth by increasing their sending rate and 
+detecting when they congest the path—a slow process. 
+As another example, end-to-end delay measurements mix together queueing delays from all congested 
+hops along a path, such that in delay-based congestion control, the number of congested hops 
+determines a sender’s perceived extent of congestion, which can yield bandwidth unfairness between 
+flows. Only the queueing delay at a flow’s single most congested hop (its true bottleneck) should 
+determine a sender’s sending rate. This quantity, again, is not directly observable by end hosts using 
+today’s coarse-grained, path-summary signals. 

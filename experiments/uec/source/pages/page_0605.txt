@@ -1,0 +1,35 @@
+ 605 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+For telemetry purposes, signals from CSIG tags can be collected by software running on FEPs, either by 
+forwarding the CSIG signal directly to the receiving application or by routing it to a dedicated telemetry 
+collection application. 
+Methods for collection of telemetry from received CSIG signals are outside the scope of this 
+specification. 
+4.2.4 CSIG Tag Formats  
+This specification defines two CSIG tag formats: a 4-byte compact CSIG tag and an 8-byte wide CSIG tag. 
+The compact CSIG tag (Figure 4-3), is a 4-byte header field identical in frame offset and field width to an 
+IEEE Std 802.1Q-2022 clause 9-compliant VLAN tag (hereafter referred to as “VLAN tag” for brevity) [2] . 
+This choice of compact CSIG tag format simplifies adding CSIG functionality to the many switches that 
+can leverage VLAN tag match-action support to recognize and update CSIG tags. 
+All UE-compliant switches and hosts that support CSIG MUST support the compact CSIG tag format. 
+In comparison, the wide CSIG tag format (Figure 4-4), 8 bytes in length, targets deployments in which 
+switches have native CSIG support. The wide tag contains the same fields with the same functions as the 
+compact tag, but by virtue of the greater number of bits available for data fields in the wide tag, the 
+wide tag supports more signal types (csig.t: 16, vs. 8 for compact tags), finer-grained signal value 
+measurements (csig.s: 1 million quantized values vs. 32 buckets for compact tags), and more detailed 
+locator metadata (csig.lm: 15 bits vs. 6 bits for compact tags). The csig.t constants defined for signal 
+types are identical for the compact and wide tag formats, but the wide tag format supports additional 
+(as yet unused) signal type definitions that have no corresponding definitions in the compact tag format. 
+The compact and wide tag formats apply different transformations in their csig.s signal value 
+representations. The definitions of the csig.d (Do Not Modify) bit and csig.lm (Locator Metadata) fields 
+in the wide CSIG tag format are the same as those for the compact CSIG tag format, apart from the 
+greater width of the LM field in the wide CSIG tag format. 
+UE-compliant switches and hosts that support CSIG MAY additionally support the wide CSIG tag format. 
+ 
+       
+ 
+Figure 4-3 - 4-Byte Compact CSIG Tag 
+ 
+ 
+ 

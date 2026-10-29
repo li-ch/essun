@@ -1,0 +1,35 @@
+# Calibration-ladder GF-08 topology: crossbar r=8 ROCE-UNDER-CONGESTION
+# DISPLACEMENT at the ALTERNATIVE CARRIER — B = 1.5625 B/ns, L = 200 ns
+# (registry).
+#
+# ROLE: the second leg of the GF-08 CARRIER-TRANSFER sweep (the GF-07
+# technique): the SAME measured factor 8 ("operation completion times
+# 8x lower than CX-7 RoCE under network congestion") executed at BOTH
+# direction readings of the anchor's 200 Gbps peak — 25/8 = 3.125 at the
+# primary reading (crossbar8_gf08_roce8x3_125_l200_v1.yaml) and
+# 12.5/8 = 1.5625 here at the bidirectional-aggregate reading
+# (crossbar8_gf08_alt12_5_l200_v1.yaml is the uncongested reference).
+# Both displacements are representable finite decimals, EXECUTED; the
+# executed property: at every finite size the observed ratio at the
+# SLOWER carrier (12.5) reads CLOSER to the factor 8 than at the faster
+# carrier (25) — the finite-size carrier relativity of dimensionless
+# factors, with the closed form d/dx[(x*f+2L)/(x+2L)] = 2L(f-1)/(x+2L)^2
+# > 0 for x = c_rank*M/B_ref (GF-07's executed finding, replicated on
+# CARRIER-TRANSFER row. L = 200 ns registry. HONESTY: swept free
+# parameter fixed by anchor arithmetic BEFORE any stage output was read;
+# never tuned; the crossbar is a placement vehicle, never a prediction
+# of CX-7 RoCE.
+topology_id: crossbar8_gf08_roce8xalt1_5625_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 1.5625
+link:
+  pair_latency_ns: 200
+notes: >
+  L0 crossbar identity at the GF-08 congestion displacement under the
+  alternative carrier: B = 1.5625 = 12.5/8 (factor 8 applied to the
+  bidirectional-aggregate reading of the 200 Gbps peak), L = 200 ns
+  registry. Asymptotic CCT ratio vs the alternative carrier row exactly
+  8. Values are anchor quotes / free registry defaults, never our
+  measurements; never tuned.

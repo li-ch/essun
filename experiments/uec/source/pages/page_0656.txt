@@ -1,0 +1,41 @@
+ 656 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Counter  Description 
+R_VC_CC[x] Receiver credits consumed by VC[x] where x = 0 to (NumVCs -1). R_VC_CC counters are 
+updated when a packet is received on the link and when a CBFC CC_Update message is 
+received from the sender. 
+R_VC_CF[x] Receiver credits freed by VC[x], where x = 0 to (NumVCs -1). An R_VC_CF counter is 
+incremented as buffer space is made available for additional packet reception.  
+All cyclic counters wrap around at the modulus of the width of the counter. For example, S_VC_CC[x] is 
+implemented as 20-bit counter. When incrementing by N credits, the new value would be: 
+S_VC_CC[x] = (S_VC_CC[x] + N) mod 220 
+ 
+For ease of understanding and readability, the rest of this specification does not show the modulus 
+operation when performing additions or comparisons to these cyclic counters, and they appear as 
+always-increasing values. 
+State variables are shown in Table 5-17. 
+Table 5-17 - Sender State Variables 
+State Variable Description 
+S_P_CL Sender port credit limit. S_P_CL is initialized to the total number of credits available when 
+set by the receiver (TotalCredits). 
+S_P_CU Sender port credits in use counter. S_P_CU is incremented by the number of credits used for 
+packets as they are transmitted by the sender, and it is decremented as credits are returned 
+to the sender. 
+S_VC_CL[x] Sender credit limit for VC[x]. Set either directly during initialization with a value specified by 
+the receiver or by the sender after distributing TotalCredits among the lossless VCs.  
+S_VC_CU[x] Sender credits in use for VC[x]. This variable is equal to S_VC_CC[x] – S_VC_CF[x]. 
+ 
+Table 5-18 - Counter and Variable Widths and Initialization 
+Counter Position # of instances Width (bits) Initial Value 
+S_P_CL Sender 1 20 TotalCredits 
+S_P_CU Sender 1 20 0 
+S_VC_CL[x] Sender NumVCs 20 0 ≤ n ≤ TotalCredits 
+S_VC_CU[x] Sender NumVCs 20 0 
+S_VC_CC[x] Sender NumVCs 20 0 
+S_VC_CF[x] Sender NumVCs 15 0 
+R_VC_CC[x] Receiver NumVCs 20 0 
+R_VC_CF[x] Receiver NumVCs 15 0 
+Note: 
+• NumVCs is implementation-dependent, but an implementation SHALL support at least one lossless VC for 
+the CBFC mechanism to be enabled. 

@@ -1,0 +1,45 @@
+6. Evaluation
+
+In this section, we explore the architecture design space of UB-Mesh and analyze its advantages against baseline Clos architecture. To facilitate a more detailed comparison, we divide our analysis into two tiers: intra-rack architecture comparison and inter-rack architecture comparison.
+
+6.1. Experiments Setup
+
+Table 5. Benchmarking Models
+
+Name#Layers#HeadsHead SizeHidden Dim#Experts
+
+DenseModelsLLAMA-70B80641288192/
+
+GPT3-175B969612812288/
+
+Dense-1T12812819224576/
+
+MoEModelsGPT4-2T *96961281228816
+
+MoE-10T1281441281843232
+
+Table 5 lists the benchmarking workloads: LLAMA-70B and GPT3-175B are dense models while GPT4-2T is a sparse model adopting MoE techniques (Rajbhandari et al., 2022). Note that GPT4’s architecture has not been released officially, we adopt the inferred parameters (SemiAnalysis, 2023). To evaluate system’s performance on larger models, we also include Dense-1T and MoE-10T models. To explore the architecture of UB-Mesh, we build an in-house simulation infrastructure, which has been aligned with the real PoC hardware, to evaluate the cluster-scale LLM training performance.
+
+6.2. Intra-Rack Architecture Exploration
+
+We compare among different intra-rack network architectures, which are illustrated in Fig. 16:
+
+Figure 16. Baseline Intra-Rack Architectures
+
+(a) 2D-FM: UB-Mesh’s architecture. 64 NPUs are directly interconnected via electrical cables, forming a 2D full-mesh network topology (X-Fullmesh + Y-Fullmesh). This design offers low cost and adopts 72 LRS (see Table. 3) for aggregating inter-rack bandwidth and CPU-NPU interconnection (CPUs are omitted in the figure for simplicity).
+
+(b) 1D-FM-A: This alternative architecture retains the 1D X-Fullmesh, namely the 8 NPUs on each board are still directly interconnected. However, cross-board communication is realized via 32 LRS. Each NPU has a UB x16 IO connecting to LRS. Another UB x16 IO are connected to four high-radix switches (HRS) for inter-rack communication.
+
+(c) 1D-FM-B: This architecture replaces LRS with HRS further. Four LRS in each backplane is used for NPU-to-CPU communication. Cross-board NPU communication is realized via eight switches in four backplanes. These switches are also connected to inter-rack networks, offering a UB x32 IO for inter-rack communication for each NPU.
+
+(d) Clos: This architecture does not use inter-NPU direct connections, instead, it connects all ports of 64 NPUs to 4×44\times 4 HRS, forming a symmetrical Clos topology. This architecture provides the highest flexibility but also requires lots of switching resources.
+
+Performance Comparison: In Fig. 17, we fix the inter-rack architecture (2D-FM, see Sec.6.3) and compare the training throughput of various intra-rack architectures, relative to the Clos baseline. The SuperPod scale is 8K (128 racks), and the sequence lengths evaluated range from 8K to 10M. We calculate the average performance among different sequence lengths.
+
+As shown in Fig. 17-(a), compared to the Clos architecture, the 2D-FM architecture achieves 93.2% to 95.9% of the training performance. The 1D-FM-A architecture shows lower performance degradation, achieving a performance improvement of 2.44% for LLAMA2-70B compared to 2D-FM. For other models with more parameters, the improvement is less than 1.6%. The 1D-FM-B architecture demonstrates a slightly higher performance improvement of more than 3% compared to the 2D-FM architecture thanks to higher inter-rack bandwidth, but the improvement is still marginal.
+
+Figure 17. Performance of Different Intra-Rack Topology
+
+Fig. 17-(b) explores the performance on different sequence lengths, relative to the baseline scenario of the Clos architecture (all-models average). For sequence lengths ranging from 8K to 32K, the 2D-FM architecture achieves 95.5% of the performance, which is slightly lower than 1DFM-A (98.1%) and 1DFM-B (99.2%). For sequence lengths from 64K to 10M, the 2D-FM architecture achieves 95.0% of the performance compared to the Clos architecture.
+
+We can see that compared to Clos, 2D-FM architecture offers similar training performance (performance gap within 7%) with much lower hardware cost, which will be evaluated in Sec. 6.4.

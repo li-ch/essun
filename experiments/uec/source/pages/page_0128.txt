@@ -1,0 +1,54 @@
+ 128 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 2-35 - UET Control API Rekey Request Parameters 
+Parameter Name Size (bits) Description 
+AN 1 Association Number (i.e., Key Generation ID) 
+SDI 31 Secure Domain Identifier 
+SSI 32 Secure Source Identifier 
+ 
+‘C’ structure representations of the UET security binding parameters, rekey parameters, and rekey 
+request parameters are shown below. 
+#define UET_SEC_MAX_KEY_OCTETS      64 
+#define UET_SEC_ALG_AES_GCM_256     0        /* AES-GCM-256 algorithm */ 
+#define UET_SEC_REKEY_MODE_AN      (1 << 0)  /* association num rekey mode */ 
+#define UET_SEC_REKEY_MODE_AUTO    (1 << 1)  /* automatic rekey mode */ 
+#define UET_SEC_CRYPTO_MODE_DIRECT  0        /* direct crypto mode */ 
+#define UET_SEC_CRYPTO_MODE_CLUSTER 1        /* cluster crypto mode */ 
+#define UET_SEC_CRYPTO_MODE_CSERVER 2        /* Client-server crypto mode */ 
+#define UET_SEC_AN_BIT             (1 << 31) /* msb of sdi */ 
+#define UET_SEC_RAW_KEY_TYPE        1        /* key is not wrapped */ 
+#define UET_SEC_WRAPPED_KEY_TYPE    2        /* key is wrapped */ 
+#define UET_SEC_IVMASK_OCTETS       96       /* IVMASK size in octets */  
+ 
+struct uet_sec_bindings { 
+          uint8_t alg; 
+          uint8_t rekey; 
+          uint8_t crypto_mode; 
+          uint8_t rekey_shift; 
+          uint64_t rekey_mask; 
+          uint16_t reserved; 
+          uint16_t coff; 
+    uint16_t aoff; 
+    uint32_t an_sdi; 
+          uint32_t ssi; 
+     uint8_t encap_type; 
+}; 
+  
+struct uet_ctrl_rekey_parms { 
+         uint32_t an_sdi; 
+    uint32_t ssi; 
+    uint16_t current_epoch; 
+    uint8_t ivmask[UET_SEC_IVMASK_OCTETS]; 
+          uint8_t key_type;  
+          uint8_t reserved_1; 
+          uint16_t key_len; 
+          uint32_t reserved_2; 
+          uint8_t key[UET_SEC_MAX_KEY_OCTETS];     
+}; 
+  
+struct uet_ctrl_rekey_req { 
+          uint32_t an_sdi; 
+          uint32_t ssi; 
+}; 
+ 

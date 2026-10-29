@@ -1,0 +1,23 @@
+# W1 Dense TP Decode — tp_size 72 at the 32 GiB FLOOR BRACKET payload
+# 34359738336 B = 2^35 - 32 (the largest multiple of 72 that is <= CAL-A3's
+# staged 32 GiB = 2^35). Stage A3 store runs execute this file; the sweep
+# overrides per config via grid.payload_sizes_bytes.
+#
+# WHY A BRACKET: CAL-A3's message sizes are powers of two, which are never
+# divisible by 72 = 8*9, so the A-L0X-DIV input guard (a structural KEEP
+# assumption of the L0 identity) rejects the anchor's exact sizes at r=72.
+# The floor/ceil brackets sit within <= 40 B (relative <= 2.7e-8) of the
+# anchor sizes; the exact-size identity evaluation is recorded — with this
+# bracketing declared — in the stage's calibration record.
+#
+# Same workload shape as every other W1 file (2 layers x 3 decode steps =
+# 6 AllReduce ops per config). tp_size 72 is the NVL72 rank count pinned by
+# CAL-A1's port arithmetic (stage A1). Nothing here is measured or
+# standard-normative; all sizes are integer byte counts; deterministic by
+# construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal72-a3
+tp_size: 72
+layers: 2
+steps: 3
+allreduce_bytes: 34359738336   # 2^35 - 32 (32 GiB floor bracket); free parameter A-W1-SIZE

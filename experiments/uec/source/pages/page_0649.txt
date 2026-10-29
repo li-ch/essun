@@ -1,0 +1,21 @@
+ 649 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Counter Description 
+rx_poisoned A count of the number of LLR-eligible frames received with a poisoned FCS. 
+rx_bad A count of the number of LLR-eligible frames received with a bad FCS. 
+rx_expected_seq_good A count of the number of LLR-eligible frames received with a good FCS that had 
+the expected sequence number. 
+rx_expected_seq_poisoned A count of the number of LLR-eligible frames received with a poisoned FCS that 
+had the expected sequence number. 
+rx_expected_seq_bad A count of the number of LLR-eligible frames received with a bad FCS that had the 
+expected sequence number. 
+rx_missing_seq A count of the number of LLR-eligible frames received that had a sequence 
+number that indicated a missing LLR-eligible frame in the sequence (irrespective 
+of FCS status). 
+rx_duplicate_seq A count of the number of LLR-eligible frames received that had a duplicate 
+sequence number (irrespective of FCS status). 
+rx_replay A count of the number of times that the receiver has detected the start of a 
+replay. 
+ 
+  

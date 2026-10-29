@@ -1,0 +1,51 @@
+ 46 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+can be utilized for new packet 
+arrivals. 
+Lossless VC A virtual channel configured to 
+require CBFC credits for 
+transmission of packets with 
+guaranteed buffering available at 
+the receiver. A lossless virtual 
+channel can be flow controlled 
+separately from other lossless VCs 
+on a single physical link. 
+Receiver The link partner function that 
+receives packet data and transmits 
+CBFC credits. 
+Sender The link partner function that 
+transmits packet data and receives 
+CBFC credits. 
+Virtual channel (VC) An entity that contains a subset of 
+a port’s traffic with similar traffic 
+characteristics, dedicated 
+buffering, and flow control 
+management. 
+Link Layer Discovery  Link Layer Discovery Protocol 
+(LLDP) 
+A media-independent protocol, 
+standardized by IEEE as IEEE Std 
+802.1AB, capable of running on all 
+IEEE 802® LAN stations allowing 
+ports to learn the connectivity and 
+management information from 
+adjacent stations. 
+Company ID (CID) IEEE Std 802: A unique 24-bit 
+identifier assigned by the IEEE to 
+identify an organization. A CID 
+cannot be used to generate 
+universally unique MAC addresses. 
+Management gNMI A standard gRPC-based network 
+management interface defined by 
+the OpenConfig project and used 
+to retrieve and modify network 
+device configuration as well as 
+provide control and generation of 
+telemetry. 
+gNOI A standard gRPC-based network 
+operations interface defined by 
+the OpenConfig project and used 
+for executing operational 
+commands on network devices. 

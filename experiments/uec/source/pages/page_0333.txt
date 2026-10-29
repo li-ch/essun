@@ -1,0 +1,31 @@
+ 333 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Native IPv4, native IPv6, and UDP encapsulations are specified. The PDS header formats are the same for 
+all encapsulations. UET FEPs MUST support generating and accepting UET packets using IPv4, IPv6, and 
+UDP encapsulation. Deployments may restrict which encapsulation type(s) are enabled. 
+When UDP encapsulation is used, the udp.src_port field is used as the entropy. The UET entropy header 
+MUST NOT be present when using UDP. When UDP is used, the udp.checksum MUST be set to 0 on send 
+and ignored on receive.  
+When native IPv4 or IPv6 encapsulation is used, the UET entropy header MUST be used. 
+Implementations MUST allow the ip.protocol field in the IP header to be configured. 
+IP fragmentation is not supported when using UET. FEPs MUST NOT fragment a packet. When using 
+IPv4, the ipv4.flags.df bit (don’t fragment) is set, and the ipv4.flags.mf bit (more fragments) and 
+ipv4.fragment_offset field is cleared to zero on send. 
+3.5.10.2 UET UFH Entropy Header 
+The UET UFH entropy header is used when running UET directly over the UFH_32 header. The format of 
+the UET UFH entropy header is shown in Figure 3-64. The header field is the same as described in Table 
+3-38; however, the location of the field does not align with the location of a UDP source port and 
+instead is located directly after the EtherType field where the EtherType is 0xE790 identifying UET. 
+ 
+The UET UFH entropy header MUST be present when running UET directly over the UFH_32 header. If 
+using any layer 2 tags such at VLAN or CSIG, these are located before the EtherType indicating UET. 
+3.5.10.3 PDS Prologue 
+The first two bytes at the beginning of all PDS Headers except RODL uses the format shown in Figure 
+3-65. The header fields are described in Table 3-39.  
+ 
+Figure 3-64 - UET UFH Entropy Header 
+ 
+ 
+ 
+Figure 3-65 - PDS Prologue Format 

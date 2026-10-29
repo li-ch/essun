@@ -1,0 +1,54 @@
+ 240 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+pds.next_hdr ses.opcode Allowed Limitations 
+MUST use 
+UET_HDR_RESPONSE_DATA_SMALL 
+for response with data. 
+UET_FETCHING_ATOMIC  
+UET_MSG_ERROR  
+UET_SYNC_ATOMIC  
+UET_SYNC_WRITE  
+UET_HDR_REQUEST_MEDIUM UET_NO_OP Payload size MUST be 0. Single-packet 
+messages only. 
+UET_WRITE Payload size MUST be less than or 
+equal to one Payload MTU. UET_READ 
+UET_ATOMIC 
+UET_FETCHING_ATOMIC  
+UET_SEND Payload size MUST be less than or 
+equal to one Payload MTU. UET_TAGGED_SEND 
+UET_DATAGRAM_SEND  
+UET_TSEND_ATOMIC Cannot use offset into target buffer. 
+UET_TSEND_FETCH_ATOMIC 
+UET_MSG_ERROR  
+UET_SYNC_ATOMIC  
+UET_SYNC_WRITE  
+UET_HDR_REQUEST_STD UET_NO_OP Payload size MUST be 0. Single-packet 
+messages only. 
+All Other Request Opcodes  
+UET_MSG_ERROR  
+UET_HDR_REQUEST_LCL UET_NO_OP Payload size MUST be 0. 
+UET_WRITE Payload size MUST be less than or 
+equal to 16KB-1 for ses.ac=0 and 4K-1 
+for ses.ac=1 but limited by the 
+configured Payload MTU. 
+UET_READ 
+UET_ATOMIC 
+UET_FETCHING_ATOMIC  
+UET_HDR_RESPONSE UET_RESPONSE  
+UET_DEFAULT_RESPONSE  
+UET_NO_RESPONSE  
+UET_HDR_RESPONSE_DATA UET_RESPONSE_W_DATA  
+UET_HDR_RESPONSE_DATA_SMALL UET_RESPONSE_W_DATA Cannot be used for responses to 
+messages larger than one Payload 
+MTU 
+UET_HDR_RESPONSE_DATA_LCL UET_DEFAULT_RESPONSE Must be used in response to a 
+UET_HDR_REQUEST_LCL. Payload size 
+must be less than or equal to Payload 
+MTU. 
+UET_RESPONSE_W_DATA 
+ 
+3.4.4 Semantic Processing 
+This section contains the normative requirements for how semantic headers are processed. Semantic 
+processing is expected to be implemented by a combination of hardware and software. The division 
+between hardware and software is an implementation decision. 

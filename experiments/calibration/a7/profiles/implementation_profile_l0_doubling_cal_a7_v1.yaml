@@ -1,0 +1,44 @@
+# Implementation profile for the calibration-ladder A7 anchor-point sweep
+# on the analytical L0 recursive-doubling backend (
+# anchor CAL-A7).
+implementation_profile_id: analytical_l0_doubling_cal_a7_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_recursive_doubling
+fidelity: L0
+model: >
+  recursive-halving + doubling AllReduce identity t = 2(r-1)/r*M/B +
+  2*log2(r)*L (see src/essun/backends/analytical/l0_recursive_doubling.py);
+  assumptions A-L0D-POW2 / A-L0D-STEP / A-L0D-BW / A-L0D-LAT / A-L0D-DIV
+  from experiments/vertical_slice/assumptions_l0.yaml. r=8 is a power of
+  two, so the anchor's rank count is natively accepted. Same single-port
+  OUT-OF-DOMAIN caveat as the crossbar profile (aggregate reading of the
+  full-mesh anchor); executed once per ladder size at the anchor point
+  (sweep_a7_doubling_v1.yaml) to place the third latency chain (6L) of
+  the single-port design space inside the anchor's fabric class and to
+  verify the backend's declared relation
+  t_doubling - t_crossbar = 2*(log2(r)-1)*L = 4L exactly.
+execution_path_note: >
+  Sweep path only (see sweep_a7_doubling_v1.yaml header): the run
+  path's collective-name gate cannot admit this backend's
+  two-word algorithm suffix ('allreduce_recursive_doubling' normalizes to
+  'allreduce_recursive', never matching the bare 'allreduce' the W1
+  generator issues, although the backend's own execute() accepts exactly
+  'allreduce'). Recorded as a stage finding in the calibration record;
+  NOT worked around by any src/ change in this stage.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns) = 448 bytes/ns at r=8 (the CAL-A7
+  aggregate anchor point; no B sweep of this identity — its bandwidth term
+  is identical to the crossbar's at equal B by construction, so a B sweep
+  would repeat stage rows; the sweep exists for the per-size anchor-point
+  placement and the latency-chain relation). L fixed at the registry
+  point 200 ns. Payload ladder 8*2^k (8 KiB - 8 GiB), every size
+  divisible by 8 (A-L0D-DIV accepts; r=8 a power of two, A-L0D-POW2
+  accepts). NOTHING tuned toward any anchor output.
+measurement_source: >
+  CAL-A7 staged numbers (AMD Instinct MI300X Platform Data Sheet; AMD Hot
+  Chips 2024; Lenovo LP1943; docs/calibration/anchors_staging.md §A7;
+  anchor PROPOSED in the anchor registry; confidence H
+  for transcription) — a vendor SPECIFICATION, not a measurement;
+  compared as PROPOSED evidence in results/calibration/; not our
+  testbed, no E3/E4 language.

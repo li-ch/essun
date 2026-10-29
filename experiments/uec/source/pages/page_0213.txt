@@ -1,0 +1,41 @@
+ 213 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+specific {initiator FA, target FA, initiator PIDonFEP, JobID, target PIDonFEP, Resource Index, traffic class} 
+tuple only. To meet the libfabric message ordering semantics for send-after-send (and other message 
+orderings), operations MUST use a ROD PDC to transport information required for resolving to a buffer 
+at the target. This means using a ROD PDC for fi_send() or fi_tsend() when making a request—including a 
+rendezvous request. Payload may be delivered out of order by using rendezvous transactions (3.4.5.3) or 
+deferrable send transactions (3.4.5.4). In these transactions, the initial message (e.g., eager portion) is 
+sent using a ROD PDC, and the remainder (e.g., the rendezvous read) is a separate message that may use 
+a RUD PDC. Section 3.4.10 discusses the mapping of *CCL ordered send/receive over a tagged interface 
+using a RUD PDC. 
+ 
+The mixture of RMA operations (e.g., fi_write()) with messaging (e.g., fi_send()) that requires message 
+ordering (e.g., send-after-write) MAY use a ROD PDC. If it does not use a ROD PDC, mixed RMA and 
+messaging MUST use source-side fencing to force the required ordering between messages. Source-side 
+fencing refers to the action of waiting for the prior operations to complete—conceptually similar to a 
+memory fence—and then initiating the subsequent transactions. This action would be applied at the 
+semantic sublayer, if it were implemented. 
+3.4.2.7.1.2 Payload Ordering 
+Payload order refers to the ordering that two different operations from the same initiating PIDonFEP 
+from a given initiator FEP perceive when accessing the same buffer associated with a single target FEP. 
+Common ordering modes (i.e., typical CPU memory model ordering modes that are also defined in 
+libfabric) include write-after-write (WAW), write-after-read (WAR), and read-after-write (RAW). RMA 
+operations that request payload ordering MAY use a ROD PDC. This would effectively order the delivery 
+of payload data such that the order in which it is presented to the target FEP would match the order of 
+the requests issued by software. Even then, WAR ordering is likely to have a limited size as defined by 
+the target implementation (i.e., as expressed through the max_order_war_size attribute in libfabric). To 
+implement WAR ordering, targets using a ROD PDC to achieve ordering MUST buffer the result of the 
+first read until an indication has been received from PDS that the result has been received by the 
+initiator. This is indicated by PDS transmitting a Clear packet for the result. Typical implementations limit 
+the size of data they buffer (e.g., to the maximum payload size of fetching atomic operations). Even with 
+these mechanisms in place, implementations need to take care in how the host bus interface (e.g., PCI 
+Express) semantics interact with the chosen ordering mode. 
+A second alternative for implementing payload ordering is to use initiator-side fencing in conjunction 
+with a RUD, or even RUDI, PDC. Initiator-side fencing implies that after one operation is performed, the 
+initiator waits for that operation to complete, and then the next operation is performed. 
+3.4.2.7.1.3 Order of Generation of Packets Within a Message 
+Informative Text: 
+Most implementations are likely to place multiple independent streams of ordered traffic onto a 
+single PDC. 

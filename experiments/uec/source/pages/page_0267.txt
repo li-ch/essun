@@ -1,0 +1,23 @@
+ 267 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 3-40 illustrates a few features of the RUD transport when implementing a back-off and retry 
+scheme. Single-packet messages are illustrated, and a message in the middle of the stream (message ID 
+3) does not find a match at the target. This returns a UET_RESPONSE with a ses.return_code of 
+RC_NO_MATCH. This indicates to the initiator that the message was dropped at the target because no 
+match was found. The initiator is then responsible for retrying the message at a later time. Note that 
+when the message associated with MID=3 and PSN=102 receives the RC_NO_MATCH response, it is 
+complete from the perspective of PDS and from the perspective of the message ID allocation. When this 
+message is retransmitted after the back-off time, it MUST allocate a new PSN and MAY allocate a 
+different message ID. Figure 3-40 also illustrates how semantic processing can have very different 
+processing times; thus, the response to PSN 101 is somewhat delayed. 
+Implementation Note: 
+SES does not specify the backoff time or the implementation mechanisms for the backoff and retry.  
+For example, the backoff and retry could be implemented as part of the libfabric provider 
+implementation.  
+While Figure 3-40 illustrates only single-packet messages, multi-packet messages have similar 
+characteristics. If the message associated with MID=3 and PSN=102 had been a multi-packet message, 
+then the diagram would look much the same. While it is expected that the initial send of a message 
+would complete before the back-off time expired, this is not a strict requirement. For example, a 
+ 
+Figure 3-40 - Single Packet Messages using Backoff and Retry 

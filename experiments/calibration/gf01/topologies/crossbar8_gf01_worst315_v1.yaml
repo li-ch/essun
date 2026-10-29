@@ -1,0 +1,36 @@
+# Calibration-ladder GF-01 topology: fully-connected (crossbar) of 8 ranks
+# at the WORST-LINK aggregate B = 315 B/ns = 7 x 45 — GF-01's own
+# worst-link expectation ("the slowest link caps the achievable bandwidth
+# at ~45 GB/s; 7 x 45 = 315 GB/s" expected aggregate;
+# docs/calibration/anchors_gapfill.md §GF-01). Decimal units, 1 GB/s =
+# 1 B/ns.
+#
+# ROLE: the anchor's OWN lower aggregate expectation, the pessimistic
+# bracket of its measured collective plateau. NOTE (recorded, in the
+# calibration record): the measured 16 GiB plateau busbw 318.98 GB/s sits
+# +1.26% ABOVE this 315 aggregate — i.e. above a single-worst-link-capped
+# ring-like reading; the blog's 4-channel RCCL configuration can spread
+# rings over faster links, and the anchor's measured per-link AVERAGE
+# (45.8, aggregate 320.6-325.6) is the consistent explanation — this
+# stage records the ordering, it does not adjudicate the mechanism.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-01 collective times; 315 = 7 x 45 is the anchor's own worst-link
+# arithmetic, fixed BEFORE any model output was read. L = 200 ns is the
+# A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_gf01_worst315_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 315
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; single-port injection shared
+  across the 7 peers (A-L0X-PORT; OUT-OF-DOMAIN as a physical description
+  of the xGMI full mesh — exact for the symmetric collective per stage
+  A7's equivalence finding). Provenance: B = 315 B/ns = 7 x 45 GB/s, the
+  anchor's staged worst-link aggregate expectation (link measurements
+  45.1-47.2 GB/s observed; ~45 slowest-link cap); L = 200 ns free
+  registry point. Values are anchor arithmetic / free-registry points,
+  never our measurements, never tuned.

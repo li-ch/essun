@@ -1,0 +1,30 @@
+# Transport-agnostic analytical topology for the L0.5 ring (second frontier
+# F1): the unidirectional ring of 8 ranks PLUS an explicit per-chunk
+# serialization (injection) term and per-hop latency charged per chunk
+# transfer. Link values are the SAME free parameters as the L0 ring
+# (A-L05-BW, A-L05-LAT — shared so the convergence anchor is meaningful);
+# the injection rate is the NEW free parameter (A-L05-INJ). None of these
+# are standard-derived, none measured. Setting nic.injection_bytes_per_ns to
+# null (or omitting `nic`) encodes the I -> infinity limit, where the L0.5
+# identity evaluates to the landed L0 ring identity exactly.
+# See experiments/vertical_slice/assumptions_l0.yaml (A-L05-*).
+schema_version: 0.2.0
+topology_id: ring8_l05_free_v1
+topology_class: unidirectional_ring_with_serialization
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+nic:
+  injection_bytes_per_ns: 64
+notes: >
+  Same ring fabric as ring8_free_v1 (one send and one receive direction per
+  neighbor, full-duplex uniform links, A-L0-FD); the differences are the
+  per-chunk serialization term c/I charged at the transmitting NIC and the
+  per-hop latency charged per chunk transfer (A-L05-SER). The chunk size is
+  the landed equal-chunk construction M/r (A-L05-CHUNK), not an independent
+  knob. Distinct topology_class so no landed backend can silently load this
+  file (l0.load_infra would ignore the nic term); the L0.5 loader checks the
+  class explicitly. Deliberately not registered in the run-path registry
+  (essun/orchestrator/runs.py DISPATCH) — model and identities only here. No congestion, no
+  credits, no packetization — L0.5 transport model only.

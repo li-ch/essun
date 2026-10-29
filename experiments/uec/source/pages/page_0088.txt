@@ -1,0 +1,62 @@
+ 88 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+UET libfabric endpoint addresses, which are specified in Section 2.2.5.1, include a Fabric Endpoint 
+Capabilities field that indicates the profiles supported by the fabric endpoint. If there is an overlap 
+between the profiles supported by the source and destination FEPs, the common profile with the 
+highest logical priority MUST be used for communication between the FEPs. 
+The AI Base profile is a subset of both the AI Full and HPC profiles. So, the AI Base profile can always be 
+used. The HPC profile is not a superset of the AI Full profile. However, deferrable send, which is 
+discussed in Section 2.2.5.4.1.2, is the only AI Full capability that is not supported by the HPC profile. 
+Thus, the AI Full profile and the HPC profile can interoperate subject to the following restrictions: 
+• The operations MUST be limited to those supported by the AI Full profile, 
+• The HPC profile MUST treat a deferrable send operation the same as a send operation, and 
+• The HPC profile MUST treat a deferrable tagged send operation the same as a tagged send 
+operation. 
+2.2.3 Configuration Information 
+The libfabric UET provider configuration parameters are shown in Table 2-7. 
+Table 2-7 - Libfabric UET Provider Configuration Parameters 
+Parameter Data Type Description 
+ 
+ 
+UET_PROVIDER_SERVICE_PATH 
+ 
+ 
+string 
+Environment variable specifying the path name 
+for an optional service configuration file 
+containing user-defined service name strings 
+and associated Indices. The service name strings 
+can be used as a parameter to the fi_getinfo() 
+API to allocate an index or a range of indices for 
+the service. The file format is simply one service 
+entry per line formatted as follows:  
+service_name start_index num_indices 
+The service_name is a string with a maximum 
+length of 64 characters. The start_index and 
+num_indices are integers, where (start_index + 
+num_indices] <= 4096. 
+ 
+UET_PROVIDER_MSG_RENDEZVOUS_SIZE 
+ 
+uint32_t 
+Messages with sizes >= 
+UET_PROVIDER_MSG_RENDEZVOUS_SIZE bytes 
+SHOULD be sent with a rendezvous protocol. 
+ 
+UET_PROVIDER_TAG_RENDEZVOUS_SIZE 
+ 
+uint32_t 
+Tagged messages with sizes >= 
+UET_PROVIDER_TAG_RENDEZVOUS_SIZE bytes 
+SHOULD be sent with a rendezvous protocol. 
+UET_PROVIDER_MAX_EAGER_SIZE uint32_t Maximum amount of eager data in bytes for the 
+rendezvous protocol. 
+The SES specification defines eager as follows: 
+The initial rendezvous request MAY have an 
+“eager” portion of data that is transferred with 
+it. Eager transfers are payload transfers before 
+the buffer for the transfer has been identified at 
+the target. 
+UET_PROVIDER_DEF_DATA_TC uint8_t Optional override of default DSCP codepoint for 
+data traffic class. See Section 2.2.7. 

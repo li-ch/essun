@@ -1,0 +1,49 @@
+ 544 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.6.18.8.3 Configuring Algorithm Instances 
+Algorithm instances are configured using implementation-specific tools. The set of configurable 
+parameters are algorithm-specific and provided to the PCM subsystem as YAML definitions as described 
+in Section 3.6.18.8.5. 
+3.6.18.8.4 Assigning Algorithm Instances to Network Traffic 
+PCM supports assigning algorithm instances to network traffic on a UET-instance basis. In this model it is 
+assumed the FEP is configured to operate over one or more UET instances. Every instance has two or 
+three traffic classes as outlined in the Section 3.6.4.7. All the traffic in a PCM-managed UET instance 
+MUST be controlled exclusively by a single CC and a single LB algorithm instance. 
+3.6.18.8.5 Load-time Algorithm Configuration YAML Format 
+PCM algorithms, their signals, accumulations, local state, and control outputs are configured via a 
+specified YAML format. The YAML file contains the following top-level keys: 
+• Algorithm: Details of the algorithm specification 
+• Signal: Configuration of the used signals, accumulations, and triggers 
+• Control: Output control definitions 
+• Variable: Definition of local-state variable and its initialization 
+• Parameter: Constant algorithm configuration parameters  
+The YAML template below defines the format of the file and its valid fields. Optional fields are in square 
+brackets. The type of <c-identifier> is a string that adheres to the C programming language definition of 
+an identifier. The type <enum> refers to names in the referenced table. The types uint, int, float refer to 
+the corresponding C types expressed in usual C string syntax (float values in scientific notation, e.g., 
+“1.3e5”). A <scalar> is any of those.  
+ 
+# ── CC Algorithm metadata (mapping node) ── 
+cc_algorithm: 
+  name: <c-identifier>     # Algorithm name (entry point of the function) 
+  description: <string>    # Algorithm description (free text) 
+  max_ack_coalescing: <uint>   # max number of ACKs to be coalesced 
+  [uint_min_bitwidth:  <uint>] # minimum required bitwidth for unsigned integers 
+  [int_min_bitwidth:   <uint>] # minimum required bitwidth for signed integers 
+  [float_min_bitwidth: <uint>] # minimum required bitwidth for float numbers 
+ 
+# ── Input signals (sequence node) ── 
+signal: 
+  name: <enum>           # Signal name (see Table XXX) 
+  macro: <c-identifier>  # Signal name in algorithm code (defined as macro) 
+  scope:<EV|CCC>         # Scope of signal (per-EV or per-CCC) 
+  [accumulator: <enum>]  # Signal accumulation (see Table YYY, also for default) 
+  [accumulator_const: <scalar>] # Acc. Constant, only used for s in uet_op_emwa  
+    [trigger: 
+      op: <eq,neq,gt,gte,lt,lte,wc>  # Trigger comparison operator 
+      mode: count_or_time            # Trigger fire mode 
+      mode_refval: <uint> <uint>     # Fire mode reference value tuple 
+      arm_mode: DISARMED|ONCE|CONTINUOUS   # Trigger armed mode 
+      action: INVOKE|RECORD          # Action performed on fire 
+      invoke_deadline: <uint>        # Invocation deadline 

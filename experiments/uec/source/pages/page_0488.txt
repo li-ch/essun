@@ -1,0 +1,41 @@
+ 488 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ccc.bytes_to_ignore = ccc.inflight 
+ccc.bytes_ignored = 0 
+ccc.trigger_qa = FALSE 
+qa_done_or_ignore = TRUE 
+ccc.achieved_bytes = 0 
+ccc.qa_endtime = now + ccc.base_rtt + target_qdelay 
+ 
+#If we are either in the bytes to ignore phase or ran quick adapt, 
+#reset fulfill-adjustment counters 
+If qa_done_or_ignore == TRUE: 
+ ccc.inc_bytes=0 
+ ccc.received_bytes=0 
+ 
+return qa_done_or_ignore 
+ 
+fast_increase(newly_rcvd_bytes, delay): 
+if delay ~= 0:   
+ccc.fi_count += newly_rcvd_bytes 
+if ccc.fi_count > ccc.cwnd or ccc.increase_mode: 
+ccc.cwnd += newly_rcvd_bytes  * fi_scale   
+if ccc.cwnd > ccc.max_wnd: 
+ccc.cwnd = ccc.max_wnd 
+ccc.increase_mode = TRUE 
+return 
+else: 
+ccc.fi_count = 0 
+ccc.increase_mode = FALSE 
+ 
+update_base_rtt(raw_rtt): 
+if ccc.base_rtt > raw_rtt: 
+ccc.base_rtt = raw_rtt 
+ccc.max_wnd = 1.5 * sender.linkspeed * (ccc.base_rtt in seconds) 
+ 
+apply_cwnd_penalty(Rcv_Cwnd_Pend, Restore_Cwnd, newly_rcvd_bytes): 
+if Rcv_Cwnd_Pend > 0: 
+if ccc.saved_cwnd == 0 then 
+ccc.saved_cwnd = ccc.cwnd 
+window_decrease = (Rcv_Cwnd_Pend * newly_rcvd_bytes) >> 7 

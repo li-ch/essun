@@ -1,0 +1,32 @@
+# Calibration-ladder A8 topology: unidirectional ring of 8 ranks at per-hop
+# latency L = 200 ns — the A-L0-LAT REGISTRY POINT (assumptions_l0.yaml
+# A-L0-LAT value 200, free range [10, 2000]; KEEP verdict per
+# CALIBRATION_PLAN.md §2.1: "200 ns lies inside the anchored axis span
+# (~10-800 ns)"). This is the stage sweep's BASELINE: every delta column
+# reads as placement of an L setting against the registry default, which is
+# the value every non-calibration manifest in the repo inherits.
+#
+# Placement context (this stage quantifies it): the registry point 200 ns
+# sits +42.9% above CAL-A8's upper emulated added-latency point (200/140 =
+# 10/7) and 3.125x above the lower point (200/64 = 25/8) — arithmetic
+# facts of the placement, NOT a registry change (the value stays 200; the
+# plan's NARROW-range-upper proposal for A-L0-LAT is the owner's decision).
+#
+# HONESTY: L is a SWEPT FREE PARAMETER (A-L0-LAT), never tuned toward any
+# CAL-A8 output. B = 64 B/ns is the A-L0-BW registry point, kept FIXED (the
+# anchor says nothing about bandwidth); r = 8 is the free smoke default
+# rank count (the anchor stages no rank count).
+topology_id: ring8_a8_l200_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Provenance: L = 200
+  ns is the free A-L0-LAT registry point (the repo-wide default this stage
+  places against the anchor's axis points); B = 64 B/ns is the free A-L0-BW
+  registry point; r = 8 is the free smoke default. Values are registry
+  defaults, never our measurements.

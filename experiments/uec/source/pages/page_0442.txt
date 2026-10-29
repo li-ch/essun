@@ -1,0 +1,39 @@
+ 442 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+a. RTT = ACK.arrival_time – PDS_Request.transmit_time – ACK.service time. 
+At the destination, the service time should be calculated as close to the transmission time of the ACK 
+packet as practically possible. Any delay between calculating the service time and actually sending the 
+ACK will be interpreted as network latency by the NSCC algorithm. 
+SERVICE_TIME is specified in units of 128 ns, with a goal of overall accuracy of ~500 ns. Implementations 
+SHOULD maintain saved timestamps with sufficient accuracy and precision to achieve this goal. 
+3.6.4.3 Endpoint Congestion State 
+Endpoints can monitor congestion using locally available information. This is endpoint telemetry, which 
+can be used without any support from network switches. Example metrics that could be measured 
+include indications of local congestion at endpoints, such as: 
+• The current offered workload to multiple destinations at the source, which indicates potential 
+source congestion (outcast). 
+• The depth of the packet buffer at the destination, which indicates potential destination 
+congestion (e.g., the destination cannot process packets fast enough or cannot sink data into 
+memory fast enough). 
+• Transmit and receive rates for non-UET traffic. 
+This information may be included in the congestion state used to adjust the rate limiting. 
+3.6.4.4 Packet Trimming  
+Packet trimming is a method where, rather than dropping packets when a switch buffer is congested, 
+packets are trimmed to a small size and forwarded with higher priority to the destination. This capability 
+was introduced in NDP [31] and Cut Payload [30]. This is a form of in-network telemetry provided by 
+network switches. 
+Packet trimming is intended to enable the use of relatively shallow packet buffer queues in the network 
+switches. In turn, shallow packet buffer queues help minimize the RTT, allowing the overall control loop 
+to work more efficiently. When a trimmed packet arrives at the destination: 
+• The destination knows the source is attempting to send to it and can allocate resources such as 
+credit to transmit, if required. 
+• The destination knows the network is congested on the path the packet took. 
+o The EV used to determine the path of the packet can be reported back to the source, 
+allowing the source to temporarily avoid using the congested path. 
+• The destination knows a specific packet was dropped and can quickly request retransmission, 
+reducing the recovery time: 
+o Trimmed packets are forwarded with high priority, so they arrive quickly and provide an 
+early indication of packet loss. Recovering lost packets quickly reduces the state needed 
+to track out-of-sequence arrivals and helps avoid increases in flow completion time due 
+to tail loss. 

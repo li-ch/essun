@@ -1,0 +1,42 @@
+ 121 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+API Group Support is Not Required 
+fi_domain FI_SET_OPS_HMEM_OVERRIDE operation 
+fi_endpoint FI_OPT_BUFFERED_LIMIT, FI_OPT_BUFFERED_MIN, FI_OPT_CM_DATA_SIZE, 
+FI_OPT_FI_HMEM_P2P, FI_OPT_XPU_TRIGGER, and 
+FI_OPT_CUDA_API_PERMITTED options 
+fi_msg FI_CLAIM and FI_DISCARD flags 
+fi_mr FI_RMA_PMEM, FI_HMEM_DEVICE_ONLY, FI_HMEM_HOST_ALLOC, and 
+FI_MR_DMABUF flags 
+ 
+2.2.5.6 Libfabric API Error Codes 
+SES Section 3.4.6.6 describes an extensive set of error codes. A subset of the semantic errors MAY result 
+in a completion error for the associated libfabric API function via the fi_cq_err_entry data structure. For 
+semantic errors that result in a completion error, the err field of the fi_cq_err_entry structure MUST be 
+populated with an appropriate error code. If a libfabric error code corresponding to a semantic error is 
+not found, the FI_EIO error code MUST be returned. In addition, when a semantic completion error 
+occurs, the provider MUST populate the semantic error code into the prov_errno field of the 
+fi_cq_err_entry structure. 
+2.2.6 Packet Delivery Modes 
+This section specifies how the UET packet delivery mode is selected. 
+Libfabric endpoints of type FI_EP_DGRAM MUST use the UET UUD packet delivery mode. 
+Libfabric endpoints of type FI_EP_RDM MUST use one of the following UET packet delivery modes: 
+• RUD (supported by all profiles) 
+• ROD (supported by all profiles) 
+• RUDI (supported by HPC profile) 
+The AI Base and AI Full profiles MUST select either ROD or RUD. The selection is based on the operation 
+type and the message ordering modes that are configured. 
+To clarify the selection criteria, the following message ordering modes are defined: 
+• Send message ordering is in effect when any of the following message ordering modes are 
+configured (send message ordering refers to any ordering mode that specifies the ordering of 
+send operations relative to other operations): 
+o FI_ORDER_RAS, FI_ORDER_SAR, FI_ORDER_SAS, FI_ORDER_SAW, FI_ORDER_WAS 
+• R/W message ordering is in effect when any of the following message ordering modes are 
+configured (R/W message ordering refers to any ordering mode that specifies the ordering of 
+read or write operations relative to other operations): 
+o FI_ORDER_ATOMIC_RAR, FI_ORDER_ATOMIC_RAW, FI_ORDER_ATOMIC_WAR, 
+FI_ORDER_ATOMIC_WAW, FI_ORDER_RAR, FI_ORDER_RAS, FI_ORDER_RAW, 
+FI_ORDER_RMA_RAR, FI_ORDER_RMA_RAW, FI_ORDER_RMA_WAR, 
+FI_ORDER_RMA_WAW, FI_ORDER_SAR, FI_ORDER_SAW, FI_ORDER_WAR, 
+FI_ORDER_WAS 

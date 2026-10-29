@@ -1,0 +1,27 @@
+# W1 Dense TP Decode — tp_size 8 at payload 2097152 B = 2 MiB: the GF-09
+# run-pair payload (calibration ladder; gap-fill anchor
+# GF-09 — "Ultra Ethernet's Design Principles and Architectural
+# Innovations", arXiv:2508.08906, Hoefler et al.; docs/calibration/
+# anchors_gapfill.md §GF-09; numbers AS STAGED, not re-fetched).
+#
+# WHY THIS PAYLOAD (declared free probe): GF-09 stages NO message-size
+# regime — it is a design-principles paper whose staged numbers are
+# design targets ("400+ Gbps", "10-150m", "sub-microsecond latency",
+# "target round-trip times of 10 us") and protocol constants / worked
+# examples (64-bit SACK bitmap, 8B NSCC feedback, two 20-bit CBFC
+# counters, RCCC 25%-to-each-of-4, oversubscription 33%) — never a
+# (size -> time) series. The run pair therefore pins the payload at the
+# 2 MiB member of the sweeps' standard 12-size ladder (8 KiB -> 8 GiB of
+# stages A1/A2/A7/A9/A11/GF-05), the same run-pair payload GF-05 (the
+# R1 sim-side sibling) used — the cross-stage comparability point on the
+# R1 axis. 2 MiB = 2^21 is divisible by 8 so the A-L0-DIV / A-L0X-DIV
+# gates ACCEPT the exact size — no bracketing. Same workload shape as
+# every other W1 file (2 layers x 3 decode steps = 6 AllReduce ops per
+# config). Nothing here is measured or standard-normative; integer byte
+# counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal-gf09-tp8
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 2097152   # 2 MiB — ladder member; free parameter, declared free probe (GF-09 stages no size regime)

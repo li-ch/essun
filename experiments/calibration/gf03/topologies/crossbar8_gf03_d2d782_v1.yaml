@@ -1,0 +1,43 @@
+# Calibration-ladder GF-03 topology: fully-connected (crossbar) of 8 ranks
+# at the MEASURED nvbandwidth D2D reading B = 782 B/ns — GF-03's
+# "`nvbandwidth` device-to-device: unidirectional 782 / 717 GB/s (per
+# direction)" (docs/calibration/anchors_gapfill.md §GF-03), first of the
+# two quoted unidirectional per-pair readings. The pairing of the two
+# unidirectional readings {782, 717} with the two bidirectional quotes
+# {1.35, 1.41 TB/s} is NOT stated by the anchor — both readings are
+# executed as separate aggregate points and the pairing ambiguity is
+# recorded (2x782 = 1564 and 2x717 = 1434 both EXCEED both bidirectional
+# quotes 1350/1410 by 5.9-9.8%; recorded not smoothed). Decimal units,
+# 1 GB/s = 1 B/ns.
+#
+# ROLE: the single-pair microbenchmark reading of the same fabric the
+# collective peak (837) measures. FINDING THIS FILE PARTICIPATES IN
+# (recorded in the calibration record): the measured collective plateau
+# 837 sits ABOVE both single-pair D2D readings (by 7.0% vs 782, 16.7% vs
+# 717) — the per-pair microbenchmark UNDERPREDICTS the multi-pair
+# collective, the opposite direction of GF-01's worst-link bracket
+# (315 under its plateau 318.98 by 1.26%); nvbandwidth D2D is
+# kernel-launch-limited (known caveat class) — ordering recorded,
+# mechanism not adjudicated.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never tuned toward the
+# GF-03 collective numbers; 782 is the anchor's own staged D2D quote,
+# fixed BEFORE any model output was read. L = 200 ns is the A-L0X-LAT
+# registry point (KEEP).
+topology_id: crossbar8_gf03_d2d782_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 782
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; single-port injection shared
+  across the 7 peers (A-L0X-PORT; in-domain for the NVSwitch class).
+  Provenance: B = 782 B/ns is the anchor's staged nvbandwidth
+  device-to-device UNIDIRECTIONAL per-direction reading (higher of the two
+  quoted; confidence M; gap-fill anchor, PROPOSED, not yet an integrated anchor
+  row); executed as one aggregate reading of the same fabric the 837
+  collective peak measures. L = 200 ns free registry point. Values are
+  anchor measurements-as-staged / free-registry points, never our
+  measurements, never tuned.

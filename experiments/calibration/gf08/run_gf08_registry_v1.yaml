@@ -1,0 +1,54 @@
+# Calibration-ladder GF-08 registry-twin RUN (gap-fill
+# anchor): the L0 single-stage crossbar identity at the FREE REGISTRY
+# DEFAULTS — r=8, B=64 B/ns (A-L0X-BW), L=200 ns (A-L0X-LAT) — at the
+# SAME payload 16384 B = 16 KiB as run_gf08_falcon25_v1.yaml, so the
+# pair isolates the B axis exactly (both runs' latency term is exactly
+# 400 ns).
+#
+# ROLE: the placement reference. GF-08 stages no (size -> time) series,
+# so there is no CCT target; what the pair measures is WHERE the
+# registry defaults sit relative to the anchor's rate axis: the anchor
+# rate 25 lands INSIDE the plan §2.1 anchored span [20, 64] in its
+# lower half, and the registry point 64's asymptotic pure-B CCT ratio
+# vs the anchor rate is exactly 64/25 = 2.56 — the model at registry
+# defaults predicts bandwidth-bound CCTs 2.56x faster than the model at
+# the anchor's own endpoint rate (placement arithmetic, never a tuning
+# target). NO comparison to any anchor time is attempted (the anchor
+# stages an endpoint rate, an operation-rate headline, and dimensionless
+# factors only).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF08-REG64-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf08/workloads/w1_dense_tp_decode_tp8_16kib.yaml
+infra_graph:
+  path: experiments/calibration/gf08/topologies/crossbar8_gf08_reg64_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf08/profiles/implementation_profile_l0_crossbar_cal_gf08_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf08_reg64_l200_v1 (one non-blocking switch stage; r=8, B=64 B/ns and L=200 ns — both free registry points, no GF-08 provenance)
+  workload: w1_dense_tp_decode tp8, payload 2^14 (16 KiB, the A-W1-SIZE registry point; GF-08 stages no size regime — executed as a declared free probe)
+  implementation: analytical L0 crossbar identity; the registry-twin placement against the GF-08 Falcon run (same payload, B axis isolated) — PROPOSED, review required; no anchor-time comparison, no claim or label changed
+evidence_level_requested: E0

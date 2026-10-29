@@ -1,0 +1,41 @@
+ 68 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+folded Clos network (i.e., a fat tree). Congestion management in this specification has been simulated 
+over a fat tree network topology. 
+1.5.3.4 In-Network Collectives (INC) 
+Network-based collectives can consume a significant portion of the total training time. In these cases, it 
+is desirable to deploy mechanisms that optimize network use, reduce completion times, improve 
+application performance, and improve total cost of ownership. One such mechanism is in-network 
+collectives (INC). The theoretical gain from INC in network bandwidth utilization for associated 
+completion time is 2x. The allreduce collective operation requires transmitting and receiving 2x the 
+message size for distributed computation (e.g., to the GPUs), while placing a computation element in 
+the center of the network (e.g., in a switch) cuts the required BW to 1x. 
+INC reduces the completion time of collective operations and at the same time frees CPU or accelerator 
+resources for computation. 
+1.5.3.5 Network Constraints 
+The UE fabric is constrained to use IPv4/IPv6-based layer 3 forwarding or UFH forwarding when 
+operating under the Unified Local profile. A UE fabric that uses tunnels (e.g., VXLAN) is not currently 
+specified and is left to implementors. Multitenancy can be addressed at the FEP level through encrypted 
+tenant application data, specific allocation of JobIDs and may also take advantage of existing tunneling 
+mechanisms.  
+UE does not require changes to the network layer and can use existing routing protocols. UE switches 
+use equal cost multipath (ECMP) routing for load balancing where the entropy values are managed by 
+the UET congestion management sublayer (CMS). The congestion management algorithms are designed 
+with the expectation that fabric switches do not modify the entropy values and that any two packets 
+with the same entropy values take the same path through the UE fabric. CMS expects UE switches to 
+support explicit congestion notification (ECN) as specified in IETF RFC 3168, but with the additional 
+constraint of marking congested packets when dequeuing for transmission rather than enqueuing. 
+Packet trimming, as specified in Section 4.1, is an additional mechanism for congestion notification and 
+makes use of multiple differentiated services code points (DSCP) to identify packets that can be trimmed 
+and have been trimmed as well as assure they are mapped to appropriate traffic classes for expedited 
+forwarding. 
+Traffic classes are embodied in the mechanisms and resources within endpoints and switches used for 
+the differentiated transmission of packets (e.g., queues, buffers, schedulers). Traffic classes are 
+differentiated from one another and can be prioritized between one another. Packets are mapped to 
+traffic classes using attributes and header fields of the received packets. UE primarily relies upon the 
+DSCP field in the IP header to identify the traffic class of a received packet. 
+Informative Text: 
+Traffic classes are specified at multiple levels. UE maps the traffic class specified at the libfabric layer 
+to traffic classes across the fabric. For example, UET recommends separate traffic classes for requests 
+and ACKs/NACKs. UET chooses a broad definition of traffic class to acknowledge implementations that 

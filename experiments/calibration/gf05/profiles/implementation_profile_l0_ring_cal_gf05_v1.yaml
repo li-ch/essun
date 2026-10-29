@@ -1,0 +1,55 @@
+# Implementation profile for the calibration-ladder GF-05 multi-hop
+# schedule contrast on the analytical L0 ring backend step
+# 3; gap-fill anchor GF-05). Used by the ring topology of
+# sweep_gf05_scale1024_v1.yaml only (the two store runs of this stage
+# are crossbar runs).
+implementation_profile_id: analytical_l0_ring_cal_gf05_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT
+  / A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml.
+  ROLE for anchor GF-05: the ring is the multi-hop SCHEDULE contrast at
+  the anchor's stated scale (r = 1,024 nodes) and sim-config point
+  (B = 100 B/ns per direction, L = 1000 ns per hop): every hop one link
+  traversal at the anchor's own per-hop decomposition, so the identity
+  charges the per-hop latency 2*(r-1) = 2,046 times per AllReduce
+  (latency chain exactly 2,046,000 ns) against the crossbar ceiling
+  row's 2; at equal B the ring-minus-crossbar difference is exactly
+  2*(r-2)*L = 2,044,000 ns at every size (identity, verified on
+  executed rows). The row quantifies that SCHEDULE STRUCTURE ALONE — an
+  in-model choice, no congestion — moves CCT by amounts far beyond the
+  anchor's congestion-control envelope (its own CC effect sizes are
+  x1.06-1.5 between schemes, x3-6 vs RoCE-class baselines), while its
+  oversubscription structure (x8 at 8:1) and rank-count structure
+  (+14.2% at r=1024 vs r=8) sit between: schedule > oversubscription >
+  rank count > the CC effect the paper measures — the honest
+  confounder ordering this stage records from the anchor's own numbers.
+  No schedule is claimed to be THE SMaRTT/uet-htsim behavior (the
+  paper's FCT tables are unstaged; no FCT comparison is attempted).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) placed at GF-05's sim line rate 100 B/ns
+  (declared per-direction reading of the staged 800 Gbps); L
+  (link.hop_latency_ns) at the anchor's per-hop decomposition 1000 ns
+  (600 link + 400 switch traversal); r = 1,024 = the anchor's STATED
+  node count (a power of two — A-L0D-POW2 native); message sizes:
+  18-size ladder 1024*2^k (1 KiB - 128 MiB), every size divisible by
+  r (A-L0-DIV accepts, no bracketing), including the anchor's 2 MiB
+  flow size (k=11) and executed rows bracketing the ring regime
+  boundary M* = L*B*r = 102,400,000 B (64 MiB below, 128 MiB above).
+  NO parameter was tuned toward any anchor output — the anchor stages
+  no (size -> time) series in any CCT-comparable metric class; the row
+  exists to execute the schedule-structure contrast, and its deltas vs
+  the crossbar baseline are arithmetic facts of the two identities at
+  equal B, L, and r.
+measurement_source: >
+  GF-05 staged numbers (SMaRTT and REPS, arXiv:2404.01630, NSDI 2025;
+  docs/calibration/anchors_gapfill.md §GF-05; numbers AS STAGED, not
+  re-fetched; gap-fill anchor, NOT yet an integrated anchor row; confidence
+  H). Peer-reviewed simulation + small HW testbed, not UEC silicon;
+  FCT (not collective-CCT) metrics — regime bridge declared
+  inexpressible at L0; compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

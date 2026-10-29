@@ -1,0 +1,39 @@
+ 750 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+6.4.1 Low error rate 
+To improve performance and efficiency of communication in UE networks and applications using them, 
+it is RECOMMENDED to minimize the error rate through optimized PHY and channel design and close 
+monitoring of the network. 
+Ethernet links with higher-than-minimum MTBPE (i.e., on the order of hundreds of years) could reduce 
+802.3 packet retry and improve the link bandwidth efficiency and overall network performance. It is 
+RECOMMENDED that network management uses MTBPE estimates collected from multiple links, if 
+available, to configure the network for improved application performance. 
+Informative Text: 
+The choice of network configuration methods depends on the application. Network configuration can 
+include settings above the physical layer, such as changing routing tables to avoid usage of poor links 
+or enablement of reliability features (such as LLR) for specific links. 
+ 
+6.4.2 Low power 
+Power consumption is usually one of the limiting factors for scaling AI and HPC systems. It is 
+RECOMMENDED to have a power-optimized PHY that supports a wide range of channel conditions, with 
+configurable power tailored to each usage case. 
+Emerging technologies such as linear optics and co-packaged optics can also potentially reduce the 
+power of the link. 
+6.4.3 Low latency 
+Latency plays a critical role in the performance of AI and HPC systems, and the PHY latency can be an 
+important factor in the overall latency. It is RECOMMENDED to optimize both average and tail latencies 
+for robust and high-performance networks. 
+Average latency: Examples of PHY technologies under development that would potentially be beneficial 
+to average latency include: low-latency FEC error correction solutions; reducing lane-to-lane skew, as 
+the link latency is dictated by the slowest lane; and new electro-optical integration (e.g., optical direct 
+drive). 
+Tail latency: Reducing PHY error rate, as discussed in Section 6.4.1, and the resulting 802.3 packet 
+retransmit through link or end-to-end mechanisms, can significantly reduce tail latency. This is especially 
+important for AI and HPC with scalable applications relying on global synchronization. 
+6.5 References 
+ 
+[1] IEEE Std 802.3-2022, "IEEE Standard for Ethernet," 2022. [Online]. Available: 
+https://ieeexplore.ieee.org/document/9844436. 
+[2] IEEE Std 802.3db-2022, "IEEE Standard for Ethernet - Amendment 3: Physical Layer Specifications 
+and Management Parameters for 100 Gb/s, 200 Gb/s, and 400 Gb/s Operation over Optical Fiber 

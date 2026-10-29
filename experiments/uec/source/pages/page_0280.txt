@@ -1,0 +1,48 @@
+ 280 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Mnemonic Constant Description 
+UET_AMO_READ 0x0B Atomic read: Initiator = Target 
+UET_AMO_WRITE 0x0C Atomic write: Target = Initiator 
+UET_AMO_CSWAP 0x0D Compare and swap if equal 
+UET_AMO_CSWAP_NE 0x0E Compare and swap if not equal 
+UET_AMO_CSWAP_LE 0x0F Compare and swap if less than or equal 
+UET_AMO_CSWAP_LT 0x10 Compare and swap if less than 
+UET_AMO_CSWAP_GE 0x11 Compare and swap if greater than or equal 
+UET_AMO_CSWAP_GT 0x12 Compare and swap if greater than 
+UET_AMO_MSWAP 0x13 Swap masked bits:  
+Target = (Target & Mask) ^ Initiator 
+UET_AMO_INVAL 0x14 If the location at the target is cached, invalidate the cache.  
+Reserved 0x15-0xDF  
+UET_AMO_VENDOR[0-30] 0xE0-0xFE Vendor-defined AMO  
+Reserved 0xFF  
+ 
+Table 3-28 - Supported Atomic Datatypes 
+Mnemonic Constant Description 
+UET_TYPE_INT8 0x00 8-bit signed integer 
+UET_TYPE_UINT8 0x01 8-bit unsigned integer 
+UET_TYPE_INT16 0x02 16-bit signed integer 
+UET_TYPE_UINT16 0x03 16-bit unsigned integer 
+UET_TYPE_INT32 0x04 32-bit signed integer 
+UET_TYPE_UINT32 0x05 32-bit unsigned integer 
+UET_TYPE_INT64 0x06 64-bit signed integer 
+UET_TYPE_UINT64 0x07 64-bit unsigned integer 
+UET_TYPE_INT128 0x08 128-bit signed integer 
+UET_TYPE_UINT128 0x09 128-bit unsigned integer 
+UET_TYPE_FLOAT 0x0A Single-precision floating-point value1 
+UET_TYPE_DOUBLE 0x0B Double-precision floating-point value1 
+UET_TYPE_FLOAT_COMPLEX 0x0C Pair of floats (real, imaginary) 
+UET_TYPE_DOUBLE_COMPLEX 0x0D Pair of doubles (real, imaginary) 
+UET_TYPE_LONG_DOUBLE 0x0E Double-extended precision floating-point value 
+UET_TYPE_LONG_DOUBLE_COMPLEX 0x0F Pair of long doubles (real, imaginary) 
+UET_TYPE_BF16 0x10 16-bit floating-point value (bfloat 16)2 
+UET_TYPE_FP16 0x11 16-bit floating-point value (FP16 format) 
+UET_TYPE_FPE4M3 0x12 FP8 encoded as E4M33 
+UET_TYPE_FPE5M2 0x13 FP8 encoded as E5M23 
+Reserved 0x14-0xDF  
+UET_TYPE_VENDOR[0-30] 0xE0-0xFE Vendor-defined types 
+Reserved 0xFF  
+Note: 
+1. As specified in IEEE 754-2019: <https://standards.ieee.org/ieee/754/6210/> 
+2. Industry specification (de facto): <intel.com/content/dam/develop/external/us/en/documents/bf16 -
+hardware-numerics-definition-white-paper.pdf> 

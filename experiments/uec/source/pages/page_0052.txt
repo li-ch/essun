@@ -1,0 +1,125 @@
+ 52 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Two FEPs require IP-level connectivity to communicate. Multi-ported FEPs are supported in a UE 
+network provided there is one FA (i.e., IP address) associated with any FEP.  The FA associated with the 
+FEP is used as the source for all packets sent from the FEP, or as the destination for all packets sent to 
+the FEP. 
+A FEP can have multiple ports (e.g., scenario A in Figure 1-6). UE does not mandate how those ports are 
+used. Many multi-ported configurations are possible, including: a link aggregation (LAG) with members 
+terminating on the same switch (e.g., scenario D in Figure 1-6), a multi-switch LAG with members 
+terminating on different switches (e.g., scenario E in Figure 1-6), or IP-level multipath connectivity to 
+reach the FEP’s individual address via multiple ports or in an active-standby configuration. Other 
+scenarios for supporting multiple ports on a common fabric interface are possible and are 
+implementation-dependent (e.g., Scenarios B, C, and F in Figure 1-6). Scenario F of Figure 1-6 shows an 
+embedded switch on a fabric interface card. 
+In multi-ported FEP architectures, the UET congestion management sublayer chooses the entropy value 
+for each packet. The UET does not mandate any specific port-selection method for multi-ported hosts; it 
+can vary between implementations. 
+Informative Text: 
+In multi-ported configurations, the network is expected to provide a mechanism that allows a FEP to 
+detect if a destination IP address (e.g., the FA of a peer FEP) is unreachable on any given plane and, if 
+so, avoid using that plane for that destination. Possible methods to do this include using IP routing 
+protocols or ICMP unreachable messages to communicate unreachability to a FEP., The UET, however, 
+does not mandate any specific technique. In the future, mechanisms might be defined in the UET to 
+allow the determination of reachability. 
+ 
+Figure 1-6 - Multi-plane Networks and Multi-port FEPs 
+ 
+Plane N
+Plane 1
+Red Fabric Plane
+Blue Fabric Plane
+FEP 
+OS
+port
+FI (Fabric 
+Interface
+)
+Node
+CPUMemoryAccelerator
+port pdc
+ccc
+FEP 
+OS
+port
+FI (Fabric Interface)
+Node
+CPUMemoryAccelerator
+port
+ pdc
+ccc
+FEP
+OS
+port
+FI (Fabric Interface)
+Node
+CPUMemoryAccelerator
+port
+ pdc
+ccc
+LAG
+Split
+Mult-Link
+LAG
+FEP
+OS
+ FI (Fabric Interface)
+Node
+CPU Memory Accelerator
+portpdcccc
+FEP
+ portpdcccc
+FEP
+OS
+ FI (Fabric Interface)
+Node
+CPU Memory Accelerator
+portpdcccc
+FEP
+ portpdcccc
+FEP
+OS
+port
+FI (Fabric Interface)
+Node
+CPU Memory Accelerator
+port
+pdc
+ccc
+A
+B
+C
+D
+E
+F
+ISL
+pdc
+ccc
+pdc
+ccc
+pdc
+ccc
+pdc
+ccc
+pdc
+ccc
+pdc
+ccc
+pdc
+ccc
+pdc
+ccc
+pdcccc
+ pdc
+ccc
+pdcccc
+pdc
+ccc
+pdcccc
+pdc
+ccc
+pdcccc
+pdc
+ccc
+Switch Switch

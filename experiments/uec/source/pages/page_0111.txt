@@ -1,0 +1,39 @@
+ 111 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The profiles that are required to support completion counters MUST support both the 
+FI_CNTR_EVENTS_COMP and FI_CNTR_EVENT_BYTES event types. 
+2.2.5.3.8 fi_av_open() and fi_av_insert() APIs 
+Address vectors are used to map higher-level addresses into fabric-specific addresses. The purpose of 
+the AV is to associate a higher-level address with a simpler, more efficient value that is used by the 
+libfabric API in a fabric-agnostic way. 
+The fi_av_open() API is called to create an address vector, the fi_ep_bind() API is called to bind an 
+address vector to an endpoint, and the fi_av_insert() API is called to insert the addresses of destination 
+endpoints into the address vector. The fi_av_insert() API returns a mapped address of type fi_addr_t, 
+which is passed to data transfer APIs to identify the destination endpoint, thereby avoiding the need to 
+pass the full address of a target endpoint with every data transfer. There are two types of address 
+vectors: 
+• FI_AV_MAP 
+o Addresses inserted into an AV are mapped to a native fabric address for application use. 
+The use of FI_AV_MAP requires that an application store the returned fi_addr_t value 
+that is associated with each inserted address. FI_AV_MAP is being deprecated in 
+libfabric v2.0. The enum will stay, but the behavior will be like FI_AV_TABLE. 
+• FI_AV_TABLE 
+o Addresses that are inserted into an AV of type FI_AV_TABLE are accessible using a 
+simple index. When FI_AV_TABLE is used, the returned fi_addr_t is an index, with the 
+index for an inserted address being the same as its insertion order into the table. The 
+index of the first address inserted into an FI_AV_TABLE will be 0, and successive 
+insertions will be given sequential indices. Sequential indices will be assigned across 
+insertion calls on the same AV. 
+The AV attributes structure, fi_av_attr, contains a name field and a map_addr field that are useful for 
+sharing an AV between processes. 
+The UET provider MUST support the FI_AV_TABLE type. The unspecified type, FI_AV_UNSPEC, MUST be 
+treated as the FI_AV_TABLE type. 
+2.2.5.4 OFI Data Transfer APIs 
+This section covers the following groups of data transfer APIs: 
+• fi_msg() <https://ofiwg.github.io/libfabric/v1.20.1/man/fi_msg.3.html> 
+• fi_tagged() <https://ofiwg.github.io/libfabric/v1.20.1/man/fi_tagged.3.html> 
+• fi_rma() <https://ofiwg.github.io/libfabric/v1.20.1/man/fi_rma.3.html> 
+Informative Text: 
+One approach for using an FI_AV_TABLE is to insert addresses for each rank sequentially such that the 
+AV table indices are the same as the rank number. 

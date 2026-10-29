@@ -1,0 +1,40 @@
+ 272 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Informative Text: 
+A first-error model is used because errors can often propagate into more severe errors that are a 
+direct result of the first error. 
+ 
+3.4.6.2 Error Scopes 
+A message-level error scope impacts one message. It may be recoverable, unrecoverable, or 
+informational. If it is unrecoverable, a message-level error MUST impact only one message and its 
+associated transaction. 
+A PDS-level error scope impacts an entire PDC. Unrecoverable PDS-level errors MUST terminate the PDC. 
+All transactions in flight on a PDC that terminates MUST terminate in error to the application through 
+libfabric. In other words, an unrecoverable PDS-level error becomes an unrecoverable message error for 
+any transaction that has not already successfully completed. 
+Device-level and device-specific errors are beyond the scope of this document. Each vendor 
+implementation is responsible for mapping device errors to message-level, PDS-level, or local node-level 
+in scope. Only device-level errors and PDS-level errors may be asynchronous. That is, only device-level 
+errors and PDS-level errors are ever delivered in any way other than as part of a message completion. 
+Informative Text: 
+Many PDS-level errors also cause erroneous completion of a message; however, some PDS-level 
+errors may report only through out-of-band mechanisms (e.g., to a driver or to a management 
+system).  
+ 
+3.4.6.3 Recoverable Errors 
+Recoverable errors may be retried by an intermediate portion of the communication stack (e.g., the 
+libfabric provider). Retries of recoverable errors are expected to succeed eventually. The number of 
+retry attempts MAY be limited by implementation-specific controls. If the number of retry attempts is 
+limited, then messages that exceed the maximum number of retry attempts MUST terminate in error. 
+3.4.6.3.1 Handling of Recoverable Errors Detected at the Initiator 
+Recoverable errors detected at the initiator before a sequence number is allocated SHOULD be handled 
+by the initiating FEP without allocating a sequence number. Recoverable errors detected at the initiator 
+after allocating a sequence number MUST poison the FCS in the packet. An example of this type of error 
+is a parity error on an intermediate buffer that the packet passes through. Recoverable errors detected 
+at the initiator MUST NOT set the ses.ie bit. 
+3.4.6.3.2 Handling of Recoverable Errors Detected at the Target 
+Recoverable errors detected at the target all fall into the class of resource exhaustion errors. These 
+scenarios are generally recoverable. Handling of the recoverable resource exhaustion occurrences MUST 
+utilize the mechanisms described in sections 3.4.4.6.1 and 3.4.4.7. If an initiator receives a semantic 
+response indicating a recoverable error from the target while a multi-packet message is still in progress, 

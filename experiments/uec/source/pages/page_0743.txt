@@ -1,0 +1,46 @@
+ 743 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+6.3.2.2 Estimation of UCR using the corrected codewords counter 
+If FEC_corrected_cw_counter is available, the UCR can be estimated based on the corrected codeword 
+ratio (CCR), defined by: 
+𝑪𝑪𝑹 =
+𝑭𝑬𝑪𝒄𝒐𝒓𝒓𝒆𝒄𝒕𝒆𝒅𝒄𝒘𝒄𝒐𝒖𝒏𝒕𝒆𝒓
+𝑵𝒕𝒐𝒕𝒂𝒍
+ (Equation 4) 
+For an observation period of one minute, Ntotal is provided in Table 6-12. 
+Unlike FEC_uncorrected_cw_counter, when FEC_corrected_cw_counter is read once per minute, most 
+values are expected to be nonzero. Thus, estimates can be made after shorter periods and before actual 
+PHY error events. 
+Assuming that uncorrectable codewords are rare compared with correctable codewords, the CCR is 
+approximately the probability that a codeword has a nonzero number of symbol errors (neglecting the 
+case that it is uncorrectable). Denoting the probability of an RS-FEC symbol error by symbol error ratio 
+(SER), we have: 
+𝑪𝑪𝑹 ≈ 𝟏 − (𝟏 − 𝑺𝑬𝑹)𝟓𝟒𝟒 (Equation 5) 
+And thus, 
+𝑺𝑬𝑹 ≈ 𝟏 − (𝟏 − 𝑪𝑪𝑹)
+𝟏
+𝟓𝟒𝟒 (Equation 6) 
+Assuming symbol errors occur as a stationary process (uncorrelated error model), UCR can be estimated 
+by the expression: 
+𝑼𝑪𝑹𝒆𝒔𝒕𝟐 = 𝟏 − ∑ (𝟓𝟒𝟒𝒊 ) 𝑺𝑬𝑹𝒊(𝟏 − 𝑺𝑬𝑹)𝟓𝟒𝟒−𝒊
+𝟏𝟓
+𝒊=𝟎
+ (Equation 7) 
+For links that use 1/(1+D) precoding (available in CR and KR PHY types), errors occur in pairs. 
+Consequently, the estimate of Equation 7 is inadequate in the following specific case: 100 Gb/s Ethernet 
+with the IEEE Std 802.3-2022 clause 91 RS-FEC (where interleaving is not used) and precoding enabled. 
+This case has a much higher UCR for the same SER. For links requiring high MTBPE, it is RECOMMENDED 
+to use IEEE Std 802.3-2022 clause 161 RS-FEC_int instead. 
+Several values of UCRest2 based on CCR (assuming uncorrelated errors, with no guard band) are provided 
+in Table 6-13. A graphical representation of the relationship between CCR and UCRest2 is shown in Figure 
+6-1. 
+Table 6-13 - Calculation of UCRest2 from CCR 
+CCR (measured) UCRest2 (calculated) 
+Assuming uncorrelated errors 
+0.132 1e-25 
+0.152 1e-24 
+0.175 1e-23 
+0.202 1e-22 
+0.231 1e-21 
+0.265 1e-20 

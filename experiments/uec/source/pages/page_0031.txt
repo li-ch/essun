@@ -1,0 +1,44 @@
+ 31 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Abbreviation Definition 
+API Application programming interface 
+AV Libfabric address vector 
+BDP Bandwidth-delay product 
+BER Bit error ratio 
+BTS Back to sender 
+BW Bandwidth 
+C2C Chip to chip 
+C2M Chip to module 
+CBFC Credit-based flow control 
+CC Credits consumed (Link Layer) / congestion control (Transport 
+Layer) 
+CCC Congestion control context 
+CCL Collective communications library 
+CCR Corrected codeword ratio 
+CF Credits freed 
+CG Codeword group 
+CID Company identifier 
+CIR Codeword interleaving ratio 
+CL Credit limit 
+CMS Congestion management sublayer 
+CP Credit packet 
+CQ Libfabric completion queue 
+CRC Cyclic redundancy check 
+CSIG A layer 2 congestion signaling mechanism 
+CtlOS Control ordered set 
+CU Credits in use 
+DPA Differential power analysis 
+DIC Deficit idle count 
+ECMP Equal cost multi-path 
+ECN Explicit congestion notification (RFC 3168) 
+EP Libfabric endpoint 
+EQ Libfabric event queue 
+EQDS Edge queued datagram service 
+EV Entropy value 
+FA Fabric address 
+FEC Forward error correction 
+FEP Fabric endpoint 
+FI Fabric interface 
+FLR Frame loss ratio 
+FPC Frames per codeword 

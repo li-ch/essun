@@ -1,0 +1,23 @@
+# Transport-agnostic analytical topology: fully-connected crossbar of 4 ranks.
+# Atlas cell 4r-crossbar (design-space atlas ladder, G2 / decision D-025).
+#
+# Same shape and the SAME free parameters as crossbar8_free_params.yaml and
+# ring4_free_params.yaml (B = 64 bytes/ns, L = 200 ns) so every atlas cell
+# compares under shared free parameters (the atlas fairness rule).
+# Values are explicit FREE PARAMETERS (A-L0X-BW, A-L0X-LAT) and the port model
+# is a MODELING ASSUMPTION (A-L0X-PORT: single-port injection) — not
+# standard-derived, not measured. See
+# experiments/vertical_slice/assumptions_l0.yaml.
+topology_id: crossbar4_free_v1
+topology_class: fully_connected_crossbar
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency. Each rank injects through ONE port shared across its 3 peers
+  (single-port model). B lives under `nic` because it is a property of the
+  rank's injection port, not of any pair link. No congestion, no credits, no
+  packetization — L0 transport model only.

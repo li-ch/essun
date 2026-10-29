@@ -1,0 +1,41 @@
+ 627 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+if (PortSpeedRatio_is_power_of_2) 
+ Adjusted_iQD = iQD >> PortSpeedRatioLog2 
+else 
+      Adjusted_iQD = iQD / PortSpeedRatio 
+Local_CSIG_nQD = Quantization (Adjusted_iQD) 
+Update CSIG(nQD) Tag when Local_CSIG_nQD is greater than the current “Signal 
+Value” 
+ 
+When all ports in a fabric run at the same speed, PortSpeedRatio is effectively 1, and 
+PortSpeedLog2Ratio is 0. 
+In UE deployments with heterogeneous output port speeds, the BasePortSpeed can be set to 100 Gbps. 
+Relative to that base value, for port speeds of 100/200/400/800/1600/3200 Gbps, we obtain 
+PortSpeedRatioLog2 values of 0/1/2/3/4/5 respectively.  
+This simple shift logic does not suffice for future non-power-of-2 speeds in a network with 
+heterogeneous port speeds. Consider a 300 Gbps port speed in a network with heterogeneous port 
+speeds as an example: division by 3 logic would be required with a BasePortSpeed of 100 Gbps. 
+Refer to sections 4.2.4.1.4 and 4.2.4.1.6 for the CSIG-Quantization() algorithms for the compact and 
+wide CSIG tag formats, respectively. 
+ 
+4.2.10 CSIG Deployment Considerations 
+As specified in Section 4.2.4, two CSIG tag formats are defined: a compact (4-byte) format and a wide (8-
+byte) format. A global configuration setting for the entire UE fabric and set of FEPs indicates whether 
+the preferred tag format for the UE CSIG domain is the compact format or the wide format. All FEPs 
+SHOULD use this global configuration setting to determine whether to insert a compact- or wide-format 
+CSIG tag in sent packets to collect congestion information from the UE fabric, such that there will not be 
+a mix of compact and wide CSIG-capable paths in the same UE CSIG domain. In some cases, operators 
+may deploy a mix of CSIG-capable and non-CSIG-capable switches in the same UE fabric. A global 
+configuration setting for the entire UE fabric and set of FEPs will indicate whether CSIG is enabled for 
+the entire fabric or disabled for the entire fabric. This setting SHOULD be enabled only when all switches 
+in the UE fabric support CSIG, such that the fabric will not mix paths that support CSIG feedback-guided 
+congestion control and paths that do not support CSIG-feedback-guided congestion control. 
+ 
+Informative Text: 
+nQD may be useful as a replacement for ECN, as nQD logically is a multi-bit ECN signal. nQD may be 
+usable as a load balancing signal, a congestion control signal, and a telemetry signal. 
+Use of the nQD signal type in deployments with application traffic in multiple traffic classes of 
+different priorities is outside the scope of this specification. Future versions of this specification may 
+address the use of the nQD signal in such deployments. 

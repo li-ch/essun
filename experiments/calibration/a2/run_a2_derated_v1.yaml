@@ -1,0 +1,38 @@
+# Calibration-ladder A2 derated-bridge RUN: same
+# workload and identity as run_a2_ceiling_v1, at the SOFTWARE-EFFECTIVE
+# injection scale B=720 B/ns = 0.8 x 900 (CAL-A2 ceiling x CAL-A12's ~80%
+# application-level derating — the normalization the plan §1.1 CAL-A12 row
+# makes mandatory when spec ceilings meet measured series). The pair
+# (ceiling run, derated run) brackets where a software-scheduled
+# measurement can sit relative to CAL-A2's line.
+#
+# claim_id deliberately EMPTY (PROPOSED candidate, zero claim edits);
+# evidence level E0 (analytical execution only).
+experiment_id: EXP-CAL-A2-DER720-001
+research_question: RQ2
+claim_id: ""
+baseline_id: EXP-CAL-A2-CEIL900-001
+workload_ir:
+  path: experiments/calibration/workloads/w1_dense_tp_decode_tp72.yaml
+infra_graph:
+  path: experiments/calibration/a2/topologies/crossbar72_a2_derated720_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a2/profiles/implementation_profile_l0_crossbar_cal_a2_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar72_a2_derated720_v1 (NVSwitch-class abstraction, r=72, B=720 B/ns = 0.8 x CAL-A2 ceiling per CAL-A12 derating, L=200 ns free)
+  workload: w1_dense_tp_decode tp72, payload 2.25 GiB (bandwidth-bound regime)
+  implementation: analytical L0 free-parameter identity; CAL-A2 comparison is injection-ceiling normalization only — PROPOSED, review required
+evidence_level_requested: E0

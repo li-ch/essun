@@ -1,0 +1,389 @@
+Huawei Unveils New UnifiedBus Computing Architecture for SuperPoDs and Clusters - Huawei
+
+Corporate Worldwide
+
+Back to Main Menu
+
+Corporate
+
+Enterprise Carrier Consumer Huawei Cloud Digital Power Intelligent Automotive Solution
+
+Back to Main Menu
+
+Select a Country or Region
+
+Australia - English
+
+Brazil - Português
+
+China - 简体中文
+
+Europe - English
+
+France - Français
+
+Germany - Deutsch
+
+Ireland - English
+
+Italy - Italiano
+
+Japan - 日本語
+
+Kazakhstan - Қазақ тілі
+
+Kazakhstan - Русский
+
+Kenya - English
+
+Korea - 한국어
+
+Malaysia - English
+
+Mexico - Español
+
+Mongolia - Монгол
+
+Netherlands - Nederlands
+
+New Zealand - English
+
+Poland - Polski
+
+Romania - Română
+
+Singapore - English
+
+South Africa - English
+
+Spain - Español
+
+Switzerland - Deutsch
+
+Switzerland - Français
+
+Switzerland - Italiano
+
+Switzerland - English
+
+Tanzania - English
+
+Thailand - ภาษาไทย
+
+Türkiye - Türkçe
+
+Ukraine - Українська
+
+United Kingdom - English
+
+Uzbekistan - Русский
+
+Uzbekistan - O’zbek
+
+Vietnam - Tiếng Việt
+
+Global - English
+
+Toggle Navigation
+
+Consumer Products
+
+Back to Main Menu
+
+Consumer Products
+
+Smartphone
+
+PC
+
+Tablet
+
+Wearable
+
+Audio
+
+Router
+
+EMUI
+
+Accessories
+
+All Products
+
+Consumer Website
+
+Business Products
+
+Back to Main Menu
+
+Business Products
+
+Products
+
+Carrier Network
+
+Enterprise Networking
+
+Enterprise Optical Networking
+
+Enterprise Wireless
+
+Data Storage
+
+Huawei Cloud
+
+Digital Power
+
+Industry Solutions
+
+Telecommunications
+
+Education
+
+Finance
+
+Electric Power
+
+Manufacturing
+
+Airport
+
+Urban Rail
+
+See More
+
+Enterprise
+
+Carrier
+
+Huawei Cloud
+
+Digital Power
+
+Intelligent Automotive Solution
+
+Support
+
+Back to Main Menu
+
+Support
+
+Consumer
+
+Find Service Center
+
+Product Support
+
+Product Environmental Information
+
+Call Us
+
+Email Us
+
+See More
+
+Huawei Cloud
+
+Self Service
+
+Service Assurance
+
+Support Plans
+
+Public Notices
+
+Feedback
+
+See More
+
+Enterprise
+
+Online Support
+
+Product Support
+
+Software Download
+
+O3 Community
+
+Tools
+
+See More
+
+Carrier
+
+Product Support
+
+Group Space
+
+Bulletins
+
+Documentation Express
+
+HedEx Lite
+
+See More
+
+Digital Power
+
+Online Support
+
+After-sales Documentation
+
+Service Hotlines
+
+Create Service Request
+
+Warranty Query
+
+Spare Parts Query
+
+See More
+
+Partners & Developers
+
+Back to Main Menu
+
+Partners & Developers
+
+Partners
+
+Enterprise Partners
+
+Huawei Cloud Partners
+
+Digital Power Partners
+
+Developers
+
+Consumer Developers
+
+Huawei Cloud Developers
+
+Kunpeng Developers
+
+Ascend Developers
+
+See More
+
+Training & Certification
+
+Free ICT Courses
+
+ICT Academy
+
+Huawei Certification
+
+About Huawei
+
+Back to Main Menu
+
+About Huawei
+
+About Us
+
+Our Company
+
+Annual Reports
+
+Corporate Governance
+
+Executives
+
+Contact Us
+
+Sustainability
+
+Trust Center
+
+Open Source
+
+Innovation and Intellectual Property
+
+Compliance and Integrity
+
+Bond Investors
+
+Suppliers
+
+Careers
+
+Public Policy
+
+News & Events
+
+Media Center
+
+Events
+
+Explore More
+
+HuaweiTech
+
+Intelligent World 2035
+
+Striding Towards the Intelligent World
+
+GDII
+
+Huawei Blog
+
+Publications
+
+Quick Links
+
+Phone
+
+PC
+
+Watch
+
+MateBook
+
+Tablet
+
+Huawei Health
+
+AppGallery
+
+IdeaShare
+
+Quick Links
+
+Phone
+
+PC
+
+Watch
+
+MateBook
+
+Tablet
+
+Huawei Health
+
+AppGallery
+
+IdeaShare
+
+This site uses cookies. By continuing to browse the site you are agreeing to our use of cookies. Read our privacy policy
+
+News & Events
+
+Media Center
+
+Events
+
+Huawei Unveils New UnifiedBus Computing Architecture for SuperPoDs and Clusters
+
+Summary:
+
+Huawei has released a new computing architecture that utilizes UnifiedBus to support cluster and SuperPoD interconnect, in order to address booming compute demand.
+
+Huawei launched a range of new UnifiedBus-powered devices that enable interconnection within cabinets, between cabinets, and across clusters, which unlocks elastic scaling from single cabinets to million-NPU clusters.
+
+[Shanghai, China, September 17, 2026] In a keynote speech on computing architecture innovation at HUAWEI CONNECT 2026, Yang Chaobin, Huawei's Executive Director of the Board and CEO of the ICT Business Group, unveiled new details about the UnifiedBus interconnect architecture, announced a series of computing products the company has recently built based on this architecture, and explained how the company has collaborated with open-source communities to enable application innovation by customers, partners, and developers.
+
+Yang Chaobin delivering a keynote at HUAWEI CONNECT 2026
+
+In a traditional computing architecture, resource utilization declines as a cluster scales. As little as 20% of a 100,000-NPU cluster's computing capacity is actually utilized by models, with a vast amount of compute sitting idle during data communications. A 10 trillion-parameter model, which requires massive amounts of intermediate data to train, far exceeds the capacity of the memory on a single accelerator under traditional architectures. Furthermore, AI agents can have hundreds of interactions per hour with AI models, which means computing systems need to be able to flexibly utilize changing amounts of central processing units (CPUs) and neural processing units (NPUs). The resulting interactions between these processors also generate KV cache that far exceeds memory capacity, which is driving up demand for data storage across compute systems and tiers. All of this means interconnection and communications between components within a cluster have become a key performance bottleneck for computing systems.

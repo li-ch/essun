@@ -1,0 +1,42 @@
+ 401 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The terms used in the sequence diagrams are abbreviated to allow them to fit in the figure and remain 
+legible. Many of these abbreviated terms are neither the field names of the headers in the packet nor 
+the computed values within the implementation, both of which are referenced in the text describing the 
+sequence diagrams.  For example, CLEAR in Figure 3-96 is intended to represent the CLEAR_PSN value 
+that is calculated from the pds.clear_psn_offset and pds.psn fields or explicitly carried in the 
+pds.payload field of a Clear Command CP.  
+3.5.20 Reliable Unordered Delivery 
+A RUD PDC is a reliable PDC established between a single initiating FEP and a single target FEP that 
+guarantees packets are delivered once and only once. PDCs are ephemeral, established and closed on 
+demand. Packets from multiple PIDs and/or send queues may share a PDC. All packets from a single 
+message use a single PDC. 
+3.5.20.1 RUD Services 
+It is important to recognize that all SES Requests—send, write, read, atomic, etc.—are fundamentally 
+the same to PDS. 
+1. RUD MUST transmit PDS Request packets as directed by the source SES and retransmit up to 
+Max_RTO_Retx_Cnt times to attempt to deliver the packets to the destination. 
+2. RUD MUST deliver PDS Request packets to the destination SES once and only once. 
+3. RUD MUST support selective retransmission. 
+4. RUD MUST generate ACK packets at the destination that carry SES responses. 
+a. PDS accepts an indication from SES whether each SES Response has guaranteed 
+delivery. 
+b. PDS MUST store guaranteed delivery SES responses (excluding data carried in an ACK for 
+a read response) to enable retransmission of the associated ACKs if a valid duplicate 
+request arrives (i.e., within the ACK window—see Section 3.5.12.6). 
+c. PDS MUST construct the default SES Response to enable retransmission of the 
+associated ACK if a valid duplicate request is received and the SES Response for the 
+associated PSN was not guaranteed delivery. 
+d. PDS MUST receive a clear indication for all PSNs with guaranteed delivery SES Responses 
+before freeing the associated SES Response. 
+5. PDS MUST receive and process ACK packets at the source and pass the SES response to SES. 
+6. PDS MUST send CLEAR_PSN from source to destination in all PDS Requests.  This is done by 
+properly setting the pds.clear_psn_offset and pds.psn fields. The CLEAR_PSN computed value is 
+not explicitly transmitted in PDS requests. 
+7. PDS MUST send CLEAR_PSN when a Clear Request CP is received—either in a PDS Request (as 
+described in step 5 above) or using a Clear Command CP where CLEAR_PSN is loaded into the 
+pds.payload field. 
+8. PDS MUST receive and process CLEAR_PSN. 
+a. PDS MUST free any stored SES Response when the associated PSN is cleared. 
+9. PDS MUST send all read responses in the same direction for a single message. 

@@ -1,0 +1,40 @@
+ 59 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+16 GB/s—but now with allreduce of size around 100 KB. If those were split across multiple planes, then 
+message sizes would be in the single-digit kilobyte range. The bandwidth requirements grow with 
+distributed KV caching! Inference requires lower latency than training in general. 
+1.3.1.3 HPC Workloads 
+HPC workloads fall into two categories: (1) low depth (LD), which is highly parallel and (2) high depth 
+(HD), which has long dependency chains. HD workloads often have long and skinny-directed acyclic 
+graphs (DAGs) leading to latency-sensitive execution. Many strong-scaling problems have this shape. 
+Consider weather forecasting as an example. In this case the computation must finish in a certain time. 
+The algorithms run many iterations during the simulation, where the time step inversely depends on the 
+resolution. More accurate higher resolution models lead to smaller timesteps. In practice, such models 
+have high communication overheads (25-50%) with mostly small (single-packet) messages (2.5 kiB) in 
+recurring patterns. 
+Many other workloads are LD and thus less latency-sensitive. Most weak-scaling workloads where one 
+can adjust the local domain size to run well on a given system fall into this category. Some of those 
+workloads may need high bandwidths (e.g., AI training) or high message rate (e.g., graph algorithms). 
+1.3.1.4 Client/Server (e.g., Storage Traffic) 
+Storage traffic serves data from storage servers to endpoints and is an example of client/server 
+communication. The communication stacks often split larger requests into multiple smaller messages 
+(e.g., some MiB or even some KiB). Those sizes can, to some extent, be tuned to the transport protocol. 
+The data access patterns and sizes are user-dependent and are rarely controlled by the system 
+administrator. Thus, random incast events (e.g., many customers accessing the same storage server) 
+regularly occur. 
+1.3.1.5 Scale-up Workloads (aka Local Network Workloads) 
+Scale-up networking (also referred to here as local networking) is quickly gaining importance, as many 
+workloads have two scaling regimes: one regime that requires low latency and high bandwidth, and a 
+second regime that does not have such stringent requirements. Scale-up networks can be designed to 
+offer higher bandwidth and lower latencies using shorter cables and distances. Wire efficiency is 
+enhanced, trading off traditional network layering and scale for compressed L2/L3/L4 network headers. 
+Of course, scale-up networking domains are limited to dozens, maybe hundreds, of endpoints today and 
+low thousands in the future. Global networking domains can reach hundreds of thousands to millions of 
+endpoints. 
+AI training is a workload that highlights the importance of high‑performance local networking. As 
+described in section 1.3.1.1, training frameworks commonly employ 3D parallelism, with each dimension 
+imposing distinct network requirements. In practice, users map DP and PP onto lower‑performance 
+global networks, while the most latency- and bandwidth-sensitive dimension OP (also referred to as 
+tensor parallelism) is placed on fast local networks. For many training jobs, this separation of local and 
+global networking domains is critical to achieving high overall performance. 

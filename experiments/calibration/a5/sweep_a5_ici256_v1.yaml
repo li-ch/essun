@@ -1,0 +1,42 @@
+# Calibration-ladder A5 sweep, slice 2: where does the
+# L0 2D-torus identity sit relative to CAL-A5's 4x8x8 slice (r=256) — Google
+# TPU v4, ISCA 2023 (docs/calibration/anchors_staging.md §A5)?
+#
+# Same design as sweep_a5_ici128_v1 (see that file's header for the full
+# honesty/tuning statement): B values {20, 25, 50, 64} B/ns fixed by anchor
+# arithmetic and the plan's A-L0T-BW candidate span; reading-1 (50) is the
+# anchor point, reading-2 (25) is executed alongside it because the staging
+# doc flags the direction convention UNVERIFIED; L at the A-L0T-LAT registry
+# point 200 ns; nothing tuned. Payload 4096 B = the anchor's individual
+# all-to-all DMA size (4 KiB), gate-accepted exactly by every power-of-two
+# dimension.
+#
+# Shapes: 8x32 and 4x64 are the two partitions of the anchor's own dimension
+# lengths {4,8,8} (3D->2D projection, declared in each topology file); 2x128
+# is the latency-chain extreme and 16x16 the minimum-latency-chain shape —
+# neither is a partition, both bound the model's expressible shape space at
+# r=256. Swapped shapes are arithmetically identical (identity symmetric in
+# dim1 x dim2) and are not duplicated.
+#
+# Baseline = the anchor point (8x32 at B=50): delta columns read directly
+# as placement vs the anchor's own arithmetic.
+sweep: cal_a5_ici256_v1
+workload: experiments/calibration/a5/workloads/w1_dense_tp_decode_tp256_4kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_torus2d
+  topology: experiments/calibration/a5/topologies/torus2d256_a5_8x32_b50_v1.yaml
+grid:
+  payload_sizes_bytes: [4096]   # CAL-A5's individual DMA size; exact, gate-accepted
+  algorithms:
+  - algorithm: allreduce_torus2d
+    topologies:
+    - experiments/calibration/a5/topologies/torus2d256_a5_8x32_b20_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d256_a5_8x32_b25_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d256_a5_8x32_b50_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d256_a5_8x32_b64_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d256_a5_4x64_b50_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d256_a5_2x128_b50_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d256_a5_16x16_b50_v1.yaml

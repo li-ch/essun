@@ -1,0 +1,46 @@
+# Calibration-ladder GF-04 anchor-point RUN (gap-fill
+# anchor): the L0 flat-ring identity at the SINGLE-NODE leg of the anchor's
+# 8->16 scaling pair — r=8 (one H100.8 node, 8 GPUs), B=476.37 B/ns (the
+# anchor's own summary figure "NCCL on single node with 8 GPUs | 476.37
+# GB/s", fetched/verified 2026-10-28; read through the pinned busbw = B
+# asymptotic mapping), L=200 ns (A-L0-LAT registry point), payload
+# 4294967296 B = 2^32 (4 GiB): the anchor's own single-node ladder top
+# (-b 32 -e 4G -f 2 -g 8) and the largest size COMMON to both ladders,
+# i.e. the same-size comparison point of the scaling pair (8 divides 2^32,
+# gate ACCEPTS, no bracketing).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF04-RING8-ANCHOR476-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp8_4gib.yaml
+infra_graph:
+  path: experiments/calibration/gf04/topologies/ring8_gf04_anchor476_37_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf04/profiles/implementation_profile_l0_ring_cal_gf04_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_gf04_anchor476_37_v1 (unidirectional ring, r=8 = the GF-04 single-node count; B=476.37 B/ns = the anchor's own single-node busbw through the pinned busbw=B mapping, declared aggregate-scale projection; L=200 ns free)
+  workload: w1_dense_tp_decode tp8, payload 2^32 (4 GiB) = the anchor's single-node ladder top and the common size of the 8->16 pair (gate-accepted, no bracketing)
+  implementation: analytical L0 free-parameter identity; GF-04 comparison is the first staged multi-rank injection-scaling point (8->16 ranks, one fabric pair, MEASURED) — plan gap 8 — PROPOSED, review required
+evidence_level_requested: E0

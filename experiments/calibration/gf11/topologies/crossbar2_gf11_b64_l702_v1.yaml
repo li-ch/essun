@@ -1,0 +1,31 @@
+# Calibration-ladder GF-11 topology: fully-connected crossbar of 2 ranks at
+# the GF-11 DECOMPOSITION point — B = 64 B/ns, L = 702 ns.
+#
+# ROLE: the anchor's latency decomposition was measured on 2 GB200 GPUs
+# (LL2_RTT 0.306 µs, remote store 0.792 µs, SoL 1.404 µs), so r=2 is the
+# decomposition system's own rank count. At r=2 ALL THREE corpus L0
+# identities coincide (t = M/B + 2L — ring chain 2(r-1)L = 2L, doubling
+# chain 2*log2(2)L = 2L, crossbar 2L): algorithm choice vanishes exactly
+# where the anchor measured its algorithm-free speed-of-light bound. At
+# M=128, B=64 this row gives t = 2 + 1404 = 1406 ns — the identity
+# reproduces the measured SoL 1404 ns to within EXACTLY M/B = 2 ns, the
+# pure wire term: the residual of the SoL mapping is the wire reading by
+# construction, demonstrated on an executed cell. L = 702 = SoL/2 is the
+# derived per-phase reading (mapping ambiguity recorded; the SoL-total
+# alternative reading lives on the r=4 L-sweep row). Same honesty rules as
+# crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: crossbar2_gf11_b64_l702_v1
+topology_class: fully_connected_crossbar
+ranks: 2
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 702
+notes: >
+  Single non-blocking switch-stage abstraction of 2 ranks (the GF-11
+  decomposition system) at the derived per-pair latency L = 702 ns
+  (measured SoL 1404/2) and B = 64 B/ns (free registry). Identity
+  t = M/B + 2L; at r=2 this coincides with the ring and recursive-doubling
+  identities exactly. The 2-GB200 SoL point of the GF-11 comparison.
+  Values are anchor arithmetic / free registry points, never ours, never
+  tuned, never standard-normative.

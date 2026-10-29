@@ -1,0 +1,19 @@
+ 672 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Figure 5-12 - Lossless VC Removal Process 
+The lossless VC removal process follows these steps as shown in Figure 5-12: 
+1. CBFC receiver update 
+CBFC management entity updates the receiver to remove one or more lossless VCs and sets the 
+TLV values in the local CBFC LLDP database accordingly: 
+• Local.R_NumVCs = total number of VCs supported on the link 
+• Local.R_TotalCredits = original R_TotalCredits, or optionally a new R_TotalCredits value 
+• For each lossless VC[x] that the receiver wants to remove: 
+o Local.R_VC_Want[x] = 0 
+o Local.R_VC_RTR[x] = 1 (no change) 
+2. LLDP packet is sent from receiver to sender with the receiver’s new TLV values and is used to 
+update the remote LLDP database at the sender. 
+3. CBFC sender drains VC queues 
+CBFC management entity performs the following actions: 
+• For each VC[x] with Remote.R_VC_Want[x] == 0 and Local.S_VC_RTS[x] == 1: 

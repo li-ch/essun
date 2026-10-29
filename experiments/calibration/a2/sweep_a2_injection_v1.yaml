@@ -1,0 +1,44 @@
+# Calibration-ladder A2 sweep: where does the L0
+# single-port crossbar identity sit relative to CAL-A2 (NVIDIA GB200
+# NVL72 product page — 1.8 TB/s bidirectional NVLink per GPU, split to
+# 900 GB/s per direction by the staging doc; 130 TB/s aggregate)?
+#
+# CAL-A2 is a capacity SPECIFICATION, not a time series: per
+# docs/calibration/CALIBRATION_PLAN.md §1.1 it CANNOT calibrate O-CCT. Its
+# role is the per-GPU per-direction INJECTION-BW CEILING that every
+# measured fraction (e.g. CAL-A3 busbw) is normalized against. This sweep
+# measures where the model output sits relative to that ceiling
+# (ceiling-fraction per message size, span placement) — it never tunes
+# anything: B values carry the provenance labels in the topology files,
+# L stays at the registry point, and every delta below is an arithmetic
+# fact of the identity.
+#
+# Swept scale (plan §2.1 A-L0X-BW, NARROW scale — modern anchors live at
+# 448–900 B/ns per-rank aggregate per direction): 448 (CAL-A7-derived
+# MI300X-class lower endpoint), 720 (CAL-A2 ceiling x CAL-A12 ~80%
+# software derating — the mandatory spec-to-measured bridge), 900 (CAL-A2
+# anchor point). Baseline = the anchor-point topology (B=900), so the
+# delta columns read directly as placement vs the anchor point.
+#
+# Payload grid: the SAME 12-size ladder as stage A1 (every size 72*2^k,
+# k = 10,12,14,16,18,20,22,24,25,26,28,30; r=72 divides M so A-L0X-DIV
+# never rejects), spanning 72 KiB -> 72 GiB — reused verbatim so A1/A2
+# rows are directly comparable across stages. The 2.25 GiB point is the
+# ladder neighbor of CAL-A3's measured 2 GiB row (that comparison belongs
+# to stage A3, not here).
+sweep: cal_a2_injection_v1
+workload: experiments/calibration/workloads/w1_dense_tp_decode_tp72.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a2/topologies/crossbar72_a2_ceiling900_v1.yaml
+grid:
+  payload_sizes_bytes: [73728, 294912, 1179648, 4718592, 18874368, 75497472, 301989888, 1207959552, 2415919104, 4831838208, 19327352832, 77309411328]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a2/topologies/crossbar72_a2_span448_v1.yaml
+    - experiments/calibration/a2/topologies/crossbar72_a2_derated720_v1.yaml
+    - experiments/calibration/a2/topologies/crossbar72_a2_ceiling900_v1.yaml

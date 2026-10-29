@@ -1,0 +1,68 @@
+ 113 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+fi_msg() API Description Requirements SES Opcode 
+UET_SEND or 
+UET_DEFERRABLE_SEND for 
+FI_EP_RDM endpoint type 
+ 
+Use of UET_SEND vs. 
+UET_DEFERRABLE_SEND is 
+based on message size as 
+specified in Section 2.2.5.4.1.2  
+ 
+HPC profile: 
+UET_SEND or 
+UET_RENDEZVOUS_SEND for 
+FI_EP_RDM endpoint type 
+ 
+Use of UET_SEND vs. 
+UET_RENDEZVOUS_SEND is 
+based on message size as in 
+Section 2.2.5.4.1.2  
+fi_sendmsg The fi_sendmsg() API 
+supports more granular 
+control of the send 
+operation per call using 
+flag parameters 
+API MUST be supported 
+ 
+The following flags MUST be 
+supported: 
+• FI_REMOTE_CQ_DATA 
+• FI_COMPLETION 
+• FI_INJECT 
+• FI_INJECT_COMPLETE 
+• FI_TRANSMIT_COMPLETE 
+• FI_DELIVERY_COMPLETE 
+• FI_FENCE 
+Same as fi_sendv 
+fi_inject The fi_inject() API is an 
+optimized version of 
+fi_send() with the following 
+characteristics: 
+• The data buffer is 
+available for reuse 
+immediately on return 
+from the call 
+• No CQ entry will be 
+written if the transfer 
+completes successfully 
+• An error CQ entry 
+MUST be written 
+when used with a 
+libfabric endpoint of 
+type FI_EP_RDM and 
+when the message 
+cannot be delivered 
+(this requirement 
+applies to all inject 
+operations) 
+API MUST be supported 
+ 
+The message size used with 
+fi_inject() is limited by the 
+inject_size attribute of the 
+transmit context, which is 
+vendor specific 
+Same as fi_sendv 

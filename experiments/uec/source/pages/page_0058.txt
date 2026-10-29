@@ -1,0 +1,41 @@
+ 58 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+models often use expert parallelism (EP) that is similar to operator parallelism in the 3D parallelism 
+view. EP bundles k (for typical k=16 to 256) models together and performs an alltoall(v) operation 
+among them. The alltoall(v) operation is not always balanced. AI inference parallelism is very similar. It 
+differs in that it does not consider data parallelism and usually uses very small batches. Thus, both job 
+sizes and transmitted messages are generally smaller. 
+Later, additional parallelism dimensions, such as sequence and context parallelism were added and may 
+lead to higher-dimensional communication structures. 
+As a workload example (circa 2023), the well-known GPT-3 model had 175 billion parameters in 96 
+transformer layers. Storing those parameters in FP16 required 350 GiB, which required multiple state-
+of-the-art accelerators available in 2023 (not accounting for stashed activations or other temporary 
+values or copies during training). In this scenario, if there are six accelerators along the pipeline and four 
+in the operator parallelism dimension, then there are 16 GPT decoder layers per four accelerators. On 
+accelerators available in 2023, this would have taken approximately 160 msec compute time. The 
+communication is then 50 MiB per layer along each dimension (pipeline and operator). 
+Assuming a target service level objective of 200 msec, then 40 msec are for pipeline communications 
+and the ring allreduce (which sends data twice). Each accelerator now sends 50 MiB 16*2 times for 
+allreduce and once along the pipeline dimension. Thus, it needs to communicate 1.7 GiB in 40 msec, 
+requiring 41 GiB/s. For lower latency, one can scale the operator dimension and decrease the 
+communication time. For a 10 msec service level objective, one would need approximately 150-200 
+GiB/s throughput. 
+AI training workloads follow a 3D parallelism scheme but in addition to the weights, each accelerator 
+typically stores a “golden copy” of the weights as well as all activation outputs for its layers until it 
+applies the gradients on the backward pass. In general, AI training workloads require extremely high 
+(cheap) bandwidth and have low to moderate latency sensitivity. Typical message sizes are in the 
+megabyte or larger regime. 
+1.3.1.2 AI Inference Workloads 
+AI inference workloads follow a 3D parallelism scheme but do not offer data parallelism, as each input 
+sample is a user request. They may be batched, but usually this is used only to improve accelerator 
+efficiency. AI inference workloads sometimes have stringent service level objective requirements to 
+satisfy interactive usage patterns. In this case, batches are smaller, leading to smaller activations 
+(pipeline messages) as well as operations (allreduce). These often remain in the kilobyte-size range. 
+Consider generative AI inference on GPT-3 as an example. In this case only one token is input instead of 
+a full sequence in the GPT-3 example above. Thus, everything is approximately a sequence length 
+smaller (2048 for GPT-3). In practice, generative inference systems often use beam search for improved 
+quality. With a beam width of four, there is a total shrinking factor of 512. Unfortunately, the weight 
+memory remains the same, leading to the same distribution (OP=4, PP=6). The computation now can be 
+as small as 1-msec and would send 3.3 MB of data per accelerator. With a service level objective of 
+1.2 msec, a reduction would be performed in 0.2 msec, leading to a bandwidth requirement of 

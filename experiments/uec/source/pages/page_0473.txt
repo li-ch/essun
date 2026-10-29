@@ -1,0 +1,41 @@
+ 473 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+process_ev(Entropy, ECN) 
+else:   
+process_ev(Entropy, NO_ECN) 
+ 
+if nscc: 
+NSCC.OnACK(newly_rcvd_bytes, M_Flag, pkt_tx_state,  
+ack_arrival_time, Service_Time, Retx_Flag, 
+Rcv_Cwnd_Pend, Restore_Cwnd, csig_refl_data) 
+ 
+if rccc: 
+RCCC.OnACK() 
+ #Each ACK may acknowledge multiple packets (cumulative ACK, SACK, etc) 
+ ccc.inflight_pkts -= number_of_newly_acked_packets 
+update_state() 
+ 
+OnNACK(nominal_pktsize, NACK_PSN, Entropy, M_Flag, pkt_tx_state, 
+       nack_arrival_time, reason, Retx_Flag, pdc_present): 
+if reason == TRIM_NACK: #Non-last hop trim 
+process_ev(Entropy, NACK) 
+else if M_Flag == 1:   #pkt was ECN marked before it was trimmed 
+process_ev(Entropy, ECN) 
+else:  #last hop trim, or other cause—no need to load balance 
+process_ev(Entropy, NO_ECN) 
+ 
+if nscc: 
+NSCC.OnNACK(nominal_pktsize, pkt_tx_state, nack_arrival_time, 
+            Retx_Flag, reason, rccc) 
+ 
+mark_packet_for_rtx(NACK_PSN, nominal_pktsize) 
+if rccc: 
+RCCC.OnNACK(pdc_present) 
+ccc.inflight_pkts-- 
+update_state() 
+ 
+OnCreditUpdate(Credit): 
+if rccc: 
+RCCC.OnCreditUpdate(Credit) 
+update_state() 

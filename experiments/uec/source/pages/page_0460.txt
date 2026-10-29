@@ -1,0 +1,39 @@
+ 460 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• A CCC transitions from PENDING to ACTIVE state if a packet sent on a PDC associated with the 
+CCC is marked for retransmission. This can be caused by receiving a NACK, inferring loss from a 
+SACK, or due to a retransmission timeout. 
+• A CCC transmissions from ACTIVE to PENDING state if there are no new data packets to send, 
+and the last data packet marked for retransmission is acknowledged. 
+Note that multiple transitions may happen consecutively triggered by a single state change. For 
+example, a CCC may immediately transition from IDLE to ACTIVE to READY if new data arrives to be sent 
+and the CCC is already in a state that permits sending. 
+The scheduler will rotate between PDCs in READY state, sending packets from them in turn. How the 
+scheduler chooses which PDC to service next is implementation specific. 
+Packet arrivals or timer events trigger actions in the source CCC behavior. These actions are: 
+• OnACK():An ACK packet arrived for a PDC under this CCC. 
+• OnNACK():A NACK packet arrived for a PDC under this CCC. The PDS indicates if a PDC is fully 
+established (i.e., a PDCID was returned from the remote device). 
+• OnInferredLoss():A PDC retransmit timer expired for a PDC under this CCC, or loss was 
+otherwise inferred from received SACKs. The PDS indicates if a PDC is established. 
+• OnNewData():New data was queued for a PDC under this CCC. 
+• OnCreditUpdate():New credit arrived for the CCC. 
+• OnSend():The scheduler sent a packet from a PDC under this CCC. 
+Each of these actions can cause the state machine for the CCC to move between the 
+READY/ACTIVE/PENDING/IDLE states. These actions do not directly cause data packets to be sent; 
+rather, the CCC moves to the READY state and then data may be sent on any corresponding PDC when 
+the scheduler determines it is time for that PDC to send. These actions may, however, cause control 
+packets to be sent. 
+In addition, when the scheduler is ready to send using a PDC, it calls GetSendParams() on the CCC, which 
+returns the CC-related fields for the packet. It is not desirable, or even possible, to compute all packet 
+fields at the time that a CCC becomes ready. One of these fields is the Entropy value (EV) (3.6.10.1) that 
+determines the packet’s path. For optimal path selection, it is preferable to determine this when the 
+packet is finally going to be sent, because incoming ACKs and NACKs arriving between the CCC being 
+ready and the packet being sent may change the choice of path/EV or may change which PDC under that 
+CCC is selected for transmission. 
+When supporting rendezvous, PDS can query CMS at the behest of SES. When PDS calls 
+GetEagerEstimate(), CMS returns the current value of cwnd. This is passed through PDS to SES to be 
+used to set the size of the eager portion of the message. 
+The CCC actions discussed in this section are further described in pseudocode in Section 3.6.12. Before 
+the actions are called, some data needs to be prepared. This preparation is detailed in Section 3.6.10. 

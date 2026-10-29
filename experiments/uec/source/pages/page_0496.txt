@@ -1,0 +1,41 @@
+ 496 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+ 
+RCCC.OnSend(nominal_pktsize): 
+ccc.credit –= nominal_pktsize 
+ccc.credit_target_sent = TRUE 
+ 
+RCCC.OnCreditUpdate(Credit) 
+#A PDC is always present when receiving a credit update 
+RCCC.stopSpeculating(pdc_present=TRUE) 
+if Credit > ccc.cumulative_credit: 
+ccc.credit += (Credit - ccc.cumulative_credit) << 8 
+ccc.cumulative_credit = Credit 
+update_state() 
+ 
+RCCC.OnNewData(): 
+ 
+credit_target = computeCreditTarget() 
+if credit_target != ccc.credit_target 
+      ccc.credit_target_sent = FALSE 
+ ccc.credit_target = credit_target 
+ 
+RCCC.CanSend(): 
+if ccc.credit > 0: 
+return TRUE 
+if ccc.credit_target_sent = FALSE 
+   or (ccc.credit_target_sent = TRUE  
+       and computeCreditTarget()> ccc.credit_target):  
+#insufficient credit available and destination does not 
+#know about our backlog 
+ccc.credit_target = computeCreditTarget() 
+#send Credit Request CP requesting credit. 
+send_credit_request(ccc.credit_target)              
+ccc.credit_target_sent = TRUE 
+return FALSE 
+ 
+RCCC.stopSpeculating(pdc_present): 
+if ccc.speculating: 
+ccc.speculating = FALSE 

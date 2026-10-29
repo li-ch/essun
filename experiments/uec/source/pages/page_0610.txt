@@ -1,0 +1,37 @@
+ 610 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+right by e bits, as each bucket spans 2e unquantized values. The resulting bucket index is the quantized 
+value. 
+The switch control plane sets e and b per signal type during configuration. 
+Each bucket index i represents the range of unquantized values: 
+[𝑏 + 𝑖2𝑒, 𝑏 + (𝑖 + 1)2𝑒 − 1] 
+And thus, for a given b and e, the full range of unquantized values representable in quantized form is: 
+[𝑏, 𝑏 + 2𝑒+20 − 1] 
+To quantize an unquantized signal value v, yielding bucket index i, the corresponding quantized value, a 
+device computes: 
+i = (𝑣 − 𝑏) ≫ e 
+The result of the quantization function is undefined for input unquantized signal values v that fall 
+outside the full range. 
+This quantization function is efficient to implement in hardware, given the simplicity of the subtraction 
+and shift-right operations. 
+As with the handling of out-of-range values in the quantization for the compact tag, if a raw signal value 
+is less than b in the wide-tag quantization, the switch hardware MUST quantize it as falling in bucket 0, 
+and if a raw signal value is greater than (𝑏 + 2𝑒+20 − 1), the switch hardware MUST quantize it as falling 
+in bucket (220-1). For the wide tag quantization, too, switch implementations SHOULD keep event 
+counters for out-of-range low and out-of-range high occurrences during quantization. The reporting and 
+use of these counters is implementation-specific and outside the scope of this specification. 
+4.2.4.1.7 Locator Metadata (csig.lm) 
+Locator metadata is a 6-bit field in the compact tag and a 15-bit field in the wide tag. It identifies the 
+location within the network and/or attributes of the switch where the signal value in a CSIG tag was 
+updated. When a switch updates the signal value in a packet’s tag, it MUST also update the locator 
+metadata in the tag. 
+Locator metadata is updated by the bottleneck hop (i.e., the hop updating the signal value as part of the 
+CSIG-Compare-and-Update() operation). Locator metadata may provide deployment-specific 
+information for deployment-specific differentiation or vendor extensions (e.g., vendor-specific 
+enhancements to UE CC algorithms). Locator metadata may provide additional hints to improve UE 
+congestion management, path selection, or just provide visibility of the bottleneck hop as telemetry 
+data. 
+Informative Text: 
+The distinction between a last-hop bottleneck and one at any earlier point along a path is useful to 
+tell incast apart from “non-leaf” congestion. This distinction is important because load balancing 

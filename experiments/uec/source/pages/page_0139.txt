@@ -1,0 +1,38 @@
+ 139 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+2.3.3 UET Verbs Object Model 
+UET leverages and extends the previously identified verbs objects. The existing RDMA verbs model is 
+insufficient to support UET, so an additional set of verbs objects is required to support UET job-based 
+communication. At a high level, Table 2-46 describes each of the new objects introduced. 
+Table 2-46 - UET Verbs Objects 
+Object Description 
+JobID A JobID identifies a distributed application. The JobID object is a device -level object 
+and may be shared between processes. The configuration of a JobID object is 
+considered a privileged operation. 
+Note that a single, logical application-level job may require multiple UET verbs job 
+objects (e.g., a job that spans multiple devices needs one job object per device).  
+Job Key A job key associates a JobID with a specific protection domain. This provides secure 
+access to the actual JobID value stored with the JobID, while restricting which 
+memory regions data transfers may access. 
+Job Address Table An address table is a virtual array of extended addresses associated with a JobID 
+object. The address table allows local processes that belong to the same job to share 
+addressing information of peer QPs. 
+Extended Address 
+Handle 
+An extension of the address handle to represent both network (i.e., port, destination 
+address, traffic class, etc.) and transport information (i.e., remote PIDonFEP, 
+Resource Index, etc.). 
+QP Semantics QP semantics are an extended set of QP attributes that describe the message and 
+data ordering semantics supported by a QP, as well as other requirements for using 
+that QP. 
+QP semantics also defines a mechanism to learn the capabilities of a specific QP type 
+on a device and aids in the selection of the UET ROD or RUD packet delivery types.  
+ 
+Figure 2-13 shows the access rules for supported MR models associated with the absolute and relative 
+UE addressing modes. MR access is classified as unrestricted or restricted. With unrestricted, the MR 
+spans a PIDonFEP, whereas restricted limits MR access to a specific JobID or Resource Index. For 
+example, an MR accessed using relative addressing with restricted access is accessible only through the 
+linked Resource Index, and the lookup for the MR is defined by a hierarchy of {JobID, PIDonFEP, 
+Resource Index}. Alternatively, an MR accessed using relative addressing with unrestricted access is 
+accessible by all RIs under a PIDonFEP, and the hierarchy is defined as {JobID, PIDonFEP}. 

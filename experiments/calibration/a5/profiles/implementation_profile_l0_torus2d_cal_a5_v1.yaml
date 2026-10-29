@@ -1,0 +1,42 @@
+# Implementation profile for the calibration-ladder A5 runs on the
+# analytical L0 2D-torus backend ( anchor CAL-A5 — Google
+# TPU v4 ISCA 2023: per-link ICI BW, twisted-torus topology measurements,
+# OCS reconfiguration).
+implementation_profile_id: analytical_l0_torus2d_cal_a5_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0_torus2d
+fidelity: L0
+model: >
+  per-dimension sequential full-message ring AllReduce on a 2D torus:
+  t_2d(M, r1, r2) = t_ring(M, r1) + t_ring(M, r2) with t_ring(M, k) =
+  2*(k-1)/k * M/B + 2*(k-1)*L (see src/essun/backends/analytical/l0_torus2d.py);
+  modeling assumptions A-L0T-SEQ / A-L0T-UNIF / A-L0T-SHAPE / A-L0T-BW /
+  A-L0T-LAT / A-L0T-DIV from experiments/vertical_slice/assumptions_l0.yaml
+  (KEEP verdicts per docs/calibration/CALIBRATION_PLAN.md §2.1).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) swept over {20, 25, 50, 64} bytes/ns at the
+  anchor-point shapes: 20 = CAL-A12 NCCL per-link model (plan A-L0T-BW span
+  endpoint); 25 = CAL-A5 READING 2 (per-link bidirectional reading of the
+  staged '6 links @ 50 GB/s'); 50 = CAL-A5 READING 1 (per-link
+  per-direction, supported by the anchor's own §7.3 '400 vs. 200 Gbit/s'
+  quote) — the stage's anchor point; 64 = CAL-A7 per-direction endpoint and
+  the A-L0T-BW registry point. The direction convention is FLAGGED
+  UNVERIFIED by the staging doc — both readings are executed, neither is
+  chosen. Shape swept over the declared 3D->2D projections of the anchor's
+  two measured slices (4x4x8 -> 8x16 / 4x32 at r=128; 4x8x8 -> 8x32 / 4x64
+  at r=256) plus the latency-chain extremes (2x64 / 2x128 / 16x16) that
+  bound the model's expressible shape space. L fixed at the registry point
+  200 ns. Message size 4096 B = the anchor's individual all-to-all DMA size
+  ("4 KiB"), placing the runs in the anchor's regime; the anchor measures
+  ALL-TO-ALL throughput while the model executes ALLREDUCE — the two
+  collectives are never compared (no mixed metric). NO parameter was tuned
+  toward any CAL-A5 measurement.
+measurement_source: >
+  CAL-A5 staged numbers (Google TPU v4, ISCA 2023, arXiv:2304.01433: 6 ICI
+  links @ 50 GB/s per chip, §7.3 '400 vs. 200 Gbit/s'; twisted-torus
+  all-to-all 1.63x on 4x4x8 and 1.31x on 4x8x8 vs regular torus, individual
+  4 KiB DMAs; OCS Palomar 136x136 ports, path switching milliseconds;
+  docs/calibration/anchors_staging.md §A5; anchor PROPOSED in the anchor registry,
+  confidence H) — external published measurement/spec, recorded as PROPOSED
+  evidence in results/calibration/; not our testbed, no E3/E4 language.

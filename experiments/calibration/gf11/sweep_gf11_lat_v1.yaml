@@ -1,0 +1,55 @@
+# Calibration-ladder GF-11 sweep #4: the MEASURED
+# LATENCY-COMPONENT LADDER on the free L axis at the bracket rank —
+# crossbar r=4, B=64 (registry), over the anchor's measured components
+# and the corpus reference points (numbers AS STAGED, not re-fetched):
+#   200  = A-L0X-LAT registry point (the placement reference; every other
+#          row differs from it by exactly 2(L-200) ns at every payload,
+#          an identity);
+#   306  = the anchor's MEASURED LL2 RTT component (0.306 µs on 2 GB200
+#          GPUs) — the first measured current-gen sub-µs component on the
+#          corpus L axis (153/100 of the registry point);
+#   702  = the DERIVED per-phase reading of the measured SoL (1404/2; the
+#          anchor's own equation 2x306 + 792 = 1404 closes exactly) — the
+#          headline mapping row, 351/100 of the registry point, inside
+#          the declared free range [10, 2000] at 351/1000 of its upper;
+#   792  = the anchor's MEASURED remote-store component (0.792 µs — the
+#          dominant term, 44/17 above the LL2 RTT);
+#   800  = CAL-A10's assumption-class 0.8 µs NVLink end-to-end value —
+#          the check row: the assumption sits only 400/351 ~ 1.14 above
+#          the current-gen derived reading (vs GF-10's app-level check at
+#          exactly 45/4 — a quantity-class contrast, coincidence recorded,
+#          never cross-derived);
+#   1404 = the SoL-total ALTERNATIVE reading (the whole 2-GPU bound
+#          charged as ONE phase's L) — the x2-class mapping ambiguity,
+#          both readings executed, neither adjudicated.
+#
+# EVERY measured/derived GF-11 latency value sits INSIDE the declared
+# free range [10, 2000] — the FIRST gap-fill anchor with no above-range
+# placement (GF-10's app-level values were all 2.5-13.5x above it). The
+# quantity classes differ from GF-10's: these are BARE-HARDWARE
+# components (no software stack) — the closest quantity class to the bare
+# per-pair L parameter the corpus has ever placed.
+#
+# NOTHING IS TUNED: the L ladder was fixed by anchor/registry arithmetic
+# BEFORE any stage output was read. Payload grid as the tp-sweeps (base
+# 128 = the anchor's cache-line granularity reading, 41216 = the exact
+# near-optimal crossover cell, 65536 = the plan's small-message boundary).
+sweep: cal_gf11_lat_v1
+workload: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp4_128b.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [128, 512, 2048, 8192, 32768, 41216, 65536]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l200_v1.yaml
+    - experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l306_v1.yaml
+    - experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l702_v1.yaml
+    - experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l792_v1.yaml
+    - experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l800_v1.yaml
+    - experiments/calibration/gf11/topologies/crossbar4_gf11_b64_l1404_v1.yaml

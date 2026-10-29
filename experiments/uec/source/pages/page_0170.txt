@@ -1,0 +1,60 @@
+ 170 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+message CapabilitiesResponse { 
+  // The INC capabilities that are available to any potential communicator 
+  Capabilities guaranteed_capabilities = 1; 
+  // The best-case capabilities that could be available to an arbitrary 
+  // communicator 
+  // This is a superset of guaranteed_capabilities. 
+  Capabilities max_capabilities = 2; 
+} 
+ 
+message CommunicatorJoinRequest { 
+  // The rank's addressing information. 
+  AddressingInfo rank_addr = 1; 
+  // A 0-indexed integer indicating the rank's position in a communicator 
+  uint32 rank_id = 2; 
+  // A 16-byte Unique ID (UID) 
+  // Also used to refer to the communicator for the remainder of the job's 
+  // lifetime. 
+  // All ranks must supply the same value. 
+  // The UID must not be reused for the duration of the job. 
+  // This field was sized such that it can house a *CCL Unique ID. 
+  bytes unique_id = 3; 
+  // The number of ranks in the communicator 
+  uint32 rank_count = 4; 
+  // The capabilities required for communicator operation. 
+  // Communicator creation MUST fail if these can not be provided. 
+  optional Capabilities required_capabilities = 5; 
+  // A hint for the IM indicating which capabilities are desired for 
+  // communicator operation 
+  // The IM may or may not honor this request. 
+  optional Capabilities desired_capabilities = 6; 
+  // The scale factor by which sum-and-scale data is divided 
+  // Must be non-0. 
+  uint32 scale_factor = 7; 
+} 
+ 
+message CommunicatorJoinReply { 
+  // The peer's addressing information 
+  AddressingInfo peer_addr = 1; 
+  // The communicator ID 
+  uint32 communicator_id = 2; 
+  // The maximum number of active collectives 
+  uint32 in_flight_ops = 3; 
+  // The INC capabilities available to the communicator 
+  // Contains exactly one protocol type. 
+  Capabilities capabilities = 4; 
+  // The peer's flow control info 
+  optional FlowControlInfo flow_control_info = 5; 
+} 
+ 
+enum LeaveReason { 
+  NO_ERROR = 0; 
+  GENERIC_ERROR = 1; 
+} 
+ 
+message CommunicatorLeaveRequest { 
+  // The communicator's Unique ID 
+  bytes unique_id = 1; 

@@ -1,0 +1,49 @@
+# Implementation profile for the calibration-ladder GF-02 allgather runs on
+# the analytical L0 phase-collectives backend, ring family step
+# 3, gap-fill anchor GF-02; docs/calibration/anchors_gapfill.md §GF-02).
+implementation_profile_id: analytical_l0_phase_collectives_ring_cal_gf02_v1
+status: PROPOSED   # calibration candidate inputs; review pending (GF anchors are not yet integrated anchor rows)
+backend: analytical_l0_phase_collectives
+fidelity: L0
+model: >
+  ring ReduceScatter / AllGather phase identities t = (r-1)/r*M/B + (r-1)L
+  on the unidirectional-ring fabric (A-L0P-ALGO pairing; see
+  src/essun/backends/analytical/l0_phase_collectives.py); assumptions
+  A-L0-BW / A-L0-LAT / A-L0P-MSG / A-L0P-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. A-L0P-MSG: the AllGather
+  op's M is the TOTAL gathered size (each rank contributes M/r) — the
+  workload file therefore carries chunk_bytes = 8 x the anchor's 16 GiB
+  per-rank table row. The anchor's metric is nccl-tests busbw; the pinned
+  mapping (all_gather_perf: algbw = size x nranks / t, busbw = algbw x
+  (r-1)/r, verified from NVIDIA/nccl-tests src/all_gather.cu fetched
+  2026-10-28) makes the identity's asymptotic busbw exactly its B for
+  AllGather too — the SAME reading as the allreduce side, one B point for
+  both collectives, exactly as the anchor states its plateau. W2 structure
+  note: the workload emits one RS+AG pair whose per-op completion times
+  are per-op identities (the chain semantics couple dependencies, not
+  per-op arithmetic); the AG op row is the calibration target, consistent
+  with the plan's per-collective comparability convention (A-W2-DAG /
+  A-AS1-CHAIN).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) executed at the two anchor-arithmetic points
+  {360 = the anchor's measured allgather plateau (the anchor's own
+  "~360 GB/s for busbw" applies to BOTH collectives), 450 = 900/2 (the
+  per-direction split of the poster's own bidirectional peak figure)} —
+  the allgather twin of the crossbar store-run pair, executing the
+  360/450 = 4/5 relation on the allgather identity. Declared
+  aggregate-scale granularity projection: per-hop B set to the
+  aggregate-scale figure an NVSwitch ring hop may draw toward one
+  neighbor, NOT a single NVLink's per-link rate (the inverse of stage
+  A12's per-link projection; GF-02 states no per-link figures). L fixed
+  at the A-L0-LAT registry point 200 ns. NOTHING was tuned toward the
+  GF-02 measurements; the swept values were fixed by anchor arithmetic
+  BEFORE any model output was read.
+measurement_source: >
+  GF-02 staged numbers (NVIDIA/nccl-tests GitHub issue #326, all_gather_perf
+  on 8 H100 + NVLink, -b 128M -e 16384M -f 2 -g 8; thread fetched and
+  verified 2026-10-28, two independent methods — see the stage record's
+  verification block). Community-reported, maintainer-confirmed; per-size
+  rows are screenshots (not text-extractable); the extractable allgather
+  target is the plateau statement itself. Compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

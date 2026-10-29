@@ -1,0 +1,43 @@
+ 366 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.5.12.6 ACK Window 
+The destination MUST NOT transmit an ACK for any packet with a PSN outside the maximum PSN 
+window of (CACK_PSN – MP_RANGE to CACK_PSN + MP_RANGE) with the exception of packets with 
+PSNs between CLEAR_PSN and CACK_PSN. It is possible that CLEAR_PSN is lower than CACK_PSN – 
+MP_RANGE during the transition to a smaller MPR. Any packet arriving with pds.psn less than or equal 
+to CLEAR_PSN is not acknowledged. This constrains the range over which responses to duplicate PSNs 
+are generated as a security feature. 
+MP_RANGE defines the maximum range of PSNs that can be outstanding on a particular PDC based on 
+resource limitations at the destination, as described in Section 3.5.11.13. 
+The source MUST NOT transmit packets with a pds.psn greater than CACK_PSN + MP_RANGE. When the 
+destination reduces MP_RANGE via the ACK_CC pds.ack_cc_state field, the source may temporarily 
+exceed CACK_PSN + MP_RANGE until the CACK_PSN advances. No new packets are transmitted on that 
+PDC during that time (retransmissions are sent). 
+At the destination, acknowledgements for packets older than CACK_PSN – MP_RANGE are not 
+transmitted except for PSNs between CLEAR_PSN and CACK_PSN. The PDS_MPR concept is illustrated in 
+Figure 3-82 and captured in example code below. When a packet is received outside of the 
+Expected_PSN range, the OUT_OF_WINDOW_PSN event counter SHOULD be incremented. This 
+indicates a potential security attack. 
+if ((PSN  CLEAR_PSN) || (PSN > CACK_PSN + MP_RANGE)) 
+  // drop the packet with no ACK and increment OUT_OF_WINDOW_PSN counter 
+Informative Text: 
+PSN state is implementation specific. The following example intends to clarify PSN tracking state and 
+is not optimized. 
+ 
+Example PSN tracking states at the source: {pkt_sent, pkt_rtx, pkt_rcvd_at_dest, done} 
+• pkt_sent: packet was sent at least once 
+• pkt_rtx: the packet is pending retransmission 
+• pkt_rcvd_at_dest: destination received the packet (i.e. bit set in SACK bitmap or based on 
+CACK), source can delete retransmit state 
+• done: SES response provided to local SES 
+ 
+Example PSN tracking states at the destination:  {not_rcvd, rcvd_at_ses, gtd_del, done} 
+• not_rcvd: packet not received yet 
+• rcvd_at_ses: packet received waiting on SES 
+• gtd_del: SES processing done and ACK needs guaranteed delivery (SACK bitmap bit is set) 
+• done: done with this PSN, if gtd_del then cleared (SACK bitmap bit is set) 
+ 
+Refer to example PSN states in Section 3.5.13. This is not an exhaustive list of all state maintained per 
+PSN. 

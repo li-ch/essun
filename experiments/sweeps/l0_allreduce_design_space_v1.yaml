@@ -1,0 +1,49 @@
+# First cross-configuration comparison sweep .
+#
+# E0 evidence only: every table value is the output of a closed-form L0
+# analytical identity under explicit FREE PARAMETERS (B = 64 bytes/ns and
+# L = 200 ns, set per topology file; ranks = 8; payload sizes below). The
+# sweep tables compare analytical identities, not empirical performance —
+# no value is measured on hardware and no standard-derived number appears
+# here. Relative deltas emitted by the runner are arithmetic facts of the
+# identities (same workload shape, same payload size).
+#
+# One shared workload file fixes the collective shape (tp_size 8, 2 layers,
+# 3 decode steps -> 6 AllReduce ops per config); the grid overrides the
+# payload size per config, so the workload file's own allreduce_bytes is
+# NOT used (recorded in table.json for provenance).
+#
+# The grid pairs each L0 algorithm with its declared fabric (the
+# capability-declared pairing; a wrong pairing is rejected by the runner,
+# never silently skipped):
+#   allreduce_ring               x unidirectional ring        (ring8_free_v1)
+#   allreduce_crossbar           x fully-connected crossbar   (crossbar8_free_v1)
+#   allreduce_recursive_doubling x fully-connected exchange   (rdoubling8_free_v1)
+#   allreduce_torus2d            x 2D torus (ring x ring)     (torus2d8_free_v1)
+# All four fabrics share B and L so the designs compare under shared free
+# parameters. Baseline = the flat ring (the landed vertical-slice design);
+# deltas say what each alternative buys relative to the simplest design at
+# the SAME payload size.
+sweep: l0_allreduce_design_space_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring8_free_params.yaml
+grid:
+  payload_sizes_bytes: [16384, 1048576]   # 16 KiB and 1 MiB — free parameters
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/topologies/ring8_free_params.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/topologies/crossbar8_free_params.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/topologies/rdoubling8_free_params.yaml
+  - algorithm: allreduce_torus2d
+    topologies:
+    - experiments/topologies/torus2d_8_free_params.yaml

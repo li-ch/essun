@@ -1,0 +1,12 @@
+# W1 Dense TP Decode — tp_size 16 at the 1.5 GiB payload 1610612736 B =
+# 3*2^29: the large endpoint of CAL-A4's staged message regime ("64 MB -
+# 1.5 GB All-Reduce", binary reading declared in the stage record). The
+# anchor-point payload of the stage's L0 store run; 2 layers x 3 steps =
+# 6 AllReduce ops. r = 16 divides the size exactly (A-L0-DIV accepts; no
+# bracketing — the structural contrast with stage A3's r = 72).
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal16-a4
+tp_size: 16
+layers: 2
+steps: 3
+allreduce_bytes: 1610612736   # 3*2^29 (1.5 GiB); free parameter A-W1-SIZE

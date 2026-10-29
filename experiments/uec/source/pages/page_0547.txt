@@ -1,0 +1,24 @@
+ 547 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• For transmit EV requests, requests are reliably delivered in data path generation order. 
+• Telegrams are delivered in received order. 
+o Local and remote telegrams are delivered in received order. 
+o There is no delivery order guarantee between local and remote telegrams. 
+• Control operations are executed in issued order. 
+Informative Text: 
+Parallelization and concurrency depend on the implementation; as long as the specified runtime 
+model is supported, implementations may innovate freely. 
+3.6.18.10 eBPF Compliance 
+Implementations MAY advertise PCM eBPF compliance. This allows implementations to formally verify 
+loaded algorithms for safety and security. Algorithms written to comply with this capability MUST 
+adhere to the following constraints: 
+• Only bounded loops 
+• No recursion 
+• All pointer accesses must be expressed so they can be verified for range and access validation 
+• Limit stack size to a maximum of 512 B 
+• Limit call depth to a maximum depth of 8 calls 
+• Limit tail-call depth to a maximum of 32 tail-calls 
+ 
+ 
+  

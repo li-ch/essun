@@ -1,0 +1,38 @@
+ 176 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• The floating-point rounding mode for the communicator. 
+The series of steps makes no assumption about the atomicity of how gRPC requests are handled. An IM 
+implementation performs the following steps. 
+The INC communicator node is created as follows: 
+• The admin-status is initialized to DOWN. 
+• The communicator-id is set to the CID. 
+• The job-id is set to the INC communicator’s JobID. 
+• The payload-mtu is set to the Payload MTU to be used for the INC communicator. 
+• dscp-low and dscp-high are set to the codepoints mapped to the low and high traffic classes to 
+be used for INC traffic. 
+• scale-factor is set to the number by which data for sum and scale is divided. 
+• protocol-type is set to the protocol type selected for the communicator. 
+• ordering-mode is set to the chosen operator ordering mode for that communicator. 
+• rounding-mode is set to the chosen rounding mode for that communicator. 
+• The bandwidth node is set to the rank bandwidth allocated by the IM for the INC communicator. 
+The interface and subinterface nodes reference the chosen IETF interface and subinterface, 
+respectively. 
+• The local addressing information, namely the values for local-pid-on-fep and local-resource-
+index, are chosen arbitrarily by the IM. 
+• The peers list node is populated with the interfaces participating in the communicator. 
+A peer node is created as follows: 
+• The id is set to a value that is unique within the list. 
+• The remote-fabric-address is set to the peer’s fabric address. 
+• The role is set to LEAF. 
+• The flow-control-info node includes the cell-size and packet-overhead nodes. This information 
+was provided as part of the rank’s RegistrationRequest::flow_control_info. 
+• If natural operator ordering mode is used, the assoc-index node indicates the position in the 
+natural order taken up by the peer’s input data. 
+• The remote addressing information, namely the values for remote-pid-on-fep and remote-index, 
+are extracted from the rank’s RegistrationRequest::rank_addr, namely pid_on_fep and index, 
+respectively. 
+The IM MUST set the INC communicator’s admin-status to UP only after all of the data structures have 
+been initialized. 
+Once the admin-status is set to UP, a switch that cannot or will not comply with the initialized data 
+structures MUST set the INC communicator’s oper-status node to FAILED. 

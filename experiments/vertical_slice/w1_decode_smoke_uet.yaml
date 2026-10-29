@@ -1,0 +1,46 @@
+# Vertical-slice smoke experiment, uet-htsim CMS twin of
+# w1_decode_smoke.yaml: the SAME W1 Dense TP Decode workload and ring8 free
+# parameter topology, translated for the pinned ultraethernet/uet-htsim
+# simulator (OD-002, the independent third backend). The AllReduce is
+# translated by chunked-ring WIRE-PATTERN decomposition onto point-to-point
+# flows (A-UET1-WIRE) — htsim_uec has no collective semantics — and the
+# physical fabric is the smoke-verified auto 3-tier fat tree, not a ring
+# (A-UET1-FABRIC). Observables are only what that backend can emit
+# honestly: O-CCT (parsed per-flow completion). O-CONSERVATION is
+# unsupported there (byte counters include packet overhead and
+# retransmissions; no received-side ledger verified) and is deliberately
+# not requested — an explicit per-backend gap, not an omission.
+# Evidence level E0 only; cross-backend comparison is classify-don't-tune.
+experiment_id: EXP-VS-W1-SMOKE-UET-001
+research_question: RQ2
+claim_id: C2
+baseline_id: EXP-VS-W1-SMOKE-001
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/topologies/ring8_free_params.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_uet_htsim.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- uet_htsim_cms
+seed: 20261026
+repetitions: 1
+metrics: []
+observables:
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: >-
+    ring8_free_v1 logical ring placed on the uet-htsim auto 3-tier fat-tree
+    fabric (transport-agnostic free parameters; A-UET1-FABRIC)
+  workload: w1_dense_tp_decode smoke configuration
+  implementation: >-
+    uet-htsim htsim_uec at pinned commit 65ea315b, UET CMS receiver-credit
+    congestion control (non-normative research platform, not the CMS
+    specification), chunked-ring wire-pattern decomposition, no standard
+    semantics
+evidence_level_requested: E0

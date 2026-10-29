@@ -1,0 +1,32 @@
+# Calibration-ladder GF-10 bandwidth row: SUMMITDEV GPUDIRECT-RDMA PEAK —
+# crossbar r=8, B = 12 B/ns, L = 200 ns (registry).
+#
+# Source number (docs/calibration/anchors_gapfill.md §GF-10, AS STAGED):
+# SummitDev GPUDirect-RDMA peak "12 GB/s at 64 MB" => 12 B/ns at the
+# 64 MB operating point (decimal convention; a peak AT a size, not an
+# asymptote — the staged phrasing carries the operating point with it,
+# recorded). DOMAIN NOTE: GPUDirect-RDMA traverses the PCIe host attach
+# and the IB-class rail — this is the anchor's OUT-of-scale-up transport
+# row and is executed under the same labeled-proxy discipline as the
+# CAL-A11/GF-07 scale-out rows and the 13000 ns PCIe latency row:
+# placement context on the axis, never a scale-up prediction. PLACEMENT:
+# 12 B/ns sits BELOW the plan §2.1 anchored span [20, 64] (the span's
+# per-direction anchors are GPU-fabric links; the RDMA row is the
+# transport class the span deliberately excludes); ratio to the carrier:
+# 25/12. Paired with the L=13000 row it places the anchor's full
+# transport-class envelope (NVLink in-fabric vs PCIe/IB host path).
+topology_id: crossbar8_gf10_b12_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12
+link:
+  pair_latency_ns: 200
+notes: >
+  Single non-blocking switch-stage abstraction: per-rank single-port
+  injection B = 12 B/ns (GF-10's staged SummitDev GPUDirect-RDMA peak,
+  12 GB/s at the 64 MB operating point) with the registry L = 200 ns,
+  charged once per phase by the L0 crossbar identity
+  (t = 2(r-1)/r*M/B + 2L). Labeled proxy row (RDMA over the host path,
+  not a GPU scale-up fabric); below the anchored B span. Value is an
+  anchor measurement, never our measurement.

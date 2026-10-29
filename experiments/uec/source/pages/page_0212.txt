@@ -1,0 +1,41 @@
+ 212 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+single buffer to accept multiple requests with a locally managed offset “until it is full.” This applies to 
+send and tagged send operations (and their rendezvous variants). 
+3.4.2.6.3 Tagged Operations 
+The target side of an implementation of libfabric over the HPC profile for UET MUST include support for 
+tagged operations. Tagged operations MAY be accelerated with special mechanisms (e.g., dedicated 
+hardware support); however, implementations that comply with the minimum requirements in Section 
+3.4.8 are also acceptable. Implementation of tagged operations MUST use the matching criteria 
+(ses.match_bits plus ses.initiator) provided in the UET header. 
+3.4.2.6.4 Memory Key Size and Range 
+Target-side FEP implementations MUST support using the match bit field of a packet as a memory key 
+for an RMA operation (e.g., fi_write()). The structure of the memory key is not defined as part of the 
+transport definition and is defined in the libfabric mapping specification. Implementations have 
+significant freedom to choose the exact usage of the memory key while complying with the libfabric 
+definition. 
+3.4.2.7 Ordering 
+Ordering behavior is divided between the ordering semantics defined for RMA and messaging in support 
+of libfabric and the ordering semantics associated with scale-up classes of accesses. The former is 
+coupled to the ordering controls exposed through libfabric, while the latter is closely tied to the 
+implementation. 
+3.4.2.7.1 Libfabric Ordering 
+Two basic forms of ordering are defined in libfabric; libfabric message ordering and payload ordering. 
+The first is the ordering between libfabric messages—where a libfabric message here is loosely defined 
+as any type of network operation — and the second is payload ordering which is the order in which 
+bytes targeting a single address are delivered to memory at the target. In contrast, packet ordering is a 
+property of the packet delivery sublayer (PDS) and is used to implement the ordering requested at the 
+libfabric layer. The ordering requested at the libfabric layer passes through SES to select a PDS mode 
+(e.g., ROD, RUD, RUDI) and how that PDS mode is used. Libfabric message ordering—defined as the 
+order in which message headers are used to select a buffer—is distinct from payload ordering when 
+utilizing underlying PDS modes. Payload ordering (3.4.2.7.1.2) refers to the order in which two different 
+transactions operating on the same target address are applied. 
+Refer to Section 3.4.2.7.2 for information on ordering in the Unified Local profile. 
+3.4.2.7.1.1 Libfabric Message Ordering 
+Message ordering as defined by libfabric (e.g., send-after-send, send-after-write) requires that message 
+headers be resolved at the target (e.g., matched or consume a receive queue entry) in the order that the 
+messages were provided by software at the initiator. That is, message ordering begins with the order in 
+which API calls (e.g., fi_send()) are made from software at the initiating libfabric endpoint and ends 
+when a buffer has been  selected (e.g., tag matching has concluded and the buffer marked as a use-once 
+buffer is no longer available for other messages to match). Message ordering requirements apply to a 

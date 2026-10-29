@@ -1,0 +1,42 @@
+# Calibration-ladder A1 sweep: where does the L0
+# single-port crossbar identity sit relative to CAL-A1 (NVIDIA DGX
+# GB200/GB300 NVL72 User Guide: NVLink5 switch chip — 57.6 Tbps full-duplex
+# per chip, 72 ports per chip, 9 trays x 2 chips)?
+#
+# CAL-A1 is a capacity SPECIFICATION, not a time series: per
+# docs/calibration/CALIBRATION_PLAN.md §1.1 it CANNOT calibrate O-CCT. Its
+# role is (a) the per-port per-direction normalization ceiling 50 B/ns
+# derived from the anchor's own port count, and (b) the radix/fan-in check
+# for NVSwitch-class topologies (r=72 exactly fills a 72-port radix). This
+# sweep measures where the model output sits relative to that ceiling
+# (ceiling-fraction per message size, span placement) — it never tunes
+# anything: B values carry the provenance labels in the topology files,
+# L stays at the registry point, and every delta below is an arithmetic
+# fact of the identity.
+#
+# Baseline = the anchor-point topology (B=50 per-port mapping), so the
+# delta columns read directly as placement vs the anchor point.
+#
+# Payload grid: 12 sizes, every one 72 * 2^k (k = 10,12,14,16,18,20,22,24,
+# 25,26,28,30) so r=72 divides M (A-L0X-DIV never rejects), spanning
+# 72 KiB -> 72 GiB: latency-bound at the small end, bandwidth-bound (the
+# regime where a capacity ceiling means anything) from ~1 GiB up. The
+# 2.25 GiB point is the ladder neighbor of CAL-A3's measured 2 GiB row
+# (that comparison belongs to stage A3, not here).
+sweep: cal_a1_ceiling_v1
+workload: experiments/calibration/workloads/w1_dense_tp_decode_tp72.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a1/topologies/crossbar72_a1_port50_v1.yaml
+grid:
+  payload_sizes_bytes: [73728, 294912, 1179648, 4718592, 18874368, 75497472, 301989888, 1207959552, 2415919104, 4831838208, 19327352832, 77309411328]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/a1/topologies/crossbar72_a1_span20_v1.yaml
+    - experiments/calibration/a1/topologies/crossbar72_a1_port50_v1.yaml
+    - experiments/calibration/a1/topologies/crossbar72_a1_span64_v1.yaml
+    - experiments/calibration/a1/topologies/crossbar72_a1_agg900_v1.yaml

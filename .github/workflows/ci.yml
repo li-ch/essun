@@ -1,0 +1,46 @@
+# CI harness. Lands before any remote exists;
+# activates unchanged once a remote is created. The target sequence is the
+# exact sequence run by `make ci-local`. Since release-readiness A3
+# (2026-10-28) the job is a Python matrix 3.10-3.13, matching the floor of
+# pyproject's requires-python >=3.10; the claim stays open above 3.13 —
+# 3.14/3.15 pass the full suite locally (receipts: reports/p0_a3.md) but
+# are not yet CI-pinned. fail-fast stays off so one version's failure is
+# reported rather than cancelled by another's.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # Quoted: unquoted 3.10 would parse as the float 3.1.
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Bootstrap (venv + editable install with dev extras)
+        run: make bootstrap
+
+      - name: Validate schemas
+        run: make validate-schemas
+
+      - name: Test
+        run: make test
+
+      - name: Paper check
+        run: make paper-check

@@ -1,0 +1,37 @@
+# Calibration-ladder A12 sweep, PER-LINK twin: the
+# same CAL-A12 anchor executed on the ring identity at LINK granularity
+# — the axis on which the anchor states its own figures (NVLink-3
+# per-link: physical 25 GB/s vs NCCL topo.h model 20 GB/s per direction;
+# docs/calibration/anchors_staging.md §A12). The 20 of this sweep IS the
+# plan §2.1 A-L0-BW candidate per-link span's LOWER ENDPOINT ("20
+# (CAL-A12 NCCL model)"): this stage executes the span endpoint on the
+# anchor's own fabric class and rank count, so the endpoint is backed by
+# an executed artifact of the anchor it came from.
+#
+# Declared granularity projection (see topology headers): per-hop B is
+# ONE NVLink's rate, not the 12-link aggregate a real ring hop could
+# use — the aggregate twin is sweep_a12_aggregate_v1 (240/300); the 12x
+# axis gap is recorded, never tuned.
+#
+# Swept B (A-L0-BW): 25 = physical per-link point (BASELINE); 20 = the
+# NCCL per-link model (exact 4/5 bridge; the A-L0-BW span endpoint);
+# 16 = 0.8^2 x 25 (double-application hazard bracket, never a bridge
+# value). L fixed at the A-L0-LAT registry point 200 ns. Same 12-size
+# ladder as the aggregate sweep (8*2^k, 8 KiB -> 8 GiB; A-L0-DIV
+# accepts every size at r=8).
+sweep: cal_a12_perlink_v1
+workload: experiments/calibration/a12/workloads/w1_dense_tp_decode_tp8_512mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/a12/topologies/ring8_a12_physical25_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608, 33554432, 134217728, 268435456, 536870912, 2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/a12/topologies/ring8_a12_hazard16_v1.yaml
+    - experiments/calibration/a12/topologies/ring8_a12_nccl20_v1.yaml
+    - experiments/calibration/a12/topologies/ring8_a12_physical25_v1.yaml

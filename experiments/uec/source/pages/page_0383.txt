@@ -1,0 +1,32 @@
+ 383 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Average transmit packet size effectively converts OOO_COUNT to bytes. This is an estimate of the 
+number of bytes that arrived out of order at the destination, ooo_rcvd_bytes, and can be calculated 
+using: 
+OOO_COUNT * avg_tx_pkt_size = ooo_rcvd_bytes = 
+ ((HPSN – Src_Lowest_Not_Rcvd_PSN) * avg_tx_pkt_size) – inflight_pdc_bytes 
+ 
+3.5.15.4.2 EV-Based Loss Detection 
+Another method for early loss detection is to maintain a record of which PSN used each entropy value 
+(EV). If an ACK is received for a higher PSN that used the same EV, the lower PSN(s) may be assumed to 
+be lost. For N outstanding packets, this scheme requires O(N) PDS state to store EVs. 
+The state required can be optimized by introducing the concept of K “slots” where each slot uses the 
+same EV, EVs are used in round-robin fashion, and thus the slots form an in-order list. Loss is detected 
+using simple arithmetic: The next PSN expected on a slot is the last PSN on that slot + K. Optimizations 
+could be to use part of the EV to identify the slot, or to use part of the PSN as the EV for a slot and do 
+arithmetic on the bitmap to detect loss. 
+The example in Figure 3-86 provides precise early loss detection except for tail loss, which generally 
+requires using Probe CPs as described in Section 3.5.15.4.3. The example is not optimized and is used 
+here to provide clarity. The PDC SLOT STATE table in Figure 3-86 tracks the next Expected_PSN on each 
+EV using simple addition. When an EV is changed or skipped (e.g., CMS detects congestion), an entry is 
+added to the EV CHANGE TABLE. When all packets on the original EV are received, the EV CHANGE 
+TABLE state is moved to the PDC SLOT STATE table and the EV CHANGE TABLE entry is deleted. 
+ 
+This example uses up to 128 EVs per PDC, where the lowest 7 bits of the EV identify the slot number. 
+The slot state holds the next Expected_PSN, which is incremented by 128 when a PSN is received. If a 
+higher PSN is received, any lower PSNs expected in that slot are determined to be lost. If the EV for the 
+ 
+Figure 3-86 - Example PSN Tracking per EV 
+ 
+ 

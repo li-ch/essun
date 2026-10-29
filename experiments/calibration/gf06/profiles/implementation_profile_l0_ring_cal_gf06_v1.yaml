@@ -1,0 +1,64 @@
+# Implementation profile for the calibration-ladder GF-06 multi-hop
+# schedule contrast on the analytical L0 ring backend step
+# 3; gap-fill anchor GF-06, PCM arXiv:2610.13130). Used by the ring
+# topology of sweep_gf06_scale1024_v1.yaml only (the two store runs of
+# this stage are crossbar runs).
+implementation_profile_id: analytical_l0_ring_cal_gf06_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT
+  / A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml.
+  ROLE for anchor GF-06: the ring is the multi-hop SCHEDULE contrast at
+  the anchor's stated scale (r = 1,024 hosts of the UET-htsim
+  three-tier fat tree) and sim-config link rate (B = 12.5 B/ns from
+  "100 Gbit/s links"); L = 1000 ns is a DECLARED IMPORT from GF-05's
+  staged UET-htsim per-hop decomposition (GF-06 stages no latency
+  component). The identity charges the per-hop latency 2*(r-1) = 2,046
+  times per AllReduce (latency chain exactly 2,046,000 ns) against the
+  crossbar ceiling row's 2; at equal B the ring-minus-crossbar
+  difference is exactly 2*(r-2)*L = 2,044,000 ns at every size
+  (identity, verified on executed rows). The regime boundary M* =
+  L*B*r = 12,800,000 B is exactly 1/8 of GF-05's M* = 102,400,000 B,
+  so the bracketing ladder members (8 MiB / 16 MiB) sit at the same
+  M*-relative positions as GF-05's (64 MiB / 128 MiB) and the executed
+  ring/crossbar ratios are IDENTICAL (755997/299747 ~ 2.522 and
+  7387083/4193333 ~ 1.762) — the ratio at equal M*-relative position
+  is B-invariant, the scale-invariance property of the displacement
+  technique, now executed on a second anchor. The row quantifies that
+  SCHEDULE STRUCTURE ALONE — an in-model choice, no congestion — moves
+  CCT by 1.76-2.52x at the bracketing sizes and unboundedly more below
+  M*, versus the anchor's programmable-CM envelope of 1.11x
+  (reaction delay) to 3x (incast tuning): schedule structure sits
+  INSIDE the anchor's measured band and far above its finest-grained
+  effect. No schedule is claimed to be THE PCM/uet-htsim behavior (the
+  paper's FCT tables are unstaged; no FCT comparison is attempted).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns) placed at GF-06's sim link rate 12.5 B/ns
+  (declared per-direction decimal reading of the staged "100 Gbit/s
+  links"); L (link.hop_latency_ns) at the DECLARED IMPORT of GF-05's
+  staged UET-htsim per-hop decomposition (1000 ns = 600 link + 400
+  switch traversal; GF-06 stages no latency component — the import is
+  an interpretation declared for cross-stage comparability); r = 1,024
+  = GF-06's STATED host count (a power of two — A-L0D-POW2 native);
+  message sizes: 18-size ladder 1024*2^k (1 KiB - 128 MiB), every size
+  divisible by r (A-L0-DIV accepts, no bracketing), including the
+  shared 2 MiB member (k=11), the staged workload-range upper 16 MiB
+  (k=14), and executed rows bracketing the ring regime boundary M* =
+  L*B*r = 12,800,000 B (8 MiB below, 16 MiB above). NO parameter was
+  tuned toward any anchor output — the anchor stages no (size -> time)
+  series in any CCT-comparable metric class; the row exists to execute
+  the schedule-structure contrast, and its deltas vs the crossbar
+  baseline are arithmetic facts of the two identities at equal B, L,
+  and r.
+measurement_source: >
+  GF-06 staged numbers (PCM, arXiv:2610.13130, Oct 2026;
+  docs/calibration/anchors_gapfill.md §GF-06; numbers AS STAGED, not
+  re-fetched; gap-fill anchor, NOT yet an integrated anchor row; confidence
+  H). Very recent preprint, not yet peer-review-verified; FCT (not
+  collective-CCT) metrics, no collectives benchmarked — regime bridge
+  declared inexpressible at L0; compared as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.

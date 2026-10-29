@@ -1,0 +1,67 @@
+Nested Parallel von Neumann Architecture and Nested BSP
+
+Report GitHub Issue
+
+×
+
+Title:
+
+Content selection saved. Describe the issue below:
+
+Description:
+
+Submit without GitHubSubmit in GitHub
+
+arXiv is now an independent nonprofit!Learn more×
+
+Back to arXiv
+
+Why HTML?Report IssueBack to AbstractDownload PDF
+
+Abstract
+
+1 Introduction: The Lesson von Neumann Never Taught
+
+2 Nested BSP: A Battle Plan for a Million
+
+3 Six Things for Unified Bus Hardware: Turn the Cliff into a Slope
+
+4 Down to Practice: Three Things That Must Be Done Right
+
+5 Conclusion: The Nested Parallel von Neumann Architecture—Many Processors, Still One Computer
+
+References
+
+License: arXiv.org perpetual non-exclusive license
+
+arXiv:2609.16787v1 [cs.DC] 15 Sep 2026
+
+Nested Parallel von Neumann Architecture and Nested BSP
+
+Liao Heng Affiliation: Huawei Technologies Co., Ltd.
+
+Abstract
+
+Large-scale AI computing is no longer a contest of “one stronger processor,” but of how an army of processors under one command can still be one computer. This paper offers two interlocking extensions.
+
+First, extend BSP to Nested BSP. The Turing machine describes computation as a single tape, in sequence [1]. A million processors need not a longer tape, but a battle plan nested layer within layer: at every layer, parallel work, barrier, exchange and aggregate, then the next phase. Every “parallel advance” inside a layer repeats the same four steps. Nested BSP extends classic BSP by nesting it recursively, a computing paradigm for million-scale parallelism, under one rule: every node at every layer is a peer.
+
+Second, extend von Neumann to the Nested Parallel von Neumann Architecture, and Unified Bus is its interconnect. Von Neumann taught us how to build one stored-program computer [2]. The false extrapolation of eighty years was that wiring many computers into a network yields one larger computer. A second habit ran deeper: nearly every design assumes a master that commands and slaves that obey—host over device, CPU over accelerator, center over edge. The Nested Parallel Architecture extends that idea rather than discarding it. Two nesting dolls must fit: Nested BSP in software, and the Nested Parallel von Neumann Architecture from package to autonomous zone, joined by one memory-semantic bus end to end, with full peer equality: physically sparse, logically tight. It pairs with Huawei’s τ\tau Scaling law[6]: τ\tau governs how each layer folds time, while the Architecture governs how the nested parallel computer stands, layer by layer, peer by peer.
+
+In summary, the paper extends BSP to Nested BSP and extends von Neumann to the Nested Parallel von Neumann Architecture. τ\tau folds time, peer-equal parallelism nests layer by layer—many processors, still one computer.
+
+arXiv Preprint
+
+1 Introduction: The Lesson von Neumann Never Taught
+
+The question this paper asks is a single one: when processors number a hundred thousand, or a million, do we still know how to design?
+
+How to build a computer, von Neumann made clear [2]. For eighty years we have followed that path, making processors stronger generation after generation. But how to turn so many processors into one army, that he never said. He was talking about one machine, not a campaign of a million.
+
+Chip contests used to look like two martial artists sparring: the harder punch wins. An AI campaign is not fought that way. A million soldiers take the field. What matters is not who hits hardest, but whether the army holds formation. At a hundred thousand or a million, victory turns on one thing: how to bind them into an army, and once bound, whether it is still one computer.
+
+Anyone who leads troops knows: an army holds only with a battle plan and a chain of command that can reach the ranks. Without a clear plan and without orders that get through, numbers alone are loose sand. And when a million must move at once, those orders are hard to deliver.
+
+2 Nested BSP: A Battle Plan for a Million
+
+The HPC community hit this wall long ago. Leslie Valiant and Bill McColl proposed BSP and cut a campaign into phases [3, 4]. In each phase, units advance in parallel, and no one waits on anyone else. When they reach their marks, the whole army barriers on one line. After the barrier, they exchange what must be exchanged and aggregate what must be aggregated. Once the handoff is clean, they enter the next phase together and advance in parallel again. A problem of that scale becomes tractable.

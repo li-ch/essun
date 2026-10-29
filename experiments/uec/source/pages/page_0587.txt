@@ -1,0 +1,42 @@
+ 587 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+[20] B. Montazeri, Y. Li, M. Alizadeh and J. Ousterhout, "Homa: A receiver-driven low-latency transport 
+protocol using network priorities," in Proceedings of the 2018 Conference of the ACM Special 
+Interest Group on Data Communication, 2018.  
+[21] P. X. Gao, A. Narayan, G. Kumar, R. Agarwal, S. Ratnasamy and S. Shenker, "pHost: Distributed 
+near-optimal datacenter transport over commodity network fabric," in Proceedings of the 11th 
+ACM Conference on Emerging Networking Experiments and Technologies, 2015.  
+[22] G. Chen, Y. Lu, B. Li, K. Tan, Y. Xiong, P. Cheng, J. Zhang and T. Moscibroda, "MP-RDMA: Enabling 
+RDMA With Multi-Path Transport in Datacenters," IEEE/ACM Transactions on Networking, vol. 27, 
+no. 6, pp. 2308-2323, 2019.  
+[23] IETF RFC 8684, "TCP Extensions for Multipath Operation with Multiple Addresses," 2020. [Online]. 
+Available: https://www.rfc-editor.org/rfc/rfc8684.html. 
+[24] A. Singh, Load-balanced routing in interconnection networks, Stanford University, 2005 
+[25] J. Kim, W. J. Dally, S. Scott and D. Abts, "Technology-Driven, Highly-Scalable Dragonfly Topology," 
+ACM SIGARCH Computer Architecture News, vol. 36, no. 3, pp. 77-88, 2008.  
+[26] P. Geoffray and T. Hoefler, "Adaptive Routing Strategies for Modern High Performance Networks," 
+in 2008 16th IEEE Symposium on High Performance Interconnects, 2008.  
+[27] De Sensi, S. Di Girolamo, K. H. McMahon, D. Roweth and T. Hoefler, "An In-Depth Analysis of the 
+Slingshot Interconnect," in SC20: International Conference for High Performance Computing, 
+Networking, Storage and Analysis, 2020. 
+[28] A. Dixit, P. Prakash, Y. C. Hu and R. R. Kompella, "On the impact of packet spraying in data center 
+networks," in 2013 Proceedings IEEE INFOCOM, 2013. 
+[29] C. Raiciu, S. Barre, C. Pluntke, A. Greenhalgh, D. Wischik and M. Handley, "Improving datacenter 
+performance and robustness with multipath TCP," in Proceedings of the ACM SIGCOMM 2011 
+Conference, Toronto, Ontario, Canada, 2011.  
+[30] P. Cheng, F. Ren, R. Shu and C. Lin, "Catch the whole lot in an action: Rapid precise packet loss 
+notification in data center," in 11th USENIX Symposium on Networked Systems Design and 
+Implementation (NSDI 14), 2014.  
+[31] M. Handley, C. Raiciu, A. Agache, A. Voinescu, A. W. Moore, G. Antichi and M. Wójcik, "Re-
+architecting datacenter networks and stacks for low latency and high performance," in 
+Proceedings of the Conference of the ACM Special Interest Group on Data Communication, 2017.  
+[32] HPCS, "HPC Challenge," [Online]. Available: https://hpcchallenge.org/hpcc/. [Accessed 08 05 
+2025]. 
+[33] K. Taranov, B. Rothenberger, A. Perrig and T. Hoefler, "{sRDMA}--Efficient {NIC-based} 
+Authentication and Encryption for Remote Direct Memory Access," in 2020 USENIX Annual 
+Technical Conference (USENIX ATC 20), 2020.  
+[34] GitHub, "google/psp psp-open-source project," 2021. [Online]. Available: 
+https://github.com/google/psp. 
+[35] A. Luykx and K. G. Paterson, "Limits on authenticated encryption use in TLS," Cryptology ePrint 
+Archive, 2024.  

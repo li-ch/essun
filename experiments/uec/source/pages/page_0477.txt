@@ -1,0 +1,40 @@
+ 477 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+temporarily, due to pds.ack_cc_state.rcvd_bytes being rounded up to units of 256 bytes and due to ACK 
+reordering; this does not affect correctness but does require that ccc.inflight is maintained as a signed 
+value. 
+A single ccc.cwnd is maintained for packets sprayed across multiple paths; in effect, it tracks the 
+available capacity in the network across the aggregate of paths. The core NSCC algorithm adapts 
+ccc.cwnd based on observed network conditions. The primary control loop is driven by a combination of 
+ECN and the bottleneck queueing delay. The bottleneck queueing delay can be either explicitly provided 
+by CSIG network telemetry using the max(Delay) signal or implicitly derived from on the packets’ end-to-
+end RTT. 
+The packets’ total queueing delay can be derived by calculating RTT – base_RTT, where base_RTT is the 
+expected latency when there is no queue. In most cases, a single bottleneck dominates the total 
+queueing delay of a packet, which makes the total queueing delay a good approximation for the 
+bottleneck queueing delay when the CSIG max(Delay) signal is not available. RTT is measured by storing 
+the transmit time of each packet at the source and subtracting both the ACK arrival time and the 
+pds.ack_cc_state.service_time as reported in the ACK packet. 
+The goal is to keep the bottleneck queueing delay (hereafter referred to simply as Delay) within bounds. 
+Note that a high delay can be measured only after a packet has spent time to traverse the queue. In 
+contrast, modern Ethernet switches set ECN on a packet when it is dequeued, based on the queue size 
+at the time of dequeue. This means that the single-bit ECN signal is a leading indicator of congestion, 
+whereas Delay is a lagging multibit indicator. The destination echoes the received ECN value back to the 
+source. This leads to four combinations of ECN and Delay that are used to determine appropriate 
+responses: 
+• ECN is not set, Delay < target_qdelay: 
+o Network is uncongested 
+o Perform proportional_increase() 
+• ECN is not set, Delay >= target_qdelay: 
+o Network was congested, but congestion has reduced 
+o Perform fair_increase() 
+• ECN is set, Delay < target_qdelay: 
+o Network is becoming congested for packets after this one, but is not yet regarded as 
+congested 
+o No increase or decrease needed 
+• ECN is set, Delay >= target_qdelay: 
+o Network is congested 
+o Perform multiplicative_decrease() 
+For each of these cases, a different congestion response is appropriate. 
+The proportional_increase() action, performed when uncongested, by default increases ccc.cwnd by a 

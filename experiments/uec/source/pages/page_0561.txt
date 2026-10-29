@@ -1,0 +1,36 @@
+ 561 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.7.5 Key Lifetime and Security Considerations 
+The symmetric keys (SDKs) used in the block cipher can be utilized only for a limited number of packets 
+(invocations) before rekeying is required. Guidance on the invocation limits is described in [36] and 
+further analyzed in [35].  
+In addition, it is assumed that the input SDKi is a “cryptographic key” in accordance with NIST 
+specifications. This implies that the key is secret, random, and uniformly distributed through the bit 
+space of key. 
+Several papers analyze attacks using a fixed nonce, authenticated data, and encrypted data as outlined 
+in IETF RFC 9001 Appendix B [45] based on the analysis in Hoang et al. "The Multi-user Security of GCM, 
+Revisited: Tight Bounds for Nonce Randomization" [46] .   
+During the development of this standard, discussions established an agreed-upon limit between 227 and 
+234.5 packets, contingent on the assumptions of the security model (single vs multi-user). 
+IETF RFC 8645 [47] provides a framework for discussing various strategies to manage the lifetime of 
+symmetric keys. The direct KDF mode utilizes an “explicit approach” per Section 5.1 of the RFC. This 
+explicitly updates the keys using the key rotation approach described the key rotation Section 3.7.5.1. 
+All KDF modes MUST support key rotation. Cluster KDF mode MAY utilize an “implicit approach” 
+specified in the same RFC. This mode utilizes a KDF with a parallel construction. Using this approach, 
+keys are generated from the master key (SDKi) using a KDF based on a counter in the packet. The KDF 
+rekeying Section 3.7.5.2 provides a detailed explanation of how this counter is constructed. 
+Key invocations are tracked at the transmitter. The transmitter MUST not use the key beyond the 
+invocation limit. The number of invocations can be tracked using the TSC counter logic, which is reset to 
+zero when a key rotation is initiated at the transmitter. 
+A FEP MUST drop packets if the authentication limit has been exceeded (tss.tsc.counter 
+>=invokeFatalTheshold) and MUST provide an indication to the SDME if an SDI is beyond this limit. 
+In addition, a FEP SHOULD indicate to the SDME that an SDI is approaching this limit (tss.tsc.counter > 
+invokeWarnThreshold) to allow the SDME time to coordinate a transition to a new key. 
+3.7.5.1 Key Rotation 
+Key rotation updates the security association, which in turn updates the SDK and optionally the IVMask 
+for all FEPS within an SD. In direct KDF mode, key rotation MUST update the IVMask. 
+To facilitate key rotation, a receiver MUST maintain multiple keys per SD identified by the association 
+number (AN). Changing the association resets both the counter and epoch to zero. The epoch is used to 
+ensure that when FEPs join and leave an association, the uniqueness of the IV is preserved. The counter 
+portion of the TSC is used to manage key-lifetime and ensure the IV uniqueness. 

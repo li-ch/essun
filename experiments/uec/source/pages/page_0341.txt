@@ -1,0 +1,40 @@
+ 341 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The ACK_CCX (congestion control eXtended) format is shown in Figure 3-72. The header fields are 
+described in Table 3-46. 
+     
+Table 3-46 - Header Fields for ACK_CCX 
+ 
+Field Name 
+Field Size 
+(in bits) 
+ 
+Field Description 
+First 12 bytes 96 Identical to PDS ACK header but with pds.type set to 
+ACK_CCX 
+ccx_type 4 This field defines the contents of pds.ack_ccx_state field 
+used to support multiple CC algorithms; defined in CMS 
+Section 3.6.9. 
+cc_flags 
+• rsvd 
+ 
+4 
+pds.cc_flags = [rsvd] 
+• Reserved 
+mpr 8 Same as ACK_CC 
+sack_psn_offset 16 Same as ACK_CC 
+sack_bitmap 64 Same as ACK_CC 
+ack_ccx_state ( 128 b)  
+128 
+Congestion control state generated at the destination and 
+carried to the source; content defined by the pds.ccx_type 
+field. 
+The pds.ack_ccx_state field is defined for future 
+extensibility. 
+ 
+3.5.10.10 Control Packet 
+The PDS header format for a control packet is shown in Figure 3-73. The header fields are described in 
+Table 3-47. 
+ 
+Figure 3-72 - ACK_CCX Format 

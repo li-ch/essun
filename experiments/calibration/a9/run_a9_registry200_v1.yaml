@@ -1,0 +1,49 @@
+# Calibration-ladder A9 registry-point RUN: the L0
+# single-stage crossbar identity at the A-L0X-LAT REGISTRY POINT — r=8,
+# L=200 ns (the free pair-latency axis's smoke default; range
+# [10, 2000]), B=64 B/ns (A-L0X-BW registry point), payload 8*2^10 =
+# 8 KiB (the SAME size as the anchor-point twin run_a9_anchor80_v1.yaml,
+# so the pair of runs isolates the latency axis exactly). PLACEMENT
+# FACT the pair executes: 200 ns sits +120 ns above the CAL-A9
+# one-stage CXL-class budget sum 80 ns (ratio exactly 5/2); per-op CCT
+# delta exactly 2*(200-80) = 240 ns (the identity charges L twice); the
+# registry point is CONSISTENT-WITH the anchor's one-sided floor
+# (">= 80 ns") but is selected by no anchor — the plan §2.1 verdict is
+# KEEP (point) / NARROW (range upper) and NO value is changed by this
+# stage.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-A9-REG200-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a9/workloads/w1_dense_tp_decode_tp8_8kib.yaml
+infra_graph:
+  path: experiments/calibration/a9/topologies/crossbar8_a9_pair200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/a9/profiles/implementation_profile_l0_crossbar_cal_a9_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_a9_pair200_v1 (one non-blocking switch stage; r=8, L=200 ns = A-L0X-LAT registry point, B=64 B/ns free registry point)
+  workload: w1_dense_tp_decode tp8, payload 8*2^10 (8 KiB, the latency-bound ladder member; same size as the anchor-point twin)
+  implementation: analytical L0 crossbar identity; CAL-A9 comparison is latency-axis placement of the registry default vs the anchor budget sum — PROPOSED, review required
+evidence_level_requested: E0

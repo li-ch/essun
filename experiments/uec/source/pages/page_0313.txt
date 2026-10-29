@@ -1,0 +1,42 @@
+ 313 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+random or pseudo-random number at least 216 distance from the last PSN used on that PDC. This is done 
+to reduce the likelihood of accepting delayed and stale packets in the network. When UET encryption is 
+enabled, follow the requirements in Section 3.5.8.2.1. 
+Informative Text: 
+PDC connections are ephemeral with all state cleared on close except the last PSN used, which is 
+saved for use in selecting a new starting PSN for unencrypted PDCs. That is, the random new 
+Start_PSN is independent from the destination—one ‘last used PSN’ is stored for each PDC. 
+ 
+Table 3-37 - PSN Offset Field 
+Packet # on PDC PSN PSN_OFFSET 
+First Starting PSN + 0 0 
+Second Starting PSN + 1 1 
+Third Starting PSN + 2 2 
+etc. Starting PSN + N N 
+ 
+The PDC establishment procedure MUST be supported as follows: 
+1. If a PDS Request is received and there is not sufficient packet buffer to accept the packet, the packet 
+is dropped and a NACK packet SHOULD be transmitted. 
+a. Set pds.nack_code = NO_PKT_BUF. 
+i. If the PDC has not yet been established and a NACK is transmitted, pds.spdcid is set 
+to 0x0. This indicates a PDC was not allocated at the target. 
+b. Drop the packet and exit processing of the PDS Request packet. 
+2. Check if the packet is trimmed—if yes: 
+a. Send a NACK with pds.nack_code = UET_TRIMMED or UET_TRIMMED_LASTHOP 
+i. See Section 3.5.15.1. 
+b. If the PDC has not yet be established, the pds.spdcid in the NACK is set to 0x0 if the NACK is 
+generated. 
+c. Drop the received trimmed packet and exit processing of the PDS Request packet. 
+3. If pds.flags.syn = 1: 
+a. pds.flags.syn is set until the ACK reaches the initiator; thus, many packets may arrive with 
+the pds.flags.syn bit set. 
+b. Determine if the PDC already exists using the {ip.src_addr, pds.spdcid} mapping tuple—if 
+yes: 
+i. Skip to the processing at step d for pds.flags.syn = 0. 
+c. Check if there are PDC resources available—if no: 
+i. Send NACK with pds.nack_code = UET_NO_PDC_AVAIL, UET_NO_CCC_AVAIL, 
+UET_NO_BITMAP, UET_NO_PKT_BUFFER, UET_NO_GTD_DEL_AVAIL, 
+UET_NO_SES_MSG_AVAIL, UET_NO_SES_SYNC_AVAIL, or UET_NO_RESOURCE 
+ii. Set pds.spdcid in the NACK to 0x0. 

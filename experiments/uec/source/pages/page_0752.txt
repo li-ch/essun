@@ -1,0 +1,34 @@
+ 752 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+7 UE Management 
+“Ultra Ethernet, Ultra Ethernet Consortium, and the Ultra Ethernet Consortium logo are the 
+unregistered trademarks of Ultra Ethernet Consortium in the United States and other countries. Other 
+brands, names, or logos contained herein are the property of their respective owners. 
+7.1 UE Management Scope 
+The UE specification covers the layers between the UE PHY and UE software. The initial focus of UE 
+management is to define management specifications for the UE link layer and the UE PHY layer. The 
+following management aspects are covered in the management specifications: 
+1. PHY configuration for speeds and auto-negotiation. 
+2. PHY statistics including FEC statistics. 
+3. Link level retry (LLR) configuration and statistics. 
+4. Credit-based flow control (CBFC) management including VC mapping, counters, 
+VC/buffer/credit/scheduler configuration, and PFC co-existence. 
+5. CSIG management. 
+6. LLDP management including support for options TLV, CBFC TLV, etc. 
+7.2 High-Level UE Management Architecture 
+UE management architecture is focused on Ultra Ethernet fabric, switch, and endpoint management. 
+The UE management architecture includes management protocols, transport, and data models. UE 
+management protocol specifications cover baseline operations for management data, topology 
+discovery, transport(s) for management data, security of transports, and streaming support for 
+telemetry data. UE management data models define Ultra Ethernet configuration, state, and events. The 
+UE management schema describes the structure of UE data models. 
+Figure 7-1 provides a high-level architecture of the UE management stack. The UE Management 
+Controller (UEMC) is a logical entity that manages UE components including UE fabric endpoints, ports, 
+NICs, and switches. The UEMC communicates with one or more UE Management Server (UEMS) 
+instances to access management data and perform management operations. An instance of UEMS can 
+reside on a server or a switch. 
+Each UEMS exposes a management data model via a protocol over a transport. The UEMS exposes the 
+Redfish data model via a RESTful protocol over HTTPS for a server platform. The UEMS exposes the 
+YANG (Yet Another Next Generation) data model via an OpenConfig protocol over gNMI/gRPC for a 
+switch platform. 

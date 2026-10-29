@@ -1,0 +1,34 @@
+ 529 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Signal/Accumulation uet_op_sum uet_op_max uet_op_min uet_op_last 
+uet_tx_send_rate N/A N/A N/A MAY 
+ 
+3.6.18.4.4.2 LB Signal-Accumulation Functions 
+ 
+Table 3-111 - LB Signal-Accumulation Functions (ET = Event Table, PP = Per-Packet) 
+Signal/Accumulation Operation 
+Model 
+uet_op_sum uet_op_max uet_op_min uet_op_last 
+uet_rx_ack ET, PP MAY N/A N/A MUST 
+uet_rx_ack_ecn ET, PP MAY N/A N/A MUST 
+uet_rx_ack_probe ET, PP MAY N/A N/A MAY 
+uet_rx_ack_rtt ET, PP MUST MUST MUST MUST 
+uet_rx_cookie PP N/A N/A N/A MUST 
+uet_rx_ev ET, PP N/A N/A N/A MUST 
+uet_rx_nack_ecn ET, PP MAY N/A N/A MUST 
+uet_rx_nack_last_hop_trim ET, PP MAY N/A N/A MUST 
+uet_rx_req_trim ET, PP MAY N/A N/A MAY 
+uet_rx_req_last_hop_trim ET, PP MAY N/A N/A MAY 
+uet_rx_nack_rtt ET, PP MUST MUST MUST MUST 
+uet_rx_nack_trim ET, PP MAY N/A N/A MUST 
+uet_rx_probe ET, PP MAY N/A N/A MAY 
+uet_tx_probe_id ET, PP N/A N/A N/A MUST 
+uet_rx_telegram_local ET, PP N/A N/A N/A MUST 
+uet_rx_telegram_peer ET, PP N/A N/A N/A MAY 
+uet_rx_telegram_type ET, PP N/A N/A N/A MUST 
+uet_time_current ET, PP N/A N/A N/A MUST 
+uet_time_last_update ET, PP N/A N/A N/A MUST 
+uet_tx_cookie PP N/A N/A N/A MUST 
+uet_tx_ev PP N/A N/A N/A MUST 
+uet_tx_ev_tbl_depth ET N/A N/A N/A MUST 

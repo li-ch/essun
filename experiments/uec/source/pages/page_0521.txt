@@ -1,0 +1,53 @@
+ 521 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Informative Text: 
+The path-aware multipath spraying algorithm (3.6.16.4) is an example of a sophisticated scheme that 
+can be supported in the EV table model. It maintains CCC-level path configuration and per-EV 
+penalties and exposes the hardware-computed on-wire EV (including both path index bits and higher-
+order randomness) to PCM. 
+The YAML syntax for the algorithm is outlined below: 
+ 
+lb_algorithm: 
+  op_model: ev-table 
+  lb_entry: uet_lb_uet_bmp 
+  hw_algo: uet-bmp 
+ 
+  hw_config: 
+    path_random_reinit: 
+      type: uint 
+      comment: "interval in microseconds between recomputation of 
+path_random (upper EV bits)" 
+ 
+  ccc_fields: 
+    - name: no_of_paths 
+      type: uint 
+      sw_access: ro 
+      init: hw_init 
+ 
+    - name: ev_max_penalty 
+      type: uint 
+      sw_access: ro 
+      range: [0, 15] 
+      init: cfg_provided 
+ 
+    - name: ev_skip_count 
+      type: uint 
+      sw_access: ro 
+      range: [0, 0xFFFF] 
+      init: zero 
+ 
+  ev_fields: 
+    - name: entropy 
+      type: uint 
+      role: ev_value 
+      sw_access: ro 
+      range: [0, 0xFFFF] 
+      init: hw_init 
+ 
+    - name: ev_skip_penalty 
+      type: uint 
+      sw_access: rw 
+      range: [0, 0xFF] 
+      init: zero  
+ 

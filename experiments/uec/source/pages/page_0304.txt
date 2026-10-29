@@ -1,0 +1,93 @@
+ 304 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Name Required Range Description 
+When TRUE, sources set pds.flags.ar field in every PDS 
+request. Support for coalesced ACKs is optional. 
+Refer to Section 3.5.12.2. 
+ACK_Gen_Trigger 
+(optional—required if ACK 
+coalescing is supported) 
+0—32 KB 
+Unit: bytes 
+Quanta: 256 B 
+Default: 16 KB 
+Configured value in bytes, when ACK_GEN_COUNT 
+reaches this threshold, an ACK is generated. 
+See Section 3.5.12.4.1. 
+ACK_Gen_Min_Pkt_Add 
+(optional—required if ACK 
+coalescing is supported) 
+0—2 KB 
+Unit: bytes 
+Quanta: 64 B 
+Default: 1 KB 
+Minimum number of bytes added to 
+ACK_GEN_COUNT when a packet is received at a PDC. 
+See Section 3.5.12.4.1. 
+RTO_Init_Time 0—8 sec 
+Unit: 128 ns 
+Quanta: 128 ns or 
+less 
+Default: n/a 
+Retransmit packet after this amount of time if no ACK 
+or NACK is received within this configured time (timer 
+at source). 
+Default depends on CC mode, fabric scale, etc. 
+Max_RTO_Retx_Cnt 0—15 
+Unit: retry count 
+Default: 5 
+Max number of retransmissions for a single packet 
+before declaring a failure event; maximum setting 
+indicates infinite retry. Retransmissions based on time 
+out (RTO) events are counted and retransmission 
+based on NACKs may be included in the count. 
+Refer to Section 3.5.12.7. 
+NACK_Retx_Time 0—8 sec 
+Unit: 128 ns  
+Quanta: 128 ns or 
+less 
+Default: n/a 
+This set of configured times is used to determine how 
+long to delay the retransmission of a NACK’d packet. 
+At least one configurable value is required. A set of 
+four values should be provided, where the value is 
+selected based on the NACK code. That is, each NACK 
+code is mapped to one of these times or to no delay. 
+Refer to Section 3.5.12.7. 
+Max_NACK_Retx_Cnt 0—31 
+Unit: retry count 
+Default: 5 
+Optional: This counter can be used to set a separate, 
+possibly higher, threshold for retransmissions based 
+on NACK packets. Maximum setting indicates infinite 
+retry. 
+Refer to Section 3.5.12.7. 
+New_PDC_Timeout_Thresh 0—64K 
+Unit: timeout count 
+Default: 1024 
+This threshold defines when an error is reported 
+indicating a potential DoS attack. It is used with 
+NEW_PDC_TIMEOUT_CNT. 
+Refer to Section 3.5.8.2.1. 
+New_PDC_Time 0—100 ms   
+Unit: 100 s 
+Default: n/a 
+If TSS is enabled, this defines the time allowed for a 
+PDC initiator to establish a PDC. When this expires, the 
+PDC is closed in error and NEW_PDC_TIMEOUT_CNT is 
+incremented. 
+PDS_Clear_Time 0—100 ms 
+Unit: 128 ns 
+Default: n/a 
+Optional: This configured time is used to trigger 
+generation of a Clear Command CP when an ACK is 
+received that advances CLEAR_PSN and there is no 
+PDS Request pending to carry the updated 
+CLEAR_PSN. 
+Refer to Section 3.5.11.4.3. 
+Close_REQ_Time 0—100 ms 
+Unit: 128 ns 
+Default: n/a 
+Optional: This configured time is used to constrain the 
+amount of time an initiator is allowed to take to 

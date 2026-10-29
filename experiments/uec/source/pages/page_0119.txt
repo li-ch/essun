@@ -1,0 +1,91 @@
+ 119 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+fi_atomic() API Description Requirements SES Opcode 
+• FI_TAGGED 
+fi_inject_atomic The fi_inject_atomic() API is 
+an optimized version of 
+fi_atomic() that provides 
+similar completion 
+semantics as fi_inject(). 
+API MUST be supported 
+by all profiles 
+ 
+The message size used 
+with fi_inject_atomic() is 
+limited by the inject_size 
+attribute of the transmit 
+context, which is vendor-
+specific 
+UET_ATOMIC  
+fi_fetch_atomic Fetching version of 
+fi_atomic() 
+API MUST be supported 
+by AI Full and HPC profiles 
+UET_FETCHING_ATOMIC 
+fi_fetch_atomicv Fetching version of 
+fi_atomicv() 
+API MUST be supported 
+by AI Full and HPC profiles 
+UET_FETCHING_ATOMIC  
+fi_fetch_atomicmsg Fetching version of 
+fi_atomicmsg() 
+API MUST be supported 
+by AI Full and HPC profiles 
+ 
+Flag requirements are the 
+same as fi_atomicmsg() 
+UET_FETCHING_ATOMIC  
+fi_compare_atomic The compare atomic APIs 
+are used for operations that 
+require comparing the 
+target data against a value 
+before performing a swap 
+operation 
+API MUST be supported 
+by AI Full and HPC profiles 
+UET_FETCHING_ATOMIC  
+fi_compare_atomicv Adds support for a scatter-
+gather list to 
+fi_compare_atomic() 
+API MUST be supported 
+by AI Full and HPC profiles 
+UET_FETCHING_ATOMIC  
+fi_compare_atomicmsg Supports more granular 
+control of the compare 
+atomic operation per call 
+using flag parameters 
+API MUST be supported 
+by AI Full and HPC profiles 
+ 
+Flag requirements are the 
+same as fi_atomicmsg() 
+UET_FETCHING_ATOMIC  
+fi_atomicvalid Checks whether a provider 
+supports a specific non-
+fetching atomic operation 
+for a given datatype and 
+operation  
+API MUST be supported 
+by all profiles 
+ 
+The set of supported 
+operations and data types 
+are vendor-specific 
+Not applicable 
+fi_fetch_atomicvalid Like fi_atomicvalid() but for 
+fetching atomics 
+ Same as fi_atomicvalid() 
+ 
+Not applicable 
+fi_compare_atomicvalid Like fi_atomicvalid() but for 
+compare atomic operations 
+Same as fi_atomicvalid() Not applicable 
+fi_query_atomic Advanced atomic valid 
+operation whose behavior is 
+based on a flags parameter; 
+MAY be used to query 
+whether tagged operations 
+are supported 
+Same as fi_atomicvalid() Not applicable 
+ 

@@ -1,0 +1,60 @@
+ 708 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+         Forwarding Header (UFH). A 1 indicates this port is configured 
+         to process UFH_32 encoding. A 2 indicates this port is 
+         configured to process UFH_16 encoding. A 3 indicates 
+         this port is configured to process both UFH_32 and UFH_16 
+         encoding."; 
+    } 
+    leaf ufh-32-version { 
+      type identityref { 
+        base ufh-version-selector; 
+      } 
+      config false; 
+      description 
+        "Version for UFH_32 encoding. The initial UFH version = 0 
+         and any future versions = 1."; 
+    } 
+    leaf ufh-32-rr { 
+      type uint32 { 
+        range "0 .. 3"; 
+      } 
+      config false; 
+      description 
+        "Reserved bits for UFH_32 encoding. Set to zero by version 0."; 
+    } 
+    leaf ufh-32-addr-bits { 
+      type uint32 { 
+        range "4 .. 32"; 
+      } 
+      default "32"; 
+      description 
+        "Address bits for UFH_32 encoding: 32 bits.";  
+    } 
+    leaf ufh-16-version { 
+      type identityref { 
+        base ufh-version-selector; 
+      } 
+      config false; 
+      description 
+        "Version for UFH_16 encoding. The initial UFH version = 0 
+         and any future versions = 1."; 
+    } 
+    leaf ufh-16-rr { 
+      type uint32 { 
+        range "0 .. 3"; 
+      } 
+      config false; 
+      description 
+        "Reserved bits for UFH_16 encoding. Set to zero by  
+        version 0."; 
+    } 
+    leaf ufh-16-addr-bits { 
+      type uint32 { 
+        range "4 .. 16"; 
+      } 
+      default "16"; 
+      description 
+        "Address bits for UFH_16 encoding: 16 bits.";  
+    } 

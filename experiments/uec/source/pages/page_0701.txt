@@ -1,0 +1,77 @@
+ 701 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Port(name)
+...
+uel-cbfc-tlv-extension //
+enum s-error-code; // r
+uint16 s-credit-size;     // r
+Int8 s-packet-overhead; // r
+uint32 s-vc-rts; // r
+uint16 r-credit-size; // r
+Int8 r-packet-overhead; // r
+uint32 r-total-credits; // r-w
+uint8 r-num-vcs; // r-w
+LLDP Port model objects
+Objects added by this model
+*r-vc-id
+bits tlvs-tx-org-uec-link-neg-cbfc-enable; // r-w
+r-vcn  (r-vc-id) // r-w
+boolean r-vc-want; // r-w
+boolean r-vc-rtr; // r
+uint8 r-vc-id; // r-w
+uint32 r-vc-credit-limit; // r-w
+enum r-vc-pktid-sel; // r-w
+remote-systems-data(time-mark, remote-index)
+timeticks timemark; // (RFC 2021 section 6) r
+uint32 remote-index; // r
+ 
+per vc parameters (r-vcn)
+packet type parameters (r-vc-pktid)
+uel-cbfc-tlv-extension //
+enum s-error-code // r
+uint16 s-credit-size;     // r
+Int8 s-packet-overhead; // r
+uint32 s-vc-rts; // r
+uint16 r-credit-size; // r
+Int8 r-packet-overhead; // r
+uint32 r-total-credits; // r
+uint8 r-num-vcs; // r
+per vc parameters (r-vcn) r-vcn  (r-vc-id) //
+boolean r-vc-want; // r
+boolean r-vc-rtr; // r
+uint8 r-vc-id; // r
+uint32 r-vc-credit-limit;      // r
+enum r-vc-pktid-sel; // r
+packet type parameters (r-vc-pktid)
+*r-vc-id
+r-pcpdei-identification
+binary r-mask-pcpdei; // r
+binary r-pcpdei; // r
+r-dscp-identification
+binary r-mask-dscp; // r
+binary r-dscp; // r
+r-acl-identification
+uint16 r-handle; // r
+{XOR}
+r-pcpdei-identification
+binary r-mask-pridei; // r-w
+binary r-pridei; // r-w
+r-dscp-identification
+binary r-mask-dscp; // r-w
+binary r-dscp; // r-w
+r-acl-identification
+uint16 r-handle; // r-w
+r-vc-pktid-sel
+{XOR}
+r-vc-pktid-sel
+r-vc-pktid-sel
+r-vc-pktid-sel
+r-vc-pktid-sel
+r-vc-pktid-sel
+ 
+Figure 5-23 - UE Link Negotiation CBFC TLV Model 
+5.3.3.2 Security Considerations for UE LLDP Extension YANG Modules 
+The YANG modules defined in this clause are designed to be accessed via a network configuration 
+protocol, e.g., NETCONF protocol [5] . In the case of NETCONF, the lowest NETCONF layer is the secure 
+transport layer, and the mandatory-to-implement secure transport is SSH [6] . The NETCONF access 

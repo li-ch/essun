@@ -1,0 +1,60 @@
+ 481 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Name Type Default Description 
+scaling_b floating 
+point 
+target_qdelay 
+/ 0.000012 
+Used to scale parameters as target_qdelay 
+is adjusted relative to 12 µs baseline. 
+eta floating 
+point 
+0.15 * MTU * 
+scaling_a 
+Additive increase constant to improve 
+fairness. 
+qa_threshold unsigned 
+integer 
+See Section 
+3.6.13.3 
+Average queuing delay before 
+quick_adapt() kicks in without seeing 
+losses. 
+adjust_bytes_threshold unsigned 
+integer 
+8 * MTU Apply decrease at least every 8 ACKs. 
+adjust_period_threshold unsigned 
+integer 
+config_base_rtt Apply decrease at least once per RTT. 
+qa_gate unsigned 
+integer 
+3 quick_adapt is enabled when 
+achieved_bytes < (ccc.max_wnd/2qa_gate). 
+csig_maxdelay_enable boolean FALSE Enable using max(Delay) signal provided by 
+CSIG. 
+csig_missing_threshold unsigned 
+integer 
+0 If set to value > 0, receiving the specified 
+number of ACKs without CSIG data will 
+transition the CC into fallback state using 
+the calculated congestion delay. 
+3.6.13.3 NSCC Configuration Parameters 
+The following configuration parameters and constants are used to tune NSCC behavior. An 
+implementation SHOULD allow the configuration of all parameters shown in Table 3-97. 
+Implementation Note: 
+Table 3-97 defines the type of several parameters as floating-point numbers. The precision of floating-
+point arithmetic is not defined and is an implementation-specific decision. Any valid floating-point 
+rounding mode may be selected for floating-point calculations. 
+ 
+The config_base_rtt parameter is defined as the round-trip time in seconds of the longest path across 
+the fabric of an MTU-sized packet when no other traffic is present, set by configuration for all CCCs. 
+While for the purposes of consistency in the formulas below, this is in units of seconds. Implementations 
+should maintain base_rtt to the nearest 128 ns or better, to match the tx_timestamp precision. 
+BDP defaults to: 
+BDP = min(sender.linkspeed, receiver.linkspeed) * config_base_rtt 
+BDP is in units of bytes, so linkspeeds above should be measured in units of bytes/second. The 
+destination linkspeed will typically be the same as the source linkspeed. If it is unknown, use the source’s 
+linkspeed. 
+alpha defaults to: 
+alpha = 4.0 * scaling_a * scaling_b * MTU / target_qdelay 

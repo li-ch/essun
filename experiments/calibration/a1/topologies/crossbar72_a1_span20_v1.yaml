@@ -1,0 +1,16 @@
+# Calibration-ladder A1 topology: crossbar72 at the LOWER endpoint of the
+# anchor-informed per-link span, B = 20 bytes/ns per direction
+# (provenance: CAL-A12, NCCL's internal NVLink model of 20 GB/s/link — the
+# software-stack floor of the span proposed in CALIBRATION_PLAN.md §2.1
+# A-L0-BW/A-L0X-BW: candidate anchored span [20, 64] B/ns, PROPOSED, owner
+# adjudication pending). Free parameter; NOT tuned toward any output.
+topology_id: crossbar72_a1_span20_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 20
+link:
+  pair_latency_ns: 200
+notes: >
+  Same identity and assumptions as crossbar72_a1_port50_v1 (A-L0X-PORT,
+  A-L0X-LAT, A-L0X-DIV); only the swept free parameter B differs.

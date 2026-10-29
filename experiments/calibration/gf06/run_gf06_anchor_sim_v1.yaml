@@ -1,0 +1,64 @@
+# Calibration-ladder GF-06 anchor-point RUN (gap-fill
+# anchor): the L0 single-stage crossbar identity at the GF-06 ANCHOR
+# SIM-CONFIG POINT — r=8, B=12.5 B/ns (the paper's staged UET-htsim
+# "100 Gbit/s links" under the declared decimal per-direction reading;
+# 12.5 = 25/2 exactly), L=1000 ns (DECLARED IMPORT of GF-05's staged
+# UET-htsim per-hop decomposition 600+400 — GF-06 stages no latency
+# component; the import exists so the two UET-htsim sim-config points
+# contrast on B ALONE), payload 2097152 B = 2 MiB (inside the anchor's
+# staged workload range 150 KB - 16 MiB, and equal to GF-05's
+# anchor-run size: at this shared size the GF-06-config /
+# GF-05-config CCT ratio is exactly 461877/60469 ~ 7.638, asymptote
+# exactly 8 — the executed two-user sim-config cross-check). An
+# FCT-class anchor executed as the free A-W1-SIZE probe, NOT compared
+# to any anchor FCT: the metric bridge is declared inexpressible at L0.
+#
+# ROLE: gap-fill doc §GF-06 — "a UET-htsim second user (sim-config
+# cross-check with GF-05)" and R3 effect-size priors. This run lands
+# the second UET-htsim config on the L0 free axes in the append-only
+# store so the PROPOSED record's placement arithmetic (vs the
+# registry-B twin run_gf06_registry_v1.yaml: combined ratio exactly
+# 92725/461877 ~ 0.2008 at this payload — the anchor config is
+# ~4.98x slower than the registry defaults in CCT, pure-B asymptote
+# exactly 128/25 = 5.12) is backed by run ids. GF-06's SUBJECT —
+# programmable congestion management (PCM vs native Swift / CX-8 DOCA
+# PCC) — is OUT of the L0 input space by capability declaration;
+# nothing about CC is executed here. B and L are free parameters
+# placed at the anchor's staged sim-config number / the declared
+# import, never tuned.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF06-SIM12-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf06/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf06/topologies/crossbar8_gf06_simline12_5_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf06/profiles/implementation_profile_l0_crossbar_cal_gf06_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf06_simline12_5_v1 (one non-blocking switch stage; r=8, B=12.5 B/ns = GF-06's UET-htsim "100 Gbit/s links" per direction under the declared reading, L=1000 ns = DECLARED IMPORT of GF-05's staged 600+400 per-hop decomposition)
+  workload: w1_dense_tp_decode tp8, payload 2^21 (2 MiB, inside the anchor's staged 150 KB - 16 MiB workload range and equal to GF-05's anchor-run size; an FCT-class anchor executed as a free probe)
+  implementation: analytical L0 crossbar identity; GF-06 comparison is sim-config-axis placement + hardware-rate-class + envelope-magnitude mapping only (programmable congestion management itself out of model scope; no FCT comparison; very-recent-preprint simulation anchor, not UEC silicon) — PROPOSED, review required
+evidence_level_requested: E0

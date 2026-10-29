@@ -1,0 +1,28 @@
+# W1 Dense TP Decode — tp_size 8 at payload 2097152 B = 2 MiB: a size
+# INSIDE GF-06's staged workload range "150 KB–16 MiB" (incast/RDMA-writes/
+# permutation; PCM, arXiv:2610.13130, docs/calibration/anchors_gapfill.md
+# §GF-06), chosen because it is ALSO the payload of stage GF-05's anchor
+# run — the two UET-htsim sim-config points (GF-05: 800 Gbps links; GF-06:
+# 100 Gbit/s links) then contrast on the B axis ALONE at one shared size
+# (the "sim-config cross-check with GF-05" role the gap-fill doc assigns
+# GF-06). GF-06 stages no per-size FCT table, and every GF-06 outcome
+# number is a per-flow FCT / goodput / processing figure, NEVER a
+# collective CCT — NO FCT-vs-CCT comparison is attempted anywhere (the
+# metric bridge is declared inexpressible at L0; no per-flow observable
+# exists). The stage executes this size as the free probe A-W1-SIZE at
+# the r=8 smoke default (the anchor's host count 1,024 is executed by the
+# scale sweep). 2^21 is divisible by 8, so the A-L0-DIV / A-L0X-DIV
+# gates ACCEPT the exact size — no bracketing. The B/L envelope and
+# latency sweeps override this payload per grid cell over a 12-size
+# ladder 2^k (8 KiB -> 16 MiB) that includes the anchor's staged 64 KiB
+# chunk-level-control size (2^16) exactly, the shared 2 MiB member (2^21),
+# and the staged range upper 16 MiB (2^24) exactly. Same workload shape
+# as every other W1 file (2 layers x 3 decode steps = 6 AllReduce ops per
+# config). Nothing here is measured or standard-normative; integer byte
+# counts; deterministic by construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal11-gf06
+tp_size: 8
+layers: 2
+steps: 3
+allreduce_bytes: 2097152   # 2 MiB; inside GF-06's staged 150 KB–16 MiB range; equals GF-05's anchor-run size; free parameter A-W1-SIZE

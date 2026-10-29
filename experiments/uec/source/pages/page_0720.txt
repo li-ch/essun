@@ -1,0 +1,27 @@
+ 720 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Table 5-39 - IEEE Std 802-2024 SLAP Encoding 
+SLAP quadrant Y bit Z bit SLAP local identifier type SLAP local identifier 
+01 0 1 Extended Local ELI 
+11 1 1 Standard Assigned SAI 
+00 0 0 Administratively Assigned AAI 
+10 1 0 Reserved Reserved 
+ 
+5.4.4 UFH Variants 
+UFH defines two variants to address the opposing needs of efficiency and broad capability: UFH_32 and 
+UFH_16. As shown in Figure 5-26, UFH_32 reserves 32 bits for addresses, 8 bits for a traffic class, and 
+4 bits for a hop-limit, making it better suited for multi-hop topologies. UFH_16 reserves 16 bits for 
+addresses and 8 bits for a traffic class, making it better suited for single-hop topologies. 
+The traffic class field is in the same location in both formats. This covers 6 bits for a DSCP codepoint and 
+2 bits for the ECN field aligned with IPv4/IPv6 usage and format. The same encodings and namespace 
+SHOULD be retained to enable stateless translation between UFH and IP and to simplify processing in 
+switches. 
+The UFH_32 format has 8 bits of opaque space while the UFH_16 format has 44 bits. These “opaque” 
+bits can be overlaid with any end-to-end data, and switches MUST ignore them when forwarding 
+packets. 
+ 
+ 
+Figure 5-26 - UFH Formats 
+ 
+ 

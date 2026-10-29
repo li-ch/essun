@@ -1,0 +1,68 @@
+ 112 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+• fi_atomic() <https://ofiwg.github.io/libfabric/v1.20.1/man/fi_atomic.3.html> 
+• fi_collective() <https://ofiwg.github.io/libfabric/v1.20.1/man/fi_collective.3.html> 
+2.2.5.4.1 fi_msg() APIs 
+The fi_msg() APIs are used to perform message data transfer operations. There are APIs to post receive 
+buffers for incoming messages and APIs for initiating transmission of outgoing messages. The fi_msg() 
+APIs MUST be supported for both FI_EP_DGRAM and FI_EP_RDM endpoints. The fi_msg() receive API 
+requirements are summarized in Table 2-21. 
+Table 2-21 - fi_msg() Receive API Requirements 
+fi_msg() API Description Requirements 
+fi_recv Posts a data buffer to the receive queue of the 
+corresponding endpoint. Posted receive buffers are 
+searched in the order they were posted to match sends. 
+Message boundaries are maintained. The src_addr 
+parameter MAY be used to indicate that a buffer should be 
+posted to receive incoming data from a specific remote 
+endpoint. 
+API MUST be supported 
+ 
+The requirements for supporting 
+the src_addr parameter are 
+specified in Section 2.2.4.3.1 
+fi_recvv The fi_recvv() API adds support for a scatter-gather list to 
+the fi_recv() API 
+API MUST be supported 
+ 
+Maximum size of scatter-gather 
+list is vendor specific 
+fi_recvmsg The fi_recvmsg() API supports more granular control of the 
+receive operation per call using flag parameters 
+ 
+The following flags MUST be supported: 
+• FI_COMPLETION 
+API MUST be supported 
+ 
+FI_MULTI_RECV / 
+FI_TAGGED_MULTI_RECV 
+capabilities and associated flag 
+parameters SHOULD be 
+supported 
+ 
+UET providers SHOULD allocate independent receive queues (i.e., lists of posted receive buffers) for 
+messages and tagged messages. 
+Table 2-22 summarizes the fi_msg() send API requirements and shows the mapping of the APIs to the 
+UET SES opcodes. 
+Table 2-22 - fi_msg() Send API Requirements 
+fi_msg() API Description Requirements SES Opcode 
+fi_send The fi_send() API transfers 
+data to a remote endpoint 
+API MUST be supported UET_DATAGRAM_SEND for 
+FI_EP_DGRAM endpoint type 
+ 
+UET_SEND for FI_EP_RDM 
+endpoint type 
+fi_sendv The fi_sendv() API adds 
+support for a scatter-
+gather list to the fi_send() 
+API 
+API MUST be supported 
+ 
+Maximum size of scatter-
+gather list is vendor specific 
+UET_DATAGRAM_SEND for 
+FI_EP_DGRAM endpoint type 
+ 
+AI Full profile: 

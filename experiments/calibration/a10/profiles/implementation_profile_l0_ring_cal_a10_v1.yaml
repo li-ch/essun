@@ -1,0 +1,47 @@
+# Implementation profile for the calibration-ladder A10 runs on the
+# analytical L0 ring backend ( anchor CAL-A10 —
+# HiPC 2025 Workshops UALink-vs-NVLink analytical comparison,
+# docs/calibration/anchors_staging.md §A10).
+implementation_profile_id: analytical_l0_ring_cal_a10_v1
+status: PROPOSED   # calibration candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml.
+  ROLE per plan §1.1 row CAL-A10: the ring is the LINEAR-EXTREME latency
+  chain 2(r-1)*L — the chained-fabric pole of the stage's flat-vs-chained
+  contrast, and the identity on which the anchor's 800 ns figure carries
+  the DECLARED SECONDARY per-hop reading (stage A8 already executed this
+  reading at r=8 as plan span context; stage A10 works the anchor itself
+  on the rank ladder). The anchor's own hierarchical NVLink-Network model
+  equations are paywalled; no identity here claims to BE that model.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  RANK COUNT r is the swept free axis, on the power-of-2 ladder 8, 16, 32,
+  64, 128, 256, 512, 1024 ending at the anchor's own stated scale ceiling
+  ("scales to 1024 GPUs"); on this identity the anchor's single 800 ns
+  assumption value is charged 2*(r-1) = 14 (r=8) up to 2046 (r=1024)
+  times per AllReduce. L (link.hop_latency_ns, A-L0-LAT) held at 800 ns =
+  CAL-A10's assumption-class 0.8 us figure under the DECLARED SECONDARY
+  per-hop reading (the plan §2.1 A-L0-LAT row's own span-context reading;
+  the PRIMARY end-to-end pair reading runs on the crossbar identity in
+  the same sweeps). B (link.bytes_per_ns) FIXED at the registry point
+  64 B/ns (the anchor's bandwidth values are not staged). Payload FIXED
+  at 16384 B (the A-W1-SIZE registry smoke point; divisible by every
+  ladder rank — A-L0-DIV accepts, no bracketing). NOTHING was tuned: the
+  anchor stages NO completion time; the sweeps measure WHERE the identity
+  sits relative to the anchor's assumption point and scale claim.
+measurement_source: >
+  CAL-A10 staged material ("Communication-Centric UALink and NVLink
+  Comparison for Large Scale AI Training", IEEE/ACM HiPC 2025 Workshops,
+  IEEE CSDL 453800a068; docs/calibration/anchors_staging.md §A10; anchor
+  PROPOSED in the anchor registry; confidence M) — an
+  ASSUMPTION-CLASS external analytical study: the 0.8 us figure is a
+  stated model assumption (quote via public search snippet; full text
+  paywalled; wording re-verify at owner integration), and the anchor's
+  outputs are QUALITATIVE direction statements — no completion-time
+  number is staged anywhere. Recorded as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language; peer review
+  certifies the USAGE of the assumption, never its value.

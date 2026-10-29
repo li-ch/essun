@@ -1,0 +1,72 @@
+ 337 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 3-42 - RODL Request Fields over UFH_16 
+ 
+Field Name 
+Size 
+(in bits) 
+ 
+Field Description 
+type 5 Packet Type = RODL 
+next_hdr 4 Encoding identifying UET Semantic type  
+flags (3 bits): over UFH_16 
+• retx 
+• ar 
+ 
+• syn 
+ 
+1 
+1 
+ 
+1 
+pds.flags = [retx, ar, syn]  
+• 1 => This packet is a retransmit 
+• 1 => ACK Request, when set an ACK is 
+requested to be sent for this packet 
+• 1 => PDC establishment request 
+spdcid 12 Source PDCID; PDCID assigned by FEP that is 
+source of the packet 
+ 
+dpdcid 
+ 
+or 
+ 
+{pdc_info, psn_offset} 
+ 
+12 
+ 
+ 
+ 
+12 
+This field is overloaded 
+• When pds.flags.syn = 0: 
+o PDCID assigned by FEP that is the 
+destination of the packet 
+ 
+• When pds.flags.syn = 1:   
+{pds.pdc_info(2), pds.psn_offset(10)} 
+ 
+pds.pdc_info: 
+pds.pdc_info.rsvd(1) 
+pds.pdc_info.use_rsv_pdc  
+     1 = use PDC from reserved pool 
+     0 = use PDC from global shared pool 
+ 
+pds.psn_offset is the numerical difference 
+between the PSN in this packet and the Start_PSN 
+on the PDC. The 10-bit size limits the number of 
+packets sent using pds.flags.syn = 1 to 1022. 
+ 
+psn_state 
+24 The content of this field depends on pds.flags.syn. 
+When pds.flags.syn = 1,  PSN = {0x00, psn_state } 
+When pds.flags.syn = 0, pds.clear_psn_offset, 
+pds.rev_cack_psn_lsb} are present. 
+ 
+In the UFH_16 header:    pds.psn_state =  
+{ psn_state_hi, psn_state_mid, psn_state_low }   
+ 
+Figure 3-68 - RODL Header Format over UFH_16 
+ 

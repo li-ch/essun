@@ -1,0 +1,36 @@
+# Calibration-ladder GF-05 topology: crossbar at r=8, B = 12.5 B/ns
+# (= 25/2 exactly, decimal-representable), L = 1000 ns — the 8:1
+# OVERSUBSCRIPTION displacement row (100/8 = 12.5): the topology class
+# of the anchor's fairness quote ("2 MiB permutation, 1,024 nodes, 8:1
+# oversubscription" — under Swift "the FCT of the slowest flow is 65%
+# longer than the fastest flow"). Same declared structural
+# effective-bandwidth reading as the 2:1/4:1 rows. Asymptotic CCT ratio
+# vs the anchor row exactly 8 — the anchor's own oversubscription
+# structure displaces CCT by MORE (x8) than every congestion-control
+# effect it measures (x1.06-1.5 between CC schemes; x3-6 RoCE-class
+# baselines vs optimal), which is the stage's central R3 structural
+# finding: in a raw CCT number, topology structure dominates the CC
+# effect the paper studies. 12.5 sits BELOW the plan §2.1 A-L0-BW
+# candidate anchored span [20, 64] (the oversubscribed UEC-class
+# regime extends below it). The anchor's 65% fairness spread itself is
+# INEXPRESSIBLE at L0 (identical flows by construction — per-flow
+# spread exactly 0; its mapped displacement 100/(33/20) = 2000/33 B/ns
+# is non-representable and recorded, not executed). Nothing tuned.
+topology_id: crossbar8_gf05_sub8to1_12_5_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 1000
+notes: >
+  Non-blocking single-stage abstraction at the 8:1 oversubscription
+  displacement of GF-05's sim line rate (100/8 = 12.5 B/ns — exact
+  25/2, the one non-integer executed B of this stage; YAML decimal is
+  loaded exactly via Fraction(str(12.5))). Identity
+  t = 2(r-1)/r*M/B + 2L with L = 1000 ns (GF-05 per-hop decomposition).
+  No congestion/queueing/subscription structure and no per-flow spread
+  (identical flows by construction) — magnitude only (asymptotic CCT
+  factor exactly 8). Provenance: anchor-staged oversubscription ratio
+  applied to the anchor-staged line rate; never our measurements, never
+  tuned.

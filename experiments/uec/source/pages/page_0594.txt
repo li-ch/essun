@@ -1,0 +1,42 @@
+ 594 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+With Cut Payload, when a certain buffer admission threshold has been passed, the incoming packet’s 
+payload is trimmed and the packet enqueued in the same queue. The packet is otherwise left 
+unchanged. Cut Payload has the advantage of requiring a single traffic class, but it has the drawback 
+that it can lead to congestion collapse under some extreme scenarios: When packets are arriving 
+faster in the congested queue than the drain rate of their (trimmed) headers, in steady state the 
+network will carry just headers, and no useful data. 
+An evolution of Cut Payload called packet trimming was proposed in the NDP paper [2] . The key 
+difference is that trimmed packets are placed into a separate traffic class. Because the associated 
+queue is typically empty, a first benefit is that trimmed packets bypass data packets and arrive quickly 
+at the destination, enabling them to request fast retransmission. Fast retransmission enables the safe 
+configuration of aggressively small buffer thresholds for data packets, typically at around 1 
+bandwidth-delay product. 
+A second benefit of utilizing two traffic classes is to restrict the bandwidth available to trimmed 
+packets, preventing congestion collapse. Fair-queueing allows trimmed packets to consume no more 
+than 50% of the bandwidth, while aggressively prioritizing the headers, which are significantly smaller 
+in size.  For example, approximately 60 headers can be forwarded for every 4 KB MTU data packet. 
+WDRR with 25% of the bandwidth allocated to trimmed packets is also a good configuration option, 
+at the expense of moderate trimmed packet loss in large incasts.  
+4.1.1 Interactions with explicit congestion notification 
+Admitted packets with a DSCP_TRIMMABLE codepoint may be subject to ECN marking if configured by 
+the network administrator. ECN configuration is therefore orthogonal to trimming for trimmable 
+packets. 
+A switch SHOULD NOT perform ECN marking on trimmed packets. This applies to the packets trimmed at 
+the switch or arriving with a DSCP_TRIMMED codepoint. Because trimming does not change the ECN 
+bits (see paragraph above), and trimmed packets are not subject to ECN marking, the trimmed packets 
+carry the ECN bits of the original data packet. The original ECN bits are useful for congestion control. 
+CMS Section 3.6.17 provides guidance on appropriate ECN configuration for UET. 
+4.1.2 Where can trimming be enabled? 
+Trimming requires that the destination can identify a trimmed packet and process it accordingly. 
+Networks SHOULD prevent destinations that do not support trimming from receiving trimmed packets. 
+Such packet reception may result in undesirable behavior (e.g., a trimmed packet passing header 
+validation checks and then being processed by the upper layers as a regular packet). This implies that 
+trimming is appropriate for backend, datacenter, or enterprise networks where the network operator 
+has knowledge of trimming support and can control DSCP_TRIMMABLE codepoint assignment. If a 
+destination is within the public Internet, it is not possible to know whether the receiver supports 
+trimming; therefore, trimmed packets SHOULD NOT be forwarded outside the backend, datacenter, or 
+enterprise network. 
+4.1.3 Interactions with upper protocols 
+Packet trimming SHOULD NOT change any upper layer header fields beyond the outer IP header. 

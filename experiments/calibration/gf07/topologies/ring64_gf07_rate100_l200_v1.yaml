@@ -1,0 +1,43 @@
+# Calibration-ladder GF-07 topology: unidirectional ring of 64 ranks —
+# B = 100 B/ns, L = 200 ns (registry) — the SCHEDULE-STRUCTURE CONTRAST
+# row of the GF-07 scale sweep.
+#
+# ROLE: the anchor's five fabrics span three fabric classes (IB
+# Dragonfly+, blocked fat tree, Cray Slingshot dragonfly, RoCE); the
+# only topology-class axis L0 can contrast at this scale is SCHEDULE
+# STRUCTURE (single-stage non-blocking vs one-hop-per-neighbor chain).
+# This ring executes the multi-hop pole at the anchor's own 64-node
+# scale, carrier B = 100 (LUMI staged aggregate, declared reading), and
+# registry L = 200 (GF-07 stages no latency number): identity
+# t = 2(r-1)/r*M/B + 2(r-1)*L — the SAME bandwidth coefficient 63/32 as
+# the crossbar, with the latency chain 2*(r-1)*L = 2*63*200 = 25,200 ns
+# exactly vs the crossbar's 2L = 400 ns: ring-minus-crossbar is exactly
+# 2(r-2)L = 24,800 ns at EVERY size. The schedule-structure effect
+# (ring/crossbar CCT ratio, falling monotonically from ~2.18 at 1 MiB
+# through ~1.07 at 16 MiB toward 1) is then compared against the
+# anchor's measured congestion factors in the stage record's confounder
+# ordering — at GF-07's scale the MEASURED envelope (1.05 -> 25)
+# DOMINATES schedule structure, the reverse of GF-05's ordering at
+# 1,024 nodes. The ring regime boundary M* = L*B*r = 200*100*64 =
+# 1,280,000 B (where the ring's latency chain equals its bandwidth
+# term) is bracketed by the ladder members 1 MiB and 2 MiB. HONESTY: a
+# schedule-structure probe, never a claim that the anchor's fabrics run
+# ring AllReduce; B/L free parameters, never tuned. 64 divides every
+# 64*2^k size; A-L0D-POW2 native.
+topology_id: ring64_gf07_rate100_l200_v1
+topology_class: unidirectional_ring
+ranks: 64
+link:
+  bytes_per_ns: 100
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled
+  independently; full-duplex uniform per-direction links (A-L0-FD).
+  Ring hops are single link traversals at the GF-07 carrier rate and
+  the registry hop latency. Identity t = 2(r-1)/r*M/B + 2(r-1)*L;
+  latency chain 2*(r-1)*L = 25,200 ns at r = 64, exactly 24,800 ns
+  above the crossbar twin at every size. No congestion, no credits, no
+  packetization — L0 transport model only. Provenance: B = 100 B/ns
+  from GF-07's staged LUMI per-node aggregate (declared reading); L =
+  200 ns registry default; values are anchor quotes / registry
+  defaults, never our measurements; never tuned.

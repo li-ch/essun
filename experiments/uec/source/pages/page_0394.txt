@@ -1,0 +1,35 @@
+ 394 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+3.5.16.7 Negotiation 
+The Negotiation CP supports capability negotiation. If this control type is received and negotiation is not 
+supported, then an ACK is generated as described below. This ACK may use any of the available 
+acknowledgement formats: ACK, ACK_CC, or ACK_CCX. 
+Negotiation CPs MUST be allocated a unique PSN, have pds.flags.ar set to one, and set pds.flags.isrod 
+according to the PDC type. This CP can be used to open a PDC; therefore, it uses the pds.flags.syn field 
+and associated state used to open a PDC if sent during PDC creation. 
+The pds.payload field of the Negotiation CP carries an encoded payload based upon the type of 
+negotiation. The first two bytes of the pds.payload are the pds.neg_type and pds.neg_length fields. The 
+pds.neg_type field defines the type of negotiation being requested and the pds.neg_length field defines 
+the length in increments of 4 B of the overall pds.payload field, including the pds.neg_type and 
+pds.neg_length fields. The format of the remainder of the pds.payload beyond the pds.neg_length field 
+depends upon the pds.neg_type field. The general format is illustrated in Figure 3-93 with field 
+definitions in Table 3-77. 
+If pds.neg_type = PDS_NEG_NO_NEG and pds.neg_length = 0, the full pds.payload field has a fixed size 
+of 32 bytes and each byte is set to zero. This assures backward compatibility with previous versions of 
+the UE Specification. 
+ 
+Table 3-77 - Negotiation CP Payload - General 
+Field Name Size  
+(in bits) 
+Description 
+neg_type 8 Indicates the type of Negotiation CP –defines the content and format of the 
+rest of the pds.payload field. 
+neg_length 
+ 
+8 Specifies the length of negotiation payload in 4 B units starting with and 
+including pds.neg_type. 
+Reserved variable Reserved 
+ 
+ 
+Figure 3-93 - Negotiation CP Payload Format - General 

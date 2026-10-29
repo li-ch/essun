@@ -1,0 +1,21 @@
+ 224 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+3.4.3.2 Optimized Header Formats for Scale-out 
+Two use cases of small transfers motivate creating a set of optimized semantic headers. The first of 
+these is the case of non-matching transfers that do not require header data. These single packet 
+messages can eliminate the ses.match_bits and ses.initiator fields (i.e., all matching criteria) as well as 
+the ses.header_data and ses.message_id. They carry an abbreviated (14-bit) ses.request_length field 
+that enables single packet payloads up to 8192 bytes. It should be noted that the packet sequence 
+number (PSN) from the packet delivery context (PDC) is needed within the semantic implementation to 
+resolve responses back to the original request since a message ID is not carried in the optimized header 
+format. Single-packet messages using the format in Figure 3-15 set both ses.som and ses.eom. 
+ 
+ 
+ 
+Figure 3-15 - Optimized, Non-Matching Format (UET_HDR_REQUEST_SMALL) 
+ 
+ 
+Figure 3-14 - Standard Header Format as Used for Ready-to-Restart Requests 
+ 

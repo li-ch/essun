@@ -1,0 +1,41 @@
+ 552 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Threat from Attacker Threat Mitigation 
+PDS PSN re-use (wrapping) • Timing attack using an old packet sequence number to 
+replay the packet data. 
+• Mitigation: Tear down the PDC after reaching 
+Start_PSN+Limit_PSN_Range.  
+PDC/SES/CMS resource exhaustion • Upper layers have limited resources that could be 
+consumed for a denial of service. 
+• Mitigation: A FEP SHOULD limit resources per source FEP. 
+3.7.2.3 Endpoint Considerations 
+A portion of the FEP is assumed to be trusted. TSS terminates within the trusted portion of the FEP. The 
+mechanism for establishing trust to this trusted component is implementation dependent. 
+Implementation Note: 
+The security of the FEP is complex and highly dependent upon the customer requirements and 
+vendor implementations. Vendors are encouraged to implement DPA counter measures or other 
+techniques to reduce the attack surface to the cryptographic implementations. In addition, 
+cryptographic hardware SHOULD be implemented in accordance with industry best practices and 
+certified by third-party testing programs (e.g., NIST’s CAVP program). 
+3.7.2.4 Switch Considerations 
+The switch is not a trusted entity from an end-point security perspective. The following sections describe 
+a few security considerations for the switch. 
+3.7.2.4.1 Quality of Service/Congestion Marking 
+The IP differentiated services code point (DSCP) and explicit congestion notification (ECN) are used by 
+UET congestion control to improve performance. Both fields are carried in the IPv4 TOS and IPv6 Traffic 
+Class fields. Tampering or misconfiguration of these parameters can impede packet delivery and might 
+cause a DoS condition. Without authentication of the ECN/DSCP header fields these changes are 
+undetectable at the FEP, and both are considered out of scope of the trust model. 
+3.7.2.4.2 Packet Trimming Congestion Signal 
+Packet trimming is an optional UE feature. During congestion the header portion of a packet is trimmed 
+and forwarded to the receiver to be used by UET as a congestion signal and to trigger a retransmission. 
+A trimmed packet allows the receiver to gain additional information and affords rapid handling of 
+retransmission. The process of trimming packets prevents authentication since portions of the packet 
+are removed including the authentication tag. However, it is possible to decrypt trimmed packets under 
+some circumstances and cryptographic algorithms. An implementation MAY use this decrypted 
+information (e.g., PDS headers) for congestion control or loss detection. 
+An attacker could modify portions of the ciphertext, including the UET header, to perform an oracle 
+attack. The results of the attack can affect only congestion control/packet replay state and MUST NOT 
+affect data placement or integrity/authentication. This is the same threat model as the ECN (explicit 
+congestion notification) described in Section 3.7.2.4.1. 

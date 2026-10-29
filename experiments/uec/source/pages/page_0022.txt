@@ -1,0 +1,45 @@
+ 22 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Figure 3-80 - ACK State Sections ............................................................................................................... 358 
+Figure 3-81 - SACK Bitmap ........................................................................................................................ 364 
+Figure 3-82 - PDS_MPR Concept ............................................................................................................... 367 
+Figure 3-83 - PDS NACK Format ................................................................................................................ 368 
+Figure 3-84 - NACK Sections ...................................................................................................................... 369 
+Figure 3-85 - Example Transmit Scheduler ............................................................................................... 376 
+Figure 3-86 - Example PSN Tracking per EV .............................................................................................. 383 
+Figure 3-87 - UET_HDR_CP_ACK Payload Format ..................................................................................... 387 
+Figure 3-88 - CP Format ............................................................................................................................ 388 
+Figure 3-89 - Close Command CP Payload Format ................................................................................... 391 
+Figure 3-90 - Close Command CP ACK Payload Format ............................................................................ 391 
+Figure 3-91 - Credit CP Payload................................................................................................................. 393 
+Figure 3-92 - Credit Request CP Payload .................................................................................................. 393 
+Figure 3-93 - Negotiation CP Payload Format - General ........................................................................... 394 
+Figure 3-94 - Negotiation CP Payload Format ........................................................................................... 395 
+Figure 3-95 - Format of CP ACK Payload (pds.neg_type = PDS_NEG_ON_OFF) ....................................... 396 
+Figure 3-96 - Example Sequence with Key ................................................................................................ 400 
+Figure 3-97 - Standard RUD Send Sequence for Single- Packet Message, Non-Guaranteed Delivery ..... 403 
+Figure 3-98 - Standard RUD Send Sequence for Single- Packet Message, Guaranteed Delivery ............. 404 
+Figure 3-99 - Standard RUD Send Sequence for Multi-Packet Message, Non-Guaranteed Delivery ....... 405 
+Figure 3-100 - Standard Sequence for RUD Send of Multi-Packet Message with Guaranteed Delivery .. 406 
+Figure 3-101 - Standard RUD Sequence for Single-Packet Read–Standard SES Header ........................... 408 
+Figure 3-102 - Standard RUD Sequence for Single-Packet Read–Medium & Small SES header ............... 409 
+Figure 3-103 - Standard RUD Sequence for Multi-Packet Read ............................................................... 411 
+Figure 3-104 - PDS NACK Sequence for RUD Send of Single-Packet Message .......................................... 412 
+Figure 3-105 - PDS Request Dropped Sequence for RUD Send of Single-Packet Message ...................... 413 
+Figure 3-106 - PDS ACK Dropped Sequence for RUD Send of Single-Packet Message ............................. 414 
+Figure 3-107 - ROD Send Sequence for Dropped PDS Request Packet ..................................................... 418 
+Figure 3-108 - ROD Send Sequence for Dropped ACK Packet Using ACK Request ................................... 420 
+Figure 3-109 - Bidirectional PDC ............................................................................................................... 423 
+Figure 3-110 - Standard RUDI RMA Write Sequence for Multi-Packet Message...................................... 425 
+Figure 3-111 - Standard RUDI RMA Read Sequence for Multi-Packet Message....................................... 426 
+Figure 3-112 - Full Header: UET/UDP/IP – no UET CRC, no TSS ................................................................ 428 
+Figure 3-113 - Full Header: UET/UDP/IP with UET CRC, no TSS ................................................................ 429 
+Figure 3-114 - Full Header: UET/UDP/IP with Encryption ......................................................................... 429 
+Figure 3-115 - Full Header: UET/IP no UET CRC, no TSS ........................................................................... 430 
+Figure 3-116 - Full Header: UET/IP with UET CRC, no TSS ........................................................................ 430 
+Figure 3-117 - Full Header: UET/IP with Encryption ................................................................................. 431 
+Figure 3-118 - Header Stack for General UET and RUD Requests over the UFH_32 header .................... 432 
+Figure 3-119 - Header Stack for UET RODL ............................................................................................... 433 
+Figure 3-120 - Header Format for UET over the UFH_16 Header ............................................................. 434 
+Figure 3-121 - UET CRC Coverage ............................................................................................................. 435 

@@ -1,0 +1,38 @@
+# Calibration-ladder GF-10 topology: the CAL-A10 CHECK ROW — crossbar
+# r=8, B = 25 B/ns (the GF-10 carrier), L = 800 ns.
+#
+# ROLE: CAL-A10 (integrated the anchor registry anchor: "0.8 µs NVLink-network
+# end-to-end latency; UALink model" — an ASSUMPTION-class value, the
+# source itself notes NVIDIA does not publish the number) is the exact
+# value the gap-fill doc says GF-10's measurements "can finally be
+# checked against": measured 9000 ns vs assumed 800 ns = exactly 45/4 =
+# 11.25x — the doc's own "an order above the assumption", quantified
+# exactly. The row executes the assumption-class point on the same axis
+# and carrier as the measured rows so the check is one exact ratio.
+# CAVEATS, in full: (a) CAL-A10 is assumption-class — zero falsification
+# power in either direction (A10 discipline); (b) the GF-10 9000 ns is
+# app-level P2P (software stack included), CAL-A10's 800 ns is an
+# end-to-end network latency assumption — they BOUND different things
+# (the doc's own interpretation duty); (c) 800 ns = exactly 4/5 of
+# GF-09's "sub-microsecond" boundary edge 1000 ns (cross-anchor
+# coincidence, recorded never cross-derived). On this row the latency/
+# wire crossover sits at M* = 200*800/7 = 160000/7 ~ 22857 B (~22 KiB) —
+# INSIDE the anchor's own measured flat region (<= 64 KiB V100), a
+# cross-quantity-class coincidence recorded not adjudicated (collective
+# identity crossover vs P2P flat boundary are different quantities).
+topology_id: crossbar8_gf10_b25_l800_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 25
+link:
+  pair_latency_ns: 800
+notes: >
+  Single non-blocking switch-stage abstraction: uniform per-pair latency
+  L = 800 ns (CAL-A10's assumption-class 0.8 µs NVLink end-to-end value —
+  an integrated the anchor registry anchor, NOT a measurement) at the GF-10
+  measured carrier B = 25 B/ns, charged once per phase by the L0
+  crossbar identity (t = 2(r-1)/r*M/B + 2L). The row exists so the
+  measured-vs-assumed latency check is one exact fraction: 9000/800 =
+  45/4 = 11.25. Assumption-class discipline applies: placement only, no
+  falsification claimed in either direction.

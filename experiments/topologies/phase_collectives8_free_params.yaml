@@ -1,0 +1,40 @@
+# Algorithm/transport config for the L0 phase collectives (P2 stage S4).
+# This is NOT a new fabric: ReduceScatter/AllGather need no links beyond the
+# committed topologies. The ring family runs on ring8_free_v1 (link
+# bytes_per_ns / hop_latency_ns — free parameters A-L0-BW / A-L0-LAT) and the
+# halving/doubling family on rdoubling8_free_v1 (nic.injection_bytes_per_ns /
+# link.pair_latency_ns — free parameters A-L0D-BW / A-L0D-LAT, power-of-two
+# ranks). The pairing, message-size semantics, and serialized composition
+# are MODELING ASSUMPTIONS (A-L0P-ALGO / A-L0P-MSG / A-L0P-COMP in
+# experiments/vertical_slice/assumptions_l0.yaml) — not standard-derived,
+# not measured. No standard-derived values anywhere in this file.
+config_id: phase_collectives8_free_v1
+collectives:
+  - collective: reducescatter
+    algorithm: ring
+    topology: ring8_free_v1
+    identity: "t_rs = (r-1)/r*M/B + (r-1)*L ; wire/rank (r-1)/r*M ; result M/r"
+  - collective: allgather
+    algorithm: ring
+    topology: ring8_free_v1
+    identity: "t_ag = (r-1)/r*M/B + (r-1)*L ; wire/rank (r-1)/r*M ; result M"
+  - collective: reducescatter
+    algorithm: recursive_halving
+    topology: rdoubling8_free_v1
+    identity: "t_rs = sum_i (M/2^i)/B + log2(r)*L ; wire/rank (r-1)/r*M ; result M/r"
+  - collective: allgather
+    algorithm: recursive_doubling
+    topology: rdoubling8_free_v1
+    identity: "t_ag = sum_i (2^(i-1)*M/r)/B + log2(r)*L ; wire/rank (r-1)/r*M ; result M"
+composition:
+  allreduce_from_phases: >
+    AllReduce(M) = ReduceScatter(M) + AllGather(M), phases serialized with no
+    overlap; reproduces l0.ring_allreduce_time_ns (ring family) and
+    l0d.rd_allreduce_time_ns (doubling family) exactly.
+notes: >
+  All phase variants move the same per-rank wire bytes (r-1)/r*M; the
+  algorithms differ only in the per-phase latency chain: (r-1)*L for the
+  ring, log2(r)*L for halving/doubling, L for the crossbar phases landed
+  inside S1's AllReduce decomposition (out of this stage's scope as
+  first-class ops). L0 transport model only: no congestion, no credits, no
+  packetization.

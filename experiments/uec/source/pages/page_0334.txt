@@ -1,0 +1,62 @@
+ 334 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+This section defines the pds.type encodings. 
+Table 3-39 - Fields of PDS Prologue 
+Field Name Size (in bits) Field Description 
+type 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+5 
+ 
+Encodings are: 
+• 0 => Reserved 
+• 1 => UET Encryption Header (TSS) 
+• 2 => RUD Request (RUD_REQ) 
+• 3 => ROD Request (ROD_REQ) 
+• 4 => RUDI Request (RUDI_REQ) 
+• 5 => RUDI Response (RUDI_RESP) 
+• 6 => UUD Request (UUD_REQ) 
+• 7 => ACK 
+• 8 => ACK_CC 
+• 9 => ACK_CCX 
+• 10 => NACK 
+• 11 => CP (Subtype encoded in CTL_TYPE field) 
+• 12 => NACK_CCX 
+• 13 => RUD_CC_REQ 
+• 14 => ROD_CC_REQ 
+• 15 => RODL Request (RODL_REQ) 
+• 16-31 => Reserved 
+ 
+next_hdr or 
+ctl_type 
+ 
+4 
+Type-specific field 
+• When pds.type = CP, this field is ctl_type 
+• When pds.type != CP, this field is next_hdr as passed in from 
+SES to PDS  
+(e.g., in the example ses_pds_tx_req() API in Section 3.5.4) 
+flags 7 Type-specific flags 
+See Section 3.5.11.8. 
+ 
+Encodings for the pds.next_hdr field are defined in the semantic sublayer Section 3.4.3.8. One 
+codepoint, 0x00, is reserved for PDS packets that do not carry an SES header and UET payload. 
+Encodings of the pds.ctl_type field are defined in Section 3.5.10.9. 
+3.5.10.4 RUD/ROD Request 
+The PDS header format for a RUD or ROD Request packet is shown in Figure 3-66. The header fields are 
+described in Table 3-40. 
+ 
+Figure 3-66 - RUD/ROD Request Header Format 
+ 

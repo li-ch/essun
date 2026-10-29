@@ -1,0 +1,42 @@
+ 639 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+ 
+Table 5-10 - LLR TX Path Variables 
+Variable name Description 
+init_echo_sent The init_echo_sent variable is used by the ACK/NACK transmit state machine 
+shown in Figure 5-4 and pulses each time a valid LLR_INIT_ECHO Control 
+Ordered Set is sent (see 5.1.6). 
+tx_seq The sequence number to be used in the frame_seq field (of the frame 
+preamble) for the next LLR frame to be transmitted. Set to 0 whenever 
+llr_mode_remote is changed. Incremented by 1 at the end of each LLR frame 
+that is transmitted when llr_mode_remote is ON. The value wraps from all 
+ones to all zeros. 
+A 20-bit variable with values: 0 to 1048575 
+acked_seq Stores the sequence number acknowledged in the most recent successfully 
+received LLR_ACK or LLR_NACK. Set to all ones whenever llr_mode_remote 
+is changed. Set to init_seq-1 when an LLR_INIT CtlOS is sent. 
+A 20-bit variable with values: 0 to 1048575 
+INIT
+ADVANCE
+llr_mode_remote == ON
+init_echo_received
+replay_done
+FLUSH
+re_init_on_discard
+REPLAY
+!pcs_lost_status_timer_expired &
+!data_age_timer_expired & 
+(nack_received |
+(replay_timer_expired & 
+!replay_ct_is_max))
+pcs_lost_status_timer_expired |
+data_age_timer_expired |
+(replay_timer_expired & 
+replay_ct_is_max)
+LLR_OFF
+reset |
+llr_mode_remote == OFF
+ 
+Figure 5-3 - LLR transmit state machine 
+ 

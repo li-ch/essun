@@ -1,0 +1,49 @@
+# Calibration-ladder GF-03 topology: unidirectional ring of 8 ranks at
+# B = 50 B/ns per direction — the PER-LINK reading of the GF-03 anchor's
+# NVLink-5/NVSwitch fabric ("B300 Field Notes (for the AI
+# Infra/Performance Engineer)", sixrackunits Substack; NCCL
+# allreduce/broadcast + nvbandwidth on a B300 Blackwell Ultra system;
+# docs/calibration/anchors_gapfill.md §GF-03, gap-fill anchor NOT yet
+# integrated into the anchor registry). Decimal units, 1 GB/s = 1 B/ns.
+#
+# CROSS-ANCHOR PROVENANCE of 50 (fixed BEFORE any model output was read):
+# 50 B/ns per link per direction is CAL-A1's own arithmetic for the NVLink5
+# switch generation (57.6 Tbps full-duplex chip / 72 ports => 50 B/ns per
+# port per direction; 18 links per GPU) and coincides with CAL-A2's
+# 1.8 TB/s bidirectional per GPU / 18 links / 2 directions. GF-03 itself
+# quotes no per-link rate; the ring reading therefore carries the
+# CAL-A1/A2 provenance explicitly (a declared cross-anchor reading, the
+# same discipline as GF-01's ring-64 = the A7 anchor point).
+#
+# ROLE OF THIS TOPOLOGY: the single-channel ring ALGORITHM EMBEDDED in the
+# NVSwitch fabric — every ring hop one GPU-switch-GPU path at the per-link
+# per-direction rate, latency chain 2(r-1)L = 14L. It is the CONSERVATIVE
+# per-link reading the collective peak (837) must be read against: 837/50
+# = 16.74, i.e. a real NCCL ring reaching the measured plateau would need
+# ~17 of the 18 available links/channels — consistent with NCCL's default
+# multi-channel behavior, recorded as arithmetic ordering only (mechanism
+# belongs to the owner, not this stage).
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0-BW), never tuned toward the
+# GF-03 measurements; 50 is CAL-A1's staged per-port arithmetic, fixed
+# BEFORE any model output was read (the A-L0-BW registry point 64 is the
+# GENERIC default and is NOT the fabric-class arithmetic for this anchor's
+# NVLink-5 class — recorded, not silently substituted). L = 200 ns is the
+# A-L0-LAT registry point (KEEP).
+topology_id: ring8_gf03_link50_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 50
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD). No congestion, no
+  credits, no packetization — L0 transport model only. Ring hops are
+  GPU-switch-GPU paths of the NVSwitch-class fabric (one switch traversed
+  per hop). Provenance: B = 50 B/ns from CAL-A1's NVLink5 per-port
+  per-direction arithmetic (= CAL-A2's 18 x 50; the anchor's own
+  per-GPU aggregate 900 = 18 x 50 confirms the same class rates;
+  gap-fill anchor GF-03, PROPOSED, not yet an integrated anchor row); L = 200 ns
+  is the free A-L0-LAT registry point. Values are cross-anchor arithmetic
+  / free-registry points, never our measurements, never tuned.

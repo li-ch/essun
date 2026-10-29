@@ -1,0 +1,39 @@
+ 696 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.3.2.2.9 S_VC_RTS 
+The 32-bit S_VC_RTS field contains 32 ready-to-send flags, one for each of the 32 possible VCs. The 
+S_VC_RTS flag in bit position 0 indicates the VC0 CBFC sender state. When the S_VC_RTS flag is TRUE(1), 
+the sender is ready to send but SHALL wait to begin until the receiver sets R_VC_RTR=TRUE. 
+5.3.2.2.10 R_VCnLength 
+The 4-bit R_VCnLength field specifies the length of each element of the per-VC fields R_VCn. For version 
+0 the length is 6 bytes. Future versions can increase the length. Version 0 SHALL skip over any bytes 
+beyond 6 when reading the R_VCn fields. 
+5.3.2.2.11 R_CellSize 
+The 12-bit R_CellSize field identifies the number of bytes in a single credit at the receiving port. 
+5.3.2.2.12 R_PacketOverhead 
+The 8-bit R_PacketOverhead field identifies the number of overhead bytes at the receiving port. 
+5.3.2.2.13 R_TotalCredits 
+The 24-bit R_TotalCredits field identifies the total number of credits, of credit size, available for all VCs 
+at the receiver. 
+5.3.2.2.14 R_NumVCs 
+The 6-bit R_NumVCs field indicates the number of receiver VC configuration subfields (R_VCn) following 
+in this TLV. 
+5.3.2.2.15 R_VCn 
+R_VCn represents R_NumVCs fields, one for each VC the receiver at this port wants to activate or 
+catalog. Each R_VCn field contains parameters for configuring CBFC for this VC as listed in the following 
+subclauses. 
+5.3.2.2.15.1 R_VC_Want 
+The 1-bit R_VC_Want field indicates if the receiver wants CBFC lossless service for this VC. If TRUE(1), 
+this port wants CBFC lossless receiver service for this VC on this port. If FALSE(0) this VC is best effort. If 
+R_VC_Want transitions to FALSE(0), the sender SHALL stop using CBFC credits to qualify transmission of 
+packets on this VC, set the corresponding S_VC_RTS flag to FALSE(0), and return to best-effort 
+forwarding. 
+5.3.2.2.15.2 R_VC_RTR 
+If the 1-bit R_VC_RTR field is TRUE, this VC receiver is ready. The R_VC_RTR field SHALL NOT be set 
+TRUE(1) until after a corresponding S_VC_RTS is set TRUE by the remote link partner. If R_VC_RTR 
+transitions to FALSE(0), the sender SHALL stop using CBFC credits to qualify transmission of packets on 
+this VC. 
+5.3.2.2.15.3 R_VcID 
+The 5-bit R_VcID field indicates the receive VC number configured by the parameters in R_VCn. VC 
+numbers range from 0 to 31. Implementations are not required to support all 32 possible VCs. 

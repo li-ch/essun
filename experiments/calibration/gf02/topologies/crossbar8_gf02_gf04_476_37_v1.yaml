@@ -1,0 +1,37 @@
+# Calibration-ladder GF-02 topology: fully-connected (crossbar) abstraction
+# of 8 ranks at the GF-04 OPEN-DISCREPANCY BRACKET B = 476.37 B/ns — NOT a
+# GF-02 number: this is the gapfill staging doc's GF-04 figure ("NCCL on
+# single node with 8 GPUs | 476.37 GB/s" busbw, Oracle OCI H100 blog,
+# docs/calibration/anchors_gapfill.md §GF-04), staged UNRESOLVED against
+# GF-02's 360 on the nominally same 8xH100 NVLink class. The staging doc's
+# rule is explicit: "do not average them" — this topology exists so the
+# discrepancy is QUANTIFIED through the identity (executed CCT of the 476.37
+# reading vs the 360 plateau at equal r, M, L), never merged into a target.
+#
+# THE STRUCTURAL FACT this row exists to expose: 476.37 EXCEEDS the
+# per-direction physical aggregate 450 (= 900/2, the anchor's own ceiling
+# arithmetic) by 5.86% — under the single-port injection abstraction no
+# physical B <= 450 can produce busbw 476.37, and every L0 backend declares
+# "in_network_computing" explicitly unsupported. The 360-vs-476.37 split is
+# an ALGORITHM-CLASS axis (ring/simple vs NVLS-class in-switch reduction),
+# outside the L0 input space — recorded as structural blindness, not fitted.
+#
+# HONESTY: B is a SWEPT FREE PARAMETER (A-L0X-BW), never a bridge or a
+# target; 476.37 is GF-04's staged figure fixed BEFORE any model output was
+# read. L = 200 ns is the A-L0X-LAT registry point (KEEP).
+topology_id: crossbar8_gf02_gf04_476_37_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 476.37
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT). Provenance: B = 476.37 B/ns = GF-04's staged 8-GPU H100
+  NCCL busbw (Oracle OCI blog per anchors_gapfill.md §GF-04; confidence
+  M-H there), executed here ONLY as the open-discrepancy bracket against
+  GF-02's 360 plateau — the two anchors are never averaged. L from the
+  free A-L0X-LAT registry point. Values are staged-anchor arithmetic /
+  free-registry points, never our measurements, never tuned.

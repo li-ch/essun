@@ -1,0 +1,44 @@
+ 328 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+The PDS manager pre-processes packets from SES and the network and assigns each to a PDC state 
+machine, or it handles the packet locally if the packet is not associated with a specific PDC. Its functions 
+include:  
+• assign_pdc()  
+o Checks the fields used to assign packets to PDCs (e.g., {JobID, destination FA, traffic 
+class, delivery mode}). 
+o If a PDC already exists, then forward the packet to that PDC. 
+o If a PDC does not exist, then if this is a tx_req then allocate a PDC or if this is a tx_rsp 
+then report the error to SES. 
+• alloc_pdc() 
+o Checks if a PDC is available, allocates a new PDC, and forwards the packet to that PDC 
+state machine for further processing. 
+o If no PDC is available because PDS is  out of resources (OOR), pass SES-generated 
+packets to a pending queue or transmit a NACK for packets received over the network. 
+• free_pdc() 
+o When a PDC is closed, reset all state except PSN as follows: 
+▪ If not using UET security, save last PSN for use in calculating Start_PSN the next 
+time a PDC is allocated (i.e., to assure the next randomly assigned PSN is at least 
+216 distance from the last PSN as described in Section 3.5.8.2). 
+▪ If using UET security and using EXPECTED_0RTT_START for new Start_PSNs, 
+then follow the procedure described in Section 3.5.8.2.1. 
+▪ If using UET security and using RANDOM_1RTT_START for new Start_PSNs, no 
+need to save state, as a random new Start_PSN will be generated during the 
+next PDC creation. 
+• msgmap() 
+o Associates each message ID with a PDC on start of message (som). 
+o All packets in a message go to the same PDC; remove mapping on end of message (eom) 
+or, if locked (e.g., while waiting for read return data), when the unlock event is received. 
+• pend_pkt() 
+o Implements a pending queue that holds up to N packets waiting for PDC resources. 
+o When a packet is pushed to the pending queue, start closing a PDC to allow the PDC to 
+be reallocated; there are many ways this can be implemented. 
+• select_pdc_2close() 
+o Selects a PDC to be closed when there are packets in the pending queue, thus freeing 
+resources to transmit the pending packets. 
+o Ideally an idle PDC is closed, otherwise choose randomly or use an implementation 
+specific policy. 
+o When the number of unallocated PDCs reaches a configured threshold, this function is 
+called to begin closing PDCs. The recently closed PDCs create a pool of available PDCs for 
+packets arriving from SES to new destinations. 
+• chk_pdc() 

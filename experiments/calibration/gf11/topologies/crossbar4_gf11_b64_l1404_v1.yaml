@@ -1,0 +1,28 @@
+# Calibration-ladder GF-11 topology: fully-connected crossbar of 4 ranks at
+# the SoL-TOTAL ALTERNATIVE READING row — B = 64 B/ns, L = 1404 ns.
+#
+# The derived headline row (crossbar4_gf11_b64_l702_v1.yaml) maps the
+# measured speed-of-light bound onto the identity by splitting it across
+# the identity's two phases: L = L_SoL/2 = 702. The ALTERNATIVE reading
+# charges the whole 2-GB200 SoL total (1404 ns = 2 x 306 + 792) as ONE
+# phase's per-pair latency — the x2-class reading of the mapping ambiguity
+# (the same ambiguity class the corpus records on direction splits). Both
+# readings are executed as their own rows, neither adjudicated; under this
+# row the identity's latency term is 2808 ns at every payload. 1404 sits
+# inside the declared free range [10, 2000] at 351/500 of its upper. Same
+# honesty rules as crossbar4_gf11_b64_l702_v1.yaml.
+topology_id: crossbar4_gf11_b64_l1404_v1
+topology_class: fully_connected_crossbar
+ranks: 4
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 1404
+notes: >
+  Single non-blocking switch-stage abstraction carrying the GF-11 measured
+  speed-of-light AllReduce bound (1404 ns on 2 GB200s = 2 x 306 + 792,
+  arXiv:2607.16100) as ONE phase's uniform per-pair latency — the
+  alternative (x2-class) reading of the SoL-to-identity mapping. Identity
+  t = 3M/128 + 2808 at r=4. Alternative-reading row of the GF-11 L-axis
+  sweep. Values are anchor arithmetic / free registry points, never ours,
+  never tuned, never standard-normative.

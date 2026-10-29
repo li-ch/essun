@@ -1,0 +1,42 @@
+ 187 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+transmission requests to the reliability component of PDS, which (if needed) creates and assigns a 
+packet delivery context (PDC) and a congestion control context (CCC) for those packets. PDS is 
+responsible for delivering packets from sender to receiver. PDS implements reliability and is designed to 
+operate on both lossless and best-effort networks. CMS is optimized to support best-effort networks. It 
+manages the assignment of packets to traffic classes. The PDS interfaces with the congestion 
+management sublayer on each packet to determine whether new packets can be sent into the network, 
+as well as an entropy value to be used. Send completion notifications and congestion signals from 
+received packets and ACKs are passed to the congestion management sublayer to manage transmission 
+windows. The TSS performs encryption and authentication at the sender, and decryption and 
+authentication at the receiver, of each packet. The data is then forwarded to the output ports of the 
+fabric interface. 
+3.2.7 Error Handling 
+Each layer may generate errors that are either to be passed to the application through the libfabric 
+bindings (see libfabric mapping Section 2.2.5.6) or to the system administrator through logging or other 
+alert mechanisms. In UET, only the SES layer interfaces to the application directly; other layer errors are 
+either passed through SES to libfabric or logged in a vendor-specific form. 
+3.3 Profiles and Capabilities [normative] 
+UET covers various application use cases utilizing different communication libraries and services with 
+differing communication requirements for both HPC and AI. Not all use cases require all semantics, and 
+simplified semantics offer opportunities to specialize and optimize hardware. Thus, UET defines four 
+profiles called HPC, AI Base, AI Full, and Unified Local respectively. The HPC profile supports full-fledged 
+HPC semantics and supports a wide range of applications. The AI Base profile is specialized to support 
+*CCL and unreliable datagram communication focusing on minimal implementation complexity. The AI 
+Full profile is intended to support all AI training and AI inferencing requirements to serve that emerging 
+market most effectively. The Unified Local profile defines an efficient header format for high efficiency 
+over the wire in local scale-up networking contexts. A specific endpoint implementation can support any 
+single profile or any combination of the four profiles. However, communication between two endpoints 
+requires that those endpoints both support the same profile. 
+Within each profile, specific features of the protocol may be defined as being optional. For example, all 
+profiles define encryption as optional. This means that devices choosing to implement a profile would 
+implement the upper layers of semantics with or without encryption, and then a deployment could 
+decide whether to enable encryption. A device that does not implement encryption can be compliant to 
+a profile, and deployments using that device could not enable encryption. Yet, communication between 
+devices of the same profile shall be possible through the least common denominator feature set. 
+The following specifies the UET features included in each of the profiles. The keyword “MUST” indicates 
+that a feature must be implemented. If a cell is empty, it means that the feature does not have to be 
+supported, but vendors are free to support it in enhanced profiles (e.g., AI Base + Read). In this case, 
+vendors should be sure to track all dependencies. Optional features may be disabled at runtime. That 
+means that an implementation declaring support for AI Base may implement all features (which would 

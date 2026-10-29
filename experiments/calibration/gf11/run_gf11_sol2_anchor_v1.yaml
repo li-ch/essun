@@ -1,0 +1,56 @@
+# Calibration-ladder GF-11 anchor-point RUN #1 (gap-fill
+# anchor): the L0 single-stage crossbar identity at the 2-GPU
+# DECOMPOSITION point — r=2, B=64 B/ns (registry), L=702 ns (the derived
+# per-phase reading of the anchor's measured speed-of-light AllReduce
+# bound: LL2 RTT 0.306 µs + remote store 0.792 µs => SoL 1.404 µs =
+# 2x306+792 exactly; 1404/2 = 702), payload 128 B (the anchor's "128-B
+# cache-line FP32" granularity — the DECLARED size reading; the per-size
+# table is a figure, ambiguity recorded).
+#
+# ROLE: at r=2 all three corpus L0 identities coincide (t = M/B + 2L), so
+# this run lands the algorithm-free point: exact CCT 1406 ns = 1404 + 2,
+# i.e. the identity reproduces the anchor's MEASURED SoL 1404 ns to within
+# exactly M/B = 2 ns — the residual of the SoL-to-L mapping is the pure
+# wire term BY CONSTRUCTION, demonstrated on a stored run. The measured
+# one-shot kernel's prose-derived 2-GPU time (about 7% overhead =>
+# 37557/25 = 1502.28 ns) sits above this floor by construction; the
+# anchor's "> 1 µs of barrier overhead" lower bound (>= 250/351 ~ 71% of
+# the whole SoL) shows the barrier class alone exceeds the kernel's
+# entire measured 2-GPU overhead (2457/25 ~ 98.28 ns) — recorded
+# arithmetic, not adjudication. Nothing is tuned toward any anchor output.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration candidate must not
+# be linked to any claim (p1 stage boundary: zero claim edits); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the
+# calibration comparison itself is recorded as PROPOSED in
+# results/calibration/ — no label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-GF11-SOL2-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp2_128b.yaml
+infra_graph:
+  path: experiments/calibration/gf11/topologies/crossbar2_gf11_b64_l702_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/gf11/profiles/implementation_profile_l0_crossbar_cal_gf11_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261028
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar2_gf11_b64_l702_v1 (one non-blocking switch stage; r=2 = the anchor's decomposition system (2 GB200 GPUs, LL2 RTT 0.306 µs / remote store 0.792 µs / SoL 1.404 µs); B=64 B/ns = free registry; L=702 ns = the derived per-phase reading SoL/2 — bare-hardware class, no software stack; the SoL-total alternative reading L=1404 is executed as its own sweep row)
+  workload: w1_dense_tp_decode tp2, payload 128 B (the anchor's 128-B cache-line granularity — DECLARED size reading, the per-size table is a figure; ambiguity carried on every CCT comparison)
+  implementation: analytical L0 crossbar identity at the algorithm-free rank (all three L0 chains coincide at r=2); GF-11 comparison is measured-decomposition placement (exact CCT 1406 = SoL 1404 + exactly M/B = 2) — PROPOSED, review required
+evidence_level_requested: E0

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backends — essun</title>
+<meta name="description" content="The essun simulation paths: the analytical L0/L0.5 model family, the pinned ASTRA-sim analytical discrete-event backend, the uet-htsim CMS adapter, and csg-htsim (built, no adapter). Honest capability tables and pinned upstream commits.">
+<link rel="stylesheet" href="style.css">
+<script src="site.js" defer></script>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <span class="brand">
+      <a href="index.html" aria-label="essun home">
+        <svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+          <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+          <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+          <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+          <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+          <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        essun</a>
+    </span>
+    <nav aria-label="Site">
+      <a href="index.html">Home</a>
+      <a href="why.html">Why</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="backends.html" aria-current="page">Backends</a>
+      <a href="standards.html">Standards</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="explorer.html">Explorer</a>
+      <a href="comparison.html">Comparison</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="about.html">About</a>
+    </nav>
+    <span class="nav-ext"><a href="https://github.com/li-ch/essun">GitHub ↗</a></span>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <p class="kicker">Simulation paths</p>
+    <h1>Four backends, one manifest, honest capability tables</h1>
+    <p class="tagline">The experiment manifest names the backend; capability gates reject any (model, topology, workload, observable) pairing the backend does not declare, before any execution. Everything below runs in-process or through a Docker-pinned image — and every row carries its evidence label.</p>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="paths">
+  <p class="kicker">The inventory</p>
+  <h2>The four paths</h2>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Path</th><th>Fidelity</th><th>Execution</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Analytical L0 family</strong> — ring, crossbar, 2D torus, recursive-doubling, phase collectives (ReduceScatter + AllGather)</td>
+        <td>Closed-form bandwidth/latency identities, exact-<code>Fraction</code> arithmetic throughout; capability-declared limits (e.g. <code>A-L*-DIV</code> divisibility guards); golden test per model with hand-derived expectations</td>
+        <td>In-process Python via <code>make run</code>; no Docker</td>
+        <td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td>
+      </tr>
+      <tr>
+        <td><strong>L0.5 compute-term model</strong></td>
+        <td>Serialized-ring AllReduce identity t = 2(r−1)(c/I + c/B + L) with c = M/r; converges exactly to the L0 identity as I→∞; carries its own assumptions file</td>
+        <td>Golden-tested in the suite; deliberately not registered in the run path (its registration is a separate capability-gated step) — exercised through the atlas cell runners</td>
+        <td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td>
+      </tr>
+      <tr>
+        <td><strong>ASTRA-sim analytical</strong> (<code>astra_sim_analytical</code>)</td>
+        <td>Discrete-event, collective-level, analytical network frontend; W1 manifest translation with a 10-entry translation-assumptions registry</td>
+        <td>Docker image <code>essun/astra-sim-analytical:s1</code> (id <code>sha256:bb02b612…</code>, ~1.3 GB, local-only), pinned to upstream commit <code>4ce9ecf</code>; reachable via <code>make run</code></td>
+        <td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span></td>
+      </tr>
+      <tr>
+        <td><strong>uet-htsim CMS</strong> (<code>uet_htsim_cms</code>) — the third backend</td>
+        <td>Discrete-event packet-level simulator for UEC congestion management; AllReduce translated by chunked-ring wire-pattern decomposition onto point-to-point flows; emits only the observables it can support honestly (O-CCT; no byte-ledger conservation claim)</td>
+        <td>Docker image <code>essun/uet-htsim:s1</code> (id <code>sha256:7eafbdd3…</code>, local-only), pinned to upstream commit <code>65ea315b</code>; reachable via <code>make run</code> (<code>experiments/vertical_slice/w1_decode_smoke_uet.yaml</code>)</td>
+        <td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> (ratified 2026-10-29 per the decision record ADR-0004)</td>
+      </tr>
+      <tr>
+        <td><strong>csg-htsim</strong> — built, no adapter yet</td>
+        <td>Packet/flow-level TCP-style simulator (the HTSim variant ASTRA-sim integrates)</td>
+        <td>Built in Docker with an execution-verified runbook; upstream run-to-run nondeterminism root-caused (<code>srand(time(NULL))</code> feeding queue-drop decisions) and an env-seeded one-line patch recorded; no essun adapter written</td>
+        <td><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span>; the patch's narrow two-run byte-identity claim is <span class="label label-verified">VERIFIED</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">The L0.5 row is listed alongside the four executable paths because it is a model in the family; the four <em>execution</em> paths are the L0 family, ASTRA-sim analytical, uet-htsim CMS, and csg-htsim (the last with no adapter yet).</p>
+</section>
+
+<section id="capabilities">
+  <p class="kicker">Declared, or rejected</p>
+  <h2>Capability table (per backend)</h2>
+  <p class="prose">What each registered backend declares today. Anything not listed is rejected loudly at the gate, with the assumption or capability id in the error.</p>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Backend id</th><th>Requires topology class</th><th>Workloads</th><th>Observables</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="n">analytical_l0</td><td class="n">unidirectional_ring</td><td>W1 (AllReduce)</td><td>O-CONSERVATION, O-CCT, O-TRAFFIC-IMBALANCE</td></tr>
+      <tr><td class="n">analytical_l0_crossbar</td><td class="n">fully_connected_crossbar</td><td>W1</td><td>O-CONSERVATION, O-CCT</td></tr>
+      <tr><td class="n">analytical_l0_torus2d</td><td class="n">torus2d_ring_x_ring (with grid:)</td><td>W1</td><td>O-CONSERVATION, O-CCT</td></tr>
+      <tr><td class="n">analytical_l0_recursive_doubling</td><td class="n">fully_connected_exchange</td><td>W1</td><td>O-CONSERVATION, O-CCT</td></tr>
+      <tr><td class="n">analytical_l0_phase_collectives</td><td class="n">unidirectional_ring or fully_connected_exchange</td><td>W2 (ReduceScatter + AllGather phases)</td><td>O-CONSERVATION, O-CCT</td></tr>
+      <tr><td class="n">astra_sim_analytical</td><td class="n">translated W1 topology</td><td>W1</td><td>O-CCT (no byte accounting emitted)</td></tr>
+      <tr><td class="n">uet_htsim_cms</td><td class="n">translated W1 topology (smoke-verified auto 3-tier fat tree)</td><td>W1</td><td>O-CCT (per-flow completion; conservation deliberately not requested — an explicit per-backend gap, not an omission)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">W3 (MoE dispatch/combine) and W5 (PD/KV) generators exist and are tested, but no registered backend executes all-to-all or memory-semantic ops — their manifests are rejected loudly at generator, schema, and run-path levels until an L1/L2 backend exists.</p>
+</section>
+
+<section id="pins">
+  <p class="kicker">External code, treated as untrusted input</p>
+  <h2>Pinned upstream simulators</h2>
+  <p class="prose">External simulators are treated as untrusted input: pinned by commit, license-reviewed before ingestion, built in Docker, and recorded with capability matrices in <code>backends/pins/</code>.</p>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Upstream</th><th>Pinned commit</th><th>License</th><th>Used as</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><a href="https://github.com/astra-sim/astra-sim">ASTRA-sim</a> (2.0)</td><td class="n">4ce9ecf (2026-09-19)</td><td>MIT</td><td>Discrete-event analytical frontend (Docker image <code>essun/astra-sim-analytical:s1</code>)</td></tr>
+      <tr><td><a href="https://github.com/ultraethernet/uet-htsim">uet-htsim</a></td><td class="n">65ea315b (2026-02-11)</td><td>BSD-2-Clause (Ultra Ethernet Transport-WG notice)</td><td>UEC congestion-management simulator, adapted as <code>uet_htsim_cms</code> (image <code>essun/uet-htsim:s1</code>)</td></tr>
+      <tr><td><a href="https://github.com/Broadcom/csg-htsim">csg-htsim</a></td><td class="n">recorded in <code>backends/pins/</code></td><td>BSD-2-Clause</td><td>Built + runbooked with the determinism patch; no essun adapter yet</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Lineage note: csg-htsim is the HTSim variant ASTRA-sim integrates (TCP-style flow simulator); uet-htsim is the separate Ultra Ethernet congestion-management simulator. A weekly scheduled CI workflow rebuilds the repo-owned pinned images from scratch as a drift alarm (no auto-repair, no push).</p>
+</section>
+
+<section id="differences">
+  <p class="kicker">The house rule, with machinery</p>
+  <h2>When backends disagree: classify, do not tune</h2>
+  <p class="prose">The cross-backend difference engine implements the house rule with machinery: exact and bounded obligations, an anti-tuning gate (registered tolerances only), a controlled-comparison gate (workload and topology hashes must match), and capability-gap <code>not_comparable</code> verdicts.</p>
+
+  <div class="stats">
+    <div class="stat"><span class="n">7.404×</span><span class="d">O-CCT gap on the W1 smoke pair (3248 ns vs 24048 ns per op)</span></div>
+    <div class="stat"><span class="n">2</span><span class="d">declared modeling differences (A-AS2-DELAY-POS, A-AS2-MEM-BW)</span></div>
+    <div class="stat"><span class="n">0</span><span class="d">residual after decomposition — nothing left unexplained</span></div>
+    <div class="stat"><span class="n">0</span><span class="d">parameters tuned to make the curves match</span></div>
+  </div>
+
+  <div class="prose">
+    <ul>
+      <li>On the W1 smoke pair (runs <code>146ba565…</code> / <code>c6dc87eb…</code>), the chain O-CCT gap of <strong>7.404x</strong> (3248 ns vs 24048 ns per op) decomposes with <strong>zero residual</strong> into 2 declared modeling differences — a delay-placement difference (<code>A-AS2-DELAY-POS</code>) and a memory-bandwidth term (<code>A-AS2-MEM-BW</code>).</li>
+      <li>No parameter was tuned to make the curves match; the 2 counterexamples were classified and stored in the production <code>counterexamples.jsonl</code>, linked to the run.</li>
+      <li>A follow-up attribution probe on the third backend (a 0.976x ratio) is named in the ADR-0004 ratification record — named as follow-up work, not as a result.</li>
+    </ul>
+    <p>Evidence label for the difference-engine story: <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span>. See the <a href="evidence.html">Evidence page</a> for the full reproducibility mechanism.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-brand">
+      <svg width="18" height="18" viewBox="0 0 26 26" aria-hidden="true" focusable="false">
+        <circle cx="13" cy="13" r="8.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="21.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="4.5" r="1.7" fill="#c46f33"/>
+        <circle cx="7" cy="7" r="1.7" fill="currentColor"/>
+        <circle cx="4.5" cy="13" r="1.7" fill="currentColor"/>
+        <circle cx="7" cy="19" r="1.7" fill="currentColor"/>
+        <circle cx="13" cy="21.5" r="1.7" fill="currentColor"/>
+        <circle cx="19" cy="19" r="1.7" fill="currentColor"/>
+      </svg>
+      essun</p>
+    <p>Executable Specifications for Scale-Up Networking. Code is MIT; documentation, figures, and this site are CC-BY-4.0 (see <a href="about.html#license">licenses</a>).</p>
+    <p><a href="https://github.com/li-ch/essun">github.com/li-ch/essun</a> · Hand-written static HTML + one stylesheet + a few lines of JavaScript: no frameworks, no external fonts, no tracking, fully offline.</p>
+  </div>
+</footer>
+
+</body>
+</html>

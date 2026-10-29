@@ -1,0 +1,27 @@
+ 652 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+5.2.4 CBFC Overview 
+5.2.4.1 General Overview 
+ 
+Figure 5-5 - Basic Packet Data and Credit Update Sequence 
+The sender keeps track of the available buffer space at the receiver in units of credits, and its packet 
+scheduler is allowed to schedule a packet for transmission from a lossless VC queue only when enough 
+buffer space, in credits, is available at the receiver. CBFC messages are used for the return of credits 
+from the receiver to the sender. Credit generation at the receiver is based on port buffer availability in 
+the receiver. 
+5.2.4.2 Cyclic Counters for Tracking Credits with Resiliency 
+Cyclic counters that always increment, with “wrap-around,” are used for resiliency while tracking credits 
+at both the sender and receiver. These cyclic counters wrap around at the modulus of the width of the 
+counter. For example, if a counter is implemented as 10-bit counter with values 0-1023, when 
+incrementing by N, the new value would be: 
+Cnew = (Cold + N) mod 210 
+ 
+To reliably compare two cyclic counter values to determine which is greater, the two counters must 
+have a difference of less than half the counter’s maximum value. This is illustrated in Figure 5-6 for an 
+example of a 10-bit counter with the value 768. A second counter with a value in the range 256-767 is 
+less than 768. A counter in the range 769-1023 or 0-255 is greater than 768. Note that the range of 
+0-255 can represent the values 1024-1279. If one of two counters is always guaranteed to be greater 
+than the other, then the full range can be used. 
+ 
+Figure 5-6 - Cyclic Counter Example 

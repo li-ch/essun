@@ -1,0 +1,63 @@
+ 373 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Name Value Error Type Source 
+Action 
+Description 
+before 
+RETX) 
+UET_UNEXP_EVENT 
+(generic event—
+implementation specific) 
+0x19 PDC_FATAL Close PDC 
+(RETRY) 
+This is unexpected—processing requires an 
+unsupported feature; use this if an event 
+occurs that is unexpected (e.g., something 
+indicating an implementation error—from 
+which the PDC cannot be recovered) 
+UET_RCVR_INFER_LOSS 
+(Section 3.5.15) 
+0x1A NORMAL Retransmit 
+(RETX) 
+Destination infers a PSN was lost and 
+effectively requests retransmission; 
+application specific 
+UET_NO_SES_SYNC_AVAIL 
+(Section 3.5.8.2) 
+0x1B NORMAL Retransmit 
+(RETX) 
+No synchronization tracking state available 
+Reserved for UET 0x1C 
+-0xFC 
+  For future use 
+UET_EXP_NACK_NORMAL 0xFD NORMAL Retransmit 
+(RETX) 
+Experimental code 
+UET_EXP_NACK_ERR 0xFE PDC_ERR Retransmit 
+(RETRY) 
+Experimental code 
+UET_EXP_NACK_FATAL 0xFF PDC_FATAL Close PDC 
+(FAIL) 
+Experimental code 
+Note: 
+• For NACK codes indicating RETX, the source action on a RUD PDC is to retransmit the original packet 
+associated with the PSN (pds.nack_psn). The source action on a ROD or RODL PDC is to support GoBackN 
+retransmission as described in Section 3.5.21.1. If an ACK arrives for a packet before it is retransmitted, 
+retransmission is not done. 
+ 
+Informative Text: 
+SES may indicate to PDS that the packet is to be dropped and NACK’d. When this occurs, typically for 
+some resource exhaustion event, PDS does not mark the PSN as received. Similar to a trim event, the 
+source will retransmit the packet with the original PSN. 
+ 
+PDCs SHOULD map each NACK-based retransmit to a timer based on the NACK code, where the timer 
+controls whether to delay the transmission, and, if so, by how much time. For example, a trimmed 
+packet may be retransmitted immediately (within the constraints of the window/credit of the 
+congestion control algorithm). Alternatively, when no PDC resource is available, it may be desirable to 
+delay retransmission for a couple of RTTs. 
+NACK events, including the NACK code, are reported to CMS. 
+NACKs MUST NOT be marked as trimmable. Trimmed NACKs are dropped. The event SHOULD be 
+counted for diagnostics. NACKs that arrive with a pds.nack_psn field that is out of range MUST NOT be 
+used to update PDC state except for event counters — for example, if the pds.nack_psn field is lower 
+than CACK_PSN or higher than the highest PSN sent on the PDC. 

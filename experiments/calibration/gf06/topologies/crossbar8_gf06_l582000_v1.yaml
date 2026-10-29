@@ -1,0 +1,30 @@
+# Calibration-ladder GF-06 topology: crossbar at r=8, B = 12.5 B/ns,
+# L = 582000 ns — the REACTION-DELAY reading row (N = 512): the anchor's
+# second staged point "0.782 at N=512, corresponding to reaction delays
+# of ... 582 us" with "Maximum FCT increases by ... 1.32x". 582000 =
+# 2 x 291000 EXACTLY (the anchor's delay doubles when N doubles;
+# per-flow coefficient 36375/32 ns identical at both points — see the
+# N=256 sibling row), while the measured max-FCT factor grows only
+# 33/25 / (111/100) = 44/37 ~ 1.19x (exact fraction) — SUB-LINEAR in
+# the delay, further falsifying any static-latency reading of a
+# reaction delay (recorded arithmetic). Same expressiveness honesty and
+# out-of-range flag as the N=256 row: time-varying scheduler state, no
+# L0 input key; static surrogate only; the 1.32x factor's carrier
+# displacement 12.5/(33/25) = 625/66 is non-representable — recorded,
+# not executed. Nothing tuned; no anchor FCT compared to any CCT.
+topology_id: crossbar8_gf06_l582000_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 12.5
+link:
+  pair_latency_ns: 582000
+notes: >
+  Non-blocking single-stage abstraction at the GF-06 anchor sim-config
+  bandwidth (12.5 B/ns) with L set to the anchor's staged CM reaction
+  delay at N=512 (582 us = 582000 ns = exactly 2 x the N=256 delay;
+  static surrogate reading declared, falsified as static semantics by
+  the anchor's own sub-linear 1.32x factor 33/25; outside the free
+  range [10, 2000], recorded). Identity t = 2(r-1)/r*M/B + 2L.
+  Provenance: anchor-staged reaction-delay quote; reading declared.
+  Never our measurements, never tuned.

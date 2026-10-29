@@ -1,0 +1,53 @@
+ 41 
+ 
+Copyright © 2026 Ultra Ethernet ConsortiumTM. All rights reserved. 
+Class Term Description 
+Advanced Encryption Standard 
+(AES) 
+A symmetric encryption algorithm 
+used with AES-GCM. 
+Cryptographic key Either a truly random binary string 
+of a length specified by the 
+cryptographic algorithm or a 
+pseudorandom binary string of the 
+specified length that is 
+computationally indistinguishable 
+from one selected uniformly at 
+random from the set of all binary 
+strings of that length. This 
+definition is from NIST SP800-108. 
+Differential power analysis (DPA) A side-channel attack that involves 
+statistically analyzing power 
+consumption measurements from 
+a cryptosystem. 
+Epoch A key epoch is a subinterval 
+between changes in security 
+association. Key epochs are 
+managed by the SDME to ensure 
+the IV is unique and MAY be used 
+to automatically generate new SDK 
+by using a KDF. 
+Initial secure domain key (SDKi) A symmetric key from the SDKDB. 
+This can be used directly as the 
+SDK or optionally used in a KDF to 
+form the SDK. 
+Galois/Counter Mode (GCM) A mode of operation for 
+symmetric-key cryptographic block 
+ciphers. 
+Galois message authentication 
+code (GMAC) 
+An authentication algorithm used 
+with AES-GCM. 
+Initialization vector (IV) The initial block/condition of the 
+block cipher. 
+Integrity check value (ICV) The checksum calculated by the 
+sender over the AAD and 
+ciphertext and sent with the 
+packet. The receiver uses the ICV 
+to validate the cryptographic 
+integrity of the packet. 
+IPv4SIP IPv4 (RFC 791) source address. 
+IPv6SIP IPv6 (RFC 8200) source address. 
+IPv4DIP IPv4 (RFC 791) destination address. 
+IPv6DIP IPv6 (RFC 8200) destination 
+address. 
