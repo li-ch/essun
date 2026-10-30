@@ -961,3 +961,6 @@ footer {
   .stats { grid-template-columns: repeat(2, 1fr); }
   .ladder .rung .ceiling, .ladder .rung .ny { font-size: 0.56rem; padding: 0.16rem 0.26rem; }
 }
+
+.rung.r-calibrated .meter { background: currentColor; }
+.rung .ny { font-style: italic; }

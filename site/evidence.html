@@ -58,7 +58,7 @@
 <section id="labels">
   <p class="kicker">The vocabulary</p>
   <h2>The evidence vocabulary</h2>
-  <p class="prose">Five labels name what kind of support a claim has. They are a vocabulary, not a ladder to climb: verification, calibration, and independent reproduction are <em>orthogonal dimensions</em> — a calibrated model can still violate its specification, a verified abstraction can predict hardware poorly, and an independently reproduced result can repeat the same modeling mistake. Each dimension is therefore attached to a specific claim and its operating regime, and none subsumes another. The two upper labels carry a <span class="notyet">not yet attained</span> mark — that mark is itself a statement about repository state, and it comes off only with an evidence record to cite.</p>
+  <p class="prose">Five labels name what kind of support a claim has. They are a vocabulary, not a ladder to climb: verification, calibration, and independent reproduction are <em>orthogonal dimensions</em> — a calibrated model can still violate its specification, a verified abstraction can predict hardware poorly, and an independently reproduced result can repeat the same modeling mistake. Each dimension is therefore attached to a specific claim and its operating regime, and none subsumes another. The upper labels carry attainment marks that are statements about repository state: CALIBRATED is attained within one stated domain (the crossbar large-message bandwidth axis, adjudication v0.2), and EXTERNALLY_REPRODUCED is not yet attained. The marks change only with an evidence record to cite.</p>
 
   <div class="cards labelsgrid" style="margin-top:1.4rem">
     <div class="card">
@@ -74,7 +74,7 @@
       <p>Checks pass in declared scope. In this repository's usage: reproduced outside the author's working tree (a human or CI, from a fresh clone).</p>
     </div>
     <div class="card card-notyet">
-      <p><span class="label label-calibrated">CALIBRATED</span> <span class="notyet">not yet attained</span></p>
+      <p><span class="label label-calibrated">CALIBRATED</span> <span class="notyet">attained within domain — one axis (adjudication v0.2)</span></p>
       <p>Held-out empirical validation inside a stated domain. Unused by essun today — nothing in the repository is calibrated against hardware.</p>
     </div>
     <div class="card card-notyet">

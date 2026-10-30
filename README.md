@@ -24,7 +24,7 @@ an immutable run record that anyone can re-derive from a clean clone.
   requirements behind an explicit label: what the spec requires, where it
   leaves implementers free, and what essun does not model.
 - **Trust the honesty machinery.** Every result carries an evidence label;
-  nothing today exceeds `IMPLEMENTED_UNVERIFIED` (we say so plainly);
+  one axis today is CALIBRATED within a stated domain, everything else stays at or below `IMPLEMENTED_UNVERIFIED` (we say which, plainly);
   `make paper-check` mechanically rejects overclaiming vocabulary in the
   documentation.
 
@@ -48,8 +48,11 @@ Docker the demo runs the analytical legs and says exactly what it skipped).
 
 ## What essun does not do
 
-- No hardware calibration yet: results are model outputs, not predictions
-  of any physical system, and the labels say so.
+- One calibrated axis, honestly scoped: the crossbar model's large-message
+  bandwidth axis is CALIBRATED within a stated domain (owner adjudication
+  `docs/calibration/ADJUDICATION_v0.2.md`); every other axis remains a
+  model output, not a prediction of any physical system, and the labels
+  say so.
 - The UEC profile carries one spec-derived constant (a 256-byte credit
   unit, UEC 1.1 §3.6); all performance parameters remain free parameters
   that you set.
