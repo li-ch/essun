@@ -16,7 +16,11 @@ All notable changes to essun. Format adapted from [Keep a Changelog](https://kee
 - **Calibration candidates approved (E1)**: all 26 records approved as E1 candidates with zero claim/label upgrades; GF-06 remains a documented gap pending manual extraction; one exploratory run marked non-authoritative. See `docs/calibration/ADJUDICATION.md`. `no-label` (adjudication record).
 - **Atlas approved as E0 product content**: 30/30 catalog pages. `no-label`.
 
-Everything the repository has ever shipped lives in this section for now: activity spans 2026-10-26 through 2026-10-29, and no release has been cut. This section is the running draft of the v0.1.0 release notes; when v0.1.0 is tagged, the entries below move under that heading unchanged. Nothing in this file is `CALIBRATED` or `EXTERNALLY_REPRODUCED` — the evidence ceiling today is `IMPLEMENTED_UNVERIFIED` (see README, "What the demo does not show").
+### Governance — 2026-10-30
+
+- **Calibration anchor split recorded (S1)**: the 23 integrated anchors partitioned into an 18-anchor calibration set (four regime groups, one per fitting stage S2–S5) and a 4-anchor holdout — CAL-A4 (plan §3.5(b) external check), GF-01 (only measured full-mesh series), GF-03 (next-generation point), GF-11 (current-gen small-message + latency decomposition) — spanning four-plus regimes; GF-06 stays blocked (no numbers exist). Content-addressed record `3862e227…` committed at `experiments/calibration/split/` BEFORE any fitting, with within-series held-out sizes declared (CAL-A3 {16, 32} GiB; GF-04's 16-GPU point) and an immutability guard test; calibration and validation data stay separate. `no-label` (split record; no observable calibrated).
+
+Everything the repository has ever shipped lives in this section for now: activity spans 2026-10-26 through 2026-10-30, and no release has been cut. This section is the running draft of the v0.1.0 release notes; when v0.1.0 is tagged, the entries below move under that heading unchanged. Nothing in this file is `CALIBRATED` or `EXTERNALLY_REPRODUCED` — the evidence ceiling today is `IMPLEMENTED_UNVERIFIED` (see README, "What the demo does not show").
 
 ### Added — simulator core
 
