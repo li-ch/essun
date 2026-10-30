@@ -339,3 +339,83 @@ def test_golden_leg_fires_on_each_tampered_golden() -> None:
     problems = golden_problems(not_a_golden)
     assert any("is not parseable Python" in p for p in problems)
     assert any("never cites the binding id" in p for p in problems)
+
+
+# -- soak seed 2 (2026-10-30): the executed set, pinned at HEAD 62efe17 ------------
+#
+# The legs above prove the property CONSISTENTLY (every executed
+# disposition is covered, nothing shadow, goldens real) for whatever
+# the registries say today.  This section additionally pins the
+# IDENTITY of the executed set at the seed-2 registry — 3
+# simulated_behavior + 1 conformance_test after the G2 credit-family
+# ladder (FC-R02 re-pointed at the automaton, FC-R08/FC-R09 via the
+# L0-TFC bindings, FC-R05 via the built profile's checks) — so an
+# identity drift (a disposition silently flipped, a requirement swapped
+# in or out, a second binding stacked on an executed requirement)
+# fails loudly instead of passing with a different-but-consistent set.
+# If the registry moves LEGITIMATELY, move this snapshot in the SAME
+# commit and say why in it; never flip a disposition to silence it.
+
+
+SEED2_SIMULATED_BEHAVIOR = {"UEC11-FC-R02", "UEC11-FC-R08", "UEC11-FC-R09"}
+SEED2_CONFORMANCE_TEST = {"UEC11-FC-R05"}
+SEED2_BINDINGS = {
+    "UEC11-FC-R02": (
+        "BIND-UEC11-FC-R02-AUTOMATON",
+        "tests/golden/test_credit_automaton_golden.py",
+    ),
+    "UEC11-FC-R08": (
+        "BIND-UEC11-FC-R08-L0TFC",
+        "tests/golden/test_l0_tfc_cell_golden.py",
+    ),
+    "UEC11-FC-R09": (
+        "BIND-UEC11-FC-R09-L0TFC",
+        "tests/golden/test_l0_tfc_pkt_golden.py",
+    ),
+}
+#: The dedicated carrier checks for the one conformance_test
+#: disposition (the built profile may cite the requirement from other
+#: checks too — the flagship FC-R02 check UEC11-CHK-02 also names it —
+#: so the pin is the floor, not the full referencing set).
+SEED2_R05_CARRIER_CHECKS = {"UEC11-CHK-12", "UEC11-CHK-13", "UEC11-CHK-14"}
+
+
+def test_executed_registry_matches_the_seed2_snapshot() -> None:
+    # The re-check against the CURRENT registry: the live executed set
+    # IS the seed-2 snapshot (3 simulated_behavior + 1 conformance_test,
+    # these exact ids), each simulated_behavior carried by exactly ONE
+    # binding naming exactly this golden, and the conformance_test
+    # carried by its dedicated profile checks.
+    live_sb = {req.requirement_id for _, req in simulated_behavior_requirements()}
+    live_ct = {req.requirement_id for _, req in conformance_test_requirements()}
+    assert live_sb == SEED2_SIMULATED_BEHAVIOR, (
+        "the simulated_behavior set moved from the seed-2 snapshot "
+        f"{sorted(SEED2_SIMULATED_BEHAVIOR)} to {sorted(live_sb)} — a "
+        "disposition changed; if it is legitimate, move the snapshot in "
+        "the same commit and justify it there (never flip a disposition "
+        "to silence this)"
+    )
+    assert live_ct == SEED2_CONFORMANCE_TEST, (
+        "the conformance_test set moved from the seed-2 snapshot "
+        f"{sorted(SEED2_CONFORMANCE_TEST)} to {sorted(live_ct)} — a "
+        "disposition changed; if it is legitimate, move the snapshot in "
+        "the same commit and justify it there"
+    )
+    index = simulated_behavior_binding_index()
+    by_id = {b.binding_id: b for b in bindings.BINDINGS}
+    for requirement_id, (binding_id, golden) in SEED2_BINDINGS.items():
+        assert index.get(requirement_id) == [binding_id], (
+            f"{requirement_id} is not carried by exactly one binding "
+            f"{binding_id}: {index.get(requirement_id)}"
+        )
+        assert by_id[binding_id].golden_test == golden
+    checks = _built_profile_checks()
+    referencing = {
+        check_id
+        for check_id, requirement_ids, _ in checks
+        if "UEC11-FC-R05" in requirement_ids
+    }
+    assert SEED2_R05_CARRIER_CHECKS <= referencing, (
+        f"the dedicated FC-R05 carrier checks {sorted(SEED2_R05_CARRIER_CHECKS)} "
+        f"are not all present in the built profile (referencing: {sorted(referencing)})"
+    )
