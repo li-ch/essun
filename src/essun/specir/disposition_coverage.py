@@ -37,6 +37,18 @@ Render with :func:`render_report` (printable text table), get the raw
 structure with :func:`coverage_report`, or run the CLI artifact:
 ``.venv/bin/python tools/disposition_coverage.py`` (``--json`` for
 machine-readable output; also ``make disposition-report``).
+
+Since the credit-family ladder's stage S6 (2026-10-30) the report also
+states the **G2 credit-family ladder window**: the family's disposition
+counts at program start (frozen at commit ``3db1d4e``, re-verified live
+against that tree) versus the counts computed live now, every disposition
+change in the window justified by naming the landed binding or check that
+earned it, and — the point of the section, not an embarrassment — what did
+NOT change: the inventory's STAYS keep their dispositions with the missing
+fidelity named.  The window record is pinned against drift exactly like
+the frozen counts: :func:`credit_family_window` refuses to render when the
+frozen BEFORE plus the named changes no longer reconcile with the live
+registries, so a later promotion must consciously edit the record.
 """
 
 from __future__ import annotations
@@ -79,6 +91,122 @@ UNIFIEDBUS_NOTE = (
     "its design parameters (UBP-P01..P54), dispositioned at ladder S5 "
     "with zero executed — no reviewed binding exists for UnifiedBus"
 )
+
+#: Dotted module of the credit/flow-control family — the G2 ladder window.
+CREDIT_FAMILY_WINDOW_MODULE = "essun.specir.uec_credits_flow_control"
+
+#: One disposition change inside the G2 window: what flipped, and the
+#: landed binding or check (plus its commit) that earned the flip.
+@dataclass(frozen=True)
+class DispositionChange:
+    requirement: str  # requirement id that changed disposition
+    before: str  # disposition before the window
+    after: str  # disposition after the change landed
+    carrier: str  # the binding id or check list that earned it
+    commit: str  # short hash of the commit that landed the carrier
+
+
+#: The program-start record (pre-S2) of the credit/flow-control family:
+#: disposition counts frozen at the S1 inventory commit ``3db1d4e``
+#: (2026-10-30).  S1 changed no disposition, so that tree IS the
+#: pre-ladder state; the counts were re-verified live for the S6 report by
+#: running this same tool on a worktree of that commit.  A stored BEFORE is
+#: unavoidable — history is not importable — but it is pinned against drift:
+#: :func:`credit_family_window` derives the AFTER side live and refuses to
+#: render when BEFORE plus the named changes disagree with the registries
+#: (a later promotion must consciously edit this record, exactly like
+#: ``EXPECTED_COUNTS`` in tests/specir/test_dispositions.py).
+CREDIT_FAMILY_BEFORE_COMMIT = "3db1d4e"
+CREDIT_FAMILY_BEFORE_COUNTS: dict[str, int] = {
+    "constraint": 0,
+    "simulated_behavior": 1,  # the flagship, UEC11-FC-R02
+    "conformance_test": 0,
+    "informational": 33,
+    "unsupported": 32,
+    "not_applicable": 0,
+}
+
+#: The three disposition changes of the window (S2, S3, S4), each with the
+#: binding or check that earned it.  UEC11-FC-R05's carrier is the profile
+#: CHECKS entries, not a binding — the D2 rule keeps conformance_test
+#: requirements out of the bindings registry.
+CREDIT_FAMILY_CHANGES: tuple[DispositionChange, ...] = (
+    DispositionChange(
+        requirement="UEC11-FC-R08",
+        before="informational",
+        after="simulated_behavior",
+        carrier="binding BIND-UEC11-FC-R08-L0TFC",
+        commit="11aec6d",
+    ),
+    DispositionChange(
+        requirement="UEC11-FC-R09",
+        before="unsupported",
+        after="simulated_behavior",
+        carrier="binding BIND-UEC11-FC-R09-L0TFC",
+        commit="c22e256",
+    ),
+    DispositionChange(
+        requirement="UEC11-FC-R05",
+        before="informational",
+        after="conformance_test",
+        carrier="profile checks UEC11-CHK-12/13/14",
+        commit="9af9e33",
+    ),
+)
+
+#: The window's one disposition-preserving event: the flagship's binding
+#: was re-pointed at the exact credit automaton (G8) — before == after, so
+#: the counts do not move, but the executed semantics did, and the report
+#: says so rather than staying silent about it.
+CREDIT_FAMILY_RE_POINT = DispositionChange(
+    requirement="UEC11-FC-R02",
+    before="simulated_behavior",
+    after="simulated_behavior",
+    carrier="binding BIND-UEC11-FC-R02-AUTOMATON (re-pointed from "
+    "BIND-UEC11-FC-R02-L0TFC)",
+    commit="0854a13",
+)
+
+#: The inventory's six CAPABLE-NOT-PLANNED ids: exact arithmetic laws
+#: recorded for a future link-credit track, deliberately not staged in the
+#: G2 ladder.  They are informational today; the window's stays count
+#: subtracts them live and the reconciliation refuses a silent drift.
+CREDIT_FAMILY_CAPABLE_NOT_PLANNED: tuple[str, ...] = (
+    "UEC11-FC-R28",
+    "UEC11-FC-R34",
+    "UEC11-FC-R39",
+    "UEC11-FC-R43",
+    "UEC11-FC-R45",
+    "UEC11-FC-R46",
+)
+
+
+#: The assembled G2 window record (see :func:`credit_family_window`).
+@dataclass(frozen=True)
+class LadderWindow:
+    module: str  # the family's dotted module name
+    before_commit: str  # where the frozen BEFORE was taken
+    before: dict[str, int]  # family counts at program start (frozen)
+    after: dict[str, int]  # family counts now (computed live)
+    profile_before: dict[str, int]  # UEC-profile-wide counts, derived live
+    profile_after: dict[str, int]  # UEC-profile-wide counts, computed live
+    changes: tuple[DispositionChange, ...]  # what moved, and what earned it
+    re_point: DispositionChange  # what did NOT move (binding re-pointed)
+    stays_unsupported: int  # inventory STAYS that remain unsupported
+    stays_informational: int  # inventory STAYS that remain informational
+    capable_not_planned: tuple[str, ...]  # exact laws recorded, not staged
+
+    @property
+    def requirements_total(self) -> int:
+        return sum(self.after.values())
+
+    @property
+    def executed(self) -> int:
+        return sum(self.after[d] for d in EXECUTED_DISPOSITIONS)
+
+    @property
+    def stays_total(self) -> int:
+        return self.stays_unsupported + self.stays_informational
 
 
 def module_disposition_counts(module: object) -> dict[str, int]:
@@ -197,6 +325,132 @@ def coverage_report() -> tuple[ProfileCoverage, ...]:
     return (uec_profile_coverage(), unifiedbus_profile_coverage())
 
 
+def reconcile_window(window: LadderWindow) -> LadderWindow:
+    """Drift gate for the G2 window record — the S6 section's teeth.
+
+    Recomputes everything from the live registries and raises ValueError
+    on any disagreement with the record's frozen side: the BEFORE counts
+    plus the named changes must land exactly on the live family row (so a
+    promotion that did not consciously edit the record fails loudly), the
+    profile-wide BEFORE must equal the live profile totals minus the same
+    deltas (asserting nothing outside the family flipped during the
+    window), every named change's disposition must be what the live
+    registry says, and the capable-not-planned ids must still be
+    informational.  Returns the window unchanged.
+    """
+    uec = uec_profile_coverage()
+    family = next(
+        m for m in uec.modules if m.module == CREDIT_FAMILY_WINDOW_MODULE
+    )
+    live = family.counts
+
+    delta = dict.fromkeys(DISPOSITIONS, 0)
+    for change in window.changes:
+        delta[change.before] -= 1
+        delta[change.after] += 1
+    reconciled = {d: window.before[d] + delta[d] for d in DISPOSITIONS}
+    if reconciled != live:
+        raise ValueError(
+            "credit-family window record is stale: the frozen BEFORE at "
+            f"{window.before_commit} + the named changes give "
+            f"{reconciled}, the live registries say {live} — update "
+            "CREDIT_FAMILY_BEFORE_COUNTS/CREDIT_FAMILY_CHANGES "
+            "consciously, never silently"
+        )
+
+    dispositions = {
+        req.requirement_id: req.disposition
+        for req in importlib.import_module(CREDIT_FAMILY_WINDOW_MODULE).requirements()
+    }
+    for change in (*window.changes, window.re_point):
+        actual = dispositions[change.requirement]
+        if actual != change.after:
+            raise ValueError(
+                f"window record says {change.requirement} is "
+                f"{change.after!r} after {change.commit}, the live "
+                f"registry says {actual!r} — conscious edit required"
+            )
+    stray_capable = [
+        req
+        for req in window.capable_not_planned
+        if dispositions[req] != "informational"
+    ]
+    if stray_capable:
+        raise ValueError(
+            f"capable-not-planned ids are no longer informational: "
+            f"{stray_capable}"
+        )
+    derived_profile_before = {
+        d: uec.total_counts()[d] - delta[d] for d in DISPOSITIONS
+    }
+    if derived_profile_before != window.profile_before:
+        raise ValueError(
+            "credit-family window's profile-wide BEFORE no longer "
+            f"derives: {window.profile_before} vs live-derived "
+            f"{derived_profile_before} — a disposition outside the "
+            "family moved; conscious edit required"
+        )
+    return window
+
+
+def credit_family_window(
+    profiles: tuple[ProfileCoverage, ...] | None = None,
+) -> LadderWindow:
+    """The G2 credit-family ladder window: frozen BEFORE vs live AFTER.
+
+    Every number the S6 section states is derived here, not copied: the
+    AFTER side comes from the live module row inside the report's own UEC
+    profile coverage, the profile-wide BEFORE is the live profile totals
+    minus the named changes' deltas, and the stays counts subtract the six
+    capable-not-planned ids from the live informational column.  The
+    assembled record is then handed to :func:`reconcile_window`, so a
+    stored table could drift but this cannot.
+    """
+    profiles = coverage_report() if profiles is None else profiles
+    uec = next(
+        (
+            p
+            for p in profiles
+            if any(m.module == CREDIT_FAMILY_WINDOW_MODULE for m in p.modules)
+        ),
+        None,
+    )
+    if uec is None:
+        uec = uec_profile_coverage()
+    family = next(m for m in uec.modules if m.module == CREDIT_FAMILY_WINDOW_MODULE)
+    live = family.counts
+
+    return reconcile_window(
+        LadderWindow(
+            module=CREDIT_FAMILY_WINDOW_MODULE,
+            before_commit=CREDIT_FAMILY_BEFORE_COMMIT,
+            before=dict(CREDIT_FAMILY_BEFORE_COUNTS),
+            after=dict(live),
+            profile_before={
+                d: uec.total_counts()[d] - _change_delta(d) for d in DISPOSITIONS
+            },
+            profile_after=dict(uec.total_counts()),
+            changes=CREDIT_FAMILY_CHANGES,
+            re_point=CREDIT_FAMILY_RE_POINT,
+            stays_unsupported=live["unsupported"],
+            stays_informational=live["informational"]
+            - len(CREDIT_FAMILY_CAPABLE_NOT_PLANNED),
+            capable_not_planned=CREDIT_FAMILY_CAPABLE_NOT_PLANNED,
+        )
+    )
+
+
+def _change_delta(disposition: str) -> int:
+    """Signed count of the named changes into/out of one disposition."""
+    delta = 0
+    for change in CREDIT_FAMILY_CHANGES:
+        if change.before == disposition:
+            delta -= 1
+        if change.after == disposition:
+            delta += 1
+    return delta
+
+
 def _wrap_note(note: str, width: int, indent: str) -> list[str]:
     words, lines, current = note.split(), [], ""
     for word in words:
@@ -272,6 +526,67 @@ def render_profile(profile: ProfileCoverage) -> list[str]:
     return out
 
 
+def _counts_phrase(counts: dict[str, int]) -> str:
+    """'33 informational / 32 unsupported / 1 simulated_behavior — 1/66
+    executed' — nonzero dispositions in registry order plus the executed
+    fraction; the tables above and ``--json`` keep all six columns."""
+    parts = [f"{counts[d]} {d}" for d in DISPOSITIONS if counts[d]]
+    executed = sum(counts[d] for d in EXECUTED_DISPOSITIONS)
+    total = sum(counts.values())
+    return f"{' / '.join(parts)} — {executed}/{total} executed"
+
+
+def render_credit_family_window(window: LadderWindow) -> list[str]:
+    """The G2 window section of the printable report (S6, 2026-10-30)."""
+    family_name = window.module.rsplit(".", 1)[-1]
+    changes = [
+        f"{c.requirement}: {c.before} -> {c.after}, earned by "
+        f"{c.carrier} ({c.commit})"
+        for c in window.changes
+    ]
+    out = [
+        "credit-family ladder window (G2, 2026-10-30): before/after, and "
+        "what earned each change",
+        "  the BEFORE is the frozen program-start record at commit "
+        f"{window.before_commit} (the S1",
+        "  inventory; S1 changed no disposition), re-verified live "
+        "against that tree for",
+        "  this report; the AFTER is computed live now and the section "
+        "refuses to render if",
+        "  the two sides do not reconcile. Zero columns are omitted from "
+        "these summary lines",
+        "  only.",
+        f"  family {family_name} ({window.requirements_total} requirements):",
+        f"    before: {_counts_phrase(window.before)}",
+        f"    after:  {_counts_phrase(window.after)}",
+        f"  profile-wide UEC 1.1 ({sum(window.profile_after.values())} "
+        "requirements):",
+        f"    before: {_counts_phrase(window.profile_before)}",
+        f"    after:  {_counts_phrase(window.profile_after)}",
+        "  every disposition change in the window, justified by what landed:",
+        *(f"    {line}" for line in changes),
+        f"    {window.re_point.requirement}: {window.re_point.after} "
+        "(disposition unchanged); executed semantics re-pointed at "
+        f"{window.re_point.carrier} ({window.re_point.commit})",
+        "  what did NOT change is the point of this section, not an "
+        "embarrassment:",
+        f"    {window.stays_total} of the family's "
+        f"{window.requirements_total - window.executed} non-executed "
+        "requirements are the inventory's STAYS —",
+        f"    {window.stays_unsupported} unsupported + "
+        f"{window.stays_informational} informational, every one with its "
+        "missing fidelity named",
+        "    in experiments/uec/credit_family_inventory.md. The other "
+        f"{len(window.capable_not_planned)} are the capable-not-planned",
+        "    exact arithmetic laws ("
+        + ", ".join(req.replace("UEC11-", "") for req in window.capable_not_planned)
+        + ") recorded for a future",
+        "    link-credit track.",
+        "    Unsupported is a valid, visible answer; honesty outranks coverage.",
+    ]
+    return out
+
+
 def render_report(profiles: tuple[ProfileCoverage, ...] | None = None) -> str:
     """The full printable coverage report (D1 gate artifact)."""
     profiles = coverage_report() if profiles is None else profiles
@@ -286,6 +601,8 @@ def render_report(profiles: tuple[ProfileCoverage, ...] | None = None) -> str:
     for profile in profiles:
         lines.append("")
         lines.extend(render_profile(profile))
+    lines.append("")
+    lines.extend(render_credit_family_window(credit_family_window(profiles)))
     lines.extend(
         [
             "",
@@ -301,9 +618,45 @@ def render_report(profiles: tuple[ProfileCoverage, ...] | None = None) -> str:
 def report_json(profiles: tuple[ProfileCoverage, ...] | None = None) -> dict:
     """Machine-readable form of the same report (no rounding, zeros kept)."""
     profiles = coverage_report() if profiles is None else profiles
+    window = credit_family_window(profiles)
     return {
         "dispositions": list(DISPOSITIONS),
         "executed_dispositions": list(EXECUTED_DISPOSITIONS),
+        "credit_family_window": {
+            "module": window.module,
+            "before_commit": window.before_commit,
+            "before_counts": {d: window.before[d] for d in DISPOSITIONS},
+            "after_counts": {d: window.after[d] for d in DISPOSITIONS},
+            "profile_before_counts": {
+                d: window.profile_before[d] for d in DISPOSITIONS
+            },
+            "profile_after_counts": {
+                d: window.profile_after[d] for d in DISPOSITIONS
+            },
+            "changes": [
+                {
+                    "requirement": c.requirement,
+                    "before": c.before,
+                    "after": c.after,
+                    "carrier": c.carrier,
+                    "commit": c.commit,
+                }
+                for c in window.changes
+            ],
+            "binding_re_point": {
+                "requirement": window.re_point.requirement,
+                "before": window.re_point.before,
+                "after": window.re_point.after,
+                "carrier": window.re_point.carrier,
+                "commit": window.re_point.commit,
+            },
+            "stays": {
+                "unsupported": window.stays_unsupported,
+                "informational": window.stays_informational,
+                "total": window.stays_total,
+            },
+            "capable_not_planned": list(window.capable_not_planned),
+        },
         "profiles": [
             {
                 "profile": p.profile,

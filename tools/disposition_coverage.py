@@ -10,7 +10,11 @@ not_applicable) and the executed fraction — including the UnifiedBus
 paper-derived profile, whose 54 design parameters were dispositioned at
 ladder S5 with zero executed.  Counts are computed live from
 ``src/essun/specir``; ``unsupported`` is printed plainly, because honesty
-outranks coverage.
+outranks coverage.  Since the credit-family ladder's S6 (2026-10-30) the
+report closes with the G2 credit-family ladder window: before/after counts
+(frozen program-start record vs live), every disposition change justified
+by the landed binding or check that earned it, and the stays stated
+plainly.
 
 Usage::
 
