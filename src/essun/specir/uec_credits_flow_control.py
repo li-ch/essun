@@ -110,12 +110,18 @@ _REQUIREMENTS: tuple[UECRequirement, ...] = (
         keyword="MUST NOT",
         subject="TFC",
         # Promoted unsupported -> simulated_behavior 2026-10-29 (flagship
-        # slice, design doc D1 build order item 2): bound to the analytical
-        # TFC-window backend by binding BIND-UEC11-FC-R02-L0TFC
-        # (essun.specir.bindings); golden test tests/golden/test_l0_tfc_golden.py.
-        # The promotion is a claim about the binding (the requirement's
-        # admission law causally affects backend outputs through
-        # tfc.window_bytes), NOT a physical-validity claim.
+        # slice, design doc D1 build order item 2): originally bound to
+        # the analytical TFC-window backend by binding
+        # BIND-UEC11-FC-R02-L0TFC; RE-POINTED 2026-10-30 (G8) at the
+        # credit obligation automaton by binding
+        # BIND-UEC11-FC-R02-AUTOMATON (essun.specir.bindings) — the
+        # exact discrete admission machine is the executed semantics and
+        # the analytical Eq. 3 identity its declared steady-state
+        # abstraction; golden test
+        # tests/golden/test_credit_automaton_golden.py. The promotion is
+        # a claim about the binding (the requirement's admission law
+        # causally affects outputs through the automaton's credit
+        # balance), NOT a physical-validity claim.
         disposition="simulated_behavior",
         statement=(
             "A source must not transmit a packet if it does not have "

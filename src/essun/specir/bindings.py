@@ -21,18 +21,32 @@ It is NOT a claim of physical validity: no model here is calibrated
 against UEC hardware, and the binding's numeric parameters are FREE
 except where a spec-derived constant is named with its requirement id.
 
-The flagship binding (build order item 2, 2026-10-29)
+The flagship binding (build order item 2, 2026-10-29; RE-POINTED at the
+credit automaton by G8, 2026-10-30)
 -----------------------------------------------------
 
 **UEC11-FC-R02** — UEC 1.1 §3.6.15 Transport Flow Control, MUST NOT: "a
 source must not transmit a packet if it does not have credit" — the
-admission law of UEC's end-to-end flow control. Bound to
-``analytical_l0_tfc`` (``src/essun/backends/analytical/l0_tfc.py``): a
-per-pair credit window ``tfc.window_bytes`` caps each ring neighbor
-pair's steady rate at ``W / (L + L_cr)``; the ring AllReduce completion
-time (O-CCT) changes exactly when the window falls below the
-bandwidth-delay product, and converges to the landed L0 identity exactly
-at ``W >= B * (L + L_cr)``.
+admission law of UEC's end-to-end flow control. Originally bound
+directly to ``analytical_l0_tfc``; since G8 the binding's backend is the
+**credit obligation automaton**
+(``src/essun/specir/credit_automaton.py``): an exact discrete state
+machine (per-link credit balance; transmit consumes; return events
+restore; a transmit without credit is a REJECTED trace; integer
+arithmetic) — the behavioral ground truth the requirement text actually
+prescribes. The analytical credit-window ring — the steady-state rate
+law ``Reff = min(B, W/(L+L_cr))``, ring completion
+``t = 2*(r-1)/r * M / min(B, W/(L+L_cr)) + 2*(r-1)*L``, paper Eq. 3 —
+is now the binding's DECLARED ABSTRACTION
+(:attr:`RequirementBinding.steady_state_abstraction`, checked two-sided
+against ``l0_tfc.GROUND_TRUTH_AUTOMATON``): Eq. 3 equals the automaton's
+steady state under stated, tested conditions (whole-packet credit grants
+``s | W``, integral serialization, greedy work-conserving sender, fixed
+credit-loop delay ``D = L + L_cr``; finite collectives diverge by exact
+closed forms, less than one credit-loop round trip) — the G6 correction,
+executable: the rate law is an abstraction with conditions, not a
+consequence of FC-R02's safety rule alone. Golden-tested (hand-derived
+traces) in ``tests/golden/test_credit_automaton_golden.py``.
 
 The credit-family S2 binding (G2 ladder, 2026-10-30)
 -----------------------------------------------------
@@ -140,38 +154,68 @@ class RequirementBinding:
     spec_derived_constants: tuple[tuple[str, str, str], ...]
     #: Where the executed golden test lives.
     golden_test: str
+    #: G8 (2026-10-30): the (module, backend_id) of the DECLARED
+    #: steady-state abstraction when the binding's backend is an exact
+    #: machine the abstraction summarizes — checked two-sided (the
+    #: abstraction module must name the binding's backend module as its
+    #: ground truth and carry the same requirement id). ``None`` for
+    #: bindings whose backend IS the analytical law.
+    steady_state_abstraction: tuple[str, str] | None = None
     notes: str = ""
 
 
-BINDING_UEC11_FC_R02_L0TFC = RequirementBinding(
-    binding_id="BIND-UEC11-FC-R02-L0TFC",
+#: The flagship binding, re-pointed at the automaton by G8 (2026-10-30):
+#: the admission law executes as an exact discrete credit machine; the
+#: analytical credit-window ring (paper Eq. 3) is its declared
+#: steady-state abstraction. The historical direct binding
+#: ``BIND-UEC11-FC-R02-L0TFC`` (2026-10-29) executed the same law as the
+#: closed-form identity; its evidence run ``dc7d83b6…`` and goldens
+#: (tests/golden/test_l0_tfc_golden.py) remain the abstraction layer's
+#: own record, unchanged.
+BINDING_UEC11_FC_R02_AUTOMATON = RequirementBinding(
+    binding_id="BIND-UEC11-FC-R02-AUTOMATON",
     requirement_id="UEC11-FC-R02",
     anchor_ids=("UEC11-S3.6.15-TFC",),
     disposition="simulated_behavior",
-    backend_module="essun.backends.analytical.l0_tfc",
-    backend_id="analytical_l0_tfc",
-    capability="tfc_credit_windowed_ring",
-    parameters=("tfc_window_bytes", "tfc_credit_return_latency_ns"),
+    backend_module="essun.specir.credit_automaton",
+    backend_id="credit_admission_automaton",
+    capability="tfc_credit_admission_automaton",
+    parameters=("window_bytes", "credit_return_latency_ns", "packet_bytes"),
     parameter_effect=(
-        "effective per-link rate = min(B, W / (L + L_cr)); ring AllReduce "
-        "completion t = 2*(r-1)/r * M / min(B, W/(L+L_cr)) + 2*(r-1)*L"
+        "UEC11-FC-R02 as the admission transition of a per-link credit "
+        "machine: attempt(t, s) applies returns due, then transmits iff "
+        "credit >= s (credit -= s; return scheduled at t + (L + L_cr)); "
+        "a transmit without credit is a REJECTED trace. Greedy steady "
+        "rate = min(B, floor(W/s)*s/(L+L_cr)), link-saturated iff "
+        "ceil((L+L_cr)*B/s) <= floor(W/s)"
     ),
     enforced_invariants=(
-        "peak in-flight bytes toward one CCC destination = "
-        "min(B,L_rate-cap) * RTT <= W always (equality iff window-limited)",
-        "tfc_window_bytes must be an integral number of 256-byte credit "
+        "credit balance in [0, W] at every step and credit + owed == W "
+        "exactly (integer-byte conservation, re-derivable every step)",
+        "a transmit without credit never executes — the trace is "
+        "rejected and the state is unchanged (the MUST NOT, structural)",
+        "window_bytes must be an integral number of 256-byte credit "
         "units; non-grantable windows are rejected at load time",
     ),
-    observable_ids=("O-CCT", "O-CONSERVATION"),
+    observable_ids=("O-CCT",),
     spec_derived_constants=(
         ("tfc_credit_unit_bytes", "256", "UEC11-FC-R05"),
     ),
-    golden_test="tests/golden/test_l0_tfc_golden.py",
+    golden_test="tests/golden/test_credit_automaton_golden.py",
+    steady_state_abstraction=(
+        "essun.backends.analytical.l0_tfc",
+        "analytical_l0_tfc",
+    ),
     notes=(
-        "Convergence anchor: at W >= B*(L+L_cr) the identity equals the "
-        "landed L0 ring equation exactly (credits never gate). E0 evidence "
-        "level: identity and determinism only; free parameters B, L, W, "
-        "L_cr are not standard-derived and not measured."
+        "Abstraction (paper Eq. 3, rate law min(B, W/(L+L_cr))): exact "
+        "iff the packet size divides the window (s | W), with finite "
+        "collectives completing EARLIER than the identity predicts by "
+        "exact closed forms ( < one credit-loop round trip D); with "
+        "s not dividing W the rate gap is exactly (W mod s)/D. E0 "
+        "evidence level: exactness and determinism only; free "
+        "parameters B, L, L_cr, W, s are not standard-derived and not "
+        "measured; modeling choices registered in "
+        "experiments/vertical_slice/assumptions_credit_automaton.yaml."
     ),
 )
 
@@ -241,7 +285,7 @@ BINDING_UEC11_FC_R08_L0TFC = RequirementBinding(
 #: tests/specir/test_dispositions.py updated, and the binding's golden
 #: test must be green (the no-silent-promotion gate).
 BINDINGS: tuple[RequirementBinding, ...] = (
-    BINDING_UEC11_FC_R02_L0TFC,
+    BINDING_UEC11_FC_R02_AUTOMATON,
     BINDING_UEC11_FC_R08_L0TFC,
 )
 
@@ -372,6 +416,52 @@ def check_binding(
                 f"{binding.binding_id}: spec-derived constant {name} cites "
                 f"unknown requirement {source_requirement}"
             )
+
+    if binding.steady_state_abstraction is not None:
+        # G8 (2026-10-30): a binding whose backend is an exact machine
+        # must DECLARE its steady-state abstraction, and the declaration
+        # is two-sided: the abstraction module must import, carry the
+        # declared backend id, name the binding's backend module as its
+        # ground truth, and execute the same requirement — so neither
+        # side of the abstraction pair can drift silently.
+        abstraction_module, abstraction_backend_id = (
+            binding.steady_state_abstraction
+        )
+        try:
+            abstraction = importlib.import_module(abstraction_module)
+        except ImportError as exc:
+            problems.append(
+                f"{binding.binding_id}: declared steady-state abstraction "
+                f"module {abstraction_module} does not import: {exc}"
+            )
+        else:
+            if getattr(abstraction, "BACKEND_ID", None) != abstraction_backend_id:
+                problems.append(
+                    f"{binding.binding_id}: declared abstraction backend id "
+                    f"{abstraction_backend_id!r} != module's "
+                    f"{getattr(abstraction, 'BACKEND_ID', None)!r}"
+                )
+            if (
+                getattr(abstraction, "GROUND_TRUTH_AUTOMATON", None)
+                != binding.backend_module
+            ):
+                problems.append(
+                    f"{binding.binding_id}: declared abstraction "
+                    f"{abstraction_backend_id} does not name "
+                    f"{binding.backend_module} as its ground truth "
+                    "(GROUND_TRUTH_AUTOMATON) — the abstraction pair is "
+                    "not reciprocal"
+                )
+            if (
+                getattr(abstraction, "REQUIREMENT_ID", None)
+                != binding.requirement_id
+            ):
+                problems.append(
+                    f"{binding.binding_id}: declared abstraction "
+                    f"{abstraction_backend_id} executes requirement "
+                    f"{getattr(abstraction, 'REQUIREMENT_ID', None)!r} "
+                    f"!= {binding.requirement_id!r}"
+                )
     return problems
 
 

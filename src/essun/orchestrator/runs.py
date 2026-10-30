@@ -139,10 +139,14 @@ DISPATCH = {
     },
     l0_tfc.BACKEND_ID: {
         # Flagship slice (D1 build order item 2): the TFC credit-windowed
-        # ring executes UEC requirement UEC11-FC-R02 (binding
-        # BIND-UEC11-FC-R02-L0TFC, essun.specir.bindings). Only its own
-        # topology class loads — an unbound ring must not silently run
-        # windowed and a TFC window must not silently vanish.
+        # ring — since G8 (2026-10-30) the DECLARED steady-state
+        # abstraction of the credit obligation automaton, which executes
+        # UEC requirement UEC11-FC-R02 (binding
+        # BIND-UEC11-FC-R02-AUTOMATON, essun.specir.bindings; the
+        # historical direct binding was BIND-UEC11-FC-R02-L0TFC). Only
+        # its own topology class loads — an unbound ring must not
+        # silently run windowed and a TFC window must not silently
+        # vanish.
         "unidirectional_ring_tfc_window": (l0_tfc.load_tfc_config, l0_tfc.execute),
     },
 }

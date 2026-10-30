@@ -18,7 +18,7 @@ Division of content (the honesty contract of this migration):
   this is a migration, not a re-adjudication), ``freedom`` (all 67 free
   parameters), ``bindings`` (the live
   :data:`essun.specir.bindings.BINDINGS` registry, currently
-  BIND-UEC11-FC-R02-L0TFC and BIND-UEC11-FC-R08-L0TFC), and the
+  BIND-UEC11-FC-R02-AUTOMATON and BIND-UEC11-FC-R08-L0TFC), and the
   ``source``/``provenance`` identity
   fields, read from the repo license-gate source record
   ``experiments/uec/source_record.yaml`` (verbatim access class; the PDF
@@ -49,6 +49,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import importlib
 from pathlib import Path
 
@@ -78,7 +79,12 @@ PROFILE_ID = "uec-1.1-semantic"
 #: (2026-10-30): the disposition flip (UEC11-FC-R08) plus a new binding is
 #: the bump rules' MAJOR class, which on the 0.x line bumps the MINOR
 #: component (semver 0.x convention: 0.MINOR is the breaking axis).
-PROFILE_VERSION = "0.2.0"
+#: 0.2.0 -> 0.3.0 at G8 (2026-10-30): the UEC11-FC-R02 binding was
+#: RE-POINTED at the credit obligation automaton (its steady-state
+#: abstraction declared as the analytical Eq. 3 backend) — again the
+#: MAJOR "bindings" class (which backend executes which requirement
+#: changed), so the MINOR component bumps once more.
+PROFILE_VERSION = "0.3.0"
 
 #: The executable checks (element 6) — real, existing tests only.  Every
 #: entry names a file that must exist; the conformance test enforces that.
@@ -124,7 +130,9 @@ CHECKS: list[dict] = [
         "kind": "invariant",
         "requirement_ids": ["UEC11-FC-R02"],
         "description": (
-            "binding BIND-UEC11-FC-R02-L0TFC is re-verified against the "
+            "the UEC11-FC-R02 binding (since G8: the credit automaton "
+            "BIND-UEC11-FC-R02-AUTOMATON, its declared steady-state "
+            "abstraction checked two-sided) is re-verified against the "
             "live requirement registry, anchor registry, backend module "
             "(capability, config fields, spec-derived constant) and "
             "observable registry — drift is a hard error, not silent"
@@ -172,6 +180,21 @@ CHECKS: list[dict] = [
             "(re-derived as an exact Fraction identity for every run)"
         ),
         "location": "tests/golden/test_l0_tfc_cell_golden.py",
+    },
+    {
+        "check_id": "UEC11-CHK-08",
+        "kind": "golden",
+        "requirement_ids": ["UEC11-FC-R02"],
+        "description": (
+            "credit obligation automaton hand-derived golden traces "
+            "(G8): the admission machine's burst schedule, the rejected "
+            "trace on a credit-less transmit, the Eq. 3 rate law as the "
+            "automaton's exact steady state when s | W, the "
+            "(W mod s)/D packetization gap at the Eq. 3 convergence "
+            "anchor, and the exact finite-collective divergence closed "
+            "forms (in (-D, 0] credit-gated, 0 link-limited)"
+        ),
+        "location": "tests/golden/test_credit_automaton_golden.py",
     },
 ]
 
@@ -351,6 +374,21 @@ def build_document() -> dict:
                 for name, value, source_requirement in binding.spec_derived_constants
             ],
             "golden_test": binding.golden_test,
+            # G8 (2026-10-30): when the binding's backend is an exact
+            # machine, the (module, backend_id) of its declared
+            # steady-state abstraction ships too — two-sided with the
+            # abstraction module's GROUND_TRUTH_AUTOMATON, re-verified
+            # live by essun.specir.bindings.check_binding.
+            **(
+                {
+                    "steady_state_abstraction": {
+                        "module": binding.steady_state_abstraction[0],
+                        "backend_id": binding.steady_state_abstraction[1],
+                    }
+                }
+                if binding.steady_state_abstraction is not None
+                else {}
+            ),
             "note": binding.notes,
         }
         for binding in BINDINGS
@@ -432,7 +470,13 @@ def validate_document(document: dict) -> list[str]:
     """Every gate the builder itself enforces before writing; [] = valid.
 
     Format (S3 loader), anchor citations against the live registry, and
-    every binding against its declared backend's CAPABILITIES.
+    every binding against its declared backend's CAPABILITIES.  Since G8
+    the profile binds MULTIPLE backends (the credit automaton plus the
+    analytical ring); ``check_bindings_against`` is single-backend by
+    design (the D2 primitive: a profile loading on one engine either
+    matches or fails loudly), so the builder filters the profile to each
+    backend's own bindings before the check — a binding is never judged
+    against a foreign backend's capabilities.
     """
     problems = list(profile_problems(document))
     if problems:
@@ -444,8 +488,12 @@ def validate_document(document: dict) -> list[str]:
         for binding in BINDINGS
     }
     for backend_id in sorted({b.backend for b in profile.bindings}):
+        own = dataclasses.replace(
+            profile,
+            bindings=tuple(b for b in profile.bindings if b.backend == backend_id),
+        )
         problems.extend(
-            check_bindings_against(profile, modules[backend_id].CAPABILITIES)
+            check_bindings_against(own, modules[backend_id].CAPABILITIES)
         )
     return problems
 

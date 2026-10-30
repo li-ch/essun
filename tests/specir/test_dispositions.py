@@ -71,8 +71,10 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
         "unsupported": 32,
         # Flagship slice 2026-10-29 (design doc D1 build order item 2):
         # UEC11-FC-R02 (TFC admission law) promoted to simulated_behavior
-        # via binding BIND-UEC11-FC-R02-L0TFC (essun.specir.bindings);
-        # golden test tests/golden/test_l0_tfc_golden.py.
+        # via binding BIND-UEC11-FC-R02-L0TFC (re-pointed at the
+        # credit automaton as BIND-UEC11-FC-R02-AUTOMATON by G8,
+        # 2026-10-30 — same disposition, same requirement, new backend;
+        # golden test tests/golden/test_credit_automaton_golden.py).
         # G2 credit-family ladder S2 (2026-10-30, per the S1 plan in
         # experiments/uec/credit_family_inventory.md): UEC11-FC-R08
         # (ROUNDUP cell-quantized credit consumption) promoted to
@@ -91,7 +93,7 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
 #: registered in essun.specir.bindings whose consistency check is green
 #: (tests/specir/test_bindings.py) — keep this table tiny on purpose.
 PROMOTED: dict[str, str] = {
-    "UEC11-FC-R02": "simulated_behavior",  # BIND-UEC11-FC-R02-L0TFC
+    "UEC11-FC-R02": "simulated_behavior",  # BIND-UEC11-FC-R02-AUTOMATON (G8 re-point)
     "UEC11-FC-R08": "simulated_behavior",  # BIND-UEC11-FC-R08-L0TFC (G2 S2)
 }
 

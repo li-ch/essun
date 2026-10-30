@@ -11,6 +11,15 @@ packet if it does not have credit — the admission law of the whole TFC
 mechanism."*
 The machine-readable binding lives in
 :mod:`essun.specir.bindings` (binding id ``BIND-UEC11-FC-R02-L0TFC``).
+G8 (2026-10-30): the admission law's executed semantics now live one
+level down — the exact discrete **credit obligation automaton**
+(:mod:`essun.specir.credit_automaton`, binding
+``BIND-UEC11-FC-R02-AUTOMATON``) — and THIS backend's steady-state law
+is that automaton's DECLARED abstraction (rate law exact iff the packet
+size divides the window; finite-collective divergence quantified by
+exact closed forms; see the automaton module). This file keeps
+executing the abstraction identity: same law, now justified by the
+machine beneath it instead of standing alone.
 
 Decision relevance (why this requirement and not another): TFC is UEC's
 end-to-end flow control — the amount of data a source may have in flight
@@ -149,6 +158,19 @@ TFC_DEST_CELL_SIZE_MAX_BYTES = 9216
 TFC_DEST_CELL_SIZE_GRANULARITY_BYTES = 256
 
 #: The bindings this backend executes (essun.specir.bindings).
+#:
+#: G8 (2026-10-30): UEC11-FC-R02's simulated_behavior binding was
+#: RE-POINTED at the credit obligation automaton
+#: (essun.specir.credit_automaton, BIND-UEC11-FC-R02-AUTOMATON): the
+#: exact discrete machine is the executed semantics, and THIS identity
+#: (the steady-state law below, paper Eq. 3) is the binding's DECLARED
+#: abstraction of it — verified live by the binding check through the
+#: reciprocal constant GROUND_TRUTH_AUTOMATON below. The historical id
+#: BIND-UEC11-FC-R02-L0TFC remains this module's own provenance label in
+#: stored run records (incl. the flagship run dc7d83b6…, which reproduces
+#: unchanged); the UEC11-FC-R08 binding below is unaffected by the
+#: re-point (it binds THIS backend directly).
+GROUND_TRUTH_AUTOMATON = "essun.specir.credit_automaton"
 BINDING_ID = "BIND-UEC11-FC-R02-L0TFC"
 REQUIREMENT_ID = "UEC11-FC-R02"
 CREDIT_UNIT_REQUIREMENT_ID = "UEC11-FC-R05"

@@ -422,10 +422,12 @@ O_CCT = register(
             "l0_torus2d.py, l0_recursive_doubling.py, "
             "l0_phase_collectives.py; plus the TFC credit-window variant "
             "t = 2*(r-1)/r * M/min(B, W/(L+L_cr)) + 2*(r-1)*L with FREE "
-            "window W and credit-return latency L_cr (l0_tfc.py — executes "
-            "UEC requirement UEC11-FC-R02 via binding "
-            "BIND-UEC11-FC-R02-L0TFC; the 256-byte credit unit is the one "
-            "spec-derived constant, UEC11-FC-R05)"
+            "window W and credit-return latency L_cr (l0_tfc.py — since G8 "
+            "the declared steady-state abstraction of the credit "
+            "obligation automaton, which executes UEC requirement "
+            "UEC11-FC-R02 via binding BIND-UEC11-FC-R02-AUTOMATON; the "
+            "256-byte credit unit is the one spec-derived constant, "
+            "UEC11-FC-R05)"
         ),
     )
 )

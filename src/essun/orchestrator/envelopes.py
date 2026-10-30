@@ -22,7 +22,9 @@ The four sweep-registered L0 algorithms are taken from the sweep runner's
 own ``ALGORITHMS`` registry (they cannot drift); the envelope adds the two
 ring refinements the sweep runner deliberately does not dispatch — the
 L0.5 serialized ring and the UEC TFC credit-window ring (the UEC profile's
-flagship ``simulated_behavior``, binding ``BIND-UEC11-FC-R02-L0TFC``).
+flagship ``simulated_behavior``: since G8 the credit automaton binding
+``BIND-UEC11-FC-R02-AUTOMATON`` executes UEC11-FC-R02 and this ring is
+its declared steady-state abstraction).
 
 Every emitted value is the output of the REAL backend's ``execute`` (the
 same code the run path and sweeps use), so per-point evaluation carries

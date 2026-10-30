@@ -1,0 +1,106 @@
+# Assumption registry for the credit obligation automaton (G8, binding
+# BIND-UEC11-FC-R02-AUTOMATON, src/essun/specir/credit_automaton.py).
+# Per-model file (same house rule as assumptions_tfc.yaml: unrelated
+# additions cannot shift other models' run identities; the automaton is
+# not a run-producing backend, its file records its modeling choices).
+#
+# PROVENANCE NOTE: the ONLY standard-derived value is the 256-byte
+# credit unit (UEC 1.1 §3.6.15, requirement UEC11-FC-R05, anchor
+# UEC11-S3.6.15-TFC), carried as the named constant
+# TFC_CREDIT_UNIT_BYTES in the automaton module — it is NOT an
+# assumption. Every entry below is a free modeling choice of the
+# automaton (the paper-draft G6 correction: Eq. 3's rate law is NOT a
+# consequence of FC-R02's safety rule alone; it needs C1-C4 below, and
+# the completion identity needs C5).
+assumptions_id: assumptions_credit_automaton_v1
+status: PROPOSED
+assumptions:
+  - id: A-CA-INIT
+    parameter: model.initial_credit
+    value: full_window_at_t0
+    unit: none
+    range: [full_window_at_t0, partial_grant]
+    rationale: >
+      The credit balance starts at exactly the granted window W at
+      t=0 (the steady granted-window abstraction, same reading as the
+      analytical backend; UEC11-FC-R14's initial-credit floor governs
+      NO_OP bring-up which the automaton does not model). A partial
+      initial grant would only delay the first burst, not change the
+      steady state.
+    sensitivity: startup transient only; zero for steady-state rate
+    owner: g8-automaton
+    review: PROPOSED
+  - id: A-CA-RT
+    parameter: model.credit_return_timing
+    value: admission_instant_plus_L_plus_Lcr
+    unit: none
+    range: [admission_instant_plus_L_plus_Lcr, completion_plus_L_plus_Lcr]
+    rationale: >
+      A return event restores a transmit's bytes exactly D = L + L_cr
+      nanoseconds AFTER THE ADMISSION INSTANT: data forward one hop L,
+      then credit return L_cr — the credit-loop round trip of the
+      analytical rate cap. The alternative (credit measured from
+      serialization completion, +s/B) would move the convergence
+      boundary to W >= s + B*(L+L_cr) and Eq. 3 would not be the
+      abstraction at its own anchor; the chosen reading is the one the
+      declared abstraction is built on, stated here instead of
+      smuggled in.
+    sensitivity: high (D scales the steady rate in the gated regime)
+    owner: g8-automaton
+    review: PROPOSED
+  - id: A-CA-SER
+    parameter: model.serialization_grid
+    value: integer_ns_s_div_B
+    unit: none
+    range: [integer_ns_s_div_B, fractional_ns]
+    rationale: >
+      The automaton keeps an integer-nanosecond event grid, so one
+      packet's serialization s/B must be a whole number of ns
+      (load-time guard); exact fractional-time generalization is
+      mechanical but would leave the integer-arithmetic contract.
+    sensitivity: rejection-only guard (no numeric sensitivity)
+    owner: g8-automaton
+    review: PROPOSED
+  - id: A-CA-GRAN
+    parameter: model.credit_consumption_granularity
+    value: byte_exact
+    unit: none
+    range: [byte_exact, cell_quantized_FCR08]
+    rationale: >
+      A transmit consumes exactly its packet_bytes of credit (byte
+      accounting; the packet size itself need not be a credit-unit
+      multiple). Cell-quantized consumption (UEC11-FC-R08,
+      credit_used = ROUNDUP(pkt/cell)*cell) is deliberately NOT
+      assumed: it is staged as its own binding on the analytical
+      backend by the credit-family ladder (S2), and layering it here
+      would pre-empt that disposition.
+    sensitivity: zero in this automaton; nonzero once FC-R08 lands
+    owner: g8-automaton
+    review: PROPOSED
+  - id: A-CA-GREEDY
+    parameter: model.achieving_schedule
+    value: greedy_work_conserving
+    unit: none
+    range: [greedy_work_conserving, paced_or_jittered]
+    rationale: >
+      The abstraction theorem's achievability leg (clause 2) and the
+      divergence closed forms (clause 4) are stated for the greedy
+      work-conserving sender: transmit whenever the link is free AND
+      credit admits. The safety bound (clause 1) holds for ANY legal
+      trace; greedy is the schedule that attains the bound, so the
+      rate law min(B, floor(W/s)*s/D) is the maximum legal rate.
+    sensitivity: defines the achieving schedule; other legal traces run slower
+    owner: g8-automaton
+    review: PROPOSED
+  - id: A-CA-DIV
+    parameter: model.transfer_divisibility
+    value: whole_packets
+    unit: none
+    range: [whole_packets, ragged_tail]
+    rationale: >
+      Transfers are whole packets (total_bytes % packet_bytes == 0,
+      run guard named A-CA-DIV in errors). A ragged final packet
+      changes only the tail divergence's r-term, not the steady state.
+    sensitivity: rejection-only guard (no numeric sensitivity)
+    owner: g8-automaton
+    review: PROPOSED

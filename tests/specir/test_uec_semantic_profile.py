@@ -20,10 +20,12 @@ registry.  This file is the migration's conformance gate:
   outside the table);
 - the BINDING check passes against the declared backend: the artifact's
   bindings are exactly the live :data:`essun.specir.bindings.BINDINGS`
-  registry (BIND-UEC11-FC-R02-L0TFC and BIND-UEC11-FC-R08-L0TFC, both on
-  analytical_l0_tfc), and
-  ``check_bindings_against`` is green against the backend's real
-  CAPABILITIES;
+  registry (BIND-UEC11-FC-R02-AUTOMATON on the credit automaton — its
+  declared steady-state abstraction the analytical Eq. 3 backend — and
+  BIND-UEC11-FC-R08-L0TFC on analytical_l0_tfc), and
+  ``check_bindings_against`` is green against each binding's own
+  backend's real CAPABILITIES (per-backend since G8: the profile binds
+  two distinct backends);
 - every anchor citation resolves in the live UEC anchor registry
   (provenance preserved, anchors unchanged — and a swapped citation is
   caught by name, never at load);
@@ -71,9 +73,11 @@ ARTIFACT = REPO_ROOT / "experiments/uec/semantic_profile.yaml"
 BUILDER = REPO_ROOT / "experiments/uec/build_semantic_profile.py"
 SCHEMA = REPO_ROOT / "schemas/profile.schema.json"
 
-#: The flagship promotion the migration must carry forward (G2): the one
-#: requirement executed today, with its binding and golden test.
-SIMULATED = ("UEC11-FC-R02", "BIND-UEC11-FC-R02-L0TFC", "analytical_l0_tfc")
+#: The flagship promotion the migration must carry forward: the one
+#: requirement executed since 2026-10-29, RE-POINTED at the credit
+#: obligation automaton by G8 (2026-10-30) — the analytical Eq. 3 backend
+#: is the binding's declared steady-state abstraction, not its backend.
+SIMULATED = ("UEC11-FC-R02", "BIND-UEC11-FC-R02-AUTOMATON", "credit_admission_automaton")
 
 
 @pytest.fixture(scope="module")
@@ -118,8 +122,10 @@ def test_artifact_loads_with_the_uec_identity(profile: LoadedProfile) -> None:
     # 0.1.0 -> 0.2.0 at G2 stage S2 (2026-10-30): a disposition flip plus
     # a new binding is the bump rules' MAJOR class; on the 0.x line that
     # bumps the minor component (semver 0.x convention, stated in the
-    # builder). A bump is conscious.
-    assert profile.profile_version == "0.2.0"
+    # builder). 0.2.0 -> 0.3.0 at G8 (2026-10-30): the UEC11-FC-R02
+    # binding re-pointed at the credit automaton — again the MAJOR
+    # "bindings" class. A bump is conscious.
+    assert profile.profile_version == "0.3.0"
 
 
 def test_artifact_validates_against_the_published_schema(document: dict) -> None:
@@ -227,22 +233,66 @@ def test_bindings_are_exactly_the_live_binding_registry(
 def test_binding_check_passes_against_the_declared_backend(
     profile: LoadedProfile,
 ) -> None:
-    from essun.backends.analytical import l0_tfc
+    import dataclasses
+    import importlib
 
-    assert SIMULATED == ("UEC11-FC-R02", "BIND-UEC11-FC-R02-L0TFC", l0_tfc.BACKEND_ID)
-    assert check_bindings_against(profile, l0_tfc.CAPABILITIES) == []
+    from essun.specir import credit_automaton
+
+    assert SIMULATED == (
+        "UEC11-FC-R02",
+        "BIND-UEC11-FC-R02-AUTOMATON",
+        credit_automaton.BACKEND_ID,
+    )
+    # Since G8 the profile binds MULTIPLE backends (the credit automaton
+    # plus the analytical ring); each binding checks green against its
+    # own backend's capabilities, never a foreign one's (same filtering
+    # the builder itself enforces).
+    for backend_id in sorted({b.backend for b in profile.bindings}):
+        own = dataclasses.replace(
+            profile,
+            bindings=tuple(
+                b for b in profile.bindings if b.backend == backend_id
+            ),
+        )
+        module = importlib.import_module(
+            next(
+                b.backend_module
+                for b in BINDINGS
+                if b.backend_id == backend_id
+            )
+        )
+        assert check_bindings_against(own, module.CAPABILITIES) == []
 
 
 def test_binding_check_fails_loudly_on_a_foreign_backend(
     profile: LoadedProfile,
 ) -> None:
+    import dataclasses
+
     from essun.backends.analytical import l0  # a real backend without TFC
+    from essun.backends.analytical import l0_tfc  # the declared abstraction
 
     problems = check_bindings_against(profile, l0.CAPABILITIES)
     assert problems, "the unbound L0 backend must not silently accept the binding"
     assert any(
-        "UEC11-FC-R02 -> analytical_l0_tfc.tfc_credit_windowed_ring" in p
+        "UEC11-FC-R02 -> credit_admission_automaton."
+        "tfc_credit_admission_automaton" in p
         for p in problems
+    )
+    # Since the G8 re-point the analytical Eq. 3 backend is itself
+    # FOREIGN to the FC-R02 binding: it executes the declared
+    # steady-state abstraction, not the bound machine.
+    flagship_only = dataclasses.replace(
+        profile,
+        bindings=tuple(
+            b
+            for b in profile.bindings
+            if b.requirement_id == SIMULATED[0]
+        ),
+    )
+    assert any(
+        "UEC11-FC-R02 -> credit_admission_automaton" in p
+        for p in check_bindings_against(flagship_only, l0_tfc.CAPABILITIES)
     )
 
 

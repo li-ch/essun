@@ -78,3 +78,27 @@ Rejected candidates (recorded in full in `src/essun/specir/bindings.py`):
 - The credit-return latency L_cr is a FREE parameter: UEC does not fix
   credit-return timing, and the slice's numbers move with it (that is a
   feature to attack, not a hidden constant — see the reproduction card).
+
+## Addendum 2026-10-30 — G8: the binding re-pointed at the credit automaton
+
+The chain table above is the 2026-10-29 record of the ORIGINAL landing
+and stands unchanged as history. Since G8 (2026-10-30) the executed
+semantics live one level down:
+
+| Link | Artifact (post-G8) |
+| --- | --- |
+| Anchored requirement | **UEC11-FC-R02** — unchanged (anchor `UEC11-S3.6.15-TFC`, MUST NOT) |
+| Machine-readable binding | `BIND-UEC11-FC-R02-AUTOMATON` — `src/essun/specir/bindings.py`; backend `credit_admission_automaton` (`src/essun/specir/credit_automaton.py`): exact discrete credit admission/return state machine, integer arithmetic, transmit-without-credit = rejected trace |
+| Declared steady-state abstraction | `analytical_l0_tfc` — the Eq. 3 identity of the table above, now the automaton's DECLARED abstraction (`steady_state_abstraction` field, two-sided with `l0_tfc.GROUND_TRUTH_AUTOMATON`, re-verified live by the binding gate) |
+| Executed golden test (the machine) | `tests/golden/test_credit_automaton_golden.py` — hand-derived burst traces, a rejected trace, the BDP anchor, the flagship point (rate 32 B/ns == Eq. 3 exactly, finite M=28672 completes 48 ns early), the quantization gap (W mod s)/D at Eq. 3's own convergence anchor |
+| Abstraction statement (tested) | rate `min(B, floor(W/s)*s/(L+L_cr))` exact; Eq. 3 equals it iff `s \| W`; finite-collective divergence exact closed forms in `(-D, 0]` (credit-gated) / `0` (link-limited); conditions C1–C5 and modeling choices registered in `experiments/vertical_slice/assumptions_credit_automaton.yaml` |
+| Evidence run (the abstraction layer) | run_id `dc7d83b6…` reproduces UNCHANGED — the analytical backend's outputs are untouched by the re-point; its golden test and claim link `C-UEC-TFC-R02` stand |
+
+Why: the G6 review correction, made executable — Eq. 3's rate law is an
+abstraction of the admission law with explicit conditions (return
+timing, initial credit, batching/packetization, greedy sender), not a
+consequence of FC-R02's safety rule alone. The automaton is the
+behavioral ground truth; the closed form is its steady-state summary
+with the exact divergence laws above. Disposition counts unchanged
+(FC-R02 stays `simulated_behavior`); labels unchanged (everything here
+stays E0 / IMPLEMENTED_UNVERIFIED).

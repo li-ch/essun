@@ -8,12 +8,17 @@ no Docker and no network beyond the clone and a pip install.
 §3.6.15, Transport Flow Control: "A source MUST NOT transmit a packet if
 it does not have credit") is executed by this platform as an honest
 `simulated_behavior`: it is bound (machine-readable binding
-`BIND-UEC11-FC-R02-L0TFC`) to the credit-window parameter of the
-`analytical_l0_tfc` backend, and the binding causally changes the
-O-CCT observable. Evidence level E0 — identity and determinism only.
-This is a claim about the binding, NOT about physical validity: the
-numeric parameters are free (not standard-derived, not measured), and the
-only standard-derived constant is the 256-byte credit unit (UEC11-FC-R05).
+`BIND-UEC11-FC-R02-AUTOMATON`) to the credit admission/return state
+machine `src/essun/specir/credit_automaton.py` — an exact discrete
+automaton, integer arithmetic, a transmit without credit a rejected
+trace — and the analytical `analytical_l0_tfc` credit-window identity
+(Eq. 3 below) is that automaton's DECLARED steady-state abstraction,
+with tested conditions and exact divergences (section 3). The binding
+causally changes the O-CCT observable. Evidence level E0 — identity and
+determinism only. This is a claim about the binding, NOT about physical
+validity: the numeric parameters are free (not standard-derived, not
+measured), and the only standard-derived constant is the 256-byte
+credit unit (UEC11-FC-R05).
 
 The full evidence record with labels and honest limits:
 `experiments/vertical_slice/tfc_r02_flagship.EVIDENCE.md`.
@@ -79,7 +84,78 @@ the binding gate re-verifies the binding against the live requirement
 registry, the anchor registry, the backend module and the observable
 registry.
 
-## 3. Attack it
+## 3. The automaton leg — the exact machine beneath Eq. 3 (G8)
+
+Since 2026-10-30 the binding's backend is not the closed form but an
+exact discrete machine: the **credit obligation automaton**
+(`src/essun/specir/credit_automaton.py`), and Eq. 3 above is its
+DECLARED steady-state abstraction. The machine: one credit context per
+link, integer bytes and integer nanoseconds; `attempt(t, s)` applies
+returns due, transmits iff `credit >= s` (consumes `s`, schedules a
+return at `t + (L + L_cr)`); a transmit without credit is a REJECTED
+trace — the requirement's MUST NOT, executed, never checked after the
+fact. The abstraction statement is tested, not asserted:
+
+- **Safety (any legal trace):** at most `W` bytes start inside any
+  half-open window of length `L + L_cr` — the admission law IS a
+  sliding-window bound.
+- **Exact steady rate:** `min(B, floor(W/s)*s/(L+L_cr))`, achieved by
+  the greedy work-conserving sender (link saturates iff
+  `ceil((L+L_cr)*B/s) <= floor(W/s)`). Eq. 3's `min(B, W/(L+L_cr))`
+  equals it exactly when the packet size divides the window; otherwise
+  Eq. 3 is optimistic by exactly `(W mod s)/(L+L_cr)` — the
+  packetization the closed form idealizes away.
+- **Finite collectives:** a transfer of `n = q*k + r` packets
+  (`k = floor(W/s)`) completes EARLIER than Eq. 3 predicts by exact
+  closed forms (`k*u - D` when `r = 0`, else `r*(u - D/k)`; always
+  inside `(-D, 0]` in the credit-gated regime) — the steady-state law
+  charges a finite collective for a full credit pipeline it does not
+  use.
+
+```bash
+.venv/bin/python -m pytest -q tests/golden/test_credit_automaton_golden.py
+```
+
+Expected: pass — every value hand-derived in the test's docstring
+(burst schedules, a rejected trace, the BDP anchor, the flagship
+operating point, the quantization boundary).
+
+Then watch the abstraction diverge exactly as claimed (no code to
+trust, ~1 min):
+
+```bash
+.venv/bin/python - <<'EOF'
+from fractions import Fraction
+from essun.specir import credit_automaton as ca
+
+# The flagship operating point (run dc7d83b6's parameters), one 256-B
+# packet: Eq. 3's rate law IS the automaton's steady state (s | W).
+cfg = ca.AutomatonConfig(12800, 64, 200, 200, 256)
+print("rate:", ca.steady_state_rate_exact(cfg), "== eq3:", ca.eq3_effective_rate(cfg))
+print("finite M=28672: auto", ca.GreedyLinkExecutor(cfg).run_transfer(28672).completion_ns,
+      "ns vs eq3", ca.eq3_completion_single_link(cfg, 28672), "ns")
+
+# One credit unit past the BDP with D=401: Eq. 3 says line rate at its
+# own convergence anchor; the automaton cannot use the ragged unit.
+cfg2 = ca.AutomatonConfig(64*401, 64, 200, 201, 256)
+print("gap:", ca.rate_divergence_exact(cfg2), "== (W mod s)/D:", Fraction(25664 % 256, 401))
+
+# And the MUST NOT itself: a transmit without credit never executes.
+print("legal:", ca.execute_trace(1024, 200, [(0,256),(4,256),(8,256),(12,256),(16,256)]).legal)
+EOF
+```
+
+Expected: `32 == 32`; `1048 ns vs 1096 ns` (the finite collective
+finishes 48 ns early — exactly `r*(u - D/k)`); `64/401 == 64/401`; and
+`legal: False` (the t=16 transmit had no credit; the four-admission
+prefix stands). Productive lines of attack are the declared assumptions
+`experiments/vertical_slice/assumptions_credit_automaton.yaml`
+(A-CA-RT return timing, A-CA-INIT initial grant, A-CA-GREEDY the
+achieving schedule) and the conditions C1–C5 in the module docstring —
+cell-quantized consumption is deliberately not assumed here; it is the
+separate FC-R08 binding on the analytical backend.
+
+## 4. Attack it
 
 ### Attack A — vary the binding's parameter (~2 min)
 
@@ -108,16 +184,17 @@ The promotion is supposed to be impossible to do silently. Test it:
 1. In `src/essun/specir/uec_credits_flow_control.py`, change
    `UEC11-FC-R02`'s `disposition="simulated_behavior"` back to
    `"unsupported"`. Run
-   `pytest -q tests/specir/test_bindings.py tests/specir/test_dispositions.py`:
-   five tests must fail — the binding gate ("requirement ... has
+   `pytest -q tests/specir/test_bindings.py tests/specir/test_dispositions.py tests/specir/test_binding_coverage.py`:
+   seven tests must fail — the binding gate ("requirement ... has
    disposition 'unsupported' but the binding claims 'simulated_behavior'"),
-   the frozen-count record (EXPECTED_COUNTS), the promotion-table rule
-   (PROMOTED), and two negative fixtures whose tampered bindings now
-   accidentally match the tampered requirement. The promotion cannot be
-   undone silently. Revert.
+   the flagship-object check, the frozen-count record (EXPECTED_COUNTS)
+   and the honest-rule check, the binding-coverage exactness property,
+   and two negative fixtures whose premises the tamper breaks. The
+   promotion cannot be undone silently. Revert.
 2. In `src/essun/specir/bindings.py`, add a bogus parameter name (e.g.
-   `"tfc_window_bites"`) to the binding's `parameters`. The binding gate
-   must report "not a config field". Revert.
+   `"window_bites"`) to the FC-R02 binding's `parameters`. The binding
+   gate must report "not a config field" (the automaton's config fields
+   are checked live, exactly like a backend's). Revert.
 3. Edit a quote inside `experiments/uec/anchor_registry.yaml` by one
    word. `pytest -q tests/specir/test_uec_anchor_registry.py` must fail
    the integrity check (quote not found in the extracted page). Revert.
@@ -143,19 +220,18 @@ If you believe the identity is WRONG (not merely coarse), the project's
 protocol is: minimize the counterexample, do not tune parameters until
 curves match — see `CONTRIBUTING.md`.
 
-## 4. Full-suite check (optional, ~1 min)
+## 5. Full-suite check (optional, ~1 min)
 
 ```bash
 .venv/bin/python -m pytest -q
 ```
 
-Expected: green (the count grows with the project). If exactly the four
-tests in `tests/specir/test_disposition_coverage.py` fail on the literals
-`256` / `0 executed` / `0/445 = 0.0%`, you are on a commit where this
-promotion landed before the coverage-report literal refresh — the report
-itself (`.venv/bin/python tools/disposition_coverage.py`) is computed
-live and prints `1/445 = 0.2%` executed with `unsupported 255`; the four
-test literals are the stale pre-promotion record.
+Expected: green (the count grows with the project). The live disposition
+coverage report (`.venv/bin/python tools/disposition_coverage.py`, also
+`make disposition-report`) prints the honest executed fraction of the
+UEC profile — `2/445` today (UEC11-FC-R02 via the automaton binding,
+UEC11-FC-R08 via the analytical cell law), computed from the live
+registry, never a stored table.
 
 ## Time budget
 
@@ -164,8 +240,9 @@ test literals are the stale pre-promotion record.
 | clone + bootstrap | ~2 min |
 | re-execute run + inspect | ~1 min |
 | golden + binding tests | ~10 s |
+| automaton leg (golden + divergence REPL) | ~2 min |
 | Attack A (parameter) | ~2 min |
 | Attack B (binding) | ~2 min |
 | Attack C (read/argue) | ~3 min |
 
-Total: under 10 minutes without Attack C, ~10 with it.
+Total: ~10 minutes without Attack C, ~12 with it.

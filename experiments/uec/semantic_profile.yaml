@@ -5206,31 +5206,40 @@ freedom:
   domain: FREE
   module: uec_f07_mechanisms
 bindings:
-- binding_id: BIND-UEC11-FC-R02-L0TFC
+- binding_id: BIND-UEC11-FC-R02-AUTOMATON
   requirement_id: UEC11-FC-R02
-  backend: analytical_l0_tfc
-  capability: tfc_credit_windowed_ring
+  backend: credit_admission_automaton
+  capability: tfc_credit_admission_automaton
   parameters:
-    tfc_window_bytes: FREE
-    tfc_credit_return_latency_ns: FREE
-  parameter_effect: effective per-link rate = min(B, W / (L + L_cr)); ring AllReduce completion t
-    = 2*(r-1)/r * M / min(B, W/(L+L_cr)) + 2*(r-1)*L
+    window_bytes: FREE
+    credit_return_latency_ns: FREE
+    packet_bytes: FREE
+  parameter_effect: 'UEC11-FC-R02 as the admission transition of a per-link credit machine: attempt(t,
+    s) applies returns due, then transmits iff credit >= s (credit -= s; return scheduled at t + (L
+    + L_cr)); a transmit without credit is a REJECTED trace. Greedy steady rate = min(B, floor(W/s)*s/(L+L_cr)),
+    link-saturated iff ceil((L+L_cr)*B/s) <= floor(W/s)'
   enforced_invariants:
-  - peak in-flight bytes toward one CCC destination = min(B,L_rate-cap) * RTT <= W always (equality
-    iff window-limited)
-  - tfc_window_bytes must be an integral number of 256-byte credit units; non-grantable windows are
-    rejected at load time
+  - credit balance in [0, W] at every step and credit + owed == W exactly (integer-byte conservation,
+    re-derivable every step)
+  - a transmit without credit never executes — the trace is rejected and the state is unchanged (the
+    MUST NOT, structural)
+  - window_bytes must be an integral number of 256-byte credit units; non-grantable windows are rejected
+    at load time
   observable_ids:
   - O-CCT
-  - O-CONSERVATION
   spec_derived_constants:
   - name: tfc_credit_unit_bytes
     value: '256'
     requirement_id: UEC11-FC-R05
-  golden_test: tests/golden/test_l0_tfc_golden.py
-  note: 'Convergence anchor: at W >= B*(L+L_cr) the identity equals the landed L0 ring equation exactly
-    (credits never gate). E0 evidence level: identity and determinism only; free parameters B, L,
-    W, L_cr are not standard-derived and not measured.'
+  golden_test: tests/golden/test_credit_automaton_golden.py
+  steady_state_abstraction:
+    module: essun.backends.analytical.l0_tfc
+    backend_id: analytical_l0_tfc
+  note: 'Abstraction (paper Eq. 3, rate law min(B, W/(L+L_cr))): exact iff the packet size divides
+    the window (s | W), with finite collectives completing EARLIER than the identity predicts by exact
+    closed forms ( < one credit-loop round trip D); with s not dividing W the rate gap is exactly
+    (W mod s)/D. E0 evidence level: exactness and determinism only; free parameters B, L, L_cr, W,
+    s are not standard-derived and not measured; modeling choices registered in experiments/vertical_slice/assumptions_credit_automaton.yaml.'
 - binding_id: BIND-UEC11-FC-R08-L0TFC
   requirement_id: UEC11-FC-R08
   backend: analytical_l0_tfc
@@ -5293,9 +5302,10 @@ checks:
   kind: invariant
   requirement_ids:
   - UEC11-FC-R02
-  description: binding BIND-UEC11-FC-R02-L0TFC is re-verified against the live requirement registry,
-    anchor registry, backend module (capability, config fields, spec-derived constant) and observable
-    registry — drift is a hard error, not silent
+  description: 'the UEC11-FC-R02 binding (since G8: the credit automaton BIND-UEC11-FC-R02-AUTOMATON,
+    its declared steady-state abstraction checked two-sided) is re-verified against the live requirement
+    registry, anchor registry, backend module (capability, config fields, spec-derived constant) and
+    observable registry — drift is a hard error, not silent'
   location: tests/specir/test_bindings.py
 - check_id: UEC11-CHK-05
   kind: golden
@@ -5324,6 +5334,15 @@ checks:
     equality iff the quantized window gates, while credit bytes in flight never exceed W (re-derived
     as an exact Fraction identity for every run)'
   location: tests/golden/test_l0_tfc_cell_golden.py
+- check_id: UEC11-CHK-08
+  kind: golden
+  requirement_ids:
+  - UEC11-FC-R02
+  description: 'credit obligation automaton hand-derived golden traces (G8): the admission machine''s
+    burst schedule, the rejected trace on a credit-less transmit, the Eq. 3 rate law as the automaton''s
+    exact steady state when s | W, the (W mod s)/D packetization gap at the Eq. 3 convergence anchor,
+    and the exact finite-collective divergence closed forms (in (-D, 0] credit-gated, 0 link-limited)'
+  location: tests/golden/test_credit_automaton_golden.py
 supported:
   workloads:
   - w1_dense_tp_decode
@@ -5368,7 +5387,7 @@ omissions:
   reason: excluded by the analytical L0 family's declared fidelity (explicitly_unsupported in every
     L0 backend's CAPABILITIES)
 versioning:
-  profile_version: 0.2.0
+  profile_version: 0.3.0
   bump_rules:
     major:
     - dispositions
