@@ -1,0 +1,65 @@
+# Calibration-ladder S5 FIT-SIDE RUN (group G4, anchor GF-05, the
+# UEC-standardized congestion-control envelope + sim-config provenance):
+# the L0 crossbar identity at the anchor's OWN sim configuration —
+# B = 100 B/ns (uet-htsim '800 Gbps network bandwidth', declared
+# per-direction reading 800/8) and L = 1000 ns (the anchor's verbatim
+# per-hop decomposition: 400 ns switch traversal + 600 ns link latency),
+# payload 2 MiB (the anchor's only staged size class). SMaRTT is 'the
+# algorithm that forms the basis of the UEC NSCC specification' and REPS
+# the UET 1.0 reference load-balancing mechanism — the effect sizes
+# (CC outperforms Swift/RoCE/MPRDMA 'by up to 50%'; alltoall 'only up to
+# 6% behind the ideal time'; RoCE 3-6x from optimal; fairness 65%)
+# bound what any congestion-semantics modeling of a UEC profile must
+# reproduce. The L0 identity IS the anchor's 'ideal time' reference by
+# construction (factor exactly 1); every CM delta is inexpressible. The
+# anchor's per-hop L = 1000 ns sits INSIDE the declared A-L0X-LAT range
+# [10, 2000] — a placement fact, never a tuned value (the registry
+# point stays 200). FCT metrics, not collective CCTs — the regime bridge
+# is declared, never assumed.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [GF-05], held_out FALSE.
+
+experiment_id: EXP-CAL-S5-GF05-SIMCONFIG-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf05/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf05/topologies/crossbar8_gf05_line100_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s5/profiles/implementation_profile_l0_crossbar_cal_s5_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf05_line100_v1 (single non-blocking switch stage, r=8 free smoke default; B = 100 B/ns and L = 1000 ns = GF-05's own staged uet-htsim sim config, the anchor-CONFIG provenance row)
+  workload: w1_dense_tp_decode tp8, payload 2 MiB (the anchor's only staged size class)
+  implementation: analytical L0 free-parameter identity; the GF-05 role is ENVELOPE + sim-config provenance (the identity is the anchor's ideal-time reference) — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s5_fit.py
+    scope: S5 fit guard — re-executes the stage's evidence chain (3 sweeps + 7 runs) and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - GF-05
+  held_out:
+    held_out: false
+    scope: fit-side execution at GF-05's own sim configuration (the anchor stages FCT effect sizes, not a collective series; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - no congestion control, no load balancing, no trimming, no windows/BDP semantics exist in the identity — the anchor's 20-50% CC effect sizes and 3-6x RoCE deltas are structurally inexpressible (the envelope bounds what CM modeling must reproduce)
+  - FCT (flow completion time) metrics, not collective CCTs — the regime bridge is declared, never assumed
+  - peer-reviewed SIMULATION + a small DPDK hardware testbed, not UEC silicon
+  - the anchor's (switch 400, link 600) per-hop decomposition is not expressible in the lumped L (the CAL-A9 expressiveness-loss class); RTT-scale figures (base 12,000 ns = 84 us/7, target 18,000 ns = 1.5x) sit far above the declared per-hop range

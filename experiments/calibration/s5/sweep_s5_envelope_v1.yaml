@@ -1,0 +1,100 @@
+# Calibration-ladder S5 FIT SWEEP (group G4, the congestion/transport-
+# envelope stage): sweep the DECLARED free range of A-L0X-BW
+# (nic.injection_bytes_per_ns, registry value 64, range [1, 1024] B/ns)
+# on the L0 crossbar identity at r=8 against the G4 envelope anchors'
+# effect sizes — CAL-A11 (context proxy), GF-05 (sim+HW UEC-class CC),
+# GF-07 (measured 5%->25x collective-slowdown envelope), GF-08 (shipped
+# HW transport), GF-09 (design-target ceiling) — per the immutable split
+# record 3862e227... None of these anchors stages a collective
+# (size -> time) series; every staged signal is a dimensionless FACTOR
+# (a congestion/load-balance effect size) or an absolute RATE (a carrier)
+# or a design TARGET. The split record's parameter_axes duty: "CM
+# effect-size envelopes bound what congestion semantics modeling must
+# reproduce — envelope/context checks, not O-CCT fits". This sweep is
+# that check's executed instrument.
+#
+# Rows, three declared families (nothing tuned toward any anchor OUTPUT):
+#   (a) the UNIFORM, ANCHOR-BLIND 64 B/ns grid over the declared range
+#       [1, 1024]: 64, 128, ..., 1024 (16 members; 64 = the registry
+#       point and this sweep's baseline);
+#   (b) the anchor CARRIERS — each anchor's own absolute staged rate
+#       under its declared reading: 100 (GF-05 sim line 800 Gbps AND
+#       GF-07 LUMI 4x200 Gb/s — two anchors, one rate), 50 (CAL-A11
+#       400G optics; GF-09 '400+ Gbps' design-class floor), 25 (GF-08
+#       Falcon 200 Gbps peak);
+#   (c) the ENVELOPE-EDGE displacement rows — carrier / measured factor,
+#       exact Fraction arithmetic: GF-07's 95/75/70/60/20/10/8/4 (the
+#       20/19 floor, the 4/3 AllReduce-class quote, 10/7, 5/3, 5x, 5x at
+#       Leonardo's own rate, 25/2, the 25x ceiling) plus the absolute
+#       Nanjing rows 22.5/15; GF-05's 50/25/20/12.5 (2:1, 4:1, RoCE-5x,
+#       8:1); GF-08's 3.125 (8x) and 12.5 (alt carrier); GF-09's 16.5
+#       (33% oversubscription worked example) and 12.5 (RCCC 4x25%);
+#       CAL-A11's 35 (30% path-pinning degradation). The non-representable
+#       edges (200/3, 500/53, 100/3, 50/3, 500/33, 250/33, 25/3,
+#       10000/167) are recorded NOT executed, in the stage record.
+#
+# The displacement rows place where a congested run would sit in the
+# model's OWN parameter space (effective-B displacement); they are NOT
+# predictions — the identity carries no congestion semantics, and its
+# prediction is always the uncongested carrier row (factor exactly 1).
+#
+# Payload ladder: the standard 12-size ladder 8 KiB -> 8 GiB (the
+# A-W1-SIZE free regime; every size divisible by r=8, gate-accepted).
+# The ladder exposes the exact structure a dimensionless factor has in
+# an affine identity: the CCT ratio of an edge row to its carrier rises
+# monotonically with size from 1 (latency-masked) toward the factor's
+# reciprocal (bandwidth-bound asymptote) — the record asserts this law
+# on executed rows. L stays at the A-L0X-LAT registry point 200 ns (the
+# latency axis was S4's). Baseline = the registry pair (B=64, L=200).
+# NOTHING IS TUNED; the registry value of A-L0X-BW stays 64.
+sweep: cal_s5_envelope_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s5/topologies/crossbar8_s5_b64_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [8192, 32768, 131072, 524288, 2097152, 8388608,
+                        33554432, 134217728, 268435456, 536870912,
+                        2147483648, 8589934592]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    # uniform anchor-blind 64 B/ns grid over the declared A-L0X-BW range [1,1024]
+    - experiments/calibration/s5/topologies/crossbar8_s5_b64_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b128_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b192_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b256_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b320_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b384_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b448_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b512_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b576_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b640_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b704_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b768_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b832_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b896_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b960_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b1024_l200_v1.yaml
+    # anchor carriers (absolute staged rates under declared readings)
+    - experiments/calibration/s5/topologies/crossbar8_s5_b100_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b50_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b25_l200_v1.yaml
+    # envelope-edge displacement rows (carrier / measured factor, exact)
+    - experiments/calibration/s5/topologies/crossbar8_s5_b95_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b75_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b70_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b60_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b35_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b22_5_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b20_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b16_5_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b15_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b12_5_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b10_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b8_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b4_l200_v1.yaml
+    - experiments/calibration/s5/topologies/crossbar8_s5_b3_125_l200_v1.yaml

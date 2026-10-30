@@ -1,0 +1,63 @@
+# Calibration-ladder S5 FIT-SIDE RUN (group G4, anchor CAL-A11, the
+# context proxy): the L0 crossbar identity at the anchor's carrier
+# B = 50 B/ns (400G single-mode optics between RTSWs and CTSWs, declared
+# per-direction reading 400/8), L = the A-L0X-LAT registry 200 ns, r = 8
+# (the free smoke default; the anchor pins a ~24,576-GPU cluster scale,
+# executed as recorded arithmetic in the stage record, not here), payload
+# 8 GiB (the E1 stage-A11 run payload, the bandwidth-bound ladder
+# member). CAL-A11 is a SCALE-OUT rail-optimized RoCE production fabric,
+# staged under the plan's labeled-proxy rule: it supplies sanity CONTEXT
+# for exactly the effects L0 declares out of scope (congestion, load
+# balancing — path pinning degraded training 'up to more than 30%';
+# E-ECMP + QP scaling 'up to 40% improvement for the AllReduce
+# collective'). The model's prediction IS this uncongested carrier row
+# (factor exactly 1); the 30-40% envelope is structurally inexpressible
+# (no congestion/load-balance semantics exist in the identity). The
+# proxy does NOT falsify the scale-up identity — it bounds the omission.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [CAL-A11], held_out FALSE.
+
+experiment_id: EXP-CAL-S5-A11-CARRIER-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a11/workloads/w1_dense_tp_decode_tp8_8gib.yaml
+infra_graph:
+  path: experiments/calibration/a11/topologies/crossbar8_a11_link50_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s5/profiles/implementation_profile_l0_crossbar_cal_s5_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_a11_link50_v1 (single non-blocking switch stage, r=8 free smoke default — the anchor pins cluster scale ~24,576 GPUs, not a collective rank count; B = 50 B/ns the anchor's declared per-direction optics reading; L = 200 ns registry point (the anchor stages no latency number))
+  workload: w1_dense_tp_decode tp8, payload 8 GiB (the bandwidth-bound regime the anchor's envelope edges displace)
+  implementation: analytical L0 free-parameter identity; the CAL-A11 role is labeled CONTEXT PROXY (scale-out domain) — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s5_fit.py
+    scope: S5 fit guard — re-executes the stage's evidence chain (3 sweeps + 7 runs) and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - CAL-A11
+  held_out:
+    held_out: false
+    scope: fit-side execution at CAL-A11's carrier (the anchor stages envelope factors, not a series; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - no congestion, no load balancing, no multi-plane routing semantics exist in the identity — the anchor's 30-40% effects are structurally inexpressible (the proxy bounds the omission, it does not falsify the scale-up identity)
+  - scale-out rail-optimized RoCE fabric (labeled proxy, wrong domain for direct scale-up calibration)
+  - the per-collective throughput tables live in the paper PDF and are NOT staged (staging §A11 caveat); only the blog+abstract figures are used
+  - cluster scale ~24,576 GPUs recorded as arithmetic context, not executed here (r=8 free default)

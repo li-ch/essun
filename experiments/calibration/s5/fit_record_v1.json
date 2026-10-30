@@ -1,0 +1,1269 @@
+{
+  "backing": {
+    "inputs": [
+      "experiments/calibration/s5/sweep_s5_torus128_v1.yaml",
+      "experiments/calibration/s5/sweep_s5_torus256_v1.yaml",
+      "experiments/calibration/s5/sweep_s5_envelope_v1.yaml",
+      "experiments/calibration/s5/run_s5_*.yaml (7 manifests)",
+      "experiments/calibration/s5/topologies/ (67 files)",
+      "experiments/calibration/s5/profiles/ (2 files)",
+      "experiments/calibration/a5/topologies/{torus2d128_a5_8x16_b20,b25,b50,4x32_b50,2x64_b50, torus2d256_a5_8x32_b20,b25,b50,4x64_b50,2x128_b50,16x16_b50}_v1.yaml and a5 workloads (committed stage-A5 files, reused as anchor-CONFIG provenance)",
+      "experiments/calibration/{a11,gf05,gf07,gf08,gf09}/ committed files reused in the runs (the anchors' own carrier/sim-config topologies and payloads)",
+      "experiments/workloads/w1_dense_tp_decode_small.yaml (the committed smoke workload, envelope sweep ladder base)"
+    ],
+    "reproduce": "make sweep EXP=experiments/calibration/s5/sweep_s5_torus128_v1.yaml ; make sweep EXP=experiments/calibration/s5/sweep_s5_torus256_v1.yaml ; make sweep EXP=experiments/calibration/s5/sweep_s5_envelope_v1.yaml ; make run EXP=(each of the seven run_s5_*.yaml manifests) ; python experiments/calibration/s5/build_fit_record.py",
+    "run_ids": [
+      "43091e1545280c151bb56769897cff7e538e3c3e8935d8ab11bb5599d49c9458",
+      "645e8b4f2a733ab358c60be719c1575757ec21bc6ed0ffd8402c7a146fbbb6b5",
+      "7f8dfd7fd28f65e42c458004f0f952f47ae7b5d5db115bd7d0e7638a92981837",
+      "f96b688ca8524eaebb846b46819edcbbe10c367687c7ddacf2524c7235a59ae1",
+      "e14917e9f91c47020d5c29e75d473fcbc385a9cecf389247b7192d47f4670017",
+      "09cae0bf8cbc0739c334b8b7ae6786eb72f7eeb85d137dd338c49f56a8ca0b16",
+      "610653fb4b9d9bf82f51a73ec91d8cb84ba7309bd9a0d7674c859f1501c7cbb7"
+    ],
+    "run_roles": {
+      "a11_carrier": "CAL-A11 context-proxy carrier run (crossbar B=50, 8 GiB; held_out: false)",
+      "a5_slice128": "CAL-A5 falsifier anchor-side reference run (torus 8x16, B=50 reading 1; held_out: false)",
+      "a5_slice256": "CAL-A5 falsifier anchor-side reference run (torus 8x32, B=50 reading 1; held_out: false)",
+      "gf05_simconfig": "GF-05 anchor-CONFIG provenance run at the anchor's own uet-htsim sim config (crossbar B=100, L=1000, 2 MiB; held_out: false)",
+      "gf07_carrier": "GF-07 measured-envelope carrier run (crossbar B=100 LUMI, 16 MiB; held_out: false)",
+      "gf08_falcon": "GF-08 hardware-transport carrier run (crossbar B=25 Falcon, 16 KiB; held_out: false)",
+      "gf09_uec50": "GF-09 design-target ceiling placement run (crossbar B=50 design-class floor, 2 MiB; held_out: false)"
+    },
+    "s6_handoff": "this stage adds NO fitted parameter configuration (no G4 anchor stages a series, so there is nothing to fit): S6 runs the S2-S4 fitted configurations against the holdout untouched; G4 hands S6/S7 its recorded diagnostics — the CAL-A5 per-link readings {20, 25, 50} inside the plan span with the registry at 32/25 above reading 1; the falsifier facts (structural blindness; B-axis delivered fractions 23200/433125 and 23600/368125; the flagged L-absorption values); GF-05's in-range sim-config L = 1000 (the only UEC-class latency figure, a simulation config); GF-09's out-of-range 10 us RTT placement (5000 as 2L, 2.5x the range upper, the range NOT moved); and the envelope displacement table with its convergence law",
+    "sweep_ids": [
+      "9351c33052f72e2dc56049ea1894011e49f8b8d0e9102abf81c296a895c94b9b",
+      "c0b0e9618c34de2e081db5b161e3da1dc6f8046d79032d65a35b3992bdc9e3dd",
+      "a489d720259ee6f3eb7bc0b7872d03fcf5dbb19f7f370dee8769c2aa8f7b25b5"
+    ]
+  },
+  "calibration_target": [
+    "CAL-A5",
+    "CAL-A11",
+    "GF-05",
+    "GF-07",
+    "GF-08",
+    "GF-09"
+  ],
+  "envelope_summary": {
+    "convergence_law_consequence": "a dimensionless congestion factor enters the affine identity only as an ASYMPTOTIC effective-B displacement (the executed law): the worst 25x edge executes at 7.332x (2075/283 exactly) at the 8 KiB ladder bottom and reaches 24.999936x at 8 GiB (asymptotic shortfall 5000/78293883) — any future congestion-semantics modeling must be size-aware, and small-message congestion costs are latency-masked in exactly the regime the smoke manifests exercise",
+    "delivered_fractions_and_spans": {
+      "a5_blind_spans_exact": {
+        "128": "63/100",
+        "256": "31/100"
+      },
+      "allreduce_class_edge_effect_exact": "1/3",
+      "allreduce_edge_over_cal_a6_8pct_exact": "25/6",
+      "gf07_envelope_span_floor_to_ceiling_exact": "95/4"
+    },
+    "range_admittance_statement": "every executed carrier and edge B value lies inside the declared A-L0X-BW range [1, 1024] (min 3.125): the DECLARED RANGE admits the whole envelope as displacement; the SHIPPED VALUE (64) does not move, and the identity predicts none of the displaced rows",
+    "the_one_sentence_where_the_model_sits": "every G4 envelope anchor measures effects RELATIVE to the uncongested reference row that the L0 identity predicts by construction (factor exactly 1 at every size): the model is the envelope's ORIGIN, and the measured spans around that origin (5%..25x collectives; 30-40% production load-balance; 20-50% CC gains / 3-6x RoCE; 8x/65% transport deltas; 31-63% geometry) are all structurally outside its input space"
+  },
+  "evidence_levels": {
+    "fit": "PROPOSED envelope/context checks and a structural falsification against external published ratios, factors, rates, and design targets; no E3/E4 language — none of the anchors is our testbed, and owner adjudication precedes any label move",
+    "runs_and_sweeps": "E0 (analytical executions; deterministic, content-addressed, replay reproduces byte-identical artifacts)"
+  },
+  "evidence_schema_version": 2,
+  "executed_sweeps": {
+    "envelope": {
+      "all_edges_inside_declared_range": "every executed carrier and edge B value (min 3.125 = GF-08's 8x edge, max 1024 = grid member) lies INSIDE the declared A-L0X-BW range [1, 1024] — the declared range ADMITS the whole envelope as effective-B displacement; the identity still predicts only the uncongested carrier row (no congestion term exists)",
+      "carriers": [
+        {
+          "B_exact": "100",
+          "anchors": "GF-05+GF-07",
+          "role": "GF-05's uet-htsim '800 Gbps network bandwidth' (declared per-direction reading) AND GF-07's LUMI '4x200 Gb/s' per-node aggregate — two anchors, one rate; the UNCONGESTED reference the identity predicts"
+        },
+        {
+          "B_exact": "50",
+          "anchors": "CAL-A11+GF-09",
+          "role": "CAL-A11's '400G single-mode optics' (declared per-direction reading) AND GF-09's '400+ Gbps' design-class floor — carrier and class floor, never achieved values for GF-09"
+        },
+        {
+          "B_exact": "25",
+          "anchors": "GF-08",
+          "role": "Falcon 'peak performance of 200 Gbps' per-endpoint reading — a shipped HW transport's headline rate, not a collective measurement"
+        }
+      ],
+      "convergence_law": {
+        "rows": [
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "95",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "625/4462751331",
+            "factor_exact": "20/19",
+            "factor_float": 1.0526315789473684,
+            "quote": "LUMI 'always within 5% of the uncongested case' (per-flow HW CM + adaptive routing) — the envelope FLOOR",
+            "ratio_at_8gib_exact": "4697632355/4462751331",
+            "ratio_at_8gib_float": 1.0526314388992337,
+            "ratio_at_8kib_exact": "16355/16131",
+            "ratio_at_8kib_float": 1.0138863058706837
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "75",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "625/704644947",
+            "factor_exact": "4/3",
+            "factor_float": 1.3333333333333333,
+            "quote": "'Open MPI AllReduce showed up to a 25% bandwidth loss' — the anchor's ONE AllReduce-class quote",
+            "ratio_at_8gib_exact": "939525971/704644947",
+            "ratio_at_8gib_float": 1.3333324463618128,
+            "ratio_at_8kib_exact": "2771/2547",
+            "ratio_at_8kib_float": 1.087946603847664
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "70",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "625/548057181",
+            "factor_exact": "10/7",
+            "factor_float": 1.4285714285714286,
+            "quote": "bursty alltoall 'drops to 70% of its uncongested baseline'",
+            "ratio_at_8gib_exact": "111848315/78293883",
+            "ratio_at_8gib_float": 1.4285702881794737,
+            "ratio_at_8kib_exact": "315/283",
+            "ratio_at_8kib_float": 1.1130742049469964
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "60",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "1250/704644947",
+            "factor_exact": "5/3",
+            "factor_float": 1.6666666666666667,
+            "quote": "steady incast 'performance dropping to 60% of the uncongested case'",
+            "ratio_at_8gib_exact": "1174406995/704644947",
+            "ratio_at_8gib_float": 1.6666648927236258,
+            "ratio_at_8kib_exact": "2995/2547",
+            "ratio_at_8kib_float": 1.175893207695328
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "20",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "2500/234881649",
+            "factor_exact": "5",
+            "factor_float": 5.0,
+            "quote": "Leonardo incast 'collapse to 0.2' at 32-64 nodes",
+            "ratio_at_8gib_exact": "1174405745/234881649",
+            "ratio_at_8gib_float": 4.999989356341755,
+            "ratio_at_8kib_exact": "1745/849",
+            "ratio_at_8kib_float": 2.055359246171967
+          },
+          {
+            "B_carrier_exact": "50",
+            "B_edge_exact": "10",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "2500/469762673",
+            "factor_exact": "5",
+            "factor_float": 5.0,
+            "quote": "the SAME factor 5 at Leonardo's OWN rate (50/5) — carrier-invariant ratio",
+            "ratio_at_8gib_exact": "2348810865/469762673",
+            "ratio_at_8gib_float": 4.999994678163797,
+            "ratio_at_8kib_exact": "2865/1073",
+            "ratio_at_8kib_float": 2.6700838769804287
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "8",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "14375/469763298",
+            "factor_exact": "25/2",
+            "factor_float": 12.5,
+            "quote": "bursty incast 64 nodes, staged ratio '0.08' read exactly",
+            "ratio_at_8gib_exact": "2936013425/234881649",
+            "ratio_at_8gib_float": 12.499969399482545,
+            "ratio_at_8kib_exact": "3425/849",
+            "ratio_at_8kib_float": 4.034157832744405
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "4",
+            "anchor": "GF-07",
+            "asymptotic_shortfall_exact": "5000/78293883",
+            "factor_exact": "25",
+            "factor_float": 25.0,
+            "quote": "CRESCO8 steady-incast AllToAll victims 'slowdowns up to 25x' — the envelope CEILING",
+            "ratio_at_8gib_exact": "1957342075/78293883",
+            "ratio_at_8gib_float": 24.99993613805053,
+            "ratio_at_8kib_exact": "2075/283",
+            "ratio_at_8kib_float": 7.332155477031802
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "50",
+            "anchor": "GF-05",
+            "asymptotic_shortfall_exact": "625/234881649",
+            "factor_exact": "2",
+            "factor_float": 2.0,
+            "quote": "2:1 oversubscription displacement (100/2)",
+            "ratio_at_8gib_exact": "469762673/234881649",
+            "ratio_at_8gib_float": 1.9999973390854386,
+            "ratio_at_8kib_exact": "1073/849",
+            "ratio_at_8kib_float": 1.2638398115429919
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "25",
+            "anchor": "GF-05",
+            "asymptotic_shortfall_exact": "625/78293883",
+            "factor_exact": "4",
+            "factor_float": 4.0,
+            "quote": "4:1 oversubscription displacement (100/4)",
+            "ratio_at_8gib_exact": "313174907/78293883",
+            "ratio_at_8gib_float": 3.999992017256316,
+            "ratio_at_8kib_exact": "507/283",
+            "ratio_at_8kib_float": 1.7915194346289753
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "20",
+            "anchor": "GF-05",
+            "asymptotic_shortfall_exact": "2500/234881649",
+            "factor_exact": "5",
+            "factor_float": 5.0,
+            "quote": "RoCE '3-5 times slower than optimal' lower edge (100/5)",
+            "ratio_at_8gib_exact": "1174405745/234881649",
+            "ratio_at_8gib_float": 4.999989356341755,
+            "ratio_at_8kib_exact": "1745/849",
+            "ratio_at_8kib_float": 2.055359246171967
+          },
+          {
+            "B_carrier_exact": "100",
+            "B_edge_exact": "25/2",
+            "anchor": "GF-05",
+            "asymptotic_shortfall_exact": "4375/234881649",
+            "factor_exact": "8",
+            "factor_float": 8.0,
+            "quote": "8:1 oversubscription displacement (100/8)",
+            "ratio_at_8gib_exact": "1879048817/234881649",
+            "ratio_at_8gib_float": 7.999981373598071,
+            "ratio_at_8kib_exact": "2417/849",
+            "ratio_at_8kib_float": 2.846878680800942
+          },
+          {
+            "B_carrier_exact": "25",
+            "B_edge_exact": "25/8",
+            "anchor": "GF-08",
+            "asymptotic_shortfall_exact": "4375/939524721",
+            "factor_exact": "8",
+            "factor_float": 8.0,
+            "quote": "'operation completion times 8x lower than CX-7 RoCE under network congestion' (25/8)",
+            "ratio_at_8gib_exact": "7516193393/939524721",
+            "ratio_at_8gib_float": 7.999995343390225,
+            "ratio_at_8kib_exact": "7793/1521",
+            "ratio_at_8kib_float": 5.123602892833662
+          },
+          {
+            "B_carrier_exact": "50",
+            "B_edge_exact": "33/2",
+            "anchor": "GF-09",
+            "asymptotic_shortfall_exact": "41875/15502168209",
+            "factor_exact": "100/33",
+            "factor_float": 3.0303030303030303,
+            "quote": "oversubscription worked example 'can only satisfy 33% of the bandwidth' (50 x 33/100)",
+            "ratio_at_8gib_exact": "46976225425/15502168209",
+            "ratio_at_8gib_float": 3.030300329067988,
+            "ratio_at_8kib_exact": "65425/35409",
+            "ratio_at_8kib_float": 1.8476940890733995
+          },
+          {
+            "B_carrier_exact": "50",
+            "B_edge_exact": "25/2",
+            "anchor": "GF-09",
+            "asymptotic_shortfall_exact": "1875/469762673",
+            "factor_exact": "4",
+            "factor_float": 4.0,
+            "quote": "RCCC worked example 'assigns 25% of the bandwidth to each' of 4 incast flows (50/4, factor exactly 4)",
+            "ratio_at_8gib_exact": "1879048817/469762673",
+            "ratio_at_8gib_float": 3.9999960086228477,
+            "ratio_at_8kib_exact": "2417/1073",
+            "ratio_at_8kib_float": 2.2525629077353213
+          },
+          {
+            "B_carrier_exact": "50",
+            "B_edge_exact": "35",
+            "anchor": "CAL-A11",
+            "asymptotic_shortfall_exact": "1875/3288338711",
+            "factor_exact": "10/7",
+            "factor_float": 1.4285714285714286,
+            "quote": "path pinning degraded training 'up to more than 30%' (50 x 7/10, the declared lower-edge reading of 'more than 30%')",
+            "ratio_at_8gib_exact": "671089265/469762673",
+            "ratio_at_8gib_float": 1.4285708583746926,
+            "ratio_at_8kib_exact": "1265/1073",
+            "ratio_at_8kib_float": 1.1789375582479031
+          }
+        ],
+        "statement": "for every degradation edge (B_e = carrier/f): the executed CCT ratio t_edge/t_carrier is STRICTLY INCREASING across the 12 ladder sizes, starts at 1 in the M->0 limit (latency-masked) and is bounded above by the exact asymptote f = B_c/B_e, reached only in the bandwidth-bound limit — a dimensionless congestion factor enters an affine identity only as an ASYMPTOTIC effective-B displacement; verified on executed rows for all 16 edge rows"
+      },
+      "cross_check": "every executed row equals the crossbar closed form 7/4*M/B + 400 at the same (payload, B) — exact Fraction string equality (396/396)",
+      "grid": "33 crossbar topologies (16 anchor-blind grid members + 3 carriers + 14 distinct edge/absolute rows) x 12 ladder sizes = 396 configs x 6 ops",
+      "manifest_path": "experiments/calibration/s5/sweep_s5_envelope_v1.yaml",
+      "payload_fence": "the 12-size standard ladder 8 KiB..8 GiB (all fit-side; no G4 anchor carries a within-series split)",
+      "registry_placement_coincidence": {
+        "bracketed_by_executed_edges": [
+          "10/7",
+          "5/3"
+        ],
+        "float": 1.5625,
+        "registry_64_as_factor_over_carrier_100_exact": "25/16",
+        "statement": "as a displacement from the 100 B/ns carrier the registry 64 equals a factor of 25/16 = 1.5625 — strictly between the executed GF-07 edges 3/2 (the Nanjing pair 180/120) and 5/3 (steady incast 60%): a NUMERICAL COINCIDENCE (the registry point is anchor-free), recorded because it locates the shipped default inside the measured envelope's lower range"
+      },
+      "sweep_id": "a489d720259ee6f3eb7bc0b7872d03fcf5dbb19f7f370dee8769c2aa8f7b25b5",
+      "sweep_name": "cal_s5_envelope_v1"
+    },
+    "torus128": {
+      "cross_check": "every executed row equals the torus closed form at the same (payload, shape, B, L=200) — exact Fraction string equality",
+      "grid": "22 configs x 6 ops at payload 4096 (the anchor's DMA size)",
+      "manifest_path": "experiments/calibration/s5/sweep_s5_torus128_v1.yaml",
+      "payload_fence": "single payload 4096 = the anchor's individual DMA size (fit-side; no within-series holdout exists for CAL-A5)",
+      "row_families": {
+        "anchor_blind_grid": "B in {64, 128, ..., 1024} at the faithful 8x16 projection (s5-authored)",
+        "anchor_readings": "B in {20, 25, 50} on the committed stage-A5 faithful-shape topologies (direction-convention readings; 64 = the registry point is a grid member)",
+        "shape_bounds": "the committed stage-A5 bound shapes at B=50 (shape-axis context)",
+        "twist_displacement": "B = 81.5 = 50 x 163/100 (the anchor's own ratio absorbed into B; declared misattribution, never selected)"
+      },
+      "rows": [
+        {
+          "B_exact": "20",
+          "cct_ns_exact": "47712/5",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "1375/1491",
+          "shape": "8x16",
+          "topology_id": "torus2d128_a5_8x16_b20_v1"
+        },
+        {
+          "B_exact": "25",
+          "cct_ns_exact": "234848/25",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "6875/7339",
+          "shape": "8x16",
+          "topology_id": "torus2d128_a5_8x16_b25_v1"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "227424/25",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "6875/7107",
+          "shape": "8x16",
+          "topology_id": "torus2d128_a5_8x16_b50_v1"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "9032",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "1100/1129",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b64_v1"
+        },
+        {
+          "B_exact": "128",
+          "cct_ns_exact": "8916",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "2200/2229",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b128_v1"
+        },
+        {
+          "B_exact": "192",
+          "cct_ns_exact": "26632/3",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "3300/3329",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b192_v1"
+        },
+        {
+          "B_exact": "256",
+          "cct_ns_exact": "8858",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "4400/4429",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b256_v1"
+        },
+        {
+          "B_exact": "320",
+          "cct_ns_exact": "44232/5",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "5500/5529",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b320_v1"
+        },
+        {
+          "B_exact": "384",
+          "cct_ns_exact": "26516/3",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "6600/6629",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b384_v1"
+        },
+        {
+          "B_exact": "448",
+          "cct_ns_exact": "61832/7",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "7700/7729",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b448_v1"
+        },
+        {
+          "B_exact": "512",
+          "cct_ns_exact": "8829",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "8800/8829",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b512_v1"
+        },
+        {
+          "B_exact": "576",
+          "cct_ns_exact": "79432/9",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "9900/9929",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b576_v1"
+        },
+        {
+          "B_exact": "640",
+          "cct_ns_exact": "44116/5",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "11000/11029",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b640_v1"
+        },
+        {
+          "B_exact": "704",
+          "cct_ns_exact": "97032/11",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "12100/12129",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b704_v1"
+        },
+        {
+          "B_exact": "768",
+          "cct_ns_exact": "26458/3",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "13200/13229",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b768_v1"
+        },
+        {
+          "B_exact": "832",
+          "cct_ns_exact": "114632/13",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "14300/14329",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b832_v1"
+        },
+        {
+          "B_exact": "896",
+          "cct_ns_exact": "61716/7",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "15400/15429",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b896_v1"
+        },
+        {
+          "B_exact": "960",
+          "cct_ns_exact": "132232/15",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "16500/16529",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b960_v1"
+        },
+        {
+          "B_exact": "1024",
+          "cct_ns_exact": "17629/2",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "17600/17629",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b1024_v1"
+        },
+        {
+          "B_exact": "163/2",
+          "cct_ns_exact": "1464096/163",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "8800",
+          "latency_share_exact": "44825/45753",
+          "shape": "8x16",
+          "topology_id": "torus2d128_s5_8x16_b81_5_v1"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "69408/5",
+          "faithful_projection": false,
+          "grid_member": false,
+          "latency_chain_ns_exact": "13600",
+          "latency_share_exact": "2125/2169",
+          "shape": "4x32",
+          "topology_id": "torus2d128_a5_4x32_b50_v1"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "129216/5",
+          "faithful_projection": false,
+          "grid_member": false,
+          "latency_chain_ns_exact": "25600",
+          "latency_share_exact": "2000/2019",
+          "shape": "2x64",
+          "topology_id": "torus2d128_a5_2x64_b50_v1"
+        }
+      ],
+      "sweep_id": "9351c33052f72e2dc56049ea1894011e49f8b8d0e9102abf81c296a895c94b9b",
+      "sweep_name": "cal_s5_torus128_v1"
+    },
+    "torus256": {
+      "cross_check": "every executed row equals the torus closed form at the same (payload, shape, B, L=200) — exact Fraction string equality",
+      "grid": "23 configs x 6 ops at payload 4096 (the anchor's DMA size)",
+      "manifest_path": "experiments/calibration/s5/sweep_s5_torus256_v1.yaml",
+      "payload_fence": "single payload 4096 = the anchor's individual DMA size (fit-side; no within-series holdout exists for CAL-A5)",
+      "row_families": {
+        "anchor_blind_grid": "B in {64, 128, ..., 1024} at the faithful 8x32 projection (s5-authored)",
+        "anchor_readings": "B in {20, 25, 50} on the committed stage-A5 faithful-shape topologies (direction-convention readings; 64 = the registry point is a grid member)",
+        "shape_bounds": "the committed stage-A5 bound shapes at B=50 (shape-axis context)",
+        "twist_displacement": "B = 65.5 = 50 x 131/100 (the anchor's own ratio absorbed into B; declared misattribution, never selected)"
+      },
+      "rows": [
+        {
+          "B_exact": "20",
+          "cct_ns_exact": "79776/5",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "2375/2493",
+          "shape": "8x32",
+          "topology_id": "torus2d256_a5_8x32_b20_v1"
+        },
+        {
+          "B_exact": "25",
+          "cct_ns_exact": "395104/25",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "11875/12347",
+          "shape": "8x32",
+          "topology_id": "torus2d256_a5_8x32_b25_v1"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "387552/25",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "11875/12111",
+          "shape": "8x32",
+          "topology_id": "torus2d256_a5_8x32_b50_v1"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "15436",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "3800/3859",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b64_v1"
+        },
+        {
+          "B_exact": "128",
+          "cct_ns_exact": "15318",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "7600/7659",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b128_v1"
+        },
+        {
+          "B_exact": "192",
+          "cct_ns_exact": "45836/3",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "11400/11459",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b192_v1"
+        },
+        {
+          "B_exact": "256",
+          "cct_ns_exact": "15259",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "15200/15259",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b256_v1"
+        },
+        {
+          "B_exact": "320",
+          "cct_ns_exact": "76236/5",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "19000/19059",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b320_v1"
+        },
+        {
+          "B_exact": "384",
+          "cct_ns_exact": "45718/3",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "22800/22859",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b384_v1"
+        },
+        {
+          "B_exact": "448",
+          "cct_ns_exact": "106636/7",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "26600/26659",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b448_v1"
+        },
+        {
+          "B_exact": "512",
+          "cct_ns_exact": "30459/2",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "30400/30459",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b512_v1"
+        },
+        {
+          "B_exact": "576",
+          "cct_ns_exact": "137036/9",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "34200/34259",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b576_v1"
+        },
+        {
+          "B_exact": "640",
+          "cct_ns_exact": "76118/5",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "38000/38059",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b640_v1"
+        },
+        {
+          "B_exact": "704",
+          "cct_ns_exact": "167436/11",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "41800/41859",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b704_v1"
+        },
+        {
+          "B_exact": "768",
+          "cct_ns_exact": "45659/3",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "45600/45659",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b768_v1"
+        },
+        {
+          "B_exact": "832",
+          "cct_ns_exact": "197836/13",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "49400/49459",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b832_v1"
+        },
+        {
+          "B_exact": "896",
+          "cct_ns_exact": "106518/7",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "53200/53259",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b896_v1"
+        },
+        {
+          "B_exact": "960",
+          "cct_ns_exact": "228236/15",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "57000/57059",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b960_v1"
+        },
+        {
+          "B_exact": "1024",
+          "cct_ns_exact": "60859/4",
+          "faithful_projection": true,
+          "grid_member": true,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "60800/60859",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b1024_v1"
+        },
+        {
+          "B_exact": "131/2",
+          "cct_ns_exact": "2021408/131",
+          "faithful_projection": true,
+          "grid_member": false,
+          "latency_chain_ns_exact": "15200",
+          "latency_share_exact": "62225/63169",
+          "shape": "8x32",
+          "topology_id": "torus2d256_s5_8x32_b65_5_v1"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "667104/25",
+          "faithful_projection": false,
+          "grid_member": false,
+          "latency_chain_ns_exact": "26400",
+          "latency_share_exact": "6875/6949",
+          "shape": "4x64",
+          "topology_id": "torus2d256_a5_4x64_b50_v1"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "1286112/25",
+          "faithful_projection": false,
+          "grid_member": false,
+          "latency_chain_ns_exact": "51200",
+          "latency_share_exact": "40000/40191",
+          "shape": "2x128",
+          "topology_id": "torus2d256_a5_2x128_b50_v1"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "61536/5",
+          "faithful_projection": false,
+          "grid_member": false,
+          "latency_chain_ns_exact": "12000",
+          "latency_share_exact": "625/641",
+          "shape": "16x16",
+          "topology_id": "torus2d256_a5_16x16_b50_v1"
+        }
+      ],
+      "sweep_id": "c0b0e9618c34de2e081db5b161e3da1dc6f8046d79032d65a35b3992bdc9e3dd",
+      "sweep_name": "cal_s5_torus256_v1"
+    }
+  },
+  "fits": {
+    "cal_a11": {
+      "carrier_placement": {
+        "carrier_B_exact": "50",
+        "executed_edge_B_35_exact": "35",
+        "executed_edge_factor_exact": "10/7",
+        "improvement_factor_exact": "7/5",
+        "recorded_not_executed_implied_baseline_exact": "250/7",
+        "registry_64_over_carrier_exact": "32/25",
+        "registry_64_over_carrier_pct": 28.000000000000004,
+        "scale_context": "cluster scale 24,576 GPUs / training scale 16,000 recorded as staged arithmetic (stage A11 executed the r=24576 rows at E1); this stage's executions are r=8"
+      },
+      "improvement_direction_note": "the 'up to 40% improvement' edge points the OTHER way (a congestion-MANAGEMENT gain toward the uncongested reference the model already predicts) — both edges bracket the model's fixed point from opposite sides; neither is expressible as a prediction",
+      "role": "context proxy (scale-out rail-optimized RoCE production fabric — the plan's labeled-proxy rule; NOT a GPU-to-GPU scale-up fabric)",
+      "split_role": "DEGENERATE (no series): dimensionless envelope factors + an absolute optics rate",
+      "staged_signal": "path pinning degraded training 'up to more than 30%'; E-ECMP + QP scaling 'up to 40% improvement for the AllReduce collective'; 400G single-mode optics; two ~24,576-GPU clusters; Llama 3 on 16,000 GPUs; the anchor's per-collective throughput tables live in the paper PDF and are NOT staged (staging §A11)",
+      "where_the_model_sits": "the identity's prediction IS the uncongested carrier row (factor exactly 1): the anchor's 30-40% congestion/load-balance effects are STRUCTURALLY INEXPRESSIBLE — no congestion, load-balancing, or multi-plane routing semantics exist in the L0 input space. The proxy BOUNDS the cost of the omission (up to 30-40% on real production fabrics of a neighboring class); it does NOT falsify the scale-up identity (wrong domain, declared)"
+    },
+    "cal_a5": {
+      "axis_absorption_alternatives": {
+        "slice_128": {
+          "L_absorption_alternative_exact": "5383072/44825",
+          "L_absorption_alternative_float": 120.090842163971,
+          "in_declared_range": true,
+          "status": "RECORDED, never executed, never selected: in this latency-dominated regime the twist effect COULD be absorbed into the hop-latency axis (the required CCT is reachable by reducing L), but that charges a bisection-structure effect to the per-hop latency parameter — the same misattribution class as the B displacement, on the axis S4 fitted; flagged so S6/S7 see the full ambiguity, never tuned"
+        },
+        "slice_256": {
+          "L_absorption_alternative_exact": "9441472/62225",
+          "L_absorption_alternative_float": 151.73116914423463,
+          "in_declared_range": true,
+          "status": "RECORDED, never executed, never selected: in this latency-dominated regime the twist effect COULD be absorbed into the hop-latency axis (the required CCT is reachable by reducing L), but that charges a bisection-structure effect to the per-hop latency parameter — the same misattribution class as the B displacement, on the axis S4 fitted; flagged so S6/S7 see the full ambiguity, never tuned"
+        }
+      },
+      "b_axis_visibility": {
+        "slice_128": {
+          "grid_64_to_1024_cct_span_pct": 2.408104517271922,
+          "statement": "the executed anchor-blind grid {64..1024} moves anchor-shape CCT by only 2.41% (r=128) / 1.43% (r=256) — the regime is hop-latency-dominated; extending to the declared range lower endpoint B=1 (closed-form-only row, not executed) the whole span is 2.68x / 1.99x, still directionally unable to express the twist effect (see falsification_2)",
+          "whole_declared_range_1_to_1024_span_exact": "47296/17629",
+          "whole_declared_range_1_to_1024_span_float": 2.682852118668104
+        },
+        "slice_256": {
+          "grid_64_to_1024_cct_span_pct": 1.4333376522415133,
+          "statement": "the executed anchor-blind grid {64..1024} moves anchor-shape CCT by only 2.41% (r=128) / 1.43% (r=256) — the regime is hop-latency-dominated; extending to the declared range lower endpoint B=1 (closed-form-only row, not executed) the whole span is 2.68x / 1.99x, still directionally unable to express the twist effect (see falsification_2)",
+          "whole_declared_range_1_to_1024_span_exact": "121216/60859",
+          "whole_declared_range_1_to_1024_span_float": 1.9917514254259847
+        }
+      },
+      "falsifier": {
+        "slice_128": {
+          "anchor_point_cct_ns_exact": "227424/25",
+          "b_to_infinity_latency_chain_floor_ns_exact": "8800",
+          "blind_spot_exact": "63/100",
+          "blind_spot_over_cal_a6_8pct_swing_exact": "63/8",
+          "blind_spot_pct": 63.0,
+          "delivered_fraction_of_required_gain_exact": "928/17325",
+          "delivered_fraction_pct": 5.3564213564213565,
+          "executed_twist_displacement_row": {
+            "B_exact": "163/2",
+            "cct_cut_vs_anchor_point_exact": "4872/386147",
+            "cct_cut_vs_anchor_point_pct": 1.2616956754810993,
+            "cct_ns_exact": "1464096/163",
+            "required_cut_pct": 38.65030674846626,
+            "statement": "executing the twist ratio as a per-link-B displacement (50 x 163/100 = 81.5) delivers only 1.26% of a CCT cut where the anchor measures 38.65% — the executed demonstration that absorbing a geometry (bisection-structure) effect into the bandwidth axis is a MISATTRIBUTION, not a fit; recorded, never selected"
+          },
+          "falsification_1_structural": "the input schema carries NO geometry field (verified against the landed Torus2DConfig): twisted and regular tori of the same (r1, r2, B, L) map to IDENTICAL model inputs — the anchor's ratio is INEXPRESSIBLE, not merely mispredicted",
+          "falsification_2_b_axis_cannot_reach_it": "the required twisted CCT 5581.0 ns lies BELOW the identity's B->infinity floor 8800 ns: NO per-link B (finite or infinite, in or out of the declared range) can produce the anchor's geometry speedup in this hop-latency-dominated regime",
+          "max_b_axis_throughput_gain_50_to_infinity_exact": "7107/6875",
+          "measured_twisted_over_regular_all_to_all_exact": "163/100",
+          "model_twisted_over_regular": "1 (exactly, by input-space blindness — no geometry field exists)",
+          "required_twisted_cct_ns_exact": "909696/163",
+          "required_twisted_cct_ns_float": 5580.957055214724
+        },
+        "slice_256": {
+          "anchor_point_cct_ns_exact": "387552/25",
+          "b_to_infinity_latency_chain_floor_ns_exact": "15200",
+          "blind_spot_exact": "31/100",
+          "blind_spot_over_cal_a6_8pct_swing_exact": "31/8",
+          "blind_spot_pct": 31.0,
+          "delivered_fraction_of_required_gain_exact": "944/14725",
+          "delivered_fraction_pct": 6.410865874363328,
+          "executed_twist_displacement_row": {
+            "B_exact": "131/2",
+            "cct_cut_vs_anchor_point_exact": "7316/1586541",
+            "cct_cut_vs_anchor_point_pct": 0.46112895916336233,
+            "cct_ns_exact": "2021408/131",
+            "required_cut_pct": 23.66412213740458,
+            "statement": "executing the twist ratio as a per-link-B displacement (50 x 131/100 = 65.5) delivers only 0.46% of a CCT cut where the anchor measures 23.66% — the executed demonstration that absorbing a geometry (bisection-structure) effect into the bandwidth axis is a MISATTRIBUTION, not a fit; recorded, never selected"
+          },
+          "falsification_1_structural": "the input schema carries NO geometry field (verified against the landed Torus2DConfig): twisted and regular tori of the same (r1, r2, B, L) map to IDENTICAL model inputs — the anchor's ratio is INEXPRESSIBLE, not merely mispredicted",
+          "falsification_2_b_axis_cannot_reach_it": "the required twisted CCT 11833.6 ns lies BELOW the identity's B->infinity floor 15200 ns: NO per-link B (finite or infinite, in or out of the declared range) can produce the anchor's geometry speedup in this hop-latency-dominated regime",
+          "max_b_axis_throughput_gain_50_to_infinity_exact": "12111/11875",
+          "measured_twisted_over_regular_all_to_all_exact": "131/100",
+          "model_twisted_over_regular": "1 (exactly, by input-space blindness — no geometry field exists)",
+          "required_twisted_cct_ns_exact": "1550208/131",
+          "required_twisted_cct_ns_float": 11833.648854961832
+        }
+      },
+      "inextractable_targets": [
+        "absolute all-to-all completion times / throughputs — only the RATIOS are staged, so no CCT-vs-CCT comparison is defined (this stage never compares a model CCT against a CAL-A5 number)",
+        "all-to-all as a model collective — the L0 torus identity executes ALLREDUCE only (backend capabilities); different collectives are never compared",
+        "3D torus geometry — the model is 2D (A-L0T-SHAPE); the declared 3D->2D projection is declared in every topology file",
+        "hybrid IB+ICI all-reduce penalty (1.8x-2.4x slower) — the paper's PROJECTION of an unbuilt alternative, recorded not used",
+        "PaLM 57.8%-of-peak FLOPs — an FLOPs-utilization figure, not a fabric observable"
+      ],
+      "metric_discipline": "ratio vs ratio (the anchor's dimensionless geometry ratio vs the model's structural invariance ratio of exactly 1); all-to-all throughput and AllReduce CCT are never compared to each other — no mixed metric; the anchor's ratio is read onto the model's OWN anchor-point CCT only to compute what the ratio demands of the model",
+      "noise_scale_comparison_provenance": "the blind spots (63%/31%) are compared against CAL-A6's 5-8% software-version swing (a FIT-SET anchor, group G2) — 7.875x / 3.875x its upper edge; the split record's sole admitted holdout-adjacent exception (the ~5% mean-error scalar) is used ONCE here as tolerance-shape/noise-scale context per plan §3.4: 12.6x / 6.2x that band — an order above every noise scale in the anchor set, so the effect cannot be absorbed as measurement noise",
+      "ocs_reconfiguration_bound": {
+        "bound": "OCS path switching is 5000x the per-hop latency and > 64x every CCT the identity emits in the anchor's regime: reconfiguration is QUASI-STATIC relative to collective completion — per plan §1.1 the OCS timescale CANNOT calibrate O-CCT; it bounds only dynamic-topology reconfiguration modeling, and the L0 topology schema is static by construction",
+        "declared_lower_edge_ns": "1e6 (the conservative lower edge of the staged WORD — a declared interpretation, not a staged number)",
+        "staged": "Palomar OCS 136x136 ports (128 usable + 8 spare), path switching 'milliseconds'",
+        "vs_anchor_point_cct_slice128_exact": "781250/7107",
+        "vs_anchor_point_cct_slice256_exact": "781250/12111",
+        "vs_per_hop_L_200_exact": "5000"
+      },
+      "per_link_placement": {
+        "plan_span_flag": {
+          "finding": "CAL-A5's own Table 4 comparison rows bracket the plan's candidate span [20, 64] differently: TPU v3 70 GB/s/link sits ABOVE the span ceiling (70/64 = 35/32) and A100 25 GB/s/link inside it — the span was derived from CAL-A7/CAL-A12 endpoints + CAL-A5's 50; the anchor's own comparison rows were not span inputs (direction convention of the 70 figure UNVERIFIED, same flag as the 50)",
+          "status": "recorded for the owner; no span or value is changed here"
+        },
+        "readings_vs_plan_span_20_64": {
+          "reading1_50": "INSIDE (20 <= 50 <= 64)",
+          "reading2_25": "INSIDE (20 <= 25 <= 64)",
+          "reading_convention": "UNVERIFIED per the staging doc (Table 4 column order); BOTH readings executed in the sweeps, neither chosen; reading 1 is supported by the anchor's own §7.3 '400 vs. 200 Gbit/s' per-link quote"
+        },
+        "registry_point_contrast": {
+          "registry_64_over_reading1_exact": "32/25",
+          "registry_64_over_reading1_pct": 28.000000000000004,
+          "statement": "the A-L0T-BW registry point 64 sits +28.0% above the reading-1 anchor point (64/50 = 32/25) — a PLACEMENT fact, not a change (the registry value is untouched)"
+        }
+      },
+      "role": "topology-sensitivity FALSIFIER (plan §1.1 row CAL-A5; plan §2.1 A-L0T-UNIF flag: 'torus-class calibration should treat CAL-A5 as the first falsifier of geometry abstractions >30%') + per-link BW anchor",
+      "shape_space_context": {
+        "note": "the model is NOT geometry-insensitive in general — its shape axis (factor-pair choice at fixed r, A-L0T-SHAPE) moves CCT by 2.84x / 4.18x at the anchor B, MORE than the twist effect — but along an axis orthogonal to twist: shape changes the latency chain 2(r1+r2-2), twist changes bisection structure. Recorded as context, NOT agreement",
+        "rows": {
+          "slice_128": {
+            "fastest_shape": "8x16",
+            "slowest_shape": "2x64",
+            "spread_exact": "6730/2369",
+            "spread_float": 2.84086112283664,
+            "times_at_anchor_B_exact": {
+              "2x64": "129216/5",
+              "4x32": "69408/5",
+              "8x16": "227424/25"
+            }
+          },
+          "slice_256": {
+            "fastest_shape": "16x16",
+            "slowest_shape": "2x128",
+            "spread_exact": "13397/3205",
+            "spread_float": 4.18003120124805,
+            "times_at_anchor_B_exact": {
+              "16x16": "61536/5",
+              "2x128": "1286112/25",
+              "4x64": "667104/25",
+              "8x32": "387552/25"
+            }
+          }
+        }
+      },
+      "split_role": "DEGENERATE (no series): the anchor's whole staged signal is fit-side; the split record defines NO within-series holdout for CAL-A5",
+      "staged_signal": "TPU v4 measured twisted-vs-regular torus all-to-all ratios 1.63x (4x4x8, r=128) / 1.31x (4x8x8, r=256) at individual 4 KiB DMAs; per-link ICI 6 links @ 50 GB/s (direction convention UNVERIFIED — both readings executed); NO absolute (size -> time) series exists, so no CCT-vs-CCT comparison is defined"
+    },
+    "gf05": {
+      "domain_caveats": "peer-reviewed SIMULATION (uet-htsim, the family pre-pinned as the repo's third backend) + a small DPDK hardware testbed — NOT UEC silicon; FCT metrics, not collective CCTs (the regime bridge is declared, never assumed)",
+      "effect_size_envelope": {
+        "alltoall_20pct_better_factor_6_5": "displaced 250/3, recorded",
+        "alltoall_6pct_behind_ideal_factor_53_50": "the model sits AT the anchor's OWN 'ideal time' reference by construction — this 6% edge is the anchor's own distance-from-ideal of a REALIZED system, the exact quantity the identity cannot move off zero",
+        "cc_gain_alt_reading_factor_2": "'50% faster' read as x2 => displaced B = 50, EXECUTED (shared with the 2:1 oversubscription row)",
+        "cc_gain_up_to_50pct_primary_factor_3_2": "displaced B = 100/(3/2) = 200/3 — NOT representable, recorded",
+        "eqds_trim_155x": "a protocol-behavior count, not a time or rate metric — inexpressible; recorded",
+        "fairness_65pct_factor_33_20": "a DISTRIBUTIONAL metric (slowest-vs-fastest flow) — no per-flow axis exists in the identity at all; recorded, not displaced",
+        "roce_alltoall_3_to_6x": "6x => 50/3 recorded; 4:1 and 8:1 oversubscription rows EXECUTED at 25 / 12.5",
+        "roce_perm_3_to_5x": "5x EXECUTED (B=20, shared); 3x => 100/3 recorded",
+        "trimming_84us_equals_7_base_rtts": "a CC reaction-time scale (7x the 12 us base RTT), not a collective quantity; recorded"
+      },
+      "role": "envelope sim+HW (R1+R3): the congestion control UEC standardized (SMaRTT = 'the algorithm that forms the basis of the UEC NSCC specification'; REPS = the UET 1.0 reference load-balancing mechanism) + sim-config provenance for the UEC profile",
+      "sim_config_provenance": {
+        "B_alt_reading_recorded_exact": "50",
+        "B_line_exact": "100",
+        "L_per_hop_decomposition": {
+          "link_ns": "600",
+          "sum_ns": "1000",
+          "switch_ns": "400"
+        },
+        "L_per_hop_in_declared_A_L0X_LAT_range": true,
+        "base_rtt_derivation": "84 us / 7 base RTTs, exact",
+        "base_rtt_exact_ns": "12000",
+        "base_rtt_over_range_upper_exact": "6",
+        "bdp_exact_bytes": "1200000",
+        "executed_run": "run f96b688c... at the anchor's OWN sim config (B=100, L=1000, 2 MiB) on the committed stage-GF-05 topology — anchor-CONFIG provenance, never a fit",
+        "mtu_serialization_exact_ns": "1024/25",
+        "registry_200_over_anchor_1000_exact": "1/5",
+        "statement": "the anchor's per-hop L = 1000 ns (400 switch + 600 link) sits INSIDE the declared A-L0X-LAT range [10, 2000] — the ONLY UEC-class latency figure in the corpus, and it is a SIMULATION configuration, not silicon; the registry point 200 ns is exactly 1/5 of it; the RTT-scale figures (12,000 / 18,000 ns) sit 6x/9x above the range upper — they quantify CC reaction scales, a different quantity class (the CAL-A9 decomposition / GF-05 lumped-L expressiveness loss, carried)",
+        "target_rtt_exact_ns": "18000",
+        "window_1_5_bdp_exact_bytes": "1800000"
+      },
+      "split_role": "DEGENERATE (no series): FCT effect sizes + the sim configuration",
+      "staged_signal": "CC 'outperforms ... Swift, RoCE, and MPRDMA by up to 50%'; alltoall 'only up to 6% behind the ideal time'; 'up to 20% better than other sender-based schemes'; fairness 'slowest flow FCT 65% longer' (under Swift); HW permutation RoCE '3-5 times slower than optimal'; HW alltoall 'RoCEv2 is 3-6x slower'; EQDS 'up to 155x more trimmed packets'; trimming learns loss in 'roughly 84 us = 7 base RTTs'; sim config '4KiB MTU, 800 Gbps network bandwidth, 400ns switch traversal latency', link latency 600 ns; 1,024-node fat trees at 2:1/4:1/8:1 oversubscription; window clamped to 1.5 BDP; target RTT 1.5x base RTT",
+      "where_the_model_sits": "the L0 identity IS the anchor's 'ideal time' reference (factor exactly 1) — the UEC-standardized CM's measured 20-50% gains and RoCE's 3-6x distances are both defined RELATIVE to the row this model predicts; every CM delta is structurally inexpressible (no congestion control, no load balancing, no trimming, no window/BDP semantics exist in the input space). These effect sizes BOUND what any UEC-profile congestion-semantics modeling must reproduce — the split record's exact duty assignment"
+    },
+    "gf07": {
+      "carrier_note": "the LUMI carrier (100 B/ns) coincides with GF-05's sim line rate — two anchors, one executed row (both declared in the topology header); the envelope's factors are what the two anchors independently measured at their own carriers",
+      "domain_caveats": "MEASURED, but on scale-out HPC fabrics (IB Dragonfly+, Slingshot, RoCE) under a victim-collective methodology (1000 iterations, 100 warmup discarded) — staged under the labeled-proxy rule; metrics are collective bandwidth ratios, not O-CCT series; the ~2%-of-partition onset has no model-side counterpart (no background-traffic axis exists)",
+      "envelope_table_exact": {
+        "absolutes": "Nanjing peak 22.5 / NSLB-off 15 B/ns (measured absolute rates, exact pair factor 180/120 = 3/2) — EXECUTED",
+        "allreduce_class_4_over_3": "the anchor's ONE AllReduce-class quote — EXECUTED at B=75; its 1/3 effect is 25/6 x CAL-A6's 8% software-version noise floor (a fit-set comparison)",
+        "bursty_alltoall_10_over_7": "EXECUTED at B=70",
+        "bursty_incast_25_over_2": "the staged ratio '0.08' read exactly — EXECUTED at B=8; the paper's '12x' gloss => 100/12 recorded",
+        "ceiling_25": "CRESCO8 'up to 25x' — EXECUTED at B=4",
+        "floor_20_over_19": "LUMI (per-flow HW CM + global-aware adaptive routing) — EXECUTED at B=95 on carrier 100",
+        "leonardo_collapse_5": "EXECUTED at B=20 on the LUMI carrier AND at B=10 on Leonardo's OWN 50 — the carrier-invariance statement (the envelope is a RATIO axis)",
+        "span_float": 23.75,
+        "span_floor_to_ceiling_exact": "95/4",
+        "steady_incast_5_over_3": "EXECUTED at B=60"
+      },
+      "role": "envelope MEASURED (R3): the 5% -> 25x collective-slowdown falsification envelope across five HPC fabrics — the measured magnitudes any congestion-effect model must fall inside; direct evidence for plan gap 7 (no scale-up-domain congestion anchor exists)",
+      "split_role": "DEGENERATE (no series): measured bandwidth-ratio effects across fabrics",
+      "staged_signal": "CRESCO8 steady-incast AllToAll victims 'slowdowns up to 25x'; steady incast 'dropping to 60%'; bursty incast 64 nodes ratio ~0.08 (12x slower gloss); bursty alltoall 'drops to 70%'; Leonardo incast ratios 'collapse to 0.2' at 32-64 nodes; LUMI 'always within 5%'; Nanjing victim AllToAll 180 Gb/s peak, 120 Gb/s NSLB-off; 'Open MPI AllReduce showed up to a 25% bandwidth loss'; effects appear 'even at ~2% of a partition'; fabrics: Leonardo HDR IB Dragonfly+, CRESCO8 NDR IB 1.67:1 fat tree, LUMI Slingshot Dragonfly, HAICGU EDR IB+RoCE, Nanjing RoCE NSLB",
+      "where_the_model_sits": "the identity's prediction IS the uncongested carrier row — factor exactly 1 at every size, i.e. AT the envelope's reference point, with the whole measured 5% -> 25x span (a 23.75x floor-to-ceiling ratio) structurally inexpressible: no congestion, incast, adaptive-routing, or HW-CM term exists. The nearest edge to O-CCT (the AllReduce 4/3 quote) alone exceeds CAL-A6's 8% software-version noise floor by 25/6 — an unabsorbable miss class"
+    },
+    "gf08": {
+      "carrier_placement": {
+        "alt_carrier_B_exact": "25/2",
+        "carrier_B_exact": "25",
+        "executed_8x_edge_B_exact": "25/8",
+        "reading": "200 Gbps per-endpoint per-direction (Ethernet full-duplex convention); the bidirectional-aggregate alternative is exactly x2 down and is EXECUTED as the 12.5 row (shared)",
+        "recorded_65pct_edge_exact": "500/33 (25 / 33/20) — NOT representable, recorded",
+        "registry_64_over_carrier_exact": "64/25",
+        "registry_64_over_carrier_float": 2.56
+      },
+      "domain_caveats": "endpoint/NIC-class transport on scale-out Ethernet — not GPU scale-up, not UEC silicon; headline abstract-level numbers only (staging confidence M-H: verified against the official abstract mirror; full tables unextracted)",
+      "ops_rate_axis_inexpressible": {
+        "bytes_per_op_exact": "625/3",
+        "floor_over_per_op_at_range_lower_exact": "12/5",
+        "floor_over_per_op_at_registry_exact": "48",
+        "implied_L_vs_range_lower": "25/6 < 10 — the per-op rate implies a pair latency BELOW the declared A-L0X-LAT range's lower endpoint",
+        "implied_pair_L_exact": "25/6",
+        "implied_pair_L_float": 4.166666666666667,
+        "ops_per_ns_exact": "3/25",
+        "per_op_time_ns_exact": "25/3",
+        "staging_gloss_check": "the staging doc's own '~6 ns/operation amortized' gloss equals 1/120e6 s per op to 3 significant figures — a rate statement, not a latency; the 200 Gbps / 120 Mops pair is self-consistent only as bytes/op = 625/3 ~ 208 B (small-message regime), which the identity reaches only through its M/B wire term at M ~ 208 B — an M the smoke manifests never execute",
+        "statement": "the '120 Mops/sec' headline is an OPERATIONS-RATE metric: at EVERY admissible L the identity's minimum per-op completion 2L >= 20 ns exceeds the anchor's 25/3 ns/op (floor/per-op = 12/5 exactly at the range lower endpoint, 48 at the registry pair) — a per-operation completion-time metric is structurally inexpressible in a collective-CCT identity (no per-op/operation-rate axis exists)"
+      },
+      "role": "envelope HW transport (R1): the hardware bookend — a SHIPPED UEC-class hardware transport (Falcon on commodity lossy PFC-free Ethernet, Intel IPU E2000), architecturally the closest shipped relative of UEC's UET design points",
+      "split_role": "DEGENERATE (no series): headline rates + dimensionless deltas",
+      "staged_signal": "'peak performance of 200 Gbps, 120 Mops/sec'; 'operation completion times 8x lower than CX-7 RoCE under network congestion'; 'up to 65% higher goodput under lossy conditions' (official abstract, verified via the MSR mirror; full paper tables NOT extracted at staging — ACM 403 in the staging sandbox)",
+      "where_the_model_sits": "factor exactly 1 (uncongested carrier row): the 8x congestion delta and the 65% lossy-goodput delta are structurally inexpressible — no congestion, loss, retransmission, or multipath-spraying semantics exist in the identity; the deltas bound what a UET-class transport's congestion/loss handling buys over RoCE, i.e. the envelope a UEC-profile transport model must reproduce"
+    },
+    "gf09": {
+      "cm_evaluation_deferral": "the anchor's own text: UEC CM 'is designed and tested in simulation' — its evaluation is deferred to the simulation study it cites (the GF-05 material, fitted separately above); GF-09 itself stages NO measurement of any kind",
+      "how_a_design_target_constrains_a_fit": {
+        "constraint_on_fit_values": "NONE. A design target is an ASPIRATIONAL outcome, not a measurement of any built system: it has ZERO falsification power (no model output can be tested against it — a model predicting below a target has not 'missed' anything, because nothing was achieved to miss), it can seed NO fit objective, NO tolerance, and NO swept-value provenance. This stage derives no fitted value from GF-09 and asserts that none may ever be",
+        "normalization_only_use": "the CAL-A1/A2 discipline, with the OPPOSITE bounding direction: CAL-A1/A2 are spec CEILINGS (achieved values stay below them), while '400+ Gbps' is an open-ended class FLOOR — the '+' states no upper bound at all. It therefore bounds the admissible scale of any future UEC-PROFILE configuration from below (a UEC-profile run at B < 50 B/ns under the declared per-direction reading would sit below the design class its profile names), and bounds nothing from above. The sub-microsecond latency target (boundary edge 1000 ns) and the 10 us target RTT (5000 ns charged as 2L) locate the LATENCY REGIME a UEC-profile model must operate in — as context, never as achieved or achievable values",
+        "protocol_constants_recorded": {
+          "bdp_at_target_rtt_exact_bytes": "500000",
+          "cbfc_counter_bits": 20,
+          "feedback_over_bdp_exact": "1/62500",
+          "note": "scale context only: protocol-constant arithmetic (feedback bytes vs BDP at the target RTT) enters no model parameter in this stage",
+          "nscc_feedback_bytes_exact": "8",
+          "sack_bitmap_bits": 64
+        },
+        "registry_placements": {
+          "alt_reading_B_exact": "25",
+          "design_class_floor_B_exact": "50",
+          "propagation_bounds_declared_physics": {
+            "10m_at_5ns_per_m_exact_ns": "50",
+            "150m_at_5ns_per_m_exact_ns": "750",
+            "note": "5 ns/m is a DECLARED engineering constant (~2/3 c, typical fiber), never an anchor- or standard-derived value; both bounds lie inside the declared range — the only GF-09 latency figures that do, and they are declared physics, not targets"
+          },
+          "range_not_moved": "the 10 us target RTT lies OUTSIDE the declared A-L0X-LAT range [10, 2000] at 2.5x its upper endpoint — a RECORDED PLACEMENT; the registry range is NOT moved by design-target material (design targets constrain nothing)",
+          "registry_200_inside_subus_at_exact": "1/5",
+          "registry_64_over_class_floor_exact": "32/25",
+          "subus_boundary_ns": "1000",
+          "target_rtt_charged_2L_ns": "5000",
+          "target_rtt_over_declared_range_upper_exact": "5/2"
+        },
+        "worked_examples_executed": {
+          "note": "the paper's OWN worked arithmetic (25% x 4 flows => factor 4 exactly; 33% => 100/33), executed as displacement rows on the design-class carrier — the paper's examples, never our fits; the 1/3 oversubscription reading (50/3) recorded not executed",
+          "oversub_B_exact": "33/2",
+          "oversub_factor_exact": "100/33",
+          "rccc_B_exact": "25/2",
+          "rccc_factor_exact": "4"
+        }
+      },
+      "provenance_fence": "public arXiv design-principles paper by consortium participants — NOT a specification document; nothing was ingested from ultraethernet.org; confidence M (targets and worked examples, not measurements)",
+      "role": "design-target CEILING (R1 design-target class; the split record's role annotation: 'ceiling/target class, same discipline as CAL-A1/A2: never achieved values')",
+      "split_role": "DEGENERATE BY CLASS: a design target is not data — there is NO fit signal and NO fit objective can exist",
+      "staged_signal": "UE 'is designed to operate at high bandwidths (400+ Gbps) over medium-length (10-150m) links'; local networks target 'sub-microsecond latency'; CC discussion assumes 'target round-trip times of 10 us'; receiver ACKs carry 'a 64-bit SACK bitmap'; NSCC receiver feedback is 'an 8B congestion window penalty value'; CBFC uses 'two 20-bit cyclic counters'; RCCC 'assigns 25% of the bandwidth to each' of 4 incast flows; an oversubscription bottleneck 'can only satisfy 33% of the bandwidth'; UEC CM 'is designed and tested in simulation' (evaluation deferred to the GF-05 paper)"
+    }
+  },
+  "group_g4_anchors": {
+    "fit_targets": [
+      "CAL-A5 — TPU v4 (ISCA 2023) twisted-vs-regular torus ratios 1.63x/1.31x + 6x50 GB/s ICI (falsifier; staging §A5; H, direction convention unverified)",
+      "CAL-A11 — Meta SIGCOMM 2024 RoCE production fabric 30-40% congestion/load-balance envelope (context proxy; staging §A11; M-H, scale-out labeled proxy)",
+      "GF-05 — SMaRTT/REPS (NSDI 2025) UEC-standardized CC effect sizes 20-50%/3-6x + the uet-htsim sim config (envelope sim+HW; gapfill §GF-05; H, FCT metrics)",
+      "GF-07 — congestion impact across 5 HPC fabrics, 5% -> 25x measured envelope (envelope measured; gapfill §GF-07; H, scale-out labeled proxy)",
+      "GF-08 — Falcon (SIGCOMM 2025) 200 Gbps / 120 Mops/s + 8x/65% deltas (envelope HW transport; gapfill §GF-08; M-H, abstract-level)",
+      "GF-09 — Ultra Ethernet design-principles targets 400+ Gbps / sub-us / 10 us RTT (design-target ceiling; gapfill §GF-09; M, never achieved values)"
+    ],
+    "no_oct_fit_exists": "none of the six stages a collective (size -> time) series: CAL-A5 stages a ratio, the envelope anchors stage factors/rates/targets — the split record's own words ('envelope/context checks, not O-CCT fits') are this record's method; every 'fit' below is a placement, an envelope check, or a classified structural miss"
+  },
+  "headline": "group G4 executes NO O-CCT fit (no anchor stages a series) — it executes the split record's two duties instead. THE FALSIFIER (CAL-A5): the torus input space carries NO geometry field, so the model's twisted/regular ratio is exactly 1 against the measured 1.63/1.31 — a 63%/31% blind spot (7.9x/3.9x CAL-A6's 8% noise floor); sweeping the DECLARED A-L0T-BW range shows the B axis cannot express the effect AT ALL in this hop-latency-dominated regime (the required twisted CCT lies BELOW the B->infinity latency floor; the whole unbounded B axis delivers at most 5.4%/6.4% of the required gain; the executed displacement rows deliver 1.26%/0.46% CCT cuts against the required 38.7%/23.7%), and the arithmetic L-absorption that COULD reach it would misattribute bisection structure to hop latency — flagged, never selected. THE ENVELOPES (CAL-A11 + GF-05 + GF-07 + GF-08): the identity predicts exactly the uncongested carrier row — the ORIGIN every envelope anchor measures its effects against (5%->25x measured collectives, 30-40% production load-balance, 20-50% NSCC gains / 3-6x RoCE, 8x/65% transport deltas); all are structurally inexpressible (no congestion semantics exist), every executed edge displacement lies INSIDE the declared A-L0X-BW range, and the executed convergence law shows a dimensionless factor enters an affine identity only as an asymptotic effective-B displacement (the 25x edge executes at 2075/283 ~ 7.33x at the 8 KiB ladder bottom, reaching 25 only in the bandwidth-bound limit). GF-08's 120 Mops/s is inexpressible from below (implied L = 25/6 ns < the range lower 10; the 2L floor exceeds the per-op time at every admissible L). GF-09 (design-target ceiling) CONSTRAINS NOTHING: zero falsification power, normalization-only, an open-ended class FLOOR (opposite direction to the CAL-A1/A2 ceilings); its 10 us RTT target (5000 ns as 2L) is an out-of-range recorded placement — the range is NOT moved",
+  "held_out": {
+    "held_out": false,
+    "scope": "all seven stage runs and all three sweeps are fit-side (the split record defines no within-series holdout for any G4 anchor); the stage's structural-miss findings (twist blindness, congestion blindness, ops-rate inexpressibility) are REPORTED classifications at anchor points fixed before evaluation, never tuned targets"
+  },
+  "independent_reproduction": [],
+  "known_omissions": [
+    "NO congestion, load-balance, incast, or congestion-control semantics exist in ANY L0 identity: the whole measured 5%->25x envelope (GF-07), the 30-40% production effects (CAL-A11), the 20-50% UEC-NSCC gains and 3-6x RoCE distances (GF-05), and the 8x/65% transport deltas (GF-08) are structurally inexpressible — the model sits at factor exactly 1 (the uncongested reference) by construction; the fourth structural-omission axis of the fit family (with S2's software-effective bandwidth ramp, S3's software-version/fabric-asymmetry axes, S4's missing software-latency term)",
+    "NO geometry field exists in the torus input space: CAL-A5's measured 31-63% twisted-vs-regular effect is inexpressible (model ratio exactly 1), the B axis delivers at most 5.4%/6.4% of the required gain even unbounded, and the in-range L absorption would misattribute bisection structure to hop latency — flagged, never selected",
+    "GF-08's operations-rate metric (120 Mops/s => 25/3 ns/op) is inexpressible from below: the implied pair latency 25/6 ns lies below the declared range lower 10 ns and the identity's 2L floor exceeds the per-op time at every admissible L — no per-op axis exists in a collective-CCT identity",
+    "GF-05's (switch 400, link 600) per-hop decomposition is not expressible in the lumped L (the CAL-A9 expressiveness-loss class); fairness (65% slowest-vs-fastest) is distributional — no per-flow axis exists",
+    "GF-09 is design-target material: zero falsification power, normalization-only use (an open-ended class FLOOR, opposite direction to the CAL-A1/A2 ceilings); the 10 us target RTT (5000 ns as 2L) lies outside the declared latency range — recorded, the range NOT moved",
+    "CAL-A11 and GF-07 are scale-out fabrics staged under the labeled-proxy rule — no scale-up-domain congestion measurement exists anywhere (plan gap 7); FCT (GF-05) and bandwidth-ratio (GF-07) metrics are not collective CCTs (declared regime bridges, never assumed)",
+    "no software/endpoint latency term, no packetization, no multi-port injection, no in-network reduction, no reconfiguration (static topologies; OCS switching is quasi-static at >= 1e6 ns) — the standing L0 transport-model omissions"
+  ],
+  "model": {
+    "assumptions": "A-L0T-SEQ / A-L0T-UNIF / A-L0T-SHAPE / A-L0T-BW / A-L0T-LAT / A-L0T-DIV (torus), A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV (crossbar) — experiments/vertical_slice/assumptions_l0.yaml",
+    "backend_ids": [
+      "analytical_l0_torus2d",
+      "analytical_l0_crossbar"
+    ],
+    "declared_free_parameters": {
+      "A-L0T-BW": {
+        "parameter": "link.bytes_per_ns",
+        "registry_range": [
+          1,
+          1024
+        ],
+        "registry_value": 64,
+        "swept_by": "the S5 torus sweeps (the falsifier's axis)"
+      },
+      "A-L0X-BW": {
+        "parameter": "nic.injection_bytes_per_ns",
+        "registry_range": [
+          1,
+          1024
+        ],
+        "registry_value": 64,
+        "swept_by": "the S5 envelope sweep (the envelope anchors' displacement axis)"
+      },
+      "registry_note": "both registry VALUES stay 64 B/ns — UNCHANGED by this stage; the grids are anchor-blind (uniform 64-multiples 64..1024); L stays at the A-L0X-LAT/A-L0T-LAT registry 200 ns on every S5-authored row (the GF-05 run's L=1000 is the anchor's OWN sim config on a committed stage file — anchor-CONFIG provenance, never a fitted value)"
+    },
+    "identities": {
+      "crossbar": "t = 2(r-1)/r*M/B + 2L = 7/4*M/B + 400 ns at r=8, L=200",
+      "torus2d": "t_2d(M,r1,r2) = sum_d [2(k_d-1)/k_d*M/B + 2(k_d-1)*L] — at the faithful projections 8x16/8x32, M=4096, L=200: wire coefficients 29/8 and 59/16 (14848/B and 15104/B ns), latency chains 8800 and 15200 ns"
+    }
+  },
+  "not_tuned": "the sweep grids were fixed by registry-range arithmetic (uniform 64-multiples) and the anchor rows by the anchors' OWN staged figures before any deviation was computed; the falsifier's displacement and absorption alternatives are executed/recorded diagnostics, never selected; no envelope edge, carrier, or design target moved any registry value; no fit objective existed to tune toward (no G4 anchor stages a series); the registry values stay 64 across A-L0T-BW and A-L0X-BW and 200 across the latency parameters; no manifest outside this calibration directory carries any anchor figure",
+  "record_kind": "calibration_fit",
+  "split_record": {
+    "committed_copy": "experiments/calibration/split/anchor_split_v1.json",
+    "group": "G4 — torus-geometry falsifier + UEC-class transport / congestion-management envelopes (fitting stage S5)",
+    "no_leakage": "none of the split record's cross-anchor holdouts or its blocked anchor is read by any objective, swept value, or tolerance in this record (mechanically asserted: their ids appear nowhere in the record bytes); sole recorded exception used: the ~5% mean-error scalar as noise-scale/tolerance-SHAPE context, exactly once, in fits.cal_a5.noise_scale_comparison_provenance",
+    "parameter_axes_duty": "A-L0T-UNIF geometry-abstraction falsification duty (plan §2.1 flag, executed in fits.cal_a5); CM effect-size envelopes bound what congestion semantics modeling must reproduce (executed in the envelope sweep + the five envelope fits); A-AS2-* adapter entries stay in their own registry (untouched by this stage)",
+    "record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20",
+    "within_series_rules": "NONE of the six G4 anchors carries a within-series split (the split record's within_series_splits lists only CAL-A3/CAL-A6/GF-02/GF-04); every staged anchor signal is fit-side and no held-out reporting run exists in this stage"
+  },
+  "stage": "calibration fit record, S5 (group G4 — torus-geometry falsifier + UEC-class transport / congestion-management envelopes)",
+  "status": "PROPOSED — owner adjudication required; no claim, label, or shipped parameter value changes; no O-CCT fit exists in this group and none is claimed",
+  "store_run_cross_checks": [
+    {
+      "calibration_target": [
+        "CAL-A5"
+      ],
+      "cct_ns_exact": "227424/25",
+      "cct_ns_float": 9096.96,
+      "experiment_id": "EXP-CAL-S5-A5-FALSIFIER-128-001",
+      "held_out": false,
+      "identity": "torus2d 8x16 (B=50, L=200)",
+      "mapping": "CAL-A5 falsifier anchor-side reference: the faithful 8x16 projection at B=50 (reading 1), L=200, payload 4096",
+      "payload_bytes": 4096,
+      "run_id": "43091e1545280c151bb56769897cff7e538e3c3e8935d8ab11bb5599d49c9458",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "CAL-A5"
+      ],
+      "cct_ns_exact": "387552/25",
+      "cct_ns_float": 15502.08,
+      "experiment_id": "EXP-CAL-S5-A5-FALSIFIER-256-001",
+      "held_out": false,
+      "identity": "torus2d 8x32 (B=50, L=200)",
+      "mapping": "CAL-A5 falsifier anchor-side reference: the faithful 8x32 projection at B=50 (reading 1), L=200, payload 4096",
+      "payload_bytes": 4096,
+      "run_id": "645e8b4f2a733ab358c60be719c1575757ec21bc6ed0ffd8402c7a146fbbb6b5",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "CAL-A11"
+      ],
+      "cct_ns_exact": "7516202768/25",
+      "cct_ns_float": 300648110.72,
+      "experiment_id": "EXP-CAL-S5-A11-CARRIER-001",
+      "held_out": false,
+      "identity": "crossbar (B=50, L=200)",
+      "mapping": "CAL-A11 context-proxy carrier row: B=50 (400G optics per-direction), L=200, payload 8 GiB, r=8",
+      "payload_bytes": 8589934592,
+      "run_id": "7f8dfd7fd28f65e42c458004f0f952f47ae7b5d5db115bd7d0e7638a92981837",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "GF-05"
+      ],
+      "cct_ns_exact": "967504/25",
+      "cct_ns_float": 38700.16,
+      "experiment_id": "EXP-CAL-S5-GF05-SIMCONFIG-001",
+      "held_out": false,
+      "identity": "crossbar (B=100, L=1000)",
+      "mapping": "GF-05 anchor-CONFIG provenance: the anchor's OWN sim config B=100, L=1000 (400 switch + 600 link), payload 2 MiB, r=8",
+      "payload_bytes": 2097152,
+      "run_id": "f96b688ca8524eaebb846b46819edcbbe10c367687c7ddacf2524c7235a59ae1",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "GF-07"
+      ],
+      "cct_ns_exact": "7350032/25",
+      "cct_ns_float": 294001.28,
+      "experiment_id": "EXP-CAL-S5-GF07-CARRIER-001",
+      "held_out": false,
+      "identity": "crossbar (B=100, L=200)",
+      "mapping": "GF-07 measured-envelope carrier row: B=100 (LUMI per-node aggregate), L=200, payload 16 MiB, r=8",
+      "payload_bytes": 16777216,
+      "run_id": "e14917e9f91c47020d5c29e75d473fcbc385a9cecf389247b7192d47f4670017",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "GF-08"
+      ],
+      "cct_ns_exact": "38672/25",
+      "cct_ns_float": 1546.88,
+      "experiment_id": "EXP-CAL-S5-GF08-FALCON-001",
+      "held_out": false,
+      "identity": "crossbar (B=25, L=200)",
+      "mapping": "GF-08 hardware-transport carrier row: B=25 (Falcon 200 Gbps per-endpoint), L=200, payload 16 KiB, r=8",
+      "payload_bytes": 16384,
+      "run_id": "09cae0bf8cbc0739c334b8b7ae6786eb72f7eeb85d137dd338c49f56a8ca0b16",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "GF-09"
+      ],
+      "cct_ns_exact": "1845008/25",
+      "cct_ns_float": 73800.32,
+      "experiment_id": "EXP-CAL-S5-GF09-UEC50-001",
+      "held_out": false,
+      "identity": "crossbar (B=50, L=200)",
+      "mapping": "GF-09 design-target ceiling placement: B=50 (the '400+' class floor), L=200, payload 2 MiB, r=8 — a placement, never a fit",
+      "payload_bytes": 2097152,
+      "run_id": "610653fb4b9d9bf82f51a73ec91d8cb84ba7309bd9a0d7674c859f1501c7cbb7",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    }
+  ],
+  "verification": [
+    {
+      "check": "tests/calibration/test_s5_fit.py",
+      "scope": "S5 fit guard — re-executes the three S5 sweeps and the seven S5 runs into a scratch store, rebuilds this record byte-identically, and checks the separation invariants (anchor-blind grid membership in both axes' sweeps; no holdout anchor id anywhere in the record bytes; the A-L0T-BW/A-L0X-BW registry values untouched at 64/[1,1024]; the falsifier's below-the-floor arithmetic exact; the envelope convergence law monotone; every envelope edge inside the declared range)"
+    },
+    {
+      "check": "tests/calibration/test_anchor_split.py",
+      "scope": "the split record's own immutability guard (S1) — the data separation this fit runs under"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+# Calibration-ladder S5 FIT SWEEP (group G4, the geometry-falsifier stage,
+# slice 1 of 2): sweep the DECLARED free range of A-L0T-BW
+# (link.bytes_per_ns, registry value 64, range [1, 1024] B/ns,
+# experiments/vertical_slice/assumptions_l0.yaml) on the L0 2D-torus
+# identity at CAL-A5's faithful r=128 projection (8x16, the declared
+# 3D->2D partition of the anchor's 4x4x8 slice) — per the immutable split
+# record 3862e227... (committed at experiments/calibration/split/
+# anchor_split_v1.json; fitting stage S5 = CAL-A5 falsifier + CAL-A11
+# context proxy + GF-05/GF-07/GF-08 envelopes + GF-09 design-target
+# ceiling). CAL-A5 stages no absolute (size -> time) series, so NO
+# CCT-vs-CCT comparison is defined; the split record's parameter_axes
+# duty for this group is the A-L0T-UNIF geometry-abstraction
+# FALSIFICATION (plan §2.1 flag: "CAL-A5 is the first falsifier of
+# geometry abstractions >30%") — this sweep is its executed instrument.
+#
+# Rows, four declared families (nothing tuned toward any anchor OUTPUT):
+#   (a) the UNIFORM, ANCHOR-BLIND 64 B/ns grid over the declared range
+#       [1, 1024]: 64, 128, ..., 1024 (16 members; membership is pure
+#       registry-range arithmetic; 64 = 64x1 is also the registry point);
+#   (b) the anchor's own direction-convention readings 20 / 25 / 50 B/ns
+#       on the committed stage-A5 topologies (the staging doc flags the
+#       per-link direction convention UNVERIFIED, so BOTH readings are
+#       executed, neither chosen; 50 = reading 1 is the anchor point);
+#   (c) the TWIST-DISPLACEMENT diagnostic 81.5 = 50 x 1.63 (the anchor's
+#       measured twisted/regular all-to-all ratio absorbed into the B
+#       axis at its own point) — a DECLARED MISATTRIBUTION row that
+#       measures how little of the geometry effect the B axis can carry
+#       in this latency-dominated regime; never fitted, never selected;
+#   (d) the committed stage-A5 shape-space bounds 2x64 / 4x32 at B=50 —
+#       the model IS geometry-sensitive along its shape axis (the record
+#       quantifies that axis) while being twist-BLIND; context rows.
+#
+# Payload: 4096 B = CAL-A5's individual DMA size (the anchor's regime;
+# a power of two, so the A-L0T-DIV gate accepts every dimension with no
+# bracketing). L stays at the A-L0T-LAT registry point 200 ns (the
+# latency axis was S4's). Baseline = the anchor point (8x16 at B=50,
+# reading 1), so the delta columns read directly as placement vs the
+# anchor's own configuration.
+#
+# NOTHING IS TUNED (the S2/S3/S4 fence): the grid was fixed by
+# registry-range arithmetic and the anchor rows by the anchor's OWN
+# staged figures before any deviation was computed; the falsifier's
+# finding (input-space twist blindness) is CLASSIFIED, never absorbed;
+# the registry value of A-L0T-BW stays 64.
+sweep: cal_s5_torus128_v1
+workload: experiments/calibration/a5/workloads/w1_dense_tp_decode_tp128_4kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_torus2d
+  topology: experiments/calibration/a5/topologies/torus2d128_a5_8x16_b50_v1.yaml
+grid:
+  payload_sizes_bytes: [4096]   # CAL-A5's individual DMA size; exact, gate-accepted
+  algorithms:
+  - algorithm: allreduce_torus2d
+    topologies:
+    # anchor direction-convention readings (committed stage-A5 files)
+    - experiments/calibration/a5/topologies/torus2d128_a5_8x16_b20_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_8x16_b25_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_8x16_b50_v1.yaml
+    # uniform anchor-blind 64 B/ns grid over the declared A-L0T-BW range [1,1024]
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b64_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b128_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b192_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b256_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b320_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b384_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b448_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b512_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b576_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b640_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b704_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b768_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b832_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b896_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b960_v1.yaml
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b1024_v1.yaml
+    # twist-displacement diagnostic (the anchor's 1.63 absorbed into B; never selected)
+    - experiments/calibration/s5/topologies/torus2d128_s5_8x16_b81_5_v1.yaml
+    # committed stage-A5 shape-space bounds at the anchor B (context rows)
+    - experiments/calibration/a5/topologies/torus2d128_a5_4x32_b50_v1.yaml
+    - experiments/calibration/a5/topologies/torus2d128_a5_2x64_b50_v1.yaml

@@ -1,0 +1,69 @@
+# Calibration-ladder S5 FIT-SIDE RUN (group G4, anchor GF-09, the
+# design-target ceiling): the L0 crossbar identity at the design-class
+# carrier B = 50 B/ns (Ultra Ethernet 'designed to operate at high
+# bandwidths (400+ Gbps)' under the declared per-direction reading
+# 400/8 — an open-ended class FLOOR, never an achieved value; the '+'
+# means no upper bound is stated), L = the A-L0X-LAT registry 200 ns,
+# payload 2 MiB. A DESIGN TARGET CONSTRAINS NOTHING in a fit: it is not
+# a measurement, it has zero falsification power, and nothing it states
+# can be missed by a model (targets are aspirational outcomes, not
+# outcomes). This run therefore places the model at the design-class
+# scale for CONTEXT only — the same normalization-only discipline as the
+# CAL-A1/A2 spec ceilings in S2, with the opposite bounding direction
+# (CAL-A1/A2 are ceilings achieved values stay below; '400+' is a class
+# floor with no stated ceiling). The anchor's latency-side targets are
+# recorded as placements in the stage record: 'sub-microsecond latency'
+# boundary edge 1000 ns (the registry 200 sits inside at exactly 1/5)
+# and 'target round-trip times of 10 us' charged as the identity's 2L =
+# 5000 ns — OUTSIDE the declared A-L0X-LAT range [10, 2000] at 2.5x its
+# upper endpoint; a recorded placement, the range is NOT moved. Protocol
+# constants (64-bit SACK bitmap, 8B NSCC feedback, two 20-bit CBFC
+# counters) are recorded as scale context only.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [GF-09], held_out FALSE.
+
+experiment_id: EXP-CAL-S5-GF09-UEC50-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf09/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/gf09/topologies/crossbar8_gf09_uec50_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s5/profiles/implementation_profile_l0_crossbar_cal_s5_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf09_uec50_l200_v1 (single non-blocking switch stage, r=8 free smoke default — the anchor stages no rank count; B = 50 B/ns the design-class floor reading; L = 200 ns registry point)
+  workload: w1_dense_tp_decode tp8, payload 2 MiB (a standard ladder member; the anchor stages no sizes)
+  implementation: analytical L0 free-parameter identity; the GF-09 role is DESIGN-TARGET CEILING class (normalization-only, zero falsification power) — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s5_fit.py
+    scope: S5 fit guard — re-executes the stage's evidence chain (3 sweeps + 7 runs) and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - GF-09
+  held_out:
+    held_out: false
+    scope: fit-side execution at GF-09's design-class carrier (a design target is not a series; no within-series holdout exists and no fit objective can exist)
+  independent_reproduction: []
+  known_omissions:
+  - a design target has ZERO falsification power — nothing is measured; the run is a scale placement, never a fit target
+  - the 400+ Gbps figure is an open-ended class floor (no stated ceiling) — the CAL-A1/A2 spec-ceiling discipline applies with the OPPOSITE bounding direction
+  - the 10 us target RTT (5000 ns charged as 2L) lies outside the declared A-L0X-LAT range at 2.5x its upper endpoint — recorded placement, the range is NOT moved by design-target material
+  - the paper's CM evaluation is deferred to the simulation study it cites (the GF-05 material); UEC CM 'is designed and tested in simulation' per its own text
+  - public design-principles paper by consortium participants, NOT a specification document; nothing was ingested from ultraethernet.org

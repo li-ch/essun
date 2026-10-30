@@ -1,0 +1,33 @@
+# Calibration-ladder S5 fit-sweep topology (group G4, the congestion/
+# transport-envelope stage): fully-connected (crossbar / single
+# non-blocking switch stage) abstraction of 8 ranks at B = 448 B/ns on
+# the parameter A-L0X-BW (nic.injection_bytes_per_ns, registry value 64,
+# DECLARED free range [1, 1024], experiments/vertical_slice/
+# assumptions_l0.yaml). L stays at the A-L0X-LAT registry point 200 ns
+# (the latency axis was S4's).
+#
+# ANCHOR-BLIND GRID member: the uniform 64 B/ns family over the declared A-L0X-BW range [1, 1024] (B = 64 x 7); membership is pure registry-range arithmetic
+#
+# Identity: t = 2(r-1)/r*M/B + 2L (src/essun/backends/analytical/
+# l0_crossbar.py). NOTHING IS TUNED: B is anchor-blind grid arithmetic,
+# an anchor's own staged rate, or an envelope-edge displacement
+# (carrier / measured factor, exact Fraction arithmetic) — never tuned
+# toward any anchor OUTPUT; the displacement rows place where a
+# congested run would sit in parameter space, they are NOT predictions
+# (the identity carries no congestion semantics).
+topology_id: crossbar8_s5_b448_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 448
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent
+  with uniform pair latency; single-port injection shared across the 7
+  peers (A-L0X-PORT). No congestion, no incast, no congestion control,
+  no load balancing, no packetization, no in-network computing, no
+  software/endpoint latency term (all explicitly unsupported by the
+  backend) — the congestion axis the envelope anchors measure is
+  inexpressible here by capability declaration. Provenance: B per the
+  header role above; L = 200 ns free registry point.

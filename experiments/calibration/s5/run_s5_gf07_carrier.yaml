@@ -1,0 +1,63 @@
+# Calibration-ladder S5 FIT-SIDE RUN (group G4, anchor GF-07, the
+# measured 5%->25x congestion envelope): the L0 crossbar identity at the
+# anchor's carrier B = 100 B/ns (LUMI's staged '4x200 Gb/s' per-node
+# aggregate, declared reading 800/8), L = the A-L0X-LAT registry 200 ns
+# (GF-07 stages NO latency number), payload 16 MiB (the anchor's maximum
+# staged vector). The anchor MEASURES collective slowdowns under
+# congestion across five HPC fabrics — the falsification envelope any
+# congestion-effect model must fall inside: floor 'always within 5%'
+# (LUMI, per-flow HW CM + adaptive routing), the one AllReduce-class
+# quote 'up to a 25% bandwidth loss' (4/3), steady incast 60%, Leonardo
+# collapse 0.2 (5x), bursty incast 0.08 (25/2), ceiling 'up to 25x'
+# (CRESCO8 AllToAll victims); envelope span 95/4 = 23.75x. The model's
+# prediction IS this uncongested carrier row (factor exactly 1); the
+# whole envelope is structurally inexpressible (no congestion term
+# exists). Scale-out HPC fabrics, labeled proxy — the envelope bounds
+# the omission; the miss IS the finding.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [GF-07], held_out FALSE.
+
+experiment_id: EXP-CAL-S5-GF07-CARRIER-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf07/workloads/w1_dense_tp_decode_tp8_16mib.yaml
+infra_graph:
+  path: experiments/calibration/gf07/topologies/crossbar8_gf07_rate100_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s5/profiles/implementation_profile_l0_crossbar_cal_s5_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf07_rate100_l200_v1 (single non-blocking switch stage, r=8 free smoke default; B = 100 B/ns LUMI staged per-node aggregate under the declared reading; L = 200 ns registry point (the anchor stages no latency number))
+  workload: w1_dense_tp_decode tp8, payload 16 MiB (the anchor's maximum staged vector, the bandwidth-bound regime)
+  implementation: analytical L0 free-parameter identity; the GF-07 role is the MEASURED envelope (the identity is the uncongested reference the envelope is measured against) — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s5_fit.py
+    scope: S5 fit guard — re-executes the stage's evidence chain (3 sweeps + 7 runs) and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - GF-07
+  held_out:
+    held_out: false
+    scope: fit-side execution at GF-07's carrier (the anchor stages bandwidth-ratio effects, not a CCT series; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - no congestion, no incast, no adaptive routing, no HW CM semantics exist in the identity — the whole 5%->25x measured envelope is structurally inexpressible; the model sits at factor exactly 1 by construction
+  - metrics are collective BANDWIDTH RATIOS, not O-CCT series (declared regime bridge)
+  - scale-out HPC fabrics (IB Dragonfly+, Slingshot, RoCE), labeled proxy — no scale-up-domain congestion measurement exists anywhere (plan gap 7)
+  - victim methodology (1000 iterations, 100 warmup discarded) and ~2%-of-partition onset have no model-side counterpart (no background-traffic axis)

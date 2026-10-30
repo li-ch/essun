@@ -1,0 +1,57 @@
+# Calibration-ladder S5 FIT-SIDE RUN (group G4, anchor CAL-A5, slice
+# 4x8x8 -> 8x32 at r=256): the L0 2D-torus identity at the anchor point
+# B = 50 B/ns (reading 1), L = the A-L0T-LAT registry 200 ns, payload
+# 4096 B. The second slice of the falsifier's anchor-side reference:
+# the measured twisted-vs-regular all-to-all ratio here is 1.31x vs the
+# 4x4x8 slice's 1.63x — a SPREAD of geometry effects (31% and 63%) that
+# no setting of the model's free parameters (B, L, shape) can express,
+# since the identity is invariant on the twist axis BY CONSTRUCTION.
+# Classified, never absorbed; the A-L0T-BW registry value stays 64.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [CAL-A5], held_out FALSE.
+
+experiment_id: EXP-CAL-S5-A5-FALSIFIER-256-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a5/workloads/w1_dense_tp_decode_tp256_4kib.yaml
+infra_graph:
+  path: experiments/calibration/a5/topologies/torus2d256_a5_8x32_b50_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s5/profiles/implementation_profile_l0_torus2d_cal_s5_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_torus2d
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: torus2d256_a5_8x32_b50_v1 (the declared 3D->2D projection 8x32 of CAL-A5's 4x8x8 slice, r=256; B = 50 B/ns reading 1; L = 200 ns registry point)
+  workload: w1_dense_tp_decode tp256, payload 4096 B (the anchor's individual DMA size)
+  implementation: analytical L0 free-parameter identity; the CAL-A5 role is the plan §1.1/§2.1 A-L0T-UNIF geometry-abstraction FALSIFIER — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s5_fit.py
+    scope: S5 fit guard — re-executes the stage's evidence chain (3 sweeps + 7 runs) and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - CAL-A5
+  held_out:
+    held_out: false
+    scope: fit-side execution at CAL-A5's anchor point (the anchor stages ratios, not a series; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - the input schema carries NO geometry field — the twisted/regular axis is inexpressible — the model's twisted/regular ratio is exactly 1 against the measured 1.31 (this slice)
+  - all-to-all (the anchor's collective) is never compared to the model's AllReduce — ratio-space falsification only, no mixed metric
+  - 3D slices projected 3D->2D (declared projection, distortion declared in the topology file)
+  - no software/endpoint latency term; the 4 KiB regime is hop-latency-dominated (98.1% at this shape) on an L axis no current-gen anchor pins (plan gap 2)
+  - no congestion, no credits, no packetization, no reconfiguration (static topology; OCS ms-scale switching is quasi-static and bounds only dynamic-topology modeling)

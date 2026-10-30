@@ -1,0 +1,34 @@
+# Calibration-ladder S5 fit-sweep topology (group G4, the geometry
+# falsifier stage): 2D torus (8x32, r=256) at
+# B = 512 B/ns on the parameter A-L0T-BW (link.bytes_per_ns, registry
+# value 64, DECLARED free range [1, 1024], experiments/vertical_slice/
+# assumptions_l0.yaml). L stays at the A-L0T-LAT registry point 200 ns
+# (the latency axis was S4's).
+#
+# ANCHOR-BLIND GRID member: the uniform 64 B/ns family over the declared A-L0T-BW range [1, 1024] (B = 64 x 8); membership is pure registry-range arithmetic
+#
+# Identity: t_2d(M,r1,r2) = t_ring(M,r1) + t_ring(M,r2) with
+# t_ring(M,k) = 2(k-1)/k*M/B + 2(k-1)*L
+# (src/essun/backends/analytical/l0_torus2d.py). NOTHING IS TUNED: B is
+# anchor-blind grid arithmetic or the anchor's own staged figure, never
+# tuned toward any anchor OUTPUT.
+topology_id: torus2d256_s5_8x32_b512_v1
+topology_class: torus2d_ring_x_ring
+ranks: 256
+grid:
+  dim1_ranks: 8
+  dim2_ranks: 32
+link:
+  bytes_per_ns: 512
+  hop_latency_ns: 200
+notes: >
+  Two wrapped dimensions; dimension-d rings connect ranks that agree on
+  the other dimension's coordinate. Dimensions execute sequentially over
+  the full message (A-L0T-SEQ); both dimensions share B and L
+  (A-L0T-UNIF). The input schema carries NO geometry field: a twisted
+  torus and a regular torus of the same (r1, r2, B, L) map to IDENTICAL
+  model inputs — the twist-blindness the CAL-A5 falsifier quantifies. No
+  congestion, no credits, no packetization, no reconfiguration, no
+  per-pair heterogeneity (L0 transport model only). Provenance: B per
+  the header role above; L = 200 ns free A-L0T-LAT registry point; shape
+  = declared 3D->2D projection of CAL-A5's 4x8x8 slice.

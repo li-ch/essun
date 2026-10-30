@@ -1,0 +1,57 @@
+# Implementation profile for the calibration-ladder S5 runs and sweeps on
+# the analytical L0 crossbar backend (group G4 — the congestion/transport
+# envelope stage: CAL-A11 + GF-05 + GF-07 + GF-08 + GF-09 per the
+# immutable split record 3862e227..., fitting stage S5).
+implementation_profile_id: analytical_l0_crossbar_cal_s5_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. The crossbar is the
+  identity of the envelope anchors because every one of them stages a
+  dimensionless effect-size FACTOR or an absolute per-endpoint RATE, and
+  the single-port per-rank injection B is the axis those factors
+  displace; the identity's prediction is by construction always the
+  UNCONGESTED carrier row (factor exactly 1) — the envelope anchors
+  measure where congested reality sits RELATIVE to that row.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns, A-L0X-BW; declared free range [1, 1024]
+  B/ns, registry point 64) is THIS STAGE'S swept axis: (a) the
+  anchor-blind uniform 64 B/ns grid 64..1024 (16 members, pure
+  registry-range arithmetic); (b) the anchor carriers — 100 (GF-05 sim
+  line rate 800 Gbps and GF-07 LUMI 4x200 Gb/s, declared per-direction
+  readings), 50 (CAL-A11 400G optics; GF-09 '400+' design-class floor),
+  25 (GF-08 Falcon 200 Gbps peak); (c) the envelope-edge displacement
+  rows carrier / measured factor (exact Fraction arithmetic): 95, 75, 70,
+  60, 20, 10, 8, 4 (GF-07's 5%->25x envelope incl. the 4/3 AllReduce-class
+  quote), absolute 22.5 / 15 (GF-07 Nanjing), 50 / 25 / 20 / 12.5 (GF-05
+  oversubscription / RoCE-5x), 3.125 (GF-08 8x), 16.5 (GF-09 33%
+  oversubscription worked example), 35 (CAL-A11 30% path-pinning
+  degradation); the non-representable edges (200/3, 500/53, 100/3, 50/3,
+  500/33, 250/33, 25/3, 10000/167) are recorded NOT executed in the stage
+  record. L stays at the A-L0X-LAT registry point 200 ns (the latency
+  axis was S4's); GF-05's own sim-config latency decomposition
+  (400 switch + 600 link = 1000 ns per hop) is executed in the GF-05 run
+  on the committed stage-GF-05 topology. The displacement rows are
+  PLACEMENTS of where a congested run would sit in parameter space, not
+  predictions. NOTHING IS TUNED: the registry value of A-L0X-BW stays 64.
+measurement_source: >
+  G4 staged signals (docs/calibration/anchors_staging.md §A5/§A11,
+  anchors_gapfill.md §GF-05/§GF-07/§GF-08/§GF-09; E1 transcription
+  builders committed at experiments/calibration/{a5,a11,gf05,gf07,gf08,gf09}/)
+  — external published effect sizes, rates, and design targets, compared
+  as ENVELOPE/CONTEXT PLACEMENTS (the split record's own words: envelope/
+  context checks, not O-CCT fits), as PROPOSED evidence; not our testbed,
+  no E3/E4 language. CAL-A11 and GF-07 are scale-out fabrics staged under
+  the labeled-proxy rule; GF-09 is a design-target class (never achieved
+  values, zero falsification power — placement only).
+evidence_dimensions: >
+  every S5 run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target = this stage's fit anchor ids /
+  held_out / independent_reproduction / known_omissions); the split
+  record defines NO within-series holdout for any G4 anchor, so every S5
+  run is fit-side (held_out: false).

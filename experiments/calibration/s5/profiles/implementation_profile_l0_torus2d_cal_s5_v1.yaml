@@ -1,0 +1,53 @@
+# Implementation profile for the calibration-ladder S5 torus runs and
+# sweeps on the analytical L0 2D-torus backend (group G4 — the geometry
+# falsifier stage: CAL-A5 per the immutable split record 3862e227...,
+# fitting stage S5).
+implementation_profile_id: analytical_l0_torus2d_cal_s5_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_torus2d
+fidelity: L0
+model: >
+  per-dimension sequential full-message ring AllReduce on a 2D torus:
+  t_2d(M, r1, r2) = t_ring(M, r1) + t_ring(M, r2) with t_ring(M, k) =
+  2*(k-1)/k * M/B + 2*(k-1)*L (see src/essun/backends/analytical/l0_torus2d.py);
+  assumptions A-L0T-SEQ / A-L0T-UNIF / A-L0T-SHAPE / A-L0T-BW / A-L0T-LAT /
+  A-L0T-DIV from experiments/vertical_slice/assumptions_l0.yaml. The torus
+  is the PRIMARY identity of the falsifier: CAL-A5's measured effect is a
+  geometry (twisted-vs-regular torus) effect, and the A-L0T-UNIF
+  geometry-abstraction flag (plan §2.1) assigns this stage its
+  falsification duty.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns, A-L0T-BW; declared free range [1, 1024] B/ns,
+  registry point 64) is THIS STAGE'S swept axis: (a) the anchor-blind
+  uniform 64 B/ns grid 64..1024 (16 members, pure registry-range
+  arithmetic); (b) the anchor's own direction-convention readings
+  20 / 25 / 50 on the committed stage-A5 topologies (the convention is
+  flagged UNVERIFIED by the staging doc — both readings executed, neither
+  chosen); (c) the twist-displacement diagnostics 81.5 = 50 x 1.63 and
+  65.5 = 50 x 1.31 (the anchor's measured twisted/regular ratios absorbed
+  into the B axis at its own point — declared-misattribution rows that
+  measure how little of the geometry effect the B axis can carry; never
+  fitted, never selected); (d) the committed stage-A5 shape-space bounds
+  at B = 50. L stays at the A-L0T-LAT registry point 200 ns (the latency
+  axis was S4's). Payload 4096 B = the anchor's individual all-to-all DMA
+  size, placing the runs in the anchor's regime; the anchor measures
+  ALL-TO-ALL throughput while the model executes ALLREDUCE — the two
+  collectives are never compared (no mixed metric); the falsifier
+  compares the anchor's dimensionless twisted/regular RATIO against the
+  model's structural invariance ratio of exactly 1. NOTHING IS TUNED: the
+  registry value of A-L0T-BW stays 64.
+measurement_source: >
+  CAL-A5 staged numbers (Google TPU v4, ISCA 2023, arXiv:2304.01433:
+  6 ICI links @ 50 GB/s per chip, §7.3 '400 vs. 200 Gbit/s'; twisted-torus
+  all-to-all 1.63x on 4x4x8 and 1.31x on 4x8x8 vs regular torus,
+  individual 4 KiB DMAs; docs/calibration/anchors_staging.md §A5;
+  confidence H) — external published measurement/spec, compared as a
+  PARAMETER-AXIS PLACEMENT plus the falsifier's ratio-space statement, as
+  PROPOSED evidence; not our testbed, no E3/E4 language.
+evidence_dimensions: >
+  every S5 run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target = this stage's fit anchor ids /
+  held_out / independent_reproduction / known_omissions); the split
+  record defines NO within-series holdout for any G4 anchor, so every S5
+  run is fit-side (held_out: false).

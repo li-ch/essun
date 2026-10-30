@@ -1,0 +1,65 @@
+# Calibration-ladder S5 FIT-SIDE RUN (group G4, anchor GF-08, the
+# shipped-UEC-class hardware transport envelope): the L0 crossbar
+# identity at the anchor's carrier B = 25 B/ns (Falcon 'peak performance
+# of 200 Gbps', declared per-endpoint reading 200/8; the
+# bidirectional-aggregate alternative 12.5 is executed in the sweep),
+# L = the A-L0X-LAT registry 200 ns, payload 16 KiB (the A-W1-SIZE
+# registry point — the anchor stages no size series). The anchor's
+# headline deltas — 'operation completion times 8x lower than CX-7 RoCE
+# under network congestion' and 'up to 65% higher goodput under lossy
+# conditions' — bound the congestion/loss sensitivity a UET-class
+# transport claims over RoCE; the model sits at factor exactly 1 (no
+# congestion or loss semantics). The anchor's OTHER headline — '120
+# Mops/sec' — is an OPERATIONS-RATE metric: 25/3 ns/op implies a per-pair
+# latency of 25/6 ns, BELOW the declared A-L0X-LAT range lower endpoint
+# 10 ns, and the identity's minimum per-op completion 2L >= 20 ns exceeds
+# the per-op time at every admissible L: the ops-rate axis is
+# structurally inexpressible in a collective-CCT identity. Endpoint/NIC-
+# class transport on scale-out Ethernet (not GPU scale-up, not UEC
+# silicon); headline abstract-level numbers (staging confidence M-H).
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [GF-08], held_out FALSE.
+
+experiment_id: EXP-CAL-S5-GF08-FALCON-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf08/workloads/w1_dense_tp_decode_tp8_16kib.yaml
+infra_graph:
+  path: experiments/calibration/gf08/topologies/crossbar8_gf08_falcon25_l200_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s5/profiles/implementation_profile_l0_crossbar_cal_s5_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf08_falcon25_l200_v1 (single non-blocking switch stage, r=8 free smoke default — the anchor stages an endpoint rate, not a rank count; B = 25 B/ns the anchor's declared per-endpoint reading; L = 200 ns registry point (the anchor stages no latency number))
+  workload: w1_dense_tp_decode tp8, payload 16 KiB (the A-W1-SIZE registry point; the anchor stages no size series)
+  implementation: analytical L0 free-parameter identity; the GF-08 role is the hardware transport ENVELOPE bookend — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s5_fit.py
+    scope: S5 fit guard — re-executes the stage's evidence chain (3 sweeps + 7 runs) and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - GF-08
+  held_out:
+    held_out: false
+    scope: fit-side execution at GF-08's carrier (the anchor stages headline deltas, not a collective series; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - no congestion, no loss, no retransmission, no multipath spraying semantics exist in the identity — the 8x / 65% deltas are structurally inexpressible; the model sits at factor exactly 1
+  - the '120 Mops/sec' operations-rate metric is structurally inexpressible in a collective-CCT identity — its implied per-pair latency 25/6 ns lies below the declared range lower 10 ns and the identity's floor 2L >= 20 ns exceeds the 25/3 ns per-op time at EVERY admissible L
+  - endpoint/NIC-class transport on scale-out Ethernet (not GPU scale-up, not UEC silicon); headline numbers verified against the abstract mirror only — full paper tables not extracted at staging (confidence M-H)
