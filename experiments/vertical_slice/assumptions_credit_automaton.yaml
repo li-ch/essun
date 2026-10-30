@@ -12,6 +12,14 @@
 # automaton (the paper-draft G6 correction: Eq. 3's rate law is NOT a
 # consequence of FC-R02's safety rule alone; it needs C1-C4 below, and
 # the completion identity needs C5).
+#
+# STEADY-STATE ASSUMPTION LEDGER (G6 extension, 2026-10-30): the five
+# assumption families the Eq. 3 reframe names — initial credits
+# (A-CA-INIT), credit-return timing (A-CA-RT), return batching
+# (A-CA-BATCH), packetization (A-CA-GRAN/A-CA-SER/A-CA-DIV), and
+# steady-state operation (A-CA-STEADY) — each have an explicit entry
+# here, each FREE (no entry is standard-derived) and each naming its
+# alternative. The achieving schedule is A-CA-GREEDY.
 assumptions_id: assumptions_credit_automaton_v1
 status: PROPOSED
 assumptions:
@@ -47,6 +55,47 @@ assumptions:
       smuggled in.
     sensitivity: high (D scales the steady rate in the gated regime)
     owner: g8-automaton
+    review: PROPOSED
+  - id: A-CA-BATCH
+    parameter: model.credit_return_batching
+    value: per_transmit_unbatched
+    unit: none
+    range: [per_transmit_unbatched, coalesced_returns]
+    rationale: >
+      Every transmit's credit returns INDIVIDUALLY, exactly s bytes
+      restored D ns after that transmit's admission instant — one
+      return event per transmit, never coalesced. Batched or piggybacked
+      returns (a return message covering multiple transmits, or a
+      periodic return timer) would delay restoration relative to this
+      reading and lower the steady rate below floor(W/s)*s/D, moving the
+      Eq. 3 convergence boundary. The spec text prescribes no batching
+      regime, so the unbatched reading is the abstraction's own free
+      choice, stated here instead of implied (companion of A-CA-RT).
+    sensitivity: high in the credit-gated regime (batching lowers the
+      achievable steady rate); zero for the safety bound
+    owner: g6-reframe
+    review: PROPOSED
+  - id: A-CA-STEADY
+    parameter: model.operating_regime
+    value: steady_state_T_much_greater_than_D
+    unit: none
+    range: [steady_state_T_much_greater_than_D, finite_transfer_regime]
+    rationale: >
+      The completion identity Eq. 3 states a STEADY-STATE rate: it is
+      the abstraction of transfers long enough that fill and drain
+      transients amortize (T >> D = L + L_cr). For a finite transfer of
+      n = q*k + r packets the automaton completes EARLIER than Eq. 3
+      predicts, by the exact closed forms of the theorem's clause 4
+      (k*u - D when r == 0; r*(u - D/k) when r >= 1; credit-gated
+      divergence strictly inside (-D, 0]; zero link-limited), so the
+      overestimate vanishes relatively as n grows and is bounded by one
+      credit-loop round trip absolutely — condition C5 of the
+      abstraction theorem, recorded here as the entry it always was.
+      The spec imposes no operating regime; steady state is the
+      abstraction's declared validity domain.
+    sensitivity: bounded (finite-regime divergence is exact, less than
+      one credit-loop round trip; relative effect vanishes as T/D grows)
+    owner: g6-reframe
     review: PROPOSED
   - id: A-CA-SER
     parameter: model.serialization_grid

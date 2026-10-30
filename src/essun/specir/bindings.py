@@ -48,6 +48,22 @@ executable: the rate law is an abstraction with conditions, not a
 consequence of FC-R02's safety rule alone. Golden-tested (hand-derived
 traces) in ``tests/golden/test_credit_automaton_golden.py``.
 
+Steady-state assumption ledger (G6, 2026-10-30): every assumption the
+throughput law needs beyond FC-R02's safety rule is an explicit
+anchored-or-FREE entry in
+``experiments/vertical_slice/assumptions_credit_automaton.yaml`` —
+initial credits (``A-CA-INIT``, full granted window at t0), credit-return
+timing (``A-CA-RT``, fixed ``D = L + L_cr`` from the admission instant),
+return batching (``A-CA-BATCH``, per-transmit unbatched returns),
+packetization (``A-CA-GRAN``/``A-CA-SER``/``A-CA-DIV``, byte-exact
+consumption on an integer serialization grid, whole packets), the
+achieving schedule (``A-CA-GREEDY``, greedy work-conserving), and
+steady-state operation itself (``A-CA-STEADY``, ``T >> D``; the
+finite-transfer divergence is the exact closed form of clause 4). Each
+entry is a FREE modeling choice — none is standard-derived — and each
+names its alternative, so the law's validity domain is read off the
+ledger rather than inferred from prose.
+
 The credit-family S2 binding (G2 ladder, 2026-10-30)
 -----------------------------------------------------
 
