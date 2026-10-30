@@ -1,0 +1,27 @@
+# Implementation profile for the analytical L0-TFC backend with the
+# UEC11-FC-R08 cell-quantization extension (G2 credit-family ladder
+# stage S2, 2026-10-30). Distinct file from implementation_profile_l0_tfc
+# (the flagship profile stays the R02-only record; run identity hashes
+# this file's bytes).
+implementation_profile_id: analytical_l0_tfc_cell_v1
+status: PROPOSED
+backend: analytical_l0_tfc
+fidelity: L0.5
+model: >
+  chunked ring AllReduce under a per-pair UEC TFC credit window with
+  cell-quantized credit consumption (see
+  src/essun/backends/analytical/l0_tfc.py): per-packet consumed credit
+  cq = ROUNDUP(c/cell)*cell with the ring chunk c = M/r as tfc_pkt_size,
+  effective data rate min(B, (c/cq)*W/(L+L_cr)), completion
+  t = 2*(r-1)/r*M/min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L. Zero-waste
+  convergence: c = 0 (mod cell) implies cq = c and the identity equals
+  the flagship R02 identity exactly.
+requirement_bindings:
+  - binding_id: BIND-UEC11-FC-R02-L0TFC
+    requirement_id: UEC11-FC-R02
+    disposition: simulated_behavior
+  - binding_id: BIND-UEC11-FC-R08-L0TFC
+    requirement_id: UEC11-FC-R08
+    disposition: simulated_behavior
+free_parameters_source: experiments/vertical_slice/assumptions_tfc_cell.yaml
+measurement_source: none   # not calibrated; free parameters, not measurements

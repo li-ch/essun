@@ -34,6 +34,37 @@ time (O-CCT) changes exactly when the window falls below the
 bandwidth-delay product, and converges to the landed L0 identity exactly
 at ``W >= B * (L + L_cr)``.
 
+The credit-family S2 binding (G2 ladder, 2026-10-30)
+-----------------------------------------------------
+
+**UEC11-FC-R08** — UEC 1.1 §3.6.15 TFC, DEFINITIONAL: the ROUNDUP
+cell-quantization law of credit consumption, ``credit_used =
+ROUNDUP(tfc_pkt_size / tfc_dest_cell_size) * tfc_dest_cell_size``. Bound
+to the same ``analytical_l0_tfc`` backend through the OPT-IN parameter
+``tfc_dest_cell_size`` (a topology that declares no cell runs the
+flagship R02 identity with byte-identical observations): per-packet
+consumed credit ``cq = ROUNDUP(c/cell) * cell`` with the ring chunk
+``c = M/r`` as ``tfc_pkt_size``, and the effective data rate
+``min(B, (c/cq) * W/(L+L_cr))`` — quantization waste spends credit
+without moving bytes. The convergence anchor is the zero-waste boundary:
+``c ≡ 0 (mod cell)`` gives ``cq = c`` and the identity equals the landed
+R02 identity EXACTLY. The cell's supported values (integral 256-byte
+multiples in 256..9216 B) are cited to **UEC11-FC-R07**, whose own
+implementation-support disposition stays ``unsupported`` — the same
+pattern as R05's credit unit inside the flagship binding (values in,
+obligation out).
+
+Choice record for S2 (decision relevance, per the G2 ladder plan):
+destination cell sizing is a real UEC receive-buffer decision the spec
+itself names (fine 256-B cells vs per-packet 9216-B cells — R08's own
+worked example), and its cost is exactly the quantization waste the law
+computes; executable today as an exact closed-form rate identity on the
+landed flagship construction. Deferred by design: the per-packet
+overhead constant (FC-R09, stage S3 — entering ``tfc_pkt_size``; at S2
+the chunk IS the packet, a registered assumption), and FC-R07/R10 as
+promotions (no admissible-config enforcement path exists;
+implementation-support semantics).
+
 Choice record (decision relevance, not convenience):
 
 - CHOSEN UEC11-FC-R02 because TFC credit provisioning is a real UEC
@@ -144,12 +175,75 @@ BINDING_UEC11_FC_R02_L0TFC = RequirementBinding(
     ),
 )
 
+#: The credit-family S2 binding (G2 ladder, 2026-10-30): UEC11-FC-R08's
+#: ROUNDUP cell-quantization law as a steady-state rate identity on the
+#: same backend. Opt-in parameter: a topology without tfc.dest_cell_size
+#: executes the flagship identity only.
+BINDING_UEC11_FC_R08_L0TFC = RequirementBinding(
+    binding_id="BIND-UEC11-FC-R08-L0TFC",
+    requirement_id="UEC11-FC-R08",
+    anchor_ids=("UEC11-S3.6.15-TFC",),
+    disposition="simulated_behavior",
+    backend_module="essun.backends.analytical.l0_tfc",
+    backend_id="analytical_l0_tfc",
+    capability="tfc_credit_windowed_ring",
+    parameters=("tfc_dest_cell_size",),
+    parameter_effect=(
+        "per-packet consumed credit cq = ROUNDUP(c/cell) * cell with the "
+        "ring chunk c = M/r as tfc_pkt_size (overhead deferred to S3's "
+        "FC-R09 law); effective data rate = min(B, (c/cq) * W/(L+L_cr)); "
+        "ring AllReduce completion t = 2*(r-1)/r * M / min(B, "
+        "(c/cq)*W/(L+L_cr)) + 2*(r-1)*L"
+    ),
+    enforced_invariants=(
+        "per-op in-flight data bytes = Rd*(L+L_cr) <= (c/cq)*W with "
+        "equality iff the quantized window gates; credit bytes in flight "
+        "<= W always (a cell gates rate, never byte count)",
+        "tfc_dest_cell_size must be an integral 256-byte multiple in "
+        "256..9216 bytes (values cited to UEC11-FC-R07); out-of-domain "
+        "cells are rejected at load time citing the requirement",
+    ),
+    observable_ids=("O-CCT", "O-CONSERVATION"),
+    spec_derived_constants=(
+        (
+            "tfc_dest_cell_size_min_bytes",
+            "256",
+            "UEC11-FC-R07",
+        ),
+        (
+            "tfc_dest_cell_size_max_bytes",
+            "9216",
+            "UEC11-FC-R07",
+        ),
+        (
+            "tfc_dest_cell_size_granularity_bytes",
+            "256",
+            "UEC11-FC-R07",
+        ),
+    ),
+    golden_test="tests/golden/test_l0_tfc_cell_golden.py",
+    notes=(
+        "Zero-waste convergence anchor: c == 0 (mod cell) => cq = c => "
+        "the identity equals the landed R02 identity exactly (cells gate "
+        "credit efficiency, the window gates rate). E0 evidence level: "
+        "identity and determinism only; the cell is FREE within the "
+        "R07-cited domain; B, L, W, L_cr stay the flagship's free "
+        "parameters. The chunk-as-packet mapping and the fluid "
+        "steady-window reading are registered assumptions "
+        "(experiments/vertical_slice/assumptions_tfc_cell.yaml), not "
+        "spec facts."
+    ),
+)
+
 #: The registry of live bindings. Adding one is a reviewed act: the
 #: requirement's disposition must be flipped to the binding's disposition
 #: in its stage module in the same commit, EXPECTED_COUNTS in
 #: tests/specir/test_dispositions.py updated, and the binding's golden
 #: test must be green (the no-silent-promotion gate).
-BINDINGS: tuple[RequirementBinding, ...] = (BINDING_UEC11_FC_R02_L0TFC,)
+BINDINGS: tuple[RequirementBinding, ...] = (
+    BINDING_UEC11_FC_R02_L0TFC,
+    BINDING_UEC11_FC_R08_L0TFC,
+)
 
 
 def requirement_index() -> dict[str, object]:

@@ -1,0 +1,126 @@
+# Assumption registry for the UEC11-FC-R08 cell-quantization extension of
+# the analytical L0-TFC credit-window model (G2 credit-family ladder
+# stage S2, binding BIND-UEC11-FC-R08-L0TFC). SEPARATE file from
+# assumptions_tfc.yaml by the per-run identity house rule: the
+# assumptions file is a hashed manifest input, so appending these entries
+# to the flagship file would have shifted the flagship run's identity;
+# here they cannot.
+#
+# PROVENANCE NOTE: the only standard-derived values governing this
+# extension are the 256-byte credit unit (UEC11-FC-R05) and the cell
+# domain 256..9216 B in 256-B multiples (UEC11-FC-R07) — both live as
+# named constants in src/essun/backends/analytical/l0_tfc.py and are NOT
+# assumptions. Every value below is a free parameter or a modeling
+# choice: not standard-derived, not measured.
+assumptions_id: assumptions_tfc_cell_v1
+status: PROPOSED
+assumptions:
+  - id: A-TFCC-BW
+    parameter: link.bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Same value and same role as the flagship A-TFC-BW: shared B (with L,
+      A-TFCC-LAT) is what makes the zero-waste convergence anchor —
+      c = 0 (mod cell) implies the R08 identity equals the landed R02
+      identity exactly — meaningful against the stored flagship run.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: g2-stage-s2
+    review: PROPOSED
+  - id: A-TFCC-LAT
+    parameter: link.hop_latency_ns
+    value: 200
+    unit: ns
+    range: [0, 2000]
+    rationale: >
+      Same value and role as the flagship A-TFC-LAT; one hop latency per
+      chunk transfer, same chain as the flagship identity.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: g2-stage-s2
+    review: PROPOSED
+  - id: A-TFCC-W
+    parameter: tfc.window_bytes
+    value: 12800
+    unit: bytes
+    range: [256, 1048576]
+    rationale: >
+      Same value and role as the flagship A-TFC-W (50 credit units; the
+      spec leaves the AMOUNT free). Under cell quantization the window
+      still gates the credit round trip; quantization multiplies the
+      achievable data rate by c/cq only.
+    sensitivity: high for O-CCT when (c/cq)*W/(L+L_cr) < B, zero for O-CONSERVATION
+    owner: g2-stage-s2
+    review: PROPOSED
+  - id: A-TFCC-CR
+    parameter: tfc.credit_return_latency_ns
+    value: 200
+    unit: ns
+    range: [0, 2000]
+    rationale: >
+      Same value and role as the flagship A-TFC-CR; the UEC spec does not
+      fix credit-return timing, so it stays an explicit free parameter.
+    sensitivity: high for O-CCT when (c/cq)*W/(L+L_cr) < B, zero for O-CONSERVATION
+    owner: g2-stage-s2
+    review: PROPOSED
+  - id: A-TFCC-CELL
+    parameter: tfc.dest_cell_size
+    value: 9216
+    unit: bytes
+    range: [256, 9216]
+    rationale: >
+      Free deployment parameter within the R07-cited validated domain
+      (integral 256-B multiples, 256..9216 B; the spec's default is 256 B,
+      at which this smoke chunk 2048 B is aligned and the identity equals
+      the flagship's exactly). 9216 B is the per-packet-buffer-strategy
+      cell the UEC11-FC-R08 statement itself names — chosen for the
+      evidence run to land deep in the waste regime (efficiency 2/9) and
+      to exercise the domain's upper boundary. NOT a claim that any real
+      destination uses 9216-B cells.
+    sensitivity: high for O-CCT when c mod cell != 0 (efficiency c/cq), zero at alignment, zero for O-CONSERVATION
+    owner: g2-stage-s2
+    review: PROPOSED
+  - id: A-TFCC-CHUNK-PKT
+    parameter: model.tfc_pkt_size_mapping
+    value: ring_chunk_is_packet
+    unit: none
+    range: [ring_chunk_is_packet, chunk_plus_overhead_constant]
+    rationale: >
+      MODELING CHOICE: at S2 the ring chunk c = M/r IS the TFC packet
+      (tfc_pkt_size = c), so the ROUNDUP law quantizes the chunk directly.
+      The spec's tfc_pkt_size = UET payload size + tfc_pkt_overhead
+      composition is stage S3's law (UEC11-FC-R09, overhead 0..256 B) and
+      is deliberately NOT modeled here; choosing ring_chunk_is_packet is
+      what makes the zero-waste boundary c = 0 (mod cell) exact.
+    sensitivity: structural (sets what the cell quantizes)
+    owner: g2-stage-s2
+    review: PROPOSED
+  - id: A-TFCC-FLUID
+    parameter: model.credit_accounting_granularity
+    value: fluid_steady_window
+    unit: none
+    range: [fluid_steady_window, integer_packet_floor]
+    rationale: >
+      MODELING CHOICE: the steady-window fluid reading — the data rate is
+      (c/cq)*W/RTT even when W is not an integral number of cq-sized
+      packets (here 12800/9216 = 25/18 cells), i.e. fractional cells in
+      flight are allowed. Integer packet-floor effects (a last partial
+      packet waiting for a full cq of credit) are packet-granular
+      dynamics, the declared packetization exclusion of the analytical
+      family, not a steady-state term.
+    sensitivity: none for O-CCT at steady state (floor effects excluded by fidelity)
+    owner: g2-stage-s2
+    review: PROPOSED
+  - id: A-TFCC-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Same equal-chunk construction as every L0 family member (A-TFC-DIV /
+      A-L0-DIV): r | M so the chunk (and hence the packet the cell
+      quantizes) is an integral byte count; non-divisible payloads are
+      rejected at execution time.
+    sensitivity: rejection-only guard (no numeric sensitivity)
+    owner: g2-stage-s2
+    review: PROPOSED

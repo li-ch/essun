@@ -1,0 +1,63 @@
+# G2 credit-family ladder stage S2 (2026-10-30): W1 Dense TP Decode on
+# the TFC credit-windowed analytical ring WITH cell-quantized credit
+# consumption — the second UEC requirement executed end-to-end as an
+# honest simulated_behavior (family count 1 -> 2).
+# Chain: UEC11-FC-R08 (anchored requirement, UEC 1.1 §3.6.15 TFC ROUNDUP
+# credit-consumption law) -> binding BIND-UEC11-FC-R08-L0TFC
+# (src/essun/specir/bindings.py) -> parameter tfc.dest_cell_size (9216 B,
+# the spec-named per-packet strategy cell; domain 256..9216 B cited to
+# UEC11-FC-R07) -> analytical_l0_tfc quantized identity
+# t = 2*(r-1)/r*M/min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L with
+# cq = ROUNDUP(c/cell)*cell -> O-CCT observable change vs the flagship
+# R02 run (6832 ns vs 3696 ns at the same B, L, W, L_cr; O-CONSERVATION
+# unchanged — a cell gates rate, never byte count). Evidence level E0
+# (identity + determinism): the simulated_behavior disposition is a claim
+# about the binding, NOT about physical validity.
+experiment_id: EXP-VS-W1-TFC-R08-001
+research_question: RQ2
+claim_id: C-UEC-TFC-R08
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/topologies/ring8_tfc_cell_window_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_l0_tfc_cell.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_tfc_cell.yaml
+backends:
+- analytical_l0_tfc
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+evidence_dimensions:
+  verification:
+  - check: tests/golden/test_l0_tfc_cell_golden.py
+    scope: UEC11-FC-R08 quantized identity exact goldens incl. the zero-waste
+      convergence boundary to the landed R02 identity and the R07-cited
+      out-of-domain negative
+  calibration_target: []   # free parameters only; nothing calibrated
+  held_out:
+    held_out: false
+    scope: no data withheld; all inputs derive from the identity (E0)
+  independent_reproduction: []   # none yet — honest
+  known_omissions:
+  - steady-state only; fill/drain transients excluded (analytical family)
+  - packet-overhead constant NOT modeled at S2 (tfc_pkt_size = ring chunk;
+    overhead is UEC11-FC-R09, stage S3)
+  - fluid steady-window reading; integer packet-floor effects of a
+    partially-filled window are packet-granular dynamics (excluded)
+validity_domain:
+  topology: ring8_tfc_cell_window_v1 (free parameters; steady granted
+    window; cell 9216 B within the R07-cited domain)
+  workload: w1_dense_tp_decode smoke configuration
+  implementation: analytical L0-TFC free-parameter model; two executed UEC
+    requirements (UEC11-FC-R02 via BIND-UEC11-FC-R02-L0TFC, UEC11-FC-R08
+    via BIND-UEC11-FC-R08-L0TFC)
+evidence_level_requested: E0

@@ -37,6 +37,7 @@ REAL_INPUTS = {
         REPO / "experiments/vertical_slice/assumptions_l0.yaml",
         REPO / "experiments/vertical_slice/assumptions_l05.yaml",
         REPO / "experiments/vertical_slice/assumptions_tfc.yaml",
+        REPO / "experiments/vertical_slice/assumptions_tfc_cell.yaml",
         REPO / "experiments/vertical_slice/assumptions_w3.yaml",
         REPO / "experiments/vertical_slice/assumptions_w5.yaml",
     ],

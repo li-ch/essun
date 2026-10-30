@@ -3073,7 +3073,7 @@ requirements:
       tfc_pkt_size = UET payload size + tfc_pkt_overhead; a destination keeping per-packet buffer
       structures may use 9216-byte cells so each packet consumes one cell (worked example: 4096-byte
       payload, 256-byte overhead, 512-byte cells ⇒ 4608 bytes of credit).'
-    disposition: informational
+    disposition: simulated_behavior
     module: uec_credits_flow_control
   - requirement_id: UEC11-FC-R09
     anchor_ids:
@@ -5231,6 +5231,39 @@ bindings:
   note: 'Convergence anchor: at W >= B*(L+L_cr) the identity equals the landed L0 ring equation exactly
     (credits never gate). E0 evidence level: identity and determinism only; free parameters B, L,
     W, L_cr are not standard-derived and not measured.'
+- binding_id: BIND-UEC11-FC-R08-L0TFC
+  requirement_id: UEC11-FC-R08
+  backend: analytical_l0_tfc
+  capability: tfc_credit_windowed_ring
+  parameters:
+    tfc_dest_cell_size: FREE
+  parameter_effect: per-packet consumed credit cq = ROUNDUP(c/cell) * cell with the ring chunk c =
+    M/r as tfc_pkt_size (overhead deferred to S3's FC-R09 law); effective data rate = min(B, (c/cq)
+    * W/(L+L_cr)); ring AllReduce completion t = 2*(r-1)/r * M / min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L
+  enforced_invariants:
+  - per-op in-flight data bytes = Rd*(L+L_cr) <= (c/cq)*W with equality iff the quantized window gates;
+    credit bytes in flight <= W always (a cell gates rate, never byte count)
+  - tfc_dest_cell_size must be an integral 256-byte multiple in 256..9216 bytes (values cited to UEC11-FC-R07);
+    out-of-domain cells are rejected at load time citing the requirement
+  observable_ids:
+  - O-CCT
+  - O-CONSERVATION
+  spec_derived_constants:
+  - name: tfc_dest_cell_size_min_bytes
+    value: '256'
+    requirement_id: UEC11-FC-R07
+  - name: tfc_dest_cell_size_max_bytes
+    value: '9216'
+    requirement_id: UEC11-FC-R07
+  - name: tfc_dest_cell_size_granularity_bytes
+    value: '256'
+    requirement_id: UEC11-FC-R07
+  golden_test: tests/golden/test_l0_tfc_cell_golden.py
+  note: 'Zero-waste convergence anchor: c == 0 (mod cell) => cq = c => the identity equals the landed
+    R02 identity exactly (cells gate credit efficiency, the window gates rate). E0 evidence level:
+    identity and determinism only; the cell is FREE within the R07-cited domain; B, L, W, L_cr stay
+    the flagship''s free parameters. The chunk-as-packet mapping and the fluid steady-window reading
+    are registered assumptions (experiments/vertical_slice/assumptions_tfc_cell.yaml), not spec facts.'
 checks:
 - check_id: UEC11-CHK-01
   kind: golden
@@ -5264,6 +5297,33 @@ checks:
     anchor registry, backend module (capability, config fields, spec-derived constant) and observable
     registry — drift is a hard error, not silent
   location: tests/specir/test_bindings.py
+- check_id: UEC11-CHK-05
+  kind: golden
+  requirement_ids:
+  - UEC11-FC-R08
+  description: 'cell-quantized ring AllReduce completion identity t = 2*(r-1)/r * M / min(B, (c/cq)*W/(L+L_cr))
+    + 2*(r-1)*L with cq = ROUNDUP(c/cell)*cell and the ring chunk c = M/r as tfc_pkt_size, including
+    the UEC11-FC-R08 worked example''s ROUNDUP arithmetic (4352 B against 512-B cells => 4608 B) and
+    the zero-waste convergence boundary: c = 0 (mod cell) gives cq = c and the identity equals the
+    landed R02 identity exactly; all expected values derived in the test by exact Fraction arithmetic'
+  location: tests/golden/test_l0_tfc_cell_golden.py
+- check_id: UEC11-CHK-06
+  kind: negative
+  requirement_ids:
+  - UEC11-FC-R08
+  - UEC11-FC-R07
+  description: a tfc.dest_cell_size outside the supported set (below 256 B, above 9216 B, not an integral
+    256-B multiple, non-integral) is rejected at load time citing UEC11-FC-R07 — the cell domain values
+    are spec-cited, and the closed boundaries 256 and 9216 load
+  location: tests/golden/test_l0_tfc_cell_golden.py
+- check_id: UEC11-CHK-07
+  kind: invariant
+  requirement_ids:
+  - UEC11-FC-R08
+  description: 'quantized admission bound: per-op in-flight data bytes Rd*(L+L_cr) <= (c/cq)*W with
+    equality iff the quantized window gates, while credit bytes in flight never exceed W (re-derived
+    as an exact Fraction identity for every run)'
+  location: tests/golden/test_l0_tfc_cell_golden.py
 supported:
   workloads:
   - w1_dense_tp_decode
@@ -5274,8 +5334,9 @@ calibration:
   status: uncalibrated
   targets: []
   note: 'E0 evidence level: identity and determinism only; no UEC hardware measurements exist. The
-    free parameters B, L, W, L_cr are not standard-derived and not measured; the only spec-derived
-    constant is the 256-byte credit unit (UEC11-FC-R05)'
+    free parameters B, L, W, L_cr (and, for the FC-R08 cell extension, tfc_dest_cell_size within the
+    R07-cited domain) are not standard-derived and not measured; the only spec-derived constants are
+    the 256-byte credit unit (UEC11-FC-R05) and the cell domain values (UEC11-FC-R07)'
 omissions:
 - what: '255 of 445 requirements carry disposition unsupported: anchored but executed by no backend
     today'
@@ -5290,9 +5351,12 @@ omissions:
   reason: the S2-S5/S2b ladder interprets transport/link mechanisms relevant to fabric simulation;
     software APIs, management, and compliance chapters are not simulated semantics
 - what: TFC credit request/grant protocol dynamics, retransmission credit exemption (UEC11-FC-R06),
-    shared-CCC credit pooling (UEC11-FC-R16), cell-size/packet-overhead accounting (UEC11-FC-R07..R10)
+    shared-CCC credit pooling (UEC11-FC-R16), packet-overhead accounting (UEC11-FC-R09..R10 — stage
+    S3 of the credit-family ladder) and cell-size configuration/support semantics (UEC11-FC-R07)
   reason: a steady granted window W is the modeled abstraction; declared explicitly_unsupported by
-    the analytical_l0_tfc backend's CAPABILITIES
+    the analytical_l0_tfc backend's CAPABILITIES. Since G2 stage S2 the cell-quantization CONSUMPTION
+    law (UEC11-FC-R08) executes when tfc_dest_cell_size is declared, with its domain values cited
+    to UEC11-FC-R07 — the obligation itself does not
 - what: RCCC receiver-driven credit scheduling across multiple concurrent sources (3.6.14, UEC11-CM-R66/R67)
   reason: needs multi-flow contention, which no backend models; the dispositions stay informational
     (choice record in src/essun/specir/bindings.py)
@@ -5304,7 +5368,7 @@ omissions:
   reason: excluded by the analytical L0 family's declared fidelity (explicitly_unsupported in every
     L0 backend's CAPABILITIES)
 versioning:
-  profile_version: 0.1.0
+  profile_version: 0.2.0
   bump_rules:
     major:
     - dispositions

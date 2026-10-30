@@ -14,11 +14,12 @@ Bars enforced here:
 - every row keeps all six disposition columns, zeros included (a dropped
   column would be a silent claim);
 - row totals equal the live ``requirements()`` counts; UEC totals are the
-  honest 445 = 189 informational + 255 unsupported + 1 executed
-  (simulated_behavior, the flagship promotion of UEC11-FC-R02 via
-  binding BIND-UEC11-FC-R02-L0TFC, 2026-10-29), with the
-  67 free parameters reported OUTSIDE the table (declared freedom is not a
-  requirement);
+  honest 445 = 188 informational + 255 unsupported + 2 executed
+  (simulated_behavior: the flagship promotion of UEC11-FC-R02 via
+  binding BIND-UEC11-FC-R02-L0TFC, 2026-10-29, and the G2 credit-family
+  S2 promotion of UEC11-FC-R08 via BIND-UEC11-FC-R08-L0TFC, 2026-10-30),
+  with the 67 free parameters reported OUTSIDE the table (declared
+  freedom is not a requirement);
 - the UnifiedBus paper-derived profile reports REAL per-disposition counts
   since ladder S5 (2026-10-29): 54 requirements = 32 informational +
   22 unsupported, ZERO executed (no reviewed binding exists for
@@ -100,11 +101,11 @@ def test_uec_profile_totals() -> None:
     uec = uec_profile_coverage()
     assert uec.requirements_total == 445
     totals = uec.total_counts()
-    assert totals["informational"] == 189
+    assert totals["informational"] == 188
     assert totals["unsupported"] == 255
-    assert totals["simulated_behavior"] == 1  # UEC11-FC-R02, BIND-UEC11-FC-R02-L0TFC
+    assert totals["simulated_behavior"] == 2  # FC-R02 (flagship) + FC-R08 (G2 S2)
     assert set(totals) == set(DISPOSITIONS)
-    assert uec.executed == 1  # the flagship promotion (was 0 at the D1 start)
+    assert uec.executed == 2  # flagship 2026-10-29 + G2 S2 2026-10-30 (0 at D1 start)
     assert uec.free_parameters == 67  # outside the table by design
 
 
@@ -167,13 +168,13 @@ def test_rendered_report_shows_unsupported_plainly() -> None:
         "Profile: UnifiedBus"
     )[0]
     assert " 255 " in uec_section.replace("\n", " ")  # the plain count
-    assert "1/445 = 0.2%" in uec_section  # the executed fraction
+    assert "2/445 = 0.4%" in uec_section  # the executed fraction
     assert "67" in uec_section  # free parameters stated, outside the table
     ub_section = text.split("Profile: UnifiedBus paper-derived profile")[1]
     assert " 22 " in ub_section.replace("\n", " ")  # unsupported, plainly
     assert "0/54 = 0.0%" in ub_section  # zero executed, plainly
     assert "8" in ub_section  # free parameters outside the table
-    assert "445" in text and "1 executed" in text  # platform total line
+    assert "445" in text and "2 executed" in text  # platform total line
     assert "499 disposition-bearing requirements" in text  # 445 + 54
 
 
@@ -208,7 +209,7 @@ def test_cli_prints_the_report_table() -> None:
     assert "disposition coverage report" in result.stdout
     assert "profile total" in result.stdout
     assert "255" in result.stdout  # unsupported, printed plainly
-    assert "1/445 = 0.2%" in result.stdout
+    assert "2/445 = 0.4%" in result.stdout
 
 
 def test_cli_json_flag_round_trips() -> None:
@@ -220,4 +221,4 @@ def test_cli_json_flag_round_trips() -> None:
     )
     data = json.loads(result.stdout)
     assert data["profiles"][0]["requirements_total"] == 445
-    assert data["profiles"][0]["executed"] == 1
+    assert data["profiles"][0]["executed"] == 2

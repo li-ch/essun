@@ -18,7 +18,8 @@ Division of content (the honesty contract of this migration):
   this is a migration, not a re-adjudication), ``freedom`` (all 67 free
   parameters), ``bindings`` (the live
   :data:`essun.specir.bindings.BINDINGS` registry, currently
-  BIND-UEC11-FC-R02-L0TFC), and the ``source``/``provenance`` identity
+  BIND-UEC11-FC-R02-L0TFC and BIND-UEC11-FC-R08-L0TFC), and the
+  ``source``/``provenance`` identity
   fields, read from the repo license-gate source record
   ``experiments/uec/source_record.yaml`` (verbatim access class; the PDF
   sha256 travels with the record).  Anchor citations are copied
@@ -73,8 +74,11 @@ PROFILE_ID = "uec-1.1-semantic"
 
 #: The artifact's own version.  Tracks the ARTIFACT, not the UEC source
 #: revision (1.1 stays in source.revision); 0.1.0 is the first release of
-#: the profile in the essun-profile format.
-PROFILE_VERSION = "0.1.0"
+#: the profile in the essun-profile format.  0.1.0 -> 0.2.0 at G2 stage S2
+#: (2026-10-30): the disposition flip (UEC11-FC-R08) plus a new binding is
+#: the bump rules' MAJOR class, which on the 0.x line bumps the MINOR
+#: component (semver 0.x convention: 0.MINOR is the breaking axis).
+PROFILE_VERSION = "0.2.0"
 
 #: The executable checks (element 6) — real, existing tests only.  Every
 #: entry names a file that must exist; the conformance test enforces that.
@@ -127,6 +131,48 @@ CHECKS: list[dict] = [
         ),
         "location": "tests/specir/test_bindings.py",
     },
+    {
+        "check_id": "UEC11-CHK-05",
+        "kind": "golden",
+        "requirement_ids": ["UEC11-FC-R08"],
+        "description": (
+            "cell-quantized ring AllReduce completion identity t = "
+            "2*(r-1)/r * M / min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L with "
+            "cq = ROUNDUP(c/cell)*cell and the ring chunk c = M/r as "
+            "tfc_pkt_size, including the UEC11-FC-R08 worked example's "
+            "ROUNDUP arithmetic (4352 B against 512-B cells => 4608 B) "
+            "and the zero-waste convergence boundary: c = 0 (mod cell) "
+            "gives cq = c and the identity equals the landed R02 "
+            "identity exactly; all expected values derived in the test "
+            "by exact Fraction arithmetic"
+        ),
+        "location": "tests/golden/test_l0_tfc_cell_golden.py",
+    },
+    {
+        "check_id": "UEC11-CHK-06",
+        "kind": "negative",
+        "requirement_ids": ["UEC11-FC-R08", "UEC11-FC-R07"],
+        "description": (
+            "a tfc.dest_cell_size outside the supported set (below 256 B, "
+            "above 9216 B, not an integral 256-B multiple, non-integral) "
+            "is rejected at load time citing UEC11-FC-R07 — the cell "
+            "domain values are spec-cited, and the closed boundaries 256 "
+            "and 9216 load"
+        ),
+        "location": "tests/golden/test_l0_tfc_cell_golden.py",
+    },
+    {
+        "check_id": "UEC11-CHK-07",
+        "kind": "invariant",
+        "requirement_ids": ["UEC11-FC-R08"],
+        "description": (
+            "quantized admission bound: per-op in-flight data bytes "
+            "Rd*(L+L_cr) <= (c/cq)*W with equality iff the quantized "
+            "window gates, while credit bytes in flight never exceed W "
+            "(re-derived as an exact Fraction identity for every run)"
+        ),
+        "location": "tests/golden/test_l0_tfc_cell_golden.py",
+    },
 ]
 
 #: Known omissions (element 9) — stated visibly, honesty over coverage.
@@ -164,13 +210,17 @@ OMISSIONS: list[dict] = [
         "what": (
             "TFC credit request/grant protocol dynamics, retransmission "
             "credit exemption (UEC11-FC-R06), shared-CCC credit pooling "
-            "(UEC11-FC-R16), cell-size/packet-overhead accounting "
-            "(UEC11-FC-R07..R10)"
+            "(UEC11-FC-R16), packet-overhead accounting "
+            "(UEC11-FC-R09..R10 — stage S3 of the credit-family ladder) "
+            "and cell-size configuration/support semantics (UEC11-FC-R07)"
         ),
         "reason": (
             "a steady granted window W is the modeled abstraction; "
             "declared explicitly_unsupported by the analytical_l0_tfc "
-            "backend's CAPABILITIES"
+            "backend's CAPABILITIES. Since G2 stage S2 the cell-"
+            "quantization CONSUMPTION law (UEC11-FC-R08) executes when "
+            "tfc_dest_cell_size is declared, with its domain values "
+            "cited to UEC11-FC-R07 — the obligation itself does not"
         ),
     },
     {
@@ -355,9 +405,11 @@ def build_document() -> dict:
             "note": (
                 "E0 evidence level: identity and determinism only; no UEC "
                 "hardware measurements exist. The free parameters B, L, W, "
-                "L_cr are not standard-derived and not measured; the only "
-                "spec-derived constant is the 256-byte credit unit "
-                "(UEC11-FC-R05)"
+                "L_cr (and, for the FC-R08 cell extension, "
+                "tfc_dest_cell_size within the R07-cited domain) are not "
+                "standard-derived and not measured; the only spec-derived "
+                "constants are the 256-byte credit unit (UEC11-FC-R05) "
+                "and the cell domain values (UEC11-FC-R07)"
             ),
         },
         # Element 9 — known omissions (curated above).

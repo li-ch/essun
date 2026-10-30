@@ -15,12 +15,13 @@ registry.  This file is the migration's conformance gate:
   citations, keywords and subjects are compared too, so the artifact is
   the same interpretation, not a paraphrase of a paraphrase;
 - the artifact's per-disposition counts equal the live D1 coverage
-  report's UEC totals (189 informational / 255 unsupported /
-  1 simulated_behavior over 445 requirements, 67 free parameters
+  report's UEC totals (188 informational / 255 unsupported /
+  2 simulated_behavior over 445 requirements, 67 free parameters
   outside the table);
 - the BINDING check passes against the declared backend: the artifact's
   bindings are exactly the live :data:`essun.specir.bindings.BINDINGS`
-  registry (BIND-UEC11-FC-R02-L0TFC on analytical_l0_tfc), and
+  registry (BIND-UEC11-FC-R02-L0TFC and BIND-UEC11-FC-R08-L0TFC, both on
+  analytical_l0_tfc), and
   ``check_bindings_against`` is green against the backend's real
   CAPABILITIES;
 - every anchor citation resolves in the live UEC anchor registry
@@ -114,7 +115,11 @@ def test_artifact_loads_with_the_uec_identity(profile: LoadedProfile) -> None:
     assert profile.provenance.source_record == "experiments/uec/source_record.yaml"
     assert profile.provenance.access == "PUBLIC_READ"
     assert profile.calibration.status == "uncalibrated"
-    assert profile.profile_version == "0.1.0"  # a bump is conscious
+    # 0.1.0 -> 0.2.0 at G2 stage S2 (2026-10-30): a disposition flip plus
+    # a new binding is the bump rules' MAJOR class; on the 0.x line that
+    # bumps the minor component (semver 0.x convention, stated in the
+    # builder). A bump is conscious.
+    assert profile.profile_version == "0.2.0"
 
 
 def test_artifact_validates_against_the_published_schema(document: dict) -> None:
@@ -161,9 +166,9 @@ def test_disposition_counts_are_the_live_coverage_totals(
 ) -> None:
     live = uec_profile_coverage().total_counts()
     assert profile.disposition_counts() == live
-    assert live["informational"] == 189
+    assert live["informational"] == 188
     assert live["unsupported"] == 255
-    assert live["simulated_behavior"] == 1
+    assert live["simulated_behavior"] == 2  # FC-R02 flagship + FC-R08 (G2 S2)
     assert live["constraint"] == 0
     assert live["conformance_test"] == 0
     assert live["not_applicable"] == 0

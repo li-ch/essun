@@ -1,0 +1,36 @@
+# UEC TFC credit-window topology WITH cell-quantized credit consumption
+# (G2 credit-family ladder stage S2, UEC11-FC-R08). Identical fabric and
+# window to the flagship ring8_tfc_window_v1.yaml (same B, L, W, L_cr
+# values so the zero-waste convergence anchor to the landed R02 identity
+# is meaningful); the ONE addition is the opt-in tfc.dest_cell_size, the
+# parameter of binding BIND-UEC11-FC-R08-L0TFC. 9216 B is the spec-named
+# per-packet strategy cell (UEC11-FC-R08's own text) — the largest
+# supportable cell, putting the smoke chunk (16384/8 = 2048 B) deep in
+# the waste regime (credit efficiency 2/9). The supported VALUES 256..9216
+# B in 256-B multiples are cited to UEC11-FC-R07 (whose own disposition
+# stays unsupported); nothing here is measured.
+schema_version: 0.3.0
+topology_id: ring8_tfc_cell_window_v1
+topology_class: unidirectional_ring_tfc_window
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+tfc:
+  window_bytes: 12800        # 50 credit units; BDP = 64*(200+200) = 25600 B
+  credit_return_latency_ns: 200
+  dest_cell_size: 9216       # UEC11-FC-R08 per-packet strategy cell (max)
+notes: >
+  One send and one receive direction per neighbor pair. Each ring
+  neighbor pair carries one TFC credit context of window_bytes granted
+  bytes; UEC11-FC-R02's admission law caps each source's steady rate at
+  one window per credit round trip, and UEC11-FC-R08's ROUNDUP law
+  quantizes the per-packet credit consumed against dest_cell_size cells:
+  effective data rate = min(B, (c/cq)*W/(L+L_cr)) with cq =
+  ROUNDUP(c/cell)*cell (see src/essun/backends/analytical/l0_tfc.py).
+  Modeling assumptions for this topology (chunk-as-packet mapping, fluid
+  steady-window reading, the cell value itself) are registered in
+  experiments/vertical_slice/assumptions_tfc_cell.yaml. No congestion,
+  no packetization, no credit-request dynamics, no packet-overhead
+  constant (that is stage S3 / UEC11-FC-R09) — the steady-window
+  analytical identity only.

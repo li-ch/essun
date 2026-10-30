@@ -196,7 +196,19 @@ _REQUIREMENTS: tuple[UECRequirement, ...] = (
         anchor_ids=("UEC11-S3.6.15-TFC",),
         keyword="DEFINITIONAL",
         subject="TFC",
-        disposition="informational",
+        # Promoted informational -> simulated_behavior 2026-10-30 (G2
+        # credit-family ladder stage S2, per the S1 plan in
+        # experiments/uec/credit_family_inventory.md): bound to the
+        # analytical TFC-window backend by binding BIND-UEC11-FC-R08-L0TFC
+        # (essun.specir.bindings) through the opt-in tfc_dest_cell_size
+        # parameter; golden test tests/golden/test_l0_tfc_cell_golden.py.
+        # The promotion claims the ROUNDUP consumption law causally affects
+        # backend outputs as the rate identity min(B, (c/cq)*W/(L+L_cr)),
+        # with exact zero-waste convergence to the landed FC-R02 identity
+        # at c == 0 (mod cell). The cell DOMAIN values are cited to
+        # UEC11-FC-R07, which itself stays unsupported; the per-packet
+        # overhead half of tfc_pkt_size is stage S3 (FC-R09), not executed.
+        disposition="simulated_behavior",
         statement=(
             "credit_used = ROUNDUP(tfc_pkt_size ÷ tfc_dest_cell_size) × "
             "tfc_dest_cell_size with tfc_pkt_size = UET payload size + "
