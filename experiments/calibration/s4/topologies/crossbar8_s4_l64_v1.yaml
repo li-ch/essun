@@ -1,0 +1,32 @@
+# Calibration-ladder S4 latency-axis fit-sweep topology (group G3):
+# fully-connected (crossbar / single non-blocking switch stage)
+# abstraction of 8 ranks at L = 64 ns on the parameter A-L0X-LAT
+# (link.pair_latency_ns, registry value 200, DECLARED free range
+# [10, 2000] ns, experiments/vertical_slice/assumptions_l0.yaml).
+# B stays at the A-L0X-BW registry point 64 B/ns (the bandwidth axis was
+# S2/S3's; this stage owns the latency axis).
+#
+# GRID member: power of two 2^6 inside the declared range (range arithmetic; anchor-blind). NUMERICAL COINCIDENCE, noted not provenance: 64 ns is also CAL-A8's lower emulated point - the grid was fixed by powers-of-two arithmetic before any deviation was computed
+#
+# Identity: t = 2(r-1)/r*M/B + 2L = 448 + 2L ns at the smoke payload
+# 16384 (src/essun/backends/analytical/l0_crossbar.py). The pair reading
+# is the PRIMARY mapping for CAL-A9 / CAL-A10 / GF-10 (each stages a
+# pair-level latency; a P2P pair access is ONE pair traversal).
+# NOTHING IS TUNED: the grid was fixed by registry-range arithmetic
+# before any deviation was computed; the registry value stays 200.
+topology_id: crossbar8_s4_l64_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 64
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT). No congestion, no credits, no packetization, no in-network
+  computing, no software/endpoint latency term (all explicitly unsupported
+  by the backend); L0 transport model only. Provenance: L = 64 ns per
+  the header role above; anchor-blind grid arithmetic or anchor-staged
+  number, never tuned toward any anchor OUTPUT; B = 64 B/ns is the fixed
+  free registry point.

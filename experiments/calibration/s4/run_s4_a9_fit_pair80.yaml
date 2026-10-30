@@ -1,0 +1,65 @@
+# Calibration-ladder S4 FIT-SIDE RUN (group G3, anchor CAL-A9): the L0
+# crossbar identity at the anchor point L = 80 ns on A-L0X-LAT — the
+# plan-stated one-stage pair sum 10 ns (CXL link) + 70 ns (switch stage)
+# of Berger et al. (IEEE Micro 2023; docs/calibration/
+# anchors_staging.md §A9; design-estimate numbers from the paper's own
+# latency-budget analysis, NOT silicon measurements). The switch term is
+# worded "AT LEAST ~70 ns" — a one-sided floor: consistency is model
+# pair latency >= 80 ns; any value < 80 ns is falsified. The two-link
+# reading 2*10 + 70 = 90 ns is a FLAGGED interpretation risk, recorded
+# and not swept (the calibration plan's stated sum 80 is the
+# reconciliation authority this stage follows).
+#
+# The fit is DEGENERATE: the anchor's own one-stage sum IS the fitted L
+# (zero residual degrees of freedom — CAL-A9 stages a budget, not a
+# series). Where the model sits: the registry point 200 ns = exactly 5/2
+# x the anchor sum (+150%) — consistent-with the one-sided floor,
+# selected by no anchor. Nothing is tuned.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [CAL-A9], held_out FALSE (the split
+# record defines no within-series holdout for CAL-A9).
+experiment_id: EXP-CAL-S4-A9-FIT-PAIR80-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/s4/topologies/crossbar8_s4_l80_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s4/profiles/implementation_profile_l0_crossbar_cal_s4_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_s4_l80_v1 (single non-blocking switch stage, r=8 free smoke default — the anchor pins no rank count; L = 80 ns = CAL-A9's plan-stated one-stage pair sum on A-L0X-LAT; B = 64 B/ns fixed registry point)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (the smoke value)
+  implementation: analytical L0 free-parameter identity; the CAL-A9 fit is a degenerate parameter-axis placement against a published design-estimate budget — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s4_fit.py
+    scope: S4 fit guard — re-executes the stage's evidence chain and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - CAL-A9
+  held_out:
+    held_out: false
+    scope: fit-side execution at CAL-A9's one-stage pair sum (the anchor's whole staged budget is the fit signal; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - the lumped link.pair_latency_ns cannot express the anchor's (link, switch, stage-count) DECOMPOSITION — a k-stage chain enters only as the lumped arithmetic L = 80k (stage A9's expressiveness-loss finding, carried forward)
+  - design-estimate numbers, not silicon measurements; the switch term is one-sided ("at least") — no upper bound follows from this anchor
+  - the 90 ns two-link reading is a recorded ambiguity, not swept
+  - no software/endpoint latency term exists anywhere in the identity
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

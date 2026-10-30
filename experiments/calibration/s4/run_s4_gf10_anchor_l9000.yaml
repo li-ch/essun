@@ -1,0 +1,71 @@
+# Calibration-ladder S4 FIT-SIDE RUN (group G3, anchor GF-10, the miss
+# executed): the L0 crossbar identity at the anchor's own measured figure
+# L = 9000 ns on A-L0X-LAT — Li et al. (IEEE TPDS 32(1) 2020/2019,
+# arXiv:1903.04611) Tartan-suite P2P latency "around 9 us" for NVLink
+# directly-connected GPU pairs on DGX-1 (V100/NVLink-2 era;
+# docs/calibration/anchors_gapfill.md §GF-10; confidence M-H — prose
+# numbers from the public ar5iv HTML). r=8 is DGX-1's own GPU count.
+#
+# THE MISS IS THE FINDING: 9000 ns lies OUTSIDE the DECLARED free range
+# [10, 2000] ns — 4.5x its upper endpoint and 45x the registry point —
+# so NO in-range L reproduces the anchor under the primary PAIR reading
+# (a DGX-1 direct P2P access crosses ONE pair, no switch, no chain; the
+# anchor's whole transport-class spread 5-27 us sits 2.5-13.5x above the
+# range upper). Classification: app-level P2P latency bundles the
+# software stack (CUDA API, driver, copy-engine queueing) — the L0
+# identities carry ZERO software/endpoint latency terms, a STRUCTURAL
+# omission this stage records (the latency-axis sibling of the S2/S3
+# software-axis findings). NOTHING IS TUNED toward making the miss
+# smaller: the range upper is NOT moved, the anchor figure is executed
+# as the degenerate fit target, and the ring-chain alternative
+# (14L = 9000 -> L = 4500/7, IN range) is flagged as schedule-absorption
+# and never selected.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [GF-10], held_out FALSE (the split
+# record defines no within-series holdout for GF-10; the anchor's staged
+# points are all fit-side signal).
+experiment_id: EXP-CAL-S4-GF10-ANCHOR-L9000-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/s4/topologies/crossbar8_s4_l9000_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s4/profiles/implementation_profile_l0_crossbar_cal_s4_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_s4_l9000_v1 (single non-blocking switch stage, r=8 = DGX-1's own GPU count; L = 9000 ns = GF-10's measured app-level P2P figure on A-L0X-LAT under the primary pair reading — OUTSIDE the declared free range [10, 2000], executed as the degenerate fit target; B = 64 B/ns fixed registry point)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (the smoke value)
+  implementation: analytical L0 free-parameter identity; the GF-10 fit is a degenerate parameter-axis placement whose deviation IS the finding (the software-latency structural omission) — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s4_fit.py
+    scope: S4 fit guard — re-executes the stage's evidence chain and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - GF-10
+  held_out:
+    held_out: false
+    scope: fit-side execution at GF-10's measured headline (the anchor's staged latency points are the fit signal; no within-series holdout exists; the split record's holdout anchors are untouched by this stage)
+  independent_reproduction: []
+  known_omissions:
+  - no software/endpoint latency term exists in any L0 identity — app-level P2P latency (software stack included) is structurally inexpressible; GF-10's measured 9 us vs the wire-class 10-800 ns axis is that gap measured, reported never tuned
+  - QUANTITY-CLASS CAVEAT (the staging doc's own) — app-level P2P bounds a DIFFERENT thing than bare wire hop latency; the miss does not falsify the wire-axis range by itself
+  - the ring-chain alternative reading (L = 4500/7 in range) is recorded ambiguity — schedule-absorption of a software-stack reading, never selected
+  - V100-era values, one generation older than the NVLink-3 domain; per-pair matrices are heat-map figures (not text-extractable) — prose numbers only
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

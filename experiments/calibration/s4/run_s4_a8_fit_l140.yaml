@@ -1,0 +1,53 @@
+# Calibration-ladder S4 FIT-SIDE RUN (group G3, anchor CAL-A8, upper
+# emulated point): the L0 ring identity at the anchor point L = 140 ns on
+# A-L0-LAT — Pond's upper emulated added memory-access latency (see
+# run_s4_a8_fit_l64.yaml for the anchor, the projection, and the
+# degenerate-fit statement; the two band points are carried SEPARATELY,
+# never averaged). Nothing is tuned; the registry value stays 200 ns.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [CAL-A8], held_out FALSE (no
+# within-series holdout defined for CAL-A8 by the split record).
+experiment_id: EXP-CAL-S4-A8-FIT-L140-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/s4/topologies/ring8_s4_l140_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s4/profiles/implementation_profile_l0_ring_cal_s4_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_s4_l140_v1 (unidirectional ring, r=8 free smoke default; L = 140 ns = CAL-A8's upper emulated added-latency point on A-L0-LAT under the declared stage-A8 projection; B = 64 B/ns fixed registry point)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (the smoke value)
+  implementation: analytical L0 free-parameter identity; the CAL-A8 fit is a degenerate parameter-axis placement — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s4_fit.py
+    scope: S4 fit guard — re-executes the stage's evidence chain and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - CAL-A8
+  held_out:
+    held_out: false
+    scope: fit-side execution at CAL-A8's upper emulated point (the whole two-point band {64, 140} ns is the fit signal; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - the anchor's MEASURED outputs (43%/37% workload-goal fractions) are structurally inexpressible — no population/SLO axis (carried forward from stage A8)
+  - emulated study inputs, not device measurements — placement against a published emulated band
+  - no software/endpoint latency term exists anywhere in the identity
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

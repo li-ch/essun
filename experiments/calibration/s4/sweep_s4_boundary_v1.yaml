@@ -1,0 +1,53 @@
+# Calibration-ladder S4 BOUNDARY SWEEP (group G3, GF-10's small-message
+# boundary role): the model's latency-governed / wire-governed boundary
+# against GF-10's own staged regime boundaries — "latency flat up to
+# 16 KiB (P100) / 64 KiB (V100)" and "NVLink V1/V2 bandwidth saturates at
+# about 2^22 = 4 MB" (docs/calibration/anchors_gapfill.md §GF-10) — plus
+# the anchor's OWN per-link rate B = 25 B/ns per direction (staged with
+# the direction split stated by the anchor itself).
+#
+# Payload ladder: the three staged boundary/relevant points 16384 (16 KiB
+# = the P100 flat top AND the smoke value), 65536 (64 KiB = the V100 flat
+# top), 4194304 (4 MiB = the stated saturation point). All divide by 8.
+#
+# Two B families, both declared (never tuned):
+#   - B = 64 B/ns: the registry point on the S4 topologies (rows at the
+#     registry L=200, CAL-A10's 800, GF-10's 9000; ring twins at 200/9000
+#     for the chain contrast);
+#   - B = 25 B/ns: GF-10's OWN measured per-link per-direction rate on
+#     the two committed stage-GF-10 topologies (l200, l9000) — anchor
+#     CONFIG provenance for the boundary check AT THE ANCHOR'S OWN
+#     numbers (the same reuse pattern as S3's stage-A3 provenance files).
+#
+# Expected identities: crossbar t = 7/4*M/B + 2L ; ring t = 7/4*M/B + 14L
+# (E0 arithmetic, cross-checked row-by-row in the builder). The exact
+# crossover spectrum M*(L,B) (payload where the wire term equals the
+# latency chain) and the one-sided consistency check — the anchor's flat
+# boundaries must sit INSIDE the model's latency-governed region at the
+# anchor's own (L,B) — live in the stage fit record. NOTHING IS TUNED:
+# the boundary comparison is a placement; no tolerance is adopted (E0
+# zero-slack stands).
+sweep: cal_s4_boundary_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s4/topologies/crossbar8_s4_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [16384, 65536, 4194304]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    # registry-B rows
+    - experiments/calibration/s4/topologies/crossbar8_s4_l200_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l800_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l9000_v1.yaml
+    # GF-10's own measured per-link rate B=25 (committed stage-GF-10 files)
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l200_v1.yaml
+    - experiments/calibration/gf10/topologies/crossbar8_gf10_b25_l9000_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/s4/topologies/ring8_s4_l200_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l9000_v1.yaml

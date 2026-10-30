@@ -1,0 +1,31 @@
+# Calibration-ladder S4 latency-axis fit-sweep topology (group G3):
+# 2D torus (ring x ring) of 8 ranks as the registry-shape 2 x 4 grid at
+# L = 2000 ns on the parameter A-L0T-LAT (link.hop_latency_ns, registry
+# value 200, DECLARED free range [10, 2000] ns,
+# experiments/vertical_slice/assumptions_l0.yaml). B stays at the
+# A-L0T-BW registry point 64 B/ns; the shape is the A-L0T-SHAPE registry
+# point 2x4 (free design-space parameter, anchor-free).
+#
+# GRID member: the declared-range UPPER endpoint 2000 ns (registry-range arithmetic; anchor-blind)
+#
+# Identity: t = sum over dims [2(k-1)/k*M/B + 2(k-1)*L] = 640 + 8L ns at
+# the smoke payload 16384 (dims 2 and 4; src/essun/backends/analytical/
+# l0_torus2d.py). NOTHING IS TUNED: same grid discipline as the ring and
+# crossbar rows; the registry value of A-L0T-LAT stays 200.
+topology_id: torus8_s4_l2000_v1
+topology_class: torus2d_ring_x_ring
+ranks: 8
+grid:
+  dim1_ranks: 2
+  dim2_ranks: 4
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 2000
+notes: >
+  Two wrapped dimensions (2 and 4 ranks); dimensions execute
+  sequentially over the full message (A-L0T-SEQ), uniform links across
+  both dimensions (A-L0T-UNIF); latency chain 2(k1-1) + 2(k2-1) = 8L per
+  AllReduce. No congestion, no credits, no packetization; L0 transport
+  model only. Provenance: L = 2000 ns per the header role above;
+  anchor-blind grid arithmetic or anchor-staged number, never tuned;
+  B = 64 B/ns fixed free registry point.

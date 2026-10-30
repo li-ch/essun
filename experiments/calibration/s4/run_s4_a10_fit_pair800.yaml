@@ -1,0 +1,68 @@
+# Calibration-ladder S4 FIT-SIDE RUN (group G3, anchor CAL-A10): the L0
+# crossbar identity at the anchor point L = 800 ns on A-L0X-LAT — the
+# HiPC 2025 Workshops UALink-vs-NVLink comparison's stated NVLink-side
+# ASSUMPTION "we assume 0.8 us" end-to-end (docs/calibration/
+# anchors_staging.md §A10; quote via public search snippet of the
+# paywalled paper — confidence M, wording re-verification at owner
+# integration is an open item). Under the stage-A10 declared PRIMARY
+# reading the figure is pair-level end-to-end — the natural operand is
+# the crossbar's link.pair_latency_ns (charged exactly 2L per AllReduce,
+# rank-count-independent); the per-hop ring reading and the log-chain
+# doubling reading are recorded as secondaries in the stage fit record.
+#
+# The fit is DEGENERATE: the anchor's own assumption value IS the fitted
+# L. ASSUMPTION-CLASS HONESTY: peer review certifies the plausibility of
+# the USAGE, never the value; the quote's own premise (NVIDIA publishes
+# no such number) means no L value can be falsified against it. Where
+# the model sits: the registry point 200 ns is exactly 1/4 of the
+# assumption (the repo-wide latency default is 4x more optimistic than
+# the peer-reviewed assumption-class usage on the same axis). The 800 ns
+# point IS the plan's anchored-span upper endpoint and sits inside the
+# declared range at 40% of its upper endpoint. Nothing is tuned.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades). E0. v2
+# dimensions: calibration_target [CAL-A10], held_out FALSE (the split
+# record defines no within-series holdout for CAL-A10).
+experiment_id: EXP-CAL-S4-A10-FIT-PAIR800-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/s4/topologies/crossbar8_s4_l800_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s4/profiles/implementation_profile_l0_crossbar_cal_s4_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_s4_l800_v1 (single non-blocking switch stage, r=8 free smoke default — the anchor's scale ceiling 1024 was the stage-A10 axis; L = 800 ns = CAL-A10's assumption-class figure on A-L0X-LAT under the primary pair reading; B = 64 B/ns fixed registry point)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (the smoke value)
+  implementation: analytical L0 free-parameter identity; the CAL-A10 fit is a degenerate parameter-axis placement against a peer-reviewed ASSUMPTION (not a measurement) — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s4_fit.py
+    scope: S4 fit guard — re-executes the stage's evidence chain and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - CAL-A10
+  held_out:
+    held_out: false
+    scope: fit-side execution at CAL-A10's assumption-class figure (the anchor's whole staged latency input is the fit signal; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - assumption-class value, confidence M (search-snippet quote of a paywalled parameter table; wording re-verification open) — placement, never a falsifiable target
+  - UALink-side parameters remain model-only until silicon (plan §1.1); this run uses only the anchor's NVLink-side assumption
+  - no software/endpoint latency term exists anywhere in the identity
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

@@ -1,0 +1,1062 @@
+{
+  "b_sensitivity_cross_checks": {
+    "check_1_fits_are_b_free": "the four fitted L values are parameter-axis placements — the anchors' staged ns figures are read onto L directly, so NO B enters any fitted value (exactly B-free, not merely insensitive); the degenerate fits cannot move with B",
+    "check_2_predictions_b_coupling_exact": "the smoke-point O-CCT predictions carry B only through the additive wire term 2(r-1)/r*M/B (448 ns at the registry B=64; 16..16384 ns across the DECLARED B range [1, 1024]); the latency shares of the smoke-point O-CCT at B=64, per anchor L: registry_200 = 25/53; a8_64 = 2/9; a8_140 = 5/13; a9_80 = 5/19; a10_800 = 25/32; gf10_9000 = 1125/1153; range_upper_2000 = 125/139",
+    "check_3_the_regime_is_mixed_at_the_registry_pair": "at (B=64, L=200) the smoke point sits at the crossover (wire 448 vs latency 400 = 28:25 on the crossbar; the ring keeps it latency-governed, M* = 8LB = 100 KiB) — unlike the S2/S3 large-message regime where the latency term was negligible, the smoke regime couples BOTH axes at the registry pair; the crossover spectrum (small_message_boundary.crossover_spectrum_exact) is the exact statement of that coupling",
+    "the_mirror_statement": "S2 fitted B at the A-L0X-LAT registry point 200 ns and recorded L-INSENSITIVITY there (2L/t <= 7.5e-5 at every fit size; L 200->0 moves the minimax B by 0.0047%); this stage's mirror cross-checks are the B-coupling of a LATENCY-axis fit:"
+  },
+  "backing": {
+    "inputs": [
+      "experiments/calibration/s4/sweep_s4_lat_v1.yaml",
+      "experiments/calibration/s4/sweep_s4_boundary_v1.yaml",
+      "experiments/calibration/s4/run_s4_a8_fit_l64.yaml",
+      "experiments/calibration/s4/run_s4_a8_fit_l140.yaml",
+      "experiments/calibration/s4/run_s4_a9_fit_pair80.yaml",
+      "experiments/calibration/s4/run_s4_a10_fit_pair800.yaml",
+      "experiments/calibration/s4/run_s4_gf10_anchor_l9000.yaml",
+      "experiments/calibration/s4/topologies/ (57 files)",
+      "experiments/calibration/s4/profiles/ (4 files)",
+      "experiments/calibration/gf10/topologies/{crossbar8_gf10_b25_l200_v1,crossbar8_gf10_b25_l9000_v1}.yaml (committed stage-GF-10 files, reused as anchor-config provenance)",
+      "experiments/workloads/w1_dense_tp_decode_small.yaml (the committed smoke workload)",
+      "experiments/calibration/{a8,a9,a10,gf10}/ committed E1 stage records (transcription sources, reused)"
+    ],
+    "reproduce": "make sweep EXP=experiments/calibration/s4/sweep_s4_lat_v1.yaml ; make sweep EXP=experiments/calibration/s4/sweep_s4_boundary_v1.yaml ; make run EXP=(each of the five run_s4_*.yaml manifests) ; python experiments/calibration/s4/build_fit_record.py",
+    "run_ids": [
+      "2ca54ead178cd0a361be29124c3e4c37053d1e75125ac02600792384dc5e905d",
+      "774cc400a6446bd77d4f28e0a297462a0bbfee84e6c8b1e7d8fe3803c964a66d",
+      "95222277ecad82b9dd8f063465d13b9ad2733b50338fa772e059163749a8808d",
+      "6c3b7566eeedd0595bc197cb21bacd3a03f9ce45ea69dd803bd1e43e27d02ce2",
+      "a54446b6d774d7853fef7a84e08bb0230cd9bb8a28e4f3a35601f3cbb54f4080"
+    ],
+    "run_roles": {
+      "2ca54ead178cd0a361be29124c3e4c37053d1e75125ac02600792384dc5e905d": "CAL-A8 lower emulated point L=64 ns fit-side run (ring, A-L0-LAT; held_out: false)",
+      "6c3b7566eeedd0595bc197cb21bacd3a03f9ce45ea69dd803bd1e43e27d02ce2": "CAL-A10 assumption-class L=800 ns fit-side run (crossbar, A-L0X-LAT; held_out: false)",
+      "774cc400a6446bd77d4f28e0a297462a0bbfee84e6c8b1e7d8fe3803c964a66d": "CAL-A8 upper emulated point L=140 ns fit-side run (ring, A-L0-LAT; held_out: false)",
+      "95222277ecad82b9dd8f063465d13b9ad2733b50338fa772e059163749a8808d": "CAL-A9 one-stage pair sum L=80 ns fit-side run (crossbar, A-L0X-LAT; held_out: false)",
+      "a54446b6d774d7853fef7a84e08bb0230cd9bb8a28e4f3a35601f3cbb54f4080": "GF-10 measured app-level headline L=9000 ns fit-side run (crossbar, A-L0X-LAT; OUT of the declared range — the miss executed; held_out: false)"
+    },
+    "s6_handoff": "the fitted configurations this record hands to the S6 holdout evaluation: the four latency-axis placements L = 64 / 140 (CAL-A8 band, carried separately), 80 (CAL-A9), 800 (CAL-A10), and GF-10's required-but-out-of-range 9000 with the in-range alternative 4500/7 flagged — all recorded diagnostics, plus the smoke-regime predictions table (predictions_for_s6)",
+    "sweep_ids": [
+      "778f67f319e8771f525a929b6ef698b11b938c6188c2ed521a5edc4ebee1aeab",
+      "f2afb64120237a1fdb2e788769de48239a3f8ce11fd579ae7bcab559729324a7"
+    ]
+  },
+  "calibration_target": [
+    "CAL-A8",
+    "CAL-A9",
+    "CAL-A10",
+    "GF-10"
+  ],
+  "evidence_levels": {
+    "fit": "PROPOSED calibration fit candidates against external published latency-axis points (emulated / design-estimate / assumption-class / measured app-level); no E3/E4 language — none of the anchors is our testbed, and owner adjudication precedes any label move",
+    "runs_and_sweeps": "E0 (analytical executions; deterministic, content-addressed, replay reproduces byte-identical artifacts)"
+  },
+  "evidence_schema_version": 2,
+  "executed_sweeps": {
+    "boundary": {
+      "cross_check": "every executed row equals its closed form at the same (payload, B, L) — exact Fraction string equality (21/21)",
+      "crossover_spectrum_exact": {
+        "gf10_at_registry_B_crossbar": {
+          "B": "64",
+          "L_ns": "9000",
+          "M_star_exact": "4608000/7",
+          "M_star_float": 658285.7142857143
+        },
+        "gf10_own_numbers_crossbar": {
+          "B": "25",
+          "L_ns": "9000",
+          "M_star_exact": "1800000/7",
+          "M_star_float": 257142.85714285713,
+          "flat_p100_16384_inside": true,
+          "flat_v100_65536_inside": true,
+          "statement": "at the anchor's OWN measured (L,B) the model's latency-governed region extends to ~251 KiB — BOTH staged flat boundaries (16 KiB P100, 64 KiB V100) sit INSIDE it: the one-sided consistency check passes (a measured flat region must be latency-governed in the model too; the converse is not claimed — the model's affine response is never literally flat)"
+        },
+        "identity": "M*(L,B) = chain * B * r/(2(r-1)) — the payload at which the identity's wire term equals its latency chain; below M* the latency axis GOVERNS O-CCT (crossbar 16LB/7, ring 8LB, torus 16LB/5, rd 24LB/7 at r=8)",
+        "registry_pair_crossbar": {
+          "B": "64",
+          "L_ns": "200",
+          "M_star_exact": "102400/7",
+          "M_star_float": 14628.57142857143,
+          "smoke_sits_above_by_exact": "16384 / (102400/7) = 28/25 (+12%) — at the registry pair the smoke payload is WIRE-governed by an exact 28:25 (wire 448 vs latency 400 ns)"
+        },
+        "registry_pair_ring": {
+          "B": "64",
+          "L_ns": "200",
+          "M_star_exact": "102400",
+          "M_star_float": 102400.0,
+          "statement": "on the ring the SAME registry pair keeps the smoke payload latency-governed (M* = 8LB = 100 KiB >> 16 KiB; chain 2800 vs wire 448) — which identity governs the smoke regime is itself L-dependent structure the axis carries"
+        }
+      },
+      "executed_rows": [
+        {
+          "B": "64",
+          "L_ns": "200",
+          "cct_ns_exact": "848",
+          "config": "crossbar8_s4_l200_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "400",
+          "latency_governed": false,
+          "payload_bytes": 16384,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "448"
+        },
+        {
+          "B": "64",
+          "L_ns": "200",
+          "cct_ns_exact": "2192",
+          "config": "crossbar8_s4_l200_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "400",
+          "latency_governed": false,
+          "payload_bytes": 65536,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "1792"
+        },
+        {
+          "B": "64",
+          "L_ns": "200",
+          "cct_ns_exact": "115088",
+          "config": "crossbar8_s4_l200_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "400",
+          "latency_governed": false,
+          "payload_bytes": 4194304,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "114688"
+        },
+        {
+          "B": "64",
+          "L_ns": "800",
+          "cct_ns_exact": "2048",
+          "config": "crossbar8_s4_l800_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "1600",
+          "latency_governed": true,
+          "payload_bytes": 16384,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "448"
+        },
+        {
+          "B": "64",
+          "L_ns": "800",
+          "cct_ns_exact": "3392",
+          "config": "crossbar8_s4_l800_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "1600",
+          "latency_governed": false,
+          "payload_bytes": 65536,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "1792"
+        },
+        {
+          "B": "64",
+          "L_ns": "800",
+          "cct_ns_exact": "116288",
+          "config": "crossbar8_s4_l800_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "1600",
+          "latency_governed": false,
+          "payload_bytes": 4194304,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "114688"
+        },
+        {
+          "B": "64",
+          "L_ns": "9000",
+          "cct_ns_exact": "18448",
+          "config": "crossbar8_s4_l9000_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "18000",
+          "latency_governed": true,
+          "payload_bytes": 16384,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "448"
+        },
+        {
+          "B": "64",
+          "L_ns": "9000",
+          "cct_ns_exact": "19792",
+          "config": "crossbar8_s4_l9000_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "18000",
+          "latency_governed": true,
+          "payload_bytes": 65536,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "1792"
+        },
+        {
+          "B": "64",
+          "L_ns": "9000",
+          "cct_ns_exact": "132688",
+          "config": "crossbar8_s4_l9000_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "18000",
+          "latency_governed": false,
+          "payload_bytes": 4194304,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "114688"
+        },
+        {
+          "B": "25",
+          "L_ns": "200",
+          "cct_ns_exact": "38672/25",
+          "config": "crossbar8_gf10_b25_l200_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "400",
+          "latency_governed": false,
+          "payload_bytes": 16384,
+          "source": "committed stage-GF-10 topology (B = the anchor's own measured per-link rate 25)",
+          "wire_term_ns_exact": "28672/25"
+        },
+        {
+          "B": "25",
+          "L_ns": "200",
+          "cct_ns_exact": "124688/25",
+          "config": "crossbar8_gf10_b25_l200_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "400",
+          "latency_governed": false,
+          "payload_bytes": 65536,
+          "source": "committed stage-GF-10 topology (B = the anchor's own measured per-link rate 25)",
+          "wire_term_ns_exact": "114688/25"
+        },
+        {
+          "B": "25",
+          "L_ns": "200",
+          "cct_ns_exact": "7350032/25",
+          "config": "crossbar8_gf10_b25_l200_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "400",
+          "latency_governed": false,
+          "payload_bytes": 4194304,
+          "source": "committed stage-GF-10 topology (B = the anchor's own measured per-link rate 25)",
+          "wire_term_ns_exact": "7340032/25"
+        },
+        {
+          "B": "25",
+          "L_ns": "9000",
+          "cct_ns_exact": "478672/25",
+          "config": "crossbar8_gf10_b25_l9000_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "18000",
+          "latency_governed": true,
+          "payload_bytes": 16384,
+          "source": "committed stage-GF-10 topology (B = the anchor's own measured per-link rate 25)",
+          "wire_term_ns_exact": "28672/25"
+        },
+        {
+          "B": "25",
+          "L_ns": "9000",
+          "cct_ns_exact": "564688/25",
+          "config": "crossbar8_gf10_b25_l9000_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "18000",
+          "latency_governed": true,
+          "payload_bytes": 65536,
+          "source": "committed stage-GF-10 topology (B = the anchor's own measured per-link rate 25)",
+          "wire_term_ns_exact": "114688/25"
+        },
+        {
+          "B": "25",
+          "L_ns": "9000",
+          "cct_ns_exact": "7790032/25",
+          "config": "crossbar8_gf10_b25_l9000_v1",
+          "identity": "crossbar",
+          "latency_chain_ns_exact": "18000",
+          "latency_governed": false,
+          "payload_bytes": 4194304,
+          "source": "committed stage-GF-10 topology (B = the anchor's own measured per-link rate 25)",
+          "wire_term_ns_exact": "7340032/25"
+        },
+        {
+          "B": "64",
+          "L_ns": "200",
+          "cct_ns_exact": "3248",
+          "config": "ring8_s4_l200_v1",
+          "identity": "ring",
+          "latency_chain_ns_exact": "2800",
+          "latency_governed": true,
+          "payload_bytes": 16384,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "448"
+        },
+        {
+          "B": "64",
+          "L_ns": "200",
+          "cct_ns_exact": "4592",
+          "config": "ring8_s4_l200_v1",
+          "identity": "ring",
+          "latency_chain_ns_exact": "2800",
+          "latency_governed": true,
+          "payload_bytes": 65536,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "1792"
+        },
+        {
+          "B": "64",
+          "L_ns": "200",
+          "cct_ns_exact": "117488",
+          "config": "ring8_s4_l200_v1",
+          "identity": "ring",
+          "latency_chain_ns_exact": "2800",
+          "latency_governed": false,
+          "payload_bytes": 4194304,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "114688"
+        },
+        {
+          "B": "64",
+          "L_ns": "9000",
+          "cct_ns_exact": "126448",
+          "config": "ring8_s4_l9000_v1",
+          "identity": "ring",
+          "latency_chain_ns_exact": "126000",
+          "latency_governed": true,
+          "payload_bytes": 16384,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "448"
+        },
+        {
+          "B": "64",
+          "L_ns": "9000",
+          "cct_ns_exact": "127792",
+          "config": "ring8_s4_l9000_v1",
+          "identity": "ring",
+          "latency_chain_ns_exact": "126000",
+          "latency_governed": true,
+          "payload_bytes": 65536,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "1792"
+        },
+        {
+          "B": "64",
+          "L_ns": "9000",
+          "cct_ns_exact": "240688",
+          "config": "ring8_s4_l9000_v1",
+          "identity": "ring",
+          "latency_chain_ns_exact": "126000",
+          "latency_governed": true,
+          "payload_bytes": 4194304,
+          "source": "S4 topology (B = registry 64)",
+          "wire_term_ns_exact": "114688"
+        }
+      ],
+      "grid": "7 topologies x 3 payloads = 21 configs x 6 ops",
+      "manifest_path": "experiments/calibration/s4/sweep_s4_boundary_v1.yaml",
+      "saturation_boundary_check": {
+        "anchor_staged": "NVLink V1/V2 bandwidth saturates at about 2^22 = 4 MiB",
+        "classification": "the anchor's two boundaries (flat-to-{16,64} KiB, saturates-at-4 MiB) bracket a transition region the identity structurally LACKS — the latency-side mirror of S2's size-dependent software-effective-bandwidth finding, now on measured small-message data; recorded as a known omission, never tuned",
+        "model_fact": {
+          "latency_chain_4mib_exact": "18000",
+          "saturation_over_crossover_exact": "458752/28125",
+          "saturation_over_crossover_float": 16.31118222222222,
+          "statement": "the identities' response is affine in M (no ramp, no plateau onset): at the anchor's own (L=9000, B=25) the 4 MiB row is wire-governed and sits far above the crossover M*",
+          "wire_term_4mib_exact": "7340032/25"
+        }
+      },
+      "sweep_id": "f2afb64120237a1fdb2e788769de48239a3f8ce11fd579ae7bcab559729324a7",
+      "sweep_name": "cal_s4_boundary_v1"
+    },
+    "lat_axis": {
+      "chain_law_table": [
+        {
+          "L_ns": "10",
+          "rd_minus_crossbar_exact": "40",
+          "ring_minus_crossbar_exact": "120",
+          "torus_minus_crossbar_exact": "252"
+        },
+        {
+          "L_ns": "16",
+          "rd_minus_crossbar_exact": "64",
+          "ring_minus_crossbar_exact": "192",
+          "torus_minus_crossbar_exact": "288"
+        },
+        {
+          "L_ns": "32",
+          "rd_minus_crossbar_exact": "128",
+          "ring_minus_crossbar_exact": "384",
+          "torus_minus_crossbar_exact": "384"
+        },
+        {
+          "L_ns": "64",
+          "rd_minus_crossbar_exact": "256",
+          "ring_minus_crossbar_exact": "768",
+          "torus_minus_crossbar_exact": "576"
+        },
+        {
+          "L_ns": "128",
+          "rd_minus_crossbar_exact": "512",
+          "ring_minus_crossbar_exact": "1536",
+          "torus_minus_crossbar_exact": "960"
+        },
+        {
+          "L_ns": "200",
+          "rd_minus_crossbar_exact": "800",
+          "ring_minus_crossbar_exact": "2400",
+          "torus_minus_crossbar_exact": "1392"
+        },
+        {
+          "L_ns": "256",
+          "rd_minus_crossbar_exact": "1024",
+          "ring_minus_crossbar_exact": "3072",
+          "torus_minus_crossbar_exact": "1728"
+        },
+        {
+          "L_ns": "512",
+          "rd_minus_crossbar_exact": "2048",
+          "ring_minus_crossbar_exact": "6144",
+          "torus_minus_crossbar_exact": "3264"
+        },
+        {
+          "L_ns": "1024",
+          "rd_minus_crossbar_exact": "4096",
+          "ring_minus_crossbar_exact": "12288",
+          "torus_minus_crossbar_exact": "6336"
+        },
+        {
+          "L_ns": "2000",
+          "rd_minus_crossbar_exact": "8000",
+          "ring_minus_crossbar_exact": "24000",
+          "torus_minus_crossbar_exact": "12192"
+        },
+        {
+          "L_ns": "80",
+          "rd_minus_crossbar_exact": "320",
+          "ring_minus_crossbar_exact": "960",
+          "torus_minus_crossbar_exact": "672"
+        },
+        {
+          "L_ns": "140",
+          "rd_minus_crossbar_exact": "560",
+          "ring_minus_crossbar_exact": "1680",
+          "torus_minus_crossbar_exact": "1032"
+        },
+        {
+          "L_ns": "800",
+          "rd_minus_crossbar_exact": "3200",
+          "ring_minus_crossbar_exact": "9600",
+          "torus_minus_crossbar_exact": "4992"
+        },
+        {
+          "L_ns": "9000",
+          "rd_minus_crossbar_exact": "36000",
+          "ring_minus_crossbar_exact": "108000",
+          "torus_minus_crossbar_exact": "54192"
+        }
+      ],
+      "chain_laws_exact": "ring - crossbar = 12L, rd - crossbar = 4L, ring - rd = 8L, torus - crossbar = 192 + 6L (the 192 ns is the torus's sequential-dims wire delta 640-448, itself L-free) — verified on executed rows at all 13 shared L values",
+      "cross_check": "every executed row equals the closed form of its own identity function at the same (payload, B=64, L) — exact Fraction string equality (57/57)",
+      "grid": "4 identities x (10 grid + 4 provenance) + 1 ring-only derived alternative = 57 configs x 6 ops",
+      "manifest_path": "experiments/calibration/s4/sweep_s4_lat_v1.yaml",
+      "payload_fence": "the single executed payload 16384 is the smoke value (A-W1-SIZE) — the regime the split record says this axis predicts; the split record defines NO within-series holdout for any G3 anchor, so every payload is fit-side",
+      "per_L_table_crossbar": [
+        {
+          "L_float": 10.0,
+          "L_ns": "10",
+          "cct_crossbar_ns_exact": "468",
+          "delta_vs_a10_800_pct": -77.1484375,
+          "delta_vs_a8_140_pct": -35.714285714285715,
+          "delta_vs_a8_64_pct": -18.75,
+          "delta_vs_a9_80_pct": -23.026315789473685,
+          "delta_vs_gf10_9000_pct": -97.46313963573287,
+          "delta_vs_registry_pct": -44.81132075471698,
+          "grid_member": true,
+          "latency_share_exact": "5/117",
+          "latency_share_float": 0.042735042735042736,
+          "provenance": "grid: 10 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 16.0,
+          "L_ns": "16",
+          "cct_crossbar_ns_exact": "480",
+          "delta_vs_a10_800_pct": -76.5625,
+          "delta_vs_a8_140_pct": -34.065934065934066,
+          "delta_vs_a8_64_pct": -16.666666666666664,
+          "delta_vs_a9_80_pct": -21.052631578947366,
+          "delta_vs_gf10_9000_pct": -97.398091934085,
+          "delta_vs_registry_pct": -43.39622641509434,
+          "grid_member": true,
+          "latency_share_exact": "1/15",
+          "latency_share_float": 0.06666666666666667,
+          "provenance": "grid: 16 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 32.0,
+          "L_ns": "32",
+          "cct_crossbar_ns_exact": "512",
+          "delta_vs_a10_800_pct": -75.0,
+          "delta_vs_a8_140_pct": -29.67032967032967,
+          "delta_vs_a8_64_pct": -11.11111111111111,
+          "delta_vs_a9_80_pct": -15.789473684210526,
+          "delta_vs_gf10_9000_pct": -97.22463139635732,
+          "delta_vs_registry_pct": -39.62264150943396,
+          "grid_member": true,
+          "latency_share_exact": "1/8",
+          "latency_share_float": 0.125,
+          "provenance": "grid: 32 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 64.0,
+          "L_ns": "64",
+          "cct_crossbar_ns_exact": "576",
+          "delta_vs_a10_800_pct": -71.875,
+          "delta_vs_a8_140_pct": -20.87912087912088,
+          "delta_vs_a8_64_pct": 0.0,
+          "delta_vs_a9_80_pct": -5.263157894736842,
+          "delta_vs_gf10_9000_pct": -96.877710320902,
+          "delta_vs_registry_pct": -32.075471698113205,
+          "grid_member": true,
+          "latency_share_exact": "2/9",
+          "latency_share_float": 0.2222222222222222,
+          "provenance": "grid: 64 is a declared-range endpoint / power of two / the registry point (NUMERICAL COINCIDENCE only: also CAL-A8's lower emulated point)"
+        },
+        {
+          "L_float": 80.0,
+          "L_ns": "80",
+          "cct_crossbar_ns_exact": "608",
+          "delta_vs_a10_800_pct": -70.3125,
+          "delta_vs_a8_140_pct": -16.483516483516482,
+          "delta_vs_a8_64_pct": 5.555555555555555,
+          "delta_vs_a9_80_pct": 0.0,
+          "delta_vs_gf10_9000_pct": -96.70424978317432,
+          "delta_vs_registry_pct": -28.30188679245283,
+          "grid_member": false,
+          "latency_share_exact": "5/19",
+          "latency_share_float": 0.2631578947368421,
+          "provenance": "anchor: CAL-A9 one-stage pair sum 10+70 (the plan-stated reading; one-sided floor)"
+        },
+        {
+          "L_float": 128.0,
+          "L_ns": "128",
+          "cct_crossbar_ns_exact": "704",
+          "delta_vs_a10_800_pct": -65.625,
+          "delta_vs_a8_140_pct": -3.296703296703297,
+          "delta_vs_a8_64_pct": 22.22222222222222,
+          "delta_vs_a9_80_pct": 15.789473684210526,
+          "delta_vs_gf10_9000_pct": -96.18386816999133,
+          "delta_vs_registry_pct": -16.9811320754717,
+          "grid_member": true,
+          "latency_share_exact": "4/11",
+          "latency_share_float": 0.36363636363636365,
+          "provenance": "grid: 128 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 140.0,
+          "L_ns": "140",
+          "cct_crossbar_ns_exact": "728",
+          "delta_vs_a10_800_pct": -64.453125,
+          "delta_vs_a8_140_pct": 0.0,
+          "delta_vs_a8_64_pct": 26.38888888888889,
+          "delta_vs_a9_80_pct": 19.736842105263158,
+          "delta_vs_gf10_9000_pct": -96.05377276669557,
+          "delta_vs_registry_pct": -14.150943396226415,
+          "grid_member": false,
+          "latency_share_exact": "5/13",
+          "latency_share_float": 0.38461538461538464,
+          "provenance": "anchor: CAL-A8 upper emulated added-latency point"
+        },
+        {
+          "L_float": 200.0,
+          "L_ns": "200",
+          "cct_crossbar_ns_exact": "848",
+          "delta_vs_a10_800_pct": -58.59375,
+          "delta_vs_a8_140_pct": 16.483516483516482,
+          "delta_vs_a8_64_pct": 47.22222222222222,
+          "delta_vs_a9_80_pct": 39.473684210526315,
+          "delta_vs_gf10_9000_pct": -95.40329575021683,
+          "delta_vs_registry_pct": 0.0,
+          "grid_member": true,
+          "latency_share_exact": "25/53",
+          "latency_share_float": 0.4716981132075472,
+          "provenance": "grid: 200 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 256.0,
+          "L_ns": "256",
+          "cct_crossbar_ns_exact": "960",
+          "delta_vs_a10_800_pct": -53.125,
+          "delta_vs_a8_140_pct": 31.868131868131865,
+          "delta_vs_a8_64_pct": 66.66666666666666,
+          "delta_vs_a9_80_pct": 57.89473684210527,
+          "delta_vs_gf10_9000_pct": -94.79618386816999,
+          "delta_vs_registry_pct": 13.20754716981132,
+          "grid_member": true,
+          "latency_share_exact": "8/15",
+          "latency_share_float": 0.5333333333333333,
+          "provenance": "grid: 256 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 512.0,
+          "L_ns": "512",
+          "cct_crossbar_ns_exact": "1472",
+          "delta_vs_a10_800_pct": -28.125,
+          "delta_vs_a8_140_pct": 102.19780219780219,
+          "delta_vs_a8_64_pct": 155.55555555555557,
+          "delta_vs_a9_80_pct": 142.10526315789474,
+          "delta_vs_gf10_9000_pct": -92.02081526452733,
+          "delta_vs_registry_pct": 73.58490566037736,
+          "grid_member": true,
+          "latency_share_exact": "16/23",
+          "latency_share_float": 0.6956521739130435,
+          "provenance": "grid: 512 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 800.0,
+          "L_ns": "800",
+          "cct_crossbar_ns_exact": "2048",
+          "delta_vs_a10_800_pct": 0.0,
+          "delta_vs_a8_140_pct": 181.3186813186813,
+          "delta_vs_a8_64_pct": 255.55555555555554,
+          "delta_vs_a9_80_pct": 236.84210526315786,
+          "delta_vs_gf10_9000_pct": -88.89852558542931,
+          "delta_vs_registry_pct": 141.50943396226415,
+          "grid_member": false,
+          "latency_share_exact": "25/32",
+          "latency_share_float": 0.78125,
+          "provenance": "anchor: CAL-A10 assumption-class 0.8 us end-to-end figure"
+        },
+        {
+          "L_float": 1024.0,
+          "L_ns": "1024",
+          "cct_crossbar_ns_exact": "2496",
+          "delta_vs_a10_800_pct": 21.875,
+          "delta_vs_a8_140_pct": 242.85714285714283,
+          "delta_vs_a8_64_pct": 333.33333333333337,
+          "delta_vs_a9_80_pct": 310.5263157894737,
+          "delta_vs_gf10_9000_pct": -86.47007805724198,
+          "delta_vs_registry_pct": 194.33962264150944,
+          "grid_member": true,
+          "latency_share_exact": "32/39",
+          "latency_share_float": 0.8205128205128205,
+          "provenance": "grid: 1024 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 2000.0,
+          "L_ns": "2000",
+          "cct_crossbar_ns_exact": "4448",
+          "delta_vs_a10_800_pct": 117.1875,
+          "delta_vs_a8_140_pct": 510.9890109890109,
+          "delta_vs_a8_64_pct": 672.2222222222223,
+          "delta_vs_a9_80_pct": 631.578947368421,
+          "delta_vs_gf10_9000_pct": -75.8889852558543,
+          "delta_vs_registry_pct": 424.52830188679246,
+          "grid_member": true,
+          "latency_share_exact": "125/139",
+          "latency_share_float": 0.8992805755395683,
+          "provenance": "grid: 2000 is a declared-range endpoint / power of two / the registry point"
+        },
+        {
+          "L_float": 9000.0,
+          "L_ns": "9000",
+          "cct_crossbar_ns_exact": "18448",
+          "delta_vs_a10_800_pct": 800.78125,
+          "delta_vs_a8_140_pct": 2434.065934065934,
+          "delta_vs_a8_64_pct": 3102.777777777778,
+          "delta_vs_a9_80_pct": 2934.2105263157896,
+          "delta_vs_gf10_9000_pct": 0.0,
+          "delta_vs_registry_pct": 2075.471698113208,
+          "grid_member": false,
+          "latency_share_exact": "1125/1153",
+          "latency_share_float": 0.9757155247181266,
+          "provenance": "anchor: GF-10 measured app-level P2P headline — OUT of the declared range (the miss executed)"
+        }
+      ],
+      "schedule_absorption_alternative": {
+        "L_exact": "4500/7",
+        "L_float": 642.8571428571429,
+        "cct_ns_exact": "9448",
+        "chain_equals_gf10_exact": "14 * 4500/7 = 9000 = GF-10's headline EXACTLY",
+        "status": "FLAGGED AMBIGUITY, never selected: a DGX-1 direct P2P access crosses ONE pair (no switch, no chain), so the pair reading (L=9000, OUT of range) is the anchor-faithful primary; reading the 9000 ns onto the ring chain puts an IN-range L on the axis only by absorbing a software-stack reading into the schedule multiplier — recorded so S6/S7 see the full ambiguity, not a tuned-away one",
+        "topology": "ring8_s4_l4500_7_v1 (ring-only)"
+      },
+      "sweep_id": "778f67f319e8771f525a929b6ef698b11b938c6188c2ed521a5edc4ebee1aeab",
+      "sweep_name": "cal_s4_lat_v1"
+    }
+  },
+  "fits": {
+    "cal_a10": {
+      "chain_multipliers_of_the_800ns_figure_per_allreduce_at_r8": {
+        "crossbar_2L_exact": "1600",
+        "note": "the same assumption, read onto the four declared latency parameters, spans 1.6-11.2 us per AllReduce at r=8 — the schedule multiplier is identity-side structure, anchor-free (stage A10 executed the rank scaling of exactly this bracket to r=1024)",
+        "rd_6L_exact": "4800",
+        "ring_14L_exact": "11200",
+        "torus_8L_exact": "6400"
+      },
+      "fitted_L": {
+        "assumption_class_honesty": "peer review certifies the plausibility of the USAGE, never the value; the quote's own premise (NVIDIA publishes no such number) means NO L value can be falsified against it — the placement is context, never a target",
+        "degeneracy": "zero residual degrees of freedom — the anchor's own assumption value IS the fitted L",
+        "exact": "800"
+      },
+      "identity": "L-axis placement on A-L0X-LAT (crossbar pair reading, the stage-A10 declared PRIMARY: the quote's own wording is END-TO-END latency for NVLink Network — pair-level across the fabric, charged exactly 2L per AllReduce, rank-count-independent); the per-hop ring reading (A-L0-LAT) and the log-chain doubling reading (A-L0D-LAT) are executed by the same sweep (stage A10's secondary mappings)",
+      "placement_statement": "the registry point 200 ns is exactly 1/4 of the assumption (the repo-wide latency default is 4x more optimistic than the peer-reviewed assumption-class usage on the same axis); 800 ns IS the plan §2.1 anchored-span upper endpoint and sits inside the declared range [10, 2000] at exactly 40% of its upper endpoint — unlike every other G3 anchor, this anchor OWNS the span's upper end",
+      "registry_placements": {
+        "assumption_is_plan_span_upper": true,
+        "assumption_over_range_upper_exact": "2/5",
+        "assumption_over_registry_exact": "4",
+        "registry_200_over_assumption_800_exact": "1/4"
+      },
+      "split_role": "DEGENERATE: the split record defines no within-series holdout for CAL-A10 — the assumption value IS the fit signal",
+      "staged_signal": "the stated ASSUMPTION 'NVIDIA does not publish end-to-end latency for NVLink Network; we assume 0.8 us, consistent with sub-us positioning for NVSwitch hops' — HiPC 2025 Workshops; quote via public search snippet of the paywalled paper (confidence M; wording re-verification at owner integration is an open item)",
+      "tolerance_shape_windows": {
+        "shape_provenance": "the ~5% mean-error SCALAR admitted solely as tolerance-shape context per the split record's sole recorded exception",
+        "status": "SHAPE CONTEXT ONLY — no tolerance adopted (E0 zero-slack stands)",
+        "tau_5pct": {
+          "L_anchor_ns": "800",
+          "L_high_exact": "4256/5",
+          "L_high_float": 851.2,
+          "L_low_exact": "3744/5",
+          "L_low_float": 748.8,
+          "anchor_cct_ns_exact": "2048",
+          "note": "the window (3744/5, 4256/5) contains NO grid member (512 and 1024 bracket it from outside) — the power-of-two grid resolves the 0.5-1 us region only at 512/1024; reported, not densified",
+          "uniform_grid_members_inside": []
+        }
+      }
+    },
+    "cal_a8": {
+      "fitted_L": {
+        "degeneracy": "zero residual degrees of freedom — under the declared projection the anchor's own staged values ARE the fitted L values; nothing is tuned and nothing can be",
+        "high_exact": "140",
+        "low_exact": "64"
+      },
+      "identity": "L-axis placement on A-L0-LAT (ring rows; the stage-A8 declared projection: the per-access added-latency ns-scale read onto the collective per-hop L); executed identically on all four identities by the sweep",
+      "inexpressible_outputs": {
+        "finding": "the anchor's MEASURED outputs (fractions of a 158-workload population meeting performance goals) are STRUCTURALLY INEXPRESSIBLE in the L0 input space — no population/SLO axis exists (stage A8's enumeration, carried forward as a known omission); never smoothed",
+        "population": 158,
+        "workload_goal_fractions": {
+          "140ns": "37/100",
+          "64ns": "43/100"
+        }
+      },
+      "placement_statement": "the registry point 200 ns sits ABOVE the anchor's whole emulated band: +150% over the lower point (25/8) and +42.857% over the upper (10/7) — in the declared range and the plan span but OUTSIDE the anchor band [64, 140]; consistent-with (the anchor bounds, it does not measure the collective hop latency) and selected by NO anchor — the plan's KEEP (point) verdict stands on span membership alone",
+      "registry_placements": {
+        "registry_200_over_a8_high_140_exact": "10/7",
+        "registry_200_over_a8_low_64_exact": "25/8",
+        "registry_in_anchor_band": false,
+        "registry_in_declared_range": true,
+        "registry_in_plan_span": true
+      },
+      "split_role": "DEGENERATE: the split record defines no within-series holdout for CAL-A8 — the whole two-point band is the fit signal; the two points are carried SEPARATELY, never averaged",
+      "staged_signal": "the two emulated added-latency points 64 / 140 ns (Pond, ASPLOS 2023; EMULATED study inputs bounding plausible CXL-class device latency, not device measurements); the anchor's MEASURED outputs are the workload-goal fractions 43% / 37% of 158 workloads",
+      "tolerance_shape_windows": {
+        "shape_provenance": "CAL-A4's ~5% validated mean-error SCALAR admitted solely as tolerance-shape context per the split record's sole recorded exception (plan §3.4, in-plan since 2026-10-27; the anchor's series and per-configuration errors are NOT fit inputs)",
+        "status": "SHAPE CONTEXT ONLY — no tolerance is adopted (the E0 zero-slack policy stands; a nonzero tolerance must arrive through CGFR with recorded evidence, plan §3.4); the L-window is where the model's smoke-point O-CCT stays within tau of the anchor-point O-CCT (the identity is affine in L, so the window is exact)",
+        "tau_5pct": {
+          "L_anchor_ns": "64",
+          "L_high_exact": "392/5",
+          "L_high_float": 78.4,
+          "L_low_exact": "248/5",
+          "L_low_float": 49.6,
+          "anchor_cct_ns_exact": "576",
+          "note": "the window (248/5, 392/5) contains the grid member 64 (the anchor point itself, also a grid member by the noted coincidence) — no OTHER grid member lies inside",
+          "uniform_grid_members_inside": [
+            "64"
+          ]
+        },
+        "tau_5pct_high_point": {
+          "L_anchor_ns": "140",
+          "L_high_exact": "791/5",
+          "L_high_float": 158.2,
+          "L_low_exact": "609/5",
+          "L_low_float": 121.8,
+          "anchor_cct_ns_exact": "728",
+          "note": "the window (609/5, 791/5) contains the grid member 128 — the anchor point 140 itself is a provenance member, not grid",
+          "uniform_grid_members_inside": [
+            "128"
+          ]
+        }
+      }
+    },
+    "cal_a9": {
+      "component_isolation_on_executed_rows": {
+        "statement": "on the executed crossbar rows at the smoke payload: t(80) - t(10) = 140 = 2 x 70 isolates the SWITCH component exactly (the 10 ns row is the declared-range lower endpoint = the link term alone); the identity charges every budget component once per phase (2x)",
+        "t80_minus_t10_exact": "140"
+      },
+      "expressiveness_loss": "carried forward from stage A9: the lumped link.pair_latency_ns cannot express the (link, switch, stage-count) decomposition — a k-stage chain enters only as the lumped arithmetic L = 80k, and the backend itself declares nonuniform_pair_latency unsupported (structural, recorded)",
+      "fitted_L": {
+        "degeneracy": "zero residual degrees of freedom — the anchor's own plan-stated sum IS the fitted L",
+        "derivation": "10 (link) + 70 (switch stage), summed exactly as the calibration plan states (§2.1 row A-L0X-LAT: 'pair-across-a-switch: ~80 ns CXL-class (CAL-A9 link+switch sum)') — the plan is the reconciliation authority this stage follows",
+        "one_sided_floor": "the switch term is worded AT LEAST ~70 ns: any one-stage CXL-class pair latency >= 80 ns is consistent-with the budget and any value < 80 ns CONTRADICTS it; the falsification direction is one-sided and no upper bound follows from this anchor",
+        "one_stage_pair_exact": "80"
+      },
+      "identity": "L-axis placement on A-L0X-LAT (crossbar pair reading, the plan §2.1 stated sum); a ring-hop reading (each hop one link+switch traversal) and the torus/doubling chains are executed by the same sweep (chain laws)",
+      "placement_statement": "the registry point 200 ns = exactly 5/2 x the one-stage pair sum (+150%); the two-link reading 2*10 + 70 = 90 ns is a FLAGGED interpretation risk (recorded, not swept — action if reversed: re-point the anchor topology at 90; every identity relation is linear in L); a cascaded second stage doubles the sum (160 = 2 x 80, anchor arithmetic) and a multi-hop schedule amplifies it (ring charges 14L vs the crossbar's 2L — the executed chain-law table)",
+      "registry_placements": {
+        "consistency": "200 >= 80 — consistent-with the one-sided floor",
+        "registry_200_over_pair_80_exact": "5/2",
+        "registry_in_declared_range": true,
+        "registry_in_plan_span": true
+      },
+      "split_role": "DEGENERATE: the split record defines no within-series holdout for CAL-A9 — the budget IS the fit signal",
+      "staged_signal": "the design-estimate budget: ~10 ns per CXL link per direction + AT LEAST ~70 ns per switch stage (ports, arbitration, NoC) — Berger et al., IEEE Micro 2023; budget-analysis numbers, NOT silicon measurements; the switch term is one-sided (a floor)",
+      "tolerance_shape_windows": {
+        "shape_provenance": "the ~5% mean-error SCALAR admitted solely as tolerance-shape context per the split record's sole recorded exception",
+        "status": "SHAPE CONTEXT ONLY — no tolerance adopted (E0 zero-slack stands)",
+        "tau_5pct": {
+          "L_anchor_ns": "80",
+          "L_high_exact": "476/5",
+          "L_high_float": 95.2,
+          "L_low_exact": "324/5",
+          "L_low_float": 64.8,
+          "anchor_cct_ns_exact": "608",
+          "note": "the window (324/5, 476/5) contains NO grid member — 64 misses from below by 0.8 ns and 128 from above by 32.8 ns; the exact boundaries are the finding, the grid is the anchor-blind instrument (same posture as S2's empty window)",
+          "uniform_grid_members_inside": []
+        }
+      }
+    },
+    "gf10": {
+      "classification": {
+        "finding": "app-level P2P latency bundles the software stack (CUDA API, driver, copy-engine queueing) — every L0 identity carries ZERO software/endpoint latency terms, so the measured axis point is STRUCTURALLY inexpressible: the latency-axis sibling of S2's size-dependent software-effective bandwidth and S3's software-version/algorithm axes (the third structural-omission axis of the fit family)",
+        "narrow_range_upper_status": "the plan §2.1 NARROW (range upper) candidate (<= 800-1000 ns) was stated CONTINGENT on extracting this anchor's series: now extracted, GF-10 does NOT validate the narrowing — on the app-level axis the measured points sit ABOVE 2000 (the candidate would move the range the wrong way), and on the wire axis GF-10 contributes no wire-class point at all; the candidate's support remains CAL-A9's floor + CAL-A10's assumption ONLY. The registry range is NOT changed by this stage",
+        "quantity_class_caveat": "the staging doc's own interpretation duty: app-level P2P bounds a DIFFERENT thing than bare wire hop latency — the miss does NOT falsify the wire-axis range by itself; the wire-class corpus (CAL-A9 10-70 ns components, CAL-A10 800 ns assumption) still tops out at 800 ns",
+        "ring_chain_alternative": "14L = 9000 at L = 4500/7 ns (642.857...) — IN range; FLAGGED schedule-absorption (a software-stack reading absorbed into the schedule multiplier), executed for the record, never selected (see executed_sweeps.lat_axis.schedule_absorption_alternative)"
+      },
+      "fitted_L": {
+        "best_in_range": {
+          "L_exact": "2000 (the declared-range upper endpoint)",
+          "cct_miss_at_smoke_exact": "-875/1153",
+          "cct_miss_at_smoke_pct": -75.8889852558543,
+          "floor_miss_exact": "-5/9",
+          "floor_miss_pct": -55.55555555555556,
+          "statement": "even the range endpoint reaches only 4/9 of the anchor's floor (4000 vs 9000 ns) and 875/1153 of its smoke-point O-CCT (4448 vs 18448 ns): -77.78% on the floor, -75.89% in CCT"
+        },
+        "degeneracy": "the anchor's own measured figure IS the required L under the primary pair reading — the fit has zero residual degrees of freedom AND no admissible solution: THE MISS IS THE FINDING",
+        "range_membership": "OUTSIDE the declared free range [10, 2000]: 4.5x the upper endpoint (9/2), 45x the registry point",
+        "required_exact": "9000",
+        "spread_over_range_upper": {
+          "manual_routing_2x_18000": "9",
+          "manual_routing_3x_27000": "27/2",
+          "nv_sli_local_5000": "5/2",
+          "nv_sli_remote_8000": "4",
+          "nvlink_direct_9000": "9/2",
+          "pcie_remote_13000": "13/2"
+        },
+        "spread_statement": "the anchor's WHOLE transport-class spread sits 2.5x-13.5x above the declared range upper — this is not one odd number; every app-level reading in the anchor is us-class"
+      },
+      "identity": "L-axis placement on A-L0X-LAT (crossbar pair reading — the PRIMARY): a P2P pair access on DGX-1 DIRECTLY-CONNECTED NVLink pairs crosses ONE pair (no switch, no chain), so the model's link.pair_latency_ns is the direct parameter analog of the anchor's measured per-pair figure",
+      "registry_placements": {
+        "headline_over_cal_a10_800_exact": "45/4",
+        "range_upper_2000_over_9000_exact": "2/9",
+        "registry_200_over_9000_exact": "1/45"
+      },
+      "small_message_boundary_role": "see small_message_boundary block — the anchor's flat-to-{16,64} KiB boundaries and 4 MiB saturation point are checked against the model's crossover spectrum at the anchor's OWN (L,B) numbers",
+      "split_role": "DEGENERATE + OUT-OF-RANGE: the split record defines no within-series holdout for GF-10; the anchor's staged points are all fit-side signal, and the headline lies OUTSIDE the declared free range",
+      "staged_signal": "measured app-level P2P latency ~9 us for NVLink directly-connected pairs (DGX-1, V100/NVLink-2 era; Tartan suite; M-H — prose numbers from the public ar5iv HTML, per-pair matrices are heat maps); the anchor's own transport-class spread: NV-SLI local ~5 us, NV-SLI remote ~8 us, PCIe remote ~13 us, manual-routing pairs ~2x/~3x => ~18/~27 us",
+      "tolerance_shape_windows": {
+        "shape_provenance": "the same tolerance-shape scalar and the same sole-recorded-exception provenance as fits.cal_a8.tolerance_shape_windows.tau_5pct.shape_provenance",
+        "status": "SHAPE CONTEXT ONLY — no tolerance adopted (E0 zero-slack stands)",
+        "tau_5pct": {
+          "L_anchor_ns": "9000",
+          "L_high_exact": "47306/5",
+          "L_high_float": 9461.2,
+          "L_low_exact": "42694/5",
+          "L_low_float": 8538.8,
+          "anchor_cct_ns_exact": "18448",
+          "note": "the window (42694/5, 47306/5) lies ENTIRELY above the declared range — NO admissible L is inside it: the executed statement of the miss",
+          "uniform_grid_members_inside": []
+        }
+      }
+    }
+  },
+  "group_g3_anchors": {
+    "fit_targets": [
+      "CAL-A8 — Pond (ASPLOS 2023) emulated CXL added-latency points 64/140 ns (latency_axis_point; staging §A8; H transcription, emulated-not-measured caveat)",
+      "CAL-A9 — Berger et al. (IEEE Micro 2023) CXL latency-budget decomposition ~10 ns/link + >=~70 ns/switch (latency_axis_point; staging §A9; design-estimate, one-sided floor)",
+      "CAL-A10 — HiPC 2025 Workshops UALink-vs-NVLink assumption 0.8 us end-to-end (latency_axis_point; staging §A10; assumption-class, confidence M)",
+      "GF-10 — Li et al. (TPDS 32(1) 2020) measured V100-era app-level P2P ~9 us + flat-to-{16,64} KiB boundaries + 4 MiB saturation (latency_axis_point_measured; staging §GF-10; M-H, the interpretation duty: bounds a different thing than wire hop latency)"
+    ],
+    "parameter_axes_duty": "A-L0-LAT / A-L0X-LAT / A-L0T-LAT / A-L0D-LAT range discipline (plan §2.1 KEEP-point / NARROW-range-upper verdicts) — executed on all four parameters; small-message O-CCT at the smoke regime predicted from this axis (predictions_for_s6) for the EXTERNAL holdout check in S6"
+  },
+  "headline": "group G3 fits (all degenerate or out-of-range — the anchors stage latency-axis POINTS, not series): CAL-A8's emulated CXL band {64, 140} ns and CAL-A9's one-stage budget sum 80 ns fit exactly as their own staged values; the registry point 200 ns sits +150%/+42.9%/+150% ABOVE the CXL-class points at exactly 1/4 of CAL-A10's 800 ns assumption (which owns the plan-span upper end, in-range at 40% of the range endpoint). GF-10's measured app-level P2P 9 us lies OUTSIDE the declared free range [10, 2000] at 4.5x its upper endpoint — the best in-range L misses by -5/9 on the floor and -75.9% at the smoke point, and the whole transport-class spread (5-27 us) sits 2.5-13.5x above: THE MISS IS THE FINDING (no software/endpoint latency term exists in any L0 identity — the third structural-omission axis of the fit family); the in-range ring-chain reading (L = 4500/7, 14L = 9000) is executed and flagged as schedule-absorption, never selected. The small-message boundary check passes one-sidedly at GF-10's own numbers (both staged flat boundaries inside the model's latency-governed region, M* = 1800000/7 B at (9000, 25)); at the registry pair the smoke payload sits exactly at the crossover (28:25 wire:latency) — and the plan's NARROW-range-upper candidate does NOT validate against the now-extracted measured series (app-level points move the wrong way; wire-class support unchanged at A9+A10 only)",
+  "held_out": {
+    "held_out": false,
+    "scope": "all five stage runs and both sweeps are fit-side (the split record defines no within-series holdout for any G3 anchor); the stage's known-omission findings (the GF-10 miss above all) are REPORTED deviations at anchor points fixed before evaluation, never tuned targets"
+  },
+  "independent_reproduction": [],
+  "known_omissions": [
+    "no software/endpoint latency term exists in ANY L0 identity — GF-10's measured app-level P2P (9 us headline; 5-27 us transport-class spread) sits 2.5-13.5x above the declared range upper with the best in-range L missing by -5/9 on the floor and -75.9% at the smoke point: the third structural-omission axis of the fit family (with S2's size-dependent software-effective bandwidth and S3's software-version/algorithm axes), reported never tuned",
+    "CAL-A8's MEASURED outputs (43%/37% of 158 workloads meeting goals) are structurally inexpressible — no population/SLO axis exists (stage A8's enumeration)",
+    "CAL-A9's (link, switch, stage-count) decomposition is not expressible in the lumped L (k-stage chains only as L = 80k; nonuniform pair latency declared unsupported) — stage A9's expressiveness loss, carried",
+    "the identities' response is affine in M — no latency-flat region and no bandwidth ramp: GF-10's flat-to-{16,64} KiB and saturates-at-4 MiB boundaries bracket a transition region the model lacks (the latency-side mirror of S2's ramp finding)",
+    "GF-10's manual-routing pair heterogeneity (2x/3x within one chassis) is inexpressible under uniform L (per-pair nonuniformity unsupported)",
+    "no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)"
+  ],
+  "model": {
+    "assumptions": "A-L0-BW / A-L0-LAT / A-L0-FD / A-L0-DIV (ring), A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV (crossbar), A-L0T-BW / A-L0T-LAT / A-L0T-SEQ / A-L0T-UNIF / A-L0T-SHAPE / A-L0T-DIV (torus), A-L0D-BW / A-L0D-LAT / A-L0D-POW2 / A-L0D-STEP / A-L0D-DIV (doubling) — experiments/vertical_slice/assumptions_l0.yaml",
+    "backend_ids": [
+      "analytical_l0",
+      "analytical_l0_crossbar",
+      "analytical_l0_torus2d",
+      "analytical_l0_recursive_doubling"
+    ],
+    "declared_free_parameters": {
+      "A-L0-LAT": {
+        "parameter": "link.hop_latency_ns",
+        "registry_range": [
+          10,
+          2000
+        ],
+        "registry_value": 200,
+        "swept_by": "the S4 ring rows"
+      },
+      "A-L0D-LAT": {
+        "parameter": "link.pair_latency_ns",
+        "registry_range": [
+          10,
+          2000
+        ],
+        "registry_value": 200,
+        "swept_by": "the S4 recursive-doubling rows (range-discipline duty)"
+      },
+      "A-L0T-LAT": {
+        "parameter": "link.hop_latency_ns",
+        "registry_range": [
+          10,
+          2000
+        ],
+        "registry_value": 200,
+        "swept_by": "the S4 torus rows (range-discipline duty)"
+      },
+      "A-L0X-LAT": {
+        "parameter": "link.pair_latency_ns",
+        "registry_range": [
+          10,
+          2000
+        ],
+        "registry_value": 200,
+        "swept_by": "the S4 crossbar rows (the PRIMARY pair-reading identity)"
+      },
+      "registry_note": "all four registry VALUES stay 200 ns — UNCHANGED by this stage; the grid is anchor-blind (declared-range endpoints + powers of two + the registry point); B stays at the A-L0*-BW registry point 64 on every S4-authored row (the GF-10 B=25 boundary rows are the anchor's own measured rate, labeled config provenance, never fitted)"
+    },
+    "identities": {
+      "crossbar": "t = 2(r-1)/r*M/B + 2L = 448 + 2L ns",
+      "rd": "t = 2(r-1)/r*M/B + 2*log2(r)*L = 448 + 6L ns",
+      "ring": "t = 2(r-1)/r*M/B + 2(r-1)*L = 448 + 14L ns at (M=16384, B=64, r=8)",
+      "torus2d": "t = sum dims [2(k-1)/k*M/B + 2(k-1)*L] = 640 + 8L ns (2x4 registry shape)"
+    },
+    "latency_chain_bracket": "the four declared latency parameters share value 200 / range [10, 2000] and differ only in the identity's chain multiplier: {2, 6, 8, 14} x L per AllReduce at r=8 (crossbar / recursive doubling / torus / ring) — executed and law-checked at every shared L"
+  },
+  "not_tuned": "the sweep grid was fixed by registry-range arithmetic (endpoints, powers of two, the registry point) and the anchor-provenance points by the anchors' OWN staged figures before any deviation was computed; every fit in this stage is degenerate (the anchor's own value IS the fitted/required L under a declared mapping recorded in advance) or out-of-range (GF-10 — the miss is the finding); the GF-10 ring-chain alternative was executed and FLAGGED, never selected; the registry values stay 200 across A-L0-LAT / A-L0X-LAT / A-L0T-LAT / A-L0D-LAT; no manifest outside this calibration directory carries any fitted value",
+  "predictions_for_s6": {
+    "external_check_scope": "S6 evaluates these predictions against the split record's cross-anchor holdout (ids deliberately unlisted here per the no-leakage rule); nothing in THIS stage reads, targets, or selects against any holdout number",
+    "predictions_table": {
+      "a10_800": {
+        "crossbar_chain2L_ns_exact": "2048",
+        "rd_chain6L_ns_exact": "5248",
+        "ring_chain14L_ns_exact": "11648",
+        "torus2d_chain8L_ns_exact": "7040"
+      },
+      "a8_140": {
+        "crossbar_chain2L_ns_exact": "728",
+        "rd_chain6L_ns_exact": "1288",
+        "ring_chain14L_ns_exact": "2408",
+        "torus2d_chain8L_ns_exact": "1760"
+      },
+      "a8_64": {
+        "crossbar_chain2L_ns_exact": "576",
+        "rd_chain6L_ns_exact": "832",
+        "ring_chain14L_ns_exact": "1344",
+        "torus2d_chain8L_ns_exact": "1152"
+      },
+      "a9_80": {
+        "crossbar_chain2L_ns_exact": "608",
+        "rd_chain6L_ns_exact": "928",
+        "ring_chain14L_ns_exact": "1568",
+        "torus2d_chain8L_ns_exact": "1280"
+      },
+      "gf10_9000": {
+        "crossbar_chain2L_ns_exact": "18448",
+        "rd_chain6L_ns_exact": "54448",
+        "ring_chain14L_ns_exact": "126448",
+        "torus2d_chain8L_ns_exact": "72640"
+      },
+      "registry_200": {
+        "crossbar_chain2L_ns_exact": "848",
+        "rd_chain6L_ns_exact": "1648",
+        "ring_chain14L_ns_exact": "3248",
+        "torus2d_chain8L_ns_exact": "2240"
+      }
+    },
+    "role": "the split record's parameter_axes for this group: 'small-message O-CCT at the smoke-manifest regime is predicted from this axis and EXTERNALLY checked on the holdout' — these are the model-side predictions at (r=8, M=16384, B=64) per identity and per fitted/registry L; every number is an executed sweep row"
+  },
+  "record_kind": "calibration_fit",
+  "registry_discipline": {
+    "keep_point_verdicts": "the plan §2.1 KEEP (point) verdicts for all four latency parameters stand on SPAN MEMBERSHIP alone (200 ns lies inside the anchored axis span ~10-800 ns): this stage's placements make that explicit — the registry point sits ABOVE every CXL-class point (64/80/140), at exactly 1/4 of the GPU-class assumption (800), and selected by NO anchor",
+    "narrow_range_upper_candidate": "the plan's NARROW (range upper) candidate (<= 800-1000 ns, contingent on extracting the V100-era measured P2P series) is now evaluated against that series: GF-10's app-level points (5-27 us) sit ABOVE the declared upper 2000, so the candidate does NOT validate on the app-level axis, and GF-10 contributes no wire-class point; the narrowing's support remains CAL-A9's floor + CAL-A10's assumption ONLY. The registry range [10, 2000] is NOT changed; the free range's upper half (800-2000) remains without a wire-class anchor, and above it lies the un-modelable app-level regime — the honest shape of this axis as the anchors leave it"
+  },
+  "split_record": {
+    "committed_copy": "experiments/calibration/split/anchor_split_v1.json",
+    "group": "G3 — measured/assumption hop-pair latency axis + small-message boundary (fitting stage S4)",
+    "no_leakage": "none of the split record's cross-anchor holdouts or its blocked anchor is read by any objective, swept value, or tolerance in this record (mechanically asserted: their ids appear nowhere in the record bytes); sole recorded exception used: the ~5% mean-error scalar as tolerance-SHAPE context only — the ids stay unlisted here by design",
+    "record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20",
+    "within_series_rules": "NONE of the four G3 anchors carries a within-series split (the split record's within_series_splits lists only CAL-A3/CAL-A6/GF-02/GF-04); every staged anchor point is fit-side and no held-out reporting run exists in this stage"
+  },
+  "stage": "calibration fit record, S4 (group G3 — latency axis + small-message boundary)",
+  "status": "PROPOSED — owner adjudication required; no claim, label, or shipped parameter value changes; every fitted/anchor L is a recorded diagnostic, never a shipped value",
+  "store_run_cross_checks": [
+    {
+      "calibration_target": [
+        "CAL-A8"
+      ],
+      "cct_ns_exact": "1344",
+      "experiment_id": "EXP-CAL-S4-A8-FIT-L64-001",
+      "held_out": false,
+      "mapping": "fit-side run at the lower emulated point L=64 ns (ring identity)",
+      "run_id": "2ca54ead178cd0a361be29124c3e4c37053d1e75125ac02600792384dc5e905d",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "CAL-A8"
+      ],
+      "cct_ns_exact": "2408",
+      "experiment_id": "EXP-CAL-S4-A8-FIT-L140-001",
+      "held_out": false,
+      "mapping": "fit-side run at the upper emulated point L=140 ns (ring identity)",
+      "run_id": "774cc400a6446bd77d4f28e0a297462a0bbfee84e6c8b1e7d8fe3803c964a66d",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "CAL-A9"
+      ],
+      "cct_ns_exact": "608",
+      "experiment_id": "EXP-CAL-S4-A9-FIT-PAIR80-001",
+      "held_out": false,
+      "mapping": "fit-side run at the one-stage pair sum L=80 ns (crossbar identity)",
+      "run_id": "95222277ecad82b9dd8f063465d13b9ad2733b50338fa772e059163749a8808d",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "CAL-A10"
+      ],
+      "cct_ns_exact": "2048",
+      "experiment_id": "EXP-CAL-S4-A10-FIT-PAIR800-001",
+      "held_out": false,
+      "mapping": "fit-side run at the assumption point L=800 ns (crossbar identity)",
+      "run_id": "6c3b7566eeedd0595bc197cb21bacd3a03f9ce45ea69dd803bd1e43e27d02ce2",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    },
+    {
+      "calibration_target": [
+        "GF-10"
+      ],
+      "cct_ns_exact": "18448",
+      "experiment_id": "EXP-CAL-S4-GF10-ANCHOR-L9000-001",
+      "held_out": false,
+      "mapping": "fit-side run at the measured headline L=9000 ns (crossbar identity; OUT of the declared range — the miss executed)",
+      "run_id": "a54446b6d774d7853fef7a84e08bb0230cd9bb8a28e4f3a35601f3cbb54f4080",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality); v2 dimensions as declared (held_out: false)"
+    }
+  ],
+  "verification": [
+    {
+      "check": "tests/calibration/test_s4_fit.py",
+      "scope": "S4 fit guard — re-executes the two S4 sweeps and the five S4 runs into a scratch store, rebuilds this record byte-identically, and checks the separation invariants (anchor-blind grid membership; no holdout anchor id anywhere in the record bytes; the four latency registry values untouched at 200/[10,2000]; GF-10's required L outside the declared range with the miss reported, never tuned)"
+    },
+    {
+      "check": "tests/calibration/test_anchor_split.py",
+      "scope": "the split record's own immutability guard (S1) — the data separation this fit runs under"
+    }
+  ]
+}

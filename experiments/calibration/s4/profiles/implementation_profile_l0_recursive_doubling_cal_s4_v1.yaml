@@ -1,0 +1,32 @@
+# Implementation profile for the calibration-ladder S4 sweep on the
+# analytical L0 recursive-doubling backend (group G3 — the latency-axis
+# fit stage).
+implementation_profile_id: analytical_l0_recursive_doubling_cal_s4_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_recursive_doubling
+fidelity: L0
+model: >
+  partner-exchange AllReduce identity t = 2(r-1)/r*M/B + 2*log2(r)*L
+  (see src/essun/backends/analytical/l0_recursive_doubling.py);
+  assumptions A-L0D-BW / A-L0D-LAT / A-L0D-POW2 / A-L0D-STEP /
+  A-L0D-DIV from experiments/vertical_slice/assumptions_l0.yaml. In this
+  stage recursive doubling is the LOG-chain point of the latency-chain
+  bracket {2, 6, 8, 14} x L per AllReduce at r=8 (chain 6L) and carries
+  the range-discipline duty for A-L0D-LAT.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  L (link.pair_latency_ns, A-L0D-LAT; declared free range [10, 2000] ns,
+  registry point 200) is swept on the same anchor-blind grid and the same
+  anchor-provenance points as the ring/crossbar rows (80 / 140 / 800 /
+  9000); B stays at the A-L0D-BW registry point 64 B/ns. NOTHING IS
+  TUNED: no G3 anchor maps specifically to the doubling axis; the rows
+  execute the range discipline and the chain law (doubling = crossbar +
+  4L at every payload) on this identity.
+measurement_source: >
+  G3 staged signals as in the ring/crossbar profiles of this stage;
+  parameter-axis placements only, PROPOSED evidence; not our testbed,
+  no E3/E4 language.
+evidence_dimensions: >
+  the S4 sweep carries the stage's evidence chain; runs on this backend
+  would declare the same five v2 dimensions (fit-side: the split record
+  defines no within-series holdout for G3).

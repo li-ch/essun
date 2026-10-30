@@ -1,0 +1,31 @@
+# Calibration-ladder S4 latency-axis fit-sweep topology (group G3):
+# unidirectional ring of 8 ranks (the free smoke default rank count; every
+# G3 anchor pins a PAIR latency, none pins a collective rank count) at
+# L = 16 ns on the parameter A-L0-LAT (link.hop_latency_ns, registry
+# value 200, DECLARED free range [10, 2000] ns,
+# experiments/vertical_slice/assumptions_l0.yaml). B stays at the
+# A-L0-BW registry point 64 B/ns (the bandwidth axis was S2/S3's; this
+# stage owns the latency axis - the mirror of S3 sweeping B at L=200).
+#
+# GRID member: power of two 2^4 inside the declared range (range arithmetic; anchor-blind)
+#
+# Identity: t = 2(r-1)/r*M/B + 2(r-1)*L = 448 + 14L ns at the smoke
+# payload 16384 (src/essun/backends/analytical/l0.py). NOTHING IS TUNED:
+# the grid was fixed by registry-range arithmetic before any deviation
+# was computed; the registry value of A-L0-LAT stays 200.
+topology_id: ring8_s4_l16_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 16
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  chunked ring AllReduce over 8 ranks; latency chain 2(r-1)L = 14L per
+  AllReduce. No congestion, no credits, no packetization, no per-hop
+  heterogeneity, no software/endpoint latency term (the L0 input space
+  carries none - the structural blindness the GF-10 miss quantifies);
+  L0 transport model only. Provenance: L = 16 ns per the header role
+  above; anchor-blind grid arithmetic or anchor-staged number, never
+  tuned toward any anchor OUTPUT; B = 64 B/ns is the fixed free registry
+  point on every row of this stage.

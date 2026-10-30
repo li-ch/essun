@@ -1,0 +1,33 @@
+# Implementation profile for the calibration-ladder S4 sweep on the
+# analytical L0 2D-torus backend (group G3 — the latency-axis fit stage).
+implementation_profile_id: analytical_l0_torus2d_cal_s4_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_torus2d
+fidelity: L0
+model: >
+  2D-torus AllReduce identity t = sum over dims [2(k-1)/k*M/B +
+  2(k-1)*L] (see src/essun/backends/analytical/l0_torus2d.py);
+  assumptions A-L0T-BW / A-L0T-LAT / A-L0T-SEQ / A-L0T-UNIF /
+  A-L0T-SHAPE / A-L0T-DIV from experiments/vertical_slice/
+  assumptions_l0.yaml; the 2x4 grid is the A-L0T-SHAPE registry point
+  (free design-space parameter, anchor-free). In this stage the torus is
+  the MIDDLE chain of the latency-chain bracket {2, 6, 8, 14} x L per
+  AllReduce at r=8 and carries the range-discipline duty for A-L0T-LAT
+  (the split record's parameter_axes name all four latency parameters).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  L (link.hop_latency_ns, A-L0T-LAT; declared free range [10, 2000] ns,
+  registry point 200) is swept on the same anchor-blind grid and the same
+  anchor-provenance points as the ring/crossbar rows (80 / 140 / 800 /
+  9000); B stays at the A-L0T-BW registry point 64 B/ns. NOTHING IS
+  TUNED: no G3 anchor maps specifically to the torus axis; the rows
+  execute the range discipline and the chain law (torus = crossbar +
+  192 + 6L at the smoke payload) on this identity.
+measurement_source: >
+  G3 staged signals as in the ring/crossbar profiles of this stage;
+  parameter-axis placements only, PROPOSED evidence; not our testbed,
+  no E3/E4 language.
+evidence_dimensions: >
+  the S4 sweep carries the stage's evidence chain; runs on this backend
+  would declare the same five v2 dimensions (fit-side: the split record
+  defines no within-series holdout for G3).

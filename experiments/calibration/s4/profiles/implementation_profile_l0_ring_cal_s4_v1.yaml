@@ -1,0 +1,47 @@
+# Implementation profile for the calibration-ladder S4 runs and sweeps on
+# the analytical L0 ring backend (group G3 — the latency-axis fit stage:
+# CAL-A8 / CAL-A9 / CAL-A10 / GF-10 per the immutable split record
+# 3862e227..., fitting stage S4).
+implementation_profile_id: analytical_l0_ring_cal_s4_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  unidirectional-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L
+  (see src/essun/backends/analytical/l0.py); assumptions A-L0-BW /
+  A-L0-LAT / A-L0-FD / A-L0-DIV from experiments/vertical_slice/
+  assumptions_l0.yaml. In this stage the ring is the LINEAR-CHAIN end of
+  the latency-chain bracket {2, 6, 8, 14} x L per AllReduce at r=8
+  (crossbar / recursive doubling / 2x4 torus / ring) and the identity of
+  CAL-A8's stage-A8 declared projection (a per-access added latency read
+  onto the per-hop L).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  L (link.hop_latency_ns, A-L0-LAT; declared free range [10, 2000] ns,
+  registry point 200) is THIS STAGE'S swept axis: (a) the anchor-blind
+  grid — the declared-range endpoints 10 and 2000, the powers of two
+  inside the range 16, 32, 64, 128, 256, 512, 1024, and the registry
+  point 200 — plus (b) the group's anchor-provenance points 80 (CAL-A9
+  one-stage pair sum, the plan-stated reading), 140 (CAL-A8 upper
+  emulated point), 800 (CAL-A10 assumption-class figure), 9000 (GF-10's
+  measured app-level P2P headline — OUTSIDE the declared range, executed
+  as the degenerate fit target; the miss is the finding), and the
+  ring-only derived alternative 4500/7 (14L = GF-10's 9000; the
+  schedule-absorption reading, flagged, never selected). B stays at the
+  A-L0-BW registry point 64 B/ns on every S4 row (the bandwidth axis was
+  S2/S3's). NOTHING IS TUNED: fitted/anchor L values are recorded
+  diagnostics; the registry value stays 200.
+measurement_source: >
+  G3 staged signals (docs/calibration/anchors_staging.md §A8/§A9/§A10,
+  anchors_gapfill.md §GF-10; E1 transcription builders committed at
+  experiments/calibration/{a8,a9,a10,gf10}/) — external published
+  latency-axis points (emulated / design-estimate / assumption-class /
+  measured app-level), compared as PARAMETER-AXIS PLACEMENTS (the anchors
+  stage no collective (size -> time) series) as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.
+evidence_dimensions: >
+  every S4 run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target = the G3 anchor ids / held_out /
+  independent_reproduction / known_omissions); the split record defines
+  NO within-series holdout for any G3 anchor, so every S4 run is
+  fit-side (held_out: false).

@@ -1,0 +1,30 @@
+# Calibration-ladder S4 latency-axis fit-sweep topology (group G3):
+# fully-connected exchange abstraction of 8 ranks (partner-exchange
+# schedule; the fabric class of the crossbar, the ALGORITHM differs) at
+# L = 16 ns on the parameter A-L0D-LAT (link.pair_latency_ns, registry
+# value 200, DECLARED free range [10, 2000] ns,
+# experiments/vertical_slice/assumptions_l0.yaml). B stays at the
+# A-L0D-BW registry point 64 B/ns; 8 is a power of two so the
+# A-L0D-POW2 gate accepts natively.
+#
+# GRID member: power of two 2^4 inside the declared range (range arithmetic; anchor-blind)
+#
+# Identity: t = 2(r-1)/r*M/B + 2*log2(r)*L = 448 + 6L ns at the smoke
+# payload 16384 (src/essun/backends/analytical/l0_recursive_doubling.py).
+# NOTHING IS TUNED: same grid discipline as the other identities; the
+# registry value of A-L0D-LAT stays 200.
+topology_id: exchange8_s4_l16_v1
+topology_class: fully_connected_exchange
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 16
+notes: >
+  Every rank pair adjacent with uniform per-pair exchange latency; one
+  partner per rank per step (XOR schedule), log2(8) = 3 steps per phase,
+  latency chain 2*3*L = 6L per AllReduce. No congestion, no credits, no
+  packetization, no overlapped phases, no software/endpoint latency term;
+  L0 transport model only. Provenance: L = 16 ns per the header role
+  above; anchor-blind grid arithmetic or anchor-staged number, never
+  tuned; B = 64 B/ns fixed free registry point.

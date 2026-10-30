@@ -1,0 +1,134 @@
+# Calibration-ladder S4 FIT SWEEP (group G3, the latency-axis stage): sweep
+# the DECLARED free-parameter ranges of the FOUR latency parameters —
+# A-L0-LAT (ring link.hop_latency_ns), A-L0X-LAT (crossbar
+# link.pair_latency_ns), A-L0T-LAT (torus link.hop_latency_ns), A-L0D-LAT
+# (recursive-doubling link.pair_latency_ns); registry value 200, range
+# [10, 2000] ns, experiments/vertical_slice/assumptions_l0.yaml — against
+# the G3 anchors' staged LATENCY-AXIS POINTS per the immutable split record
+# 3862e227... (committed at experiments/calibration/split/
+# anchor_split_v1.json; fitting stage S4 = CAL-A8, CAL-A9, CAL-A10 +
+# GF-10; the record defines NO within-series holdout for any of them, so
+# every executed payload is fit-side).
+#
+# Grid, two declared families (nothing tuned toward any anchor OUTPUT):
+#   (a) the UNIFORM, ANCHOR-BLIND grid over the declared range [10, 2000]:
+#       the endpoints 10 and 2000, the powers of two inside 16, 32, 64,
+#       128, 256, 512, 1024, and the REGISTRY POINT 200 (10 members;
+#       membership is pure range/registry arithmetic — one noted
+#       coincidence: 64 = 2^6 is also numerically CAL-A8's lower emulated
+#       point, which selected nothing);
+#   (b) the group's anchor-provenance points: 80 (CAL-A9 one-stage pair
+#       sum, the plan-stated reading; the one-sided floor makes < 80 the
+#       falsified side), 140 (CAL-A8 upper emulated point), 800 (CAL-A10
+#       assumption-class 0.8 us), and 9000 (GF-10's measured app-level P2P
+#       headline — OUTSIDE the declared range at 4.5x its upper endpoint;
+#       executed as the degenerate fit target so the miss is visible in
+#       executed artifacts; THE MISS IS THE FINDING, nothing is tuned).
+#   (c) one ring-only DERIVED alternative: 4500/7 (14L = GF-10's 9000) —
+#       the schedule-absorption reading of the same anchor, IN range;
+#       flagged, never selected (a DGX-1 direct P2P pair crosses ONE
+#       pair, no chain).
+#
+# Payload: 16384 B = the W1 smoke value (A-W1-SIZE) — exactly the regime
+# the split record says this axis predicts ("small-message O-CCT at the
+# smoke-manifest regime is predicted from this axis"). B stays at the
+# A-L0*-BW registry point 64 B/ns on every row (the bandwidth axis was
+# S2/S3's; S4 owns the latency axis — the mirror of S3 sweeping B at
+# L=200). All four identities at r=8 (torus at the 2x4 registry shape):
+# the latency chain per AllReduce is the bracket {2, 6, 8, 14} x L
+# (crossbar / recursive doubling / torus / ring) — the executed
+# chain-law cross-checks (ring = crossbar + 12L, doubling = crossbar +
+# 4L, torus = crossbar + 192 + 6L) live in the stage fit record.
+#
+# Expected identities (E0 arithmetic, cross-checked row-by-row in the
+# builder by exact Fraction string equality):
+#   ring     t = 448 + 14L ; crossbar t = 448 + 2L ;
+#   torus    t = 640 + 8L  ; doubling t = 448 + 6L   (ns at M=16384, B=64).
+#
+# Baseline = the registry point on the crossbar (the shipped pair (B=64,
+# L=200)); the delta columns read directly as placement vs the registry.
+# NOTHING IS TUNED (the S2/S3 fence): the grid was fixed by
+# registry-range arithmetic and anchor provenance before any deviation
+# was computed; every fitted/anchor L is a RECORDED DIAGNOSTIC, never a
+# shipped parameter value; the registry values stay 200 across A-L0-LAT /
+# A-L0X-LAT / A-L0T-LAT / A-L0D-LAT.
+sweep: cal_s4_lat_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s4/topologies/crossbar8_s4_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [16384]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    # uniform anchor-blind grid over the declared A-L0-LAT range [10, 2000]
+    - experiments/calibration/s4/topologies/ring8_s4_l10_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l16_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l32_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l64_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l128_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l200_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l256_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l512_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l1024_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l2000_v1.yaml
+    # anchor-provenance points of the group
+    - experiments/calibration/s4/topologies/ring8_s4_l80_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l140_v1.yaml
+    - experiments/calibration/s4/topologies/ring8_s4_l800_v1.yaml
+    # GF-10's measured headline — OUT of the declared range (the miss executed)
+    - experiments/calibration/s4/topologies/ring8_s4_l9000_v1.yaml
+    # ring-only derived alternative: 14L = 9000 (schedule-absorption, flagged)
+    - experiments/calibration/s4/topologies/ring8_s4_l4500_7_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/s4/topologies/crossbar8_s4_l10_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l16_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l32_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l64_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l128_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l200_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l256_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l512_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l1024_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l2000_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l80_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l140_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l800_v1.yaml
+    - experiments/calibration/s4/topologies/crossbar8_s4_l9000_v1.yaml
+  - algorithm: allreduce_torus2d
+    topologies:
+    - experiments/calibration/s4/topologies/torus8_s4_l10_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l16_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l32_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l64_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l128_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l200_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l256_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l512_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l1024_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l2000_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l80_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l140_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l800_v1.yaml
+    - experiments/calibration/s4/topologies/torus8_s4_l9000_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/s4/topologies/exchange8_s4_l10_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l16_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l32_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l64_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l128_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l200_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l256_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l512_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l1024_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l2000_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l80_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l140_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l800_v1.yaml
+    - experiments/calibration/s4/topologies/exchange8_s4_l9000_v1.yaml
