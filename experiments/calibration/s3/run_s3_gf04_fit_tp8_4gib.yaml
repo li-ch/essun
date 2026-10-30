@@ -1,0 +1,67 @@
+# Calibration-ladder S3 FIT-side RUN (group G2, anchor GF-04, the 8-GPU
+# FIT leg): the L0 ring identity at B_fit(GF-04) = 476.37 B/ns — the
+# DEGENERATE one-point S3 fit value over GF-04's split-record FIT POINT,
+# the 8-GPU single-node summary busbw (split record 3862e227..., committed
+# at experiments/calibration/split/anchor_split_v1.json,
+# within_series_splits: fit = the 8-GPU single-node point ONLY; the 16-GPU
+# two-node point is HELD OUT on the scaling dimension — the scaling
+# dimension is validated, not fitted) — executed at the common ladder
+# member 4294967296 B = 2^32 (the largest size common to both of the
+# anchor's verified command-line ladders; 8 divides it, gate-accepted, no
+# bracketing).
+#
+# The fit is degenerate with ZERO residual degrees of freedom: under the
+# pinned nccl-tests busbw = B asymptotic mapping the one-point fit puts B
+# exactly at the anchor's own figure 476.37 (carried by the committed
+# stage-GF-04 topology); the residual at the fit point is the fixed +14L
+# registry term ONLY. NO r=16 topology enters this or any S3 sweep — the
+# held-out 16-GPU point is executed ONLY by this stage's declared
+# held_out: true run.
+#
+# v2 evidence dimensions: calibration_target [GF-04], held_out FALSE.
+# claim_id is deliberately EMPTY (fence: no claim upgrades). Evidence
+# level E0.
+experiment_id: EXP-CAL-S3-GF04-FIT-TP8-4GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp8_4gib.yaml
+infra_graph:
+  path: experiments/calibration/gf04/topologies/ring8_gf04_anchor476_37_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s3/profiles/implementation_profile_l0_ring_cal_s3_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_gf04_anchor476_37_v1 (unidirectional ring, r=8 = the anchor's single-node GPU count; B = B_fit(GF-04) = 476.37 B/ns, the degenerate one-point S3 fit value equal to the anchor's own summary figure under the pinned busbw = B mapping; L=200 ns registry point)
+  workload: w1_dense_tp_decode tp8, payload 2^32 = the largest size common to both of the anchor's verified ladders (the same-size comparison point of the 8->16 scaling pair; gate-accepted, no bracketing)
+  implementation: analytical L0 free-parameter identity; the GF-04 fit comparison is CCT-vs-CCT against an external published vendor measurement at the split-record fit point — PROPOSED, review required; B_fit is a recorded diagnostic, never a shipped value
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s3_fit.py
+    scope: S3 fit guard — re-executes the three S3 fit sweeps and the six S3 runs into a scratch store, rebuilds the calibration fit record byte-identically, and checks the fit/holdout separation invariants (GF-04's 16-GPU point held out; CAL-A6/GF-02 degenerate splits)
+  calibration_target:
+  - GF-04
+  held_out:
+    held_out: false
+    scope: fit-side execution at the 8-GPU single-node point (the split record's sole GF-04 fit size; payload 2^32, the common ladder member); the 16-GPU two-node point is NEVER fitted — it is held out on the scaling dimension and reported by the declared held_out:true run only; the provenance points (450/360) enter as swept-value provenance only
+  independent_reproduction: []
+  known_omissions:
+  - single fixed-B, zero-overhead L0 ring identity with no fabric-asymmetry parameter — the 8->16 crossing cost (an inter-node leg distinct from the intra-node fabric) is structurally inexpressible; the held-out 16-GPU deviation at the fitted B is that finding, reported not tuned
+  - the fit target is the anchor's SUMMARY figure (per-size tables are images, not text-extractable); which size row the summary aggregates is unstated — the executed comparison anchors at the common ladder member 2^32 (aggregation ambiguity bounded by the plateau's own flatness, stage GF-04)
+  - the 476.37 figure sits 5.86% above the 450 physical per-direction ceiling (in-network-computing class, stage GF-02 classification) — the absolute value's class is inherited, not re-adjudicated here
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)
+  - A-L0-LAT fixed at the registry point 200 ns; the latency axis is stage S4's

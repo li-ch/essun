@@ -1,0 +1,66 @@
+# Calibration-ladder S3 HELD-OUT REPORTING RUN (evaluation-side, group
+# G2, anchor GF-04): the L0 ring identity at the FITTED configuration
+# B_fit(GF-04) = 476.37 B/ns executed at r=16 — the WITHIN-SERIES HELD-OUT
+# 16-GPU two-node point (split record 3862e227..., within_series_splits:
+# fit = the 8-GPU single-node point ONLY; the 16-GPU two-node point is
+# held out on the multi-rank scaling dimension — "the scaling dimension is
+# validated, not fitted") — at the common ladder member 2^32, the
+# same-size point of the 8->16 scaling pair (16 divides it; gate-accepted,
+# no bracketing).
+#
+# This run never tunes anything: B_fit was fixed by the 8-GPU point alone
+# before this run existed; the recorded deviation at r=16 IS the finding
+# (the model's rank-count-invariance vs the measured -1.41% busbw drop —
+# a known-omission candidate: fabric asymmetry), never a target. This is
+# the ONLY r=16 execution of stage S3 (no r=16 topology enters any S3
+# sweep — the mechanical fence the guard test asserts).
+#
+# This is NOT the S6 cross-anchor holdout: CAL-A4/GF-01/GF-03/GF-11 stay
+# untouched this stage; no number from them is read here.
+#
+# v2 evidence dimensions: calibration_target [GF-04], held_out TRUE with
+# an evaluation-only scope (this run is mandated held-out-error reporting,
+# not a fit). claim_id is deliberately EMPTY (fence: no claim upgrades).
+# Evidence level E0.
+experiment_id: EXP-CAL-S3-GF04-HOLDOUT-TP16-4GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp16_4gib.yaml
+infra_graph:
+  path: experiments/calibration/gf04/topologies/ring16_gf04_anchor476_37_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s3/profiles/implementation_profile_l0_ring_cal_s3_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring16_gf04_anchor476_37_v1 (unidirectional ring, r=16 = the anchor's two-node rank count; B = B_fit(GF-04) = 476.37 B/ns UNCHANGED from the 8-GPU fit — the scaling counterfactual the held-out point evaluates; L=200 ns registry point)
+  workload: w1_dense_tp_decode tp16, payload 2^32 = the common ladder member (the same-size point of the 8->16 scaling pair — WITHIN-SERIES HELD-OUT point on the rank dimension; evaluation-only)
+  implementation: analytical L0 free-parameter identity; held-out error reporting against GF-04's 16-GPU point at the fitted configuration — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s3_fit.py
+    scope: S3 fit guard — re-executes the three S3 fit sweeps and the six S3 runs into a scratch store, rebuilds the calibration fit record byte-identically, and checks the fit/holdout separation invariants (this run is the stage's sole r=16 execution and carries held_out TRUE)
+  calibration_target:
+  - GF-04
+  held_out:
+    held_out: true
+    scope: evaluation-only reporting of GF-04's within-series held-out 16-GPU two-node point (split record 3862e227...) at the S3 fitted B; excluded from every fit objective; nothing tunes on this run
+  independent_reproduction: []
+  known_omissions:
+  - single fixed-B, zero-overhead L0 ring identity with no fabric-asymmetry parameter — the 8->16 crossing cost is structurally inexpressible; this run's deviation is that finding, reported not tuned
+  - the held-out reference is the anchor's summary figure 469.67 GB/s read through the pinned busbw = B mapping at the common ladder member (per-size tables are images; the ratio axis is the extractable target)
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

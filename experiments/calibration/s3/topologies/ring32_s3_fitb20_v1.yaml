@@ -1,0 +1,40 @@
+# Calibration-ladder S3 FITTED-CONFIGURATION DIAGNOSTIC topology (group
+# G2, anchor CAL-A6, NCCL 2.20.3 leg): unidirectional ring of 32 ranks
+# (the anchor's 4x8 H100 count) at B = B_fit(2.20.3), the exact minimax
+# fixed-B of the S3 fit over CAL-A6's split-record fit sizes {1 GiB,
+# 16 GiB} of the 2.20.3 series ONLY (split record 3862e227...,
+# within_series_splits; degenerate — no within-series holdout exists).
+#
+# B_fit(2.20.3) is carried as the EXACT rational
+# "115757383942144/309086671475" (= 374.5143179... B/ns): the closed-form
+# minimax of the identity t = 2(r-1)/r*M/B + 2(r-1)*L (r=32, L=200 ns
+# registry point) against the two 2.20.3 fit points, equalizing their
+# deviations exactly (worst case +/- 2.195%). It is a RECORDED DIAGNOSTIC
+# (one of the fitted configurations handed to the S6 holdout evaluation),
+# NOT a shipped value: the registry A-L0-BW value stays 64, range
+# [1, 1024]; nothing was tuned toward any holdout anchor to produce it.
+#
+# CAVEAT CARRIED (the anchor's own recorded ambiguity, stage A6): the
+# 2.20.3 QUOTED busbw values are inconsistent with their own quoted times
+# under the standard r=32 ring convention by -3.2%; this topology is fit
+# to the anchor's TIMES (the unambiguous targets), never to the
+# quarantined quotes. The version-pair twin ring32_s3_fitb19_v1.yaml
+# carries B_fit(2.19.3); the fitted-B separation (-3.66%) is the anchor's
+# noise-floor role on the parameter axis — recorded, never tuned.
+topology_id: ring32_s3_fitb20_v1
+topology_class: unidirectional_ring
+ranks: 32
+link:
+  bytes_per_ns: "115757383942144/309086671475"
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  chunked ring AllReduce over 32 ranks. No congestion, no credits, no
+  packetization, no per-hop heterogeneity and no software-version
+  parameter (the L0 input space carries none — the structural blindness
+  the anchor's noise-floor role quantifies); L0 transport model only.
+  Provenance: B = the exact S3 minimax fit diagnostic over CAL-A6's
+  2.20.3 fit sizes (calibration fit record, group G2, stage S3); fitted
+  to the anchor's times, never to its quarantined 2.20.3 busbw quotes;
+  never tuned toward held-out data or holdout anchors; not a shipped
+  parameter value. L = 200 ns is the free A-L0-LAT registry point.

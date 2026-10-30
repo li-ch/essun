@@ -1,0 +1,1180 @@
+{
+  "backing": {
+    "inputs": [
+      "experiments/calibration/s3/sweep_s3_a6_bw_v1.yaml",
+      "experiments/calibration/s3/sweep_s3_gf02_bw_v1.yaml",
+      "experiments/calibration/s3/sweep_s3_gf04_tp8_bw_v1.yaml",
+      "experiments/calibration/s3/run_s3_a6_fit_2193_16gib.yaml",
+      "experiments/calibration/s3/run_s3_a6_fit_2203_16gib.yaml",
+      "experiments/calibration/s3/run_s3_gf02_fit_ar_16gib.yaml",
+      "experiments/calibration/s3/run_s3_gf02_fit_ag_twin.yaml",
+      "experiments/calibration/s3/run_s3_gf04_fit_tp8_4gib.yaml",
+      "experiments/calibration/s3/run_s3_gf04_holdout_tp16_4gib.yaml",
+      "experiments/calibration/s3/topologies/ (49 files)",
+      "experiments/calibration/s3/profiles/ (3 files)",
+      "experiments/calibration/{a6,gf02,gf04}/ committed stage inputs (workloads + anchor/provenance topologies, reused)"
+    ],
+    "reproduce": "make sweep EXP=experiments/calibration/s3/sweep_s3_a6_bw_v1.yaml ; make sweep EXP=experiments/calibration/s3/sweep_s3_gf02_bw_v1.yaml ; make sweep EXP=experiments/calibration/s3/sweep_s3_gf04_tp8_bw_v1.yaml ; make run EXP=(each of the six run_s3_*.yaml manifests) ; python experiments/calibration/s3/build_fit_record.py",
+    "run_ids": [
+      "ad7e937c83882b2bf0d117838a5d9a25e136a8a8f609a1f085eead5b2158e450",
+      "7d7624054d2777655dd36a0ce0d620129e744d550f3c09a960c1f767134299d8",
+      "ffdd546d3a7a12342680808c1f56bb7eb9f3dcad6e9ecb7207c9f3a3b0bc43fb",
+      "96d480731cd2017be8d251f04c357e5a2739b9f62846b4e64fbb19254836fd17",
+      "5af31f3b51ef54579371fcc4ae643cf567ebd900388d6cc2162da1c6904ad3d4",
+      "ed77cce301ef938c5497e936904c01ce9665b1885099fd568e0f006a61ee2b48"
+    ],
+    "run_roles": {
+      "5af31f3b51ef54579371fcc4ae643cf567ebd900388d6cc2162da1c6904ad3d4": "GF-04 8-GPU fit-side (held_out: false)",
+      "7d7624054d2777655dd36a0ce0d620129e744d550f3c09a960c1f767134299d8": "CAL-A6 2.20.3 fit-side (held_out: false)",
+      "96d480731cd2017be8d251f04c357e5a2739b9f62846b4e64fbb19254836fd17": "GF-02 allgather twin, fit-side backing (held_out: false)",
+      "ad7e937c83882b2bf0d117838a5d9a25e136a8a8f609a1f085eead5b2158e450": "CAL-A6 2.19.3 fit-side (held_out: false)",
+      "ed77cce301ef938c5497e936904c01ce9665b1885099fd568e0f006a61ee2b48": "GF-04 16-GPU held-out reporting, the stage's sole r=16 execution (held_out: true)",
+      "ffdd546d3a7a12342680808c1f56bb7eb9f3dcad6e9ecb7207c9f3a3b0bc43fb": "GF-02 allreduce fit-side (held_out: false)"
+    },
+    "s6_handoff": "the fitted configurations this record hands to the S6 holdout evaluation: B_fit(CAL-A6 2.19.3) = 111478703128576/286778506025, B_fit(CAL-A6 2.20.3) = 115757383942144/309086671475, B_fit(GF-02) = 360, B_fit(GF-04) = 476.37 B/ns — all recorded diagnostics",
+    "sweep_ids": [
+      "26e275b7b3697b6f6640471e05fa0439ba122d3ee609f7ed5ba13c77842ed834",
+      "13bc507205108c718f06e836bf003f71d2ce84a8b02e8cec19e0d7ee6c8dab9c",
+      "96b91ab6dd42b5e084a17ff56b35694e29e5526b4de13b0a9298df2736002499"
+    ]
+  },
+  "calibration_target": [
+    "CAL-A6",
+    "GF-02",
+    "GF-04"
+  ],
+  "evidence_levels": {
+    "fit": "PROPOSED calibration fit candidate against external published measurements; no E3/E4 language — none of the anchors is our testbed, and owner adjudication precedes any label move",
+    "runs": "E0 (analytical executions; deterministic, content-addressed, replay reproduces byte-identical artifacts)"
+  },
+  "evidence_schema_version": 2,
+  "executed_sweeps": {
+    "cal_a6": {
+      "cross_check": "all executed rows equal the closed form of the same identity function at the same payload and swept B (exact Fraction string equality)",
+      "grid": "18 topologies x 2 payload sizes = 36 configs x 6 ops",
+      "manifest_path": "experiments/calibration/s3/sweep_s3_a6_bw_v1.yaml",
+      "payload_fence": "every executed payload is a fit-side size of this anchor's split record (asserted)",
+      "per_B_deltas": [
+        {
+          "B_bytes_per_ns": "64",
+          "B_float": 64.0,
+          "delta_pct_2193_16GiB": 511.098691105628,
+          "delta_pct_2193_1GiB": 502.43536255511503,
+          "delta_pct_2203_16GiB": 497.9536864372679,
+          "delta_pct_2203_1GiB": 471.2774674115456,
+          "grid_member": true,
+          "max_abs_delta_pct": 511.098691105628,
+          "provenance": "grid: 64=64x1",
+          "topology": "ring32_s3_b64_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "128",
+          "B_float": 128.0,
+          "delta_pct_2193_16GiB": 205.55663024321467,
+          "delta_pct_2193_1GiB": 201.3325428878432,
+          "delta_pct_2203_16GiB": 198.9839712121038,
+          "delta_pct_2203_1GiB": 185.74765468535892,
+          "grid_member": true,
+          "max_abs_delta_pct": 205.55663024321467,
+          "provenance": "grid: 128=64x2",
+          "topology": "ring32_s3_b128_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "192",
+          "B_float": 192.0,
+          "delta_pct_2193_16GiB": 103.70927662241021,
+          "delta_pct_2193_1GiB": 100.96493633208591,
+          "delta_pct_2203_16GiB": 99.32739947038242,
+          "delta_pct_2203_1GiB": 90.57105044329667,
+          "grid_member": true,
+          "max_abs_delta_pct": 103.70927662241021,
+          "provenance": "grid: 192=64x3",
+          "topology": "ring32_s3_b192_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "256",
+          "B_float": 256.0,
+          "delta_pct_2193_16GiB": 52.78559981200799,
+          "delta_pct_2193_1GiB": 50.78113305420727,
+          "delta_pct_2203_16GiB": 49.499113599521735,
+          "delta_pct_2203_1GiB": 42.98274832226556,
+          "grid_member": true,
+          "max_abs_delta_pct": 52.78559981200799,
+          "provenance": "grid: 256=64x4",
+          "topology": "ring32_s3_b256_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "320",
+          "B_float": 320.0,
+          "delta_pct_2193_16GiB": 22.231393725766655,
+          "delta_pct_2193_1GiB": 20.670851087480084,
+          "delta_pct_2203_16GiB": 19.602142077005322,
+          "delta_pct_2203_1GiB": 14.429767049646886,
+          "grid_member": true,
+          "max_abs_delta_pct": 22.231393725766655,
+          "provenance": "grid+anchor: 320=64x5 AND the CAL-A12 ~80% derated-rail provenance point",
+          "topology": "ring32_a6_derated320_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "384",
+          "B_float": 384.0,
+          "delta_pct_2193_16GiB": 1.861923001605765,
+          "delta_pct_2193_1GiB": 0.5973297763286277,
+          "delta_pct_2203_16GiB": -0.32917227133895144,
+          "delta_pct_2203_1GiB": -4.605553798765563,
+          "grid_member": true,
+          "max_abs_delta_pct": 4.605553798765563,
+          "provenance": "grid: 384=64x6",
+          "topology": "ring32_s3_b384_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "448",
+          "B_float": 448.0,
+          "delta_pct_2193_16GiB": -12.687698944223442,
+          "delta_pct_2193_1GiB": -13.740899731636699,
+          "delta_pct_2203_16GiB": -14.565825377299147,
+          "delta_pct_2203_1GiB": -18.202211547631595,
+          "grid_member": true,
+          "max_abs_delta_pct": 18.202211547631595,
+          "provenance": "grid: 448=64x7",
+          "topology": "ring32_s3_b448_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "512",
+          "B_float": 512.0,
+          "delta_pct_2193_16GiB": -23.599915403595347,
+          "delta_pct_2193_1GiB": -24.494571862610695,
+          "delta_pct_2203_16GiB": -25.243315206769296,
+          "delta_pct_2203_1GiB": -28.399704859281123,
+          "grid_member": true,
+          "max_abs_delta_pct": 28.399704859281123,
+          "provenance": "grid: 512=64x8",
+          "topology": "ring32_s3_b512_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "576",
+          "B_float": 576.0,
+          "delta_pct_2193_16GiB": -32.08719487199572,
+          "delta_pct_2193_1GiB": -32.858539075590464,
+          "delta_pct_2203_16GiB": -33.54802951857941,
+          "delta_pct_2203_1GiB": -36.33108854611964,
+          "grid_member": true,
+          "max_abs_delta_pct": 36.33108854611964,
+          "provenance": "grid: 576=64x9",
+          "topology": "ring32_s3_b576_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "640",
+          "B_float": 640.0,
+          "delta_pct_2193_16GiB": -38.877018446716015,
+          "delta_pct_2193_1GiB": -39.549712845974284,
+          "delta_pct_2203_16GiB": -40.1918009680275,
+          "delta_pct_2203_1GiB": -42.676195495590456,
+          "grid_member": true,
+          "max_abs_delta_pct": 42.676195495590456,
+          "provenance": "grid: 640=64x10",
+          "topology": "ring32_s3_b640_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "704",
+          "B_float": 704.0,
+          "delta_pct_2193_16GiB": -44.43232864421444,
+          "delta_pct_2193_1GiB": -45.02430956719741,
+          "delta_pct_2203_16GiB": -45.627613972121395,
+          "delta_pct_2203_1GiB": -47.86764663606658,
+          "grid_member": true,
+          "max_abs_delta_pct": 47.86764663606658,
+          "provenance": "grid: 704=64x11",
+          "topology": "ring32_s3_b704_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "768",
+          "B_float": 768.0,
+          "delta_pct_2193_16GiB": -49.06175380879646,
+          "delta_pct_2193_1GiB": -49.58647350155002,
+          "delta_pct_2203_16GiB": -50.15745814219964,
+          "delta_pct_2203_1GiB": -52.19385591979668,
+          "grid_member": true,
+          "max_abs_delta_pct": 52.19385591979668,
+          "provenance": "grid: 768=64x12",
+          "topology": "ring32_s3_b768_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "832",
+          "B_float": 832.0,
+          "delta_pct_2193_16GiB": -52.97895971728894,
+          "delta_pct_2193_1GiB": -53.44676606138683,
+          "delta_pct_2203_16GiB": -53.99040320918892,
+          "delta_pct_2203_1GiB": -55.85449454449138,
+          "grid_member": true,
+          "max_abs_delta_pct": 55.85449454449138,
+          "provenance": "grid: 832=64x13",
+          "topology": "ring32_s3_b832_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "896",
+          "B_float": 896.0,
+          "delta_pct_2193_16GiB": -56.33656478171106,
+          "delta_pct_2193_1GiB": -56.75558825553268,
+          "delta_pct_2203_16GiB": -57.27578469517974,
+          "delta_pct_2203_1GiB": -58.9921847942297,
+          "grid_member": true,
+          "max_abs_delta_pct": 58.9921847942297,
+          "provenance": "grid: 896=64x14",
+          "topology": "ring32_s3_b896_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "960",
+          "B_float": 960.0,
+          "delta_pct_2193_16GiB": -59.246489170876906,
+          "delta_pct_2193_1GiB": -59.623234157125744,
+          "delta_pct_2203_16GiB": -60.12311531637177,
+          "delta_pct_2203_1GiB": -61.7115163440029,
+          "grid_member": true,
+          "max_abs_delta_pct": 61.7115163440029,
+          "provenance": "grid: 960=64x15",
+          "topology": "ring32_s3_b960_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "1024",
+          "B_float": 1024.0,
+          "delta_pct_2193_16GiB": -61.792673011397014,
+          "delta_pct_2193_1GiB": -62.13242432101968,
+          "delta_pct_2203_16GiB": -62.61452960991481,
+          "delta_pct_2203_1GiB": -64.09093145005446,
+          "grid_member": true,
+          "max_abs_delta_pct": 64.09093145005446,
+          "provenance": "grid: 1024=64x16 (declared-range upper endpoint)",
+          "topology": "ring32_s3_b1024_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "25",
+          "B_float": 25.0,
+          "delta_pct_2193_16GiB": 1464.3899209963577,
+          "delta_pct_2193_1GiB": 1441.8761599170032,
+          "delta_pct_2203_16GiB": 1430.7391979397798,
+          "delta_pct_2203_1GiB": 1362.130483117248,
+          "grid_member": false,
+          "max_abs_delta_pct": 1464.3899209963577,
+          "provenance": "anchor-config: 25 = one 200 Gbps RoCEv2 port per direction (per-port endpoint)",
+          "topology": "ring32_a6_port25_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "400",
+          "B_float": 400.0,
+          "delta_pct_2193_16GiB": -2.211971143226413,
+          "delta_pct_2193_1GiB": -3.4173744859016635,
+          "delta_pct_2203_16GiB": -4.315435141007806,
+          "delta_pct_2203_1GiB": -8.412617968448052,
+          "grid_member": false,
+          "max_abs_delta_pct": 8.412617968448052,
+          "provenance": "anchor-config: 400 = the staged 16x200Gbps per-node rail aggregate (the anchor point)",
+          "topology": "ring32_a6_rail400_v1.yaml"
+        }
+      ],
+      "sweep_id": "26e275b7b3697b6f6640471e05fa0439ba122d3ee609f7ed5ba13c77842ed834",
+      "sweep_name": "cal_s3_a6_bw_v1"
+    },
+    "gf02": {
+      "cross_check": "all executed rows equal the closed form of the same identity function at the same payload and swept B (exact Fraction string equality)",
+      "grid": "20 topologies x 3 payload sizes = 60 configs x 6 ops",
+      "manifest_path": "experiments/calibration/s3/sweep_s3_gf02_bw_v1.yaml",
+      "payload_fence": "every executed payload is a fit-side size of this anchor's split record (asserted)",
+      "per_B_deltas": [
+        {
+          "B_bytes_per_ns": "64",
+          "B_float": 64.0,
+          "delta_pct_1073741824": 462.5076634543283,
+          "delta_pct_134217728": 462.56130763462613,
+          "delta_pct_17179869184": 462.5004789658955,
+          "grid_member": true,
+          "max_abs_delta_pct": 462.56130763462613,
+          "provenance": "grid: 64=64x1",
+          "topology": "crossbar8_s3_b64_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "128",
+          "B_float": 128.0,
+          "delta_pct_1073741824": 181.25766345432825,
+          "delta_pct_134217728": 181.3113076346261,
+          "delta_pct_17179869184": 181.25047896589552,
+          "grid_member": true,
+          "max_abs_delta_pct": 181.3113076346261,
+          "provenance": "grid: 128=64x2",
+          "topology": "crossbar8_s3_b128_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "192",
+          "B_float": 192.0,
+          "delta_pct_1073741824": 87.50766345432827,
+          "delta_pct_134217728": 87.56130763462612,
+          "delta_pct_17179869184": 87.50047896589551,
+          "grid_member": true,
+          "max_abs_delta_pct": 87.56130763462612,
+          "provenance": "grid: 192=64x3",
+          "topology": "crossbar8_s3_b192_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "256",
+          "B_float": 256.0,
+          "delta_pct_1073741824": 40.63266345432827,
+          "delta_pct_134217728": 40.68630763462612,
+          "delta_pct_17179869184": 40.62547896589552,
+          "grid_member": true,
+          "max_abs_delta_pct": 40.68630763462612,
+          "provenance": "grid: 256=64x4",
+          "topology": "crossbar8_s3_b256_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "320",
+          "B_float": 320.0,
+          "delta_pct_1073741824": 12.507663454328265,
+          "delta_pct_134217728": 12.561307634626116,
+          "delta_pct_17179869184": 12.500478965895516,
+          "grid_member": true,
+          "max_abs_delta_pct": 12.561307634626116,
+          "provenance": "grid: 320=64x5",
+          "topology": "crossbar8_s3_b320_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "384",
+          "B_float": 384.0,
+          "delta_pct_1073741824": -6.242336545671735,
+          "delta_pct_134217728": -6.188692365373884,
+          "delta_pct_17179869184": -6.249521034104483,
+          "grid_member": true,
+          "max_abs_delta_pct": 6.249521034104483,
+          "provenance": "grid: 384=64x6",
+          "topology": "crossbar8_s3_b384_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "448",
+          "B_float": 448.0,
+          "delta_pct_1073741824": -19.63519368852888,
+          "delta_pct_134217728": -19.581549508231028,
+          "delta_pct_17179869184": -19.642378176961625,
+          "grid_member": true,
+          "max_abs_delta_pct": 19.642378176961625,
+          "provenance": "grid: 448=64x7",
+          "topology": "crossbar8_s3_b448_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "512",
+          "B_float": 512.0,
+          "delta_pct_1073741824": -29.679836545671737,
+          "delta_pct_134217728": -29.626192365373885,
+          "delta_pct_17179869184": -29.687021034104482,
+          "grid_member": true,
+          "max_abs_delta_pct": 29.687021034104482,
+          "provenance": "grid: 512=64x8",
+          "topology": "crossbar8_s3_b512_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "576",
+          "B_float": 576.0,
+          "delta_pct_1073741824": -37.49233654567173,
+          "delta_pct_134217728": -37.43869236537388,
+          "delta_pct_17179869184": -37.49952103410448,
+          "grid_member": true,
+          "max_abs_delta_pct": 37.49952103410448,
+          "provenance": "grid: 576=64x9",
+          "topology": "crossbar8_s3_b576_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "640",
+          "B_float": 640.0,
+          "delta_pct_1073741824": -43.74233654567173,
+          "delta_pct_134217728": -43.68869236537388,
+          "delta_pct_17179869184": -43.74952103410448,
+          "grid_member": true,
+          "max_abs_delta_pct": 43.74952103410448,
+          "provenance": "grid: 640=64x10",
+          "topology": "crossbar8_s3_b640_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "704",
+          "B_float": 704.0,
+          "delta_pct_1073741824": -48.8559729093081,
+          "delta_pct_134217728": -48.80232872901025,
+          "delta_pct_17179869184": -48.86315739774085,
+          "grid_member": true,
+          "max_abs_delta_pct": 48.86315739774085,
+          "provenance": "grid: 704=64x11",
+          "topology": "crossbar8_s3_b704_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "768",
+          "B_float": 768.0,
+          "delta_pct_1073741824": -53.11733654567173,
+          "delta_pct_134217728": -53.06369236537388,
+          "delta_pct_17179869184": -53.12452103410448,
+          "grid_member": true,
+          "max_abs_delta_pct": 53.12452103410448,
+          "provenance": "grid: 768=64x12",
+          "topology": "crossbar8_s3_b768_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "832",
+          "B_float": 832.0,
+          "delta_pct_1073741824": -56.72310577644097,
+          "delta_pct_134217728": -56.669461596143115,
+          "delta_pct_17179869184": -56.730290264873716,
+          "grid_member": true,
+          "max_abs_delta_pct": 56.730290264873716,
+          "provenance": "grid: 832=64x13",
+          "topology": "crossbar8_s3_b832_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "896",
+          "B_float": 896.0,
+          "delta_pct_1073741824": -59.81376511710031,
+          "delta_pct_134217728": -59.76012093680246,
+          "delta_pct_17179869184": -59.82094960553305,
+          "grid_member": true,
+          "max_abs_delta_pct": 59.82094960553305,
+          "provenance": "grid: 896=64x14",
+          "topology": "crossbar8_s3_b896_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "960",
+          "B_float": 960.0,
+          "delta_pct_1073741824": -62.49233654567173,
+          "delta_pct_134217728": -62.43869236537388,
+          "delta_pct_17179869184": -62.49952103410448,
+          "grid_member": true,
+          "max_abs_delta_pct": 62.49952103410448,
+          "provenance": "grid: 960=64x15",
+          "topology": "crossbar8_s3_b960_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "1024",
+          "B_float": 1024.0,
+          "delta_pct_1073741824": -64.83608654567173,
+          "delta_pct_134217728": -64.78244236537388,
+          "delta_pct_17179869184": -64.84327103410449,
+          "grid_member": true,
+          "max_abs_delta_pct": 64.84327103410449,
+          "provenance": "grid: 1024=64x16 (declared-range upper endpoint)",
+          "topology": "crossbar8_s3_b1024_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "360",
+          "B_float": 360.0,
+          "delta_pct_1073741824": 0.0076634543282645086,
+          "delta_pct_134217728": 0.06130763462611607,
+          "delta_pct_17179869184": 0.0004789658955165318,
+          "grid_member": false,
+          "max_abs_delta_pct": 0.06130763462611607,
+          "provenance": "anchor: 360 = the anchor's measured plateau (the degenerate FIT value)",
+          "topology": "crossbar8_gf02_plateau360_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "450",
+          "B_float": 450.0,
+          "delta_pct_1073741824": -19.992336545671737,
+          "delta_pct_134217728": -19.938692365373885,
+          "delta_pct_17179869184": -19.999521034104482,
+          "grid_member": false,
+          "max_abs_delta_pct": 19.999521034104482,
+          "provenance": "anchor: 450 = the poster's own 900/2 physical per-direction split",
+          "topology": "crossbar8_gf02_perdir450_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "47637/100",
+          "B_float": 476.37,
+          "delta_pct_1073741824": -24.420827004768658,
+          "delta_pct_134217728": -24.367182824470806,
+          "delta_pct_17179869184": -24.428011493201403,
+          "grid_member": false,
+          "max_abs_delta_pct": 24.428011493201403,
+          "provenance": "anchor: 476.37 = GF-04's figure (this group's OPEN 360-vs-476 audit bracket)",
+          "topology": "crossbar8_gf02_gf04_476_37_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "900",
+          "B_float": 900.0,
+          "delta_pct_1073741824": -59.99233654567173,
+          "delta_pct_134217728": -59.93869236537388,
+          "delta_pct_17179869184": -59.99952103410448,
+          "grid_member": false,
+          "max_abs_delta_pct": 59.99952103410448,
+          "provenance": "anchor: 900 = the bidirectional-misread hazard bracket (never a bridge)",
+          "topology": "crossbar8_gf02_bidir900_v1.yaml"
+        }
+      ],
+      "sweep_id": "13bc507205108c718f06e836bf003f71d2ce84a8b02e8cec19e0d7ee6c8dab9c",
+      "sweep_name": "cal_s3_gf02_bw_v1"
+    },
+    "gf04_tp8_only": {
+      "cross_check": "all executed rows equal the closed form of the same identity function at the same payload and swept B (exact Fraction string equality)",
+      "grid": "19 topologies x 3 payload sizes = 57 configs x 6 ops",
+      "manifest_path": "experiments/calibration/s3/sweep_s3_gf04_tp8_bw_v1.yaml",
+      "payload_fence": "every executed payload is a fit-side size of this anchor's split record (asserted)",
+      "per_B_deltas": [
+        {
+          "B_bytes_per_ns": "64",
+          "B_float": 64.0,
+          "delta_pct_1073741824": 644.3991096615791,
+          "delta_pct_4294967296": 644.3458711653948,
+          "delta_pct_8589934592": 644.3369980826974,
+          "grid_member": true,
+          "max_abs_delta_pct": 644.3991096615791,
+          "provenance": "grid: 64=64x1",
+          "topology": "ring8_s3_b64_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "128",
+          "B_float": 128.0,
+          "delta_pct_1073741824": 272.23504716157913,
+          "delta_pct_4294967296": 272.1818086653948,
+          "delta_pct_8589934592": 272.1729355826974,
+          "grid_member": true,
+          "max_abs_delta_pct": 272.23504716157913,
+          "provenance": "grid: 128=64x2",
+          "topology": "ring8_s3_b128_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "192",
+          "B_float": 192.0,
+          "delta_pct_1073741824": 148.18035966157913,
+          "delta_pct_4294967296": 148.12712116539478,
+          "delta_pct_8589934592": 148.1182480826974,
+          "grid_member": true,
+          "max_abs_delta_pct": 148.18035966157913,
+          "provenance": "grid: 192=64x3",
+          "topology": "ring8_s3_b192_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "256",
+          "B_float": 256.0,
+          "delta_pct_1073741824": 86.15301591157913,
+          "delta_pct_4294967296": 86.09977741539478,
+          "delta_pct_8589934592": 86.09090433269739,
+          "grid_member": true,
+          "max_abs_delta_pct": 86.15301591157913,
+          "provenance": "grid: 256=64x4",
+          "topology": "ring8_s3_b256_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "320",
+          "B_float": 320.0,
+          "delta_pct_1073741824": 48.93660966157913,
+          "delta_pct_4294967296": 48.883371165394784,
+          "delta_pct_8589934592": 48.87449808269739,
+          "grid_member": true,
+          "max_abs_delta_pct": 48.93660966157913,
+          "provenance": "grid: 320=64x5",
+          "topology": "ring8_s3_b320_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "384",
+          "B_float": 384.0,
+          "delta_pct_1073741824": 24.125672161579132,
+          "delta_pct_4294967296": 24.072433665394783,
+          "delta_pct_8589934592": 24.06356058269739,
+          "grid_member": true,
+          "max_abs_delta_pct": 24.125672161579132,
+          "provenance": "grid: 384=64x6",
+          "topology": "ring8_s3_b384_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "448",
+          "B_float": 448.0,
+          "delta_pct_1073741824": 6.403573947293418,
+          "delta_pct_4294967296": 6.350335451109069,
+          "delta_pct_8589934592": 6.341462368411677,
+          "grid_member": true,
+          "max_abs_delta_pct": 6.403573947293418,
+          "provenance": "grid: 448=64x7",
+          "topology": "ring8_s3_b448_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "512",
+          "B_float": 512.0,
+          "delta_pct_1073741824": -6.887999713420868,
+          "delta_pct_4294967296": -6.941238209605217,
+          "delta_pct_8589934592": -6.9501112923026085,
+          "grid_member": true,
+          "max_abs_delta_pct": 6.9501112923026085,
+          "provenance": "grid: 512=64x8",
+          "topology": "ring8_s3_b512_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "576",
+          "B_float": 576.0,
+          "delta_pct_1073741824": -17.225890338420868,
+          "delta_pct_4294967296": -17.279128834605217,
+          "delta_pct_8589934592": -17.28800191730261,
+          "grid_member": true,
+          "max_abs_delta_pct": 17.28800191730261,
+          "provenance": "grid: 576=64x9",
+          "topology": "ring8_s3_b576_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "640",
+          "B_float": 640.0,
+          "delta_pct_1073741824": -25.496202838420867,
+          "delta_pct_4294967296": -25.549441334605216,
+          "delta_pct_8589934592": -25.558314417302608,
+          "grid_member": true,
+          "max_abs_delta_pct": 25.558314417302608,
+          "provenance": "grid: 640=64x10",
+          "topology": "ring8_s3_b640_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "704",
+          "B_float": 704.0,
+          "delta_pct_1073741824": -32.26282215660269,
+          "delta_pct_4294967296": -32.31606065278704,
+          "delta_pct_8589934592": -32.32493373548443,
+          "grid_member": true,
+          "max_abs_delta_pct": 32.32493373548443,
+          "provenance": "grid: 704=64x11",
+          "topology": "ring8_s3_b704_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "768",
+          "B_float": 768.0,
+          "delta_pct_1073741824": -37.90167158842087,
+          "delta_pct_4294967296": -37.95491008460522,
+          "delta_pct_8589934592": -37.96378316730261,
+          "grid_member": true,
+          "max_abs_delta_pct": 37.96378316730261,
+          "provenance": "grid: 768=64x12",
+          "topology": "ring8_s3_b768_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "832",
+          "B_float": 832.0,
+          "delta_pct_1073741824": -42.673005723036255,
+          "delta_pct_4294967296": -42.726244219220604,
+          "delta_pct_8589934592": -42.735117301917995,
+          "grid_member": true,
+          "max_abs_delta_pct": 42.735117301917995,
+          "provenance": "grid: 832=64x13",
+          "topology": "ring8_s3_b832_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "896",
+          "B_float": 896.0,
+          "delta_pct_1073741824": -46.76272069556372,
+          "delta_pct_4294967296": -46.81595919174807,
+          "delta_pct_8589934592": -46.82483227444546,
+          "grid_member": true,
+          "max_abs_delta_pct": 46.82483227444546,
+          "provenance": "grid: 896=64x14",
+          "topology": "ring8_s3_b896_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "960",
+          "B_float": 960.0,
+          "delta_pct_1073741824": -50.307140338420865,
+          "delta_pct_4294967296": -50.360378834605214,
+          "delta_pct_8589934592": -50.369251917302606,
+          "grid_member": true,
+          "max_abs_delta_pct": 50.369251917302606,
+          "provenance": "grid: 960=64x15",
+          "topology": "ring8_s3_b960_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "1024",
+          "B_float": 1024.0,
+          "delta_pct_1073741824": -53.40850752592087,
+          "delta_pct_4294967296": -53.46174602210522,
+          "delta_pct_8589934592": -53.47061910480261,
+          "grid_member": true,
+          "max_abs_delta_pct": 53.47061910480261,
+          "provenance": "grid: 1024=64x16 (declared-range upper endpoint)",
+          "topology": "ring8_s3_b1024_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "450",
+          "B_float": 450.0,
+          "delta_pct_1073741824": 5.930984661579132,
+          "delta_pct_4294967296": 5.877746165394783,
+          "delta_pct_8589934592": 5.868873082697392,
+          "grid_member": false,
+          "max_abs_delta_pct": 5.930984661579132,
+          "provenance": "anchor: 450 = physical per-direction NVLink ceiling (GF-02 poster arithmetic)",
+          "topology": "ring8_gf02_perdir450_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "47637/100",
+          "B_float": 476.37,
+          "delta_pct_1073741824": 0.07098466157913208,
+          "delta_pct_4294967296": 0.01774616539478302,
+          "delta_pct_8589934592": 0.00887308269739151,
+          "grid_member": false,
+          "max_abs_delta_pct": 0.07098466157913208,
+          "provenance": "anchor: 476.37 = the anchor's own single-node figure (the degenerate FIT value)",
+          "topology": "ring8_gf04_anchor476_37_v1.yaml"
+        },
+        {
+          "B_bytes_per_ns": "360",
+          "B_float": 360.0,
+          "delta_pct_1073741824": 32.395984661579135,
+          "delta_pct_4294967296": 32.342746165394786,
+          "delta_pct_8589934592": 32.333873082697394,
+          "grid_member": false,
+          "max_abs_delta_pct": 32.395984661579135,
+          "provenance": "anchor: 360 = GF-02's plateau (this group's OPEN 360-vs-476 audit bracket)",
+          "topology": "ring8_gf02_plateau360_v1.yaml"
+        }
+      ],
+      "sweep_id": "96b91ab6dd42b5e084a17ff56b35694e29e5526b4de13b0a9298df2736002499",
+      "sweep_name": "cal_s3_gf04_tp8_bw_v1"
+    }
+  },
+  "fits": {
+    "cal_a6": {
+      "L_sensitivity": {
+        "chain_share_of_anchor_t_pct": {
+          "2.19.3_16GiB": 0.014569380801315944,
+          "2.19.3_1GiB": 0.2297232205713439
+        },
+        "note": "0.23%-0.015% — bandwidth-bound; the latency axis is stage S4's; no L degree of freedom is fitted here"
+      },
+      "identity": "t = 2*(r-1)/r*M/B + 2*(r-1)*L at r=32, L=200 ns (l0.ring_allreduce_time_ns); targets = the anchor's staged TIMES",
+      "series_2_19_3": {
+        "binding": "both staged sizes (deviations exactly opposite)",
+        "minimax_B_exact": "111478703128576/286778506025",
+        "minimax_B_float": 388.7275398486727,
+        "minimax_B_materialized_as": "111478703128576/286778506025 (carried by experiments/calibration/s3/topologies/ring32_s3_fitb19_v1.yaml — asserted equal)",
+        "per_size_at_fitted_B": [
+          {
+            "anchor_cct_ns_exact": "5397800",
+            "anchor_implied_effective_B_exact": "260046848/673175",
+            "delta_pct_float": -0.6232985838152312,
+            "model_cct_ns_exact": "2299543767000/428687",
+            "payload_bytes": 1073741824,
+            "ratio_model_over_anchor_exact": "426015/428687",
+            "size": "1 GiB"
+          },
+          {
+            "anchor_cct_ns_exact": "85110000",
+            "anchor_implied_effective_B_exact": "260046848/664825",
+            "delta_pct_float": 0.6232985838152312,
+            "model_cct_ns_exact": "36712964490000/428687",
+            "payload_bytes": 17179869184,
+            "ratio_model_over_anchor_exact": "431359/428687",
+            "size": "16 GiB"
+          }
+        ],
+        "worst_case_deviation_pct": 0.6232985838152312
+      },
+      "series_2_20_3": {
+        "binding": "both staged sizes (deviations exactly opposite)",
+        "minimax_B_exact": "115757383942144/309086671475",
+        "minimax_B_float": 374.51431790874506,
+        "minimax_B_materialized_as": "115757383942144/309086671475 (carried by experiments/calibration/s3/topologies/ring32_s3_fitb20_v1.yaml — asserted equal)",
+        "per_size_at_fitted_B": [
+          {
+            "anchor_cct_ns_exact": "5692200",
+            "anchor_implied_effective_B_exact": "260046848/709975",
+            "delta_pct_float": -2.1949249731264624,
+            "model_cct_ns_exact": "4956426228000/890281",
+            "payload_bytes": 1073741824,
+            "ratio_model_over_anchor_exact": "870740/890281",
+            "size": "1 GiB"
+          },
+          {
+            "anchor_cct_ns_exact": "86981000",
+            "anchor_implied_effective_B_exact": "4160749568/10871075",
+            "delta_pct_float": 2.1949249731264624,
+            "model_cct_ns_exact": "79137227382000/890281",
+            "payload_bytes": 17179869184,
+            "ratio_model_over_anchor_exact": "909822/890281",
+            "size": "16 GiB"
+          }
+        ],
+        "worst_case_deviation_pct": 2.1949249731264624
+      },
+      "split_role": "DEGENERATE per the split record: both endpoint sizes are fit-side (no within-series holdout exists at two points); the version pair itself measures the noise floor; the 2.20.3 quoted busbw rows are quarantined (internally inconsistent with their own times by -3.2%, stage A6) and never used",
+      "tolerance_shape_windows": {
+        "note": "unlike S2 (no grid member inside the 5% window), the 64 B/ns grid member 384 lies inside BOTH versions' 5% windows — the hybrid series is flatter in effective-B than CAL-A3's ramp",
+        "status": "SHAPE CONTEXT ONLY — no tolerance is adopted (the E0 zero-slack policy stands; a nonzero tolerance must arrive through CGFR with recorded evidence, plan §3.4)",
+        "tau_5pct": {
+          "series_2_19_3": {
+            "B_high_exact": "1040187392/2557755",
+            "B_high_float": 406.6798391558222,
+            "B_low_exact": "8321499136/22338275",
+            "B_low_float": 372.5220114802956,
+            "uniform_grid_members_inside": [
+              "384"
+            ],
+            "width_float": 34.157827675526605
+          },
+          "series_2_20_3": {
+            "B_high_exact": "1040187392/2697595",
+            "B_high_float": 385.5980575290212,
+            "B_low_exact": "16642998272/45658825",
+            "B_low_float": 364.5078092132244,
+            "uniform_grid_members_inside": [
+              "384"
+            ],
+            "width_float": 21.090248315796835
+          },
+          "shape_provenance": "CAL-A4's ~5% validated mean-error SCALAR admitted solely as tolerance-shape context per the split record's sole recorded exception (plan §3.4; the anchor's series and per-configuration errors are NOT fit inputs)"
+        },
+        "tau_8pct": {
+          "series_2_19_3": {
+            "B_high_exact": "260046848/619197",
+            "B_high_float": 419.97433450097463,
+            "B_low_exact": "1040187392/2872075",
+            "B_low_float": 362.17278169964226,
+            "uniform_grid_members_inside": [
+              "384"
+            ],
+            "width_float": 57.801552801332406
+          },
+          "series_2_20_3": {
+            "B_high_exact": "260046848/653053",
+            "B_high_float": 398.2017508532998,
+            "B_low_exact": "4160749568/11740885",
+            "B_low_float": 354.3812555867807,
+            "uniform_grid_members_inside": [
+              "384"
+            ],
+            "width_float": 43.82049526651908
+          },
+          "shape_provenance": "upper edge of CAL-A6's measured 5-8% software-version swing (this stage's own noise-floor anchor, plan §3.4); a criterion tighter than the measured software variance would be overfitting"
+        }
+      }
+    },
+    "gf02": {
+      "allgather_twin_residual": {
+        "anchor_implied_reference_ns_exact": "15032385536/45",
+        "m_total_gathered_bytes": 137438953472,
+        "model_cct_ns_exact": "15032448536/45",
+        "residual_exact": "1125/268435456",
+        "residual_pct": 0.00041909515857696533,
+        "statement": "the anchor states its plateau for BOTH collectives; the same fitted B lands on the allgather identity with the same pure-latency residual — one B point, two collectives, as staged"
+      },
+      "allreduce_residuals_across_band": {
+        "1073741824": {
+          "anchor_implied_reference_ns_exact": "234881024/45",
+          "model_cct_ns_exact": "234899024/45",
+          "payload_bytes": 1073741824,
+          "residual_exact": "1125/14680064",
+          "residual_pct": 0.0076634543282645086,
+          "size_label": "1 GiB (in-band)"
+        },
+        "134217728": {
+          "anchor_implied_reference_ns_exact": "29360128/45",
+          "model_cct_ns_exact": "29378128/45",
+          "payload_bytes": 134217728,
+          "residual_exact": "1125/1835008",
+          "residual_pct": 0.06130763462611607,
+          "size_label": "128 MiB (band bottom)"
+        },
+        "17179869184": {
+          "anchor_implied_reference_ns_exact": "3758096384/45",
+          "model_cct_ns_exact": "3758114384/45",
+          "payload_bytes": 17179869184,
+          "residual_exact": "1125/234881024",
+          "residual_pct": 0.0004789658955165318,
+          "size_label": "16 GiB (band top)"
+        }
+      },
+      "degeneracy": "the fit has ZERO residual degrees of freedom: under the pinned mapping the fitted B equals the anchor's own plateau reading 360 exactly; the residual at every band size is the fixed latency term ONLY",
+      "fitted_B_exact": "360",
+      "fitted_B_float": 360.0,
+      "fitted_B_materialized_as": "the committed stage-GF-02 plateau topology (crossbar8_gf02_plateau360_v1.yaml / ring8_gf02_plateau360_v1.yaml)",
+      "identity": "allreduce crossbar t = 2(r-1)/r*M/B + 2L at r=8 (plus the allgather ring twin t = (r-1)/r*M_total/B + (r-1)L = +1400 ns, A-L0P-MSG); mapping pinned from nccl-tests source by stage GF-02's fetch: busbw = algbw x 2(r-1)/r, algbw = M/t => asymptotic busbw IS B",
+      "split_role": "DEGENERATE per the split record: a single saturation band (128 MiB-16 GiB); every band payload is fit-side; a within-series split would hold out noise",
+      "tolerance_shape_windows": {
+        "note": "no uniform 64 B/ns grid member lies inside the 5% window (384 misses it from above); the exact boundaries are the finding, the grid is the anchor-blind sampling instrument (same posture as S2)",
+        "status": "SHAPE CONTEXT ONLY — no tolerance is adopted (E0 zero-slack stands, plan §3.4)",
+        "tau_5pct": {
+          "B_high_exact": "422785843200/1115679239",
+          "B_high_float": 378.94927898716594,
+          "B_low_exact": "1101004800/3209389",
+          "B_low_float": 343.05744800645857,
+          "shape_provenance": "the 5% tolerance-shape scalar as admitted solely as context per the split record's single recorded exception (identical role and provenance as the CAL-A6 section's window above — see fits.cal_a6.tolerance_shape_windows.tau_5pct.shape_provenance)",
+          "uniform_grid_members_inside": [],
+          "width_float": 35.891830980707404
+        },
+        "tau_8pct": {
+          "B_high_exact": "2113929216000/5402235427",
+          "B_high_float": 391.30638502622963,
+          "B_low_exact": "1835008000/5501899",
+          "B_low_float": 333.52266190273576,
+          "shape_provenance": "upper edge of CAL-A6's measured 5-8% software-version swing (this stage's noise-floor anchor)",
+          "uniform_grid_members_inside": [
+            "384"
+          ],
+          "width_float": 57.78372312349386
+        }
+      },
+      "worst_band_residual_pct": 0.06130763462611607
+    },
+    "gf04": {
+      "degeneracy": "the one-point fit has ZERO residual degrees of freedom: the fitted B equals the anchor's own summary figure 476.37 exactly; the residual at the fit point is the fixed +14L registry term ONLY",
+      "fit_point_residual": {
+        "anchor_implied_reference_ns_exact": "751619276800/47637",
+        "model_cct_ns_exact": "751752660400/47637",
+        "payload_bytes": 4294967296,
+        "residual_exact": "47637/268435456",
+        "residual_pct": 0.01774616539478302
+      },
+      "fitted_B_exact": "47637/100",
+      "fitted_B_float": 476.37,
+      "fitted_B_materialized_as": "the committed stage-GF-04 topology (ring8_gf04_anchor476_37_v1.yaml; the r=16 twin of the same B is ring16_gf04_anchor476_37_v1.yaml, used ONLY by the held-out run)",
+      "identity": "ring t = 2(r-1)/r*M/B + 2(r-1)*L at r=8, L=200 ns; mapping pinned from nccl-tests source (stage GF-02's fetch): busbw = B",
+      "split_role": "the fit objective touches the 8-GPU single-node point ONLY; the 16-GPU two-node point is HELD OUT on the scaling dimension (split record: 'the scaling dimension is validated, not fitted'); no r=16 topology enters any S3 sweep (mechanically asserted)",
+      "summary_figure_caveat": "the fit target is the anchor's SUMMARY figure (per-size tables are images, not text-extractable); the anchor-implied reference at any ladder size is wire/476.37 — the aggregation ambiguity cannot move the executed ratio axis by more than the plateau's own flatness (stage GF-04's recorded caveat)",
+      "sweep_size_residuals": {
+        "1073741824": {
+          "anchor_implied_reference_ns_exact": "187904819200/47637",
+          "model_cct_ns_exact": "188038202800/47637",
+          "payload_bytes": 1073741824,
+          "residual_pct": 0.07098466157913208
+        },
+        "4294967296": {
+          "anchor_implied_reference_ns_exact": "751619276800/47637",
+          "model_cct_ns_exact": "751752660400/47637",
+          "payload_bytes": 4294967296,
+          "residual_pct": 0.01774616539478302
+        },
+        "8589934592": {
+          "anchor_implied_reference_ns_exact": "1503238553600/47637",
+          "model_cct_ns_exact": "1503371937200/47637",
+          "payload_bytes": 8589934592,
+          "residual_pct": 0.00887308269739151
+        }
+      },
+      "tolerance_shape_windows": {
+        "status": "SHAPE CONTEXT ONLY — no tolerance is adopted (E0 zero-slack stands, plan §3.4)",
+        "tau_5pct": {
+          "B_high_exact": "6393729908736/12749493235",
+          "B_high_float": 501.4889447671447,
+          "B_low_exact": "266405412864/586805585",
+          "B_low_float": 453.9926334613874,
+          "shape_provenance": "the 5% tolerance-shape scalar as admitted solely as context per the split record's single recorded exception (identical role and provenance as the CAL-A6 section's window above — see fits.cal_a6.tolerance_shape_windows.tau_5pct.shape_provenance)",
+          "uniform_grid_members_inside": [],
+          "width_float": 47.49631130575732
+        },
+        "tau_8pct": {
+          "B_high_exact": "6393729908736/12346840051",
+          "B_high_float": 517.8434224729555,
+          "B_low_exact": "88801804288/201194267",
+          "B_low_float": 441.37343281257614,
+          "shape_provenance": "upper edge of CAL-A6's measured 5-8% software-version swing (this stage's noise-floor anchor)",
+          "uniform_grid_members_inside": [
+            "448",
+            "512"
+          ],
+          "width_float": 76.46998966037935
+        }
+      }
+    }
+  },
+  "gf02_gf04_audit": {
+    "audit_rows": {
+      "fitted_B_separation": "the two fitted B values of THIS stage (360 and 476.37) differ by the same 32.3% — both are recorded diagnostics, carried separately to S6",
+      "gf02_over_perdir_450_exact": "4/5",
+      "gf04_over_perdir_450_exact": "5293/5000",
+      "ratio_gf04_over_gf02_exact": "5293/4000",
+      "ratio_gf04_over_gf02_pct": 32.325
+    },
+    "classification": "GF-02's plateau sits at exactly 4/5 of the 450 physical per-direction aggregate (the CAL-A12 derating factor, the first measured point ON that bridge); GF-04's 476.37 sits 5.86% ABOVE 450 — no physical B <= 450 can produce it under the single-port injection abstraction, and in-network computing is declared unsupported by every L0 backend: the 476.37 figure is the NVLS/in-switch-reduction algorithm class (stage GF-02's classification, inherited). The 32.3% span between two same-fabric community/vendor readings is therefore a SOFTWARE-STACK/ALGORITHM axis (NCCL algorithm choice unpinned in both threads), not a fabric axis — B in this family is a software-effective rate, and the discrepancy is exactly the range of that effectiveness. KEPT OPEN: the two numbers are never averaged or reconciled into one parameter; both fitted values stand as separate diagnostics with their own provenance",
+    "duty": "the split record assigns this group the open 360 (GF-02) vs 476.37 (GF-04) GB/s discrepancy audit — carried, classified, never averaged",
+    "implication_for_the_fit_family": "any single-B claim about the 8xH100 NVSwitch class must carry a software-config pin or a >= 32% algorithm-class bracket; the L0 input space has no algorithm-class parameter (structural, recorded — the same blindness class as the CAL-A6 version axis and the size-dependent ramp of S2)",
+    "the_two_numbers": {
+      "GF-02": "community 8xH100 NVSwitch node, NCCL allreduce/allgather busbw plateau ~360 GB/s (maintainer-confirmed as the expected H100 figure; thread verified 2026-10-28)",
+      "GF-04": "vendor 8xH100 single-node NCCL summary busbw 476.37 GB/s (fetch-verified 2026-10-28)",
+      "same_fabric_class": "both are single-node 8xH100 NVSwitch-class series — the discrepancy is NOT a fabric-class difference"
+    }
+  },
+  "group_g2_anchors": {
+    "carried_duty": "the GF-02-vs-GF-04 360/476.37 GB/s audit (see gf02_gf04_audit)",
+    "fit_targets": [
+      "CAL-A6 — noise-floor anchor + secondary O-CCT target (NCCL issue #1222, 4x8 H100 hybrid NVLink+RoCE, 2.19.3 vs 2.20.3, 1-16 GiB; staging §A6; confidence M-H; targets = the staged TIMES, the 2.20.3 busbw quotes quarantined)",
+      "GF-02 — community 8xH100 NVSwitch saturation band ~360 GB/s (nccl-tests issue #326; staging §GF-02; confidence M-H; thread verified 2026-10-28)",
+      "GF-04 — vendor 8-GPU point 476.37 GB/s of the 8->16 scaling pair (Oracle OCI blog; staging §GF-04; confidence M-H; page verified 2026-10-28; the 16-GPU leg 469.67 is held out)"
+    ]
+  },
+  "headline": "group G2 fits: CAL-A6 two-point minimax per NCCL version lands at B_fit = 388.7275 (2.19.3, worst ±0.62%) and 374.5143 B/ns (2.20.3, worst ±2.19%) — a -3.66% fitted-B separation that IS the anchor's noise-floor role executed on the parameter axis; GF-02 is degenerate (B_fit = 360 exactly, residuals = the pure latency terms, worst +0.061% at the band bottom); GF-04 is degenerate (B_fit = 476.37 exactly, fit-point residual +0.018%) with the 16-GPU point held out: the model at the fitted B misses it by -1.37% (rank-count-invariance vs the measured -1.41% busbw drop — the fabric-asymmetry known-omission finding); the 360-vs-476.37 audit resolves to a 32.3% software-stack/algorithm axis on the same fabric class — kept open, both fitted values carried as separate diagnostics",
+  "held_out": {
+    "held_out": false,
+    "scope": "the S3 fit objectives and every swept value here touch only the group-G2 fit signals: CAL-A6's two endpoint sizes per NCCL version (degenerate split), GF-02's saturation band (degenerate split), and GF-04's 8-GPU single-node point ONLY; the provenance points (25/320/400/450/900) are config/ceiling arithmetic, never measured values; GF-04's 16-GPU point appears ONLY in held_out_evaluation (its run record declares held_out: true)"
+  },
+  "held_out_evaluation": {
+    "anchor_implied_reference_ns_exact": "805306368000/46967",
+    "at": "the 8-GPU-fitted configuration B_fit = 47637/100 B/ns, UNCHANGED at r=16 (the scaling counterfactual)",
+    "delta_pct_float": -1.3714766190105685,
+    "finding": "the held-out deviation is -1.37% (the model at the fitted B runs 1.37% FASTER than the measured 16-GPU leg): the single-B identity is rank-count-invariant in busbw by construction (model ratio 1 - 1.8e-4) while the anchor measures a -1.41% drop — the 8->16 crossing cost (an inter-node RoCE leg distinct from the intra-node fabric) is structurally inexpressible in the uniform-B input space. THE MISS IS THE FINDING (known-omission candidate: fabric asymmetry / r-dependent effective bandwidth); nothing was tuned toward this point — B_fit was fixed by the 8-GPU leg alone before this evaluation existed",
+    "held_out_point": "GF-04's 16-GPU two-node leg (busbw 469.67 GB/s) on the multi-rank scaling dimension, at the common ladder member 2^32",
+    "in_scale_context": "the held-out miss (-1.37%) is inside the group's own noise-floor context (CAL-A6's 5.45% version swing at 1 GiB) but is a DISTINCT, structural residual: it does not move with software state, it moves with rank count",
+    "model_cct_ns_exact": "268530730000/15879",
+    "ratio_model_over_anchor_exact": "94120020865/95428804608",
+    "run_backing": {
+      "cct_ns_exact": "268530730000/15879",
+      "held_out_dimension": {
+        "held_out": true,
+        "scope": "evaluation-only reporting of GF-04's within-series held-out 16-GPU two-node point (split record 3862e227...) at the S3 fitted B; excluded from every fit objective; nothing tunes on this run"
+      },
+      "note": "the stage's ONLY r=16 execution; evaluation-only",
+      "run_id": "ed77cce301ef938c5497e936904c01ce9665b1885099fd568e0f006a61ee2b48"
+    },
+    "scaling_axis": {
+      "anchor_implied_cct_pair_exact": "10665/9814",
+      "measured_busbw_ratio_exact": "701/711",
+      "measured_drop_pct": 1.4064697609001406,
+      "model_busbw_ratio_at_fixed_B_exact": "268483093/268530730",
+      "model_cct_pair_exact": "2013980475/1879381651",
+      "pair_residual_pct": -1.3889762943748574
+    }
+  },
+  "independent_reproduction": [],
+  "known_omissions": [
+    "single fixed-B, zero-overhead L0 identities — no software-version parameter (the CAL-A6 fitted-B separation of -3.66% is that axis executed), no algorithm-class parameter (the 32.3% GF-02-vs-GF-04 span), no fabric-asymmetry parameter (the GF-04 held-out -1.37%)",
+    "A-L0-LAT / A-L0X-LAT fixed at the registry point 200 ns; the latency axis is stage S4's (every S3 fit is bandwidth-bound, latency-term share <= 0.24%)",
+    "no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)",
+    "GF-02's per-size rows are screenshots (plateau + regime endpoints extractable only); GF-04's per-size tables are images (summary figures extractable only) — both recorded by their stages; the NCCL algorithm/channelization is UNPINNED in both threads"
+  ],
+  "model": {
+    "assumptions": "A-L0-BW / A-L0-LAT / A-L0-DIV (ring), A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV (crossbar), A-L0P-ALGO / A-L0P-MSG / A-L0P-COMP / A-L0P-DIV (phase collectives) — experiments/vertical_slice/assumptions_l0.yaml; the anchor sizes are powers of two and every rank count divides them, so all gates ACCEPT with NO bracketing (the anti-A3 case)",
+    "backend_ids": [
+      "analytical_l0",
+      "analytical_l0_crossbar",
+      "analytical_l0_phase_collectives"
+    ],
+    "chunk_count_declaration": "A-AS1-CHUNKS-1 duty (plan §2.2, the split record's parameter_axes): the ring identity's chunk treatment is FIXED at the equal-chunk construction M/r in serialized single-partner steps — the identity carries NO chunk-count/channel/SM parameter, and the CAL-A6 anchor's staged root cause (16x200G read as 8x400G; 16 SMs) is exactly that sensitivity class: the version swing is the mechanism's measured shadow, inexpressible in this input space",
+    "declared_free_parameters": {
+      "A-L0-BW": {
+        "parameter": "link.bytes_per_ns",
+        "registry_range": [
+          1,
+          1024
+        ],
+        "registry_value": 64,
+        "swept_by": "the CAL-A6 (r=32 ring) and GF-04 (r=8 ring) fits"
+      },
+      "A-L0X-BW": {
+        "parameter": "nic.injection_bytes_per_ns",
+        "registry_range": [
+          1,
+          1024
+        ],
+        "registry_value": 64,
+        "swept_by": "the GF-02 (r=8 crossbar) fit"
+      },
+      "registry_note": "both registry VALUES stay 64 — unchanged by this stage; the grid is the same anchor-blind 64 B/ns instrument as S2 (64..1024 = 16 uniform points over the declared range)"
+    },
+    "identities": {
+      "allgather_ring_phase": "t = (r-1)/r*M_total/B + (r-1)*L (A-L0P-MSG total-gathered semantics)",
+      "crossbar": "t = 2(r-1)/r*M/B + 2L (r=8)",
+      "ring": "t = 2(r-1)/r*M/B + 2(r-1)*L (chains 62L-term structure at r=32, 14L at r=8, 30L at r=16)"
+    }
+  },
+  "noise_floor_execution": {
+    "anchor_time_swings_pct": {
+      "16GiB": 2.1983315709082363,
+      "1GiB": 5.454073881951906
+    },
+    "finding": "the two fitted-B values differ by -3.66% — the software-version movement, moved onto the free-parameter axis by fitting each version's times exactly. The L0 input space carries no software-version parameter (structural, stage A6), so this separation is a LOWER bound on any B-reading ambiguity a hybrid-rail comparison must absorb: it exceeds the 2.19.3 fit's own worst-case residual (0.62%) by ~6x and is comparable to the 2.20.3 fit residual (2.19%). A B quoted for this regime without an NCCL pin is software-state-dependent to at least this degree — recorded, never tuned",
+    "fitted_B_separation_2203_over_2193_exact": "-55368118552935/1514302147824038",
+    "fitted_B_separation_pct": -3.656345507565692,
+    "in_fit_worst_case_residuals_pct": {
+      "2.19.3": 0.6232985838152312,
+      "2.20.3": 2.1949249731264624
+    },
+    "placement_of_fitted_Bs_vs_config_ceilings": {
+      "B_fit_2193_over_derated320_pct": 121.47735620271021,
+      "B_fit_2193_over_rail400_pct": 97.18188496216817,
+      "B_fit_2203_over_rail400_pct": 93.62857947718626,
+      "note": "the fitted effective B sits at 94-97% of the anchor's own 400 B/ns rail arithmetic (the measurement never fully reaches config arithmetic; CAL-A12's 320 derated bridge is 17-21% below both fitted values — pessimistic here, as stage A6 recorded)"
+    },
+    "question": "what does the anchor's software-version noise floor look like on the FITTED-parameter axis?"
+  },
+  "not_tuned": "every sweep grid was fixed by registry-range arithmetic and anchor-CONFIG provenance before any deviation was computed; the A6 minimax values are exact closed forms over the fit points only; the GF-02/GF-04 fitted values are the anchors' own figures under the source-pinned mapping (degenerate fits with zero residual degrees of freedom); the held-out 16-GPU row was evaluated AFTER B_fit was fixed and changed nothing; the registry values stay 64 and no manifest outside this calibration directory carries any fitted value",
+  "record_kind": "calibration_fit",
+  "split_record": {
+    "committed_copy": "experiments/calibration/split/anchor_split_v1.json",
+    "group": "G2 — H100-class community series + hybrid scale-up/scale-out + multi-rank injection scaling (fitting stage S3)",
+    "no_leakage": "none of the split record's cross-anchor holdouts or its blocked anchor is read by any objective, swept value, or tolerance in this record (mechanically asserted: their ids appear nowhere in the record bytes); sole recorded exception used: the ~5% mean-error scalar as tolerance-SHAPE context only — the ids stay unlisted here by design",
+    "record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20",
+    "within_series_rules": "CAL-A6 fit BOTH endpoint sizes {1,16} GiB per version (degenerate — no within-series holdout exists; the version pair is the noise floor); GF-02 fit the whole saturation band (degenerate); GF-04 fit the 8-GPU point ONLY — the 16-GPU point is held out on the scaling dimension and reported as held-out error"
+  },
+  "stage": "calibration fit record, S3 (group G2)",
+  "status": "PROPOSED — owner adjudication required; no claim, label, or shipped parameter value changes; every fitted B is a recorded diagnostic, never a shipped value",
+  "store_run_cross_checks": [
+    {
+      "calibration_target": [
+        "CAL-A6"
+      ],
+      "cct_ns_exact": "36712964490000/428687",
+      "experiment_id": "EXP-CAL-S3-A6-FIT-2193-16GIB-001",
+      "held_out": false,
+      "mapping": "CAL-A6 2.19.3 fit-side run at the 16 GiB fit size, B_fit(2.19.3)",
+      "run_id": "ad7e937c83882b2bf0d117838a5d9a25e136a8a8f609a1f085eead5b2158e450",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality)"
+    },
+    {
+      "calibration_target": [
+        "CAL-A6"
+      ],
+      "cct_ns_exact": "79137227382000/890281",
+      "experiment_id": "EXP-CAL-S3-A6-FIT-2203-16GIB-001",
+      "held_out": false,
+      "mapping": "CAL-A6 2.20.3 fit-side run at the 16 GiB fit size, B_fit(2.20.3)",
+      "run_id": "7d7624054d2777655dd36a0ce0d620129e744d550f3c09a960c1f767134299d8",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality)"
+    },
+    {
+      "calibration_target": [
+        "GF-02"
+      ],
+      "cct_ns_exact": "3758114384/45",
+      "experiment_id": "EXP-CAL-S3-GF02-FIT-AR-16GIB-001",
+      "held_out": false,
+      "mapping": "GF-02 allreduce fit-side run at the band top, B_fit = 360",
+      "run_id": "ffdd546d3a7a12342680808c1f56bb7eb9f3dcad6e9ecb7207c9f3a3b0bc43fb",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality)"
+    },
+    {
+      "calibration_target": [
+        "GF-02"
+      ],
+      "cct_ns_exact": "15032448536/45",
+      "experiment_id": "EXP-CAL-S3-GF02-FIT-AG-TWIN-001",
+      "held_out": false,
+      "mapping": "GF-02 allgather twin run at M_total = 2^37, the same fitted B",
+      "run_id": "96d480731cd2017be8d251f04c357e5a2739b9f62846b4e64fbb19254836fd17",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality)"
+    },
+    {
+      "calibration_target": [
+        "GF-04"
+      ],
+      "cct_ns_exact": "751752660400/47637",
+      "experiment_id": "EXP-CAL-S3-GF04-FIT-TP8-4GIB-001",
+      "held_out": false,
+      "mapping": "GF-04 8-GPU fit-side run at the common ladder member 2^32, B_fit = 476.37",
+      "run_id": "5af31f3b51ef54579371fcc4ae643cf567ebd900388d6cc2162da1c6904ad3d4",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality)"
+    },
+    {
+      "calibration_target": [
+        "GF-04"
+      ],
+      "cct_ns_exact": "268530730000/15879",
+      "experiment_id": "EXP-CAL-S3-GF04-HOLDOUT-TP16-4GIB-001",
+      "held_out": true,
+      "mapping": "GF-04 held-out reporting run at r=16, 2^32, the SAME fitted B (held_out: true)",
+      "run_id": "ed77cce301ef938c5497e936904c01ce9665b1885099fd568e0f006a61ee2b48",
+      "verdict": "store run == closed form of the same identity function (exact Fraction string equality)"
+    }
+  ],
+  "verification": [
+    {
+      "check": "tests/calibration/test_s3_fit.py",
+      "scope": "S3 fit guard — re-executes the three S3 fit sweeps and the six S3 runs into a scratch store, rebuilds this record byte-identically, and checks the fit/holdout separation invariants (GF-04's 16-GPU point held out; CAL-A6/GF-02 degenerate splits; no r=16 topology in any sweep)"
+    },
+    {
+      "check": "tests/calibration/test_anchor_split.py",
+      "scope": "the split record's own immutability guard (S1) — the data separation this fit runs under"
+    }
+  ]
+}

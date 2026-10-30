@@ -1,0 +1,74 @@
+# Calibration-ladder S3 FIT-side RUN (group G2, anchor GF-02, the
+# allreduce leg): the L0 crossbar identity at B_fit(GF-02) = 360 B/ns —
+# the DEGENERATE S3 fit value over GF-02's split-record fit signal, the
+# saturation band 128 MiB-16 GiB (split record 3862e227..., committed at
+# experiments/calibration/split/anchor_split_v1.json,
+# within_series_splits: DEGENERATE — a single saturation band, no
+# within-series holdout exists) — executed at the band-top size
+# 17179869184 B = 2^34 EXACTLY (8 = 2^3 divides it; the A-L0X-DIV gate
+# accepts the anchor's size with NO bracketing).
+#
+# The fit is degenerate with ZERO residual degrees of freedom: under the
+# nccl-tests conventions pinned from src/all_reduce.cu by stage GF-02's
+# fetch (busbw = algbw x 2(r-1)/r, algbw = M/t), the identity's
+# asymptotic busbw IS its B, so the fitted B equals the anchor's own
+# plateau reading 360 exactly — carried by the committed stage-GF-02
+# plateau topology; the residual at every band size is the fixed +2L
+# registry term ONLY (the exact per-size residuals are recorded in the
+# calibration fit record). The allgather twin run backs the anchor's
+# BOTH-collectives claim on the phase-collectives identity.
+#
+# This run carries the v2 evidence dimensions with calibration_target
+# [GF-02] and held_out FALSE (the anchor's split is degenerate, nothing is
+# held out).
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration fit candidate
+# must not be linked to any claim (fence: no claim upgrades); the schema
+# requires the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the fit
+# comparison itself is recorded as PROPOSED in results/calibration/ — no
+# label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-S3-GF02-FIT-AR-16GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf02/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+infra_graph:
+  path: experiments/calibration/gf02/topologies/crossbar8_gf02_plateau360_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s3/profiles/implementation_profile_l0_crossbar_cal_s3_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_gf02_plateau360_v1 (NVSwitch-class single-port abstraction, r=8 = the anchor's 8xH100 node; B = B_fit(GF-02) = 360 B/ns, the degenerate S3 fit value equal to the anchor's own measured plateau under the pinned busbw = B mapping; L=200 ns registry point)
+  workload: w1_dense_tp_decode tp8, payload 2^34 = the anchor's band-top ladder member exactly (gate-accepted, no bracketing)
+  implementation: analytical L0 free-parameter identity; the GF-02 fit comparison is CCT-vs-CCT against an external published community measurement at the split-record fit signal — PROPOSED, review required; B_fit is a recorded diagnostic, never a shipped value
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s3_fit.py
+    scope: S3 fit guard — re-executes the three S3 fit sweeps and the six S3 runs into a scratch store, rebuilds the calibration fit record byte-identically, and checks the fit/holdout separation invariants (GF-04's 16-GPU point held out; CAL-A6/GF-02 degenerate splits)
+  calibration_target:
+  - GF-02
+  held_out:
+    held_out: false
+    scope: fit-side execution at the anchor's band-top size (of the degenerate saturation band 128 MiB-16 GiB); the S3 fit objective touches only GF-02's band signal; the provenance points (450/476.37/900) enter as swept-value provenance only (ceilings/hazard brackets, never fit targets)
+  independent_reproduction: []
+  known_omissions:
+  - single fixed-B, zero-overhead L0 crossbar identity — the degenerate fit's residual is the fixed +2L registry term only; the band's per-size rows are screenshots (not extractable), the plateau + regime endpoints are the targets
+  - no algorithm-class parameter — the anchor's (unpinned) NCCL algorithm choice cannot be represented (structural, recorded; the GF-04 side of the 360-vs-476.37 audit is the same axis)
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)
+  - A-L0X-LAT fixed at the registry point 200 ns; the latency axis is stage S4's (the band regime is bandwidth-bound)

@@ -1,0 +1,36 @@
+# Implementation profile for the calibration-ladder S3 allgather-side run
+# on the analytical L0 phase-collectives ring backend (group G2, anchor
+# GF-02's allgather leg) — the both-collectives cross-check of the
+# GF-02 fitted B.
+implementation_profile_id: analytical_l0_phase_collectives_ring_cal_s3_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_phase_collectives
+fidelity: L0
+model: >
+  ring ReduceScatter + AllGather phase identities on the unidirectional
+  ring (see src/essun/backends/analytical/l0_phase_collectives.py); the
+  AllGather phase carries t = (r-1)/r*M_total/B + (r-1)*L with A-L0P-MSG
+  total-gathered semantics. Modeling assumptions A-L0P-ALGO / A-L0P-MSG /
+  A-L0P-COMP / A-L0P-DIV plus the ring family's A-L0-BW / A-L0-LAT /
+  A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (A-L0-BW; declared free range [1, 1024] B/ns, registry point 64) —
+  this run executes the ring8 topology at the GF-02 fitted value B = 360
+  B/ns (the anchor's own measured plateau, which the anchor states for
+  BOTH collectives; under the allgather convention pinned from
+  nccl-tests src/all_gather.cu by stage GF-02 — busbw = algbw x (r-1)/r
+  with algbw on the RESULT-size basis — the identity's asymptotic busbw
+  IS its B, the same reading as the allreduce leg: one B point for both
+  collectives). The run is the allgather-side backing of the degenerate
+  GF-02 fit, not a separate fit. L = 200 ns is the A-L0-LAT registry
+  point (KEEP). NO shipped parameter changes.
+measurement_source: >
+  GF-02 staged signal (NVIDIA/nccl-tests GitHub issue #326; the anchor's
+  16 GiB all_gather row => total gathered 8 x 2^34 = 2^37 per A-L0P-MSG;
+  docs/calibration/anchors_gapfill.md §GF-02) — external published
+  community measurement, PROPOSED evidence, not our testbed.
+evidence_dimensions: >
+  the S3 GF-02 runs declare the five v2 evidence dimensions
+  content-addressed; this run is fit-side (held_out: false — the anchor's
+  split is degenerate, nothing is held out).

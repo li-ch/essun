@@ -1,0 +1,72 @@
+# Calibration-ladder S3 FIT SWEEP (group G2, anchor CAL-A6): sweep the
+# DECLARED free-parameter range of A-L0-BW (link.bytes_per_ns, registry
+# range [1, 1024] B/ns, experiments/vertical_slice/assumptions_l0.yaml)
+# against CAL-A6's SPLIT-RECORD FIT SIZES {1 GiB, 16 GiB} ONLY (split
+# record 3862e227..., committed at experiments/calibration/split/
+# anchor_split_v1.json, within_series_splits: the anchor's series is
+# DEGENERATE — two endpoint sizes per NCCL version, held_out_sizes is
+# empty, no within-series holdout exists; both sizes are fit-side and the
+# version pair itself measures the noise floor).
+#
+# Grid, two declared families (nothing tuned toward any anchor OUTPUT):
+#   (a) the UNIFORM, ANCHOR-BLIND 64 B/ns grid 64..1024 (16 points, of
+#       which 320 = 64x5 rides the committed stage-A6 derated320 topology
+#       — the CAL-A12 ~80% derated-rail provenance point);
+#   (b) the anchor-CONFIG provenance points of the group on the committed
+#       stage-A6 topologies: 25 (per-port 200 Gbps Ethernet per-direction
+#       convention) and 400 (per-node rail aggregate) — config arithmetic
+#       from the anchor's own system description, never measurements.
+# The exact fit quantities (per-version minimax B, tolerance-shape
+# windows) are closed-form arithmetic over the whole declared range and
+# live in the stage's calibration fit record; this executed table is the
+# run-path backing, cross-checked row by row there.
+#
+# Comparison is CCT-vs-CCT (plan §3): the targets are the anchor's staged
+# TIMES (2.19.3 reconciles with its own busbw quotes to print precision;
+# the 2.20.3 quotes are quarantined as internally inconsistent by stage
+# A6 and never used as targets). NCCL's 2(r-1)/r busbw factor is carried
+# by both sides and cancels. L stays at the A-L0-LAT registry point
+# 200 ns. Baseline = the 400 B/ns rail topology (the anchor's own config
+# arithmetic), so the delta columns read directly as placement vs the
+# config ceiling.
+#
+# Payload grid: 2^30 (1 GiB) and 2^34 (16 GiB) EXACTLY — 32 = 2^5 divides
+# both, so the A-L0-DIV gate accepts the anchor's sizes with NO
+# bracketing. NOTHING IS TUNED (the S3 fence): the grid was fixed by
+# registry-range arithmetic and anchor-config provenance before any
+# CAL-A6 deviation was computed; the per-version fitted B derived from
+# this sweep is a RECORDED DIAGNOSTIC, never a shipped parameter value.
+sweep: cal_s3_a6_bw_v1
+workload: experiments/calibration/a6/workloads/w1_dense_tp_decode_tp32_16gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/a6/topologies/ring32_a6_rail400_v1.yaml
+grid:
+  payload_sizes_bytes: [1073741824, 17179869184]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    # uniform anchor-blind 64 B/ns grid over the declared A-L0-BW range [1,1024]
+    - experiments/calibration/s3/topologies/ring32_s3_b64_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b128_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b192_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b256_v1.yaml
+    # 320 = 64 x 5: the uniform-grid member AND the CAL-A12 ~80% derated rail
+    - experiments/calibration/a6/topologies/ring32_a6_derated320_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b384_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b448_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b512_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b576_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b640_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b704_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b768_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b832_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b896_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b960_v1.yaml
+    - experiments/calibration/s3/topologies/ring32_s3_b1024_v1.yaml
+    # anchor-config provenance points of the group (committed stage-A6 files)
+    - experiments/calibration/a6/topologies/ring32_a6_port25_v1.yaml
+    - experiments/calibration/a6/topologies/ring32_a6_rail400_v1.yaml

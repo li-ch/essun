@@ -1,0 +1,64 @@
+# Implementation profile for the calibration-ladder S3 runs on the
+# analytical L0 ring backend (group G2: H100-class community series +
+# hybrid scale-up/scale-out + multi-rank injection scaling) — the FIT
+# stage against CAL-A6's and GF-04's split-record fit signals.
+implementation_profile_id: analytical_l0_ring_cal_s3_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  chunked ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L (see
+  src/essun/backends/analytical/l0.py); modeling assumptions A-L0-BW /
+  A-L0-LAT / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml
+  (KEEP verdicts per docs/calibration/CALIBRATION_PLAN.md §2.1).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (link.bytes_per_ns, A-L0-BW; declared free range [1, 1024] B/ns,
+  registry point 64) swept by the S3 fit sweeps at (a) the UNIFORM,
+  ANCHOR-BLIND 64 B/ns grid 64..1024 and (b) the groups' anchor-config
+  provenance points on committed stage topologies — CAL-A6: 25 (per-port)
+  / 320 (64x5 grid member AND the CAL-A12 ~80% derated rail) / 400
+  (per-node rail aggregate; config arithmetic, never measurements);
+  GF-04: 450 (physical per-direction ceiling) / 360 (the GF-02 plateau,
+  audit bracket). Fit objectives touch ONLY the split-record fit signals:
+  CAL-A6's two endpoint sizes per NCCL version (degenerate split, no
+  within-series holdout exists) and GF-04's 8-GPU single-node point ONLY —
+  the 16-GPU two-node point is HELD OUT on the scaling dimension and
+  reported as held-out error at the fitted B (declared held_out: true
+  run), never fitted; NO r=16 topology enters any S3 sweep. The fitted
+  configurations are RECORDED DIAGNOSTICS carried by clearly-labeled
+  topology files (exact minimax rationals on ring32_s3_fitb{19,20}_v1;
+  GF-04's degenerate fitted value 47637/100 B/ns equals the anchor's own
+  summary figure, already materialized by the committed stage-GF-04
+  ring8/ring16 topologies). L stays at the A-L0-LAT registry point 200 ns
+  (KEEP; the latency axis is S4's; the fits are bandwidth-bound,
+  2(r-1)L/t <= 0.24%). NO shipped parameter changes: the registry value
+  stays 64.
+measurement_source: >
+  CAL-A6 staged series (NCCL GitHub issue #1222, allreduce on 4x8 H100
+  SXM with 16x200Gbps ROCEv2 inter-node, NCCL 2.19.3 vs 2.20.3, 1 and
+  16 GiB per rank, out-of-place; docs/calibration/anchors_staging.md §A6;
+  anchor PROPOSED, confidence M-H; the 2.20.3 quoted busbw rows are
+  quarantined as internally inconsistent by stage A6 — the TIMES are the
+  targets) and GF-04 staged figures (Oracle OCI blog, single-node 8-GPU
+  busbw 476.37 GB/s, two-node 16-GPU 469.67 GB/s, fetch-verified
+  2026-10-28; docs/calibration/anchors_gapfill.md §GF-04) — external
+  published measurements, compared CCT-vs-CCT as PROPOSED evidence in
+  results/calibration/; not our testbed, no E3/E4 language.
+chunk_count_declaration: >
+  A-AS1-CHUNKS-1 duty (plan §2.2; split record parameter_axes): the L0
+  ring identity's chunk treatment is FIXED at the equal-chunk construction
+  M/r serialized in single-partner steps (A-L0-DIV / A-L0D-STEP) — the
+  identity carries NO chunk-count/channel/SM parameter, and the ASTRA
+  adapter's active-chunks-per-dimension=1 convention is NOT exercised by
+  this stage. Declared explicitly because the CAL-A6 anchor's staged root
+  cause (16x200G read as 8x400G; 16 SMs) is exactly the
+  channel/chunk-count sensitivity class: the version swing is the
+  mechanism's measured shadow, inexpressible in this input space.
+evidence_dimensions: >
+  every S3 run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target / held_out / independent_
+  reproduction / known_omissions), so the run records carry them
+  content-addressed; fit-side runs declare held_out: false; the GF-04
+  held-out reporting run declares held_out: true with an evaluation-only
+  scope naming the 16-GPU point.

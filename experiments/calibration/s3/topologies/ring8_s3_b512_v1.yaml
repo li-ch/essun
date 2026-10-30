@@ -1,0 +1,34 @@
+# Calibration-ladder S3 fit-sweep topology (group G2, anchor GF-04,
+# 8-GPU fit leg): unidirectional ring of 8 ranks (the anchor's single-node
+# GPU count) at B = 512 B/ns per link per direction — grid point 8 of 16
+# of the UNIFORM 64 B/ns grid spanning the DECLARED A-L0-BW free range
+# [1, 1024] (experiments/vertical_slice/assumptions_l0.yaml; 64 x 8).
+#
+# The grid is ANCHOR-BLIND by construction: 64 B/ns steps over the declared
+# registry range were fixed before and independently of any anchor series;
+# no anchor number selected this point. The provenance points of the group
+# ride committed topologies instead (450 = physical per-direction NVLink
+# ceiling, 476.37 = the anchor's own single-node figure and this fit's
+# degenerate target, 360 = GF-02's plateau, the audit bracket; see
+# sweep_s3_gf04_tp8_bw_v1.yaml). NOTHING IS TUNED: this file is a sampling
+# instrument of the S3 fit sweep against GF-04's SPLIT-RECORD FIT POINT
+# (the 8-GPU single-node leg) ONLY (split record 3862e227...,
+# within_series_splits; the 16-GPU two-node point is HELD OUT on the
+# scaling dimension — it is REPORTED as held-out error at the fitted B,
+# never fitted, and NO r=16 topology enters this sweep). L = 200 ns is the
+# A-L0-LAT registry point (KEEP). The registry VALUE of A-L0-BW stays 64.
+topology_id: ring8_s3_b512_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 512
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  chunked ring AllReduce over 8 ranks (the anchor's single-node count).
+  No congestion, no credits, no packetization, no in-network computing
+  (the anchor's NVLS-class figure is classified by the stage audit, not
+  modeled) — L0 transport model only. Provenance: B = the uniform-grid
+  value 512 = 64 x 8 inside the DECLARED A-L0-BW range [1, 1024];
+  anchor-blind grid arithmetic, never tuned toward any anchor output.
+  L = 200 ns is the free A-L0-LAT registry point.

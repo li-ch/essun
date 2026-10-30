@@ -1,0 +1,47 @@
+# Implementation profile for the calibration-ladder S3 runs on the
+# analytical L0 crossbar backend (group G2, anchor GF-02's allreduce leg)
+# — the FIT stage against the community 8xH100 saturation band.
+implementation_profile_id: analytical_l0_crossbar_cal_s3_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); modeling
+  assumptions A-L0X-PORT / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1; A-L0X-PORT KEEP for the
+  NVSwitch class this anchor measures).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns, A-L0X-BW; declared free range [1, 1024]
+  B/ns, registry point 64) swept by the S3 fit sweep at (a) the UNIFORM,
+  ANCHOR-BLIND 64 B/ns grid 64..1024 and (b) the group's anchor-provenance
+  points on the committed stage-GF-02 topologies — 360 (the anchor's own
+  measured plateau), 450 (the poster's 900/2 physical per-direction
+  split), 476.37 (the GF-04 open-discrepancy audit bracket), 900 (the
+  bidirectional-misread hazard). The fit signal is the split record's
+  DEGENERATE one: a single saturation band (128 MiB-16 GiB), no
+  within-series holdout exists; under the nccl-tests conventions pinned
+  from source by stage GF-02 (busbw = algbw x 2(r-1)/r, algbw = M/t), the
+  identity's asymptotic busbw IS its B, so the fitted B equals the
+  anchor's own plateau reading 360 exactly — a degenerate fit with zero
+  residual degrees of freedom, recorded as such. L stays at the A-L0X-LAT
+  registry point 200 ns (KEEP). NO shipped parameter changes: the
+  registry value stays 64.
+measurement_source: >
+  GF-02 staged signal (NVIDIA/nccl-tests GitHub issue #326: allreduce and
+  allgather busbw saturated at ~360 GB/s for 128 MiB-16 GiB on 8 H100
+  GPUs with NVLink; issue body verified by two independent fetch methods
+  2026-10-28; docs/calibration/anchors_gapfill.md §GF-02; anchor PROPOSED,
+  confidence M-H) — an external published community measurement, compared
+  CCT-vs-CCT (through the pinned busbw = B asymptotic mapping, written per
+  point) as PROPOSED evidence in results/calibration/; not our testbed, no
+  E3/E4 language.
+evidence_dimensions: >
+  every S3 run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target = [GF-02] / held_out / independent_
+  reproduction / known_omissions); the GF-02 runs are fit-side
+  (held_out: false — the anchor's split is degenerate, nothing is held
+  out); the allgather twin run executes the same fitted B on the phase-
+  collectives ring identity to back the anchor's BOTH-collectives claim.

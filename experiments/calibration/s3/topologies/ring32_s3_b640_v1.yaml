@@ -1,0 +1,34 @@
+# Calibration-ladder S3 fit-sweep topology (group G2, anchor CAL-A6):
+# unidirectional ring of 32 ranks (the anchor's 4x8 H100 count) at
+# B = 640 B/ns per link per direction — grid point 10 of 16 of the
+# UNIFORM 64 B/ns grid spanning the DECLARED A-L0-BW free range
+# [1, 1024] (experiments/vertical_slice/assumptions_l0.yaml; 64 x 10).
+#
+# The grid is ANCHOR-BLIND by construction: 64 B/ns steps over the declared
+# registry range were fixed before and independently of any anchor series;
+# no anchor number selected this point. The anchor-config provenance points
+# of the group (25 = per-port, 320 = 64x5 grid member AND the CAL-A12 ~80%
+# derated rail, 400 = per-node rail aggregate) ride the committed stage-A6
+# topologies instead (see sweep_s3_a6_bw_v1.yaml). NOTHING IS TUNED: this
+# file is a sampling instrument of the S3 fit sweep against CAL-A6's
+# split-record fit sizes {1 GiB, 16 GiB} ONLY (split record 3862e227...,
+# within_series_splits; the anchor's series is degenerate — two endpoint
+# sizes per NCCL version, no within-series holdout exists). L = 200 ns is
+# the A-L0-LAT registry point (KEEP; the latency axis is S4's). The
+# registry VALUE of A-L0-BW stays 64; no shipped parameter changes here.
+topology_id: ring32_s3_b640_v1
+topology_class: unidirectional_ring
+ranks: 32
+link:
+  bytes_per_ns: 640
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  chunked ring AllReduce over 32 ranks. No congestion, no credits, no
+  packetization, no per-hop heterogeneity (the hybrid's NVLink/RoCE
+  distinction is projected away — bottleneck-dominated uniform reading,
+  declared in the stage-A6 topology headers); L0 transport model only.
+  Provenance: B = the uniform-grid value 640 = 64 x 10 inside the
+  DECLARED A-L0-BW range [1, 1024]; anchor-blind grid arithmetic, never
+  tuned toward any anchor output. L = 200 ns is the free A-L0-LAT registry
+  point. Values are free parameters, never measurements.

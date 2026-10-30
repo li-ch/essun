@@ -1,0 +1,82 @@
+# Calibration-ladder S3 FIT SWEEP (group G2, anchor GF-04, the 8-GPU fit
+# leg ONLY): sweep the DECLARED free-parameter range of A-L0-BW
+# (link.bytes_per_ns, registry range [1, 1024] B/ns,
+# experiments/vertical_slice/assumptions_l0.yaml) against GF-04's
+# SPLIT-RECORD FIT POINT — the 8-GPU single-node summary busbw 476.37
+# GB/s (split record 3862e227..., committed at experiments/calibration/
+# split/anchor_split_v1.json, within_series_splits: fit = the 8-GPU
+# single-node point ONLY; the 16-GPU two-node point is HELD OUT on the
+# multi-rank scaling dimension — "the scaling dimension is validated, not
+# fitted" — and is REPORTED as held-out error at the fitted B by the
+# stage's held_out:true run manifest, never fitted here).
+#
+# THE HELD-OUT FENCE IS MECHANICAL: this sweep contains ONLY r=8 ring
+# topologies — NO r=16 topology enters any S3 sweep (the sole r=16
+# execution of the stage is the held-out reporting run, which declares
+# held_out: true with an evaluation-only scope).
+#
+# Grid, two declared families (nothing tuned toward any anchor OUTPUT):
+#   (a) the UNIFORM, ANCHOR-BLIND 64 B/ns grid 64..1024 (16 points);
+#   (b) provenance points of the group on committed topologies: 450 (the
+#       physical per-direction NVLink ceiling, GF-02's poster-figures
+#       arithmetic), 476.37 (the anchor's own single-node figure — the
+#       degenerate fit target), 360 (the GF-02 plateau; the OPEN
+#       360-vs-476 discrepancy audit bracket — carried, classified,
+#       never averaged).
+# The exact fit quantities are closed-form arithmetic over the whole
+# declared range (under the pinned busbw = B asymptotic mapping the
+# one-point fit is degenerate and exact) and live in the stage's
+# calibration fit record; this executed table is the run-path backing,
+# cross-checked row by row there.
+#
+# Comparison is CCT-vs-CCT (plan §3) through the pinned nccl-tests
+# conventions: the anchor-implied reference CCT at the common ladder
+# member M = 2^32 is 2(r-1)/r*M/476.37 (r=8; bandwidth term only — the
+# anchor's per-size tables are images, the extractable target is the
+# summary figure; the aggregation ambiguity cannot move the ratio axis
+# by more than the plateau's own flatness, recorded by stage GF-04). L
+# stays at the A-L0-LAT registry point 200 ns. Baseline = the anchor's
+# own 476.37 topology (the fitted reading), so the delta columns read
+# directly as placement vs the fit.
+#
+# Payload grid: the anchor's own verified command-line ladder span —
+# 2^30, 2^32 (the largest size COMMON to both of the anchor's ladders:
+# the same-size comparison point of the 8->16 scaling pair), 2^33 (the
+# two-node ladder top, fit-side at r=8); 8 divides all. NOTHING IS TUNED
+# (the S3 fence): the grid was fixed by registry-range arithmetic and
+# anchor provenance before any GF-04 deviation was computed; the fitted
+# B is a RECORDED DIAGNOSTIC, never a shipped parameter value.
+sweep: cal_s3_gf04_tp8_bw_v1
+workload: experiments/calibration/gf04/workloads/w1_dense_tp_decode_tp8_4gib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/gf04/topologies/ring8_gf04_anchor476_37_v1.yaml
+grid:
+  payload_sizes_bytes: [1073741824, 4294967296, 8589934592]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    # uniform anchor-blind 64 B/ns grid over the declared A-L0-BW range [1,1024]
+    - experiments/calibration/s3/topologies/ring8_s3_b64_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b128_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b192_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b256_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b320_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b384_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b448_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b512_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b576_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b640_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b704_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b768_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b832_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b896_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b960_v1.yaml
+    - experiments/calibration/s3/topologies/ring8_s3_b1024_v1.yaml
+    # provenance points of the group (committed stage files)
+    - experiments/calibration/gf02/topologies/ring8_gf02_perdir450_v1.yaml
+    - experiments/calibration/gf04/topologies/ring8_gf04_anchor476_37_v1.yaml
+    - experiments/calibration/gf02/topologies/ring8_gf02_plateau360_v1.yaml

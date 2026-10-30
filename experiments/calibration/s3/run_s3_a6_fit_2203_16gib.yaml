@@ -1,0 +1,61 @@
+# Calibration-ladder S3 FIT-side RUN (group G2, anchor CAL-A6, the
+# NCCL 2.20.3 leg): the L0 ring identity at B_fit(2.20.3) — the exact
+# minimax fixed-B of the S3 fit over CAL-A6's split-record fit sizes
+# {1 GiB, 16 GiB} of the 2.20.3 series (split record 3862e227...;
+# degenerate — no within-series holdout exists) — executed at the 16 GiB
+# fit size 2^34 EXACTLY (no bracketing; the 1 GiB fit point is the same
+# identity in closed form, cross-checked in the fit record).
+#
+# The version-pair run of run_s3_a6_fit_2193_16gib.yaml: fitted to the
+# 2.20.3 TIMES only — the 2.20.3 QUOTED busbw values are quarantined as
+# internally inconsistent with their own times by -3.2% (stage A6
+# finding) and never used as targets. The separation of the two fitted
+# Bs is the anchor's noise-floor role executed on the parameter axis.
+#
+# claim_id is deliberately EMPTY (fence: no claim upgrades). Evidence
+# level E0: analytical identity execution; the fit comparison is
+# recorded as PROPOSED in results/calibration/.
+experiment_id: EXP-CAL-S3-A6-FIT-2203-16GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a6/workloads/w1_dense_tp_decode_tp32_16gib.yaml
+infra_graph:
+  path: experiments/calibration/s3/topologies/ring32_s3_fitb20_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s3/profiles/implementation_profile_l0_ring_cal_s3_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring32_s3_fitb20_v1 (unidirectional ring, r=32 = CAL-A6's 4x8 H100 count; B = B_fit(2.20.3) = the exact S3 minimax fit diagnostic over the 2.20.3 fit sizes {1 GiB, 16 GiB}, carried as the exact rational 115757383942144/309086671475 B/ns, fitted to the 2.20.3 TIMES with the quarantined busbw quotes never used as targets; L=200 ns registry point)
+  workload: w1_dense_tp_decode tp32, payload 2^34 = CAL-A6's 16 GiB fit size exactly (gate-accepted, no bracketing)
+  implementation: analytical L0 free-parameter identity; the CAL-A6 fit comparison is CCT-vs-CCT against an external published measurement at the split-record fit sizes — PROPOSED, review required; B_fit is a recorded diagnostic, never a shipped value
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s3_fit.py
+    scope: S3 fit guard — re-executes the three S3 fit sweeps and the six S3 runs into a scratch store, rebuilds the calibration fit record byte-identically, and checks the fit/holdout separation invariants
+  calibration_target:
+  - CAL-A6
+  held_out:
+    held_out: false
+    scope: fit-side execution at the split-record fit size 16 GiB of the NCCL 2.20.3 series (of the degenerate {1 GiB, 16 GiB} pair); the version pair itself measures the noise floor — nothing is held out within this anchor's series
+  independent_reproduction: []
+  known_omissions:
+  - single fixed-B, zero-overhead L0 ring identity with no software-version parameter — the version movement is inexpressible in this input space (the anchor's noise-floor finding)
+  - fitted to the 2.20.3 times; the 2.20.3 quoted busbw rows are quarantined as internally inconsistent (-3.2%, stage A6) and never used as targets
+  - uniform-B projection of the hybrid NVLink+RoCE fabric (bottleneck-dominated rail reading; per-hop heterogeneity unsupported)
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)
+  - A-L0-LAT fixed at the registry point 200 ns; the latency axis is stage S4's

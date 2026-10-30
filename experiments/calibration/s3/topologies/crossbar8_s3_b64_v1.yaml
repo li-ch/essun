@@ -1,0 +1,35 @@
+# Calibration-ladder S3 fit-sweep topology (group G2, anchor GF-02):
+# fully-connected (crossbar) abstraction of 8 ranks (the anchor's 8xH100
+# NVSwitch node; A-L0X-PORT KEEP-for-NVSwitch-class) at B = 64 B/ns per
+# rank per direction — grid point 1 of 16 of the UNIFORM 64 B/ns grid
+# spanning the DECLARED A-L0X-BW free range [1, 1024]
+# (experiments/vertical_slice/assumptions_l0.yaml; 64 x 1).
+#
+# The grid is ANCHOR-BLIND by construction: 64 B/ns steps over the declared
+# registry range were fixed before and independently of any anchor series;
+# no anchor number selected this point. The anchor-provenance points of the
+# group ride the committed stage-GF-02 topologies instead (360 = the
+# anchor's own measured plateau, 450 = the poster's 900/2 physical
+# per-direction split, 476.37 = the GF-04 open-discrepancy audit bracket,
+# 900 = the bidirectional-misread hazard; see sweep_s3_gf02_bw_v1.yaml).
+# NOTHING IS TUNED: this file is a sampling instrument of the S3 fit sweep
+# against GF-02's split-record fit signal (the saturation band 128 MiB-16
+# GiB, degenerate — a single band, no within-series holdout exists; split
+# record 3862e227..., within_series_splits). L = 200 ns is the A-L0X-LAT
+# registry point (KEEP). The registry VALUE of A-L0X-BW stays 64.
+topology_id: crossbar8_s3_b64_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected abstraction; every rank pair adjacent with
+  uniform pair latency; single-port injection shared across the 7 peers
+  (A-L0X-PORT). No congestion, no credits, no packetization, no in-network
+  computing (all explicitly unsupported by the backend) — L0 transport
+  model only. Provenance: B = the uniform-grid value 64 = 64 x 1
+  inside the DECLARED A-L0X-BW range [1, 1024]; anchor-blind grid
+  arithmetic, never tuned toward any anchor output. L = 200 ns is the free
+  A-L0X-LAT registry point.
