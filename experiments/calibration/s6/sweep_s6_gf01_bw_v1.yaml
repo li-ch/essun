@@ -1,0 +1,34 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION SWEEP (anchor GF-01, r=8,
+# bandwidth-axis): the five LANDED BANDWIDTH-FITTED CONFIGURATIONS of
+# S2/S3 executed UNTOUCHED at the anchor's rank count — the three
+# ring-family fits (CAL-A6 2.19.3 / CAL-A6 2.20.3 / GF-04; the ring is
+# the structurally in-domain reading for a mesh) and the two crossbar
+# fits (GF-02's B=360 and S2's B_fit; the single-port crossbar class is
+# OUT-OF-DOMAIN for a full-mesh fabric per plan 2.1 A-L0X-PORT —
+# executed and CLASSIFIED, never tuned) — at GF-01's six non-excluded
+# sizes (8/32/64 B latency-only, 16/64 KiB reconciling, 16 GiB the
+# reconciling plateau; the six staged mid rows the anchor's E1 record
+# EXCLUDED stay excluded here).
+#
+# The CCT-vs-CCT targets are the anchor's quoted eager times. NOTHING
+# IS TUNED; the misses are the findings.
+sweep: cal_s6_gf01_bw_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s6/topologies/crossbar8_s6_fitb_gf02_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 32, 64, 16384, 65536, 17179869184]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/s6/topologies/ring8_s6_fitb_a6193_v1.yaml
+    - experiments/calibration/s6/topologies/ring8_s6_fitb_a6203_v1.yaml
+    - experiments/calibration/s6/topologies/ring8_s6_fitb_gf04_v1.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/s6/topologies/crossbar8_s6_fitb_gf02_v1.yaml
+    - experiments/calibration/s6/topologies/crossbar8_s6_fitb_s2_v1.yaml

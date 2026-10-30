@@ -1,0 +1,54 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION RUN (anchor GF-03): the S2
+# fitted configuration B_fit(CAL-A3) = 19561820264071168/23648730912675
+# B/ns (crossbar, L=200 ns registry) executed UNTOUCHED at the anchor's
+# ONLY staged CCT row — 2 MiB AllReduce "in as little as 42-52 us" — at
+# the E1 stage's declared rank assumption r=8. GF-03 is the
+# generation-extrapolation HOLDOUT (split record 3862e227...): the fit
+# set tops out at GB200 (CAL-A3 — the anchor this B was fitted against),
+# so executing it one generation forward IS the check. NOTHING IS TUNED;
+# the miss is the finding.
+#
+# claim_id deliberately EMPTY. E0. v2 dimensions; calibration_target [];
+# held_out TRUE, evaluation-only scope.
+experiment_id: EXP-CAL-S6-GF03-EVAL-XBAR8-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf03/workloads/w1_dense_tp_decode_tp8_2mib.yaml
+infra_graph:
+  path: experiments/calibration/s6/topologies/crossbar8_s6_fitb_s2_gf03_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s6/profiles/implementation_profile_l0_crossbar_cal_s6_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_s6_fitb_s2_gf03_v1 (single-port crossbar at the anchor's declared r=8 assumption — the anchor states no rank count; B carried bit-exact from the S2 fit record 31b0d090...; L = 200 ns registry)
+  workload: w1_dense_tp_decode tp8, payload 2097152 B = 2 MiB (the anchor's only staged CCT row)
+  implementation: analytical L0 identity executing a LANDED fitted configuration for holdout evaluation — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s6_holdout.py
+    scope: S6 holdout guard — re-executes the stage's evidence chain and rebuilds the holdout record byte-identically with the nothing-tunes invariants
+  calibration_target: []
+  held_out:
+    held_out: true
+    scope: evaluation-only against holdout anchor GF-03 (split record 3862e227... holdout set) — the anchor's band is an EVALUATION target, never a fit input; nothing tunes
+  independent_reproduction: []
+  known_omissions:
+  - the fitted configuration is a fixed-B, zero-overhead identity — the anchor's 2 MiB row implies an effective B 9.5-11.8x below its own plateau (the S2 size-dependent software-effective bandwidth omission, corroborated one generation later)
+  - the anchor's rank count and NCCL version are unstated (M-confidence, carried); r=8 is the declared E1 assumption
+  - the broadcast (682 GB/s) and bidirectional D2D quotes have no L0 identity — non-evaluations recorded
+  - no software/endpoint latency term; no congestion, no packetization (L0 identity only)

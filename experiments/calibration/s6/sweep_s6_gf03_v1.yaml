@@ -1,0 +1,26 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION SWEEP (anchor GF-03): the
+# S2 LANDED FITTED CONFIGURATION B_fit(CAL-A3) executed UNTOUCHED on the
+# crossbar identity at the E1 stage's declared rank assumption (r=8)
+# across the E1 band ladder (64 KiB..4 MiB, containing the anchor's only
+# staged CCT row 2 MiB) and the four plateau probes (16 MiB..16 GiB;
+# 2^34 cross-references GF-01's plateau row). GF-03 is the
+# generation-extrapolation holdout; the fit set tops out at GB200
+# (CAL-A3, the anchor this B was fitted against) — the transfer itself
+# is the check.
+#
+# NOTHING IS TUNED; the 2 MiB miss and the plateau placement are the
+# findings.
+sweep: cal_s6_gf03_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s6/topologies/crossbar8_s6_fitb_s2_gf03_v1.yaml
+grid:
+  payload_sizes_bytes: [65536, 262144, 1048576, 2097152, 4194304, 16777216, 134217728, 1073741824, 17179869184]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/s6/topologies/crossbar8_s6_fitb_s2_gf03_v1.yaml

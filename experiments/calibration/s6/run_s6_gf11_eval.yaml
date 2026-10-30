@@ -1,0 +1,55 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION RUN (anchor GF-11, r=4
+# bracket): the S4 fitted latency placement L = 800 ns (CAL-A10's
+# assumption-class 0.8 us pair reading, the ONLY landed placement in the
+# microsecond decade) on the crossbar identity at B=64 registry,
+# executed UNTOUCHED at the anchor's declared 128-B size reading. GF-11
+# is the regime-disjoint same-fabric HOLDOUT (split record 3862e227...,
+# plan 3.5c instance; GB200 NVL72 — the same fabric class as the S2 fit
+# target CAL-A3, on the latency axis the fit never touched). The
+# measured bracket; one-shot 2370 ns vs NCCL ring 11000 ns. NOTHING IS
+# TUNED; the bracket gaps are the findings.
+#
+# claim_id deliberately EMPTY. E0. v2 dimensions; calibration_target [];
+# held_out TRUE, evaluation-only scope.
+experiment_id: EXP-CAL-S6-GF11-EVAL-XBAR4-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp4_128b.yaml
+infra_graph:
+  path: experiments/calibration/s6/topologies/crossbar4_s6_l800_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s6/profiles/implementation_profile_l0_crossbar_cal_s6_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar4_s6_l800_v1 (single-port crossbar at the anchor's own r=4; L = 800 ns carried bit-exact from the S4 fit record ef9c4517...; B = 64 B/ns registry)
+  workload: w1_dense_tp_decode tp4, payload 128 B (the anchor's declared 128-B cache-line size reading of its measured small-message bracket)
+  implementation: analytical L0 identity executing a LANDED fitted placement for holdout evaluation — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s6_holdout.py
+    scope: S6 holdout guard — re-executes the stage's evidence chain and rebuilds the holdout record byte-identically with the nothing-tunes invariants
+  calibration_target: []
+  held_out:
+    held_out: true
+    scope: evaluation-only against holdout anchor GF-11 (split record 3862e227... holdout set) — the anchor's measured bracket and decomposition are EVALUATION targets, never fit inputs; nothing tunes
+  independent_reproduction: []
+  known_omissions:
+  - no software/kernel/sync overhead term exists — the anchor's barrier bound (>1 us) and one-shot kernel overhead class are inexpressible
+  - the identity's latency chain is rank-flat (crossbar) or power-of-two-stepped — the measured 7-to-70 percent overhead growth over r=2..64 is inexpressible
+  - the anchor's per-size latency table lives in a figure; the 128-B reading is the declared E1 ambiguity, carried
+  - no congestion, no packetization, no multicast semantics (L0 identity only)

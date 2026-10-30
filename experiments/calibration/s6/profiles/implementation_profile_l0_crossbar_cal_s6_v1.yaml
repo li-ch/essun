@@ -1,0 +1,39 @@
+# Implementation profile for the calibration-ladder S6 HOLDOUT-EVALUATION
+# runs and sweeps on the analytical L0 crossbar backend: the fitted
+# configurations of S2/S3 (crossbar family) and the S4 latency-axis
+# placements (crossbar chain) executed UNTOUCHED against the split
+# record's holdout anchors (GF-01, GF-03, GF-11) — split record
+# 3862e227..., holdout set. NOTHING TUNES in S6.
+implementation_profile_id: analytical_l0_crossbar_cal_s6_v1
+status: PROPOSED   # holdout-evaluation candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. DOMAIN NOTE (plan 2.1
+  A-L0X-PORT): the single-port abstraction is KEEP for the NVSwitch class
+  and OUT-OF-DOMAIN for full-mesh-class fabrics — GF-01's 7-hop xGMI full
+  mesh contradicts it as a physical description; crossbar rows against
+  GF-01 are executed and CLASSIFIED (the fabric-class miss is a
+  known-omission finding, never a tuning target).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_executed: >
+  NOTHING is swept and NOTHING is tuned in S6. The executed values are
+  LANDED FITTED CONFIGURATIONS carried bit-exact: B_fit(CAL-A3) =
+  19561820264071168/23648730912675 (S2 fit record 31b0d090...), B_fit
+  (GF-02) = 360 B/ns (S3 fit record 23036816...), and the S4 latency-axis
+  placements L in {64, 80, 140, 800} (S4 fit record ef9c4517...) with the
+  registry 200 ns as the reference row, each at the registry B = 64 B/ns.
+  The registry A-L0X-BW value stays 64, range [1, 1024]; the registry
+  A-L0X-LAT value stays 200, range [10, 2000]. Rank counts are the HOLDOUT
+  ANCHORS' own (r=8 GF-01/GF-03 per the staged assumption; r=2/4/64
+  GF-11) or the S4 prediction rank (r=8) where the anchor stages none.
+evaluation_scope: >
+  Holdout evaluation ONLY against the split record's holdout anchors
+  (GF-01 measured rows; GF-03 2 MiB band + plateau conversion; GF-11
+  bracket/decomposition/scaling). No fit objective exists in this stage;
+  no number of any holdout anchor tunes anything; errors are recorded as
+  findings. v2 dimensions on every run record: calibration_target [],
+  held_out true with an evaluation-only scope naming the anchor id.

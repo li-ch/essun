@@ -1,0 +1,39 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION SWEEP (anchor GF-11, r=64):
+# the S4 LANDED LATENCY PLACEMENTS L in {64, 80, 140, 800} plus the
+# registry 200 reference on the three corpus identities at the anchor's
+# rank count and 128-B declared size reading — the split record's OWN
+# assignment (group G3 parameter_axes; externally checked on GF-11).
+# This sweep's measured counterpart: the measured scaling endpoint (prose 7-to-70 percent overhead; the derived envelope 2386.8 ns).
+# NOTHING IS TUNED; the bracket/scaling gaps are the findings.
+sweep: cal_s6_gf11_tp64_v1
+workload: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp64_128b.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s6/topologies/crossbar64_s6_l200_v1.yaml
+grid:
+  payload_sizes_bytes: [128]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/s6/topologies/crossbar64_s6_l64_v1.yaml
+    - experiments/calibration/s6/topologies/crossbar64_s6_l80_v1.yaml
+    - experiments/calibration/s6/topologies/crossbar64_s6_l140_v1.yaml
+    - experiments/calibration/s6/topologies/crossbar64_s6_l200_v1.yaml
+    - experiments/calibration/s6/topologies/crossbar64_s6_l800_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/s6/topologies/ring64_s6_l64_v1.yaml
+    - experiments/calibration/s6/topologies/ring64_s6_l80_v1.yaml
+    - experiments/calibration/s6/topologies/ring64_s6_l140_v1.yaml
+    - experiments/calibration/s6/topologies/ring64_s6_l200_v1.yaml
+    - experiments/calibration/s6/topologies/ring64_s6_l800_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/s6/topologies/exchange64_s6_l64_v1.yaml
+    - experiments/calibration/s6/topologies/exchange64_s6_l80_v1.yaml
+    - experiments/calibration/s6/topologies/exchange64_s6_l140_v1.yaml
+    - experiments/calibration/s6/topologies/exchange64_s6_l200_v1.yaml
+    - experiments/calibration/s6/topologies/exchange64_s6_l800_v1.yaml

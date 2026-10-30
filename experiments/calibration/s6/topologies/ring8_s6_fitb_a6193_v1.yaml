@@ -1,0 +1,27 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION topology (unidirectional ring of 8
+# ranks) carrying the LANDED FITTED CONFIGURATION B_fit(CAL-A6 2.19.3) = 388.7275398... B/ns
+# — the EXACT rational "111478703128576/286778506025" from S3 fit record 23036816... (ring, r=32, L=200),
+# evaluated against the split record's holdout anchor GF-01
+# (split record 3862e227..., holdout set; NOTHING TUNES in S6: the fitted
+# value was fixed by its fit stage BEFORE this stage existed and is
+# executed here UNTOUCHED; the registry A-L0-BW value stays 64, range
+# [1, 1024]). L = 200 ns is the A-L0-LAT registry point the fit stages
+# fixed (the latency axis is S4's). The rank count is the HOLDOUT
+# ANCHOR'S own (the fit rank differs where noted in the stage record);
+# the identity is rank-parametric, so the fitted configuration
+# transplants as-is. Not a shipped value; no label is upgraded.
+topology_id: ring8_s6_fitb_a6193_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: "111478703128576/286778506025"
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD); ring AllReduce
+  identity t = 2(r-1)/r*M/B + 2(r-1)*L (src/essun/backends/analytical/
+  l0.py). No congestion, no credits, no packetization, no software or
+  endpoint latency term (all explicitly unsupported); L0 transport model
+  only. B is the carried fitted-configuration diagnostic named in the
+  header (a recorded diagnostic of a fit stage, never a shipped value);
+  L = 200 ns is the registry point.

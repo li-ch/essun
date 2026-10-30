@@ -1,0 +1,29 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION topology (fully-connected crossbar of 8
+# ranks) carrying the LANDED FITTED CONFIGURATION B_fit(CAL-A3) = 827.1826651... B/ns
+# — the EXACT rational "19561820264071168/23648730912675" from S2 fit record 31b0d090... (crossbar, r=72, L=200),
+# evaluated against the split record's holdout anchor GF-03
+# (split record 3862e227..., holdout set; NOTHING TUNES in S6: the fitted
+# value was fixed by its fit stage BEFORE this stage existed and is
+# executed here UNTOUCHED; the registry A-L0-BW value stays 64, range
+# [1, 1024]). L = 200 ns is the A-L0-LAT registry point the fit stages
+# fixed (the latency axis is S4's). The rank count is the HOLDOUT
+# ANCHOR'S own (the fit rank differs where noted in the stage record);
+# the identity is rank-parametric, so the fitted configuration
+# transplants as-is. Not a shipped value; no label is upgraded.
+topology_id: crossbar8_s6_fitb_s2_gf03_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: "19561820264071168/23648730912675"
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected crossbar abstraction; every rank pair
+  adjacent with uniform pair latency; single-port injection shared
+  across the r-1 peers (A-L0X-PORT); crossbar AllReduce identity
+  t = 2(r-1)/r*M/B + 2L (src/essun/backends/analytical/l0_crossbar.py).
+  No congestion, no credits, no packetization, no in-network reduction,
+  no software/endpoint latency term; L0 transport model only. B is the
+  carried fitted-configuration diagnostic named in the header (a
+  recorded diagnostic of a fit stage, never a shipped value); L = 200 ns
+  is the registry point.

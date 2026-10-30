@@ -1,0 +1,36 @@
+# Implementation profile for the calibration-ladder S6 HOLDOUT-EVALUATION
+# runs and sweeps on the analytical L0 ring backend: the fitted
+# configurations of S3 (ring family) executed UNTOUCHED against the split
+# record's holdout anchors (CAL-A4, GF-01) — split record 3862e227...,
+# holdout set. NOTHING TUNES in S6: no parameter moves, no re-fitting;
+# misses and non-evaluations are findings feeding the S7 proposal.
+implementation_profile_id: analytical_l0_ring_cal_s6_v1
+status: PROPOSED   # holdout-evaluation candidate inputs; review pending
+backend: analytical_l0
+fidelity: L0
+model: >
+  unidirectional-ring AllReduce identity t = 2(r-1)/r*M/B + 2(r-1)*L
+  (src/essun/backends/analytical/l0.py); assumptions A-L0-BW / A-L0-LAT /
+  A-L0-FD / A-L0-DIV from experiments/vertical_slice/assumptions_l0.yaml.
+  The ring is the topology class of holdout anchor CAL-A4 (the anchor's
+  own "Ring topology") and the structurally in-domain reading for GF-01's
+  full mesh (a ring runs over the mesh's per-pair links).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_executed: >
+  NOTHING is swept and NOTHING is tuned in S6. The executed values are
+  the LANDED FITTED CONFIGURATIONS of the fit stages, carried bit-exact:
+  B_fit(CAL-A6 2.19.3) = 111478703128576/286778506025,
+  B_fit(CAL-A6 2.20.3) = 115757383942144/309086671475, B_fit(GF-04) =
+  476.37 B/ns (S3 fit record 23036816...), each with L at the registry
+  point 200 ns the fit stages fixed. The registry A-L0-BW value stays
+  64, range [1, 1024]; the registry A-L0-LAT value stays 200, range
+  [10, 2000]. Rank counts are the HOLDOUT ANCHORS' own (r=4/16 CAL-A4,
+  r=8 GF-01); the fitted configurations transplant as-is (the identity
+  is rank-parametric; the fit rank is recorded in the stage record).
+evaluation_scope: >
+  Holdout evaluation ONLY against the split record's holdout anchors
+  (CAL-A4 regime placement; GF-01 measured rows). No fit objective
+  exists in this stage; no number of any holdout anchor tunes anything;
+  errors are recorded as findings. v2 dimensions on every run record:
+  calibration_target [] (nothing is calibrated against holdout data),
+  held_out true with an evaluation-only scope naming the anchor id.

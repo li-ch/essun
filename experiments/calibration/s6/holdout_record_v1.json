@@ -1,0 +1,1548 @@
+{
+  "backing": {
+    "executed_rows_cross_checked": {
+      "a4_ring16": 18,
+      "a4_ring4": 18,
+      "gf01_bw": 30,
+      "gf01_small": 75,
+      "gf03": 9,
+      "gf11_tp2": 15,
+      "gf11_tp4": 15,
+      "gf11_tp64": 15
+    },
+    "inputs": [
+      "experiments/calibration/s6/sweep_s6_*.yaml (8)",
+      "experiments/calibration/s6/run_s6_*_eval.yaml (4)",
+      "experiments/calibration/s6/topologies/ (57 files)",
+      "experiments/calibration/s6/profiles/ (3 files)",
+      "reused committed inputs: experiments/calibration/s4/topologies/ (15 fitted-L files), experiments/calibration/{a4,gf01,gf03,gf11}/workloads/ (8 files)"
+    ],
+    "reproduce": "make sweep EXP=experiments/calibration/s6/sweep_s6_a4_ring4_v1.yaml (.. all 8 sweeps ..) ; make run EXP=experiments/calibration/s6/run_s6_a4_eval.yaml (.. all 4 runs ..) ; python experiments/calibration/s6/build_holdout_record.py",
+    "run_backed_numbers": "every model number is an executed sweep row or store run cross-checked against its closed form by exact Fraction string equality; every anchor number is transcribed AS STAGED from the anchor's committed E1 builder; ratios and implied values are declared arithmetic with inputs named",
+    "run_ids": [
+      "e1d2aede889d31c43aa510f86eb7bc4f478f1d82a8b601acdfd29bd07b553b71",
+      "d70ef4265dcba35f760f44d2ca617a5fc75d2165c730805f0424b9b29800bb99",
+      "f99ca410bb13d8e9cd910f7bd8ebf63ca66b59d84f309948b4a64cfc7d81287e",
+      "7eda947ca7025b99bea378719f6ec54c42c85f02753a17777596bebdddf30075"
+    ],
+    "run_roles": {
+      "7eda947ca7025b99bea378719f6ec54c42c85f02753a17777596bebdddf30075": "GF-11 r=4 bracket evaluation (crossbar4 at the S4 A10 placement L=800, 128 B)",
+      "d70ef4265dcba35f760f44d2ca617a5fc75d2165c730805f0424b9b29800bb99": "GF-01 large-message evaluation (ring8 at B_fit(GF-04), 16 GiB)",
+      "e1d2aede889d31c43aa510f86eb7bc4f478f1d82a8b601acdfd29bd07b553b71": "CAL-A4 placement leg (ring16 at B_fit(GF-04), 1.5 GiB)",
+      "f99ca410bb13d8e9cd910f7bd8ebf63ca66b59d84f309948b4a64cfc7d81287e": "GF-03 2 MiB band evaluation (crossbar8 at B_fit(CAL-A3))"
+    },
+    "s7_handoff": "the five-axis omission list above (known_omissions_for_s7) with the S6 evidence per axis; the GF-03 plateau transfer (-1.17%, M-flagged) as the single positive same-family point; the small-message implied-L decade as the measured magnitude of the software-latency axis; the CAL-A4 non-evaluation as the honest boundary of the plan's 3.5(b) check; NOTHING in this record moves any parameter — every proposal is S7's to make and the owner's to adjudicate",
+    "sweep_ids": {
+      "a4_ring16": "9f8580e5a085bdddfc6128b6b505265772d1867ec308da0064e2ed10c656428a",
+      "a4_ring4": "3a34576656e090f3830beaffdf85da14d48863c079ebb6a327bb8ed3f8600704",
+      "gf01_bw": "e2b963723e37f1c023147fc81ec7ee9479fe1ee9e8eee38d663c2f0939326b15",
+      "gf01_small": "bb092e47925a716950253ad954400d4227dca1d66d1dd91abe02e3f908b74ca7",
+      "gf03": "f86f189a80c31a6785015d4e7ae1e86639d335ccc2d58949f41954866c2364b2",
+      "gf11_tp2": "5fbf7e902cbe42486549775ff37af3f2805f5d82320d31ed83fbc0cf329c5791",
+      "gf11_tp4": "fe243b3a56da92baa79cc03eda258a6698b9f5a80fc15fe7453803e30c590714",
+      "gf11_tp64": "1340cbeb22e3dc408fb613fe39804419383bc2e3adf2a7695134fe8af8c22ad7"
+    }
+  },
+  "calibration_target": [],
+  "cross_anchor_observations": {
+    "discipline": "coincidences RECORDED, never cross-derived (the E1 rule)",
+    "small_message_implied_L_decade": "the implied effective L from three independent measurements — GF-01 MI300X eager ring band 855.6-1195.7 ns, GF-11 GB200 one-shot crossbar 1183.5 ns, GF-03 B300 D2D 1400-1600 ns — ALL land in the same decade, ABOVE every wire-class fitted placement and BELOW GF-10's app-level 9000: the measured small-message floor of three GPU generations and two fabric classes is a ~0.86-1.83 us software-dominated quantity; the only landed configuration in that decade is CAL-A10's assumption-class 800 ns"
+  },
+  "evaluation": {
+    "cal_a4": {
+      "anchor": "CAL-A4 (ASTRA-sim 2.0 ISPASS 2023, simulator-vs-hardware validation; staging doc anchors_staging.md section A4; confidence H)",
+      "cct_evaluation": {
+        "band_non_transferability": "the ~5% band is a property of the authors' simulator-vs-hardware pair; it cannot be reproduced against any platform run (no per-point hardware times exist) and was never a fit input (the split record's sole admitted exception — tolerance-SHAPE context per plan 3.4, used descriptively)",
+        "reason": "CAL-A4 stages NO hardware (size -> time) series: its extractable numbers are the regime, the 150 GB/s NVLink link quote, and the ~5% MEAN-error summary of the AUTHORS' ASTRA-sim configuration vs their V100 hardware (the anchor's own E1 record, not_calibratable row: 'no CCT-vs-CCT comparison against the V100 systems is constructible from the staged numbers'). The plan's 3.5(b) external check therefore DEGENERATES to placement arithmetic for this anchor — that degeneration is itself a finding, and no model class is forced to manufacture a comparison",
+        "verdict": "NON-EVALUATION — recorded, not forced"
+      },
+      "executed_placement": {
+        "generation_gap_vs_anchor_quote": {
+          "anchor_quote_B_per_ns": "150 (per-GPU per-direction NVLink, the anchor's verbatim '150 GB/s NVLink')",
+          "finding": "every landed ring fit is 2.497x-3.176x the anchor's own NVLink-3-era link quote — the fitted configurations are H100/NVLink-4-5-class (S3's fit anchors), the holdout is V100/NVLink-3: a two-generation transfer in the WRONG direction for any bandwidth expectation; the 5% shape scalar cannot bridge it (and must not be asked to)",
+          "ratios": {
+            "s3_ring_a6_2193": {
+              "B_over_150_exact": "55739351564288/21508387951875",
+              "B_over_150_float": 2.591516932324484
+            },
+            "s3_ring_a6_2203": {
+              "B_over_150_exact": "57878691971072/23181500360625",
+              "B_over_150_float": 2.496762119391634
+            },
+            "s3_ring_gf04": {
+              "B_over_150_exact": "15879/5000",
+              "B_over_150_float": 3.1758
+            }
+          }
+        },
+        "registry_placement": "the untouched registry point 64 B/ns sits at 150/64 = 75/32 of the anchor quote (BELOW it, unlike every fitted value); the anchor quote itself is a hardware capability, never a completion time (the E1 normalization finding)",
+        "sweeps": {
+          "16": {
+            "rows": [
+              {
+                "B_exact": "111478703128576/286778506025",
+                "B_float": 388.7275398486727,
+                "fitted_configuration": "s3_ring_a6_2193",
+                "per_size": [
+                  {
+                    "busbw_over_anchor_quote_150_exact": "55739351564288/21907066861875",
+                    "cct_ns_exact": "4381413372375/13289297",
+                    "cct_ns_float": 329694.8944985577,
+                    "implied_busbw_B_per_ns_exact": "111478703128576/292094224825",
+                    "payload_bytes": 67108864,
+                    "size": "64MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "55739351564288/21707727406875",
+                    "cct_ns_exact": "8683090962750/13289297",
+                    "cct_ns_float": 653389.7889971155,
+                    "implied_busbw_B_per_ns_exact": "111478703128576/289436365425",
+                    "payload_bytes": 134217728,
+                    "size": "128MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "55739351564288/21608057679375",
+                    "cct_ns_exact": "17286446143500/13289297",
+                    "cct_ns_float": 1300779.577994231,
+                    "implied_busbw_B_per_ns_exact": "111478703128576/288107435725",
+                    "payload_bytes": 268435456,
+                    "size": "256MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "55739351564288/21558222815625",
+                    "cct_ns_exact": "34493156505000/13289297",
+                    "cct_ns_float": 2595559.155988462,
+                    "implied_busbw_B_per_ns_exact": "111478703128576/287442970875",
+                    "payload_bytes": 536870912,
+                    "size": "512MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "27869675782144/10766652691875",
+                    "cct_ns_exact": "68906577228000/13289297",
+                    "cct_ns_float": 5185118.311976924,
+                    "implied_busbw_B_per_ns_exact": "55739351564288/143555369225",
+                    "payload_bytes": 1073741824,
+                    "size": "1GiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "55739351564288/21524999573125",
+                    "cct_ns_exact": "103319997951000/13289297",
+                    "cct_ns_float": 7774677.467965386,
+                    "implied_busbw_B_per_ns_exact": "334436109385728/860999982925",
+                    "payload_bytes": 1610612736,
+                    "size": "1.5GiB"
+                  }
+                ]
+              },
+              {
+                "B_exact": "115757383942144/309086671475",
+                "B_float": 374.51431790874506,
+                "fitted_configuration": "s3_ring_a6_2203",
+                "per_size": [
+                  {
+                    "busbw_over_anchor_quote_150_exact": "57878691971072/23595481025625",
+                    "cct_ns_exact": "9438192410250/27598711",
+                    "cct_ns_float": 341979.46455723967,
+                    "implied_busbw_B_per_ns_exact": "115757383942144/314606413675",
+                    "payload_bytes": 67108864,
+                    "size": "64MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "57878691971072/23388490693125",
+                    "cct_ns_exact": "18710792554500/27598711",
+                    "cct_ns_float": 677958.9291144793,
+                    "implied_busbw_B_per_ns_exact": "115757383942144/311846542575",
+                    "payload_bytes": 134217728,
+                    "size": "128MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "57878691971072/23284995526875",
+                    "cct_ns_exact": "37255992843000/27598711",
+                    "cct_ns_float": 1349917.8582289587,
+                    "implied_busbw_B_per_ns_exact": "115757383942144/310466607025",
+                    "payload_bytes": 268435456,
+                    "size": "256MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "28939345985536/11616623971875",
+                    "cct_ns_exact": "74346393420000/27598711",
+                    "cct_ns_float": 2693835.7164579174,
+                    "implied_busbw_B_per_ns_exact": "57878691971072/154888319625",
+                    "payload_bytes": 536870912,
+                    "size": "512MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "115757383942144/46414748304375",
+                    "cct_ns_exact": "148527194574000/27598711",
+                    "cct_ns_float": 5381671.432915835,
+                    "implied_busbw_B_per_ns_exact": "231514767884288/618863310725",
+                    "payload_bytes": 1073741824,
+                    "size": "1GiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "7234836496384/2899843694375",
+                    "cct_ns_exact": "222707995728000/27598711",
+                    "cct_ns_float": 8069507.149373751,
+                    "implied_busbw_B_per_ns_exact": "43409018978304/115993747775",
+                    "payload_bytes": 1610612736,
+                    "size": "1.5GiB"
+                  }
+                ]
+              },
+              {
+                "B_exact": "47637/100",
+                "B_float": 476.37,
+                "fitted_configuration": "s3_ring_gf04",
+                "per_size": [
+                  {
+                    "busbw_over_anchor_quote_150_exact": "4162584576/1340493125",
+                    "cct_ns_exact": "4289578000/15879",
+                    "cct_ns_float": 270141.5706278733,
+                    "implied_busbw_B_per_ns_exact": "24975507456/53619725",
+                    "payload_bytes": 67108864,
+                    "size": "64MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "8325169152/2651213125",
+                    "cct_ns_exact": "8483882000/15879",
+                    "cct_ns_float": 534283.1412557466,
+                    "implied_busbw_B_per_ns_exact": "49951014912/106048525",
+                    "payload_bytes": 134217728,
+                    "size": "128MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "16650338304/5272653125",
+                    "cct_ns_exact": "16872490000/15879",
+                    "cct_ns_float": 1062566.2825114932,
+                    "implied_busbw_B_per_ns_exact": "99902029824/210906125",
+                    "payload_bytes": 268435456,
+                    "size": "256MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "33300676608/10515533125",
+                    "cct_ns_exact": "33649706000/15879",
+                    "cct_ns_float": 2119132.5650229864,
+                    "implied_busbw_B_per_ns_exact": "199804059648/420621325",
+                    "payload_bytes": 536870912,
+                    "size": "512MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "66601353216/21001293125",
+                    "cct_ns_exact": "67204138000/15879",
+                    "cct_ns_float": 4232265.130045973,
+                    "implied_busbw_B_per_ns_exact": "399608119296/840051725",
+                    "payload_bytes": 1073741824,
+                    "size": "1GiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "33300676608/10495684375",
+                    "cct_ns_exact": "33586190000/5293",
+                    "cct_ns_float": 6345397.695068959,
+                    "implied_busbw_B_per_ns_exact": "199804059648/419827375",
+                    "payload_bytes": 1610612736,
+                    "size": "1.5GiB"
+                  }
+                ]
+              }
+            ],
+            "sweep_id": "9f8580e5a085bdddfc6128b6b505265772d1867ec308da0064e2ed10c656428a"
+          },
+          "4": {
+            "rows": [
+              {
+                "B_exact": "111478703128576/286778506025",
+                "B_float": 388.7275398486727,
+                "fitted_configuration": "s3_ring_a6_2193",
+                "per_size": [
+                  {
+                    "busbw_over_anchor_quote_150_exact": "55739351564288/21608057679375",
+                    "cct_ns_exact": "3457289228700/13289297",
+                    "cct_ns_float": 260155.9155988462,
+                    "implied_busbw_B_per_ns_exact": "111478703128576/288107435725",
+                    "payload_bytes": 67108864,
+                    "size": "64MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "55739351564288/21558222815625",
+                    "cct_ns_exact": "6898631301000/13289297",
+                    "cct_ns_float": 519111.8311976924,
+                    "implied_busbw_B_per_ns_exact": "111478703128576/287442970875",
+                    "payload_bytes": 134217728,
+                    "size": "128MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "27869675782144/10766652691875",
+                    "cct_ns_exact": "13781315445600/13289297",
+                    "cct_ns_float": 1037023.6623953847,
+                    "implied_busbw_B_per_ns_exact": "55739351564288/143555369225",
+                    "payload_bytes": 268435456,
+                    "size": "256MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "111478703128576/43041693335625",
+                    "cct_ns_exact": "27546683734800/13289297",
+                    "cct_ns_float": 2072847.3247907695,
+                    "implied_busbw_B_per_ns_exact": "222957406257152/573889244475",
+                    "payload_bytes": 536870912,
+                    "size": "512MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "222957406257152/86058469239375",
+                    "cct_ns_exact": "55077420313200/13289297",
+                    "cct_ns_float": 4144494.649581539,
+                    "implied_busbw_B_per_ns_exact": "445914812514304/1147446256525",
+                    "payload_bytes": 1073741824,
+                    "size": "1GiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "111478703128576/43025081714375",
+                    "cct_ns_exact": "82608156891600/13289297",
+                    "cct_ns_float": 6216141.974372309,
+                    "implied_busbw_B_per_ns_exact": "668872218771456/1721003268575",
+                    "payload_bytes": 1610612736,
+                    "size": "1.5GiB"
+                  }
+                ]
+              },
+              {
+                "B_exact": "115757383942144/309086671475",
+                "B_float": 374.51431790874506,
+                "fitted_configuration": "s3_ring_a6_2203",
+                "per_size": [
+                  {
+                    "busbw_over_anchor_quote_150_exact": "57878691971072/23284995526875",
+                    "cct_ns_exact": "7451198568600/27598711",
+                    "cct_ns_float": 269983.5716457917,
+                    "implied_busbw_B_per_ns_exact": "115757383942144/310466607025",
+                    "payload_bytes": 67108864,
+                    "size": "64MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "28939345985536/11616623971875",
+                    "cct_ns_exact": "14869278684000/27598711",
+                    "cct_ns_float": 538767.1432915834,
+                    "implied_busbw_B_per_ns_exact": "57878691971072/154888319625",
+                    "payload_bytes": 134217728,
+                    "size": "128MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "115757383942144/46414748304375",
+                    "cct_ns_exact": "29705438914800/27598711",
+                    "cct_ns_float": 1076334.2865831668,
+                    "implied_busbw_B_per_ns_exact": "231514767884288/618863310725",
+                    "payload_bytes": 268435456,
+                    "size": "256MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "231514767884288/92777749025625",
+                    "cct_ns_exact": "59377759376400/27598711",
+                    "cct_ns_float": 2151468.5731663336,
+                    "implied_busbw_B_per_ns_exact": "463029535768576/1237036653675",
+                    "payload_bytes": 536870912,
+                    "size": "512MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "463029535768576/185503750468125",
+                    "cct_ns_exact": "118722400299600/27598711",
+                    "cct_ns_float": 4301737.146332667,
+                    "implied_busbw_B_per_ns_exact": "926059071537152/2473383339575",
+                    "payload_bytes": 1073741824,
+                    "size": "1GiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "231514767884288/92743250636875",
+                    "cct_ns_exact": "178067041222800/27598711",
+                    "cct_ns_float": 6452005.719499001,
+                    "implied_busbw_B_per_ns_exact": "1389088607305728/3709730025475",
+                    "payload_bytes": 1610612736,
+                    "size": "1.5GiB"
+                  }
+                ]
+              },
+              {
+                "B_exact": "47637/100",
+                "B_float": 476.37,
+                "fitted_configuration": "s3_ring_gf04",
+                "per_size": [
+                  {
+                    "busbw_over_anchor_quote_150_exact": "16650338304/5272653125",
+                    "cct_ns_exact": "3374498000/15879",
+                    "cct_ns_float": 212513.25650229864,
+                    "implied_busbw_B_per_ns_exact": "99902029824/210906125",
+                    "payload_bytes": 67108864,
+                    "size": "64MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "33300676608/10515533125",
+                    "cct_ns_exact": "6729941200/15879",
+                    "cct_ns_float": 423826.5130045973,
+                    "implied_busbw_B_per_ns_exact": "199804059648/420621325",
+                    "payload_bytes": 134217728,
+                    "size": "128MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "66601353216/21001293125",
+                    "cct_ns_exact": "13440827600/15879",
+                    "cct_ns_float": 846453.0260091946,
+                    "implied_busbw_B_per_ns_exact": "399608119296/840051725",
+                    "payload_bytes": 268435456,
+                    "size": "256MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "133202706432/41972813125",
+                    "cct_ns_exact": "26862600400/15879",
+                    "cct_ns_float": 1691706.052018389,
+                    "implied_busbw_B_per_ns_exact": "799216238592/1678912525",
+                    "payload_bytes": 536870912,
+                    "size": "512MiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "266405412864/83915853125",
+                    "cct_ns_exact": "53706146000/15879",
+                    "cct_ns_float": 3382212.104036778,
+                    "implied_busbw_B_per_ns_exact": "1598432477184/3356634125",
+                    "payload_bytes": 1073741824,
+                    "size": "1GiB"
+                  },
+                  {
+                    "busbw_over_anchor_quote_150_exact": "133202706432/41952964375",
+                    "cct_ns_exact": "26849897200/5293",
+                    "cct_ns_float": 5072718.156055167,
+                    "implied_busbw_B_per_ns_exact": "799216238592/1678118575",
+                    "payload_bytes": 1610612736,
+                    "size": "1.5GiB"
+                  }
+                ]
+              }
+            ],
+            "sweep_id": "3a34576656e090f3830beaffdf85da14d48863c079ebb6a327bb8ed3f8600704"
+          }
+        },
+        "what": "the three fitted ring configurations executed at the anchor's exact regime (r=4/16, the declared binary ladder 64 MiB..1.5 GiB) — model-side predictions with NO anchor counterpart; the implied-busbw column is the identity's own normalization (asymptote = B_fit)"
+      },
+      "matched_fitted_configurations": {
+        "configs": [
+          "s3_ring_a6_2193",
+          "s3_ring_a6_2203",
+          "s3_ring_gf04"
+        ],
+        "matching_basis": "the anchor's own staged topology class is Ring at r=4/16; the corpus's ring-family fitted configurations are exactly S3's three (the CAL-A6 two-mode fits at r=32 and the GF-04 fit at r=8) — transplanted to the anchor's rank counts (the identity is rank-parametric; no crossbar/torus/doubling fit is applied to a Ring-class anchor)",
+        "s5_contribution": "NONE (S5 hands S6 no fitted configuration)"
+      },
+      "verdict": "NON-EVALUATION on CCT (no staged series); executed placement recorded at both rank counts; NOTHING TUNED — no value moved, no tolerance adopted, no model class forced"
+    },
+    "gf01": {
+      "anchor": "GF-01 (AMD ROCm blog; RCCL 2.22.3/ROCm 6.3 all_reduce_perf on 8 MI300X, 7-hop full-mesh xGMI; staging doc anchors_gapfill.md section GF-01; confidence M-H)",
+      "large_message_16gib": {
+        "anchor_implied_effective_B": {
+          "definition": "7/4 * M / (t_anchor - 2L), crossbar reading, 2L removed — declared arithmetic FROM the measured row; no run id; nothing set",
+          "value_exact": "15032385536/47127075",
+          "value_float": 318.9755684179423
+        },
+        "anchor_row": {
+          "busbw_quoted_GB_per_s": "318.98 (the series' only reconciling bandwidth-bound row; the six staged mid rows the anchor's E1 reconciliation EXCLUDED stay excluded here)",
+          "size": "16 GiB",
+          "time_ns_exact": "94254550",
+          "time_us_staged": "94254.55"
+        },
+        "findings": {
+          "aggregate_readings_bracket": "the anchor's own aggregate readings bracket its implied effective B (315 < 318.98 < 320.6 < 325.6 < 336 < 448); every fitted B sits ABOVE the whole bracket except none below — recorded ordering, mechanism not adjudicated",
+          "every_fitted_configuration_overpredicts_bandwidth": "all five fitted configurations predict a FASTER completion than measured (-11.40% to -61.44% in time): the anchor's implied effective B (318.98) sits BELOW every fitted B (+12.9% to +159.3% in B space); closest landing is GF-02's crossbar B=360 at -11.40% — a fabric class the plan flags OUT-OF-DOMAIN for full meshes (A-L0X-PORT), so the closest number is ALSO the least applicable: a scale coincidence, not a validation",
+          "per_link_derating_inexpressible": "the anchor measures per-link usable derating 45.1-47.2 of 64 GB/s (70.5-73.8%); every fitted configuration is a single-B identity with NO per-link or port structure — the xGMI derating axis (GF-01's own CAL-A12-pairing role) is structurally inexpressible in the fitted family (S3's fabric-asymmetry omission axis)"
+        },
+        "rows": [
+          {
+            "B_exact": "47637/100",
+            "B_float": 476.37,
+            "B_over_anchor_implied_effective_exact": "89799698871/60129542144",
+            "anchor_cct_ns_exact": "94254550",
+            "cct_ns_exact": "3006610490800/47637",
+            "cct_ns_float": 63115025.94201986,
+            "delta_pct_float": -33.037687897274076,
+            "domain_class": "in-domain structure (a ring runs over the mesh's per-pair links)",
+            "fitted_configuration": "s3_ring_gf04",
+            "identity": "ring",
+            "ratio_model_over_anchor_exact": "60132209816/89800079967",
+            "ratio_model_over_anchor_float": 0.6696231210272593
+          },
+          {
+            "B_exact": "111478703128576/286778506025",
+            "B_float": 388.7275398486727,
+            "B_over_anchor_implied_effective_exact": "3578775408093/2936611901696",
+            "anchor_cct_ns_exact": "94254550",
+            "cct_ns_exact": "146835910803600/1898471",
+            "cct_ns_float": 77344300.12552206,
+            "delta_pct_float": -17.941043561799336,
+            "domain_class": "in-domain structure; hybrid scale-up+scale-out fit class",
+            "fitted_configuration": "s3_ring_a6_2193",
+            "identity": "ring",
+            "ratio_model_over_anchor_exact": "2936718216072/3578790595861",
+            "ratio_model_over_anchor_float": 0.8205895643820067
+          },
+          {
+            "B_exact": "115757383942144/309086671475",
+            "B_float": 374.51431790874506,
+            "B_over_anchor_implied_effective_exact": "7432265846859/6330095031808",
+            "anchor_cct_ns_exact": "94254550",
+            "cct_ns_exact": "316515791074800/3942673",
+            "cct_ns_float": 80279493.3982098,
+            "delta_pct_float": -14.826930478995664,
+            "domain_class": "in-domain structure; hybrid scale-up+scale-out fit class",
+            "fitted_configuration": "s3_ring_a6_2203",
+            "identity": "ring",
+            "ratio_model_over_anchor_exact": "6330315821496/7432297388243",
+            "ratio_model_over_anchor_float": 0.8517306952100434
+          },
+          {
+            "B_exact": "360",
+            "B_float": 360.0,
+            "B_over_anchor_implied_effective_exact": "2120718375/1879048192",
+            "anchor_cct_ns_exact": "94254550",
+            "cct_ns_exact": "3758114384/45",
+            "cct_ns_float": 83513652.97777778,
+            "delta_pct_float": -11.395627078185852,
+            "domain_class": "OUT-OF-DOMAIN fabric class (A-L0X-PORT; single-port vs 7 per-pair links)",
+            "fitted_configuration": "s3_xbar_gf02",
+            "identity": "crossbar",
+            "ratio_model_over_anchor_exact": "1879057192/2120727375",
+            "ratio_model_over_anchor_float": 0.8860437292181415
+          },
+          {
+            "B_exact": "19561820264071168/23648730912675",
+            "B_float": 827.1826651630861,
+            "B_over_anchor_implied_effective_exact": "183163358911157/70630876325856",
+            "anchor_cct_ns_exact": "94254550",
+            "cct_ns_exact": "10594748046413200/291493837",
+            "cct_ns_float": 36346387.81887248,
+            "delta_pct_float": -61.43805490676845,
+            "domain_class": "OUT-OF-DOMAIN fabric class AND wrong generation (GB200-class rack)",
+            "fitted_configuration": "s2_xbar_cal_a3",
+            "identity": "crossbar",
+            "ratio_model_over_anchor_exact": "211894960928264/549492408684167",
+            "ratio_model_over_anchor_float": 0.38561945093231553
+          }
+        ]
+      },
+      "matched_fitted_configurations": {
+        "large_message": "the S3 r=8 fits (ring GF-04; crossbar GF-02) + the S3 ring hybrid fits (CAL-A6 two-mode, transplanted from r=32) + the S2 crossbar fit (transplanted from r=72) — the bandwidth axis",
+        "s5_contribution": "NONE (no fitted configuration)",
+        "small_message": "the S4 latency-axis placements (the split record's G3 parameter_axes assigns exactly this external check to 'GF-01 small rows'); executed on the committed S4 topology files at the anchor's r=8"
+      },
+      "small_message": {
+        "findings": {
+          "every_fitted_latency_placement_underpredicts": "at the reconciling 16 KiB row the fitted placements under-predict the eager time by 0.10x-0.86x in time (ring chain: 64->0.099, 80->0.116, 140->0.178, 200->0.240, 800->0.860 of measured); only CAL-A10's assumption-class 800 ns on the LONGEST chain approaches, and it still sits 14% below; the wire-class placements sit 0.10x-0.24x of measured (4.2-10.1x under) at that row",
+          "implied_band_vs_placements": "the implied effective-L band 855.6-1195.7 ns lies ABOVE every fitted placement (the A10 800 at 0.669-0.935 of the band; registry 200 at 0.167-0.234) — the measured floor is launch-overhead-dominated (the S4 software-latency omission axis, externally confirmed on a second fabric)",
+          "non_monotone_floor_inexpressible": "the measured eager series is NON-monotone in size (t(8 B)=16,610 ns > t(16 KiB)=13,540 ns) while every fixed-(B, L) identity is strictly monotone (asserted on the executed rows) — an expressiveness limit of the identity family, not a parameter mismatch"
+        },
+        "implied_effective_L_ring_chain": {
+          "band_exact": [
+            "5989/7",
+            "133913/112"
+          ],
+          "band_float": [
+            855.5714285714286,
+            1195.6517857142858
+          ],
+          "definition": "(t_eager - wire term)/14 at B=64 — declared diagnostics FROM the measurements; no run id; NO parameter is set to them",
+          "per_size_exact": {
+            "16384": "6546/7",
+            "32": "133913/112",
+            "64": "66433/56",
+            "65536": "5989/7",
+            "8": "531513/448"
+          }
+        },
+        "measured_band": "eager 16.61-16.74 us at 8-64 B and 13.54/13.77 us at 16/64 KiB (the reconciling rows); graph mode 16.38/6.32/9.14 us — the eager/graph pair brackets software launch overhead (a pure software-stack effect, inexpressible at L0)",
+        "rows": [
+          {
+            "identities": {
+              "crossbar": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "51207/32",
+                  "ratio_over_eager_exact": "51207/531520",
+                  "ratio_over_eager_float": 0.09634068332329922
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "8967/32",
+                  "ratio_over_eager_exact": "8967/531520",
+                  "ratio_over_eager_float": 0.01687048464780253
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "4103/32",
+                  "ratio_over_eager_exact": "373/48320",
+                  "ratio_over_eager_float": 0.007719370860927152
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "5127/32",
+                  "ratio_over_eager_exact": "5127/531520",
+                  "ratio_over_eager_float": 0.009645921131848284
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "12807/32",
+                  "ratio_over_eager_exact": "12807/531520",
+                  "ratio_over_eager_float": 0.024095048163756773
+                }
+              },
+              "exchange": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "153607/32",
+                  "ratio_over_eager_exact": "153607/531520",
+                  "ratio_over_eager_float": 0.2889957104154124
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "26887/32",
+                  "ratio_over_eager_exact": "26887/531520",
+                  "ratio_over_eager_float": 0.05058511438892234
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "12295/32",
+                  "ratio_over_eager_exact": "2459/106304",
+                  "ratio_over_eager_float": 0.023131773028296207
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "15367/32",
+                  "ratio_over_eager_exact": "1397/48320",
+                  "ratio_over_eager_float": 0.028911423841059603
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "38407/32",
+                  "ratio_over_eager_exact": "38407/531520",
+                  "ratio_over_eager_float": 0.07225880493678508
+                }
+              },
+              "ring": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "358407/32",
+                  "ratio_over_eager_exact": "358407/531520",
+                  "ratio_over_eager_float": 0.6743057645996388
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "62727/32",
+                  "ratio_over_eager_exact": "62727/531520",
+                  "ratio_over_eager_float": 0.11801437387116195
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "28679/32",
+                  "ratio_over_eager_exact": "28679/531520",
+                  "ratio_over_eager_float": 0.053956577363034317
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "35847/32",
+                  "ratio_over_eager_exact": "35847/531520",
+                  "ratio_over_eager_float": 0.06744242925948224
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "89607/32",
+                  "ratio_over_eager_exact": "89607/531520",
+                  "ratio_over_eager_float": 0.16858631848284167
+                }
+              }
+            },
+            "label": "8 B",
+            "measured_eager_ns_exact": "16610",
+            "measured_graph_ns_exact": "16380",
+            "payload_bytes": 8
+          },
+          {
+            "identities": {
+              "crossbar": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "12807/8",
+                  "ratio_over_eager_exact": "1423/14880",
+                  "ratio_over_eager_float": 0.09563172043010752
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "2247/8",
+                  "ratio_over_eager_exact": "749/44640",
+                  "ratio_over_eager_float": 0.01677867383512545
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "1031/8",
+                  "ratio_over_eager_exact": "1031/133920",
+                  "ratio_over_eager_float": 0.007698626045400239
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "1287/8",
+                  "ratio_over_eager_exact": "143/14880",
+                  "ratio_over_eager_float": 0.009610215053763442
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "3207/8",
+                  "ratio_over_eager_exact": "1069/44640",
+                  "ratio_over_eager_float": 0.023947132616487454
+                }
+              },
+              "exchange": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "38407/8",
+                  "ratio_over_eager_exact": "38407/133920",
+                  "ratio_over_eager_float": 0.28679062126642774
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "6727/8",
+                  "ratio_over_eager_exact": "217/4320",
+                  "ratio_over_eager_float": 0.05023148148148148
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "3079/8",
+                  "ratio_over_eager_exact": "3079/133920",
+                  "ratio_over_eager_float": 0.022991338112305856
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "3847/8",
+                  "ratio_over_eager_exact": "3847/133920",
+                  "ratio_over_eager_float": 0.02872610513739546
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "9607/8",
+                  "ratio_over_eager_exact": "9607/133920",
+                  "ratio_over_eager_float": 0.0717368578255675
+                }
+              },
+              "ring": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "89607/8",
+                  "ratio_over_eager_exact": "29869/44640",
+                  "ratio_over_eager_float": 0.6691084229390681
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "15687/8",
+                  "ratio_over_eager_exact": "581/4960",
+                  "ratio_over_eager_float": 0.11713709677419355
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "7175/8",
+                  "ratio_over_eager_exact": "1435/26784",
+                  "ratio_over_eager_float": 0.053576762246117085
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "8967/8",
+                  "ratio_over_eager_exact": "2989/44640",
+                  "ratio_over_eager_float": 0.0669578853046595
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "22407/8",
+                  "ratio_over_eager_exact": "7469/44640",
+                  "ratio_over_eager_float": 0.1673163082437276
+                }
+              }
+            },
+            "label": "32 B",
+            "measured_eager_ns_exact": "16740",
+            "measured_graph_ns_exact": "6320",
+            "payload_bytes": 32
+          },
+          {
+            "identities": {
+              "crossbar": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "6407/4",
+                  "ratio_over_eager_exact": "6407/66440",
+                  "ratio_over_eager_float": 0.09643287176399759
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "1127/4",
+                  "ratio_over_eager_exact": "1127/66440",
+                  "ratio_over_eager_float": 0.016962673088500902
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "519/4",
+                  "ratio_over_eager_exact": "519/66440",
+                  "ratio_over_eager_float": 0.007811559301625527
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "647/4",
+                  "ratio_over_eager_exact": "647/66440",
+                  "ratio_over_eager_float": 0.00973810957254666
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "1607/4",
+                  "ratio_over_eager_exact": "1607/66440",
+                  "ratio_over_eager_float": 0.024187236604455147
+                }
+              },
+              "exchange": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "19207/4",
+                  "ratio_over_eager_exact": "19207/66440",
+                  "ratio_over_eager_float": 0.2890878988561108
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "3367/4",
+                  "ratio_over_eager_exact": "3367/66440",
+                  "ratio_over_eager_float": 0.05067730282962071
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "1543/4",
+                  "ratio_over_eager_exact": "1543/66440",
+                  "ratio_over_eager_float": 0.02322396146899458
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "1927/4",
+                  "ratio_over_eager_exact": "1927/66440",
+                  "ratio_over_eager_float": 0.029003612281757976
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "4807/4",
+                  "ratio_over_eager_exact": "437/6040",
+                  "ratio_over_eager_float": 0.07235099337748345
+                }
+              },
+              "ring": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "44807/4",
+                  "ratio_over_eager_exact": "44807/66440",
+                  "ratio_over_eager_float": 0.6743979530403371
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "7847/4",
+                  "ratio_over_eager_exact": "7847/66440",
+                  "ratio_over_eager_float": 0.11810656231186033
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "3591/4",
+                  "ratio_over_eager_exact": "3591/66440",
+                  "ratio_over_eager_float": 0.05404876580373269
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "4487/4",
+                  "ratio_over_eager_exact": "4487/66440",
+                  "ratio_over_eager_float": 0.06753461770018061
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "11207/4",
+                  "ratio_over_eager_exact": "11207/66440",
+                  "ratio_over_eager_float": 0.16867850692354003
+                }
+              }
+            },
+            "label": "64 B",
+            "measured_eager_ns_exact": "16610",
+            "measured_graph_ns_exact": null,
+            "payload_bytes": 64
+          },
+          {
+            "identities": {
+              "crossbar": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "2048",
+                  "ratio_over_eager_exact": "512/3385",
+                  "ratio_over_eager_float": 0.15125553914327916
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "728",
+                  "ratio_over_eager_exact": "182/3385",
+                  "ratio_over_eager_float": 0.053766617429837515
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "576",
+                  "ratio_over_eager_exact": "144/3385",
+                  "ratio_over_eager_float": 0.04254062038404727
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "608",
+                  "ratio_over_eager_exact": "152/3385",
+                  "ratio_over_eager_float": 0.044903988183161006
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "848",
+                  "ratio_over_eager_exact": "212/3385",
+                  "ratio_over_eager_float": 0.06262924667651404
+                }
+              },
+              "exchange": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "5248",
+                  "ratio_over_eager_exact": "1312/3385",
+                  "ratio_over_eager_float": 0.38759231905465286
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "1288",
+                  "ratio_over_eager_exact": "322/3385",
+                  "ratio_over_eager_float": 0.09512555391432792
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "832",
+                  "ratio_over_eager_exact": "208/3385",
+                  "ratio_over_eager_float": 0.06144756277695716
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "928",
+                  "ratio_over_eager_exact": "232/3385",
+                  "ratio_over_eager_float": 0.06853766617429838
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "1648",
+                  "ratio_over_eager_exact": "412/3385",
+                  "ratio_over_eager_float": 0.12171344165435746
+                }
+              },
+              "ring": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "11648",
+                  "ratio_over_eager_exact": "2912/3385",
+                  "ratio_over_eager_float": 0.8602658788774002
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "2408",
+                  "ratio_over_eager_exact": "602/3385",
+                  "ratio_over_eager_float": 0.1778434268833087
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "1344",
+                  "ratio_over_eager_exact": "336/3385",
+                  "ratio_over_eager_float": 0.09926144756277695
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "1568",
+                  "ratio_over_eager_exact": "392/3385",
+                  "ratio_over_eager_float": 0.11580502215657312
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "3248",
+                  "ratio_over_eager_exact": "812/3385",
+                  "ratio_over_eager_float": 0.2398818316100443
+                }
+              }
+            },
+            "label": "16 KiB",
+            "measured_eager_ns_exact": "13540",
+            "measured_graph_ns_exact": null,
+            "payload_bytes": 16384
+          },
+          {
+            "identities": {
+              "crossbar": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "3392",
+                  "ratio_over_eager_exact": "1696/6885",
+                  "ratio_over_eager_float": 0.24633260711692084
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "2072",
+                  "ratio_over_eager_exact": "1036/6885",
+                  "ratio_over_eager_float": 0.1504720406681191
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "1920",
+                  "ratio_over_eager_exact": "64/459",
+                  "ratio_over_eager_float": 0.1394335511982571
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "1952",
+                  "ratio_over_eager_exact": "976/6885",
+                  "ratio_over_eager_float": 0.14175744371822804
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "2192",
+                  "ratio_over_eager_exact": "1096/6885",
+                  "ratio_over_eager_float": 0.15918663761801016
+                }
+              },
+              "exchange": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "6592",
+                  "ratio_over_eager_exact": "3296/6885",
+                  "ratio_over_eager_float": 0.478721859114016
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "2632",
+                  "ratio_over_eager_exact": "1316/6885",
+                  "ratio_over_eager_float": 0.19114015976761076
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "2176",
+                  "ratio_over_eager_exact": "64/405",
+                  "ratio_over_eager_float": 0.1580246913580247
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "2272",
+                  "ratio_over_eager_exact": "1136/6885",
+                  "ratio_over_eager_float": 0.16499636891793754
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "2992",
+                  "ratio_over_eager_exact": "88/405",
+                  "ratio_over_eager_float": 0.21728395061728395
+                }
+              },
+              "ring": {
+                "a10_800": {
+                  "L_ns": "800",
+                  "cct_ns_exact": "12992",
+                  "ratio_over_eager_exact": "6496/6885",
+                  "ratio_over_eager_float": 0.9435003631082063
+                },
+                "a8_140": {
+                  "L_ns": "140",
+                  "cct_ns_exact": "3752",
+                  "ratio_over_eager_exact": "1876/6885",
+                  "ratio_over_eager_float": 0.27247639796659406
+                },
+                "a8_64": {
+                  "L_ns": "64",
+                  "cct_ns_exact": "2688",
+                  "ratio_over_eager_exact": "448/2295",
+                  "ratio_over_eager_float": 0.1952069716775599
+                },
+                "a9_80": {
+                  "L_ns": "80",
+                  "cct_ns_exact": "2912",
+                  "ratio_over_eager_exact": "1456/6885",
+                  "ratio_over_eager_float": 0.21147421931735658
+                },
+                "registry_200": {
+                  "L_ns": "200",
+                  "cct_ns_exact": "4592",
+                  "ratio_over_eager_exact": "2296/6885",
+                  "ratio_over_eager_float": 0.3334785766158315
+                }
+              }
+            },
+            "label": "64 KiB",
+            "measured_eager_ns_exact": "13770",
+            "measured_graph_ns_exact": "9140",
+            "payload_bytes": 65536
+          }
+        ]
+      },
+      "verdict": "EVALUATED on both axes; every landed configuration MISSES (-11.4% to -61.4% large; 0.05x-0.94x small); the crossbar class is OUT-OF-DOMAIN for this fabric (evaluated and classified, never tuned); per-link derating and the software floor are the recorded omission findings"
+    },
+    "gf03": {
+      "anchor": "GF-03 (B300 field notes, independent practitioner blog; NCCL allreduce/broadcast + nvbandwidth on a B300 NVLink-5-class system; staging doc anchors_gapfill.md section GF-03; confidence M — FLAGGED: rank count and NCCL version not cleanly captured; r=8 is the E1 stage's declared assumption)",
+      "cct_row_2mib": {
+        "anchor_row": "AllReduce completes 2 MiB 'in as little as 42-52 us' — the anchor's ONLY staged CCT row; best-case semantics ('as little as'), warmup protocol unstated",
+        "band_ns_exact": [
+          "42000",
+          "52000"
+        ],
+        "collapse_vs_peak_float": [
+          9.487479073660714,
+          11.768123081752233
+        ],
+        "finding": "the fitted configuration MISSES the only measured CCT row by 8.68-10.75x (model 4,836.8 ns vs 42,000-52,000 ns); the row implies effective B 71.1-88.2 B/ns at r=8 — a 9.5-11.8x size-dependent collapse below the anchor's own 837 plateau — the S2 size-dependent software-effective-bandwidth omission CORROBORATED one generation later, with a measured mid-size row",
+        "implied_L_at_B_fit_exact": [
+          "1401529751323275/74622422272",
+          "1774641862683275/74622422272"
+        ],
+        "implied_L_at_B_fit_float": [
+          18781.616954414523,
+          23781.616954414523
+        ],
+        "implied_effective_B_at_r8_exact": [
+          "28672/325",
+          "229376/3225"
+        ],
+        "implied_effective_B_at_r8_float": [
+          88.22153846153846,
+          71.12434108527131
+        ],
+        "miss_factor_float": [
+          8.683487935599551,
+          10.750985063123252
+        ],
+        "model_cct_ns_exact": "180465600843125/37311211136",
+        "model_cct_ns_float": 4836.766091170957,
+        "no_combination_check": {
+          "construction": "3 latency chains (2L/6L/14L) x 10 B readings (5 fitted + the anchor's own {50, 717, 782, 837, 900}) x 7 L values (the 4 fitted placements + registry 200 + the anchor's measured {1400, 1600}) = 210 constructible predictions at the 2 MiB row",
+          "largest_below_band_exact": "1466752/45",
+          "largest_below_band_float": 32594.48888888889,
+          "smallest_above_band_exact": "1838208/25",
+          "smallest_above_band_float": 73528.32,
+          "verdict": "NONE of the 210 constructible predictions lands inside the 42-52 us band — the largest below (ring at B_fit(GF-02)=360, L at the anchor's own measured D2D 1600) reaches only 77.6% of the band floor; the smallest above (the per-link B=50 reading at the smallest fitted L) overshoots the ceiling 1.41x: the row is an algorithm/software floor INEXPRESSIBLE in the fixed-(B, L) L0 family (the E1 finding, now confirmed WITH every fitted configuration in the constructible set)"
+        },
+        "ratio_over_band_exact": [
+          "1443724806745/12536566941696",
+          "111055754365/1193958756352"
+        ],
+        "ratio_over_band_float": [
+          0.1151610974088323,
+          0.0930147325225184
+        ]
+      },
+      "latency_axis_placement": {
+        "finding": "the measured points sit INSIDE the declared range [10, 2000] (1400 at 70%, 1600 at 80% of the upper) but 8-25x ABOVE every wire-class fitted placement; the closest landed placement is CAL-A10's assumption-class 800 (exactly 2x below the D2D point); GF-10's required 9000 (context, out-of-range) sits 5.6x above — the measured app-level latency class lands BETWEEN the wire-class fits and the app-level V100-era anchor (S4's quantity-class gap, now with a current-gen point)",
+        "measured_points": {
+          "D2D_ns": "1600",
+          "PCIe_ns": "1400",
+          "caveat": "app-level microbenchmark points (software stack bundled), not wire latency — the E1 interpretation caveat carried"
+        },
+        "placements": {
+          "a10_800": {
+            "D2D_1600_over_L_exact": "2",
+            "D2D_1600_over_L_float": 2.0
+          },
+          "a8_140": {
+            "D2D_1600_over_L_exact": "80/7",
+            "D2D_1600_over_L_float": 11.428571428571429
+          },
+          "a8_64": {
+            "D2D_1600_over_L_exact": "25",
+            "D2D_1600_over_L_float": 25.0
+          },
+          "a9_80": {
+            "D2D_1600_over_L_exact": "20",
+            "D2D_1600_over_L_float": 20.0
+          },
+          "registry_200": {
+            "D2D_1600_over_L_exact": "8",
+            "D2D_1600_over_L_float": 8.0
+          }
+        }
+      },
+      "matched_fitted_configurations": {
+        "configs": [
+          "s2_xbar_cal_a3 (B_fit transplanted r=72 -> r=8)"
+        ],
+        "latency_axis": "the S4 fitted placements placed against the anchor's measured D2D/PCIe points (arithmetic placement; the identity's L axis)",
+        "matching_basis": "the generation-extrapolation holdout: the fit set tops out at the GB200/CAL-A3 class — the anchor this B_fit was fitted against; GF-03 measures the NEXT generation of the same NVLink rack class; the S2 crossbar fit is the same-family landed configuration, and the transfer itself is the check (the split record's stated mandate)",
+        "s5_contribution": "NONE (no fitted configuration)"
+      },
+      "non_evaluations": [
+        {
+          "reason": "NO broadcast identity exists in the L0 backend set — execution of that target is impossible at this fidelity; recorded as anchor derating arithmetic only (the E1 statement, carried)",
+          "row": "broadcast ~682 GB/s (~76%)"
+        },
+        {
+          "reason": "no bidirectional identity exists; the two quotes enter as recorded arithmetic only",
+          "row": "nvbandwidth bidirectional 1.35/1.41 TB/s"
+        }
+      ],
+      "plateau_837": {
+        "anchor_row": "measured allreduce peak 837 GB/s = 93/100 of its own 900 theoretical (the anchor's own exact percentage); read as an nccl-tests-style busbw plateau (the E1 convention — if algbw, the implied per-rank rate 7/4*837 would exceed the 900 injection cap)",
+        "effective_B_transfer": {
+          "B_fit_over_837_exact": "631026460131328/638515734642225",
+          "B_fit_over_837_float": 0.9882708066464589,
+          "delta_pct_float": -1.1729193353541103,
+          "executed_probe": {
+            "anchor_reference_ns_exact": "30064771072/837",
+            "conversion": "t_ref = 7/4 * M / 837 (the E1-declared busbw->CCT conversion; no latency term — the quote carries none)",
+            "model_cct_ns_exact": "10594748046413200/291493837",
+            "ratio_model_over_anchor_ref_exact": "17878637328322275/17668740883677184",
+            "ratio_model_over_anchor_ref_float": 1.0118795360703376,
+            "size": "16 GiB (declared free probe; 2^34 cross-references GF-01's plateau row)"
+          }
+        },
+        "finding": "the S2 fitted configuration, transferred ONE GENERATION forward untouched, lands -1.17% below the measured peak in effective-B (+1.19% in CCT at the probe) — inside CAL-A6's measured 5-8% software-version noise floor (fit-set context) and inside the ~5% tolerance SHAPE (context only; no tolerance is adopted). HONESTY: the anchor is M-confidence FLAGGED, stages a single headline busbw quote (no series), and the same 837 also sits inside CAL-A3's own measured band (the E1 corroboration) — this is ONE corroborating point, not a validation; nothing tunes toward it"
+      },
+      "verdict": "EVALUATED (with the anchor's M-confidence flag carried): SPLIT outcome — the bandwidth-plateau transfer lands -1.17% (inside the software noise floor; one corroborating point), while the only measured CCT row misses 8.7-10.7x (the S2 ramp omission, corroborated); NOTHING TUNED"
+    },
+    "gf11": {
+      "anchor": "GF-11 ('Achieving Near Speed-of-Light Latency in GPU Collectives', arXiv:2607.16100; GB200 NVL72 + 2/4-GPU GB200 microbenchmarks; staging doc anchors_gapfill.md section GF-11; confidence H; NCCL 2.29.1 / NVSHMEM 3.5.21 / MSCCL++ 0.8.0 pins)",
+      "matched_fitted_configurations": {
+        "configs": "the S4 latency-axis placements L in {64, 80, 140, 800} + registry 200 reference at B=64, on the three corpus identities at the anchor's rank counts r=2/4/64",
+        "matching_basis": "the split record's OWN assignment — G3 parameter_axes: 'small-message O-CCT at the smoke-manifest regime is predicted from this axis and EXTERNALLY checked on the holdout (GF-01 small rows, GF-11)'; GF-11 is the regime-disjoint same-fabric instance (plan 3.5(c): never validate on the dimension that was fitted — the S2 bandwidth fit shared the fabric, this anchor holds the latency axis)",
+        "s2_same_fabric_note": "the S2 B_fit is the same-fabric (GB200 NVL72) fitted configuration, but at the anchor's 128-B reading its whole wire term is 3 ns of 1,603 ns (exact share 3/1603) — the bandwidth axis carries NO information at this size; stated, not hidden",
+        "s5_contribution": "NONE (no fitted configuration)"
+      },
+      "r2_decomposition_point": {
+        "finding": "of the landed placements only CAL-A10's assumption-class 800 lands in the measured decade (2L = 1600 ns = 89/78 ~ +14.1% over the 2-GPU SoL); every wire-class placement (64-200) under-predicts 3.5-11.0x; per-phase, 800/702 = 400/351 — the assumption sits 1.14x above the FIRST measured bare-hardware current-gen per-phase L. The decomposition STRUCTURE itself (2 RTT + 1 store, asymmetric components 44/17) has no expression in a lumped symmetric 2L term (S4's lumped-L known omission)",
+        "fitted_placements_vs_sol": {
+          "a10_800": {
+            "L_ns": "800",
+            "cct_ns_exact": "1602",
+            "cct_over_sol_exact": "89/78",
+            "cct_over_sol_float": 1.141025641025641,
+            "chain2L_ns_exact": "1600",
+            "sol_over_per_phase_L_exact": "351/400"
+          },
+          "a8_140": {
+            "L_ns": "140",
+            "cct_ns_exact": "282",
+            "cct_over_sol_exact": "47/234",
+            "cct_over_sol_float": 0.20085470085470086,
+            "chain2L_ns_exact": "280",
+            "sol_over_per_phase_L_exact": "351/70"
+          },
+          "a8_64": {
+            "L_ns": "64",
+            "cct_ns_exact": "130",
+            "cct_over_sol_exact": "5/54",
+            "cct_over_sol_float": 0.09259259259259259,
+            "chain2L_ns_exact": "128",
+            "sol_over_per_phase_L_exact": "351/32"
+          },
+          "a9_80": {
+            "L_ns": "80",
+            "cct_ns_exact": "162",
+            "cct_over_sol_exact": "3/26",
+            "cct_over_sol_float": 0.11538461538461539,
+            "chain2L_ns_exact": "160",
+            "sol_over_per_phase_L_exact": "351/40"
+          },
+          "registry_200": {
+            "L_ns": "200",
+            "cct_ns_exact": "402",
+            "cct_over_sol_exact": "67/234",
+            "cct_over_sol_float": 0.2863247863247863,
+            "chain2L_ns_exact": "400",
+            "sol_over_per_phase_L_exact": "351/100"
+          }
+        },
+        "measured": "LL2 RTT 306 ns + remote store 792 ns close the anchor's own SoL equation 2*306+792 = 1404 EXACTLY (verified here); the derived per-phase reading is L = 702"
+      },
+      "r4_bracket": {
+        "findings": {
+          "barrier_class_inexpressible": "the anchor's barrier bound (>1 us, a strict lower bound at >= 250/351 of the whole 2-GPU SoL) bounds a cost class the identity does not carry at all (no barrier/sync term)",
+          "bracket_straddle_at_a10": "at the A10 placement the three chains bracket the near-optimal leg exactly: crossbar 1,603 < 2,370 < exchange 3,203 ns (the model family straddles it; no single identity reaches it); the NCCL leg sits 2.29x above the ring chain at the same placement",
+          "software_span_exceeds_family_span": "the measured implementation span 1100/237 ~ 4.64x EXCEEDS the family's full chain ratio 6L/2L = 3 at r=4 — the extra ~1.55x is kernel/sync/software, inexpressible in the shared-(B, L) identity family (the E1 finding, unchanged by the fitted placements)"
+        },
+        "implied_effective_L": {
+          "crossbar_from_oneshot_exact": "2367/2",
+          "crossbar_from_oneshot_float": 1183.5,
+          "definition": "solving each chain for L at the measured legs (wire term 3 ns removed) — declared diagnostics FROM the measurements; no run ids; NOTHING is set to them",
+          "placement": "both implied values sit INSIDE the declared range [10, 2000] (1183.5 at 59.2% of the upper; 10997/6 ~ 1832.8 at 91.6%) and ABOVE every fitted placement — the measured legs demand an effective L in a decade NO landed configuration occupies except the out-of-range GF-10 reading (context, never selected)",
+          "ring_from_nccl_leg_exact": "10997/6",
+          "ring_from_nccl_leg_float": 1832.8333333333333
+        },
+        "measured": "small-message AllReduce on 4 GB200s at the declared 128-B reading — near-optimal one-shot 2,370 ns vs stock NCCL 2.29.1 ring 11,000 ns (the bracket 'what any model may predict without accusing the fabric')",
+        "rows": {
+          "a10_800": {
+            "crossbar": {
+              "cct_ns_exact": "1603",
+              "cct_ns_float": 1603.0,
+              "over_nccl_11000_exact": "1603/11000",
+              "over_nccl_11000_float": 0.14572727272727273,
+              "over_oneshot_2370_exact": "1603/2370",
+              "over_oneshot_2370_float": 0.6763713080168776
+            },
+            "exchange": {
+              "cct_ns_exact": "3203",
+              "cct_ns_float": 3203.0,
+              "over_nccl_11000_exact": "3203/11000",
+              "over_nccl_11000_float": 0.2911818181818182,
+              "over_oneshot_2370_exact": "3203/2370",
+              "over_oneshot_2370_float": 1.351476793248945
+            },
+            "ring": {
+              "cct_ns_exact": "4803",
+              "cct_ns_float": 4803.0,
+              "over_nccl_11000_exact": "4803/11000",
+              "over_nccl_11000_float": 0.43663636363636366,
+              "over_oneshot_2370_exact": "1601/790",
+              "over_oneshot_2370_float": 2.026582278481013
+            }
+          },
+          "a8_140": {
+            "crossbar": {
+              "cct_ns_exact": "283",
+              "cct_ns_float": 283.0,
+              "over_nccl_11000_exact": "283/11000",
+              "over_nccl_11000_float": 0.025727272727272727,
+              "over_oneshot_2370_exact": "283/2370",
+              "over_oneshot_2370_float": 0.11940928270042193
+            },
+            "exchange": {
+              "cct_ns_exact": "563",
+              "cct_ns_float": 563.0,
+              "over_nccl_11000_exact": "563/11000",
+              "over_nccl_11000_float": 0.05118181818181818,
+              "over_oneshot_2370_exact": "563/2370",
+              "over_oneshot_2370_float": 0.23755274261603376
+            },
+            "ring": {
+              "cct_ns_exact": "843",
+              "cct_ns_float": 843.0,
+              "over_nccl_11000_exact": "843/11000",
+              "over_nccl_11000_float": 0.07663636363636364,
+              "over_oneshot_2370_exact": "281/790",
+              "over_oneshot_2370_float": 0.3556962025316456
+            }
+          },
+          "a8_64": {
+            "crossbar": {
+              "cct_ns_exact": "131",
+              "cct_ns_float": 131.0,
+              "over_nccl_11000_exact": "131/11000",
+              "over_nccl_11000_float": 0.011909090909090909,
+              "over_oneshot_2370_exact": "131/2370",
+              "over_oneshot_2370_float": 0.05527426160337553
+            },
+            "exchange": {
+              "cct_ns_exact": "259",
+              "cct_ns_float": 259.0,
+              "over_nccl_11000_exact": "259/11000",
+              "over_nccl_11000_float": 0.023545454545454546,
+              "over_oneshot_2370_exact": "259/2370",
+              "over_oneshot_2370_float": 0.10928270042194092
+            },
+            "ring": {
+              "cct_ns_exact": "387",
+              "cct_ns_float": 387.0,
+              "over_nccl_11000_exact": "387/11000",
+              "over_nccl_11000_float": 0.03518181818181818,
+              "over_oneshot_2370_exact": "129/790",
+              "over_oneshot_2370_float": 0.16329113924050634
+            }
+          },
+          "a9_80": {
+            "crossbar": {
+              "cct_ns_exact": "163",
+              "cct_ns_float": 163.0,
+              "over_nccl_11000_exact": "163/11000",
+              "over_nccl_11000_float": 0.014818181818181819,
+              "over_oneshot_2370_exact": "163/2370",
+              "over_oneshot_2370_float": 0.06877637130801688
+            },
+            "exchange": {
+              "cct_ns_exact": "323",
+              "cct_ns_float": 323.0,
+              "over_nccl_11000_exact": "323/11000",
+              "over_nccl_11000_float": 0.029363636363636363,
+              "over_oneshot_2370_exact": "323/2370",
+              "over_oneshot_2370_float": 0.13628691983122362
+            },
+            "ring": {
+              "cct_ns_exact": "483",
+              "cct_ns_float": 483.0,
+              "over_nccl_11000_exact": "483/11000",
+              "over_nccl_11000_float": 0.04390909090909091,
+              "over_oneshot_2370_exact": "161/790",
+              "over_oneshot_2370_float": 0.20379746835443038
+            }
+          },
+          "registry_200": {
+            "crossbar": {
+              "cct_ns_exact": "403",
+              "cct_ns_float": 403.0,
+              "over_nccl_11000_exact": "403/11000",
+              "over_nccl_11000_float": 0.036636363636363634,
+              "over_oneshot_2370_exact": "403/2370",
+              "over_oneshot_2370_float": 0.170042194092827
+            },
+            "exchange": {
+              "cct_ns_exact": "803",
+              "cct_ns_float": 803.0,
+              "over_nccl_11000_exact": "73/1000",
+              "over_nccl_11000_float": 0.073,
+              "over_oneshot_2370_exact": "803/2370",
+              "over_oneshot_2370_float": 0.3388185654008439
+            },
+            "ring": {
+              "cct_ns_exact": "1203",
+              "cct_ns_float": 1203.0,
+              "over_nccl_11000_exact": "1203/11000",
+              "over_nccl_11000_float": 0.10936363636363636,
+              "over_oneshot_2370_exact": "401/790",
+              "over_oneshot_2370_float": 0.5075949367088608
+            }
+          }
+        }
+      },
+      "r64_scaling": {
+        "envelope_placement": "the derived envelope 2,386.8 ns lands BETWEEN the crossbar (1,603.94 ns; rank-flat BY CONSTRUCTION) and the exchange (9,603.94 ns; 6x) chains at the fitted A10 placement (executed rows)",
+        "finding": "the measured growth 1.589x sits between the crossbar's 1.00x and the exchange's 6.00x (ring 63x): NO chain matches; the rank-dependent part is kernel/multicast overhead (and any unstated SoL rank-dependence — the E1 flagged ambiguity), inexpressible in the rank-flat/pl power-of-two chain family — S4's omission axis with a measured growth magnitude",
+        "identity_chain_growth_at_L800": {
+          "crossbar": {
+            "growth_exact": "25663/25632",
+            "growth_float": 1.0012094257178528,
+            "t_r2_ns_exact": "1602",
+            "t_r64_ns_exact": "25663/16"
+          },
+          "exchange": {
+            "growth_exact": "51221/8544",
+            "growth_float": 5.99496722846442,
+            "t_r2_ns_exact": "1602",
+            "t_r64_ns_exact": "153663/16"
+          },
+          "ring": {
+            "growth_exact": "179207/2848",
+            "growth_float": 62.92380617977528,
+            "t_r2_ns_exact": "1602",
+            "t_r64_ns_exact": "1612863/16"
+          }
+        },
+        "measured": "overhead fraction 'about 7%' (r=2) -> 'roughly 70%' (r=64) — prose figures; the constant-SoL total-time growth is exactly 170/107 ~ 1.589 over the 32x rank span; the derived r=64 envelope is 11934/5 = 2,386.8 ns"
+      },
+      "verdict": "EVALUATED at r=2/4/64: the fitted latency axis bracket-straddles the near-optimal leg at best (A10 placement), under-predicts the stock-stack leg 2.3x, and cannot express the software span, the barrier class, or the rank growth; the wire-class placements miss the decomposition point 3.5-11x; NOTHING TUNED"
+    }
+  },
+  "evidence_levels": {
+    "candidate": "PROPOSED holdout evaluation against external published measurements — not our testbed, no E3/E4 language; owner adjudication precedes any label move; the CALIBRATED-candidate proposal is stage S7's separate dispatch",
+    "runs_and_sweeps": "E0 (8 analytical sweeps, 195 executed rows, all cross-checked against the closed forms by exact Fraction string equality; 4 dimensioned store runs; deterministic, content-addressed, replay-verified byte-identically)"
+  },
+  "evidence_schema_version": 2,
+  "fitted_configurations_evaluated": {
+    "s2_xbar_cal_a3": {
+      "B_exact": "19561820264071168/23648730912675",
+      "B_float": 827.1826651630861,
+      "fitted_at": "r=72 vs CAL-A3 {2,4,8} GiB, L=200 registry",
+      "identity": "analytical_l0_crossbar (2(r-1)/r*M/B + 2L)",
+      "source_record": "31b0d090f918ba486775d204912a1b9cc82a5f2f3b758ccebc0142967e6df24f"
+    },
+    "s3_ring_a6_2193": {
+      "B_exact": "111478703128576/286778506025",
+      "B_float": 388.7275398486727,
+      "fitted_at": "r=32 vs CAL-A6 2.19.3 {1,16} GiB",
+      "identity": "analytical_l0 ring",
+      "source_record": "23036816e86f81025853decde3b846809f0560f4e3922619ef9eddb52a6106b5"
+    },
+    "s3_ring_a6_2203": {
+      "B_exact": "115757383942144/309086671475",
+      "B_float": 374.51431790874506,
+      "fitted_at": "r=32 vs CAL-A6 2.20.3 {1,16} GiB",
+      "identity": "analytical_l0 ring",
+      "source_record": "23036816e86f81025853decde3b846809f0560f4e3922619ef9eddb52a6106b5"
+    },
+    "s3_ring_gf04": {
+      "B_exact": "47637/100",
+      "B_float": 476.37,
+      "fitted_at": "r=8 vs GF-04 8-GPU point",
+      "identity": "analytical_l0 ring",
+      "source_record": "23036816e86f81025853decde3b846809f0560f4e3922619ef9eddb52a6106b5"
+    },
+    "s3_xbar_gf02": {
+      "B_exact": "360",
+      "B_float": 360.0,
+      "fitted_at": "r=8 vs GF-02 plateau",
+      "identity": "analytical_l0_crossbar",
+      "source_record": "23036816e86f81025853decde3b846809f0560f4e3922619ef9eddb52a6106b5"
+    },
+    "s4_l_placements": {
+      "L_values": {
+        "a10_800": "800",
+        "a8_140": "140",
+        "a8_64": "64",
+        "a9_80": "80",
+        "registry_200": "200"
+      },
+      "fitted_at": "r=8 vs CAL-A8/A9/A10 (GF-10 out-of-range miss)",
+      "identity": "crossbar/ring/exchange at B=64 registry (the S4 prediction family)",
+      "out_of_range_context": {
+        "gf10_flagged_alt_L": "4500/7",
+        "gf10_required_L": "9000",
+        "note": "GF-10's required 9000 stays OUTSIDE the declared range [10, 2000] — context arithmetic only, NEVER an executed configuration"
+      },
+      "source_record": "ef9c4517d18913645a90ee3daa26b1bc365a978a10efdf78d276fbf9418101df"
+    },
+    "s5": {
+      "configuration": "NONE — S5's s6_handoff carries recorded diagnostics only (no G4 anchor stages a series); its congestion-envelope and twist-blindness findings reach S7 untested-by-holdout",
+      "source_record": "43fca722ff77711d67b2879dca1407510dd6a60132e047d6b34fd7b7ee6bb34b"
+    }
+  },
+  "held_out": {
+    "held_out": true,
+    "scope": "the WHOLE record is the split record's S6 holdout evaluation (anchors CAL-A4, GF-01, GF-03, GF-11; split 3862e227...): every anchor number it carries is an evaluation target named in scope, never a fit input; nothing tunes"
+  },
+  "independent_reproduction": [],
+  "known_omissions": [
+    "CAL-A4 stages no hardware series — its external check is a non-evaluation on CCT (placement only); recorded, not forced",
+    "GF-01's six E1-excluded mid rows stay excluded; its graph-mode rows bracket a software launch span inexpressible at L0",
+    "GF-03 is M-confidence FLAGGED (rank count, NCCL version unstated); its broadcast/bidirectional rows have no L0 identity (non-evals)",
+    "GF-11's per-size latency table lives in a figure (the 128-B declared reading); its overhead figures are prose-class",
+    "no congestion, no credits, no packetization, no multi-port injection, no in-network reduction, no software/endpoint latency term anywhere in the L0 identity family"
+  ],
+  "known_omissions_for_s7": [
+    "(1) S2 — size-dependent software-effective bandwidth (a fixed-B, zero-overhead identity cannot express the effective-B ramp): S6 CORROBORATES one generation later — GF-03's 2 MiB row implies 71.1-88.2 B/ns vs its own 837 plateau (9.5-11.8x collapse), and the S2 fitted configuration misses the row 8.68-10.75x",
+    "(2) S3 — software-version/algorithm-class + fabric asymmetry: S6 adds the cross-fabric instance — every fitted configuration over-predicts GF-01's xGMI plateau bandwidth (its per-link derating 45.1-47.2/64 is inexpressible) and the generation gap to CAL-A4's quote is 2.497-3.176x",
+    "(3) S4 — no software/endpoint latency term: S6 confirms on three independent fabrics — GF-01's implied floor L 855.6-1195.7 ns, GF-11's implied bracket L 1183.5/1832.8 ns, GF-03's D2D 1400/1600 ns: ALL above every wire-class fitted placement (the A10 800 is the only landed value in the measured decade)",
+    "(4) S5 — congestion/load-balance/CM semantics inexpressible (the model sits at the uncongested origin): NOT exercised by this holdout (all four holdout anchors are uncongested single-collective microbenchmarks) — carried to S7 UNTESTED-BY-HOLDOUT",
+    "(5) S5 — torus geometry (CAL-A5 twist blindness 31-63%): NOT exercised by this holdout (no torus-class holdout anchor exists in the split) — carried to S7 UNTESTED-BY-HOLDOUT"
+  ],
+  "nothing_tuned": {
+    "gf06_untouched": "the blocked GF-06 material was neither used nor fetched (the standing guard)",
+    "registry_untouched": "A-L0X-BW/A-L0-BW stay 64, range [1, 1024]; A-L0X-LAT/A-L0-LAT stay 200, range [10, 2000] (assumptions_l0.yaml unchanged; verified by the guard test)",
+    "statement": "NO parameter moved, NO re-fit, NO tolerance adopted: every executed value is a landed fitted configuration carried bit-exact from its fit record (content-address verified at build time) or the untouched registry point; every anchor number is an EVALUATION target; the misses and non-evaluations are recorded AS findings and change nothing"
+  },
+  "provenance_fence": {
+    "fit_record_ids": {
+      "s2": "31b0d090f918ba486775d204912a1b9cc82a5f2f3b758ccebc0142967e6df24f",
+      "s3": "23036816e86f81025853decde3b846809f0560f4e3922619ef9eddb52a6106b5",
+      "s4": "ef9c4517d18913645a90ee3daa26b1bc365a978a10efdf78d276fbf9418101df",
+      "s5": "43fca722ff77711d67b2879dca1407510dd6a60132e047d6b34fd7b7ee6bb34b"
+    },
+    "split_record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20",
+    "statement": "sha256 over the committed bytes of the split record and all four fit records verified at build time; every evaluated fitted value asserted EQUAL to its fit record's own exact rational (bit-exact transplant); the shipped assumptions registry values are untouched (64 B/ns and 200 ns with their declared ranges) — verified by the guard test against the file"
+  },
+  "record_kind": "calibration_holdout_evaluation",
+  "split_record": {
+    "committed_copy": "experiments/calibration/split/anchor_split_v1.json",
+    "record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20",
+    "role": "defines the four holdout anchors, the regime tags, and the no-leakage rules; its rule for this stage: 'S6 runs the fitted configuration against the four holdout anchors and records errors; nothing tunes in S6 either'"
+  },
+  "stage": "calibration holdout evaluation S6 — the split record's four holdout anchors evaluated against the LANDED fitted configurations of S2-S5 (S5 contributes none); NOTHING TUNES",
+  "status": "PROPOSED — owner adjudication required; no claim or label changed",
+  "verdicts": {
+    "cal_a4": "NON-EVALUATION on CCT (no staged series); executed placement recorded at both rank counts; NOTHING TUNED — no value moved, no tolerance adopted, no model class forced",
+    "gf01": "EVALUATED on both axes; every landed configuration MISSES (-11.4% to -61.4% large; 0.05x-0.94x small); the crossbar class is OUT-OF-DOMAIN for this fabric (evaluated and classified, never tuned); per-link derating and the software floor are the recorded omission findings",
+    "gf03": "EVALUATED (with the anchor's M-confidence flag carried): SPLIT outcome — the bandwidth-plateau transfer lands -1.17% (inside the software noise floor; one corroborating point), while the only measured CCT row misses 8.7-10.7x (the S2 ramp omission, corroborated); NOTHING TUNED",
+    "gf11": "EVALUATED at r=2/4/64: the fitted latency axis bracket-straddles the near-optimal leg at best (A10 placement), under-predicts the stock-stack leg 2.3x, and cannot express the software span, the barrier class, or the rank growth; the wire-class placements miss the decomposition point 3.5-11x; NOTHING TUNED",
+    "overall": "of the four holdout anchors: ONE non-evaluation on CCT (CAL-A4 — no staged series; placement recorded), THREE evaluated (GF-01, GF-03, GF-11). The single positive transfer is the GF-03 bandwidth plateau (-1.17%, inside the software noise floor, M-flagged single point); every other landed check MISSES, and every miss decomposes onto the five-axis known-omission list. NOTHING TUNED anywhere in this stage; no tolerance adopted (E0 zero-slack stands); no label upgraded"
+  },
+  "verification": [
+    {
+      "check": "tests/calibration/test_s6_holdout.py",
+      "scope": "S6 holdout guard — re-executes the stage's whole evidence chain (8 sweeps + 4 runs) into a scratch store, rebuilds this record BYTE-identically, and checks the nothing-tunes invariants (fitted values bit-exact vs the fit records; registry untouched; held_out TRUE + calibration_target [] on every run; split record unchanged)"
+    }
+  ]
+}

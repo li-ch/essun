@@ -1,0 +1,25 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION topology (fully-connected crossbar of 64
+# ranks) carrying the LANDED FITTED LATENCY PLACEMENT L = 200 ns —
+# the A-L0X-LAT/A-L0-LAT/A-L0D-LAT REGISTRY point (the reference from experiments/vertical_slice/assumptions_l0.yaml) — at
+# the registry B = 64 B/ns, evaluated against the split record's holdout
+# anchor GF-11 (split record 3862e227..., holdout set; NOTHING TUNES
+# in S6: the placement was fixed by S4 BEFORE this stage existed and is
+# executed here UNTOUCHED; the registry latency value stays 200, range
+# [10, 2000]). The rank count is the HOLDOUT ANCHOR'S own. Not a shipped
+# value; no label is upgraded.
+topology_id: crossbar64_s6_l200_v1
+topology_class: fully_connected_crossbar
+ranks: 64
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking fully-connected crossbar abstraction; every rank pair
+  adjacent with uniform pair latency; single-port injection shared
+  across the r-1 peers (A-L0X-PORT); crossbar AllReduce identity
+  t = 2(r-1)/r*M/B + 2L. No congestion, no credits, no packetization,
+  no in-network reduction, no software/endpoint latency term; L0
+  transport model only. L is the carried S4 fitted placement named in
+  the header (a recorded diagnostic, never a shipped value); B = 64 B/ns
+  is the registry point.

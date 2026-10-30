@@ -1,0 +1,54 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION RUN (anchor GF-01, large
+# message): the S3 ring fitted configuration B_fit(GF-04) = 476.37 B/ns
+# (L=200 ns registry) executed UNTOUCHED at the anchor's reconciling
+# plateau row — 16 GiB, measured eager 94254.55 us (the series' only
+# reconciling bandwidth-bound row). GF-01 is a HOLDOUT anchor (split
+# record 3862e227...; the only MEASURED full-mesh series): the ring is
+# the structurally in-domain reading (a ring runs over the mesh's
+# per-pair links); the crossbar fits (GF-02/S2) are the OUT-OF-DOMAIN
+# single-port class per plan 2.1 A-L0X-PORT — evaluated in the stage
+# sweeps and classified there. NOTHING IS TUNED; the miss is the finding.
+#
+# claim_id deliberately EMPTY. E0. v2 dimensions; calibration_target [];
+# held_out TRUE, evaluation-only scope.
+experiment_id: EXP-CAL-S6-GF01-EVAL-RING8-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf01/workloads/w1_dense_tp_decode_tp8_16gib.yaml
+infra_graph:
+  path: experiments/calibration/s6/topologies/ring8_s6_fitb_gf04_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s6/profiles/implementation_profile_l0_ring_cal_s6_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_s6_fitb_gf04_v1 (the anchor's own rank count r=8 on a 7-hop full mesh, read as a ring over per-pair links; B = 476.37 B/ns carried bit-exact from the S3 fit record 23036816...; L = 200 ns registry)
+  workload: w1_dense_tp_decode tp8, payload 17179869184 B = 16 GiB (the anchor's reconciling plateau row)
+  implementation: analytical L0 identity executing a LANDED fitted configuration for holdout evaluation — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s6_holdout.py
+    scope: S6 holdout guard — re-executes the stage's evidence chain and rebuilds the holdout record byte-identically with the nothing-tunes invariants
+  calibration_target: []
+  held_out:
+    held_out: true
+    scope: evaluation-only against holdout anchor GF-01 (split record 3862e227... holdout set) — the anchor's measured rows are EVALUATION targets, never fit inputs; nothing tunes
+  independent_reproduction: []
+  known_omissions:
+  - the fitted configuration carries no per-pair link structure — the anchor's measured per-link derating (45.1-47.2 of 64 GB/s usable) is inexpressible
+  - the anchor's six staged mid rows excluded by its own E1 reconciliation stay excluded here
+  - no software/endpoint latency term (the eager/graph launch-overhead span is inexpressible); no congestion, no packetization (L0 identity only)

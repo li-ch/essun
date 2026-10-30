@@ -1,0 +1,23 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION topology (unidirectional ring of 64
+# ranks) carrying the LANDED FITTED LATENCY PLACEMENT L = 64 ns —
+# CAL-A8's emulated-CXL lower band point (the S4 fitted placement from S4 fit record ef9c4517...) — at
+# the registry B = 64 B/ns, evaluated against the split record's holdout
+# anchor GF-11 (split record 3862e227..., holdout set; NOTHING TUNES
+# in S6: the placement was fixed by S4 BEFORE this stage existed and is
+# executed here UNTOUCHED; the registry latency value stays 200, range
+# [10, 2000]). The rank count is the HOLDOUT ANCHOR'S own. Not a shipped
+# value; no label is upgraded.
+topology_id: ring64_s6_l64_v1
+topology_class: unidirectional_ring
+ranks: 64
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 64
+notes: >
+  One send and one receive direction per neighbor, modeled independently;
+  full-duplex uniform per-direction links (A-L0-FD); ring AllReduce
+  identity t = 2(r-1)/r*M/B + 2(r-1)*L. No congestion, no credits, no
+  packetization, no software/endpoint latency term; L0 transport model
+  only. L is the carried S4 fitted placement named in the header (a
+  recorded diagnostic, never a shipped value); B = 64 B/ns is the
+  registry point.

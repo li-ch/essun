@@ -1,0 +1,29 @@
+# Implementation profile for the calibration-ladder S6 HOLDOUT-EVALUATION
+# sweeps on the analytical L0 recursive-doubling backend: the S4
+# latency-axis placements on the exchange chain executed UNTOUCHED
+# against the split record's holdout anchors (GF-01 small rows, GF-11
+# bracket/scaling) — split record 3862e227..., holdout set. NOTHING
+# TUNES in S6. (Run manifests cannot reach this backend — stage A7's
+# gate finding, carried; sweep path only, as in S4/S5.)
+implementation_profile_id: analytical_l0_recursive_doubling_cal_s6_v1
+status: PROPOSED   # holdout-evaluation candidate inputs; review pending
+backend: analytical_l0_recursive_doubling
+fidelity: L0
+model: >
+  fully-connected exchange (partner-exchange schedule) recursive-doubling
+  AllReduce identity t = 2(r-1)/r*M/B + 2*log2(r)*L
+  (src/essun/backends/analytical/l0_recursive_doubling.py); assumptions
+  A-L0D-POW2 / A-L0D-STEP / A-L0D-BW / A-L0D-LAT / A-L0D-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml; ranks a power of two.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_executed: >
+  NOTHING is swept and NOTHING is tuned in S6. The executed values are
+  the S4 LANDED LATENCY PLACEMENTS L in {64, 80, 140, 800} (S4 fit
+  record ef9c4517...) with the registry 200 ns as the reference row, at
+  the registry B = 64 B/ns (S4's fixed B; the bandwidth axis was
+  S2/S3's). The registry A-L0D-LAT value stays 200, range [10, 2000].
+evaluation_scope: >
+  Holdout evaluation ONLY (GF-01 small-message band; GF-11 r=4 bracket
+  and r=2..64 scaling envelope — the exchange chain is the intermediate
+  latency chain the measured growth is checked against). No fit
+  objective exists; nothing tunes.

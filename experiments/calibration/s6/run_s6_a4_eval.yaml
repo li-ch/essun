@@ -1,0 +1,56 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION RUN (anchor CAL-A4): the S3
+# ring-family fitted configuration B_fit(GF-04) = 476.37 B/ns (L=200 ns
+# registry) executed UNTOUCHED at the anchor's own regime point r=16,
+# 1.5 GiB = 3*2^29 (the ladder top). CAL-A4 is a HOLDOUT anchor (split
+# record 3862e227...; the plan's 3.5b external check): the anchor stages
+# NO hardware (size -> time) series, so this run is the model-side
+# placement leg of a NON-EVALUATION on CCT — no anchor time exists to
+# compare against; the constructible checks (B_fit vs the anchor's own
+# 150 B/ns NVLink quote; the ~5 percent band as tolerance-shape context
+# only, per the split record's sole admitted exception) live in the
+# stage holdout record. NOTHING IS TUNED.
+#
+# claim_id deliberately EMPTY (fence; no claim upgrades). E0. v2
+# dimensions; calibration_target [] (nothing is calibrated against
+# holdout data); held_out TRUE with an evaluation-only scope.
+experiment_id: EXP-CAL-S6-A4-EVAL-RING16-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a4/workloads/w1_dense_tp_decode_tp16_1500mib.yaml
+infra_graph:
+  path: experiments/calibration/s6/topologies/ring16_s6_fitb_gf04_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s6/profiles/implementation_profile_l0_ring_cal_s6_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring16_s6_fitb_gf04_v1 (the anchor's own Ring topology class at r=16; B = 476.37 B/ns carried bit-exact from the S3 fit record 23036816...; L = 200 ns registry)
+  workload: w1_dense_tp_decode tp16, payload 1610612736 B = 3*2^29 (the anchor regime ladder top, binary reading declared by stage A4)
+  implementation: analytical L0 identity executing a LANDED fitted configuration for holdout evaluation — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s6_holdout.py
+    scope: S6 holdout guard — re-executes the stage's evidence chain and rebuilds the holdout record byte-identically with the nothing-tunes invariants
+  calibration_target: []
+  held_out:
+    held_out: true
+    scope: evaluation-only against holdout anchor CAL-A4 (split record 3862e227... holdout set) — the anchor's numbers are EVALUATION targets and its series does not exist (non-evaluation on CCT recorded); never fit inputs; nothing tunes
+  independent_reproduction: []
+  known_omissions:
+  - the anchor stages no hardware (size to time) series — no CCT-vs-CCT comparison is constructible; the run is model-side placement only
+  - the fitted configuration is H100-class (S3's GF-04 fit) transplanted to a V100/NVLink-3-era regime — a two-generation transfer, itself an unmodeled gap
+  - no software/endpoint latency term, no congestion, no multi-port structure (L0 identity only)

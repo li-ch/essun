@@ -1,0 +1,30 @@
+# Calibration-ladder S6 HOLDOUT-EVALUATION SWEEP (anchor CAL-A4, r=4):
+# the three LANDED RING-FAMILY FITTED CONFIGURATIONS of S3 executed
+# UNTOUCHED at the anchor's own regime — r=4, the declared binary ladder
+# 64 MiB..1.5 GiB (2^26..3*2^29, the stage-A4 convention; r=4 divides
+# every size exactly so the A-L0-DIV gate accepts).
+#
+# WHAT THIS IS: the split record's plan-mandated external check
+# (CALIBRATION_PLAN 3.5b) — CAL-A4 is a HOLDOUT anchor. The anchor
+# stages NO hardware (size -> time) series, so NO CCT-vs-CCT comparison
+# is constructible (the anchor's own E1 record's not_calibratable row);
+# these rows are the fitted configurations' model-side placement AT the
+# anchor's regime, with the normalization arithmetic (implied busbw vs
+# the anchor's own 150 B/ns NVLink quote; B_fit/150 generation-gap
+# ratios) recorded in the stage holdout record. NOTHING IS TUNED.
+sweep: cal_s6_a4_ring4_v1
+workload: experiments/calibration/a4/workloads/w1_dense_tp_decode_tp4_64mib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_ring
+  topology: experiments/calibration/s6/topologies/ring4_s6_fitb_gf04_v1.yaml
+grid:
+  payload_sizes_bytes: [67108864, 134217728, 268435456, 536870912, 1073741824, 1610612736]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/s6/topologies/ring4_s6_fitb_a6193_v1.yaml
+    - experiments/calibration/s6/topologies/ring4_s6_fitb_a6203_v1.yaml
+    - experiments/calibration/s6/topologies/ring4_s6_fitb_gf04_v1.yaml
