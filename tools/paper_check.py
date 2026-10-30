@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""paper_check.py — placeholder-discipline checker for paper/ markdown.
+"""paper_check.py — placeholder-discipline checker for manuscript markdown.
+
+The public repository ships no manuscript (the white paper is a site PDF
+asset); with no manuscript directory present the check passes trivially
+and says so. The discipline applies to any manuscript tree the tool is
+pointed at via --paper-dir.
 
 Enforces the paper-writing rules
 on every ``*.md`` under the paper directory (default ``paper/``):
@@ -202,8 +207,8 @@ def main(argv: list[str] | None = None) -> int:
 
     md_files = sorted(args.paper_dir.rglob("*.md"))
     if not md_files:
-        print(f"paper-check: FAIL — no markdown files under {args.paper_dir}")
-        return 1
+        print(f"paper-check: PASS — no manuscript files under {args.paper_dir} (nothing to check)")
+        return 0
 
     all_violations: list[str] = []
     for path in md_files:
