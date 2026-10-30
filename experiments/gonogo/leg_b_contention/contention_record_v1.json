@@ -1,0 +1,403 @@
+{
+  "assumptions": "experiments/vertical_slice/assumptions_credit_automaton.yaml (A-CA-* incl. the new A-CA-ARB / A-CA-SHARE)",
+  "cases": [
+    {
+      "case": "no_window_never_binds",
+      "config": {
+        "credit_loop_delay_ns_D": 400,
+        "credit_return_latency_ns": 100,
+        "flows": [
+          {
+            "packet_bytes": 256,
+            "packets": 32,
+            "packets_per_window_k": 32,
+            "window_bytes": 8192
+          },
+          {
+            "packet_bytes": 256,
+            "packets": 32,
+            "packets_per_window_k": 32,
+            "window_bytes": 8192
+          }
+        ],
+        "hop_latency_ns": 300,
+        "link_bytes_per_ns": 8
+      },
+      "executions": {
+        "index_priority": {
+          "arbitration": "index_priority",
+          "automaton": "credit_admission_automaton",
+          "extension": "multi_source_shared_link_contention",
+          "idle_gaps_ns": [],
+          "law_aggregate_ns_exact": "2348",
+          "max_completion_ns_exact": 2348,
+          "note": "Eq. 3 is a per-flow steady-state cap with no composition operator: applied per flow it predicts jointly infeasible alone-times on a shared link; composed as an aggregate it predicts one completion and misses the machine's exact value (and every per-flow value). The machine resolves the case exactly \u2014 and its per-flow observables MOVE with the arbitration freedom (A-CA-ARB), which no law input encodes.",
+          "per_flow": [
+            {
+              "completion_ns_exact": 1324,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "0",
+              "flow_index": 0,
+              "law_alone_ns_exact": "1324",
+              "packet_starts_ns": [
+                0,
+                32,
+                64,
+                96,
+                128,
+                160,
+                192,
+                224,
+                256,
+                288,
+                320,
+                352,
+                384,
+                416,
+                448,
+                480,
+                512,
+                544,
+                576,
+                608,
+                640,
+                672,
+                704,
+                736,
+                768,
+                800,
+                832,
+                864,
+                896,
+                928,
+                960,
+                992
+              ],
+              "packets": 32,
+              "window_bound_holds": true
+            },
+            {
+              "completion_ns_exact": 2348,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "1024",
+              "flow_index": 1,
+              "law_alone_ns_exact": "1324",
+              "packet_starts_ns": [
+                1024,
+                1056,
+                1088,
+                1120,
+                1152,
+                1184,
+                1216,
+                1248,
+                1280,
+                1312,
+                1344,
+                1376,
+                1408,
+                1440,
+                1472,
+                1504,
+                1536,
+                1568,
+                1600,
+                1632,
+                1664,
+                1696,
+                1728,
+                1760,
+                1792,
+                1824,
+                1856,
+                1888,
+                1920,
+                1952,
+                1984,
+                2016
+              ],
+              "packets": 32,
+              "window_bound_holds": true
+            }
+          ],
+          "requirement_id": "UEC11-FC-R02",
+          "window_never_binds": true
+        },
+        "round_robin": {
+          "arbitration": "round_robin",
+          "automaton": "credit_admission_automaton",
+          "extension": "multi_source_shared_link_contention",
+          "idle_gaps_ns": [],
+          "law_aggregate_ns_exact": "2348",
+          "max_completion_ns_exact": 2348,
+          "note": "Eq. 3 is a per-flow steady-state cap with no composition operator: applied per flow it predicts jointly infeasible alone-times on a shared link; composed as an aggregate it predicts one completion and misses the machine's exact value (and every per-flow value). The machine resolves the case exactly \u2014 and its per-flow observables MOVE with the arbitration freedom (A-CA-ARB), which no law input encodes.",
+          "per_flow": [
+            {
+              "completion_ns_exact": 2316,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "992",
+              "flow_index": 0,
+              "law_alone_ns_exact": "1324",
+              "packet_starts_ns": [
+                0,
+                64,
+                128,
+                192,
+                256,
+                320,
+                384,
+                448,
+                512,
+                576,
+                640,
+                704,
+                768,
+                832,
+                896,
+                960,
+                1024,
+                1088,
+                1152,
+                1216,
+                1280,
+                1344,
+                1408,
+                1472,
+                1536,
+                1600,
+                1664,
+                1728,
+                1792,
+                1856,
+                1920,
+                1984
+              ],
+              "packets": 32,
+              "window_bound_holds": true
+            },
+            {
+              "completion_ns_exact": 2348,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "1024",
+              "flow_index": 1,
+              "law_alone_ns_exact": "1324",
+              "packet_starts_ns": [
+                32,
+                96,
+                160,
+                224,
+                288,
+                352,
+                416,
+                480,
+                544,
+                608,
+                672,
+                736,
+                800,
+                864,
+                928,
+                992,
+                1056,
+                1120,
+                1184,
+                1248,
+                1312,
+                1376,
+                1440,
+                1504,
+                1568,
+                1632,
+                1696,
+                1760,
+                1824,
+                1888,
+                1952,
+                2016
+              ],
+              "packets": 32,
+              "window_bound_holds": true
+            }
+          ],
+          "requirement_id": "UEC11-FC-R02",
+          "window_never_binds": true
+        }
+      },
+      "law_candidates": {
+        "aggregate_ns_exact": "2348",
+        "per_flow_alone_ns_exact": {
+          "flow_0": "1324",
+          "flow_1": "1324"
+        }
+      },
+      "no_window_closed_forms": {
+        "index_priority": [
+          1324,
+          2348
+        ],
+        "round_robin": [
+          2316,
+          2348
+        ]
+      },
+      "window_never_binds": true
+    },
+    {
+      "case": "gated_burst_interaction",
+      "config": {
+        "credit_loop_delay_ns_D": 400,
+        "credit_return_latency_ns": 100,
+        "flows": [
+          {
+            "packet_bytes": 256,
+            "packets": 8,
+            "packets_per_window_k": 5,
+            "window_bytes": 1280
+          },
+          {
+            "packet_bytes": 256,
+            "packets": 8,
+            "packets_per_window_k": 5,
+            "window_bytes": 1280
+          }
+        ],
+        "hop_latency_ns": 300,
+        "link_bytes_per_ns": 8
+      },
+      "executions": {
+        "index_priority": {
+          "arbitration": "index_priority",
+          "automaton": "credit_admission_automaton",
+          "extension": "multi_source_shared_link_contention",
+          "idle_gaps_ns": [
+            [
+              320,
+              400
+            ],
+            [
+              496,
+              560
+            ]
+          ],
+          "law_aggregate_ns_exact": "940",
+          "max_completion_ns_exact": 956,
+          "note": "Eq. 3 is a per-flow steady-state cap with no composition operator: applied per flow it predicts jointly infeasible alone-times on a shared link; composed as an aggregate it predicts one completion and misses the machine's exact value (and every per-flow value). The machine resolves the case exactly \u2014 and its per-flow observables MOVE with the arbitration freedom (A-CA-ARB), which no law input encodes.",
+          "per_flow": [
+            {
+              "completion_ns_exact": 796,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "-144",
+              "flow_index": 0,
+              "law_alone_ns_exact": "940",
+              "packet_starts_ns": [
+                0,
+                32,
+                64,
+                96,
+                128,
+                400,
+                432,
+                464
+              ],
+              "packets": 8,
+              "window_bound_holds": true
+            },
+            {
+              "completion_ns_exact": 956,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "16",
+              "flow_index": 1,
+              "law_alone_ns_exact": "940",
+              "packet_starts_ns": [
+                160,
+                192,
+                224,
+                256,
+                288,
+                560,
+                592,
+                624
+              ],
+              "packets": 8,
+              "window_bound_holds": true
+            }
+          ],
+          "requirement_id": "UEC11-FC-R02",
+          "window_never_binds": false
+        },
+        "round_robin": {
+          "arbitration": "round_robin",
+          "automaton": "credit_admission_automaton",
+          "extension": "multi_source_shared_link_contention",
+          "idle_gaps_ns": [
+            [
+              320,
+              400
+            ]
+          ],
+          "law_aggregate_ns_exact": "940",
+          "max_completion_ns_exact": 892,
+          "note": "Eq. 3 is a per-flow steady-state cap with no composition operator: applied per flow it predicts jointly infeasible alone-times on a shared link; composed as an aggregate it predicts one completion and misses the machine's exact value (and every per-flow value). The machine resolves the case exactly \u2014 and its per-flow observables MOVE with the arbitration freedom (A-CA-ARB), which no law input encodes.",
+          "per_flow": [
+            {
+              "completion_ns_exact": 860,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "-80",
+              "flow_index": 0,
+              "law_alone_ns_exact": "940",
+              "packet_starts_ns": [
+                0,
+                64,
+                128,
+                192,
+                256,
+                400,
+                464,
+                528
+              ],
+              "packets": 8,
+              "window_bound_holds": true
+            },
+            {
+              "completion_ns_exact": 892,
+              "credit_conserved": true,
+              "divergence_vs_alone_ns_exact": "-48",
+              "flow_index": 1,
+              "law_alone_ns_exact": "940",
+              "packet_starts_ns": [
+                32,
+                96,
+                160,
+                224,
+                288,
+                432,
+                496,
+                560
+              ],
+              "packets": 8,
+              "window_bound_holds": true
+            }
+          ],
+          "requirement_id": "UEC11-FC-R02",
+          "window_never_binds": false
+        }
+      },
+      "law_candidates": {
+        "aggregate_ns_exact": "940",
+        "per_flow_alone_ns_exact": {
+          "flow_0": "940",
+          "flow_1": "940"
+        }
+      },
+      "window_never_binds": false
+    }
+  ],
+  "date": "2026-10-30",
+  "evidence_level": "E0 (exact integer execution of free parameters; nothing measured, nothing standard-derived except the 256-byte credit unit UEC11-FC-R05)",
+  "goldens": "tests/golden/test_credit_automaton_golden.py (G7-A/G7-B), tests/specir/test_credit_automaton.py (grids)",
+  "program": "G7 go/no-go leg (b)",
+  "record_id": "gonogo-legb-contention-v1",
+  "source_module": "essun.specir.credit_automaton (G8 + the G7 shared-link contention extension)",
+  "status": "PROPOSED",
+  "what_the_law_alone_cannot_do": "Eq. 3 is a per-flow steady-state cap min(B, W/(L+L_cr)) with NO composition operator across flows. Applied per flow on a shared link it predicts jointly infeasible alone-times; composed as an aggregate min(B, sum(W_i)/D) it predicts one completion, no per-flow values, and no idle-gap semantics \u2014 and it still misses the machine's exact time. The machine resolves the case exactly; its per-flow and collective observables MOVE with the arbitration freedom (A-CA-ARB), an input no law term encodes."
+}

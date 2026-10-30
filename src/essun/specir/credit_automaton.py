@@ -85,21 +85,50 @@ identity needs C5.  This is the G6 correction stated executable.
 Driven by the anchored FC requirements: UEC11-FC-R02 (MUST NOT,
 anchor UEC11-S3.6.15-TFC) is the admission transition and the rejection
 semantics; UEC11-FC-R05 (DEFINITIONAL, same anchor) supplies the ONLY
-standard-derived constant, the 256-byte credit unit — windows are
+standard-derived constant, the 256-byte credit unit – windows are
 granted in whole units and non-grantable windows are rejected at load
 time citing the requirement (same discipline as the analytical backend).
 :func:`check_requirements` re-verifies both objects against the live
 stage registry so the automaton cannot drift from its anchors.
+
+G7 (2026-10-30) — the MULTI-SOURCE SHARED-LINK CONTENTION extension
+(the p8 pre-registered follow-up): two or more flows (independent
+finite collectives, each with its OWN per-source credit context, the
+TFC per-PDC-pair shape) serialize on ONE shared link at ``B``.  The
+admission machine per flow is unchanged (one
+:class:`CreditAdmissionAutomaton` per context); the new executor adds
+only the LINK serializer and an ARBITRATION rule among credit-ready
+flows (assumption A-CA-ARB: a declared free choice — the standard does
+not pin it, and Eq. 3 does not compose across flows).  What this
+resolves that the analytical law alone cannot (exact, goldens G7-A/B):
+
+1. THE WINDOW-NEVER-BINDS CASE (golden G7-A).  Two flows whose windows
+   never gate (``n_i <= floor(W_i/s_i)``): each flow's per-flow law
+   predicts its alone time ``M_i/B + L`` — but the two predictions are
+   JOINTLY INFEASIBLE on one shared link.  The machine gives the exact
+   per-flow completions, and they MOVE with the arbitration freedom
+   while every flow parameter stays identical (per-flow observable
+   spread ``(n_0 - 1) * u`` between index-priority and round-robin).
+2. THE GATED BURST-INTERACTION CASE (golden G7-B).  Both windows gate:
+   the machine's trace interleaves per-flow credit rhythms with the
+   shared serializer — the link can go IDLE with every flow backlogged
+   (both contexts drained, returns not yet due), and the collective's
+   completion lands at an exact value BOTH fluid compositions (per-flow
+   ``min(B, W_i/D)`` and aggregate ``min(B, sum(W_i)/D)``) miss, in
+   either direction, by exact amounts that depend on the arbitration.
 
 Scope honestly NOT executed (declared unsupported in CAPABILITIES):
 credit-request/grant protocol dynamics (a steady granted window is the
 modeled abstraction), TFC retransmission credit exemption (FC-R06),
 shared-CCC pooling (FC-R16), cell-quantized credit consumption (FC-R08
 — staged separately on the analytical backend by the credit-family
-ladder), CBFC hop credits (§5.2), RCCC multi-source scheduling
-(§3.6.14), packet loss and credit-timer recovery (FC-R19), multi-link
-contention, and variable return timing.  B, L, L_cr, W, s are FREE
-parameters (not standard-derived, not measured).
+ladder), CBFC hop credits (§5.2), RCCC receiver-driven multi-source
+credit GRANT scheduling (§3.6.14 — this extension executes contention
+among independent granted windows on a shared link, not the receiver's
+grant-arbitration algorithm), packet loss and credit-timer recovery
+(FC-R19), multi-LINK topologies (multi-hop paths, crossing links), and
+variable return timing.  B, L, L_cr, W, s are FREE parameters (not
+standard-derived, not measured).
 """
 
 from __future__ import annotations
@@ -144,7 +173,10 @@ ABSTRACTION_COMPLETION_LAW = (
 CAPABILITIES = {
     "backend_id": BACKEND_ID,
     "fidelity": "exact_discrete_events",
-    "collectives": ("single_link_transfer",),
+    "collectives": (
+        "single_link_transfer",
+        "multi_source_shared_link_transfer",  # G7 contention extension
+    ),
     "transport_model": "tfc_credit_admission_automaton",
     "observables": ("O-CCT",),
     "steady_state_abstraction": {
@@ -159,13 +191,18 @@ CAPABILITIES = {
         "shared_ccc_credit_pooling",  # UEC11-FC-R16
         "cell_quantized_credit_consumption",  # UEC11-FC-R08 (staged on the analytical backend)
         "cbfc_link_credits",  # UEC §5.2 hop-level flow control
-        "rccc_multi_source_credit_scheduling",  # UEC §3.6.14
+        "rccc_grant_scheduling",  # UEC §3.6.14 receiver-driven grant arbitration
         "credit_loss_and_timer_recovery",  # UEC11-FC-R19
-        "multi_link_contention",
+        "multi_link_topologies",  # multi-hop paths / crossing links (G7: shared SINGLE link only)
         "variable_credit_return_timing",  # fixed D = L + L_cr (A-CA-RT)
-        "overlapping_transfers",
+        "overlapping_transfers_within_one_credit_context",  # one context, one flow (G7: contexts are per flow)
     ),
 }
+
+#: G7: the arbitration policies among credit-ready flows on the shared
+#: link (assumption A-CA-ARB — a declared free choice; the standard does
+#: not pin an order and Eq. 3 has no composition operator across flows).
+ARBITRATION_POLICIES = ("index_priority", "round_robin")
 
 
 # -- configuration -------------------------------------------------------------
@@ -790,3 +827,398 @@ def check_requirements() -> list[str]:
                 "enforces at load time"
             )
     return problems
+
+
+# -- the shared-link contention extension (G7) ------------------------------------
+#
+# Two or more flows — independent finite collectives, each with its OWN
+# credit context (the TFC per-PDC-pair shape) — serialize on ONE shared
+# link at B bytes/ns.  The per-flow admission machine is UNCHANGED (one
+# CreditAdmissionAutomaton per context, same invariants); this extension
+# adds the LINK serializer (work-conserving: it never idles while some
+# flow is credit-ready) and an ARBITRATION rule among credit-ready flows
+# (A-CA-ARB: a declared free choice — UEC 1.1 pins no order, and Eq. 3
+# is a per-flow steady-state cap with NO composition operator across
+# flows; that gap is exactly what this extension makes executable).
+
+
+@dataclass(frozen=True)
+class FlowSpec:
+    """One flow: a finite collective of ``packets`` x ``packet_bytes``
+    under its own credit context of ``window_bytes`` (free parameters,
+    same validation as the single-link machine)."""
+
+    window_bytes: int
+    packet_bytes: int
+    packets: int
+
+
+@dataclass(frozen=True)
+class SharedLinkConfig:
+    """Free parameters of one shared-link contention instance (integers).
+
+    One link (B, L, L_cr with D = L + L_cr per flow context) shared by
+    ``flows`` (>= 2); per flow: window W_i, packet size s_i (B | s_i,
+    A-CA-SER per flow), packet count n_i."""
+
+    link_bytes_per_ns: int
+    hop_latency_ns: int
+    credit_return_latency_ns: int
+    flows: tuple[FlowSpec, ...]
+
+    @property
+    def credit_loop_delay_ns(self) -> int:
+        """D = L + L_cr: one round trip of the credit loop (A-CA-RT)."""
+        return self.hop_latency_ns + self.credit_return_latency_ns
+
+
+def load_shared_link_config(data: dict) -> SharedLinkConfig:
+    """Load and validate a shared-link contention configuration
+    (manifest-shaped: the shared ``link``/``tfc`` scalars plus a
+    ``flows`` list of per-flow window/packet/count).  Rejections name
+    their rule exactly as the single-link loader does; the 256-byte
+    credit-unit rule (UEC11-FC-R05) applies to EVERY flow's window."""
+
+    link = data["link"]
+    tfc = data["tfc"]
+    raw_flows = data["flows"]
+    if not isinstance(raw_flows, list) or len(raw_flows) < 2:
+        raise ValueError(
+            f"{BACKEND_ID}: shared-link contention needs >= 2 flows "
+            f"(got {len(raw_flows) if hasattr(raw_flows, '__len__') else raw_flows!r}); "
+            "a single flow is the single-link machine's job, not a "
+            "contention instance"
+        )
+    flows: list[FlowSpec] = []
+    for index, raw in enumerate(raw_flows):
+        window = _int(raw["window_bytes"], f"flows[{index}].window_bytes")
+        packet = _int(raw["packet_bytes"], f"flows[{index}].packet_bytes")
+        packets = _int(raw["packets"], f"flows[{index}].packets")
+        if packets < 1:
+            raise ValueError(
+                f"{BACKEND_ID}: flows[{index}].packets must be >= 1 "
+                f"(got {packets})"
+            )
+        if window % TFC_CREDIT_UNIT_BYTES != 0:
+            # UEC11-FC-R05 (§3.6.15): every granted window is whole credit
+            # units — same load-time rejection as the single-link machine,
+            # applied per flow context.
+            raise ValueError(
+                f"{BACKEND_ID}: flows[{index}].window_bytes {window} is not "
+                f"a multiple of the {TFC_CREDIT_UNIT_BYTES}-byte credit unit "
+                f"({CREDIT_UNIT_REQUIREMENT_ID}, UEC 1.1 §3.6.15: one "
+                "pds.credit bit grants 256 bytes); the contention extension "
+                "only executes grantable windows"
+            )
+        if packet <= 0 or window < packet:
+            raise ValueError(
+                f"{BACKEND_ID}: flows[{index}] needs packet_bytes >= 1 and "
+                f"window_bytes >= packet_bytes (got s={packet}, W={window}; "
+                "a window below one packet executes no transfer)"
+            )
+        if packet % _int(link["bytes_per_ns"], "link.bytes_per_ns") != 0:
+            # A-CA-SER per flow: integer serialization grid on the shared link.
+            raise ValueError(
+                f"{BACKEND_ID}: flows[{index}].packet_bytes {packet} is not "
+                f"a multiple of link.bytes_per_ns {link['bytes_per_ns']} "
+                "(A-CA-SER: serialization s/B must be integral on the "
+                "automaton's integer event grid)"
+            )
+        flows.append(FlowSpec(window_bytes=window, packet_bytes=packet, packets=packets))
+    config = SharedLinkConfig(
+        link_bytes_per_ns=_int(link["bytes_per_ns"], "link.bytes_per_ns"),
+        hop_latency_ns=_int(link["hop_latency_ns"], "link.hop_latency_ns"),
+        credit_return_latency_ns=_int(
+            tfc["credit_return_latency_ns"], "tfc.credit_return_latency_ns"
+        ),
+        flows=tuple(flows),
+    )
+    if config.link_bytes_per_ns <= 0:
+        raise ValueError(
+            f"{BACKEND_ID}: link.bytes_per_ns must be > 0 "
+            f"(got {config.link_bytes_per_ns})"
+        )
+    if config.hop_latency_ns < 0 or config.credit_return_latency_ns < 0:
+        raise ValueError(
+            f"{BACKEND_ID}: latencies must be >= 0 (got L="
+            f"{config.hop_latency_ns}, L_cr={config.credit_return_latency_ns})"
+        )
+    return config
+
+
+@dataclass(frozen=True)
+class FlowContentionResult:
+    """One flow's executed outcome under contention."""
+
+    flow_index: int
+    packet_starts_ns: tuple[int, ...]
+    completion_ns: int  # last start + serialization + hop latency
+    window_bound_holds: bool  # theorem clause 1 re-derived for this context
+    credit_conserved: bool  # per-context byte conservation
+
+
+@dataclass(frozen=True)
+class ContentionResult:
+    """The shared-link contention execution (exact, integer ns)."""
+
+    arbitration: str
+    flows: tuple[FlowContentionResult, ...]
+    idle_gaps_ns: tuple[tuple[int, int], ...]  # (from, to): link idle, every flow gated
+    max_completion_ns: int
+
+
+class SharedLinkContentionExecutor:
+    """Work-conserving shared link + one admission machine per flow.
+
+    Loop: at each link-free instant, the flows whose credit covers one
+    packet AT that instant are READY; the arbitration rule (A-CA-ARB)
+    picks among them; the winner transmits (credit consumed in ITS
+    context, return scheduled), and the link is busy for u_i = s_i/B ns.
+    If no flow is ready the link IDLES until the earliest return that
+    unfreezes one — with every flow backlogged, an exact idle gap the
+    steady-state law's fluid picture never produces.  Greedy never
+    violates the admission law (a rejection here is a machine bug,
+    raised, not a trace outcome)."""
+
+    def __init__(self, config: SharedLinkConfig, arbitration: str = "index_priority") -> None:
+        if arbitration not in ARBITRATION_POLICIES:
+            raise ValueError(
+                f"{BACKEND_ID}: unknown arbitration {arbitration!r}; declared "
+                f"policies (A-CA-ARB): {list(ARBITRATION_POLICIES)}"
+            )
+        self._config = config
+        self._arbitration = arbitration
+        self.machines = [
+            CreditAdmissionAutomaton(flow.window_bytes, config.credit_loop_delay_ns)
+            for flow in config.flows
+        ]
+
+    def _next_admission_time(self, index: int, earliest_ns: int) -> int:
+        """Earliest time >= earliest_ns at which flow index's credit covers
+        one packet (exact integer scan over pending returns; no state change)."""
+        s = self._config.flows[index].packet_bytes
+        t_ns = earliest_ns
+        available = self.machines[index].credit_bytes
+        for due_ns, bytes_ in self.machines[index].pending_returns:
+            if available >= s:
+                break
+            if due_ns > t_ns:
+                t_ns = due_ns
+            available += bytes_
+        return t_ns
+
+    def run(self) -> ContentionResult:
+        config = self._config
+        n_flows = len(config.flows)
+        remaining = [flow.packets for flow in config.flows]
+        starts: list[list[int]] = [[] for _ in range(n_flows)]
+        idle_gaps: list[tuple[int, int]] = []
+        link_free_ns = 0
+        rr_next = 0
+        total_packets = sum(remaining)
+        done = 0
+        while done < total_packets:
+            t_ns = link_free_ns
+            ready = [
+                index
+                for index in range(n_flows)
+                if remaining[index] > 0
+                and self._next_admission_time(index, t_ns) == t_ns
+            ]
+            if not ready:
+                # Every flow with data is credit-gated: the link idles to
+                # the earliest unfreezing return (the burst-interaction gap).
+                next_ns = min(
+                    self._next_admission_time(index, t_ns)
+                    for index in range(n_flows)
+                    if remaining[index] > 0
+                )
+                idle_gaps.append((t_ns, next_ns))
+                link_free_ns = next_ns
+                continue
+            if self._arbitration == "index_priority":
+                winner = ready[0]
+            else:  # round_robin
+                winner = next(
+                    (rr_next + offset) % n_flows
+                    for offset in range(n_flows)
+                    if (rr_next + offset) % n_flows in ready
+                )
+                rr_next = (winner + 1) % n_flows
+            flow = config.flows[winner]
+            outcome = self.machines[winner].attempt(link_free_ns, flow.packet_bytes)
+            if isinstance(outcome, Rejection):  # greedy must never see this
+                raise AssertionError(
+                    f"{BACKEND_ID}: contention executor violated the admission "
+                    f"law for flow {winner} at t={link_free_ns} — this is a "
+                    "machine bug, not a trace outcome"
+                )
+            starts[winner].append(link_free_ns)
+            link_free_ns += flow.packet_bytes // config.link_bytes_per_ns
+            remaining[winner] -= 1
+            done += 1
+        flow_results = []
+        for index, flow in enumerate(config.flows):
+            u = flow.packet_bytes // config.link_bytes_per_ns
+            flow_results.append(
+                FlowContentionResult(
+                    flow_index=index,
+                    packet_starts_ns=tuple(starts[index]),
+                    completion_ns=starts[index][-1] + u + config.hop_latency_ns,
+                    window_bound_holds=sliding_window_bound_holds(
+                        self.machines[index].admissions,
+                        flow.window_bytes,
+                        config.credit_loop_delay_ns,
+                    ),
+                    credit_conserved=self.machines[index].credit_conserved(),
+                )
+            )
+        return ContentionResult(
+            arbitration=self._arbitration,
+            flows=tuple(flow_results),
+            idle_gaps_ns=tuple(idle_gaps),
+            max_completion_ns=max(result.completion_ns for result in flow_results),
+        )
+
+
+def run_shared_link_contention(
+    config: SharedLinkConfig, arbitration: str = "index_priority"
+) -> ContentionResult:
+    """Execute one shared-link contention instance (deterministic)."""
+    return SharedLinkContentionExecutor(config, arbitration).run()
+
+
+# -- the law candidates the contention case defeats (exact) -----------------------
+
+
+def law_alone_ns(config: SharedLinkConfig, index: int) -> Fraction:
+    """Eq. 3's single-link reduction for flow ``index`` ALONE on the link:
+    ``M_i / min(B, W_i/D) + L`` — the per-flow steady-state law applied the
+    only way it can be applied, per flow in isolation."""
+    flow = config.flows[index]
+    d = config.credit_loop_delay_ns
+    if d == 0:
+        rate = Fraction(config.link_bytes_per_ns)
+    else:
+        rate = min(
+            Fraction(config.link_bytes_per_ns),
+            Fraction(flow.window_bytes, d),
+        )
+    return Fraction(flow.packets * flow.packet_bytes) / rate + config.hop_latency_ns
+
+
+def law_aggregate_ns(config: SharedLinkConfig) -> Fraction:
+    """The aggregate-composition candidate: treat the flows as ONE transfer
+    of ``sum(M_i)`` bytes under the SUM of the windows —
+    ``sum(M_i) / min(B, sum(W_i)/D) + L``.  A plausible ad-hoc composition
+    of Eq. 3 across flows; it predicts ONE completion time, says nothing
+    about per-flow completions, and (golden G7-B) still misses the exact
+    machine time."""
+    d = config.credit_loop_delay_ns
+    total_bytes = sum(flow.packets * flow.packet_bytes for flow in config.flows)
+    if d == 0:
+        rate = Fraction(config.link_bytes_per_ns)
+    else:
+        rate = min(
+            Fraction(config.link_bytes_per_ns),
+            Fraction(sum(flow.window_bytes for flow in config.flows), d),
+        )
+    return Fraction(total_bytes) / rate + config.hop_latency_ns
+
+
+def window_never_binds(config: SharedLinkConfig) -> bool:
+    """True iff EVERY flow's window covers its whole finite collective
+    (``n_i <= floor(W_i/s_i)``): no credit context ever gates, yet the
+    flows still contend for the link — golden G7-A's regime."""
+    return all(
+        flow.packets <= flow.window_bytes // flow.packet_bytes
+        for flow in config.flows
+    )
+
+
+def no_window_closed_form(
+    config: SharedLinkConfig, arbitration: str
+) -> tuple[int, ...]:
+    """Exact closed form of the per-flow completions in the
+    window-never-binds regime (verified against execution by the tests):
+
+    - ``index_priority`` (any flow count): flow i waits for every earlier
+      flow to drain, ``t_i = sum_{j<=i} n_j * u_j + L`` (flow 0 alone-time).
+    - ``round_robin`` (2 flows, equal packet size): the flows alternate
+      slots while both have packets, then the larger flow drains alone
+      and holds the last slot: ``t_larger = (n_0 + n_1)*u + L``; the
+      other flow finishes one slot earlier (``t_0 = (2*n_0 - 1)*u + L``
+      when ``n_0 <= n_1``; ``t_1 = 2*n_1*u + L`` when ``n_1 < n_0``).
+    """
+    if not window_never_binds(config):
+        raise ValueError(
+            f"{BACKEND_ID}: no-window closed form stated only for the "
+            "window-never-binds regime (some flow is credit-gated here)"
+        )
+    flows = config.flows
+    u = [flow.packet_bytes // config.link_bytes_per_ns for flow in flows]
+    if arbitration == "index_priority":
+        prefix = 0
+        out = []
+        for index, flow in enumerate(flows):
+            prefix += flow.packets * u[index]
+            out.append(prefix + config.hop_latency_ns)
+        return tuple(out)
+    if arbitration == "round_robin":
+        if len(flows) != 2 or flows[0].packet_bytes != flows[1].packet_bytes:
+            raise ValueError(
+                f"{BACKEND_ID}: round-robin closed form stated for 2 flows of "
+                "equal packet size (grid tests verify execution generally)"
+            )
+        n0, n1 = flows[0].packets, flows[1].packets
+        larger = (n0 + n1) * u[0] + config.hop_latency_ns
+        if n0 <= n1:
+            return ((2 * n0 - 1) * u[0] + config.hop_latency_ns, larger)
+        return (larger, 2 * n1 * u[0] + config.hop_latency_ns)
+    raise ValueError(
+        f"{BACKEND_ID}: unknown arbitration {arbitration!r}; declared "
+        f"policies (A-CA-ARB): {list(ARBITRATION_POLICIES)}"
+    )
+
+
+def contention_statement(config: SharedLinkConfig, arbitration: str) -> dict:
+    """The G7 hard case as data: the per-flow laws, the aggregate
+    candidate, and the machine's exact completions/gaps side by side —
+    the numbers the analytical law alone cannot produce (it has no
+    arbitration operator and no idle-gap semantics)."""
+    result = run_shared_link_contention(config, arbitration)
+    return {
+        "automaton": BACKEND_ID,
+        "extension": "multi_source_shared_link_contention",
+        "requirement_id": REQUIREMENT_ID,
+        "arbitration": arbitration,
+        "window_never_binds": window_never_binds(config),
+        "per_flow": [
+            {
+                "flow_index": flow.flow_index,
+                "packets": config.flows[flow.flow_index].packets,
+                "packet_starts_ns": list(flow.packet_starts_ns),
+                "completion_ns_exact": flow.completion_ns,
+                "law_alone_ns_exact": str(law_alone_ns(config, flow.flow_index)),
+                "divergence_vs_alone_ns_exact": str(
+                    Fraction(flow.completion_ns)
+                    - law_alone_ns(config, flow.flow_index)
+                ),
+                "window_bound_holds": flow.window_bound_holds,
+                "credit_conserved": flow.credit_conserved,
+            }
+            for flow in result.flows
+        ],
+        "idle_gaps_ns": [list(gap) for gap in result.idle_gaps_ns],
+        "max_completion_ns_exact": result.max_completion_ns,
+        "law_aggregate_ns_exact": str(law_aggregate_ns(config)),
+        "note": (
+            "Eq. 3 is a per-flow steady-state cap with no composition "
+            "operator: applied per flow it predicts jointly infeasible "
+            "alone-times on a shared link; composed as an aggregate it "
+            "predicts one completion and misses the machine's exact value "
+            "(and every per-flow value). The machine resolves the case "
+            "exactly — and its per-flow observables MOVE with the "
+            "arbitration freedom (A-CA-ARB), which no law input encodes."
+        ),
+    }

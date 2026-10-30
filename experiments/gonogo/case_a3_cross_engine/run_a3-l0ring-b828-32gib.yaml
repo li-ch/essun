@@ -1,0 +1,42 @@
+# G7 leg-(a) gonogo run: engine A ring TWIN at B=828 (nearest ASTRA-representable integer above B_fit), CAL-A3 32GIB floor bracket — identical topology/workload bytes as the ASTRA runs.
+experiment_id: EXP-GONOGO-A3-L0RING-B828-32GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/gonogo/case_a3_cross_engine/workloads/w1_tp72_32gib_floorbr.yaml
+infra_graph:
+  path: experiments/gonogo/case_a3_cross_engine/topologies/ring72_gonogo_b828_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_l0.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+  - O-CONSERVATION
+  - O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring72_gonogo_b828_v1.yaml (r=72, the CAL-A3 operating point class; free parameters)
+  workload: w1_dense_tp_decode tp72 at the CAL-A3 floor-bracket payload (32gib)
+  implementation: G7 leg-(a) gonogo cross-engine re-derivation of anchor CAL-A3's published series; E0/PROPOSED; nothing tuned toward the anchor, no label upgrades
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_gonogo_case.py
+    scope: G7 leg-(a) guard — rebuilds this study's record byte-identically from the run records and re-derives every audit number exactly
+  calibration_target:
+  - CAL-A3
+  held_out:
+    held_out: true
+    scope: reported (never fitted) at CAL-A3's within-series held-out size (split record 3862e227...); G7 leg (a) documents re-derivation, it does not tune
+  independent_reproduction: []
+  known_omissions:
+  - single fixed-B, zero-overhead L0 identity — cannot express the size-dependent software-effective bandwidth ramp the anchor series exhibits (the S2 known-omission finding, carried here)
+  - the ring identity models a 72-hop chain, not the published system's NVSwitch crossbar — run as the direct twin of engine B (identical topology/workload bytes), while the fabric-matched view is the crossbar identity's runs

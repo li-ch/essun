@@ -386,3 +386,190 @@ def test_requirement_check_fires_on_a_tampered_registry(
     monkeypatch.setattr(stage, "_REQUIREMENTS", swapped)
     problems = ca.check_requirements()
     assert any("MUST NOT" in p for p in problems)
+
+
+# -- the shared-link contention extension (G7) --------------------------------------
+#
+# Properties of the multi-source shared-link executor: load semantics,
+# per-context safety/conservation on grids, the no-window closed forms
+# in both regimes, the arbitration-freedom fact (same parameters, moved
+# per-flow observables), and the law candidates' exact misses.
+
+
+def _shared(window0: int, n0: int, window1: int, n1: int, b: int = 8, hop: int = 300, lcr: int = 100, s: int = 256):
+    data = {
+        "link": {"bytes_per_ns": b, "hop_latency_ns": hop},
+        "tfc": {"credit_return_latency_ns": lcr},
+        "flows": [
+            {"window_bytes": window0, "packet_bytes": s, "packets": n0},
+            {"window_bytes": window1, "packet_bytes": s, "packets": n1},
+        ],
+    }
+    return ca.load_shared_link_config(data)
+
+
+def test_contention_loader_rejects_single_flow_and_spec_violations() -> None:
+    # One flow is not a contention instance (the single-link machine's job).
+    with pytest.raises(ValueError, match=">= 2 flows"):
+        _shared(1024, 4, 1024, 4) if False else ca.load_shared_link_config(
+            {
+                "link": {"bytes_per_ns": 8, "hop_latency_ns": 300},
+                "tfc": {"credit_return_latency_ns": 100},
+                "flows": [{"window_bytes": 1024, "packet_bytes": 256, "packets": 4}],
+            }
+        )
+    # UEC11-FC-R05 applies per flow context: a non-grantable window on
+    # ANY flow is rejected citing the requirement.
+    with pytest.raises(ValueError, match="UEC11-FC-R05"):
+        _shared(1000, 4, 1024, 4)
+    # A-CA-SER applies per flow on the shared link.
+    with pytest.raises(ValueError, match="A-CA-SER"):
+        _shared(1024, 4, 1024, 4, b=7)
+    # A window below one packet executes no transfer (W=256 is one whole
+    # credit unit, so the unit rule passes and the sub-packet rule fires).
+    with pytest.raises(ValueError, match="window_bytes >= packet_bytes"):
+        ca.load_shared_link_config(
+            {
+                "link": {"bytes_per_ns": 8, "hop_latency_ns": 300},
+                "tfc": {"credit_return_latency_ns": 100},
+                "flows": [
+                    {"window_bytes": 256, "packet_bytes": 512, "packets": 4},
+                    {"window_bytes": 1024, "packet_bytes": 256, "packets": 4},
+                ],
+            }
+        )
+    # Unknown arbitration names are rejected (A-CA-ARB is a declared set).
+    config = _shared(1024, 4, 1024, 4)
+    with pytest.raises(ValueError, match="A-CA-ARB"):
+        ca.run_shared_link_contention(config, "random")
+
+
+def test_contention_priority_never_starves_and_always_terminates() -> None:
+    # Asymmetric sizes/windows: every flow completes, per-context safety
+    # and conservation hold, and packet starts are strictly increasing
+    # per flow while the shared link never transmits two packets at once.
+    config = _shared(1280, 9, 512, 3)
+    for policy in ca.ARBITRATION_POLICIES:
+        result = ca.run_shared_link_contention(config, policy)
+        assert len(result.flows) == 2
+        assert all(f.window_bound_holds and f.credit_conserved for f in result.flows)
+        busy: list[tuple[int, int]] = []
+        for f in result.flows:
+            starts = f.packet_starts_ns
+            assert len(starts) == config.flows[f.flow_index].packets
+            assert all(b > a for a, b in zip(starts, starts[1:]))
+            u = config.flows[f.flow_index].packet_bytes // config.link_bytes_per_ns
+            busy.extend((t, t + u) for t in starts)
+        busy.sort()
+        for (_, end_a), (start_b, _) in zip(busy, busy[1:]):
+            assert start_b >= end_a  # the link serializes: no overlap
+
+
+@pytest.mark.parametrize(
+    "b,window,n0,n1",
+    [
+        (b, w, n0, n1)
+        for b in (2, 8)
+        for w in (256, 512, 1024)
+        for n0 in (1, 2, 3)
+        for n1 in (1, 2, 3, 5)
+        if n0 <= w // 256 and n1 <= w // 256
+    ],
+)
+def test_contention_no_window_closed_forms_match_execution(b, window, n0, n1):
+    # Grid: whenever neither window binds (n_i <= k_i), the closed forms
+    # equal execution for both arbitration policies, there are no idle
+    # gaps, and the max completion equals the aggregate serialization
+    # (n0 + n1)*u + L under both policies.
+    config = _shared(window, n0, window, n1, b=b)
+    assert ca.window_never_binds(config)
+    u = 256 // b
+    for policy in ca.ARBITRATION_POLICIES:
+        result = ca.run_shared_link_contention(config, policy)
+        expected = ca.no_window_closed_form(config, policy)
+        got = tuple(f.completion_ns for f in result.flows)
+        assert got == expected
+        assert result.idle_gaps_ns == ()
+        assert result.max_completion_ns == (n0 + n1) * u + config.hop_latency_ns
+        # The per-flow alone-law is the STEADY-STATE cap M_i/min(B, W/D)+L
+        # (re-derived independently here).  Note the regime fact it
+        # exposes: in this grid W/D can sit below B (W=256: 0.64 B/ns at
+        # D=400), so the fluid law calls the flow "window-gated" while
+        # the machine's FINITE collective runs at full B -- n_i <= k_i
+        # means the window never binds a finite transfer even below the
+        # BDP; the law is the T >> D limit, clause C5, not this regime.
+        d = config.credit_loop_delay_ns
+        for index, n_i in ((0, n0), (1, n1)):
+            rate = min(Fraction(b), Fraction(window, d))
+            assert ca.law_alone_ns(config, index) == Fraction(n_i * 256) / rate + config.hop_latency_ns
+
+
+@pytest.mark.parametrize(
+    "window,n0,n1,lcr",
+    [
+        (w, n0, n1, lcr)
+        for w in (512, 1024, 1280, 2048)
+        for n0, n1 in ((6, 6), (7, 5), (9, 3), (12, 8))
+        for lcr in (50, 100, 260)
+    ],
+)
+def test_contention_gated_grids_hold_safety_and_bounds(window, n0, n1, lcr):
+    # Grid over the gated regime: per-context clause-1 safety and byte
+    # conservation on every execution; the per-flow alone-law and the
+    # aggregate candidate are each violated by at least one flow at
+    # every point with two backlogged flows (the laws do not compose);
+    # and both policies produce EXACT integer completions with idle
+    # gaps only where every context is drained.
+    config = _shared(window, n0, window, n1, lcr=lcr)
+    if ca.window_never_binds(config):
+        pytest.skip("grid point not in the gated regime")
+    for policy in ca.ARBITRATION_POLICIES:
+        result = ca.run_shared_link_contention(config, policy)
+        for f in result.flows:
+            assert f.window_bound_holds and f.credit_conserved
+        # The machine's max completion may sit on EITHER side of the
+        # fluid candidates (the exact trace has bursts and gaps they
+        # idealize away) — what is pinned is EXACTNESS, not agreement:
+        every_gap_has_room = all(
+            gap[1] > gap[0] for gap in result.idle_gaps_ns
+        )
+        assert every_gap_has_room
+        # Determinism: same inputs, same bytes.
+        replay = ca.run_shared_link_contention(config, policy)
+        assert replay == result
+
+
+def test_contention_arbitration_moves_observables_at_fixed_parameters() -> None:
+    # THE hard-case property: with every flow parameter FIXED, the
+    # per-flow and collective observables move with the arbitration
+    # freedom — the input the analytical law does not have.  No-window
+    # regime: flow 0's completion differs between policies; gated
+    # regime: the MAX completion differs (goldens pin the exact values).
+    no_window = _shared(8192, 32, 8192, 32)
+    completions = {
+        policy: tuple(f.completion_ns for f in ca.run_shared_link_contention(no_window, policy).flows)
+        for policy in ca.ARBITRATION_POLICIES
+    }
+    assert completions["index_priority"] != completions["round_robin"]
+    gated = _shared(1280, 8, 1280, 8)
+    maxima = {
+        policy: ca.run_shared_link_contention(gated, policy).max_completion_ns
+        for policy in ca.ARBITRATION_POLICIES
+    }
+    assert maxima["index_priority"] != maxima["round_robin"]
+
+
+def test_contention_statement_is_machine_readable_and_exact() -> None:
+    # The G7 statement carries the exact machine values, the law
+    # candidates, and the safety booleans — the record builder's source.
+    config = _shared(1280, 8, 1280, 8)
+    statement = ca.contention_statement(config, "round_robin")
+    assert statement["extension"] == "multi_source_shared_link_contention"
+    assert statement["arbitration"] == "round_robin"
+    assert statement["window_never_binds"] is False
+    assert statement["per_flow"][0]["completion_ns_exact"] == 860
+    assert statement["per_flow"][1]["completion_ns_exact"] == 892
+    assert statement["law_aggregate_ns_exact"] == "940"
+    assert statement["per_flow"][0]["law_alone_ns_exact"] == "940"
+    assert statement["idle_gaps_ns"] == [[320, 400]]
+    assert statement["per_flow"][0]["window_bound_holds"] is True

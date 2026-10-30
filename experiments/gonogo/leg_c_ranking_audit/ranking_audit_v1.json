@@ -1,0 +1,646 @@
+{
+  "date": "2026-10-30",
+  "declared_freedom_box": {
+    "A-TFC-CR": [
+      0,
+      2000,
+      "ns"
+    ],
+    "A-TFC-W": [
+      256,
+      1048576,
+      "bytes"
+    ],
+    "A-XDUO-BW": [
+      1,
+      1024,
+      "B/ns"
+    ],
+    "A-XDUO-LAT": [
+      10,
+      2000,
+      "ns"
+    ],
+    "A-XDUO-PAYLOAD": [
+      1024,
+      16777216,
+      "bytes"
+    ],
+    "A-XDUO-TP": [
+      2,
+      1024,
+      "ranks"
+    ],
+    "UEC11-FC-F01 cell": [
+      256,
+      9216,
+      "bytes"
+    ],
+    "UEC11-FC-F02 overhead": [
+      0,
+      256,
+      "bytes"
+    ]
+  },
+  "evidence_level": "E0 (exact closed-form sign analysis over the declared freedom box; witnesses executed by the landed backend functions)",
+  "free_parameter_classification": {
+    "carried_not_executed": 65,
+    "note": "A free parameter no executed binding reads cannot change any ranking by construction \u2014 the honest first quantification. The executed subset is exactly what its name says: a parameter of an executed binding's config surface (tfc_dest_cell_size via BIND-UEC11-FC-R08-L0TFC, tfc_pkt_overhead via BIND-UEC11-FC-R09-L0TFC).",
+    "parameters": [
+      {
+        "module": "uec_link_transport",
+        "name": "multipath_path_selection",
+        "parameter_id": "UEC11-LT-F01",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "implementation_modularity",
+        "parameter_id": "UEC11-LT-F02",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "virtualization_tunnels",
+        "parameter_id": "UEC11-LT-F03",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "payload_mtu_value",
+        "parameter_id": "UEC11-LT-F04",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "rma_size_limit",
+        "parameter_id": "UEC11-LT-F05",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "memory_key_mechanism",
+        "parameter_id": "UEC11-LT-F06",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "pdc_retention_policy",
+        "parameter_id": "UEC11-LT-F07",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "llr_replay_buffer_sizing",
+        "parameter_id": "UEC11-LT-F08",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "llr_frame_eligibility",
+        "parameter_id": "UEC11-LT-F09",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "profile_feature_extension",
+        "parameter_id": "UEC11-LT-F10",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "traffic_class_configuration",
+        "parameter_id": "UEC11-LT-F11",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_link_transport",
+        "name": "ufh_flow_selection",
+        "parameter_id": "UEC11-LT-F12",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "early_loss_detection_method",
+        "parameter_id": "UEC11-RO-F01",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "ack_loss_detection_method",
+        "parameter_id": "UEC11-RO-F02",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "rto_init_time_value",
+        "parameter_id": "UEC11-RO-F03",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "retry_count_limits",
+        "parameter_id": "UEC11-RO-F04",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "multi_pdc_criteria",
+        "parameter_id": "UEC11-RO-F05",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "rendezvous_deferrable_pdc_mapping",
+        "parameter_id": "UEC11-RO-F06",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "rod_deep_retransmit_handling",
+        "parameter_id": "UEC11-RO-F07",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "rodl_retransmission_support",
+        "parameter_id": "UEC11-RO-F08",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "dscp_trim_values",
+        "parameter_id": "UEC11-RO-F09",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "min_trim_size_configuration",
+        "parameter_id": "UEC11-RO-F10",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "llr_timer_and_window_config",
+        "parameter_id": "UEC11-RO-F11",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_reliability_ordering",
+        "name": "llr_init_flush_behavior",
+        "parameter_id": "UEC11-RO-F12",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "multipath_implementation_and_entropy_space",
+        "parameter_id": "UEC11-CM-F01",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "single_path_reroute_policy",
+        "parameter_id": "UEC11-CM-F02",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "nscc_tunable_parameters",
+        "parameter_id": "UEC11-CM-F03",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "nscc_receiver_flow_control_computation",
+        "parameter_id": "UEC11-CM-F04",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "rccc_credit_grant_policy",
+        "parameter_id": "UEC11-CM-F05",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "rccc_rud_ccc_sharing",
+        "parameter_id": "UEC11-CM-F06",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "dscp_codepoint_assignment",
+        "parameter_id": "UEC11-CM-F07",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "switch_queue_thresholds",
+        "parameter_id": "UEC11-CM-F08",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "source_scheduler_behavior",
+        "parameter_id": "UEC11-CM-F09",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "pcm_algorithm_selection_and_configuration",
+        "parameter_id": "UEC11-CM-F10",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "csig_ethertypes_and_tag_policy",
+        "parameter_id": "UEC11-CM-F11",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "csig_measurement_interval",
+        "parameter_id": "UEC11-CM-F12",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "csig_quantization_buckets",
+        "parameter_id": "UEC11-CM-F13",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "rccc_last_hop_ecn_configuration",
+        "parameter_id": "UEC11-CM-F14",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_congestion_management",
+        "name": "path_failure_handling",
+        "parameter_id": "UEC11-CM-F15",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "tfc_dest_cell_size",
+        "parameter_id": "UEC11-FC-F01",
+        "read_by_an_executed_binding": true
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "tfc_pkt_overhead",
+        "parameter_id": "UEC11-FC-F02",
+        "read_by_an_executed_binding": true
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "tfc_initial_credit",
+        "parameter_id": "UEC11-FC-F03",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "tfc_ccc_sharing",
+        "parameter_id": "UEC11-FC-F04",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_creditsize",
+        "parameter_id": "UEC11-FC-F05",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_pktovhd_quantization",
+        "parameter_id": "UEC11-FC-F06",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_credit_limit_method",
+        "parameter_id": "UEC11-FC-F07",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_credit_distribution",
+        "parameter_id": "UEC11-FC-F08",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_timer_values",
+        "parameter_id": "UEC11-FC-F09",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_vc_mapping",
+        "parameter_id": "UEC11-FC-F10",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_pfc_resource_split",
+        "parameter_id": "UEC11-FC-F11",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_credits_flow_control",
+        "name": "cbfc_nonideal_credit_strategy",
+        "parameter_id": "UEC11-FC-F12",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "memory_model_strength",
+        "parameter_id": "UEC11-F07-F01",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "unified_local_memory_model_options",
+        "parameter_id": "UEC11-F07-F02",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "coherent_atomics_implementation",
+        "parameter_id": "UEC11-F07-F03",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "rudi_rto_timer_value",
+        "parameter_id": "UEC11-F07-F04",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "rudi_nack_on_resource_drop",
+        "parameter_id": "UEC11-F07-F05",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "cbfc_vc_count",
+        "parameter_id": "UEC11-F07-F06",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "cbfc_credit_and_overhead_values",
+        "parameter_id": "UEC11-F07-F07",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "cbfc_packet_to_vc_identification",
+        "parameter_id": "UEC11-F07-F08",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "inc_outstanding_ops_capacity",
+        "parameter_id": "UEC11-F07-F09",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "inc_operator_ordering_mode",
+        "parameter_id": "UEC11-F07-F10",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "inc_accumulator_and_rounding_extras",
+        "parameter_id": "UEC11-F07-F11",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "inc_sum_scale_factor",
+        "parameter_id": "UEC11-F07-F12",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "inc_logical_switch_implementation",
+        "parameter_id": "UEC11-F07-F13",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "inc_vendor_operations",
+        "parameter_id": "UEC11-F07-F14",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "phy_rate_selection",
+        "parameter_id": "UEC11-F07-F15",
+        "read_by_an_executed_binding": false
+      },
+      {
+        "module": "uec_f07_mechanisms",
+        "name": "phy_lane_generation",
+        "parameter_id": "UEC11-F07-F16",
+        "read_by_an_executed_binding": false
+      }
+    ],
+    "read_by_an_executed_binding": 2,
+    "total": 67
+  },
+  "pairs": [
+    {
+      "difference_closed_form": "d = 2(r-1)/r*M*(1/min(B,W/(L+L_cr)) - 1/B)",
+      "pair": "uec_tfc_ring vs ub_flat_ring_pod (D4 envelope flagship)",
+      "sign_analysis": "d >= 0 for EVERY admissible point (the windowed rate never exceeds B, so the windowed identity is never faster); d = 0 iff W >= B*(L+L_cr) (the saturation boundary, the G6 rename's arithmetic now proven over the whole declared box, not only the envelope's fixed operating point)",
+      "verdict": "SIGN-STABLE (windowed never faster; tie above the boundary)",
+      "witnesses": [
+        {
+          "description": "gated corner (W=12800 < B*D=25600)",
+          "sign_of_t_a_minus_t_b": 1,
+          "t_a_ns_exact": "474672",
+          "t_b_ns_exact": "441936"
+        },
+        {
+          "description": "saturated corner (W=1048576 >= B*D)",
+          "sign_of_t_a_minus_t_b": 0,
+          "t_a_ns_exact": "441936",
+          "t_b_ns_exact": "441936"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "same min-law term as the flagship pair",
+      "pair": "uec_tfc_ring vs uec_ring_free (envelope control)",
+      "sign_analysis": "identical sign structure: >= 0 everywhere, tie iff W >= B*(L+L_cr)",
+      "verdict": "SIGN-STABLE",
+      "witnesses": [
+        {
+          "description": "gated corner",
+          "sign_of_t_a_minus_t_b": 1,
+          "t_a_ns_exact": "474672",
+          "t_b_ns_exact": "441936"
+        },
+        {
+          "description": "saturated corner",
+          "sign_of_t_a_minus_t_b": 0,
+          "t_a_ns_exact": "441936",
+          "t_b_ns_exact": "441936"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "d = 0 identically (the two unwindowed ring identities coincide at L0)",
+      "pair": "uec_ring_free vs ub_flat_ring_pod (envelope honesty anchor)",
+      "sign_analysis": "tie at every admissible point",
+      "verdict": "SIGN-STABLE (as equality)",
+      "witnesses": [
+        {
+          "description": "any point",
+          "sign_of_t_a_minus_t_b": 0,
+          "t_a_ns_exact": "441936",
+          "t_b_ns_exact": "441936"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "d = 2*(2-r)*L (the M/B terms cancel under the shared bar)",
+      "pair": "crossbar vs ring (atlas)",
+      "sign_analysis": "d < 0 for r >= 3, d = 0 at r = 2: the crossbar is never slower at ANY admissible point",
+      "verdict": "SIGN-STABLE",
+      "witnesses": [
+        {
+          "description": "r=64 atlas point",
+          "sign_of_t_a_minus_t_b": -1,
+          "t_a_ns_exact": "32656",
+          "t_b_ns_exact": "57456"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "d = 2*(log2(r) - (r-1))*L (same wire bytes; shorter latency chain)",
+      "pair": "recursive-doubling vs ring (atlas)",
+      "sign_analysis": "d < 0 for r >= 3, d = 0 at r = 2 \u2014 never slower anywhere",
+      "verdict": "SIGN-STABLE",
+      "witnesses": [
+        {
+          "description": "r=64 atlas point",
+          "sign_of_t_a_minus_t_b": -1,
+          "t_a_ns_exact": "34656",
+          "t_b_ns_exact": "57456"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "d = 2*(1 - log2(r))*L (same wire bytes)",
+      "pair": "crossbar vs recursive-doubling (atlas)",
+      "sign_analysis": "d < 0 for r >= 4, d = 0 at r = 2 \u2014 the crossbar is never slower anywhere",
+      "verdict": "SIGN-STABLE",
+      "witnesses": [
+        {
+          "description": "r=64 atlas point",
+          "sign_of_t_a_minus_t_b": -1,
+          "t_a_ns_exact": "32656",
+          "t_b_ns_exact": "34656"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "d = 2*(1-1/r1-1/r2+1/r)*M/B + 2*(r1+r2-3)*L",
+      "pair": "torus2d(8x8) vs crossbar (atlas)",
+      "sign_analysis": "both coefficients are positive for r1, r2 >= 2: the torus pays more wire bytes AND a longer latency chain than the crossbar's 2L fill at every admissible point",
+      "verdict": "SIGN-STABLE (torus never faster)",
+      "witnesses": [
+        {
+          "description": "r=64 atlas point",
+          "sign_of_t_a_minus_t_b": 1,
+          "t_a_ns_exact": "62944",
+          "t_b_ns_exact": "32656"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "d = 2*(1-1/r1-1/r2+1/r)*M/B + 2*(r1+r2-2-log2(r))*L",
+      "pair": "torus2d(8x8) vs recursive-doubling (atlas)",
+      "sign_analysis": "both coefficients positive (r1+r2-2-log2(r) >= 2+4-2-3 = 1 at r=8x... minimum over admissible shapes is positive) \u2014 torus never faster anywhere",
+      "verdict": "SIGN-STABLE (torus never faster)",
+      "witnesses": [
+        {
+          "description": "r=64 atlas point",
+          "sign_of_t_a_minus_t_b": 1,
+          "t_a_ns_exact": "62944",
+          "t_b_ns_exact": "34656"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "d = 2*(1-1/r1-1/r2+1/r)*M/B - (r1-1)*(r2-1)*L (more wire bytes against a shorter latency chain \u2014 the design-space trade the backend exists for)",
+      "flip_surface": "M/B = (r1-1)*(r2-1)*L / (2*(1-1/r1-1/r2+1/r)); at 8x8: M/B = 32*L",
+      "pair": "torus2d(8x8) vs ring (atlas) \u2014 THE contingent ranking",
+      "sign_analysis": "opposite-sign coefficients: d > 0 iff M/B > (r1-1)*(r2-1)*L / (2*(1-1/r1-1/r2+1/r)). At r=64 (8x8): a = 49/32, b = 49, flip at M/B = 32*L \u2014 and BOTH sides of the flip surface are inside the declared box (M/B ranges over [1, 16777216] while 32*L ranges over [320, 64000]): the declared ambiguity DECIDES this ranking, in both directions, with admissible witnesses on each side",
+      "verdict": "CONTINGENT (ambiguity decides the ranking)",
+      "witnesses": [
+        {
+          "description": "torus slower: M=2^24, B=1, L=10 (M/B = 16777216 > 32*10)",
+          "sign_of_t_a_minus_t_b": 1,
+          "t_a_ns_exact": "58720536",
+          "t_b_ns_exact": "33031404"
+        },
+        {
+          "description": "torus faster: M=1024, B=1024, L=2000 (M/B = 1 < 32*2000)",
+          "sign_of_t_a_minus_t_b": -1,
+          "t_a_ns_exact": "112007/2",
+          "t_b_ns_exact": "8064063/32"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "rate eta*W/D with eta = c/ROUNDUP(c/cell)*cell <= 1: d >= 0, d = 0 iff cell | c",
+      "pair": "tfc-with-cell (UEC11-FC-F01) vs tfc-plain (R02 identity)",
+      "sign_analysis": "one-sided everywhere in the cell's declared domain (256..9216): quantization waste only slows; the RANKING never flips, the saturation boundary MOVES from B*(L+L_cr) to B*(L+L_cr)/eta (values shift, order does not)",
+      "verdict": "SIGN-STABLE (one-sided; boundary shifts only)",
+      "witnesses": [
+        {
+          "description": "zero-waste cell (c=4608, cell=512: eta=1)",
+          "sign_of_t_a_minus_t_b": 0,
+          "t_a_ns_exact": "4816",
+          "t_b_ns_exact": "4816"
+        },
+        {
+          "description": "waste cell (cell=2048: cq=6144, eta=3/4)",
+          "sign_of_t_a_minus_t_b": 1,
+          "t_a_ns_exact": "5488",
+          "t_b_ns_exact": "4816"
+        }
+      ]
+    },
+    {
+      "difference_closed_form": "eta(c+ovh) <= eta(c): d >= 0, d = 0 iff the overhead adds no cell",
+      "pair": "tfc-with-overhead (UEC11-FC-F02) vs tfc-with-cell",
+      "sign_analysis": "one-sided everywhere in 0..256 B: the overhead grows cq, never shrinks it",
+      "verdict": "SIGN-STABLE (one-sided)",
+      "witnesses": [
+        {
+          "description": "overhead 256 B crosses the next 512 B cell at c=4608 (eta 1 -> 0.9)",
+          "sign_of_t_a_minus_t_b": 1,
+          "t_a_ns_exact": "5040",
+          "t_b_ns_exact": "4816"
+        }
+      ]
+    }
+  ],
+  "program": "G7 go/no-go leg (c)",
+  "record_id": "gonogo-legc-ranking-audit-v1",
+  "status": "PROPOSED",
+  "summary": {
+    "answer": "Does declared specification ambiguity change any model RANKING? For the 67 spec free parameters: NO \u2014 65 are read by no executed model (they cannot move a number, let alone an order), and the 2 that execute (tfc_dest_cell_size, tfc_pkt_overhead) are one-sided (they slow the windowed identity and move its saturation boundary, never its rank). For every pairwise ranking the committed artifacts report the sign is stable over the WHOLE declared range box (proven in closed form, witnesses executed) \u2014 with ONE contingent family: torus2d vs ring, where the wire-bytes/latency-chain trade has its flip surface INSIDE the box (M/B = 32*L at r=64), so the declared freedom decides that ranking in both directions. The honest answer to 'do the ranges change any ranking' is: values and boundaries yes (quantified), order almost never \u2014 exactly once (torus2d vs ring), and that pair is a declared design-space trade, not a spec ambiguity.",
+    "contingent": 1,
+    "pairs_audited": 11,
+    "sign_stable": 10
+  }
+}

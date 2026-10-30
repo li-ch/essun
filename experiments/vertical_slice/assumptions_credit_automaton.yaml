@@ -141,6 +141,46 @@ assumptions:
     sensitivity: defines the achieving schedule; other legal traces run slower
     owner: g8-automaton
     review: PROPOSED
+  - id: A-CA-ARB
+    parameter: model.shared_link_arbitration
+    value: declared_policy_index_priority_or_round_robin
+    unit: none
+    range: [index_priority, round_robin, other_deterministic_orders]
+    rationale: >
+      G7 shared-link contention extension: when the shared link frees and
+      more than one flow is credit-ready, WHICH flow transmits is a free
+      choice — UEC 1.1 pins no order among sources on a shared egress,
+      and the Eq. 3 steady-state law has no composition operator across
+      flows to inherit one from. The executor declares its policy
+      explicitly (index_priority: lowest flow index among the ready;
+      round_robin: rotating pointer among the ready) and the goldens pin
+      that the per-flow and collective completion observables MOVE with
+      this choice at fixed parameters (G7-A: a per-flow spread of
+      (n-1)*u; G7-B: the collective completion itself moves) — the
+      freedom is exactly what the analytical law alone cannot resolve.
+    sensitivity: high (decides per-flow and, gated, collective
+      completions at fixed parameters; zero effect on per-context safety)
+    owner: g7-gonogo
+    review: PROPOSED
+  - id: A-CA-SHARE
+    parameter: model.shared_link_serialization
+    value: one_work_conserving_link_across_flow_contexts
+    unit: none
+    range: [one_work_conserving_link_across_flow_contexts, per_flow_reserved_link_share]
+    rationale: >
+      G7 shared-link contention extension: the flows (independent
+      finite collectives, each its own credit context — the TFC
+      per-PDC-pair shape) serialize on ONE link at B, work-conserving:
+      the link never idles while some flow is credit-ready, and idles
+      exactly when every backlogged context is drained (the exact idle
+      gaps golden G7-B pins). The alternative (a reserved share per
+      flow, e.g. a scheduler partitioning the link) is a different
+      machine. Multi-LINK topologies (multi-hop paths, crossing links)
+      remain explicitly unsupported.
+    sensitivity: defines the contention machine (serialization
+      interleaving + idle-gap semantics); per-context admission law unchanged
+    owner: g7-gonogo
+    review: PROPOSED
   - id: A-CA-DIV
     parameter: model.transfer_divisibility
     value: whole_packets

@@ -1,0 +1,12 @@
+# G7 leg-(a) gonogo workload: tp72 decode step at CAL-A3's 16GIB floor
+# bracket payload 17179869168 B (the largest multiple of 72 that is <= CAL-A3's
+# staged 16gib = 17179869184 B; the A-L0X-DIV / A-L0-DIV input guards reject
+# the exact power-of-two sizes at r=72 — same bracket convention as the S2
+# calibration stage, relative shortfall <= 2.7e-8). Same W1 shape (1 layer x
+# 1 step) so the O-CCT observable is exactly one AllReduce completion.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-gonogo-a3-16gib-floorbr
+tp_size: 72
+layers: 1
+steps: 1
+allreduce_bytes: 17179869168   # free parameter A-W1-SIZE; 16gib floor bracket

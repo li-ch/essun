@@ -1,0 +1,40 @@
+# Implementation profile for the G7 leg-(a) gonogo cross-engine study
+# (anchor CAL-A3, the plan's primary O-CCT calibration target): the L0
+# single-port crossbar identity of calibration stage S2, re-executed here
+# as ENGINE A of a two-engine re-derivation of the published series. B is
+# carried from the S2 fit record UNCHANGED (B_fit, the exact minimax over
+# CAL-A3's {2,4,8} GiB fit points; the ceiling comparison reuses the
+# committed CAL-A2 900 B/ns topology) — nothing in this study tunes toward
+# the anchor; the study DOCUMENTS where re-derivation is underdetermined.
+implementation_profile_id: analytical_l0_crossbar_gonogo_v1
+status: PROPOSED
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml. Engine A ("essun L0")
+  of the G7 leg-(a) motivation case study; the same L0 family also runs
+  the RING identity (analytical_l0, ring72_gonogo_b828_v1 topology) as
+  the direct twin of engine B at identical inputs.
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  none swept here: B is the S2 recorded diagnostic B_fit (fit sizes
+  {2,4,8} GiB only) plus the committed CAL-A2 ceiling-900 topology; the
+  ring twin runs at B = 828, the nearest ASTRA-representable integer
+  above B_fit. This study never fits: it reports where each engine lands
+  and audits WHICH unstated choices move the number.
+measurement_source: >
+  CAL-A3 staged series (Crusoe Cloud GB200 NVL72 all_reduce_perf, NCCL
+  2.28.3, 72 GPUs, 2-32 GiB per rank, out-of-place;
+  docs/calibration/anchors_staging.md §A3; confidence M-H) — external
+  published measurement compared CCT-vs-CCT as PROPOSED evidence. The
+  engine-B side is the pinned ASTRA-sim analytical frontend
+  (essun/astra-sim-analytical:s1) with its declared translation
+  assumptions (A-AS1-*/A-AS2-* in src/essun/backends/astra_sim/adapter.py).
+evidence_dimensions: >
+  every gonogo run manifest declares the five v2 evidence dimensions;
+  held_out flags follow the split record's within-series split (fit sizes
+  {2,4,8} GiB: held_out false; {16,32} GiB: held_out true — reported,
+  never fitted, same as S2). No cross-anchor holdout anchor is read.

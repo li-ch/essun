@@ -1,0 +1,252 @@
+{
+  "anchor": {
+    "citation": "docs/calibration/anchors_staging.md \u00a7A3 (Crusoe Cloud support article, public; numbers transcribed there with confidence M-H)",
+    "id": "CAL-A3",
+    "series": "out-of-place all_reduce_perf, NCCL 2.28.3, 72 GPUs (18x4) of one GB200 NVL72 rack, 2-32 GiB per rank",
+    "split_record_role": "fit_target_primary of group G1 (split record 3862e227...); the {16,32} GiB rows are within-series held-out from the fit (reported, never fitted)"
+  },
+  "audit_findings": {
+    "conclusion": "The published comparison re-derives only as a JOINT (fabric-parameter, software-version, observable-convention) statement. Two engines sharing every declared parameter disagree with each other by 80-118% on completion time (observables differ by definition), and each misses the published series for reasons the publication cannot arbitrate. A comparison without executable observable definitions and declared assumptions is not re-derivable \u2014 this is the motivation case for the platform's observable registry and assumption ledgers.",
+    "engine_freedom": "Engine B's fitted optimum is not even expressible in its input convention (B_fit rejected as non-dyadic; twin at +0.0988% above it), and its completion observable bundles translation knobs with no counterpart in the publication: endpoint-delay 10 (A-AS2-DELAY-POS), local-mem-bw 1600 with per-bundle 3*size/local-mem-bw processing (A-AS2-MEM-BW), active-chunks-per-dimension 1 (A-AS1-CHUNKS-1). Against the essun L0 ring identity at IDENTICAL topology/workload bytes, engine B's Wall time is +80.2% (32 GiB) to +118.1% (2 GiB) higher \u2014 an exactly recorded engine-vs-engine disagreement of the same order as the algorithm-convention ambiguity itself.",
+    "observable_definition": "The published busbw re-derives EXACTLY as algbw*2(r-1)/r (ring convention) at every size \u2014 it is an algorithm-convention quantity, not a wire-rate measurement. Read as per-GPU egress under the ring traffic identity it reaches 100.77% of the CAL-A2 900 B/ns per-direction line at 32 GiB (and crosses 100% between 16 and 32 GiB); read under a multicast/in-network reduction identity the same number is 51.10% of the line. The publication does not state the algorithm, so the fabric-utilization claim swings by the exact factor 2(r-1)/r = 71/36 = 1.9722.",
+    "omitted_assumptions": "Publication-side quantities no engine can pin: the communicator's algorithm at each size (ring vs NVLS/tree), NCCL channel/SM configuration (the same article's in-place 2 GiB row collapses to 5.20 GB/s \u2014 a 151x software-stack effect acknowledged in the source), warmup/iteration protocol, and the NVLink-vs-IB path split of the 72-GPU communicator (the article's own NCCL_IB_HCA guidance; staging caveat). None is standard-derived; each moves the re-derived number.",
+    "parameter_freedom": "No single fixed-B identity covers the series: at the S2 minimax B_fit (fitted on {2,4,8} GiB only) the deviations run -4.7% (2 GiB) to +9.6% (32 GiB held out) \u2014 the software-effective bandwidth ramps with size, which a fabric-parameter model cannot express by construction (the S2 known-omission finding, executed here for the record). Even the vendor ceiling line B=900 is CROSSED: at 32 GiB the ceiling-fixed identity is -0.77% off the published time \u2014 the published point is faster than the spec-ceiling fabric model, mirroring the busbw>900 crossing of the observable audit."
+  },
+  "date": "2026-10-30",
+  "engines": {
+    "engine_a": "essun L0 (analytical_l0_crossbar at the S2 B_fit diagnostic and the CAL-A2 ceiling-900 line; analytical_l0 ring twin at B=828)",
+    "engine_b": "ASTRA-sim analytical, pinned Docker 4ce9ecfe (essun/astra-sim-analytical:s1), native Ring AllReduce, congestion-unaware",
+    "same_workload_bar": "identical workload bytes (floor-bracket payloads) and identical topology file (ring72_gonogo_b828_v1) for the twin legs; ASTRA observables are its Wall time only (no byte accounting)"
+  },
+  "evidence_level": "E0/E1 (exact arithmetic + engine executions of free parameters against a published external measurement, compared CCT-vs-CCT as PROPOSED evidence; no tuning toward the anchor, no label upgrades)",
+  "parameter_provenance": {
+    "B_fit_exact": "19561820264071168/23648730912675",
+    "B_twin": 828,
+    "L_ns": 200,
+    "L_provenance": "A-L0X-LAT / A-L0-LAT registry point; the publication states no latency",
+    "b_twin_minus_b_fit_pct_exact": "120805822648325/1222613766504448",
+    "representability": "B_fit is NOT representable in engine B's input convention: the ASTRA adapter (A-AS1-BW-UNIT, 1 GB = 2^30 B) rejects any bandwidth whose GB/s decimal is non-finite \u2014 the exact fitted rational is refused by design, never silently rounded; the twin runs at the nearest admissible integer"
+  },
+  "program": "G7 go/no-go leg (a)",
+  "record_id": "gonogo-lega-case-a3-cross-engine-v1",
+  "rows": [
+    {
+      "algbw_bytes_per_ns_exact": "536870912/1343775",
+      "busbw_convention_check": {
+        "convention": "busbw == algbw * 2*(r-1)/r (NCCL ring convention; 2(r-1)/r = 71/36 at r=72)",
+        "note": "agrees to the publication's 2-decimal rounding at every size \u2014 the published observable IS the ring-convention quantity, not a wire-rate measurement",
+        "recomputed_minus_published_exact": "44347/48375900"
+      },
+      "busbw_recomputed_exact": "9529458688/12093975",
+      "ceiling_audit": {
+        "algorithm_convention_swing_exact": "71/36",
+        "cal_a2_line_bytes_per_ns": "900",
+        "multicast_reading_pct_of_line_exact": "536870912/12093975",
+        "ring_reading_pct_of_line_exact": "9529458688/108845775"
+      },
+      "engines": {
+        "astra_b828": {
+          "completion_time_ns_exact": "11216448",
+          "deviation_vs_published_pct_exact": "1947116/17917",
+          "manifest": "run_a3-astra-b828-2gib.yaml",
+          "run_id": "8bcf3697dd731d1c47146ff59ad37c55c7e3b6358d6ed4b8eb414f1d19baf252"
+        },
+        "l0ring_b828": {
+          "completion_time_ns_exact": "2129415031/414",
+          "deviation_vs_published_pct_exact": "-95876369/22252914",
+          "manifest": "run_a3-l0ring-b828-2gib.yaml",
+          "run_id": "2e3b54e953b3e8dc8f7b59637ea4fd3cb5b5ced9c57fd4070433841509644c7b",
+          "twin_delta_astra_over_l0ring_pct_exact": "251419444100/2129415031"
+        },
+        "l0x_fitb": {
+          "completion_time_ns_exact": "705405959366175212275/137759297634304",
+          "deviation_vs_published_pct_exact": "-35064041347972218125/7404700007141474304",
+          "manifest": "run_a3-l0x-fitb-2gib.yaml",
+          "run_id": "814205157899023c81d9c4ae389ea999ba540317001c14d4f6d38f2576c13c5d"
+        }
+      },
+      "held_out_from_fit": false,
+      "payload_bytes_exact": 2147483648,
+      "published_busbw_gb_per_s": "787.95",
+      "published_time_us": "5375.10",
+      "size": "2GiB"
+    },
+    {
+      "algbw_bytes_per_ns_exact": "2147483648/5096505",
+      "busbw_convention_check": {
+        "convention": "busbw == algbw * 2*(r-1)/r (NCCL ring convention; 2(r-1)/r = 71/36 at r=72)",
+        "note": "agrees to the publication's 2-decimal rounding at every size \u2014 the published observable IS the ring-convention quantity, not a wire-rate measurement",
+        "recomputed_minus_published_exact": "-6043987/917370900"
+      },
+      "busbw_recomputed_exact": "38117834752/45868545",
+      "ceiling_audit": {
+        "algorithm_convention_swing_exact": "71/36",
+        "cal_a2_line_bytes_per_ns": "900",
+        "multicast_reading_pct_of_line_exact": "2147483648/45868545",
+        "ring_reading_pct_of_line_exact": "38117834752/412816905"
+      },
+      "engines": {
+        "astra_b828": {
+          "completion_time_ns_exact": "20300472",
+          "deviation_vs_published_pct_exact": "33691540/339767",
+          "manifest": "run_a3-astra-b828-4gib.yaml",
+          "run_id": "bde216093a09836fd5aae15d04704a190c1535d2bfa20dec00bac20e170f5f19"
+        },
+        "l0ring_b828": {
+          "completion_time_ns_exact": "4247072533/414",
+          "deviation_vs_published_pct_exact": "135831965/210995307",
+          "manifest": "run_a3-l0ring-b828-4gib.yaml",
+          "run_id": "bddc5ff768fb6c7572d5f6d98ad002fac599c753e0aa563af8e56a3dffd2afda",
+          "twin_delta_astra_over_l0ring_pct_exact": "415732287500/4247072533"
+        },
+        "l0x_fitb": {
+          "completion_time_ns_exact": "1410756838662027615625/137759297634304",
+          "deviation_vs_published_pct_exact": "32874701412953002925/70209094918971850752",
+          "manifest": "run_a3-l0x-fitb-4gib.yaml",
+          "run_id": "df3984790bd77001c30a3d3d2fc37ab7ad5cc8a1751b2afa51a79f5e1fa6cbc4"
+        }
+      },
+      "held_out_from_fit": false,
+      "payload_bytes_exact": 4294967296,
+      "published_busbw_gb_per_s": "831.03",
+      "published_time_us": "10193.01",
+      "size": "4GiB"
+    },
+    {
+      "algbw_bytes_per_ns_exact": "4294967296/9777535",
+      "busbw_convention_check": {
+        "convention": "busbw == algbw * 2*(r-1)/r (NCCL ring convention; 2(r-1)/r = 71/36 at r=72)",
+        "note": "agrees to the publication's 2-decimal rounding at every size \u2014 the published observable IS the ring-convention quantity, not a wire-rate measurement",
+        "recomputed_minus_published_exact": "-10587497/439989075"
+      },
+      "busbw_recomputed_exact": "76235669504/87997815",
+      "ceiling_audit": {
+        "algorithm_convention_swing_exact": "71/36",
+        "cal_a2_line_bytes_per_ns": "900",
+        "multicast_reading_pct_of_line_exact": "4294967296/87997815",
+        "ring_reading_pct_of_line_exact": "76235669504/791980335"
+      },
+      "engines": {
+        "astra_b828": {
+          "completion_time_ns_exact": "38478744",
+          "deviation_vs_published_pct_exact": "189236740/1955507",
+          "manifest": "run_a3-astra-b828-8gib.yaml",
+          "run_id": "0906c3b869ce4f878a233d1e51093c52572545d9bb82629fcf28aecaf310d3aa"
+        },
+        "l0ring_b828": {
+          "completion_time_ns_exact": "8482387537/414",
+          "deviation_vs_published_pct_exact": "1932942785/404789949",
+          "manifest": "run_a3-l0ring-b828-8gib.yaml",
+          "run_id": "2e0ecb8d795e7f43ce711992448b3302d0e61f6cc23cc9711ec9c6d39dcb6ca7",
+          "twin_delta_astra_over_l0ring_pct_exact": "744781247900/8482387537"
+        },
+        "l0x_fitb": {
+          "completion_time_ns_exact": "91014793459797820075/4443848310784",
+          "deviation_vs_published_pct_exact": "20575143365174725975/4344988239338143744",
+          "manifest": "run_a3-l0x-fitb-8gib.yaml",
+          "run_id": "377becad758853611657acf5b900b4381553350ed5996a2f914260a39124fde2"
+        }
+      },
+      "held_out_from_fit": false,
+      "payload_bytes_exact": 8589934592,
+      "published_busbw_gb_per_s": "866.36",
+      "published_time_us": "19555.07",
+      "size": "8GiB"
+    },
+    {
+      "algbw_bytes_per_ns_exact": "2147483648/4757075",
+      "busbw_convention_check": {
+        "convention": "busbw == algbw * 2*(r-1)/r (NCCL ring convention; 2(r-1)/r = 71/36 at r=72)",
+        "note": "agrees to the publication's 2-decimal rounding at every size \u2014 the published observable IS the ring-convention quantity, not a wire-rate measurement",
+        "recomputed_minus_published_exact": "-36374/42813675"
+      },
+      "busbw_recomputed_exact": "38117834752/42813675",
+      "ceiling_audit": {
+        "algorithm_convention_swing_exact": "71/36",
+        "cal_a2_line_bytes_per_ns": "900",
+        "multicast_reading_pct_of_line_exact": "2147483648/42813675",
+        "ring_reading_pct_of_line_exact": "38117834752/385323075"
+      },
+      "engines": {
+        "astra_b828": {
+          "completion_time_ns_exact": "74825064",
+          "deviation_vs_published_pct_exact": "18384232/190283",
+          "manifest": "run_a3-astra-b828-16gib.yaml",
+          "run_id": "c69f128540cabeba00d072286d3717fb22d90284c728d8d9950a58e6f500cd22"
+        },
+        "l0ring_b828": {
+          "completion_time_ns_exact": "8476508737/207",
+          "deviation_vs_published_pct_exact": "598792537/78777162",
+          "manifest": "run_a3-l0ring-b828-16gib.yaml",
+          "run_id": "d80f10199d8d33050abd9686a157dc6e63e35c3e4fc13a79f9214653bc0ab94e",
+          "twin_delta_astra_over_l0ring_pct_exact": "701227951100/8476508737"
+        },
+        "l0x_ceil900": {
+          "completion_time_ns_exact": "8470719937/225",
+          "deviation_vs_published_pct_exact": "-92015063/85627350",
+          "manifest": "run_a3-l0x-ceil900-16gib.yaml",
+          "run_id": "6fdf1aad91da6edb41e95ddeeb8f8febbf6aac6a3f5adc77827a17b87c706e49"
+        },
+        "l0x_fitb": {
+          "completion_time_ns_exact": "91013904690135663275/2221924155392",
+          "deviation_vs_published_pct_exact": "6455025878044476075/845588788120911872",
+          "manifest": "run_a3-l0x-fitb-16gib.yaml",
+          "run_id": "a05af5225d0cc36c018cc2aaf3cb097a4525604b54227b4dfeec976e47cd52ef"
+        }
+      },
+      "held_out_from_fit": true,
+      "payload_bytes_exact": 17179869184,
+      "published_busbw_gb_per_s": "890.32",
+      "published_time_us": "38056.60",
+      "size": "16GiB"
+    },
+    {
+      "algbw_bytes_per_ns_exact": "17179869184/37359205",
+      "busbw_convention_check": {
+        "convention": "busbw == algbw * 2*(r-1)/r (NCCL ring convention; 2(r-1)/r = 71/36 at r=72)",
+        "note": "agrees to the publication's 2-decimal rounding at every size \u2014 the published observable IS the ring-convention quantity, not a wire-rate measurement",
+        "recomputed_minus_published_exact": "-3384283/3362328450"
+      },
+      "busbw_recomputed_exact": "304942678016/336232845",
+      "ceiling_audit": {
+        "algorithm_convention_swing_exact": "71/36",
+        "cal_a2_line_bytes_per_ns": "900",
+        "multicast_reading_pct_of_line_exact": "17179869184/336232845",
+        "ring_reading_pct_of_line_exact": "304942678016/3026095605"
+      },
+      "engines": {
+        "astra_b828": {
+          "completion_time_ns_exact": "147502368",
+          "deviation_vs_published_pct_exact": "55987660/574757",
+          "manifest": "run_a3-astra-b828-32gib.yaml",
+          "run_id": "39ea43357b47c192dd1d2ead799255c2fe9d6e6a1780227fa493f371a1b7e15b"
+        },
+        "l0ring_b828": {
+          "completion_time_ns_exact": "16947138674/207",
+          "deviation_vs_published_pct_exact": "14804278040/1546671087",
+          "manifest": "run_a3-l0ring-b828-32gib.yaml",
+          "run_id": "afd865d0cba88066df991c6aa5d54277cb95987f368fa491ddf4acc995cdd5f0",
+          "twin_delta_astra_over_l0ring_pct_exact": "679292575100/8473569337"
+        },
+        "l0x_ceil900": {
+          "completion_time_ns_exact": "16941349874/225",
+          "deviation_vs_published_pct_exact": "259415248/336232845",
+          "manifest": "run_a3-l0x-ceil900-32gib.yaml",
+          "run_id": "131b1cabf73d8bd05631e099391d93e3e9fcaa86e77ba200bbd2430d9eec0f53"
+        },
+        "l0x_fitb": {
+          "completion_time_ns_exact": "91013460305304584875/1110962077696",
+          "deviation_vs_published_pct_exact": "40020701447815007575/4150466000787079168",
+          "manifest": "run_a3-l0x-fitb-32gib.yaml",
+          "run_id": "a90f5cdd3e9efe292b6fe530506398a3e1a80ce83de4438c8d00958b4868518e"
+        }
+      },
+      "held_out_from_fit": true,
+      "payload_bytes_exact": 34359738368,
+      "published_busbw_gb_per_s": "906.94",
+      "published_time_us": "74718.41",
+      "size": "32GiB"
+    }
+  ],
+  "status": "PROPOSED"
+}

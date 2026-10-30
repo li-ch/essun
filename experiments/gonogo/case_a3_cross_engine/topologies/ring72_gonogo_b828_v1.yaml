@@ -1,0 +1,21 @@
+# G7 leg-(a) gonogo ring topology: unidirectional ring of 72 ranks at
+# B = 828 B/ns — the NEAREST INTEGER to the S2 minimax fit diagnostic
+# B_fit = 827.1827 (19561820264071168/23648730912675) that the ASTRA-sim
+# analytical engine can express EXACTLY: the adapter's bandwidth
+# translation (A-AS1-BW-UNIT, 1 GB = 2^30 B) only admits values whose
+# GB/s decimal is finite, which holds for integers and fails for the
+# fitted rational — the fitted optimum is NOT representable in engine B's
+# input convention (the adapter rejects it by design rather than rounding
+# silently; +0.0989% above B_fit). L = 200 ns is the A-L0-LAT registry
+# point. Free parameters; nothing measured, nothing standard-derived.
+topology_id: ring72_gonogo_b828_v1
+topology_class: unidirectional_ring
+ranks: 72
+link:
+  bytes_per_ns: 828
+  hop_latency_ns: 200
+notes: >
+  One send and one receive direction per neighbor, modeled independently.
+  No congestion, no credits, no packetization. Shared by the essun L0 ring
+  twin runs and the ASTRA-sim analytical runs (same-workload bar: identical
+  file, identical bytes).
