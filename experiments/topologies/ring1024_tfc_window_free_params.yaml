@@ -1,5 +1,5 @@
 # UEC TFC credit-window ring at the pod-scale operating point of the D4
-# envelope (experiments/envelopes/uec_vs_ub_window_reversal_v1.yaml): the
+# envelope (experiments/envelopes/uec_vs_ub_window_boundary_v1.yaml): the
 # UEC profile's flagship simulated_behavior — admission law UEC11-FC-R02
 # (UEC 1.1 §3.6.15), binding BIND-UEC11-FC-R02-L0TFC — executed by the
 # landed analytical backend (src/essun/backends/analytical/l0_tfc.py).

@@ -155,8 +155,8 @@ evaluate to exactly the same completion time, 50400 ns (ring
 63*819200/2048 + 25200; 2x32 47*819200/1024 + 12800; 4x16
 27*819200/512 + 7200; 8x8 7*819200/128 + 5600): the total order
 8x8 < 4x16 < 2x32 < ring below M* reverses completely
-(ring < 2x32 < 4x16 < 8x8) above it, a full reversal of a FOUR-identity
-chain at one exact size — the atlas's FIRST four-way concurrent point
+(ring < 2x32 < 4x16 < 8x8) above it, a complete order inversion of
+a FOUR-identity chain at one exact size — the atlas's FIRST four-way concurrent point
 ([16r-torus.md](16r-torus.md) and [32r-torus.md](32r-torus.md) had
 three-way).
 

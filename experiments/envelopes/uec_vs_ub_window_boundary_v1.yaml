@@ -1,13 +1,16 @@
-# FIRST D4 envelope + reversal artifact (design doc D4, 2026-10-29):
-# named-profile comparators over operating-point grids on DECLARED freedom
-# ranges, with exact-Fraction reversal detection.
+# FIRST D4 envelope + boundary artifact (design doc D4, 2026-10-29;
+# saturation-boundary language since G6, 2026-10-30): named-profile
+# comparators over operating-point grids on DECLARED freedom ranges, with
+# exact-Fraction ranking-boundary detection.
 #
 # COMPARISON (two existing profiles, one stated operating point):
 #   - UEC side: the UEC profile's flagship executed semantic — the TFC
-#     admission law (UEC11-FC-R02, binding BIND-UEC11-FC-R02-L0TFC) on the
-#     free ring stand-in (A-XDUO-IDUEC) at the top of the declared rank
-#     freedom (A-XDUO-TP range [2,1024] -> 1024; UEC 1.1 fixes no rank
-#     count). The credit window W is the binding's declared free parameter
+#     admission law (UEC11-FC-R02; executed by the credit automaton
+#     binding BIND-UEC11-FC-R02-AUTOMATON, with this ring identity as its
+#     DECLARED steady-state abstraction) on the free ring stand-in
+#     (A-XDUO-IDUEC) at the top of the declared rank freedom
+#     (A-XDUO-TP range [2,1024] -> 1024; UEC 1.1 fixes no rank count).
+#     The credit window W is the binding's declared free parameter
 #     (A-TFC-W, experiments/vertical_slice/assumptions_tfc.yaml): the spec
 #     anchors only the 256-byte credit UNIT (UEC11-FC-R05), never the
 #     amount — W is exactly the kind of permitted choice D4 makes a grid.
@@ -43,9 +46,11 @@
 # numerically identical (delta exactly 0 at every point — the honesty
 # anchor); uec_tfc_ring ties both exactly at windows covering the
 # bandwidth-delay product W >= B*(L+L_cr) = 25600 bytes (100 credit units)
-# and ranks strictly worse below it — the ranking reversal the detector
-# must find, with the exact boundary W* = 25600.
-envelope: uec_vs_ub_window_reversal_v1
+# and ranks strictly worse below it — a SATURATION BOUNDARY (penalty
+# below, exact tie at and above; the windowed comparator is never
+# faster), which the detector must find with the exact boundary
+# W* = 25600.
+envelope: uec_vs_ub_window_boundary_v1
 workload: experiments/workloads/w1_dense_tp_decode_pod1024.yaml
 assumption_registries:
 - experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml   # shared B/L, ranks, payload ranges
@@ -88,7 +93,7 @@ models:
   binds:
     A-XDUO-BW: link.bytes_per_ns
     A-XDUO-LAT: link.hop_latency_ns
-reversal_pairs:
+boundary_pairs:
 - [uec_tfc_ring, ub_flat_ring_pod]   # the two-profile flagship pair
-- [uec_tfc_ring, uec_ring_free]      # UEC-side control: same flip against the unwindowed stand-in
-- [uec_ring_free, ub_flat_ring_pod]  # honesty anchor: delta exactly 0 everywhere, no reversal
+- [uec_tfc_ring, uec_ring_free]      # UEC-side control: same boundary against the unwindowed stand-in
+- [uec_ring_free, ub_flat_ring_pod]  # honesty anchor: delta exactly 0 everywhere, no boundary

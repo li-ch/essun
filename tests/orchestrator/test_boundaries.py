@@ -1,4 +1,4 @@
-"""Reversal-detector tests: PLANTED reversals must be found EXACTLY.
+"""Boundary-detector tests: PLANTED boundaries must be found EXACTLY.
 
 The detector works on exact Fractions only; boundaries are accepted only
 when re-evaluation at the secant root returns exactly zero (in the x or
@@ -11,9 +11,9 @@ from fractions import Fraction
 
 import pytest
 
-from essun.orchestrator.reversals import (
+from essun.orchestrator.boundaries import (
     detect_flips,
-    detect_reversals,
+    detect_boundaries,
     resolve_flip_boundary,
     sign,
 )
@@ -38,7 +38,7 @@ def test_planted_affine_two_sided_flip_found_exactly():
     values_b = [F(0) for _ in grid]
     difference_at = lambda x: F(12) - 2 * x  # noqa: E731 - the planted metric
 
-    flips, regions = detect_reversals(
+    flips, regions = detect_boundaries(
         "T-X", grid, values_a, values_b, difference_at=difference_at
     )
 
@@ -62,7 +62,7 @@ def test_planted_boundary_landing_on_a_grid_point():
     values_a = [F(12) - 2 * x for x in grid]
     difference_at = lambda x: F(12) - 2 * x  # noqa: E731
 
-    flips, _ = detect_reversals(
+    flips, _ = detect_boundaries(
         "T-X", grid, values_a, [F(0)] * 5, difference_at=difference_at
     )
 
@@ -74,8 +74,9 @@ def test_planted_boundary_landing_on_a_grid_point():
 def test_planted_tie_to_worse_flip():
     """PLANTED: ranking goes exact tie -> strictly worse at x = 6.
 
-    d(x) = 6 - x for x < 6 and exactly 0 from x = 6 on: the ranking
-    reversal (tie to loss) must be detected with boundary exactly 6.
+    d(x) = 6 - x for x < 6 and exactly 0 from x = 6 on: the saturation
+    boundary (tie to loss, never a two-sided crossing) must be detected
+    with boundary exactly 6.
     """
 
     def planted(x: Fraction) -> Fraction:
@@ -83,7 +84,7 @@ def test_planted_tie_to_worse_flip():
 
     grid = [F(x) for x in (0, 3, 6, 9)]
     values_a = [planted(x) for x in grid]
-    flips, regions = detect_reversals(
+    flips, regions = detect_boundaries(
         "T-X", grid, values_a, [F(0)] * 4, difference_at=planted
     )
 
@@ -100,10 +101,10 @@ def test_planted_tie_to_worse_flip():
 def test_no_false_positive_on_one_sided_or_constant_differences():
     grid = [F(x) for x in (1, 2, 3, 4)]
     # Strictly one-sided: A always worse.
-    flips, regions = detect_reversals("T-X", grid, [F(10)] * 4, [F(1)] * 4)
+    flips, regions = detect_boundaries("T-X", grid, [F(10)] * 4, [F(1)] * 4)
     assert flips == [] and len(regions) == 1 and regions[0].sign_value == 1
-    # Exact ties everywhere: no reversal, one tie region.
-    flips, regions = detect_reversals("T-X", grid, [F(5)] * 4, [F(5)] * 4)
+    # Exact ties everywhere: no boundary, one tie region.
+    flips, regions = detect_boundaries("T-X", grid, [F(5)] * 4, [F(5)] * 4)
     assert flips == [] and regions[0].sign_value == 0
 
 
@@ -120,7 +121,7 @@ def test_planted_reciprocal_axis_boundary_is_exact():
 
     grid = [F(24), F(40), F(100)]
     values_a = [planted(b) for b in grid]
-    flips, _ = detect_reversals(
+    flips, _ = detect_boundaries(
         "T-B", grid, values_a, [F(0)] * 3, difference_at=planted
     )
 
@@ -144,7 +145,7 @@ def test_non_affine_difference_stays_unresolved_bracket_only():
 
     grid = [F(0), F(6), F(10)]
     values_a = [planted(x) for x in grid]
-    flips, regions = detect_reversals(
+    flips, regions = detect_boundaries(
         "T-X", grid, values_a, [F(0)] * 3, difference_at=planted
     )
 
@@ -164,7 +165,7 @@ def test_non_affine_difference_stays_unresolved_bracket_only():
 def test_grid_only_mode_reports_bracket_without_difference_function():
     grid = [F(1), F(2), F(4)]
     values_a = [F(3), F(1), F(-1)]
-    flips, _ = detect_reversals("T-X", grid, values_a, [F(0)] * 3)
+    flips, _ = detect_boundaries("T-X", grid, values_a, [F(0)] * 3)
     assert flips and flips[0].boundary is None
     assert flips[0].boundary_method == "unresolved"
 
@@ -179,7 +180,7 @@ def test_rejected_candidate_counts_as_unverifiable():
         return x - F(7, 2)
 
     grid = [F(1), F(6)]
-    flips, _ = detect_reversals(
+    flips, _ = detect_boundaries(
         "T-X", grid, [awkward(x) for x in grid], [F(0)] * 2, difference_at=awkward
     )
     assert len(flips) == 1

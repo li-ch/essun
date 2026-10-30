@@ -1,5 +1,5 @@
 # UnifiedBus-paper-flavor flat-ring stand-in at POD scale for the D4
-# envelope (experiments/envelopes/uec_vs_ub_window_reversal_v1.yaml).
+# envelope (experiments/envelopes/uec_vs_ub_window_boundary_v1.yaml).
 #
 # HONESTY (ladder rule): this file is a paper-derived design profile
 # comparator, NOT a normative standard profile; the UnifiedBus

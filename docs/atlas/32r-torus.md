@@ -117,7 +117,7 @@ t = 31M/1024 + 12400 — [32r-ring.md](32r-ring.md)):
 evaluate to exactly the same completion time, 24800 ns (ring
 31*409600/1024 + 12400; 2x16 23*409600/512 + 6400; 4x8 13*409600/256 +
 4000): the total order 4x8 < 2x16 < ring below M* reverses completely
-(ring < 2x16 < 4x8) above it, a full reversal of the three-identity chain
+(ring < 2x16 < 4x8) above it, a complete order inversion of the three-identity chain
 at one exact size — the atlas's SECOND three-way crossing (after
 [16r-torus.md](16r-torus.md)), now between skew and closest-to-square
 rather than skew and square.

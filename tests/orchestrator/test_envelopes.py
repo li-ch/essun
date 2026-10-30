@@ -1,5 +1,5 @@
 """Envelope runner tests: capability gates, exact grid identities, and the
-REAL two-sided reversal between the L0.5 serialized ring and the TFC
+REAL two-sided rank crossing between the L0.5 serialized ring and the TFC
 credit-window ring (both at r = 8, closed-form boundary 12800 bytes).
 
 Every expected value in the happy-path tests is derived HERE by exact
@@ -87,7 +87,7 @@ def base_manifest() -> dict:
                 },
             },
         ],
-        "reversal_pairs": [["tfc", "l05"], ["tfc", "ring"]],
+        "boundary_pairs": [["tfc", "l05"], ["tfc", "ring"]],
     }
 
 
@@ -144,8 +144,8 @@ def test_happy_path_values_are_exact_and_hand_computed(tmp_path):
     assert table["status"] == "PROPOSED"
 
 
-def test_real_two_sided_reversal_l05_vs_tfc_at_exact_boundary(tmp_path):
-    """The REAL planted-in-code reversal: TFC ring vs L0.5 ring flip at
+def test_real_two_sided_crossing_l05_vs_tfc_at_exact_boundary(tmp_path):
+    """The REAL planted-in-code two-sided crossing: TFC ring vs L0.5 ring flip at
     exactly W* = (L+L_cr) * B*I/(B+I) = 400 * 2048/128 = 12800 bytes.
 
     TFC ranks worse below W* (window-limited), ties AT W* (both rates
@@ -156,7 +156,7 @@ def test_real_two_sided_reversal_l05_vs_tfc_at_exact_boundary(tmp_path):
         write_manifest(base_manifest(), tmp_path), results_root=tmp_path / "results"
     )
     flips = [
-        r for r in result["table"]["reversals"] if r["pair"] == ["tfc", "l05"]
+        r for r in result["table"]["boundaries"] if r["pair"] == ["tfc", "l05"]
     ]
     regions = [
         r for r in result["table"]["regions"] if r["pair"] == ["tfc", "l05"]
@@ -181,7 +181,7 @@ def test_tfc_vs_ring_flips_at_the_bandwidth_delay_product(tmp_path):
         write_manifest(base_manifest(), tmp_path), results_root=tmp_path / "results"
     )
     flips = [
-        r for r in result["table"]["reversals"] if r["pair"] == ["tfc", "ring"]
+        r for r in result["table"]["boundaries"] if r["pair"] == ["tfc", "ring"]
     ]
     assert len(flips) == 1
     assert flips[0]["boundary_exact"] == "25600"  # B*(L+L_cr) = 64*400
@@ -258,20 +258,20 @@ def test_fixed_parameter_reaching_nothing_is_rejected(tmp_path):
         run_envelope(write_manifest(manifest, tmp_path), results_root=tmp_path)
 
 
-def test_reversal_pair_gates(tmp_path):
+def test_boundary_pair_gates(tmp_path):
     unknown = base_manifest()
-    unknown["reversal_pairs"] = [["tfc", "ghost"]]
+    unknown["boundary_pairs"] = [["tfc", "ghost"]]
     with pytest.raises(EnvelopeError, match="unknown model"):
         run_envelope(write_manifest(unknown, tmp_path), results_root=tmp_path)
 
     self_pair = base_manifest()
-    self_pair["reversal_pairs"] = [["tfc", "tfc"]]
+    self_pair["boundary_pairs"] = [["tfc", "tfc"]]
     with pytest.raises(EnvelopeError, match="two distinct models"):
         run_envelope(write_manifest(self_pair, tmp_path), results_root=tmp_path)
 
     duplicate = base_manifest()
-    duplicate["reversal_pairs"] = [["tfc", "ring"], ["ring", "tfc"]]
-    with pytest.raises(EnvelopeError, match="duplicate reversal pair"):
+    duplicate["boundary_pairs"] = [["tfc", "ring"], ["ring", "tfc"]]
+    with pytest.raises(EnvelopeError, match="duplicate boundary pair"):
         run_envelope(write_manifest(duplicate, tmp_path), results_root=tmp_path)
 
 

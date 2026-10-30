@@ -1,5 +1,6 @@
 """Envelope runner: named comparators over operating-point grids, with
-exact-Fraction reversal detection (design doc D4, 2026-10-29).
+exact-Fraction ranking-boundary detection (design doc D4, 2026-10-29;
+boundary language since G6, 2026-10-30).
 
 This extends the sweep machinery (``orchestrator/sweeps.py``) along the
 axis D4 names: instead of ONE fixed operating point per topology file, an
@@ -14,9 +15,12 @@ envelope manifest declares
   (Fractions, never floats — see ``orchestrator/opgrids.py``);
 - named COMPARATOR MODELS (profile/algorithm identities), each a topology
   file whose bound knobs are overridden by the exact operating point, and
-- REVERSAL PAIRS whose ranking is examined for flips along every axis by
-  ``orchestrator/reversals.py`` (exact boundaries, verified, never
-  interpolated).
+- BOUNDARY PAIRS whose ranking relation is examined for sign changes
+  along every axis by ``orchestrator/boundaries.py`` (exact boundaries,
+  verified, never interpolated). The landed window family's boundaries
+  are SATURATION BOUNDARIES (credit-provisioning thresholds): the windowed
+  comparator ties at and above W* = B*(L+L_cr) and ranks strictly worse
+  below — a penalty-then-tie transition, never a two-sided crossing.
 
 The four sweep-registered L0 algorithms are taken from the sweep runner's
 own ``ALGORITHMS`` registry (they cannot drift); the envelope adds the two
@@ -35,15 +39,18 @@ re-derived formula.
 Determinism: the sweep-runner policy — integer byte counts, exact
 Fractions serialized as strings, canonical JSON (sort_keys), no
 wall-clock. ``envelope_id`` is the SHA-256 of the canonical manifest plus
-the code version; the emitted ``reversal.json`` is additionally
-CONTENT-ADDRESSED: ``reversal.json.sha256`` records the SHA-256 of the
+the code version; the emitted ``boundary.json`` is additionally
+CONTENT-ADDRESSED: ``boundary.json.sha256`` records the SHA-256 of the
 exact artifact bytes (recorded in the committed experiment record so the
-artifact is checkable forever).
+artifact is checkable forever). The artifact filenames and the manifest
+key ``boundary_pairs`` carry boundary language since G6 (2026-10-30);
+they were ``reversal.json``/``reversal_pairs`` before, and the renaming
+changed the artifact bytes (hence their content hashes) but no arithmetic.
 
 Evidence level E0 ONLY, status PROPOSED. An envelope compares ANALYTICAL
-MODEL IDENTITIES under declared freedom; a reversal is a statement about
-the ranking of those identities — never about measured behavior, and the
-artifact language carries no hardware claims.
+MODEL IDENTITIES under declared freedom; a boundary is a statement about
+the ranking relation of those identities — never about measured behavior,
+and the artifact language carries no hardware claims.
 """
 
 from __future__ import annotations
@@ -77,7 +84,7 @@ from essun.orchestrator.opgrids import (
     expand_operating_points,
     load_ranges,
 )
-from essun.orchestrator.reversals import detect_reversals
+from essun.orchestrator.boundaries import detect_boundaries
 from essun.orchestrator.sweeps import ALGORITHMS
 from essun.workload import w1
 
@@ -379,7 +386,7 @@ def _validate_and_load_models(
 
 
 # ---------------------------------------------------------------------------
-# Evaluation (through the real backends) and reversal detection
+# Evaluation (through the real backends) and boundary detection
 # ---------------------------------------------------------------------------
 
 
@@ -519,7 +526,7 @@ def run_envelope(manifest_path, results_root=None) -> dict:
     if observable != "O-CCT":
         fail(
             f"observable {observable!r} is not supported by the envelope runner "
-            "v1 (O-CCT only: completion-time ranking is the reversal metric)"
+            "v1 (O-CCT only: completion-time ranking is the boundary metric)"
         )
     if observable not in registered_observables():
         fail(f"observable {observable!r} is not registered")
@@ -622,10 +629,10 @@ def run_envelope(manifest_path, results_root=None) -> dict:
                 }
             )
 
-    # --- reversal detection per declared pair, per axis slice
-    pairs_raw = manifest.get("reversal_pairs")
+    # --- boundary detection per declared pair, per axis slice
+    pairs_raw = manifest.get("boundary_pairs")
     if not isinstance(pairs_raw, list) or not pairs_raw:
-        fail("'reversal_pairs' must list at least one [model_a, model_b] pair")
+        fail("'boundary_pairs' must list at least one [model_a, model_b] pair")
     pairs: list[tuple[str, str]] = []
     for pair in pairs_raw:
         if (
@@ -633,18 +640,18 @@ def run_envelope(manifest_path, results_root=None) -> dict:
             or len(pair) != 2
             or not all(isinstance(name, str) for name in pair)
         ):
-            fail(f"reversal pair {pair!r} must be a two-model list")
+            fail(f"boundary pair {pair!r} must be a two-model list")
         for name in pair:
             if name not in models:
-                fail(f"reversal pair names unknown model {name!r}; models: {sorted(models)}")
+                fail(f"boundary pair names unknown model {name!r}; models: {sorted(models)}")
         if pair[0] == pair[1]:
-            fail(f"reversal pair {pair!r} must name two distinct models")
+            fail(f"boundary pair {pair!r} must name two distinct models")
         key = tuple(pair)
         if key in pairs or (key[1], key[0]) in pairs:
-            fail(f"duplicate reversal pair {pair!r}")
+            fail(f"duplicate boundary pair {pair!r}")
         pairs.append(key)
 
-    reversals: list[dict] = []
+    boundaries: list[dict] = []
     regions_out: list[dict] = []
     for model_a, model_b in pairs:
         for axis in axes:
@@ -684,7 +691,7 @@ def run_envelope(manifest_path, results_root=None) -> dict:
                 # multiple of the 256-byte credit unit) is handled inside
                 # the solver: verification fails and the flip keeps the
                 # bracket only (grid evidence, never a fake boundary).
-                flips, regions = detect_reversals(
+                flips, regions = detect_boundaries(
                     axis.assumption_id,
                     coords,
                     vals_a,
@@ -693,7 +700,7 @@ def run_envelope(manifest_path, results_root=None) -> dict:
                     slice_values=slice_key,
                 )
                 for flip in flips:
-                    reversals.append(
+                    boundaries.append(
                         {
                             "pair": [model_a, model_b],
                             **flip.as_dict(),
@@ -751,17 +758,20 @@ def run_envelope(manifest_path, results_root=None) -> dict:
             }
             for entry in models.values()
         ],
-        "reversal_pairs": [list(pair) for pair in pairs],
+        "boundary_pairs": [list(pair) for pair in pairs],
         "evaluations": evaluations,
-        "reversals": reversals,
+        "boundaries": boundaries,
         "regions": regions_out,
         "framing": [
             "E0 evidence only: every value is the output of a closed-form "
             "analytical identity executed by its landed backend under explicit "
             "free parameters at exact operating points.",
-            "A reversal is a statement about the RANKING OF MODEL IDENTITIES "
-            "under declared freedom — not about any measured system; nothing "
-            "here was run on or says anything about hardware.",
+            "A boundary is a statement about the RANKING RELATION OF MODEL "
+            "IDENTITIES under declared freedom — not about any measured "
+            "system; nothing here was run on or says anything about hardware. "
+            "The landed window family's boundaries are saturation boundaries: "
+            "the windowed comparator ties at and above W* = B*(L+L_cr) and "
+            "ranks strictly worse below it.",
             "Registered free-parameter ranges are the authority: every grid "
             "point and fixed value was validated inside its range before any "
             "model executed.",
@@ -775,9 +785,9 @@ def run_envelope(manifest_path, results_root=None) -> dict:
     results_root = Path(results_root) if results_root else REPO_ROOT / "results"
     out_dir = results_root / "envelopes" / envelope_id
     expected = {
-        "reversal.json": artifact_bytes,
-        "reversal.md": md_bytes,
-        "reversal.json.sha256": (artifact_sha256 + "\n").encode("utf-8"),
+        "boundary.json": artifact_bytes,
+        "boundary.md": md_bytes,
+        "boundary.json.sha256": (artifact_sha256 + "\n").encode("utf-8"),
     }
     if out_dir.exists():
         for name, payload in expected.items():
@@ -815,7 +825,7 @@ def _cell(text: str) -> str:
 def render_envelope_md(table: dict) -> str:
     lines: list[str] = []
     lines.append(
-        f"# Envelope `{table['envelope']}` — operating-point grid + reversal report"
+        f"# Envelope `{table['envelope']}` — operating-point grid + boundary report"
     )
     lines.append("")
     lines.append(f"Envelope id: `{table['envelope_id']}`")
@@ -893,14 +903,14 @@ def render_envelope_md(table: dict) -> str:
             + " |"
         )
     lines.append("")
-    lines.append("## Reversals (exact-Fraction flips)")
+    lines.append("## Boundaries (exact-Fraction sign changes)")
     lines.append("")
-    if not table["reversals"]:
+    if not table["boundaries"]:
         lines.append(
-            "No ranking reversal at any sampled operating point: every "
-            "declared pair keeps one ranking across the whole grid."
+            "No ranking-boundary at any sampled operating point: every "
+            "declared pair keeps one ranking relation across the whole grid."
         )
-    for flip in table["reversals"]:
+    for flip in table["boundaries"]:
         boundary = (
             flip["boundary_exact"]
             if flip["boundary_verified"]
@@ -927,8 +937,8 @@ def render_envelope_md(table: dict) -> str:
     lines.append(
         "Generated deterministically from the envelope manifest (canonical "
         "JSON, exact Fractions, no wall-clock); byte-identical on replay. "
-        "The artifact is content-addressed: reversal.json.sha256 records "
-        "the SHA-256 of reversal.json."
+        "The artifact is content-addressed: boundary.json.sha256 records "
+        "the SHA-256 of boundary.json."
     )
     return "\n".join(lines)
 
@@ -937,7 +947,7 @@ def main(argv=None) -> int:
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Run an envelope manifest and emit the reversal artifact"
+        description="Run an envelope manifest and emit the boundary artifact"
     )
     parser.add_argument("manifest", help="path to the envelope manifest YAML")
     parser.add_argument(

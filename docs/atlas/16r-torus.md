@@ -104,7 +104,7 @@ t = 15M/512 + 6000 — [16r-ring.md](16r-ring.md)):
 evaluate to exactly the same completion time, 12000 ns (ring
 15*204800/512 + 6000; 2x8 11*204800/256 + 3200; 4x4 3*204800/64 + 2400):
 the total order 4x4 < 2x8 < ring below M* reverses completely (ring <
-2x8 < 4x4) above it, a full reversal of the three-identity chain at one
+2x8 < 4x4) above it, a complete order inversion of the three-identity chain at one
 exact size — the atlas's first three-way crossing.
 
 **Rank-class ladder vs [4r-torus.md](4r-torus.md) /

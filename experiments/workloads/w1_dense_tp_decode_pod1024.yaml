@@ -1,5 +1,5 @@
 # W1 Dense TP Decode — pod-scale operating point for the D4 envelope
-# (experiments/envelopes/uec_vs_ub_window_reversal_v1.yaml).
+# (experiments/envelopes/uec_vs_ub_window_boundary_v1.yaml).
 #
 # Same W1 shape as the cross-design configuration
 # (experiments/workloads/w1_dense_tp_decode_rack64.yaml: 2 layers x 3 decode

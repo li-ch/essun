@@ -1,5 +1,5 @@
 # UEC-flavor free stand-in ring at the pod-scale operating point of the D4
-# envelope (experiments/envelopes/uec_vs_ub_window_reversal_v1.yaml).
+# envelope (experiments/envelopes/uec_vs_ub_window_boundary_v1.yaml).
 #
 # HONESTY: no UEC-derived numeric value exists at L0 — UEC 1.1 (STD-UEC-11,
 # public read) fixes no line rate, hop latency, or rank count usable as an

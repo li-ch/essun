@@ -1,9 +1,24 @@
-"""Exact-Fraction reversal detection over operating-point grids (D4).
+"""Exact-Fraction ranking-boundary detection over operating-point grids (D4).
 
-A REVERSAL is a parameter region where the ranking of two named
-comparators (profiles, algorithms, or model identities) flips: the exact
-difference ``d = value_a - value_b`` changes sign between adjacent grid
-points of a freedom axis, with every other axis held at its exact value.
+A BOUNDARY is an exact coordinate on a freedom axis where the ranking
+relation of two named comparators (profiles, algorithms, or model
+identities) CHANGES: the exact three-way sign of ``d = value_a - value_b``
+differs between adjacent grid points, with every other axis held at its
+exact value. Most boundaries in the landed L0 family are SATURATION
+BOUNDARIES (credit-provisioning thresholds), not two-sided ranking
+crossings: on one side comparator A ranks strictly worse (``d > 0`` for
+the completion-time observable O-CCT), on the other side the two tie
+exactly (``d == 0``) — A is never faster than B there. The detector
+reports the sign table and never names a saturation boundary a
+``reversal``: a true rank-order crossing (strictly worse to strictly
+better) requires ``d`` to change sign through zero on BOTH sides, which
+the exact sign table distinguishes by construction.
+
+Renamed from ``reversals.py`` (G6, 2026-10-30): the landed window
+comparison is a penalty-then-tie saturation boundary — tie at and above
+W* = B*(L+L_cr), strictly worse below — and the former name claimed a
+crossing the arithmetic never produced. Detection semantics, exact
+arithmetic, and all outputs are unchanged; only the name is honest now.
 
 Everything here is :class:`fractions.Fraction` arithmetic — there are NO
 floats in the identity math (floats appear only downstream, as display
@@ -30,7 +45,7 @@ Detector semantics (stated so a challenger can attack them):
    observable O-CCT, larger is worse). ``sign == 0`` is an exact TIE at
    the grid point, itself evidence (two identities numerically equal).
 
-Evidence level E0 ONLY: a reversal is a statement about the RANKING OF
+Evidence level E0 ONLY: a boundary is a statement about the RANKING OF
 ANALYTICAL MODEL IDENTITIES under declared freedom — never a statement
 about measured behavior on any system, and never hardware language.
 """
@@ -253,7 +268,7 @@ def resolve_flip_boundary(
     )
 
 
-def detect_reversals(
+def detect_boundaries(
     axis: str,
     coordinates: list[Fraction],
     values_a: list[Fraction],

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Evidence — essun</title>
-<meta name="description" content="How every essun number stays traceable: content-addressed run records, byte-identical replay, golden tests, the paper-claims checker, the calibration ladder (23 anchors, 26 E1-candidate records), and the property-checking campaign. Nothing is calibrated against hardware.">
+<meta name="description" content="How every essun number stays traceable: content-addressed run records, byte-identical replay, golden tests, the paper-claims checker, the calibration program (23 anchors, 26 E1-candidate records), and the property-checking campaign. Nothing is calibrated against hardware.">
 <link rel="stylesheet" href="style.css">
 <script src="site.js" defer></script>
 </head>
@@ -57,37 +57,8 @@
 
 <section id="labels">
   <p class="kicker">The vocabulary</p>
-  <h2>The evidence ladder</h2>
-  <p class="prose">Five labels, equal status, one line each. The two upper rungs carry a <span class="notyet">not yet attained</span> mark — that mark is itself a statement about repository state, and it comes off only with an evidence record to cite.</p>
-
-  <div class="ladder on-light" role="img" aria-label="Evidence ladder with five rising rungs: PROPOSED, IMPLEMENTED_UNVERIFIED, VERIFIED, CALIBRATED, EXTERNALLY_REPRODUCED. The repository ceiling today is IMPLEMENTED_UNVERIFIED; CALIBRATED and EXTERNALLY_REPRODUCED are not yet attained.">
-    <div class="rung r-proposed">
-      <div class="meter"></div>
-      <span class="rname">PROPOSED</span>
-    </div>
-    <div class="rung r-unverified">
-      <div class="meter"></div>
-      <span class="ceiling">ceiling today ▾</span>
-      <span class="rname">IMPLEMENTED_<wbr>UNVERIFIED</span>
-    </div>
-    <div class="rung r-verified">
-      <div class="meter"></div>
-      <span class="rname">VERIFIED</span>
-    </div>
-    <div class="rung r-calibrated notyet">
-      <div class="meter"></div>
-      <span class="ny">not yet attained</span>
-      <span class="rname">CALIBRATED</span>
-    </div>
-    <div class="rung r-external notyet">
-      <div class="meter"></div>
-      <span class="ny">not yet attained</span>
-      <span class="rname">EXTERNALLY_<wbr>REPRODUCED</span>
-    </div>
-  </div>
-  <div class="ladder-axis on-light" aria-hidden="true" style="color:var(--muted)">
-    <span>weaker evidence</span><span class="arrow"></span><span>stronger evidence</span>
-  </div>
+  <h2>The evidence vocabulary</h2>
+  <p class="prose">Five labels name what kind of support a claim has. They are a vocabulary, not a ladder to climb: verification, calibration, and independent reproduction are <em>orthogonal dimensions</em> — a calibrated model can still violate its specification, a verified abstraction can predict hardware poorly, and an independently reproduced result can repeat the same modeling mistake. Each dimension is therefore attached to a specific claim and its operating regime, and none subsumes another. The two upper labels carry a <span class="notyet">not yet attained</span> mark — that mark is itself a statement about repository state, and it comes off only with an evidence record to cite.</p>
 
   <div class="cards labelsgrid" style="margin-top:1.4rem">
     <div class="card">
@@ -111,7 +82,34 @@
       <p>Independent reproduction from released artifacts. Unused by essun today.</p>
     </div>
   </div>
-  <p class="prose">The ceiling for the entire repository today is <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span>. A result may carry different labels for different claims; commits are read as claims and carry the label in their title. When a document cites earlier labeled work, it reproduces the label it carried — a citing party cannot upgrade it.</p>
+
+  <h2 style="margin-top:2rem">Orthogonal dimensions on every run record</h2>
+  <p class="prose">Every stored run record carries the support facts as five separate structured fields — attached to the claim and its regime, defaulting to <em>unknown</em> when absent, never silently defaulted to "none". Silence never reads as a positive claim. Today, in every record: verification is the identity and determinism checks that ran; the calibration target is empty; no data is held out; no independent reproduction exists; the known omissions are stated.</p>
+
+  <div class="cards labelsgrid">
+    <div class="card">
+      <p><strong>Verification</strong></p>
+      <p>Which checks passed, in which declared scope (e.g. exact-identity goldens, byte-identical replay). Says nothing about hardware.</p>
+    </div>
+    <div class="card">
+      <p><strong>Calibration</strong></p>
+      <p>Which public-measurement anchors the run was fit against, if any. A different dimension from verification — fitting never proves the model's semantics.</p>
+    </div>
+    <div class="card">
+      <p><strong>Held-out data</strong></p>
+      <p>Whether any data was withheld from fitting, and its scope. Calibration data is never reused as final validation data.</p>
+    </div>
+    <div class="card">
+      <p><strong>Independent reproduction</strong></p>
+      <p>External reproductions of this run, by party and date. Reproducing a run can reproduce its modeling mistake — so this dimension cannot upgrade any of the others.</p>
+    </div>
+    <div class="card">
+      <p><strong>Known omissions</strong></p>
+      <p>What the run deliberately does not model (e.g. steady-state only, fill/drain transients excluded), stated in the record itself.</p>
+    </div>
+  </div>
+
+  <p class="prose">The label ceiling for the entire repository today is <span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span>. A result may carry different labels for different claims; commits are read as claims and carry the label in their title. When a document cites earlier labeled work, it reproduces the label it carried — a citing party cannot upgrade it.</p>
   <p class="note">Run records additionally request an evidence <em>level</em> E0–E4: E0 = identities and determinism (no empirical claim), E1 = calibration candidate, upward toward external reproduction. Everything demonstrated on this site is E0.</p>
 </section>
 
@@ -143,7 +141,7 @@
 
 <section id="calibration">
   <p class="kicker">Planned, candidates recorded, not executed</p>
-  <h2>Calibration ladder</h2>
+  <h2>Calibration program</h2>
 
   <div class="stats">
     <div class="stat"><span class="n">23</span><span class="d">public-measurement anchors integrated (12 core + 11 gap-fill) as citations</span></div>
