@@ -1,0 +1,37 @@
+# Calibration-ladder S2 FITTED-CONFIGURATION DIAGNOSTIC topology:
+# fully-connected crossbar of 72 ranks at B = B_fit, the exact minimax
+# fixed-B of the S2 fit over CAL-A3's split-record fit sizes {2, 4, 8} GiB
+# ONLY (split record 3862e227..., within_series_splits; the {16, 32} GiB
+# rows are held out — they are REPORTED as held-out error at this B, never
+# fitted).
+#
+# B_fit is carried as the EXACT rational "19561820264071168/23648730912675"
+# (= 827.1826651630... B/ns): the closed-form minimax of the identity
+# t = 2(r-1)/r*M/B + 2L against the three fit points, equalizing the 2 GiB
+# and 8 GiB deviations (worst case +/- 4.735%). It is a RECORDED DIAGNOSTIC
+# (the fitted configuration this record hands to the S6 holdout evaluation),
+# NOT a shipped value: the registry A-L0X-BW value stays 64, range
+# [1, 1024]; no label anywhere is upgraded by this file; nothing was tuned
+# toward the held-out sizes or any holdout anchor to produce it.
+#
+# Placement (anchor-anchor arithmetic, recorded not selected): B_fit sits at
+# 91.91% of the CAL-A2 900 B/ns per-direction line — ABOVE the CAL-A12 ~80%
+# spec-to-measured bridge point (NVLink-3-era A100 provenance, M
+# confidence), consistent with the fit's known-omission finding that the
+# software-effective bandwidth of the measured series ramps with message
+# size (788 -> 866 B/ns across the fit sizes). L = 200 ns is the A-L0X-LAT
+# registry point.
+topology_id: crossbar72_s2_fitb_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: "19561820264071168/23648730912675"
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency; single-port injection shared across the 71 peers. No congestion,
+  no credits, no packetization — L0 transport model only. Provenance: B =
+  the exact S2 minimax fit diagnostic (calibration fit record, group G1,
+  stage S2); never tuned toward held-out data or holdout anchors; not a
+  shipped parameter value. L = 200 ns is the free A-L0X-LAT registry point.

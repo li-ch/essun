@@ -1,0 +1,22 @@
+# W1 Dense TP Decode — tp_size 72 at the 8 GiB FLOOR BRACKET payload
+# 8589934584 B = 2^33 - 8 (the largest multiple of 72 that is <= CAL-A3's
+# staged 8 GiB = 2^33). 8 GiB is one of the S2 FIT sizes (split record
+# 3862e227..., within_series_splits: fit {2,4,8} GiB / hold out {16,32} GiB).
+#
+# WHY A BRACKET: CAL-A3's message sizes are powers of two, which are never
+# divisible by 72 = 8*9, so the A-L0X-DIV input guard (a structural KEEP
+# assumption of the L0 identity) rejects the anchor's exact sizes at r=72.
+# The floor bracket sits 8 B (relative 9.3e-10) below the anchor size; the
+# exact-size identity evaluation is recorded — with this bracketing
+# declared — in the stage's calibration fit record.
+#
+# Same workload shape as every other W1 file (2 layers x 3 decode steps =
+# 6 AllReduce ops per config). Nothing here is measured or
+# standard-normative; all sizes are integer byte counts; deterministic by
+# construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal72-s2-8gib-floorbr
+tp_size: 72
+layers: 2
+steps: 3
+allreduce_bytes: 8589934584   # 2^33 - 8 (8 GiB floor bracket); free parameter A-W1-SIZE

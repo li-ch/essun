@@ -1,0 +1,62 @@
+# Calibration-ladder S2 FIT-side RUN: the L0 single-port crossbar identity
+# at B_fit — the exact minimax fixed-B of the S2 fit over CAL-A3's
+# split-record fit sizes {2, 4, 8} GiB (split record 3862e227..., committed
+# at experiments/calibration/split/anchor_split_v1.json) — executed at the
+# 8 GiB FLOOR BRACKET payload 8589934584 B = 2^33 - 8 (the A-L0X-DIV input
+# gate rejects the exact power-of-two sizes at r=72; the exact-size
+# evaluation is recorded in the calibration fit record).
+#
+# This is the FIT RECORD's run-side anchor row: it carries the v2 evidence
+# dimensions with calibration_target [CAL-A3] and held_out FALSE (the run
+# sits on the fit side of the split). The two held-out sizes {16, 32} GiB
+# are executed by the stage's held_out:true manifests and never here.
+#
+# claim_id is deliberately EMPTY: a PROPOSED calibration fit candidate must
+# not be linked to any claim (fence: no claim upgrades); the schema requires
+# the key, the run path only links non-empty ids.
+#
+# Evidence level E0: this run executes the analytical identity; the fit
+# comparison itself is recorded as PROPOSED in results/calibration/ — no
+# label anywhere is upgraded by this run.
+experiment_id: EXP-CAL-S2-FIT-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/s2/workloads/w1_dense_tp_decode_tp72_8gib_floorbr.yaml
+infra_graph:
+  path: experiments/calibration/s2/topologies/crossbar72_s2_fitb_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s2/profiles/implementation_profile_l0_crossbar_cal_s2_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar72_s2_fitb_v1 (NVSwitch-class abstraction, r=72, B = B_fit = the exact S2 minimax fit diagnostic over CAL-A3's {2,4,8} GiB points, L=200 ns registry point)
+  workload: w1_dense_tp_decode tp72, payload 2^33-8 (8 GiB floor bracket; A-L0X-DIV rejects the exact power-of-two sizes at r=72)
+  implementation: analytical L0 free-parameter identity; the CAL-A3 fit comparison is CCT-vs-CCT against an external published measurement at the split-record fit sizes — PROPOSED, review required; B_fit is a recorded diagnostic, never a shipped value
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s2_fit.py
+    scope: S2 fit guard — re-executes the fit sweep and the S2 runs into a scratch store, rebuilds the calibration fit record byte-identically, and checks the fit/holdout size separation invariants
+  calibration_target:
+  - CAL-A3
+  held_out:
+    held_out: false
+    scope: fit-side execution at the split-record fit size 8 GiB (of {2,4,8} GiB); the S2 fit objective touches only CAL-A3's fit sizes; CAL-A1/A2/A7/A12 enter as swept-value provenance only (ceilings/derating bridge, never measured values)
+  independent_reproduction: []
+  known_omissions:
+  - single fixed-B, zero-overhead L0 crossbar identity — cannot express the size-dependent software-effective bandwidth ramp the anchor series exhibits (the S2 known-omission candidate)
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)
+  - A-L0X-LAT fixed at the registry point 200 ns; the latency axis is stage S4's (at the fit sizes 2L/t <= 7.4e-5, so the S2 fit is L-insensitive)

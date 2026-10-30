@@ -1,0 +1,31 @@
+# Calibration-ladder S2 fit-sweep topology: fully-connected crossbar of
+# 72 ranks at B = 576 B/ns per rank per direction — grid point 9 of 16 of
+# the UNIFORM 64 B/ns grid spanning the DECLARED A-L0X-BW free range
+# [1, 1024] (experiments/vertical_slice/assumptions_l0.yaml; 64 x 9).
+#
+# The grid is ANCHOR-BLIND by construction: 64 B/ns steps over the declared
+# registry range were fixed before and independently of any anchor series;
+# no anchor number selected this point. The three anchor-provenance points
+# of group G1 ride the stage-A3 committed topologies instead
+# (span448 = CAL-A7-derived, derated720 = CAL-A2 x CAL-A12, ceiling900 =
+# CAL-A2 line; see sweep_s2_bw_v1.yaml). NOTHING IS TUNED: this file is a
+# sampling instrument of the S2 fit sweep against CAL-A3's split-record fit
+# sizes {2, 4, 8} GiB ONLY (split record 3862e227..., within_series_splits;
+# the {16, 32} GiB rows are held out and never swept). L = 200 ns is the
+# A-L0X-LAT registry point (KEEP; the latency axis is S4's). The registry
+# VALUE of A-L0X-BW stays 64; no shipped parameter changes in this stage.
+topology_id: crossbar72_s2_b576_v1
+topology_class: fully_connected_crossbar
+ranks: 72
+nic:
+  injection_bytes_per_ns: 576
+link:
+  pair_latency_ns: 200
+notes: >
+  Non-blocking switch fabric; every rank pair adjacent with uniform pair
+  latency; single-port injection shared across the 71 peers. No congestion,
+  no credits, no packetization — L0 transport model only. Provenance: B is
+  the uniform-grid value 576 = 64 x 9 inside the DECLARED A-L0X-BW range
+  [1, 1024]; anchor-blind grid arithmetic, never tuned toward any anchor
+  output. L = 200 ns is the free A-L0X-LAT registry point. Values are free
+  parameters, never measurements.

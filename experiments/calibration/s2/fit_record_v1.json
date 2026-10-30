@@ -1,0 +1,555 @@
+{
+  "anchor": {
+    "anchor_id": "CAL-A3",
+    "plan_row": "docs/calibration/CALIBRATION_PLAN.md §1.1 row CAL-A3 (primary O-CCT calibration target)",
+    "series": {
+      "consistency_verdict": "all 5 out-of-place rows internally consistent under the standard NCCL accounting within <= 0.03 GB/s (print precision); only the {2,4,8} GiB rows enter the fit objective (split record within_series_splits)",
+      "primary_series": "out-of-place allreduce, 5 sizes, per-rank GiB payloads (in-place variant excluded per plan §4.10)",
+      "rows": [
+        {
+          "algbw_GB_per_s_exact": "536870912/1343775",
+          "implied_busbw_GB_per_s_exact": "9529458688/12093975",
+          "mapping": "algbw = M/t ; busbw = algbw * 2(r-1)/r (r=72 => factor 71/36); CCT target = the quoted time (CCT-vs-CCT, the factor cancels)",
+          "payload_bytes": 2147483648,
+          "residual_implied_minus_quoted_exact": "44347/48375900",
+          "size": "2GiB",
+          "split_role": "fit",
+          "staged_busbw_GB_per_s": "787.95",
+          "staged_time_ns_exact": "5375100",
+          "staged_time_us": "5375.10"
+        },
+        {
+          "algbw_GB_per_s_exact": "2147483648/5096505",
+          "implied_busbw_GB_per_s_exact": "38117834752/45868545",
+          "mapping": "algbw = M/t ; busbw = algbw * 2(r-1)/r (r=72 => factor 71/36); CCT target = the quoted time (CCT-vs-CCT, the factor cancels)",
+          "payload_bytes": 4294967296,
+          "residual_implied_minus_quoted_exact": "-6043987/917370900",
+          "size": "4GiB",
+          "split_role": "fit",
+          "staged_busbw_GB_per_s": "831.03",
+          "staged_time_ns_exact": "10193010",
+          "staged_time_us": "10193.01"
+        },
+        {
+          "algbw_GB_per_s_exact": "4294967296/9777535",
+          "implied_busbw_GB_per_s_exact": "76235669504/87997815",
+          "mapping": "algbw = M/t ; busbw = algbw * 2(r-1)/r (r=72 => factor 71/36); CCT target = the quoted time (CCT-vs-CCT, the factor cancels)",
+          "payload_bytes": 8589934592,
+          "residual_implied_minus_quoted_exact": "-10587497/439989075",
+          "size": "8GiB",
+          "split_role": "fit",
+          "staged_busbw_GB_per_s": "866.36",
+          "staged_time_ns_exact": "19555070",
+          "staged_time_us": "19555.07"
+        },
+        {
+          "algbw_GB_per_s_exact": "2147483648/4757075",
+          "implied_busbw_GB_per_s_exact": "38117834752/42813675",
+          "mapping": "algbw = M/t ; busbw = algbw * 2(r-1)/r (r=72 => factor 71/36); CCT target = the quoted time (CCT-vs-CCT, the factor cancels)",
+          "payload_bytes": 17179869184,
+          "residual_implied_minus_quoted_exact": "-36374/42813675",
+          "size": "16GiB",
+          "split_role": "held_out",
+          "staged_busbw_GB_per_s": "890.32",
+          "staged_time_ns_exact": "38056600",
+          "staged_time_us": "38056.60"
+        },
+        {
+          "algbw_GB_per_s_exact": "17179869184/37359205",
+          "implied_busbw_GB_per_s_exact": "304942678016/336232845",
+          "mapping": "algbw = M/t ; busbw = algbw * 2(r-1)/r (r=72 => factor 71/36); CCT target = the quoted time (CCT-vs-CCT, the factor cancels)",
+          "payload_bytes": 34359738368,
+          "residual_implied_minus_quoted_exact": "-3384283/3362328450",
+          "size": "32GiB",
+          "split_role": "held_out",
+          "staged_busbw_GB_per_s": "906.94",
+          "staged_time_ns_exact": "74718410",
+          "staged_time_us": "74718.41"
+        }
+      ],
+      "software_pins": "NCCL 2.28.3, CUDA 12.9.1, driver 580.82.07; all_reduce_perf float32; -b 2G -e 32G; 10 warmup / 20 iterations; 72 GPUs of one GB200 NVL72 rack exposed as 18 x 4-GPU instances; NVLink-vs-IB path split for the 72-GPU communicator NOT stated in the source (staging caveat)"
+    },
+    "staging_doc": "docs/calibration/anchors_staging.md §A3",
+    "url": "https://support.crusoecloud.com/hc/en-us/articles/41038210396443"
+  },
+  "backing": {
+    "inputs": [
+      "experiments/calibration/s2/sweep_s2_bw_v1.yaml",
+      "experiments/calibration/s2/topologies/ (16 files)",
+      "experiments/calibration/s2/workloads/ (2 files)",
+      "experiments/calibration/a3/workloads/w1_dense_tp_decode_tp72_32gib_floorbr.yaml",
+      "experiments/calibration/s2/run_s2_fit_8gib_floorbr.yaml",
+      "experiments/calibration/s2/run_s2_holdout_16gib_floorbr.yaml",
+      "experiments/calibration/s2/run_s2_holdout_32gib_floorbr.yaml",
+      "experiments/calibration/s2/profiles/implementation_profile_l0_crossbar_cal_s2_v1.yaml",
+      "experiments/calibration/a3/topologies/ (3 files, reused anchor-provenance points)"
+    ],
+    "reproduce": "make sweep EXP=experiments/calibration/s2/sweep_s2_bw_v1.yaml ; make run EXP=experiments/calibration/s2/run_s2_fit_8gib_floorbr.yaml ; make run EXP=experiments/calibration/s2/run_s2_holdout_16gib_floorbr.yaml ; make run EXP=experiments/calibration/s2/run_s2_holdout_32gib_floorbr.yaml ; python experiments/calibration/s2/build_fit_record.py",
+    "run_ids": [
+      "c32d3c646a5f4acedf054eb219675c7711e5ee3f412e1c2ee9ea5f0c215ce32a",
+      "f1f0604853f1ffb712903848624d6afe9b3072a58cb26d741f7297ef9f896140",
+      "7b2136ae9d09d16cdb4324bcb4d3a66b83261b22560938c10532f18e225fe1d1"
+    ],
+    "run_roles": {
+      "7b2136ae9d09d16cdb4324bcb4d3a66b83261b22560938c10532f18e225fe1d1": "held-out reporting run at the 32 GiB floor bracket, B_fit (held_out: true)",
+      "c32d3c646a5f4acedf054eb219675c7711e5ee3f412e1c2ee9ea5f0c215ce32a": "fit-side run at the 8 GiB floor bracket, B_fit (held_out: false)",
+      "f1f0604853f1ffb712903848624d6afe9b3072a58cb26d741f7297ef9f896140": "held-out reporting run at the 16 GiB floor bracket, B_fit (held_out: true)"
+    },
+    "sweep_dir": "results/sweeps/9cf1ed89c1f2e6056e9afa1e9f8642a53df68e5e8c4bebee7365beea0b60ef70",
+    "sweep_id": "9cf1ed89c1f2e6056e9afa1e9f8642a53df68e5e8c4bebee7365beea0b60ef70"
+  },
+  "calibration_target": [
+    "CAL-A3"
+  ],
+  "evidence_levels": {
+    "fit": "PROPOSED calibration fit candidate against an external published measurement; no E3/E4 language — CAL-A3 is not our testbed, and owner adjudication precedes any label move",
+    "runs": "E0 (analytical executions; deterministic, content-addressed, replay reproduces byte-identical artifacts)"
+  },
+  "evidence_schema_version": 2,
+  "executed_sweep": {
+    "baseline": "crossbar72_a3_ceiling900_v1 (the CAL-A2-derived 900 B/ns line; the sweep table's delta columns measure vs it)",
+    "cross_check": "all 108 executed rows equal the closed form of the same identity function at the same bracket payload and swept B (exact Fraction string equality)",
+    "grid": "18 topologies (uniform anchor-blind 64 B/ns grid 64..1024 plus the three group-G1 anchor-provenance points 448/720/900 on the committed stage-A3 files) x 6 fit-size floor/ceil brackets = 108 configs x 6 ops",
+    "manifest_path": "experiments/calibration/s2/sweep_s2_bw_v1.yaml",
+    "payload_fence": "every executed payload is a {2,4,8} GiB bracket (asserted; the {16,32} GiB held-out brackets are absent from the fit sweep by construction)",
+    "per_B_deltas_at_exact_fit_sizes": [
+      {
+        "B_bytes_per_ns": "64",
+        "B_float": 64.0,
+        "delta_pct_2GiB": 1131.1807490920066,
+        "delta_pct_4GiB": 1198.4780049160051,
+        "delta_pct_8GiB": 1253.6519469261823,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 1253.6519469261823,
+        "provenance": "grid: 64=64x1",
+        "topology": "crossbar72_s2_b64_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "128",
+        "B_float": 128.0,
+        "delta_pct_2GiB": 515.5940954070105,
+        "delta_pct_4GiB": 549.2409645869517,
+        "delta_pct_8GiB": 576.8269962157583,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 576.8269962157583,
+        "provenance": "grid: 128=64x2",
+        "topology": "crossbar72_s2_b128_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "192",
+        "B_float": 192.0,
+        "delta_pct_2GiB": 310.3985441786785,
+        "delta_pct_4GiB": 332.8286178106006,
+        "delta_pct_8GiB": 351.21867931228365,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 351.21867931228365,
+        "provenance": "grid: 192=64x3",
+        "topology": "crossbar72_s2_b192_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "256",
+        "B_float": 256.0,
+        "delta_pct_2GiB": 207.80076856451248,
+        "delta_pct_4GiB": 224.622444422425,
+        "delta_pct_8GiB": 238.41452086054636,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 238.41452086054636,
+        "provenance": "grid: 256=64x4",
+        "topology": "crossbar72_s2_b256_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "320",
+        "B_float": 320.0,
+        "delta_pct_2GiB": 146.2421031960129,
+        "delta_pct_4GiB": 159.69874038951966,
+        "delta_pct_8GiB": 170.73202578950398,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 170.73202578950398,
+        "provenance": "grid: 320=64x5",
+        "topology": "crossbar72_s2_b320_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "384",
+        "B_float": 384.0,
+        "delta_pct_2GiB": 105.20299295034648,
+        "delta_pct_4GiB": 116.41627103424943,
+        "delta_pct_8GiB": 125.61036240880905,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 125.61036240880905,
+        "provenance": "grid: 384=64x6",
+        "topology": "crossbar72_s2_b384_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "448",
+        "B_float": 448.0,
+        "delta_pct_2GiB": 75.88934277487049,
+        "delta_pct_4GiB": 85.5002214947707,
+        "delta_pct_8GiB": 93.38060285116983,
+        "grid_member": false,
+        "max_abs_delta_pct_at_fit_sizes": 93.38060285116983,
+        "provenance": "anchor: 448 = CAL-A7-derived MI300X-class endpoint (7 x 64 B/ns per direction)",
+        "topology": "crossbar72_a3_span448_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "512",
+        "B_float": 512.0,
+        "delta_pct_2GiB": 53.904105143263486,
+        "delta_pct_4GiB": 62.31318434016165,
+        "delta_pct_8GiB": 69.20828318294039,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 69.20828318294039,
+        "provenance": "grid: 512=64x8",
+        "topology": "crossbar72_s2_b512_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "576",
+        "B_float": 576.0,
+        "delta_pct_2GiB": 36.80447587423582,
+        "delta_pct_4GiB": 44.278822108799055,
+        "delta_pct_8GiB": 50.40759010765084,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 50.40759010765084,
+        "provenance": "grid: 576=64x9",
+        "topology": "crossbar72_s2_b576_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "640",
+        "B_float": 640.0,
+        "delta_pct_2GiB": 23.124772459013684,
+        "delta_pct_4GiB": 29.85133232370898,
+        "delta_pct_8GiB": 35.3670356474192,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 35.3670356474192,
+        "provenance": "grid: 640=64x10",
+        "topology": "crossbar72_s2_b640_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "704",
+        "B_float": 704.0,
+        "delta_pct_2GiB": 11.932287846559209,
+        "delta_pct_4GiB": 18.047022499544376,
+        "delta_pct_8GiB": 23.06112745268422,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 23.06112745268422,
+        "provenance": "grid: 704=64x11",
+        "topology": "crossbar72_s2_b704_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "768",
+        "B_float": 768.0,
+        "delta_pct_2GiB": 2.605217336180481,
+        "delta_pct_4GiB": 8.21009764607387,
+        "delta_pct_8GiB": 12.806203957071737,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 12.806203957071737,
+        "provenance": "grid: 768=64x12",
+        "topology": "crossbar72_s2_b768_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "832",
+        "B_float": 832.0,
+        "delta_pct_2GiB": -5.286919249524597,
+        "delta_pct_4GiB": -0.11345415301655902,
+        "delta_pct_8GiB": 4.128960999245789,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 5.286919249524597,
+        "provenance": "grid: 832=64x13",
+        "topology": "crossbar72_s2_b832_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "896",
+        "B_float": 896.0,
+        "delta_pct_2GiB": -12.051607751557519,
+        "delta_pct_4GiB": -7.247927123665497,
+        "delta_pct_8GiB": -3.308675821747879,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 12.051607751557519,
+        "provenance": "grid: 896=64x14",
+        "topology": "crossbar72_s2_b896_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "960",
+        "B_float": 960.0,
+        "delta_pct_2GiB": -17.91433778665272,
+        "delta_pct_4GiB": -13.431137031561244,
+        "delta_pct_8GiB": -9.754627733275726,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 17.91433778665272,
+        "provenance": "grid: 960=64x15",
+        "topology": "crossbar72_s2_b960_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "1024",
+        "B_float": 1024.0,
+        "delta_pct_2GiB": -23.044226567361022,
+        "delta_pct_4GiB": -18.841445700970024,
+        "delta_pct_8GiB": -15.394835655862591,
+        "grid_member": true,
+        "max_abs_delta_pct_at_fit_sizes": 23.044226567361022,
+        "provenance": "grid: 1024=64x16 (declared-range upper endpoint)",
+        "topology": "crossbar72_s2_b1024_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "720",
+        "B_float": 720.0,
+        "delta_pct_2GiB": 9.445069043791548,
+        "delta_pct_4GiB": 15.423842538618906,
+        "delta_pct_8GiB": 20.326481187187557,
+        "grid_member": false,
+        "max_abs_delta_pct_at_fit_sizes": 20.326481187187557,
+        "provenance": "anchor: 720 = CAL-A2 900 x CAL-A12 ~80% spec-to-measured bridge (derating)",
+        "topology": "crossbar72_a3_derated720_v1.yaml"
+      },
+      {
+        "B_bytes_per_ns": "900",
+        "B_float": 900.0,
+        "delta_pct_2GiB": -12.442456420563866,
+        "delta_pct_4GiB": -7.660141117525214,
+        "delta_pct_8GiB": -3.7384059491830692,
+        "grid_member": false,
+        "max_abs_delta_pct_at_fit_sizes": 12.442456420563866,
+        "provenance": "anchor: 900 = CAL-A2 per-GPU per-direction ceiling (normalization line)",
+        "topology": "crossbar72_a3_ceiling900_v1.yaml"
+      }
+    ],
+    "sweep_id": "9cf1ed89c1f2e6056e9afa1e9f8642a53df68e5e8c4bebee7365beea0b60ef70",
+    "sweep_name": "cal_s2_bw_v1"
+  },
+  "fit": {
+    "L_sensitivity": {
+      "minimax_B_at_L_zero_exact": "19561820264071168/23649852770325",
+      "minimax_B_shift_pct_when_L_0_to_200_float": 0.004743838703829635,
+      "note": "the fit is bandwidth-bound and L-insensitive at these sizes (2L/t <= 7.5e-5); the latency axis belongs to stage S4 — no L degree of freedom is fitted here",
+      "two_L_over_anchor_t_exact": {
+        "2GiB": "4/53751",
+        "4GiB": "40/1019301",
+        "8GiB": "40/1955507"
+      },
+      "two_L_over_anchor_t_float": {
+        "2GiB": 7.44172201447415e-05,
+        "4GiB": 3.9242578983048186e-05,
+        "8GiB": 2.045505334422224e-05
+      }
+    },
+    "binding_sizes": [
+      "2GiB",
+      "8GiB"
+    ],
+    "effective_B_ramp_at_fit_sizes": {
+      "definition": "anchor-implied effective B = [2(r-1)/r * M] / (t_anchor - 2L) per fit size — RECORDED DIAGNOSTIC placement, never a topology value",
+      "span_last_over_first_float": 1.0994202407915858,
+      "values_float": {
+        "2GiB": 788.0095581975635,
+        "4GiB": 831.0560244028653,
+        "8GiB": 866.3536582196364
+      }
+    },
+    "identity": "t = 2*(r-1)/r * M/B + 2*L ; per-rank wire bytes = 2*(r-1)/r * M (r=72)",
+    "minimax_B_exact": "19561820264071168/23648730912675",
+    "minimax_B_float": 827.1826651630861,
+    "minimax_B_materialized_as": "19561820264071168/23648730912675 (the exact rational carried by experiments/calibration/s2/topologies/crossbar72_s2_fitb_v1.yaml — asserted equal)",
+    "objective": "minimax over the free parameter B of the worst-case CCT deviation at the three split-record fit sizes {2, 4, 8} GiB (exact Fractions; L at the A-L0X-LAT registry point 200 ns)",
+    "per_size_at_fitted_B": [
+      {
+        "anchor_cct_ns_exact": "5375100",
+        "anchor_implied_effective_B_exact": "134217728/170325",
+        "anchor_implied_effective_B_float": 788.0095581975635,
+        "delta_pct_float": -4.735373873444878,
+        "model_cct_ns_exact": "21022736363400/4105547",
+        "payload_bytes": 2147483648,
+        "ratio_model_over_anchor_exact": "3911134/4105547",
+        "size": "2GiB"
+      },
+      {
+        "anchor_cct_ns_exact": "10193010",
+        "anchor_implied_effective_B_exact": "38117834752/45866745",
+        "anchor_implied_effective_B_float": 831.0560244028653,
+        "delta_pct_float": 0.4682408616976603,
+        "model_cct_ns_exact": "42043830508000/4105547",
+        "payload_bytes": 4294967296,
+        "ratio_model_over_anchor_exact": "4204383050800/4184788162647",
+        "size": "4GiB"
+      },
+      {
+        "anchor_cct_ns_exact": "19555070",
+        "anchor_implied_effective_B_exact": "76235669504/87996015",
+        "anchor_implied_effective_B_float": 866.3536582196364,
+        "delta_pct_float": 4.735373873444878,
+        "model_cct_ns_exact": "84086018797200/4105547",
+        "payload_bytes": 8589934592,
+        "ratio_model_over_anchor_exact": "4299960/4105547",
+        "size": "8GiB"
+      }
+    ],
+    "tolerance_shape_windows": {
+      "note": "the 5% window contains NO member of the uniform 64 B/ns grid (reported, not resolved by adding grid points: the exact window boundaries are the finding, the grid is the anchor-blind sampling instrument)",
+      "status": "SHAPE CONTEXT ONLY — no tolerance is adopted (the E0 zero-slack policy stands; a nonzero tolerance must arrive through CGFR with recorded evidence, plan §3.4)",
+      "tau_5pct": {
+        "B_high_exact": "38117834752/45953505",
+        "B_high_float": 829.4869945611331,
+        "B_low_exact": "304942678016/369583623",
+        "B_low_float": 825.0979184107408,
+        "shape_provenance": "CAL-A4's ~5% validated mean-error SCALAR admitted solely as tolerance-shape context per the split record's sole recorded exception (plan §3.4; the anchor's series and per-configuration errors are NOT fit inputs)",
+        "uniform_grid_members_inside": [],
+        "width_exact": "920278884417536/209674850215415",
+        "width_float": 4.3890761503922056
+      },
+      "tau_8pct": {
+        "B_high_exact": "9529458688/11125557",
+        "B_high_float": 856.5376715970266,
+        "B_low_exact": "381178347520/475179201",
+        "B_low_float": 802.1780976899281,
+        "shape_provenance": "upper edge of CAL-A6's measured 5-8% software-version swing (calibration-set noise-floor anchor, plan §3.4); a criterion tighter than the measured software variance would be overfitting",
+        "uniform_grid_members_inside": [
+          "832"
+        ],
+        "width_exact": "10643671586177024/195801232812591",
+        "width_float": 54.359573907098415
+      }
+    },
+    "worst_case_deviation_pct": 4.735373873444878,
+    "worst_case_relative_deviation_exact": "194413/4105547"
+  },
+  "group_g1_anchors": {
+    "declared_scale_provenance_only": [
+      "CAL-A1 — NVLink5 switch chip spec: 57.6 Tbps full-duplex, 72 ports => 50 B/ns per port per direction (radix/fan-in context for the NVSwitch class; ceiling, never achieved)",
+      "CAL-A2 — GB200 NVL72 per-GPU 1.8 TB/s bidirectional => 900 B/ns per-direction line (the normalization line and sweep baseline topology)",
+      "CAL-A7 — MI300X Infinity Fabric 7 x 128 GB/s bidirectional => 448 B/ns per-direction aggregate (the anchored-span lower endpoint; a different fabric class — included for span completeness, flagged by A-L0X-PORT as full-mesh OUT-OF-DOMAIN there)",
+      "CAL-A12 — NCCL internal NVLink model ~80% of peak (the 720 B/ns spec-to-measured derating bridge; NVLink-3-era, M confidence)"
+    ],
+    "fit_target": "CAL-A3 (Crusoe Cloud GB200 NVL72 NCCL 2.28.3 allreduce, 2-32 GiB, r=72, out-of-place; staging §A3; confidence M-H)"
+  },
+  "headline": "the fixed-B L0 crossbar identity fits CAL-A3's split-record fit sizes {2,4,8} GiB to a worst case of +/-4.74% at B_fit = 827.1827 B/ns (exact minimax; binding sizes 2 GiB and 8 GiB); the 5% tolerance-shape window is [825.10, 829.49] B/ns (width 4.39); NO group-G1 provenance point (448 / 720 / 900) lies inside it; the held-out sizes {16,32} GiB miss by +7.63% / +9.64% at B_fit and the miss grows with size — the known-omission finding (size-dependent software-effective bandwidth), reported, never tuned",
+  "held_out": {
+    "held_out": false,
+    "scope": "the S2 fit objective and every swept value here touch only CAL-A3's split-record fit sizes {2,4,8} GiB; CAL-A1/A2/A7/A12 enter as declared-scale provenance of the swept values (ceilings/derating bridge, never measured values); the {16,32} GiB rows appear ONLY in held_out_evaluation (their run records declare held_out: true)"
+  },
+  "held_out_evaluation": {
+    "at": "the fitted configuration B_fit = 19561820264071168/23648730912675",
+    "finding": "held-out deviations at the fitted B grow monotonically with size (+7.63% at 16 GiB, +9.64% at 32 GiB) and exceed the 5% tolerance-shape band: the anchor's implied effective B keeps ramping above the fitted window out-of-fit (890.3 / 906.9 B/ns at the held-out sizes vs 788.0..866.4 across the fit sizes) — the fixed-B, zero-overhead L0 identity cannot express a size-dependent software-effective bandwidth BY CONSTRUCTION. THE MISS IS THE FINDING (known-omission candidate); nothing was tuned toward these sizes — B_fit was fixed by the {2,4,8} GiB points alone before the held-out rows were evaluated",
+    "historical_context": "the E1 untuned sweep's five-point fixed-B minimax misfit was +/-7.02% (docs/calibration/ADJUDICATION.md headline read, 2026-10-29); the S2 three-point fit sits at +/-4.73% in-fit while the held-out rows land at +7.6%/+9.6% — the clean fit/holdout separation isolates the size-dependent ramp as the dominant residual",
+    "rows": [
+      {
+        "anchor_cct_ns_exact": "38056600",
+        "anchor_implied_effective_B_exact": "38117834752/42813225",
+        "anchor_implied_effective_B_float": 890.3285083522674,
+        "delta_pct_float": 7.633764843490261,
+        "model_cct_at_fitted_B_exact": "168170395375600/4105547",
+        "payload_bytes": 17179869184,
+        "ratio_model_over_anchor_exact": "840851976878/781215799801",
+        "run_backing": {
+          "cct_ns_exact": "91013904690135663275/2221924155392",
+          "held_out_dimension": {
+            "held_out": true,
+            "scope": "evaluation-only reporting of CAL-A3's within-series held-out size 16 GiB (split record 3862e227...) at the S2 fitted B; excluded from every fit objective; nothing tunes on this run"
+          },
+          "note": "run executes the 72-divisible FLOOR bracket; the exact-size row above is the same identity in closed form (asserted equal at the bracket)",
+          "payload_bytes": 17179869168,
+          "run_id": "f1f0604853f1ffb712903848624d6afe9b3072a58cb26d741f7297ef9f896140"
+        },
+        "size": "16GiB"
+      },
+      {
+        "anchor_cct_ns_exact": "74718410",
+        "anchor_implied_effective_B_exact": "304942678016/336231045",
+        "anchor_implied_effective_B_float": 906.9438487335398,
+        "delta_pct_float": 9.642459874153412,
+        "model_cct_at_fitted_B_exact": "336339148532400/4105547",
+        "payload_bytes": 34359738368,
+        "ratio_model_over_anchor_exact": "2587224219480/2359691877079",
+        "run_backing": {
+          "cct_ns_exact": "91013460305304584875/1110962077696",
+          "held_out_dimension": {
+            "held_out": true,
+            "scope": "evaluation-only reporting of CAL-A3's within-series held-out size 32 GiB (split record 3862e227...) at the S2 fitted B; excluded from every fit objective; nothing tunes on this run"
+          },
+          "note": "run executes the 72-divisible FLOOR bracket; the exact-size row above is the same identity in closed form (asserted equal at the bracket)",
+          "payload_bytes": 34359738336,
+          "run_id": "7b2136ae9d09d16cdb4324bcb4d3a66b83261b22560938c10532f18e225fe1d1"
+        },
+        "size": "32GiB"
+      }
+    ],
+    "sizes": [
+      "16GiB",
+      "32GiB"
+    ]
+  },
+  "independent_reproduction": [],
+  "known_omissions": [
+    "single fixed-B, zero-overhead L0 crossbar identity — cannot express the size-dependent software-effective bandwidth ramp the anchor series exhibits (the S2 known-omission candidate, confirmed out-of-fit by the held-out rows)",
+    "A-L0X-LAT fixed at the registry point 200 ns; the latency axis is stage S4's (the S2 fit is L-insensitive: 2L/t <= 7.5e-5)",
+    "no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)",
+    "the anchor's NCCL algorithm and NVLink-vs-IB path split are unstated in the source (staging caveat — an attribution risk recorded with the anchor, not resolvable here)"
+  ],
+  "model": {
+    "assumptions": "A-L0X-PORT single-port injection (KEEP for NVSwitch-class), A-L0X-LAT (KEEP, registry point 200 ns), A-L0X-DIV (structural; rejects the anchor's exact powers of two at r=72 — the executed rows sit at the 72-divisible floor/ceil brackets, relative offset <= 2.7e-8, and the exact-size rows are the same identity in closed form, cross-checked)",
+    "backend_id": "analytical_l0_crossbar",
+    "declared_free_parameter": {
+      "id": "A-L0X-BW",
+      "parameter": "nic.injection_bytes_per_ns",
+      "registry": "experiments/vertical_slice/assumptions_l0.yaml (plan §2.1 verdict NARROW-scale: anchored span 448..900 B/ns; the registry VALUE stays 64 — unchanged by this stage)",
+      "registry_range": [
+        1,
+        1024
+      ],
+      "registry_value": 64
+    },
+    "identity": "t = 2*(r-1)/r * M/B + 2*L ; per-rank wire bytes = 2*(r-1)/r * M",
+    "ranks": 72
+  },
+  "not_tuned": "the sweep grid was fixed by registry-range arithmetic and group-G1 anchor provenance before any CAL-A3 deviation was computed; the minimax B is an exact closed-form diagnostic over the fit points only; the held-out rows were evaluated AFTER B_fit was fixed and changed nothing; the registry A-L0X-BW value stays 64 and no manifest outside this calibration directory carries the fitted value",
+  "provenance_point_placement": {
+    "fitted_B_placement": {
+      "fraction_of_900_line_exact": "4890455066017792/5320964455351875",
+      "fraction_of_900_line_float": 0.9190918501812068,
+      "note": "the fitted B sits at ~91.9% of the CAL-A2 line — above the CAL-A12 ~80% bridge; the spec-to-measured derating is generation/stack-dependent (recorded placement, never a shipped value)",
+      "over_720_bridge_ratio_exact": "1222613766504448/1064192891070375",
+      "over_720_bridge_ratio_float": 1.1488648127265084
+    },
+    "rows": [
+      {
+        "B": "448",
+        "delta_pct_2GiB": 75.88934277487049,
+        "delta_pct_4GiB": 85.5002214947707,
+        "delta_pct_8GiB": 93.38060285116983,
+        "placement": "CAL-A7-derived MI300X-class endpoint (spec ceiling of a different fabric class; included for span completeness)"
+      },
+      {
+        "B": "720",
+        "delta_pct_2GiB": 9.445069043791548,
+        "delta_pct_4GiB": 15.423842538618906,
+        "delta_pct_8GiB": 20.326481187187557,
+        "placement": "CAL-A2 900 x CAL-A12 ~80% spec-to-measured derating bridge (NCCL internal NVLink model; NVLink-3-era A100 provenance, M confidence)"
+      },
+      {
+        "B": "900",
+        "delta_pct_2GiB": -12.442456420563866,
+        "delta_pct_4GiB": -7.660141117525214,
+        "delta_pct_8GiB": -3.7384059491830692,
+        "placement": "CAL-A2 per-GPU per-direction ceiling line (spec, never an achieved value; the group's normalization line)"
+      }
+    ],
+    "verdict": "NO group-G1 provenance point falls inside the 5% tolerance-shape window at the fit sizes: the MI300X-class endpoint (448) misses by +75.9..+93.4% (expected: different fabric class), the CAL-A12-derated bridge (720) by +9.4..+20.3% (the NVLink-3-era ~80% derating under-states this GB200-era series), and the CAL-A2 ceiling line (900) by -12.4..-3.7% (the model at the spec ceiling is FASTER than the measurement at every fit size — the ceiling is never achieved)"
+  },
+  "record_kind": "calibration_fit",
+  "split_record": {
+    "committed_copy": "experiments/calibration/split/anchor_split_v1.json",
+    "group": "G1 — large-message bandwidth-bound switched scale-up + spec ceilings + spec-to-measured derating bridge (fitting stage S2)",
+    "no_leakage": "none of the split record's four cross-anchor holdouts or its blocked anchor is read by any objective, swept value, or tolerance in this record (mechanically asserted: their ids appear nowhere in the record bytes); sole recorded exception used: the ~5% mean-error scalar as tolerance-SHAPE context only (see fit.tolerance_shape_windows.tau_5pct) — the ids stay unlisted here by design",
+    "record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20",
+    "within_series_rule": "CAL-A3 fit {2,4,8} GiB / hold out {16,32} GiB; held-out sizes never enter a fit objective and are reported as held-out error"
+  },
+  "stage": "calibration fit record, S2 (group G1)",
+  "status": "PROPOSED — owner adjudication required; no claim, label, or shipped parameter value changes; the fitted B is a recorded diagnostic, never a shipped value",
+  "verification": [
+    {
+      "check": "tests/calibration/test_s2_fit.py",
+      "scope": "S2 fit guard — re-executes the fit sweep and the three S2 runs into a scratch store, rebuilds this record byte-identically, and checks the fit/holdout size-separation invariants"
+    },
+    {
+      "check": "tests/calibration/test_anchor_split.py",
+      "scope": "the split record's own immutability guard (S1) — the data separation this fit runs under"
+    }
+  ]
+}

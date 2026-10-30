@@ -1,0 +1,49 @@
+# Implementation profile for the calibration-ladder S2 runs (group G1:
+# large-message switched scale-up + ceilings + derating) on the analytical
+# L0 crossbar backend — the FIT stage against anchor CAL-A3's split-record
+# fit sizes {2, 4, 8} GiB ONLY.
+implementation_profile_id: analytical_l0_crossbar_cal_s2_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity t = 2(r-1)/r*M/B
+  + 2L (see src/essun/backends/analytical/l0_crossbar.py); modeling
+  assumptions A-L0X-PORT / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml (KEEP verdicts per
+  docs/calibration/CALIBRATION_PLAN.md §2.1).
+free_parameters_source: experiments/vertical_slice/assumptions_l0.yaml
+free_parameters_swept: >
+  B (nic.injection_bytes_per_ns, A-L0X-BW; declared free range [1, 1024]
+  B/ns, registry point 64) swept by the S2 fit sweep at (a) the UNIFORM,
+  ANCHOR-BLIND 64 B/ns grid 64..1024 and (b) the three anchor-provenance
+  points of group G1 carried by the committed stage-A3 topologies — 448 =
+  CAL-A7-derived MI300X-class endpoint, 720 = CAL-A2 900 x CAL-A12 ~80%
+  spec-to-measured bridge, 900 = the CAL-A2 per-GPU per-direction ceiling
+  (the group's normalization line). The fit objective touches ONLY CAL-A3's
+  {2, 4, 8} GiB points (split record 3862e227..., within_series_splits);
+  the {16, 32} GiB points are held out and REPORTED as held-out error at
+  the fitted configuration (declared held_out: true runs), never fitted.
+  L stays at the A-L0X-LAT registry point 200 ns (KEEP; the latency axis is
+  S4's; at the fit sizes 2L/t <= 7.4e-5, so the fit is bandwidth-bound and
+  L-insensitive). NO shipped parameter changes: the fitted B is a recorded
+  diagnostic (the exact minimax over the fit points), carried by
+  experiments/calibration/s2/topologies/crossbar72_s2_fitb_v1.yaml for
+  fit-side and held-out reporting runs and for the S6 holdout evaluation;
+  the registry value stays 64.
+measurement_source: >
+  CAL-A3 staged series (Crusoe Cloud GB200 NVL72 all_reduce_perf, NCCL
+  2.28.3 / CUDA 12.9.1 / driver 580.82.07, 72 GPUs, 2-32 GiB per rank,
+  out-of-place; docs/calibration/anchors_staging.md §A3; anchor PROPOSED,
+  confidence M-H) — external published measurement, compared CCT-vs-CCT as
+  PROPOSED evidence in results/calibration/; not our testbed, no E3/E4
+  language. CAL-A1/A2/A7/A12 enter as declared-scale provenance of the
+  swept values only (normalization ceilings and derating bridge are never
+  measured values).
+evidence_dimensions: >
+  every S2 run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target = [CAL-A3] / held_out / independent_
+  reproduction / known_omissions), so the run records carry them
+  content-addressed; fit-side runs declare held_out: false, the two
+  held-out reporting runs declare held_out: true with scopes naming the
+  within-series held-out sizes.

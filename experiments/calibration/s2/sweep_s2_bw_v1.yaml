@@ -1,0 +1,75 @@
+# Calibration-ladder S2 FIT SWEEP: sweep the DECLARED free-parameter range
+# of A-L0X-BW (nic.injection_bytes_per_ns, registry range [1, 1024] B/ns,
+# experiments/vertical_slice/assumptions_l0.yaml) against anchor CAL-A3's
+# SPLIT-RECORD FIT SIZES {2, 4, 8} GiB ONLY (split record 3862e227...,
+# committed at experiments/calibration/split/anchor_split_v1.json,
+# within_series_splits: fit {2,4,8} GiB / hold out {16,32} GiB). The
+# {16, 32} GiB brackets are DELIBERATELY ABSENT from this grid: held-out
+# sizes never enter a fit objective; they are reported as held-out error at
+# the fitted configuration by the stage's held_out:true run manifests.
+#
+# Grid, two declared families (nothing tuned toward any anchor OUTPUT):
+#   (a) the UNIFORM, ANCHOR-BLIND 64 B/ns grid 64..1024 (16 points, of
+#       which 448 = 64x7 rides the committed stage-A3 span448 topology);
+#   (b) the three anchor-provenance points of group G1 on the committed
+#       stage-A3 topologies: 448 (CAL-A7-derived MI300X-class endpoint),
+#       720 (CAL-A2 900 x CAL-A12 ~80% spec-to-measured bridge), 900
+#       (CAL-A2 per-GPU per-direction ceiling — the group's normalization
+#       line and this sweep's baseline).
+# The exact fit quantities (minimax B, tolerance-shape windows) are
+# closed-form arithmetic over the whole declared range and live in the
+# stage's calibration fit record; this executed table is the run-path
+# backing, cross-checked row by row there.
+#
+# Comparison is CCT-vs-CCT (plan §3: NCCL's 2(r-1)/r busbw factor is
+# carried by both sides and cancels). L stays at the A-L0X-LAT registry
+# point 200 ns. Baseline = the CAL-A2-derived 900 B/ns ceiling topology,
+# so the delta columns read directly as placement vs the line the CAL-A3
+# series is normalized against.
+#
+# Payload grid: the A-L0X-DIV input gate (structural KEEP assumption)
+# rejects CAL-A3's exact power-of-two sizes at r=72 (72 = 8*9 never divides
+# 2^k), so the grid carries the FLOOR/CEIL 72-divisible brackets around
+# each FIT size only — relative offset <= 2.7e-8:
+#   2 GiB  2^31: brackets 2147483592 / 2147483664
+#   4 GiB  2^32: brackets 4294967256 / 4294967328
+#   8 GiB  2^33: brackets 8589934584 / 8589934656
+#
+# NOTHING IS TUNED (the S2 fence): the grid values were fixed by registry
+# range arithmetic and group-G1 anchor provenance before any CAL-A3
+# deviation was computed; the fitted B that the fit record derives from
+# this sweep is a RECORDED DIAGNOSTIC, never a shipped parameter value.
+sweep: cal_s2_bw_v1
+workload: experiments/calibration/s2/workloads/w1_dense_tp_decode_tp72_8gib_floorbr.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/a3/topologies/crossbar72_a3_ceiling900_v1.yaml
+grid:
+  payload_sizes_bytes: [2147483592, 2147483664, 4294967256, 4294967328, 8589934584, 8589934656]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    # uniform anchor-blind 64 B/ns grid over the declared A-L0X-BW range [1,1024]
+    - experiments/calibration/s2/topologies/crossbar72_s2_b64_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b128_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b192_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b256_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b320_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b384_v1.yaml
+    # 448 = 64 x 7: the uniform-grid member AND the CAL-A7-derived provenance point
+    - experiments/calibration/a3/topologies/crossbar72_a3_span448_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b512_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b576_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b640_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b704_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b768_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b832_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b896_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b960_v1.yaml
+    - experiments/calibration/s2/topologies/crossbar72_s2_b1024_v1.yaml
+    # anchor-provenance points of group G1 (committed stage-A3 topologies)
+    - experiments/calibration/a3/topologies/crossbar72_a3_derated720_v1.yaml
+    - experiments/calibration/a3/topologies/crossbar72_a3_ceiling900_v1.yaml

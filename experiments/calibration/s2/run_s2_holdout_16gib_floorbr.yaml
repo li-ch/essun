@@ -1,0 +1,59 @@
+# Calibration-ladder S2 HELD-OUT REPORTING RUN (evaluation-side): the L0
+# single-port crossbar identity at B_fit (the S2 fitted-configuration
+# diagnostic over CAL-A3's fit sizes {2,4,8} GiB) executed at the 16 GiB
+# FLOOR BRACKET payload 17179869168 B = 2^34 - 16. 16 GiB is one of CAL-A3's
+# WITHIN-SERIES HELD-OUT sizes (split record 3862e227...,
+# within_series_splits: fit {2,4,8} GiB / hold out {16,32} GiB): the split
+# record requires held-out sizes to be REPORTED as held-out error and
+# forbids them from every fit objective. This run never tunes anything —
+# B_fit was fixed by the fit points alone before this run existed; the
+# recorded deviation at this size IS the finding (a known-omission
+# candidate), never a target.
+#
+# This is NOT the S6 cross-anchor holdout: CAL-A4/GF-01/GF-03/GF-11 stay
+# untouched this stage; no number from them is read here.
+#
+# claim_id is deliberately EMPTY (fence: no claim upgrades). Evidence level
+# E0: this run executes the analytical identity; the held-out comparison is
+# recorded as PROPOSED in results/calibration/.
+experiment_id: EXP-CAL-S2-HOLDOUT-16GIB-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/s2/workloads/w1_dense_tp_decode_tp72_16gib_floorbr.yaml
+infra_graph:
+  path: experiments/calibration/s2/topologies/crossbar72_s2_fitb_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s2/profiles/implementation_profile_l0_crossbar_cal_s2_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar72_s2_fitb_v1 (NVSwitch-class abstraction, r=72, B = B_fit = the exact S2 minimax fit diagnostic over CAL-A3's {2,4,8} GiB points, L=200 ns registry point)
+  workload: w1_dense_tp_decode tp72, payload 2^34-16 (16 GiB floor bracket — WITHIN-SERIES HELD-OUT size; evaluation-only)
+  implementation: analytical L0 free-parameter identity; held-out error reporting against CAL-A3's 16 GiB point at the fitted configuration — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s2_fit.py
+    scope: S2 fit guard — re-executes the fit sweep and the S2 runs into a scratch store, rebuilds the calibration fit record byte-identically, and checks the fit/holdout size separation invariants
+  calibration_target:
+  - CAL-A3
+  held_out:
+    held_out: true
+    scope: evaluation-only reporting of CAL-A3's within-series held-out size 16 GiB (split record 3862e227...) at the S2 fitted B; excluded from every fit objective; nothing tunes on this run
+  independent_reproduction: []
+  known_omissions:
+  - single fixed-B, zero-overhead L0 crossbar identity — cannot express the size-dependent software-effective bandwidth ramp the anchor series exhibits (the S2 known-omission candidate; the held-out deviation at this size is that finding, reported not tuned)
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

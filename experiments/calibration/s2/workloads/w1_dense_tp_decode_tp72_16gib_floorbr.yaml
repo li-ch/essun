@@ -1,0 +1,24 @@
+# W1 Dense TP Decode — tp_size 72 at the 16 GiB FLOOR BRACKET payload
+# 17179869168 B = 2^34 - 16 (the largest multiple of 72 that is <= CAL-A3's
+# staged 16 GiB = 2^34). 16 GiB is one of CAL-A3's WITHIN-SERIES HELD-OUT
+# sizes (split record 3862e227..., within_series_splits: fit {2,4,8} GiB /
+# hold out {16,32} GiB): this workload exists ONLY for evaluation-side
+# held-out error reporting at the S2 fitted B — it never enters a fit
+# objective, and the run manifests that use it declare held_out: true.
+#
+# WHY A BRACKET: CAL-A3's message sizes are powers of two, which are never
+# divisible by 72 = 8*9, so the A-L0X-DIV input guard (a structural KEEP
+# assumption of the L0 identity) rejects the anchor's exact sizes at r=72.
+# The floor bracket sits 16 B (relative 9.3e-10) below the anchor size; the
+# exact-size identity evaluation is recorded in the calibration fit record.
+#
+# Same workload shape as every other W1 file (2 layers x 3 decode steps =
+# 6 AllReduce ops per config). Nothing here is measured or
+# standard-normative; all sizes are integer byte counts; deterministic by
+# construction.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-cal72-s2-16gib-floorbr
+tp_size: 72
+layers: 2
+steps: 3
+allreduce_bytes: 17179869168   # 2^34 - 16 (16 GiB floor bracket); free parameter A-W1-SIZE
