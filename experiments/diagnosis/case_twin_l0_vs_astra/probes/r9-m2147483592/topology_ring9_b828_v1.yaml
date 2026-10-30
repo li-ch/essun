@@ -1,0 +1,8 @@
+# G9 diagnosis twin probe topology (case r9-m2147483592): identical
+# file shared by both engines (the same-workload bar).
+topology_id: ring9_diag_b828_v1
+topology_class: unidirectional_ring
+ranks: 9
+link:
+  bytes_per_ns: 828
+  hop_latency_ns: 200

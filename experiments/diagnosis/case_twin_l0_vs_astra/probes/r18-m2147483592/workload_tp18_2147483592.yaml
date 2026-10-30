@@ -1,0 +1,7 @@
+# G9 diagnosis twin probe workload (case r18-m2147483592): one op.
+workload: w1_dense_tp_decode
+model_name: diag-twin-r18-m2147483592
+tp_size: 18
+layers: 1
+steps: 1
+allreduce_bytes: 2147483592

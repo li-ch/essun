@@ -1,0 +1,835 @@
+{
+  "pipeline": "probe -> delta-debugging minimize -> exact form attribution -> classify",
+  "record_type": "essun.diagnosis.defect_seeding.v1",
+  "summary": {
+    "classification_matches_ground_truth": 4,
+    "defects_seeded": 4,
+    "detected": 4,
+    "missed_or_misclassified": []
+  },
+  "taxonomy_note": "labels from essun.diagnosis.classify.TAXONOMY; residuals stay visible; nothing tuned, no dispositions changed",
+  "trials": [
+    {
+      "attribution": [
+        {
+          "clean_matches": true,
+          "defect_matches": false,
+          "normativity": "declared_identity",
+          "requirement_or_convention": "",
+          "variant_id": "r08_roundup_law"
+        },
+        {
+          "clean_matches": false,
+          "defect_matches": true,
+          "normativity": "contradicts_bound_requirement",
+          "requirement_or_convention": "UEC11-FC-R08",
+          "variant_id": "floor_not_roundup_credit_consumption"
+        }
+      ],
+      "classification": {
+        "component": "floor_not_roundup_credit_consumption",
+        "engine_id": "defect_carrier:l0_tfc_cell",
+        "label": "specification_violation",
+        "label_definition": "executed behavior contradicts a normative requirement the engine claims to implement through a declared binding (the binding's law is not the law that executed)",
+        "reasons": [
+          "engine defect_carrier:l0_tfc_cell values match form 'floor_not_roundup_credit_consumption' exactly, which contradicts normative requirement UEC11-FC-R08 that the engine itself binds (UEC11-FC-R08, UEC11-FC-R02)"
+        ],
+        "residual_exact": "see minimal_case values",
+        "residual_visible": true
+      },
+      "classification_matches_ground_truth": true,
+      "defect_id": "floor_not_roundup_credit_consumption",
+      "defect_kind": "credit-consumption bug",
+      "detected": true,
+      "expected_label": "specification_violation",
+      "ground_truth_reason": "executed form contradicts UEC11-FC-R08 (bound; ROUNDUP is the law, FLOOR executed)",
+      "initial_case": {
+        "cell_bytes": 256,
+        "credit_return_latency_ns": 200,
+        "hop_latency_ns": 200,
+        "link_bytes_per_ns": 64,
+        "payload_bytes": 7168,
+        "ranks": 8,
+        "window_bytes": 8192
+      },
+      "minimal_case": {
+        "cell_bytes": 256,
+        "credit_return_latency_ns": 200,
+        "hop_latency_ns": 200,
+        "link_bytes_per_ns": 64,
+        "payload_bytes": 896,
+        "ranks": 2,
+        "window_bytes": 8192
+      },
+      "minimal_values": {
+        "clean_exact": [
+          "450"
+        ],
+        "defect_exact": [
+          "425"
+        ]
+      },
+      "minimization": {
+        "accepted": 5,
+        "final_pass_rejections": [
+          {
+            "description": "payload 896 -> 448",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          },
+          {
+            "description": "payload 896 -> 224",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          },
+          {
+            "description": "payload 896 -> 112",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          },
+          {
+            "description": "payload 896 -> 56",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          },
+          {
+            "description": "payload 896 -> 28",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          },
+          {
+            "description": "payload 896 -> 14",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          },
+          {
+            "description": "payload 896 -> 6",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          },
+          {
+            "description": "payload 896 -> 2",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b"
+          }
+        ],
+        "passes": 6,
+        "probe_log": [
+          {
+            "accepted": false,
+            "description": "ranks 8 -> 4",
+            "dimension": "ranks",
+            "outcome": "vanished",
+            "pass": 1
+          },
+          {
+            "accepted": false,
+            "description": "ranks 8 -> 2",
+            "dimension": "ranks",
+            "outcome": "vanished",
+            "pass": 1
+          },
+          {
+            "accepted": true,
+            "description": "payload 7168 -> 3584",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 1
+          },
+          {
+            "accepted": true,
+            "description": "ranks 8 -> 4",
+            "dimension": "ranks",
+            "outcome": "reproduces",
+            "pass": 2
+          },
+          {
+            "accepted": false,
+            "description": "ranks 4 -> 2",
+            "dimension": "ranks",
+            "outcome": "vanished",
+            "pass": 3
+          },
+          {
+            "accepted": true,
+            "description": "payload 3584 -> 1792",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 3
+          },
+          {
+            "accepted": true,
+            "description": "ranks 4 -> 2",
+            "dimension": "ranks",
+            "outcome": "reproduces",
+            "pass": 4
+          },
+          {
+            "accepted": true,
+            "description": "payload 1792 -> 896",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 5
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 448",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 224",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 112",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 56",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 28",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 14",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 6",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "payload 896 -> 2",
+            "dimension": "payload_bytes",
+            "outcome": "error_engine_b",
+            "pass": 6
+          }
+        ],
+        "probes": 16
+      }
+    },
+    {
+      "admission_law_check_on_carrier_trace": {
+        "check": "sliding_window_bound_holds over the carrier's own admissions",
+        "holds": true,
+        "note": "mechanical evidence behind the classification: the carrier never exceeds the granted window in flight, so the bound admission law is intact and the divergence is return TIMING \u2014 not pinned by any bound requirement",
+        "requirement": "UEC11-FC-R02"
+      },
+      "attribution": [
+        {
+          "clean_matches": true,
+          "defect_matches": false,
+          "normativity": "declared_identity",
+          "requirement_or_convention": "",
+          "variant_id": "per_packet_credit_return_automaton"
+        },
+        {
+          "clean_matches": false,
+          "defect_matches": true,
+          "normativity": "free_implementation_choice",
+          "requirement_or_convention": "",
+          "variant_id": "whole_window_batched_credit_return"
+        }
+      ],
+      "classification": {
+        "component": "drain_batched_credit_return",
+        "engine_id": "defect_carrier:credit_automaton",
+        "label": "permitted_implementation_variation",
+        "label_definition": "engines disagree on an aspect the governing specification and the engines' own declarations leave free; both are self-consistent; the divergence is quantified and stays visible (never tuned away)",
+        "reasons": [
+          "engine defect_carrier:credit_automaton values match form 'whole_window_batched_credit_return' exactly; no bound requirement of (UEC11-FC-R02) is violated and no declared convention is misapplied \u2014 the diverged aspect is specification-free, both engines self-consistent; the divergence is quantified and STAYS VISIBLE"
+        ],
+        "residual_exact": "see minimal_case values",
+        "residual_visible": true
+      },
+      "classification_matches_ground_truth": true,
+      "defect_id": "drain_batched_credit_return",
+      "defect_kind": "return-batching error",
+      "detected": true,
+      "expected_label": "permitted_implementation_variation",
+      "ground_truth_reason": "admission law UEC11-FC-R02 intact on the carrier's own trace (sliding-window bound holds); return timing not normatively pinned; divergence quantified and stays visible",
+      "initial_case": {
+        "credit_return_latency_ns": 100,
+        "hop_latency_ns": 100,
+        "link_bytes_per_ns": 64,
+        "packet_bytes": 256,
+        "total_bytes": 16384,
+        "window_bytes": 4096
+      },
+      "minimal_case": {
+        "credit_return_latency_ns": 100,
+        "hop_latency_ns": 100,
+        "link_bytes_per_ns": 64,
+        "packet_bytes": 256,
+        "total_bytes": 768,
+        "window_bytes": 512
+      },
+      "minimal_values": {
+        "clean_exact": [
+          "304"
+        ],
+        "defect_exact": [
+          "308"
+        ]
+      },
+      "minimization": {
+        "accepted": 10,
+        "final_pass_rejections": [
+          {
+            "description": "packets 3 -> 2",
+            "dimension": "total_bytes",
+            "outcome": "vanished"
+          },
+          {
+            "description": "window 512 -> 256",
+            "dimension": "window_bytes",
+            "outcome": "vanished"
+          }
+        ],
+        "passes": 11,
+        "probe_log": [
+          {
+            "accepted": true,
+            "description": "packets 64 -> 32",
+            "dimension": "total_bytes",
+            "outcome": "reproduces",
+            "pass": 1
+          },
+          {
+            "accepted": false,
+            "description": "packets 32 -> 16",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 2
+          },
+          {
+            "accepted": true,
+            "description": "packets 32 -> 24",
+            "dimension": "total_bytes",
+            "outcome": "reproduces",
+            "pass": 2
+          },
+          {
+            "accepted": false,
+            "description": "packets 24 -> 12",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 3
+          },
+          {
+            "accepted": true,
+            "description": "packets 24 -> 18",
+            "dimension": "total_bytes",
+            "outcome": "reproduces",
+            "pass": 3
+          },
+          {
+            "accepted": false,
+            "description": "packets 18 -> 9",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 4
+          },
+          {
+            "accepted": false,
+            "description": "packets 18 -> 14",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 4
+          },
+          {
+            "accepted": false,
+            "description": "packets 18 -> 16",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 4
+          },
+          {
+            "accepted": true,
+            "description": "packets 18 -> 17",
+            "dimension": "total_bytes",
+            "outcome": "reproduces",
+            "pass": 4
+          },
+          {
+            "accepted": false,
+            "description": "packets 17 -> 9",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 5
+          },
+          {
+            "accepted": false,
+            "description": "packets 17 -> 13",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 5
+          },
+          {
+            "accepted": false,
+            "description": "packets 17 -> 15",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 5
+          },
+          {
+            "accepted": false,
+            "description": "packets 17 -> 16",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 5
+          },
+          {
+            "accepted": true,
+            "description": "window 4096 -> 2048",
+            "dimension": "window_bytes",
+            "outcome": "reproduces",
+            "pass": 5
+          },
+          {
+            "accepted": true,
+            "description": "packets 17 -> 9",
+            "dimension": "total_bytes",
+            "outcome": "reproduces",
+            "pass": 6
+          },
+          {
+            "accepted": false,
+            "description": "packets 9 -> 5",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 7
+          },
+          {
+            "accepted": false,
+            "description": "packets 9 -> 7",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 7
+          },
+          {
+            "accepted": false,
+            "description": "packets 9 -> 8",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 7
+          },
+          {
+            "accepted": true,
+            "description": "window 2048 -> 1024",
+            "dimension": "window_bytes",
+            "outcome": "reproduces",
+            "pass": 7
+          },
+          {
+            "accepted": true,
+            "description": "packets 9 -> 5",
+            "dimension": "total_bytes",
+            "outcome": "reproduces",
+            "pass": 8
+          },
+          {
+            "accepted": false,
+            "description": "packets 5 -> 3",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 9
+          },
+          {
+            "accepted": false,
+            "description": "packets 5 -> 4",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 9
+          },
+          {
+            "accepted": true,
+            "description": "window 1024 -> 512",
+            "dimension": "window_bytes",
+            "outcome": "reproduces",
+            "pass": 9
+          },
+          {
+            "accepted": true,
+            "description": "packets 5 -> 3",
+            "dimension": "total_bytes",
+            "outcome": "reproduces",
+            "pass": 10
+          },
+          {
+            "accepted": false,
+            "description": "packets 3 -> 2",
+            "dimension": "total_bytes",
+            "outcome": "vanished",
+            "pass": 11
+          },
+          {
+            "accepted": false,
+            "description": "window 512 -> 256",
+            "dimension": "window_bytes",
+            "outcome": "vanished",
+            "pass": 11
+          }
+        ],
+        "probes": 26
+      }
+    },
+    {
+      "attribution": [
+        {
+          "clean_matches": true,
+          "defect_matches": false,
+          "normativity": "declared_identity",
+          "requirement_or_convention": "",
+          "variant_id": "gb_convention_applied_2p30"
+        },
+        {
+          "clean_matches": false,
+          "defect_matches": true,
+          "normativity": "misapplies_declared_convention",
+          "requirement_or_convention": "A-AS1-BW-UNIT-analogue (1 GB = 2^30 B)",
+          "variant_id": "gb_convention_ignored_value_as_b_per_ns"
+        }
+      ],
+      "classification": {
+        "component": "ignored_gb_unit_conversion",
+        "engine_id": "defect_carrier:ring_translation",
+        "label": "translation_defect",
+        "label_definition": "the manifest-to-engine-input translation misapplies a declared convention (unit, grid, rounding), so the executed case is not the declared case",
+        "reasons": [
+          "engine defect_carrier:ring_translation values match form 'gb_convention_ignored_value_as_b_per_ns' exactly: the declared convention A-AS1-BW-UNIT-analogue (1 GB = 2^30 B) is not the one that executed \u2014 the executed case differs from the declared case"
+        ],
+        "residual_exact": "see minimal_case values",
+        "residual_visible": true
+      },
+      "classification_matches_ground_truth": true,
+      "defect_id": "ignored_gb_unit_conversion",
+      "defect_kind": "ignored unit conversion",
+      "detected": true,
+      "expected_label": "translation_defect",
+      "ground_truth_reason": "executed case differs from the declared case: the declared 1 GB = 2^30 B convention (A-AS1-BW-UNIT analogue) was skipped",
+      "initial_case": {
+        "hop_latency_ns": 200,
+        "link_gbps": 828,
+        "ops_count": 1,
+        "payload_bytes": 7168,
+        "ranks": 8
+      },
+      "minimal_case": {
+        "hop_latency_ns": 200,
+        "link_gbps": 828,
+        "ops_count": 1,
+        "payload_bytes": 2,
+        "ranks": 2
+      },
+      "minimal_values": {
+        "clean_exact": [
+          "347290324325/868220928"
+        ],
+        "defect_exact": [
+          "165601/414"
+        ]
+      },
+      "minimization": {
+        "accepted": 13,
+        "final_pass_rejections": [],
+        "passes": 14,
+        "probe_log": [
+          {
+            "accepted": true,
+            "description": "ranks 8 -> 4",
+            "dimension": "ranks",
+            "outcome": "reproduces",
+            "pass": 1
+          },
+          {
+            "accepted": true,
+            "description": "ranks 4 -> 2",
+            "dimension": "ranks",
+            "outcome": "reproduces",
+            "pass": 2
+          },
+          {
+            "accepted": true,
+            "description": "payload 7168 -> 3584",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 3
+          },
+          {
+            "accepted": true,
+            "description": "payload 3584 -> 1792",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 4
+          },
+          {
+            "accepted": true,
+            "description": "payload 1792 -> 896",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 5
+          },
+          {
+            "accepted": true,
+            "description": "payload 896 -> 448",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 6
+          },
+          {
+            "accepted": true,
+            "description": "payload 448 -> 224",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 7
+          },
+          {
+            "accepted": true,
+            "description": "payload 224 -> 112",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 8
+          },
+          {
+            "accepted": true,
+            "description": "payload 112 -> 56",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 9
+          },
+          {
+            "accepted": true,
+            "description": "payload 56 -> 28",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 10
+          },
+          {
+            "accepted": true,
+            "description": "payload 28 -> 14",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 11
+          },
+          {
+            "accepted": true,
+            "description": "payload 14 -> 6",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 12
+          },
+          {
+            "accepted": true,
+            "description": "payload 6 -> 2",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 13
+          }
+        ],
+        "probes": 13
+      }
+    },
+    {
+      "attribution": [
+        {
+          "clean_matches": true,
+          "defect_matches": false,
+          "normativity": "declared_identity",
+          "requirement_or_convention": "",
+          "variant_id": "l0_ring_identity_per_op_latency"
+        },
+        {
+          "clean_matches": false,
+          "defect_matches": true,
+          "normativity": "contradicts_bound_requirement",
+          "requirement_or_convention": "SPEC:L0-RING-IDENTITY(A-L0-LAT per op)",
+          "variant_id": "latency_omitted_after_first_op"
+        }
+      ],
+      "classification": {
+        "component": "latency_omitted_after_first_op",
+        "engine_id": "defect_carrier:l0_ring",
+        "label": "specification_violation",
+        "label_definition": "executed behavior contradicts a normative requirement the engine claims to implement through a declared binding (the binding's law is not the law that executed)",
+        "reasons": [
+          "engine defect_carrier:l0_ring values match form 'latency_omitted_after_first_op' exactly, which contradicts normative requirement SPEC:L0-RING-IDENTITY(A-L0-LAT per op) that the engine itself binds (SPEC:L0-RING-IDENTITY(A-L0-LAT per op))"
+        ],
+        "residual_exact": "see minimal_case values",
+        "residual_visible": true
+      },
+      "classification_matches_ground_truth": true,
+      "defect_id": "latency_omitted_after_first_op",
+      "defect_kind": "silent scheduling omission",
+      "detected": true,
+      "expected_label": "specification_violation",
+      "ground_truth_reason": "declared L0 ring identity (latency term per op, A-L0-LAT) contradicted for every op after the first; reproducer certified op-count-dependent (>= 2 ops)",
+      "initial_case": {
+        "hop_latency_ns": 200,
+        "link_gbps": 828,
+        "ops_count": 4,
+        "payload_bytes": 7168,
+        "ranks": 8
+      },
+      "minimal_case": {
+        "hop_latency_ns": 200,
+        "link_gbps": 828,
+        "ops_count": 2,
+        "payload_bytes": 2,
+        "ranks": 2
+      },
+      "minimal_values": {
+        "clean_exact": [
+          "347290324325/868220928",
+          "347290324325/868220928"
+        ],
+        "defect_exact": [
+          "347290324325/868220928",
+          "1953125/868220928"
+        ]
+      },
+      "minimization": {
+        "accepted": 14,
+        "final_pass_rejections": [
+          {
+            "description": "ops 2 -> 1",
+            "dimension": "ops_count",
+            "outcome": "vanished"
+          }
+        ],
+        "passes": 15,
+        "probe_log": [
+          {
+            "accepted": true,
+            "description": "ranks 8 -> 4",
+            "dimension": "ranks",
+            "outcome": "reproduces",
+            "pass": 1
+          },
+          {
+            "accepted": true,
+            "description": "ranks 4 -> 2",
+            "dimension": "ranks",
+            "outcome": "reproduces",
+            "pass": 2
+          },
+          {
+            "accepted": true,
+            "description": "payload 7168 -> 3584",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 3
+          },
+          {
+            "accepted": true,
+            "description": "payload 3584 -> 1792",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 4
+          },
+          {
+            "accepted": true,
+            "description": "payload 1792 -> 896",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 5
+          },
+          {
+            "accepted": true,
+            "description": "payload 896 -> 448",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 6
+          },
+          {
+            "accepted": true,
+            "description": "payload 448 -> 224",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 7
+          },
+          {
+            "accepted": true,
+            "description": "payload 224 -> 112",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 8
+          },
+          {
+            "accepted": true,
+            "description": "payload 112 -> 56",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 9
+          },
+          {
+            "accepted": true,
+            "description": "payload 56 -> 28",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 10
+          },
+          {
+            "accepted": true,
+            "description": "payload 28 -> 14",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 11
+          },
+          {
+            "accepted": true,
+            "description": "payload 14 -> 6",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 12
+          },
+          {
+            "accepted": true,
+            "description": "payload 6 -> 2",
+            "dimension": "payload_bytes",
+            "outcome": "reproduces",
+            "pass": 13
+          },
+          {
+            "accepted": true,
+            "description": "ops 4 -> 2",
+            "dimension": "ops_count",
+            "outcome": "reproduces",
+            "pass": 14
+          },
+          {
+            "accepted": false,
+            "description": "ops 2 -> 1",
+            "dimension": "ops_count",
+            "outcome": "vanished",
+            "pass": 15
+          }
+        ],
+        "probes": 15
+      }
+    }
+  ]
+}

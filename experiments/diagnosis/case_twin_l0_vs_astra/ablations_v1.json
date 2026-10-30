@@ -1,0 +1,141 @@
+[
+  {
+    "ablation": "a0_pinned_knobs",
+    "aborted": false,
+    "case_id": "r2-m2",
+    "exit_code": 0,
+    "overrides": {},
+    "parsed": {
+      "completion_time_ns": 860,
+      "per_rank": [
+        {
+          "comm_time_ns": 860,
+          "exposed_comm_cycles": 860,
+          "finished_cycles": 860,
+          "rank": 0,
+          "wall_time_ns": 860
+        },
+        {
+          "comm_time_ns": 860,
+          "exposed_comm_cycles": 860,
+          "finished_cycles": 860,
+          "rank": 1,
+          "wall_time_ns": 860
+        }
+      ],
+      "ranks": 2,
+      "units": "ns (EventTime, astra-network-analytical common/Type.h at the pin)"
+    },
+    "stdout_file": "localization/r2-m2/a0_pinned_knobs.stdout",
+    "system_json": "{\"active-chunks-per-dimension\": 1, \"all-gather-implementation\": [\"ring\"], \"all-reduce-implementation\": [\"ring\"], \"all-to-all-implementation\": [\"ring\"], \"collective-optimization\": \"localBWAware\", \"endpoint-delay\": 10, \"local-mem-bw\": 1600, \"preferred-dataset-splits\": 2, \"reduce-scatter-implementation\": [\"ring\"], \"scheduling-policy\": \"LIFO\"}"
+  },
+  {
+    "ablation": "a1_local_mem_bw_relaxed",
+    "aborted": false,
+    "case_id": "r2-m2",
+    "exit_code": 0,
+    "overrides": {
+      "local-mem-bw": 1600000
+    },
+    "parsed": {
+      "completion_time_ns": 860,
+      "per_rank": [
+        {
+          "comm_time_ns": 860,
+          "exposed_comm_cycles": 860,
+          "finished_cycles": 860,
+          "rank": 0,
+          "wall_time_ns": 860
+        },
+        {
+          "comm_time_ns": 860,
+          "exposed_comm_cycles": 860,
+          "finished_cycles": 860,
+          "rank": 1,
+          "wall_time_ns": 860
+        }
+      ],
+      "ranks": 2,
+      "units": "ns (EventTime, astra-network-analytical common/Type.h at the pin)"
+    },
+    "stdout_file": "localization/r2-m2/a1_local_mem_bw_relaxed.stdout",
+    "system_json": "{\"active-chunks-per-dimension\": 1, \"all-gather-implementation\": [\"ring\"], \"all-reduce-implementation\": [\"ring\"], \"all-to-all-implementation\": [\"ring\"], \"collective-optimization\": \"localBWAware\", \"endpoint-delay\": 10, \"local-mem-bw\": 1600000, \"preferred-dataset-splits\": 2, \"reduce-scatter-implementation\": [\"ring\"], \"scheduling-policy\": \"LIFO\"}"
+  },
+  {
+    "ablation": "a2_chunks_relaxed",
+    "aborted": false,
+    "case_id": "r2-m2",
+    "exit_code": 0,
+    "overrides": {
+      "active-chunks-per-dimension": 4
+    },
+    "parsed": {
+      "completion_time_ns": 430,
+      "per_rank": [
+        {
+          "comm_time_ns": 430,
+          "exposed_comm_cycles": 430,
+          "finished_cycles": 430,
+          "rank": 0,
+          "wall_time_ns": 430
+        },
+        {
+          "comm_time_ns": 430,
+          "exposed_comm_cycles": 430,
+          "finished_cycles": 430,
+          "rank": 1,
+          "wall_time_ns": 430
+        }
+      ],
+      "ranks": 2,
+      "units": "ns (EventTime, astra-network-analytical common/Type.h at the pin)"
+    },
+    "stdout_file": "localization/r2-m2/a2_chunks_relaxed.stdout",
+    "system_json": "{\"active-chunks-per-dimension\": 4, \"all-gather-implementation\": [\"ring\"], \"all-reduce-implementation\": [\"ring\"], \"all-to-all-implementation\": [\"ring\"], \"collective-optimization\": \"localBWAware\", \"endpoint-delay\": 10, \"local-mem-bw\": 1600, \"preferred-dataset-splits\": 2, \"reduce-scatter-implementation\": [\"ring\"], \"scheduling-policy\": \"LIFO\"}"
+  },
+  {
+    "ablation": "a3_endpoint_delay_zero",
+    "aborted": true,
+    "abortion_error": "AdapterError: ASTRA-sim process exited with code 134 (see its stdout/stderr in the run log); refusing to parse a failed run",
+    "case_id": "r2-m2",
+    "exit_code": 0,
+    "overrides": {
+      "endpoint-delay": 0
+    },
+    "stdout_file": "localization/r2-m2/a3_endpoint_delay_zero.stdout",
+    "system_json": "{\"active-chunks-per-dimension\": 1, \"all-gather-implementation\": [\"ring\"], \"all-reduce-implementation\": [\"ring\"], \"all-to-all-implementation\": [\"ring\"], \"collective-optimization\": \"localBWAware\", \"endpoint-delay\": 0, \"local-mem-bw\": 1600, \"preferred-dataset-splits\": 2, \"reduce-scatter-implementation\": [\"ring\"], \"scheduling-policy\": \"LIFO\"}"
+  },
+  {
+    "ablation": "a4_all_feasible_relaxed",
+    "aborted": false,
+    "case_id": "r2-m2",
+    "exit_code": 0,
+    "overrides": {
+      "active-chunks-per-dimension": 4,
+      "local-mem-bw": 1600000
+    },
+    "parsed": {
+      "completion_time_ns": 430,
+      "per_rank": [
+        {
+          "comm_time_ns": 430,
+          "exposed_comm_cycles": 430,
+          "finished_cycles": 430,
+          "rank": 0,
+          "wall_time_ns": 430
+        },
+        {
+          "comm_time_ns": 430,
+          "exposed_comm_cycles": 430,
+          "finished_cycles": 430,
+          "rank": 1,
+          "wall_time_ns": 430
+        }
+      ],
+      "ranks": 2,
+      "units": "ns (EventTime, astra-network-analytical common/Type.h at the pin)"
+    },
+    "stdout_file": "localization/r2-m2/a4_all_feasible_relaxed.stdout",
+    "system_json": "{\"active-chunks-per-dimension\": 4, \"all-gather-implementation\": [\"ring\"], \"all-reduce-implementation\": [\"ring\"], \"all-to-all-implementation\": [\"ring\"], \"collective-optimization\": \"localBWAware\", \"endpoint-delay\": 10, \"local-mem-bw\": 1600000, \"preferred-dataset-splits\": 2, \"reduce-scatter-implementation\": [\"ring\"], \"scheduling-policy\": \"LIFO\"}"
+  }
+]

@@ -1,0 +1,20 @@
+{
+    "active-chunks-per-dimension": 4,
+    "all-gather-implementation": [
+        "ring"
+    ],
+    "all-reduce-implementation": [
+        "ring"
+    ],
+    "all-to-all-implementation": [
+        "ring"
+    ],
+    "collective-optimization": "localBWAware",
+    "endpoint-delay": 10,
+    "local-mem-bw": 1600000,
+    "preferred-dataset-splits": 2,
+    "reduce-scatter-implementation": [
+        "ring"
+    ],
+    "scheduling-policy": "LIFO"
+}

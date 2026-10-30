@@ -1,0 +1,764 @@
+{
+  "accepted": 34,
+  "final_pass_rejections": [],
+  "initial_case": {
+    "payload_bytes": 2147483592,
+    "ranks": 72
+  },
+  "minimal_case": {
+    "payload_bytes": 2,
+    "ranks": 2
+  },
+  "passes": 35,
+  "probe_log": [
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2147483592,
+        "ranks": 36
+      },
+      "description": "ranks 72 -> 36",
+      "dimension": "ranks",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r36-m2147483592/run-diag-astra-r36-m2147483592.yaml",
+        "astra_run_id": "77095b814a59943315918dcaebc7056a731c32b451f175a80f284d293e313e7d",
+        "astra_wall_ns": "9484380",
+        "case_id": "r36-m2147483592",
+        "l0_cct_exact": "1046813635/207",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r36-m2147483592/run-diag-l0-r36-m2147483592.yaml",
+        "l0_run_id": "68bc8de73a89592fb1e34bc6e461a757b65d8cc3ee611801dd75253646aaa5ea",
+        "relative_deviation_exact": "183290605/209362727",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 1
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2147483592,
+        "ranks": 18
+      },
+      "description": "ranks 36 -> 18",
+      "dimension": "ranks",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r18-m2147483592/run-diag-astra-r18-m2147483592.yaml",
+        "astra_run_id": "5a0f40e4ff8a97eb2c4c67884f93c31812c06f61370fd1c88bb8ab5912b4575d",
+        "astra_wall_ns": "8829504",
+        "case_id": "r18-m2147483592",
+        "l0_cct_exact": "1015497074/207",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r18-m2147483592/run-diag-l0-r18-m2147483592.yaml",
+        "l0_run_id": "2a49511017355595b9c004e7c92b974e64252ba9742c64d4821d5004dda66b32",
+        "relative_deviation_exact": "406105127/507748537",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 2
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2147483592,
+        "ranks": 9
+      },
+      "description": "ranks 18 -> 9",
+      "dimension": "ranks",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r9-m2147483592/run-diag-astra-r9-m2147483592.yaml",
+        "astra_run_id": "2a0857aed546516326878b0535b6e309af921f2691ae62571d7bd007e966bab1",
+        "astra_wall_ns": "8220186",
+        "case_id": "r9-m2147483592",
+        "l0_cct_exact": "955099552/207",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r9-m2147483592/run-diag-l0-r9-m2147483592.yaml",
+        "l0_run_id": "83491d9f5a07b6d8e245a23cdd959070232f7d075adf55a5e767549efa5fd5e1",
+        "relative_deviation_exact": "373239475/477549776",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 3
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2147483592,
+        "ranks": 4
+      },
+      "description": "ranks 9 -> 4",
+      "dimension": "ranks",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r4-m2147483592/run-diag-astra-r4-m2147483592.yaml",
+        "astra_run_id": "5ecad2928dcbfe5583f340d77ba9184fa14068189fc88b13cf857b4733bd277a",
+        "astra_wall_ns": "6915328",
+        "case_id": "r4-m2147483592",
+        "l0_cct_exact": "89506083/23",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r4-m2147483592/run-diag-l0-r4-m2147483592.yaml",
+        "l0_run_id": "9c488648b4521c104307bc0eefd8ec3e371a0209fd2ac3344d47e147e2dedf61",
+        "relative_deviation_exact": "69546461/89506083",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 4
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2147483592,
+        "ranks": 2
+      },
+      "description": "ranks 4 -> 2",
+      "dimension": "ranks",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2147483592/run-diag-astra-r2-m2147483592.yaml",
+        "astra_run_id": "9f39d0cbdad74e50d85a9af3484c50486e1a41a6c64fc060469779d9a2362b73",
+        "astra_wall_ns": "4607700",
+        "case_id": "r2-m2147483592",
+        "l0_cct_exact": "59661522/23",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2147483592/run-diag-l0-r2-m2147483592.yaml",
+        "l0_run_id": "1a5e957e016df3f7e9746680b8a0fceb00c80028e07ad88e86dd125ad5da8ee3",
+        "relative_deviation_exact": "7719263/9943587",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 5
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 1073741796,
+        "ranks": 2
+      },
+      "description": "payload 2147483592 -> 1073741796",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m1073741796/run-diag-astra-r2-m1073741796.yaml",
+        "astra_run_id": "d8001b03b0c036c9bbc1dc00d5477543083766ef66928c6b4d06706e927afa59",
+        "astra_wall_ns": "2304280",
+        "case_id": "r2-m1073741796",
+        "l0_cct_exact": "29835361/23",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m1073741796/run-diag-l0-r2-m1073741796.yaml",
+        "l0_run_id": "ef8e47d30b10fdb346d2a117285948d2b0fe0a05d5781baf37a8e773f7fc2639",
+        "relative_deviation_exact": "23163079/29835361",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 6
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 536870898,
+        "ranks": 2
+      },
+      "description": "payload 1073741796 -> 536870898",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m536870898/run-diag-astra-r2-m536870898.yaml",
+        "astra_run_id": "a20c940d417c16266545d6ec42dabcfd0c0c4d266820a414e98ffb17b328c775",
+        "astra_wall_ns": "1152568",
+        "case_id": "r2-m536870898",
+        "l0_cct_exact": "29844561/46",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m536870898/run-diag-l0-r2-m536870898.yaml",
+        "l0_run_id": "6319c1dc3009d8bfd13b5d00b981da13d01a766b15dc96680ee3dc696c460ce2",
+        "relative_deviation_exact": "23173567/29844561",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 7
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 268435448,
+        "ranks": 2
+      },
+      "description": "payload 536870898 -> 268435448",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m268435448/run-diag-astra-r2-m268435448.yaml",
+        "astra_run_id": "00e603caeda82629f1655d913553684147f02f63f03406ecaac870d47d3080fd",
+        "astra_wall_ns": "576714",
+        "case_id": "r2-m268435448",
+        "l0_cct_exact": "67191662/207",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m268435448/run-diag-l0-r2-m268435448.yaml",
+        "l0_run_id": "db458b7134cdc893083f5a0025393807fcce6edf94c7345370d00a68b987ba48",
+        "relative_deviation_exact": "26094068/33595831",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 8
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 134217724,
+        "ranks": 2
+      },
+      "description": "payload 268435448 -> 134217724",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m134217724/run-diag-astra-r2-m134217724.yaml",
+        "astra_run_id": "ee3ab302d3ced6f782445c2313de1ce8e078c2784763735bcfc5c751df5324f9",
+        "astra_wall_ns": "288782",
+        "case_id": "r2-m134217724",
+        "l0_cct_exact": "33637231/207",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m134217724/run-diag-l0-r2-m134217724.yaml",
+        "l0_run_id": "e349c2026ab65c2401f9c0461fd92db7ea530696af79a0d523cfd97a5299900e",
+        "relative_deviation_exact": "26140643/33637231",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 9
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 67108862,
+        "ranks": 2
+      },
+      "description": "payload 134217724 -> 67108862",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m67108862/run-diag-astra-r2-m67108862.yaml",
+        "astra_run_id": "d98b29b48791531013677ce8c6c9720706dc5351456388ab553c3dfe9eea32fc",
+        "astra_wall_ns": "144818",
+        "case_id": "r2-m67108862",
+        "l0_cct_exact": "33720031/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m67108862/run-diag-l0-r2-m67108862.yaml",
+        "l0_run_id": "3df668b7895b1f43ba2ce57e430688825b5503683af2dee22ed6eee69f16526b",
+        "relative_deviation_exact": "26234621/33720031",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 10
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 33554430,
+        "ranks": 2
+      },
+      "description": "payload 67108862 -> 33554430",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m33554430/run-diag-astra-r2-m33554430.yaml",
+        "astra_run_id": "4297de1319b08bc9e1142236de9630d424aa1b92463c09400a77e131295378af",
+        "astra_wall_ns": "72836",
+        "case_id": "r2-m33554430",
+        "l0_cct_exact": "1882535/46",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m33554430/run-diag-l0-r2-m33554430.yaml",
+        "l0_run_id": "f983b64e2d4445866ac972d04b7acb2d33cea6424ccc43923fcd0d078dafcf9c",
+        "relative_deviation_exact": "1467921/1882535",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 11
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 16777214,
+        "ranks": 2
+      },
+      "description": "payload 33554430 -> 16777214",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m16777214/run-diag-astra-r2-m16777214.yaml",
+        "astra_run_id": "a729840e17a0851f867a56f611fc8f60db4e9f996cbe65fc5139c526a88e8aa4",
+        "astra_wall_ns": "36846",
+        "case_id": "r2-m16777214",
+        "l0_cct_exact": "8554207/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m16777214/run-diag-l0-r2-m16777214.yaml",
+        "l0_run_id": "54b6d7dc1b959c28a4bab786623eafc5e559fda0bd17f741324027b3a1bcc5f1",
+        "relative_deviation_exact": "6700037/8554207",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 12
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 8388606,
+        "ranks": 2
+      },
+      "description": "payload 16777214 -> 8388606",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m8388606/run-diag-astra-r2-m8388606.yaml",
+        "astra_run_id": "95ebb747546a9faa749ae2165fa576d94ba80a7f61ed17c16887c5f20dd4ff5f",
+        "astra_wall_ns": "18848",
+        "case_id": "r2-m8388606",
+        "l0_cct_exact": "63187/6",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m8388606/run-diag-l0-r2-m8388606.yaml",
+        "l0_run_id": "824f4811485655fb1f69af2b839e5887077a7e84d9e5e4eb3017d89c86868a4a",
+        "relative_deviation_exact": "49901/63187",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 13
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 4194302,
+        "ranks": 2
+      },
+      "description": "payload 8388606 -> 4194302",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m4194302/run-diag-astra-r2-m4194302.yaml",
+        "astra_run_id": "a599a68024870a349da96a1e8ab627b3b33ad785ca30356c1885a7f1f26e27dc",
+        "astra_wall_ns": "9854",
+        "case_id": "r2-m4194302",
+        "l0_cct_exact": "2262751/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m4194302/run-diag-l0-r2-m4194302.yaml",
+        "l0_run_id": "077f5633a6ed4162569e969591b2274e0c117a6205f35d6aa8f9fa9847dee627",
+        "relative_deviation_exact": "1816805/2262751",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 14
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2097150,
+        "ranks": 2
+      },
+      "description": "payload 4194302 -> 2097150",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2097150/run-diag-astra-r2-m2097150.yaml",
+        "astra_run_id": "2e3edfcb74b1eb484c768229f5d30b41191aca8655ef5b53abd21237aa03b8ca",
+        "astra_wall_ns": "5354",
+        "case_id": "r2-m2097150",
+        "l0_cct_exact": "404725/138",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2097150/run-diag-l0-r2-m2097150.yaml",
+        "l0_run_id": "0de97bdfd89c6cab94b5eaa25d8c6df01b77fad2fd2c18552fcadc197c56a218",
+        "relative_deviation_exact": "334127/404725",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 15
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 1048574,
+        "ranks": 2
+      },
+      "description": "payload 2097150 -> 1048574",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m1048574/run-diag-astra-r2-m1048574.yaml",
+        "astra_run_id": "758c6d036ca3ca2c78f46cb648b22c12d402b0c2dfe3f771dd0fdc804902fabd",
+        "astra_wall_ns": "3102",
+        "case_id": "r2-m1048574",
+        "l0_cct_exact": "689887/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m1048574/run-diag-l0-r2-m1048574.yaml",
+        "l0_run_id": "c6c0107dfe314dd0ceae78ca4d9d95bd9b0abb948c4894c1d25306e0274d6e5a",
+        "relative_deviation_exact": "54031/62717",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 16
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 524286,
+        "ranks": 2
+      },
+      "description": "payload 1048574 -> 524286",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m524286/run-diag-astra-r2-m524286.yaml",
+        "astra_run_id": "7de313af7cb7649d7f531e02f8c70d11f62a08e5e3a62b305b5e80192fbe1048",
+        "astra_wall_ns": "1978",
+        "case_id": "r2-m524286",
+        "l0_cct_exact": "47527/46",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m524286/run-diag-l0-r2-m524286.yaml",
+        "l0_run_id": "7d6f032140f78ccea7e6de9571b45c2ea5dcfb7edc7e04c2230a4a0533c205a0",
+        "relative_deviation_exact": "43461/47527",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 17
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 262142,
+        "ranks": 2
+      },
+      "description": "payload 524286 -> 262142",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m262142/run-diag-astra-r2-m262142.yaml",
+        "astra_run_id": "3e648d0976dc18410dc15be7f116ed28ea13d259a2fb77d3b2691d42430b1e11",
+        "astra_wall_ns": "1416",
+        "case_id": "r2-m262142",
+        "l0_cct_exact": "296671/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m262142/run-diag-l0-r2-m262142.yaml",
+        "l0_run_id": "03ba32d0b23b0fa4628aed9d2e94dbc284c57251e925d23c6742082b2a250330",
+        "relative_deviation_exact": "289553/296671",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 18
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 131070,
+        "ranks": 2
+      },
+      "description": "payload 262142 -> 131070",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m131070/run-diag-astra-r2-m131070.yaml",
+        "astra_run_id": "8d15d05f43c4d5722189e5fd15b8e335e7e0621806693249770e56c6c1f003ad",
+        "astra_wall_ns": "1136",
+        "case_id": "r2-m131070",
+        "l0_cct_exact": "77045/138",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m131070/run-diag-l0-r2-m131070.yaml",
+        "l0_run_id": "8c2b77c0de463313e6e83d7d31e145e4091dd0b8b511139856d1a453587292c4",
+        "relative_deviation_exact": "79723/77045",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 19
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 65534,
+        "ranks": 2
+      },
+      "description": "payload 131070 -> 65534",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m65534/run-diag-astra-r2-m65534.yaml",
+        "astra_run_id": "d2fd0d6349e170a10dd405b5371e324528c6d11ca050b8bd32c67485f441624a",
+        "astra_wall_ns": "996",
+        "case_id": "r2-m65534",
+        "l0_cct_exact": "198367/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m65534/run-diag-l0-r2-m65534.yaml",
+        "l0_run_id": "ab91c24e63d8085b89a8be15b46ac3ae29a59c5b5a6ced33c4ae68ebb4da9195",
+        "relative_deviation_exact": "213977/198367",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 20
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 32766,
+        "ranks": 2
+      },
+      "description": "payload 65534 -> 32766",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m32766/run-diag-astra-r2-m32766.yaml",
+        "astra_run_id": "dba47a0aca7714ae766d5499ad68fad60ac966317bfaecb58e7636caee5565e4",
+        "astra_wall_ns": "926",
+        "case_id": "r2-m32766",
+        "l0_cct_exact": "60661/138",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m32766/run-diag-l0-r2-m32766.yaml",
+        "l0_run_id": "f86c709cf3fdfc13b7b1a0877e758be9fb30103c09a178191f62f88176b572db",
+        "relative_deviation_exact": "67127/60661",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 21
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 16382,
+        "ranks": 2
+      },
+      "description": "payload 32766 -> 16382",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m16382/run-diag-astra-r2-m16382.yaml",
+        "astra_run_id": "da545b65c41f5a99eba8f62b2324cdd18e7dac03d3890ae1188f36e1703f8a5b",
+        "astra_wall_ns": "888",
+        "case_id": "r2-m16382",
+        "l0_cct_exact": "173791/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m16382/run-diag-l0-r2-m16382.yaml",
+        "l0_run_id": "c0bbe49baae50bb472bf8a22caa8d1863c8019eb2aa11c1f9a18262cbc3aaf2d",
+        "relative_deviation_exact": "193841/173791",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 22
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 8190,
+        "ranks": 2
+      },
+      "description": "payload 16382 -> 8190",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m8190/run-diag-astra-r2-m8190.yaml",
+        "astra_run_id": "6fdad2fbdc8bc9704e5ee004130dc64dc84e0803e3cbca6db9a32aa5679a4aa7",
+        "astra_wall_ns": "874",
+        "case_id": "r2-m8190",
+        "l0_cct_exact": "18855/46",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m8190/run-diag-l0-r2-m8190.yaml",
+        "l0_run_id": "152601c1da8dd77c7befca13f800ace6ecd20dbc972343c2098d4ac610a42c8d",
+        "relative_deviation_exact": "21349/18855",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 23
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 4094,
+        "ranks": 2
+      },
+      "description": "payload 8190 -> 4094",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m4094/run-diag-astra-r2-m4094.yaml",
+        "astra_run_id": "214dd813952cb6a1e0ddef9920b65f0b2582691cb0509c912005a82a41811c40",
+        "astra_wall_ns": "864",
+        "case_id": "r2-m4094",
+        "l0_cct_exact": "7289/18",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m4094/run-diag-l0-r2-m4094.yaml",
+        "l0_run_id": "de24c4e98d5cedba023d6b7a72e93e702724285a485fba948ce68a82868c3b4c",
+        "relative_deviation_exact": "8263/7289",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 24
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2046,
+        "ranks": 2
+      },
+      "description": "payload 4094 -> 2046",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2046/run-diag-astra-r2-m2046.yaml",
+        "astra_run_id": "9bd50f7f09bf1126818863fd15043cb45219b859fc9ba191010c06f1de3a8945",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m2046",
+        "l0_cct_exact": "55541/138",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2046/run-diag-l0-r2-m2046.yaml",
+        "l0_run_id": "9c7edc668251295cc1773fa6af1fd8ed95e8d6f4d27024a7502bfbc9dffaa107",
+        "relative_deviation_exact": "63139/55541",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 25
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 1022,
+        "ranks": 2
+      },
+      "description": "payload 2046 -> 1022",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m1022/run-diag-astra-r2-m1022.yaml",
+        "astra_run_id": "10a91b101423dcb843074d2f8fc4127803eb695b235bcf94f27a3215ea0c3bf2",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m1022",
+        "l0_cct_exact": "166111/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m1022/run-diag-l0-r2-m1022.yaml",
+        "l0_run_id": "373329a8b67f8bf84c5c7b90b360b6a43ae6669c5860023d70fb17420960ad4e",
+        "relative_deviation_exact": "189929/166111",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 26
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 510,
+        "ranks": 2
+      },
+      "description": "payload 1022 -> 510",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m510/run-diag-astra-r2-m510.yaml",
+        "astra_run_id": "2c220bdb9c1286047188b3757dbfc53db6666577fc5bb8c5c91eb6f5f7179c5d",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m510",
+        "l0_cct_exact": "55285/138",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m510/run-diag-l0-r2-m510.yaml",
+        "l0_run_id": "e7ee5a7101299b9f1643231e39a749394216e9321d0e592b34384d8887b5f897",
+        "relative_deviation_exact": "12679/11057",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 27
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 254,
+        "ranks": 2
+      },
+      "description": "payload 510 -> 254",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m254/run-diag-astra-r2-m254.yaml",
+        "astra_run_id": "ca7b91faf14b42e53c86a7865635960732a3354c33e5ba6e7f63d46ab4a4509b",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m254",
+        "l0_cct_exact": "165727/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m254/run-diag-l0-r2-m254.yaml",
+        "l0_run_id": "94c470ac820f5c3bcbff1344e0f464f9383f0027c625fcbe1da64f93297edb75",
+        "relative_deviation_exact": "190313/165727",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 28
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 126,
+        "ranks": 2
+      },
+      "description": "payload 254 -> 126",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m126/run-diag-astra-r2-m126.yaml",
+        "astra_run_id": "14b66af80d559f6efa2424de6e243cb61b352df0f16881250b99f668c3e015d7",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m126",
+        "l0_cct_exact": "18407/46",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m126/run-diag-l0-r2-m126.yaml",
+        "l0_run_id": "6d1d62cd5ffe9d258ded3b484e81f370a31372a5b99b50204e3a4c683047113f",
+        "relative_deviation_exact": "21153/18407",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 29
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 62,
+        "ranks": 2
+      },
+      "description": "payload 126 -> 62",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m62/run-diag-astra-r2-m62.yaml",
+        "astra_run_id": "b68aa658de4e84a9f67388d36201815e62ecd528118874e4bd1ffa78b3940a52",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m62",
+        "l0_cct_exact": "165631/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m62/run-diag-l0-r2-m62.yaml",
+        "l0_run_id": "def8be0d8ad3085ff2283661ed1162e19638c68386a875b5e2756cc06ef43b2f",
+        "relative_deviation_exact": "190409/165631",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 30
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 30,
+        "ranks": 2
+      },
+      "description": "payload 62 -> 30",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m30/run-diag-astra-r2-m30.yaml",
+        "astra_run_id": "5d10395e7a89d8b792a911299370256d880e533e10a336051660df30babb1be0",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m30",
+        "l0_cct_exact": "55205/138",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m30/run-diag-l0-r2-m30.yaml",
+        "l0_run_id": "06100d411c83fb8a0c9feb0f8736b04a07716008d8166e20b197dfc3226d099c",
+        "relative_deviation_exact": "12695/11041",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 31
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 14,
+        "ranks": 2
+      },
+      "description": "payload 30 -> 14",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m14/run-diag-astra-r2-m14.yaml",
+        "astra_run_id": "666e17896b7cddfb3b0b6d0f2ac66299a5030745306ff5ee1d21bafda507641a",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m14",
+        "l0_cct_exact": "165607/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m14/run-diag-l0-r2-m14.yaml",
+        "l0_run_id": "2bd54a0c0eea0cd27a6bdf2f6ef173e8bb135eb435dffa7c0b97509a6e5f68c2",
+        "relative_deviation_exact": "190433/165607",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 32
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 6,
+        "ranks": 2
+      },
+      "description": "payload 14 -> 6",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m6/run-diag-astra-r2-m6.yaml",
+        "astra_run_id": "d4c5792e121a9a45d8efcc24dca92d01db441011e127dbc7de79635e6b37c299",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m6",
+        "l0_cct_exact": "55201/138",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m6/run-diag-l0-r2-m6.yaml",
+        "l0_run_id": "ad87bf412ac9b7915dacca62399bc5a6ef3c000b87d581cbc14f799dffb1ec95",
+        "relative_deviation_exact": "63479/55201",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 33
+    },
+    {
+      "accepted": true,
+      "candidate": {
+        "payload_bytes": 2,
+        "ranks": 2
+      },
+      "description": "payload 6 -> 2",
+      "dimension": "payload_bytes",
+      "evidence": {
+        "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2/run-diag-astra-r2-m2.yaml",
+        "astra_run_id": "2ce2995beb32db88fb3e813893514934414b071928c2a2e3fb385fb59250bbbf",
+        "astra_wall_ns": "860",
+        "case_id": "r2-m2",
+        "l0_cct_exact": "165601/414",
+        "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m2/run-diag-l0-r2-m2.yaml",
+        "l0_run_id": "9162fade0942094b80a05fca3df0e35afc07be1801ae98cd6696bdfd2dc68f09",
+        "relative_deviation_exact": "190439/165601",
+        "threshold_exact": "1/100"
+      },
+      "outcome": "reproduces",
+      "pass": 34
+    }
+  ],
+  "probes": 34
+}

@@ -1,0 +1,5 @@
+ESSUN_BINARY_SHA256=ecc3a52d44c7134ce353ed03b8cb0076e5bfdbf2659bcdbb0cc5f2d760749ea4
+[2026-10-30 07:34:25.748] [system::topology::RingTopology] [info] ring of node 0, id: 0 dimension: local total nodes in ring: 2 index in ring: 0 offset: 1 total nodes in ring: 2
+ASTRA_EXIT=134
+AstraSim_Analytical_Congestion_Unaware: /opt/astra-sim/extern/network_backend/analytical/common/event-queue/EventQueue.cpp:33: void NetworkAnalytical::EventQueue::proceed(): Assertion `current_event_list.get_event_time() > current_time' failed.
+bash: line 1:     9 Aborted                 /opt/astra-sim/build/astra_analytical/build/bin/AstraSim_Analytical_Congestion_Unaware --workload-configuration=/mnt/inputs/workload/run-diag-astra-r2-m2 --system-configuration=/mnt/inputs/system.json --remote-memory-configuration=/mnt/inputs/remote_memory.json --network-configuration=/mnt/inputs/network.yml

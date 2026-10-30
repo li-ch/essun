@@ -1,0 +1,8 @@
+# G9 diagnosis twin probe topology (case r8-m2048): identical
+# file shared by both engines (the same-workload bar).
+topology_id: ring8_diag_b828_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 828
+  hop_latency_ns: 200

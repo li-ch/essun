@@ -1,0 +1,40 @@
+# G9 diagnosis twin probe: engine l0 at case r2-m254.
+experiment_id: EXP-DIAG-TWIN-L0-R2-M254-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m254/workload_tp2_254.yaml
+infra_graph:
+  path: experiments/diagnosis/case_twin_l0_vs_astra/probes/r2-m254/topology_ring2_b828_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_l0.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0.yaml
+backends:
+- analytical_l0
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+  - O-CONSERVATION
+  - O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring2 at B=828, L=200 (free parameters, the G7 twin values)
+  workload: one w1 AllReduce of 254 B (divisible by 2)
+  implementation: G9 diagnosis minimization probe; E0/PROPOSED; nothing tuned; no labels
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/diagnosis/test_case_twin.py
+    scope: G9 twin case study guard — rebuilds the case record from these runs
+  calibration_target: []
+  held_out:
+    held_out: false
+    scope: diagnosis probe; no anchor read
+  independent_reproduction: []
+  known_omissions:
+  - diagnosis minimization probe of the G7 twin disagreement; not a calibration leg

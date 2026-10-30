@@ -1,0 +1,43 @@
+{
+  "diff_engine": [
+    {
+      "diff_id": "297adbb36aa92421017aff38d96741ecceba01226caff697e40da2aba20a76da",
+      "report": "results/difference_reports/297adbb36aa92421017aff38d96741ecceba01226caff697e40da2aba20a76da.json",
+      "verdict": {
+        "detail": "first divergence at {'op': 0}: 2129415031/414 vs 11216448 ns (delta 2514194441/414)",
+        "first_divergence": {
+          "delta_exact": "2514194441/414",
+          "location": {
+            "op": 0
+          },
+          "observable": "O-CCT",
+          "ratio_b_over_a_exact": "4643609472/2129415031",
+          "ratio_b_over_a_float": 2.180697235812834,
+          "value_a_exact": "2129415031/414",
+          "value_b_exact": "11216448"
+        },
+        "status": "diverged"
+      }
+    },
+    {
+      "diff_id": "bcc3797f23f385b1c125c4ddd5a669926b18c5edc0083c1e338623cd81a3b695",
+      "report": "results/difference_reports/bcc3797f23f385b1c125c4ddd5a669926b18c5edc0083c1e338623cd81a3b695.json",
+      "verdict": {
+        "detail": "capability gap, not a numeric difference; recorded as such and never classified as divergence",
+        "reason": "run b declares O-CONSERVATION unsupported: the analytical congestion-unaware output has no byte accounting (only per-NPU cycle/time lines, runbook \u00a75), so wire-conservation cannot be emitted honestly for this backend; explicitly declared unsupported, matching CAPABILITIES['explicitly_unsupported']",
+        "status": "not_comparable"
+      }
+    }
+  ],
+  "initial_pair": {
+    "astra_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r72-m2147483592/run-diag-astra-r72-m2147483592.yaml",
+    "astra_run_id": "0c6b8ec4868a8ed440e7883b7a7b2b9498b03bfecd44c7d133891ae3efa8e03f",
+    "astra_wall_ns": "11216448",
+    "case_id": "r72-m2147483592",
+    "l0_cct_exact": "2129415031/414",
+    "l0_manifest": "experiments/diagnosis/case_twin_l0_vs_astra/probes/r72-m2147483592/run-diag-l0-r72-m2147483592.yaml",
+    "l0_run_id": "82b2296fc18604ad74566246a4bff0249b6055fbd96ac9782cbb3502dc6e76c3",
+    "relative_deviation_exact": "2514194441/2129415031",
+    "threshold_exact": "1/100"
+  }
+}
