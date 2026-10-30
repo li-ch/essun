@@ -15,14 +15,15 @@ registry.  This file is the migration's conformance gate:
   citations, keywords and subjects are compared too, so the artifact is
   the same interpretation, not a paraphrase of a paraphrase;
 - the artifact's per-disposition counts equal the live D1 coverage
-  report's UEC totals (188 informational / 255 unsupported /
-  2 simulated_behavior over 445 requirements, 67 free parameters
+  report's UEC totals (188 informational / 254 unsupported /
+  3 simulated_behavior over 445 requirements, 67 free parameters
   outside the table);
 - the BINDING check passes against the declared backend: the artifact's
   bindings are exactly the live :data:`essun.specir.bindings.BINDINGS`
   registry (BIND-UEC11-FC-R02-AUTOMATON on the credit automaton — its
-  declared steady-state abstraction the analytical Eq. 3 backend — and
-  BIND-UEC11-FC-R08-L0TFC on analytical_l0_tfc), and
+  declared steady-state abstraction the analytical Eq. 3 backend — plus
+  BIND-UEC11-FC-R08-L0TFC and BIND-UEC11-FC-R09-L0TFC on
+  analytical_l0_tfc), and
   ``check_bindings_against`` is green against each binding's own
   backend's real CAPABILITIES (per-backend since G8: the profile binds
   two distinct backends);
@@ -124,8 +125,10 @@ def test_artifact_loads_with_the_uec_identity(profile: LoadedProfile) -> None:
     # bumps the minor component (semver 0.x convention, stated in the
     # builder). 0.2.0 -> 0.3.0 at G8 (2026-10-30): the UEC11-FC-R02
     # binding re-pointed at the credit automaton — again the MAJOR
-    # "bindings" class. A bump is conscious.
-    assert profile.profile_version == "0.3.0"
+    # "bindings" class. 0.3.0 -> 0.4.0 at G2 stage S3 (2026-10-30): the
+    # UEC11-FC-R09 promotion (dispositions + new binding), same MAJOR
+    # class. A bump is conscious.
+    assert profile.profile_version == "0.4.0"
 
 
 def test_artifact_validates_against_the_published_schema(document: dict) -> None:
@@ -173,8 +176,10 @@ def test_disposition_counts_are_the_live_coverage_totals(
     live = uec_profile_coverage().total_counts()
     assert profile.disposition_counts() == live
     assert live["informational"] == 188
-    assert live["unsupported"] == 255
-    assert live["simulated_behavior"] == 2  # FC-R02 flagship + FC-R08 (G2 S2)
+    assert live["unsupported"] == 254
+    assert (
+        live["simulated_behavior"] == 3
+    )  # FC-R02 flagship + FC-R08 (G2 S2) + FC-R09 (G2 S3)
     assert live["constraint"] == 0
     assert live["conformance_test"] == 0
     assert live["not_applicable"] == 0

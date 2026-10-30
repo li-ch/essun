@@ -18,8 +18,8 @@ Division of content (the honesty contract of this migration):
   this is a migration, not a re-adjudication), ``freedom`` (all 67 free
   parameters), ``bindings`` (the live
   :data:`essun.specir.bindings.BINDINGS` registry, currently
-  BIND-UEC11-FC-R02-AUTOMATON and BIND-UEC11-FC-R08-L0TFC), and the
-  ``source``/``provenance`` identity
+  BIND-UEC11-FC-R02-AUTOMATON, BIND-UEC11-FC-R08-L0TFC and
+  BIND-UEC11-FC-R09-L0TFC), and the ``source``/``provenance`` identity
   fields, read from the repo license-gate source record
   ``experiments/uec/source_record.yaml`` (verbatim access class; the PDF
   sha256 travels with the record).  Anchor citations are copied
@@ -83,8 +83,10 @@ PROFILE_ID = "uec-1.1-semantic"
 #: RE-POINTED at the credit obligation automaton (its steady-state
 #: abstraction declared as the analytical Eq. 3 backend) — again the
 #: MAJOR "bindings" class (which backend executes which requirement
-#: changed), so the MINOR component bumps once more.
-PROFILE_VERSION = "0.3.0"
+#: changed), so the MINOR component bumps once more.  0.3.0 -> 0.4.0 at
+#: G2 stage S3 (2026-10-30): the UEC11-FC-R09 disposition flip plus its
+#: new binding — the MAJOR class once more (dispositions + bindings).
+PROFILE_VERSION = "0.4.0"
 
 #: The executable checks (element 6) — real, existing tests only.  Every
 #: entry names a file that must exist; the conformance test enforces that.
@@ -196,6 +198,55 @@ CHECKS: list[dict] = [
         ),
         "location": "tests/golden/test_credit_automaton_golden.py",
     },
+    {
+        "check_id": "UEC11-CHK-09",
+        "kind": "golden",
+        "requirement_ids": ["UEC11-FC-R09"],
+        "description": (
+            "per-packet-overhead composed ring AllReduce identity t = "
+            "2*(r-1)/r * M / min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L with "
+            "tfc_pkt_size = c + tfc_pkt_overhead (default 256 B, "
+            "UEC11-FC-R09) inside the ROUNDUP cell law, including the "
+            "R08 worked example's native composition (4096 + 256 = 4352 "
+            "B against 512-B cells => 4608 B), the overhead-is-cell-"
+            "quantized law (any 1..256 B overhead at an aligned 256-B "
+            "cell lands the same 9th cell), and the convergence "
+            "boundary: tfc_pkt_overhead = 0 recovers the S2 identity "
+            "exactly and with c = 0 (mod cell) recovers the landed R02 "
+            "identity exactly; all expected values derived in the test "
+            "by exact Fraction arithmetic"
+        ),
+        "location": "tests/golden/test_l0_tfc_pkt_golden.py",
+    },
+    {
+        "check_id": "UEC11-CHK-10",
+        "kind": "negative",
+        "requirement_ids": ["UEC11-FC-R09", "UEC11-FC-R10"],
+        "description": (
+            "a tfc.pkt_overhead outside the configurable set (below 0 B, "
+            "above 256 B, non-integral) is rejected at load time citing "
+            "UEC11-FC-R10 — the overhead bounds are spec-cited, and the "
+            "closed boundaries 0 and 256 load — and a declared overhead "
+            "without tfc.dest_cell_size is rejected citing the binding "
+            "(the ROUNDUP consumption law it feeds is the cell law)"
+        ),
+        "location": "tests/golden/test_l0_tfc_pkt_golden.py",
+    },
+    {
+        "check_id": "UEC11-CHK-11",
+        "kind": "invariant",
+        "requirement_ids": ["UEC11-FC-R09"],
+        "description": (
+            "quantized admission bound with the composed packet: per-op "
+            "in-flight data bytes Rd*(L+L_cr) <= (c/cq)*W with equality "
+            "iff the quantized window gates, credit bytes in flight "
+            "never exceed W, and the wire-byte ledger is unchanged (the "
+            "overhead constant gates credit consumption, never byte "
+            "count; re-derived as an exact Fraction identity for every "
+            "run)"
+        ),
+        "location": "tests/golden/test_l0_tfc_pkt_golden.py",
+    },
 ]
 
 #: Known omissions (element 9) — stated visibly, honesty over coverage.
@@ -233,17 +284,22 @@ OMISSIONS: list[dict] = [
         "what": (
             "TFC credit request/grant protocol dynamics, retransmission "
             "credit exemption (UEC11-FC-R06), shared-CCC credit pooling "
-            "(UEC11-FC-R16), packet-overhead accounting "
-            "(UEC11-FC-R09..R10 — stage S3 of the credit-family ladder) "
-            "and cell-size configuration/support semantics (UEC11-FC-R07)"
+            "(UEC11-FC-R16), per-direction cell/overhead asymmetry of a "
+            "PDC pair (UEC11-FC-R12), and the cell/overhead "
+            "configuration-support obligations (UEC11-FC-R07, "
+            "UEC11-FC-R10)"
         ),
         "reason": (
             "a steady granted window W is the modeled abstraction; "
             "declared explicitly_unsupported by the analytical_l0_tfc "
-            "backend's CAPABILITIES. Since G2 stage S2 the cell-"
-            "quantization CONSUMPTION law (UEC11-FC-R08) executes when "
-            "tfc_dest_cell_size is declared, with its domain values "
-            "cited to UEC11-FC-R07 — the obligation itself does not"
+            "backend's CAPABILITIES. Since G2 stages S2/S3 the credit-"
+            "consumption ARITHMETIC executes — the ROUNDUP cell law "
+            "(UEC11-FC-R08) when tfc_dest_cell_size is declared, and "
+            "the per-packet overhead constant (UEC11-FC-R09) composing "
+            "tfc_pkt_size = payload + tfc_pkt_overhead inside it when "
+            "tfc.pkt_overhead is also declared — with the domain values "
+            "cited to UEC11-FC-R07 and UEC11-FC-R10 respectively; the "
+            "support/configurability obligations themselves do not"
         ),
     },
     {
@@ -443,11 +499,14 @@ def build_document() -> dict:
             "note": (
                 "E0 evidence level: identity and determinism only; no UEC "
                 "hardware measurements exist. The free parameters B, L, W, "
-                "L_cr (and, for the FC-R08 cell extension, "
-                "tfc_dest_cell_size within the R07-cited domain) are not "
+                "L_cr (and, for the FC-R08/FC-R09 consumption extensions, "
+                "tfc_dest_cell_size within the R07-cited domain and "
+                "tfc_pkt_overhead within the R10-cited bounds) are not "
                 "standard-derived and not measured; the only spec-derived "
-                "constants are the 256-byte credit unit (UEC11-FC-R05) "
-                "and the cell domain values (UEC11-FC-R07)"
+                "constants are the 256-byte credit unit (UEC11-FC-R05), "
+                "the cell domain values (UEC11-FC-R07), the overhead "
+                "default 256 B (UEC11-FC-R09) and the overhead bounds "
+                "0..256 B (UEC11-FC-R10)"
             ),
         },
         # Element 9 — known omissions (curated above).

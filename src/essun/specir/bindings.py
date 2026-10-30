@@ -79,6 +79,39 @@ the chunk IS the packet, a registered assumption), and FC-R07/R10 as
 promotions (no admissible-config enforcement path exists;
 implementation-support semantics).
 
+The credit-family S3 binding (G2 ladder, 2026-10-30)
+-----------------------------------------------------
+
+**UEC11-FC-R09** — UEC 1.1 §3.6.15 TFC, MUST: source and destination
+must use the same constant ``tfc_pkt_overhead`` (default 256 B, one
+credit unit), covering the extra destination memory a packet needs
+(Ethernet/IP/UDP/SES headers, FCS, stored metadata) because packet sizes
+can change in transit. Bound to the same ``analytical_l0_tfc`` backend
+through the OPT-IN parameter ``tfc.pkt_overhead``, which composes the
+packet S2's ROUNDUP quantizes: ``tfc_pkt_size = c + tfc_pkt_overhead``
+(ring chunk c = M/r as the UET payload), ``cq = ROUNDUP(tfc_pkt_size /
+cell) * cell``, useful-data rate ``min(B, (c/cq) * W/(L+L_cr))`` — the
+overhead spends credit without moving modeled bytes, the same causal
+category as quantization slack, so O-CONSERVATION is unchanged (the
+constant gates credit consumption, never the wire-byte count). The
+overhead's configurability bounds 0..256 B are cited to **UEC11-FC-R10**
+and its default 256 B to the requirement's own text; R10's
+recommendation disposition stays ``unsupported`` (values in, obligation
+out — the S2 pattern). The MUST's same-constant-at-both-ends property is
+STRUCTURAL in one model (one constant), stated as structure, not claimed
+as executed. Convergence anchors: overhead 0 recovers the S2 identity
+exactly, and overhead 0 with ``c ≡ 0 (mod cell)`` recovers the landed
+R02 identity exactly.
+
+Choice record for S3: the overhead constant is the second half of the
+spec's own consumption arithmetic (R08's statement composes
+``tfc_pkt_size`` from payload + overhead), so the two bindings complete
+one law; its cost is decision-relevant at the spec's DEFAULT point —
+default cell 256 B plus default overhead 256 B means every packet spends
+one extra credit unit per packet (efficiency c/(c+cell) at alignment) —
+and executing it asks exactly one new parameter of the steady-state
+identity.
+
 Choice record (decision relevance, not convenience):
 
 - CHOSEN UEC11-FC-R02 because TFC credit provisioning is a real UEC
@@ -279,6 +312,66 @@ BINDING_UEC11_FC_R08_L0TFC = RequirementBinding(
     ),
 )
 
+#: The credit-family S3 binding (G2 ladder, 2026-10-30): UEC11-FC-R09's
+#: per-packet overhead constant inside the S2 ROUNDUP law. Opt-in
+#: parameter: a topology without tfc.pkt_overhead executes the S2 law
+#: only; an overhead without a declared cell is rejected at load time.
+BINDING_UEC11_FC_R09_L0TFC = RequirementBinding(
+    binding_id="BIND-UEC11-FC-R09-L0TFC",
+    requirement_id="UEC11-FC-R09",
+    anchor_ids=("UEC11-S3.6.15-TFC",),
+    disposition="simulated_behavior",
+    backend_module="essun.backends.analytical.l0_tfc",
+    backend_id="analytical_l0_tfc",
+    capability="tfc_credit_windowed_ring",
+    parameters=("tfc_pkt_overhead",),
+    parameter_effect=(
+        "the packet the ROUNDUP law quantizes is composed per UEC11-FC-R09: "
+        "tfc_pkt_size = c + tfc_pkt_overhead with the ring chunk c = M/r as "
+        "the UET payload, cq = ROUNDUP(tfc_pkt_size/cell) * cell, useful-"
+        "data rate = min(B, (c/cq) * W/(L+L_cr)); ring AllReduce completion "
+        "t = 2*(r-1)/r * M / min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L"
+    ),
+    enforced_invariants=(
+        "per-op in-flight data bytes = Rd*(L+L_cr) <= (c/cq)*W with "
+        "equality iff the quantized window gates; credit bytes in flight "
+        "<= W always (the overhead constant, like the cell, gates rate "
+        "and credit consumption, never the wire-byte count)",
+        "tfc_pkt_overhead must be an integral byte count in 0..256 bytes "
+        "(bounds cited to UEC11-FC-R10); out-of-domain values are "
+        "rejected at load time citing the requirement",
+        "declaring tfc.pkt_overhead without tfc.dest_cell_size is "
+        "rejected at load time — the ROUNDUP consumption law the "
+        "overhead feeds is the cell law (UEC11-FC-R08)",
+    ),
+    observable_ids=("O-CCT", "O-CONSERVATION"),
+    spec_derived_constants=(
+        ("tfc_pkt_overhead_default_bytes", "256", "UEC11-FC-R09"),
+        ("tfc_pkt_overhead_min_bytes", "0", "UEC11-FC-R10"),
+        ("tfc_pkt_overhead_max_bytes", "256", "UEC11-FC-R10"),
+    ),
+    golden_test="tests/golden/test_l0_tfc_pkt_golden.py",
+    notes=(
+        "Convergence anchors: tfc_pkt_overhead = 0 recovers the S2 "
+        "identity exactly, and overhead 0 with c == 0 (mod cell) recovers "
+        "the landed R02 identity exactly (the overhead and the cell's "
+        "slack are the two credit-waste terms of one law). The default "
+        "constant 256 B is spec-derived (UEC11-FC-R09); the 0..256 B "
+        "configurability bounds are UEC11-FC-R10's stated values, whose "
+        "recommendation disposition stays unsupported. E0 evidence level: "
+        "identity and determinism only; the overhead value is FREE within "
+        "the R10-cited domain; B, L, W, L_cr, cell stay the flagship's "
+        "and S2's free parameters. The same-constant-at-both-ends "
+        "property of the MUST is structural (one model, one constant) — "
+        "stated as structure, not claimed as executed. The overhead-as-"
+        "buffer-accounting reading (it spends credit, never wire bytes; "
+        "header serialization stays a packetization exclusion) is a "
+        "registered assumption "
+        "(experiments/vertical_slice/assumptions_tfc_pkt.yaml), not a "
+        "spec fact."
+    ),
+)
+
 #: The registry of live bindings. Adding one is a reviewed act: the
 #: requirement's disposition must be flipped to the binding's disposition
 #: in its stage module in the same commit, EXPECTED_COUNTS in
@@ -287,6 +380,7 @@ BINDING_UEC11_FC_R08_L0TFC = RequirementBinding(
 BINDINGS: tuple[RequirementBinding, ...] = (
     BINDING_UEC11_FC_R02_AUTOMATON,
     BINDING_UEC11_FC_R08_L0TFC,
+    BINDING_UEC11_FC_R09_L0TFC,
 )
 
 

@@ -1,0 +1,74 @@
+# G2 credit-family ladder stage S3 (2026-10-30): W1 Dense TP Decode on
+# the TFC credit-windowed analytical ring WITH the per-packet overhead
+# constant composed into cell-quantized credit consumption — the third
+# UEC requirement executed end-to-end as an honest simulated_behavior
+# (family count 2 -> 3).
+# Chain: UEC11-FC-R09 (anchored requirement, UEC 1.1 §3.6.15 TFC
+# per-packet overhead constant, default 256 B) -> binding
+# BIND-UEC11-FC-R09-L0TFC (src/essun/specir/bindings.py) -> parameter
+# tfc.pkt_overhead (256 B, the spec default; bounds 0..256 B cited to
+# UEC11-FC-R10) composed with tfc.dest_cell_size (256 B, the UEC11-FC-R07
+# default; domain 256..9216 B) -> analytical_l0_tfc composed identity
+# t = 2*(r-1)/r*M/min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L with cq =
+# ROUNDUP((c+overhead)/cell)*cell -> O-CCT observable change vs the S2
+# (overhead-less) run at the same B, L, W, L_cr (3808 ns vs 3696 ns at
+# the aligned default cell — the default constant costs one extra credit
+# unit per packet, +112 ns/op exact; O-CONSERVATION unchanged — the
+# overhead gates credit consumption, never byte count). Evidence level
+# E0 (identity + determinism): the simulated_behavior disposition is a
+# claim about the binding, NOT about physical validity.
+experiment_id: EXP-VS-W1-TFC-R09-001
+research_question: RQ2
+claim_id: C-UEC-TFC-R09
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/topologies/ring8_tfc_pkt_window_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/vertical_slice/profiles/implementation_profile_l0_tfc_pkt.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_tfc_pkt.yaml
+backends:
+- analytical_l0_tfc
+seed: 20261030
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+evidence_dimensions:
+  verification:
+  - check: tests/golden/test_l0_tfc_pkt_golden.py
+    scope: UEC11-FC-R09 composed-identity exact goldens incl. the R08
+      worked example's native composition, the overhead-is-cell-quantized
+      law, the convergence boundary overhead 0 with c = 0 (mod cell) to
+      the landed R02 identity, and the R10-cited out-of-domain negative
+      plus the overhead-without-cell negative
+  calibration_target: []   # free parameters only; nothing calibrated
+  held_out:
+    held_out: false
+    scope: no data withheld; all inputs derive from the identity (E0)
+  independent_reproduction: []  # none yet — honest
+  known_omissions:
+  - steady-state only; fill/drain transients excluded (analytical family)
+  - overhead is destination-buffer accounting only — header serialization
+    on the wire is the packetization exclusion (registered assumption
+    A-TFCP-OVH-BUFFER); the wire-byte ledger is unchanged
+  - one overhead constant per direction pair; per-direction cell/overhead
+    asymmetry (UEC11-FC-R12) not modeled
+  - fluid steady-window reading; integer packet-floor effects of a
+    partially-filled window are packet-granular dynamics (excluded)
+validity_domain:
+  topology: ring8_tfc_pkt_window_v1 (free parameters; steady granted
+    window; cell 256 B within the R07-cited domain; overhead 256 B within
+    the R10-cited bounds)
+  workload: w1_dense_tp_decode smoke configuration
+  implementation: analytical L0-TFC free-parameter model; three executed
+    UEC requirements (UEC11-FC-R02 via BIND-UEC11-FC-R02-L0TFC,
+    UEC11-FC-R08 via BIND-UEC11-FC-R08-L0TFC, UEC11-FC-R09 via
+    BIND-UEC11-FC-R09-L0TFC)
+evidence_level_requested: E0

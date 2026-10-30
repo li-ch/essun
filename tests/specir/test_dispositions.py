@@ -68,7 +68,7 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
     },
     "essun.specir.uec_credits_flow_control": {
         "informational": 32,
-        "unsupported": 32,
+        "unsupported": 31,
         # Flagship slice 2026-10-29 (design doc D1 build order item 2):
         # UEC11-FC-R02 (TFC admission law) promoted to simulated_behavior
         # via binding BIND-UEC11-FC-R02-L0TFC (re-pointed at the
@@ -80,7 +80,17 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
         # (ROUNDUP cell-quantized credit consumption) promoted to
         # simulated_behavior via binding BIND-UEC11-FC-R08-L0TFC; golden
         # test tests/golden/test_l0_tfc_cell_golden.py.
-        "simulated_behavior": 2,
+        # G2 credit-family ladder S3 (2026-10-30, same plan): UEC11-FC-R09
+        # (the per-packet overhead constant tfc_pkt_overhead, default
+        # 256 B spec-derived, bounds 0..256 B cited to UEC11-FC-R10)
+        # promoted to simulated_behavior via binding
+        # BIND-UEC11-FC-R09-L0TFC; golden test
+        # tests/golden/test_l0_tfc_pkt_golden.py. Computed live: R09 was
+        # unsupported (keyword MUST), so S3 moves 32->31 unsupported and
+        # 2->3 simulated_behavior; informational stays 32 (the S1 plan's
+        # final informational 31 arrives at S4 with FC-R05 ->
+        # conformance_test).
+        "simulated_behavior": 3,
     },
     "essun.specir.uec_f07_mechanisms": {
         "informational": 49,
@@ -95,6 +105,7 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
 PROMOTED: dict[str, str] = {
     "UEC11-FC-R02": "simulated_behavior",  # BIND-UEC11-FC-R02-AUTOMATON (G8 re-point)
     "UEC11-FC-R08": "simulated_behavior",  # BIND-UEC11-FC-R08-L0TFC (G2 S2)
+    "UEC11-FC-R09": "simulated_behavior",  # BIND-UEC11-FC-R09-L0TFC (G2 S3)
 }
 
 

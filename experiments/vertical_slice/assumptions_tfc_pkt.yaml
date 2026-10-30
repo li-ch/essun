@@ -1,0 +1,161 @@
+# Assumption registry for the UEC11-FC-R09 per-packet overhead extension
+# of the analytical L0-TFC credit-window model (G2 credit-family ladder
+# stage S3, binding BIND-UEC11-FC-R09-L0TFC). SEPARATE file from
+# assumptions_tfc.yaml AND assumptions_tfc_cell.yaml by the per-run
+# identity house rule: the assumptions file is a hashed manifest input,
+# so appending these entries to an earlier file would have shifted that
+# run's identity; here they cannot.
+#
+# PROVENANCE NOTE: the only standard-derived values governing this
+# extension are the 256-byte credit unit (UEC11-FC-R05), the cell domain
+# 256..9216 B in 256-B multiples (UEC11-FC-R07), the overhead DEFAULT
+# 256 B (UEC11-FC-R09) and the overhead configurability bounds 0..256 B
+# (UEC11-FC-R10) — all four live as named constants in
+# src/essun/backends/analytical/l0_tfc.py and are NOT assumptions. Every
+# value below is a free parameter or a modeling choice: not
+# standard-derived, not measured.
+assumptions_id: assumptions_tfc_pkt_v1
+status: PROPOSED
+assumptions:
+  - id: A-TFCP-BW
+    parameter: link.bytes_per_ns
+    value: 64
+    unit: bytes_per_ns
+    range: [1, 1024]
+    rationale: >
+      Same value and same role as the flagship A-TFC-BW (and S2's
+      A-TFCC-BW): shared B is what makes the convergence anchors —
+      overhead 0 recovers the S2 identity, overhead 0 with c = 0 (mod
+      cell) recovers the landed R02 identity exactly — meaningful
+      against the stored flagship and S2 runs.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-LAT
+    parameter: link.hop_latency_ns
+    value: 200
+    unit: ns
+    range: [0, 2000]
+    rationale: >
+      Same value and role as the flagship A-TFC-LAT; one hop latency per
+      chunk transfer, same chain as the flagship identity.
+    sensitivity: high for O-CCT, zero for O-CONSERVATION
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-W
+    parameter: tfc.window_bytes
+    value: 12800
+    unit: bytes
+    range: [256, 1048576]
+    rationale: >
+      Same value and role as the flagship A-TFC-W (50 credit units; the
+      spec leaves the AMOUNT free). The window still gates the credit
+      round trip; the composed overhead multiplies the achievable data
+      rate by c/cq only.
+    sensitivity: high for O-CCT when (c/cq)*W/(L+L_cr) < B, zero for O-CONSERVATION
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-CR
+    parameter: tfc.credit_return_latency_ns
+    value: 200
+    unit: ns
+    range: [0, 2000]
+    rationale: >
+      Same value and role as the flagship A-TFC-CR; the UEC spec does not
+      fix credit-return timing, so it stays an explicit free parameter.
+    sensitivity: high for O-CCT when (c/cq)*W/(L+L_cr) < B, zero for O-CONSERVATION
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-CELL
+    parameter: tfc.dest_cell_size
+    value: 256
+    unit: bytes
+    range: [256, 9216]
+    rationale: >
+      Free deployment parameter within the R07-cited validated domain.
+      256 B is the cell size UEC11-FC-R07's own statement names as the
+      default — chosen for the S3 evidence run so the run sits at the
+      SPEC'S DEFAULT POINT (default cell + default overhead) rather than
+      an exotic corner: the chunk 2048 B is aligned, so every measured
+      credit effect is the overhead's own. NOT a claim that any real
+      destination uses 256-B cells.
+    sensitivity: sets the ROUNDUP granularity the overhead composes into (with A-TFCP-PKT-OVH, high for O-CCT off alignment, zero at overhead 0 and alignment)
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-PKT-OVH
+    parameter: tfc.pkt_overhead
+    value: 256
+    unit: bytes
+    range: [0, 256]
+    rationale: >
+      Free deployment parameter within the R10-cited configurable bounds;
+      the value 256 B is the default constant UEC11-FC-R09's own
+      statement names (one credit unit). At the default cell (256 B) and
+      the smoke chunk (2048 B) the composed packet 2304 B consumes
+      exactly 9 cells — the default configuration costs one extra credit
+      unit per packet (efficiency 8/9). NOT a claim that any real
+      deployment uses 256 B; the model moves with any value in 0..256 B.
+    sensitivity: high for O-CCT whenever ROUNDUP(c/cell) != ROUNDUP((c+ovh)/cell), zero when the composed packet lands in the same cell count (e.g. cell 9216 absorbs the whole default overhead), zero for O-CONSERVATION
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-OVH-BUFFER
+    parameter: model.tfc_pkt_overhead_semantics
+    value: destination_buffer_accounting_only
+    unit: none
+    range: [destination_buffer_accounting_only, overhead_rides_the_wire]
+    rationale: >
+      MODELING CHOICE: tfc_pkt_overhead spends CREDIT only — it covers
+      extra destination memory per packet (headers, FCS, stored
+      metadata per UEC11-FC-R09's own rationale), so it changes outputs
+      exactly through the ROUNDUP consumption law and never through the
+      wire-byte ledger (O-CONSERVATION unchanged; B is the L0 family's
+      payload-rate abstraction). The alternative reading — encapsulation
+      headers also serialized on the wire — belongs to the declared
+      packetization/FLIT exclusion of the analytical family, not to a
+      steady-state rate identity. The same-constant-at-both-ends
+      property of the MUST is structural here (one model, one
+      constant), stated as structure, not claimed as executed.
+    sensitivity: structural (sets which law the overhead moves)
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-CHUNK-PKT
+    parameter: model.tfc_pkt_size_mapping
+    value: chunk_plus_overhead_constant
+    unit: none
+    range: [ring_chunk_is_packet, chunk_plus_overhead_constant]
+    rationale: >
+      MODELING CHOICE: the ring chunk c = M/r is the UET payload size of
+      the spec's composition, and tfc_pkt_size = c + tfc_pkt_overhead
+      (UEC11-FC-R09) is the packet the ROUNDUP law quantizes — the S2
+      mapping (chunk IS the packet) is exactly this entry's overhead-0
+      case, so the two stages are one law at two points.
+    sensitivity: structural (sets what the cell quantizes)
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-FLUID
+    parameter: model.credit_accounting_granularity
+    value: fluid_steady_window
+    unit: none
+    range: [fluid_steady_window, integer_packet_floor]
+    rationale: >
+      MODELING CHOICE (same as S2's A-TFCC-FLUID): the steady-window
+      fluid reading — the data rate is (c/cq)*W/RTT even when W is not
+      an integral number of cq-sized packets; integer packet-floor
+      effects of a partially-filled window are packet-granular dynamics,
+      the declared packetization exclusion, not a steady-state term.
+    sensitivity: none for O-CCT at steady state (floor effects excluded by fidelity)
+    owner: g2-stage-s3
+    review: PROPOSED
+  - id: A-TFCP-DIV
+    parameter: model.chunk_divisibility
+    value: ranks_divide_payload
+    unit: none
+    range: [ranks_divide_payload, ragged_or_padded_chunks]
+    rationale: >
+      Same equal-chunk construction as every L0 family member (A-TFC-DIV
+      / A-TFCC-DIV): r | M so the chunk (the UET payload the overhead
+      composes onto) is an integral byte count; non-divisible payloads
+      are rejected at execution time.
+    sensitivity: rejection-only guard (no numeric sensitivity)
+    owner: g2-stage-s3
+    review: PROPOSED

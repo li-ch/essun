@@ -1,0 +1,47 @@
+# UEC TFC credit-window topology WITH the per-packet overhead constant
+# composed into cell-quantized credit consumption (G2 credit-family
+# ladder stage S3, UEC11-FC-R09). Identical fabric and window to the
+# flagship ring8_tfc_window_v1.yaml and the S2 cell topology (same B, L,
+# W, L_cr values so both convergence anchors are meaningful); the TWO
+# opt-in parameters of the executed consumption laws are declared:
+# tfc.dest_cell_size (binding BIND-UEC11-FC-R08-L0TFC) and
+# tfc.pkt_overhead (binding BIND-UEC11-FC-R09-L0TFC). This topology sits
+# at the SPEC'S OWN DEFAULT POINT — cell 256 B (UEC11-FC-R07's default)
+# and overhead 256 B (UEC11-FC-R09's default, one credit unit) — so the
+# evidence run prices the default configuration: the smoke chunk
+# (16384/8 = 2048 B) is cell-aligned, and the default overhead spends
+# exactly one extra 256-B credit unit per packet (credit efficiency
+# 2048/2304 = 8/9). The cell domain 256..9216 B in 256-B multiples is
+# cited to UEC11-FC-R07 and the overhead bounds 0..256 B to UEC11-FC-R10
+# (both obligations themselves stay unsupported); nothing here is
+# measured.
+schema_version: 0.3.0
+topology_id: ring8_tfc_pkt_window_v1
+topology_class: unidirectional_ring_tfc_window
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+tfc:
+  window_bytes: 12800        # 50 credit units; BDP = 64*(200+200) = 25600 B
+  credit_return_latency_ns: 200
+  dest_cell_size: 256        # UEC11-FC-R07 default cell
+  pkt_overhead: 256          # UEC11-FC-R09 default constant (one credit unit)
+notes: >
+  One send and one receive direction per neighbor pair. Each ring
+  neighbor pair carries one TFC credit context of window_bytes granted
+  bytes; UEC11-FC-R02's admission law caps each source's steady rate at
+  one window per credit round trip; UEC11-FC-R08's ROUNDUP law quantizes
+  the per-packet credit against dest_cell_size cells; and UEC11-FC-R09
+  composes the quantized packet as tfc_pkt_size = payload +
+  pkt_overhead: effective data rate = min(B, (c/cq)*W/(L+L_cr)) with cq
+  = ROUNDUP((c + pkt_overhead)/cell)*cell (see
+  src/essun/backends/analytical/l0_tfc.py). The overhead spends credit
+  without moving modeled bytes — O-CONSERVATION is unchanged. Modeling
+  assumptions for this topology (the overhead-as-buffer-accounting
+  reading, chunk-as-UET-payload mapping, fluid steady-window reading,
+  the cell and overhead values) are registered in
+  experiments/vertical_slice/assumptions_tfc_pkt.yaml. No congestion, no
+  packetization (including header serialization on the wire), no
+  credit-request dynamics, no per-direction parameter asymmetry
+  (UEC11-FC-R12) — the steady-window analytical identity only.

@@ -2,8 +2,8 @@
 
 Flagship slice of the D1 disposition ladder (design-integration doc
 2026-10-29, build order item 2): UEC semantic requirements executed
-end-to-end as an honest ``simulated_behavior`` — TWO today (the flagship
-plus the G2 credit-family S2 extension; see below).
+end-to-end as an honest ``simulated_behavior`` — THREE today (the flagship
+plus the G2 credit-family S2/S3 extensions; see below).
 
 The flagship requirement is **UEC11-FC-R02** (UEC 1.1 section 3.6.15,
 Transport Flow Control, keyword MUST NOT): *"a source must not transmit a
@@ -92,17 +92,57 @@ supported VALUES — an integral 256-byte multiple in 256..9216 bytes —
 are cited to UEC11-FC-R07 (which itself stays unsupported: this executes
 R08's consumption law, not R07's implementation-support obligation).
 
+Credit-family extension (G2 stage S3, 2026-10-30) — **UEC11-FC-R09** as a
+third executed requirement on the same backend, binding
+``BIND-UEC11-FC-R09-L0TFC``: the per-packet overhead CONSTANT of the
+consumption law. UEC 1.1 §3.6.15 composes the packet the ROUNDUP
+quantizes as ``tfc_pkt_size = UET payload size + tfc_pkt_overhead`` — the
+destination must reserve credit for the packet's buffer footprint
+(headers, FCS, stored metadata), which exceeds the payload because
+packets can grow in transit. The opt-in parameter ``tfc.pkt_overhead``
+(default 256 B, standard-derived via UEC11-FC-R09; configurability bounds
+0..256 B cited to UEC11-FC-R10, whose SHOULD-disposition itself stays
+unsupported — values in, obligation out, the same pattern as R07's domain
+in S2) puts the overhead INSIDE S2's ROUNDUP::
+
+    packet              tfc_pkt_size = c + tfc_pkt_overhead   [FC-R09]
+    consumed credit     cq  = ROUNDUP(tfc_pkt_size/cell)*cell [FC-R08]
+    credit efficiency   c/cq                               [payload per credit]
+    effective data rate Rd  = min(B, (c/cq)*W/(L+L_cr))
+    AllReduce time      t   = T / Rd + 2*(r-1)*L
+
+Overhead spends credit WITHOUT moving modeled bytes — the same causal
+category as cell-quantization slack — so the wire-byte ledger
+(O-CONSERVATION) is unchanged: the constant gates credit consumption,
+never byte count. The overhead is deliberately a destination-BUFFER
+accounting constant only: serialization of encapsulation headers on the
+wire stays inside the declared packetization exclusion (B is the
+payload-rate abstraction of the whole L0 family; registered assumption
+A-TFCP-OVH-BUFFER). Convergence anchors, pinned by
+tests/golden/test_l0_tfc_pkt_golden.py: ``tfc_pkt_overhead = 0`` gives
+exactly the S2 identity (declared zero is the overhead-less law), and
+``tfc_pkt_overhead = 0`` with ``c ≡ 0 (mod cell)`` gives exactly the
+landed R02 identity; declaring the overhead without a cell is rejected
+at load time (the ROUNDUP consumption law it feeds needs
+``tfc_dest_cell_size``). The same-constant-at-both-ends property of the
+MUST (source and destination use one ``tfc_pkt_overhead``) is STRUCTURAL
+here — one model, one constant — stated as structure, not claimed as
+executed.
+
 Scope honestly NOT simulated (declared unsupported below): the credit
 REQUEST/grant protocol dynamics (a steady granted window is the modeled
 abstraction — the source always holds exactly W reusable credit), TFC
 retransmission exemptions (UEC11-FC-R06), per-PDC vs shared-CCC credit
-pooling (FC-R16), packet-overhead accounting (FC-R09..R10 — stage S3's
-law, not yet landed) and cell-size CONFIGURATION semantics (FC-R07's
-implementation-support obligation), CBFC hop-level credits (section 5.2),
+pooling (FC-R16), per-direction cell/overhead ASYMMETRY of a PDC pair
+(FC-R12 — one data direction per neighbor pair here) and the
+cell/overhead CONFIGURATION-SUPPORT obligations (FC-R07/FC-R10 — since
+S2/S3 their VALUES execute as cited constants and validated domains,
+the obligations do not), CBFC hop-level credits (section 5.2),
 RCCC receiver-driven credit scheduling across MULTIPLE concurrent sources
 (3.6.14 — needs contention, which no analytical backend executes),
 congestion, packetization/FLIT effects (including integer packet-floor
-effects of a partially-filled window), fill/drain start-up transients
+effects of a partially-filled window and the wire serialization of
+encapsulation headers), fill/drain start-up transients
 (same exclusion class as the L0 family), and overlapping collectives.
 
 The credit UNIT is the only standard-derived constant governing the
@@ -110,11 +150,14 @@ window: 256 bytes per credit unit (UEC11-FC-R05, anchor
 ``UEC11-S3.6.15-TFC``). By the provenance rule it is carried as a named
 constant citing its requirement, never invented; the cell DOMAIN
 constants (min/max/granularity) are likewise named constants cited to
-UEC11-FC-R07. Everything else — B, L, W, L_cr, cell — is a FREE
+UEC11-FC-R07, and the overhead DEFAULT and DOMAIN constants to
+UEC11-FC-R09 (default 256 B) and UEC11-FC-R10 (bounds 0..256 B).
+Everything else — B, L, W, L_cr, cell, overhead — is a FREE
 parameter registered in ``experiments/vertical_slice/assumptions_tfc.yaml``
-(flagship) and ``experiments/vertical_slice/assumptions_tfc_cell.yaml``
-(cell extension; separate file so appending modeling choices cannot shift
-the flagship run's input hashes). The window W must be an integral
+(flagship), ``experiments/vertical_slice/assumptions_tfc_cell.yaml``
+(cell extension), and ``experiments/vertical_slice/assumptions_tfc_pkt.yaml``
+(overhead extension; separate files so appending modeling choices cannot
+shift an earlier run's input hashes). The window W must be an integral
 number of credit units; a non-multiple-of-256 window is REJECTED at load
 time with the requirement citation — the spec's credit granularity is a
 binding semantic, not a convention.
@@ -157,6 +200,16 @@ TFC_DEST_CELL_SIZE_MIN_BYTES = 256
 TFC_DEST_CELL_SIZE_MAX_BYTES = 9216
 TFC_DEST_CELL_SIZE_GRANULARITY_BYTES = 256
 
+#: Per-packet credit-overhead constant (G2 stage S3, binding
+#: BIND-UEC11-FC-R09-L0TFC): tfc_pkt_overhead DEFAULTS to 256 bytes (one
+#: credit unit), standard-derived via requirement UEC11-FC-R09 (anchor
+#: UEC11-S3.6.15-TFC); its supported CONFIGURABILITY bounds 0..256 bytes
+#: are UEC11-FC-R10's stated values — R10's recommendation obligation
+#: itself stays unsupported (values in, obligation out, the R07 pattern).
+TFC_PKT_OVERHEAD_DEFAULT_BYTES = 256
+TFC_PKT_OVERHEAD_MIN_BYTES = 0
+TFC_PKT_OVERHEAD_MAX_BYTES = 256
+
 #: The bindings this backend executes (essun.specir.bindings).
 #:
 #: G8 (2026-10-30): UEC11-FC-R02's simulated_behavior binding was
@@ -180,6 +233,13 @@ CREDIT_UNIT_REQUIREMENT_ID = "UEC11-FC-R05"
 CELL_BINDING_ID = "BIND-UEC11-FC-R08-L0TFC"
 CELL_REQUIREMENT_ID = "UEC11-FC-R08"
 CELL_RANGE_REQUIREMENT_ID = "UEC11-FC-R07"
+#: G2 stage S3 (2026-10-30): the per-packet overhead constant of the
+#: same consumption law, executed when tfc.pkt_overhead is declared
+#: (opt-in; absent overhead = the S2 law, absent cell = flagship only —
+#: an overhead without a cell is rejected at load time).
+PKT_BINDING_ID = "BIND-UEC11-FC-R09-L0TFC"
+PKT_REQUIREMENT_ID = "UEC11-FC-R09"
+PKT_RANGE_REQUIREMENT_ID = "UEC11-FC-R10"
 
 CAPABILITIES = {
     "backend_id": BACKEND_ID,
@@ -192,11 +252,14 @@ CAPABILITIES = {
         "credit_request_grant_dynamics",  # steady granted window W is the abstraction
         "tfc_retransmission_credit_exempt",  # UEC11-FC-R06
         "shared_ccc_credit_pooling",  # UEC11-FC-R16
-        # Cell-size CONSUMPTION accounting (UEC11-FC-R08) executes since G2
-        # stage S2 when tfc.dest_cell_size is declared; what stays out is
-        # packet-overhead accounting (FC-R09..R10, stage S3) and FC-R07's
-        # cell-size configuration/support semantics.
-        "tfc_pkt_overhead_accounting",  # UEC11-FC-R09..R10 (stage S3, not yet)
+        # Credit-consumption accounting executes per binding since G2
+        # stage S2 (cell quantization, UEC11-FC-R08, tfc.dest_cell_size)
+        # and stage S3 (the per-packet overhead constant, UEC11-FC-R09,
+        # tfc.pkt_overhead). What stays out is per-direction
+        # cell/overhead ASYMMETRY of a PDC pair and the two parameters'
+        # configuration/support obligations.
+        "tfc_cell_overhead_asymmetry",  # UEC11-FC-R12 (per-direction values)
+        "tfc_parameter_config_support",  # UEC11-FC-R07/R10 obligations
         "cbfc_link_credits",  # UEC §5.2 hop-level flow control
         "rccc_multi_source_credit_scheduling",  # UEC §3.6.14
         "packetization_flit_effects",
@@ -219,6 +282,11 @@ class TFCRingConfig:
     #: (the default, and the flagship topology's shape) = the R02
     #: identity only, byte-identical to the pre-S2 backend.
     tfc_dest_cell_size: Fraction | None = None
+    #: Per-packet credit-overhead constant executing UEC11-FC-R09's
+    #: composition (tfc_pkt_size = c + overhead) inside the ROUNDUP law;
+    #: None (the default) = the S2 law (no overhead term). Requires a
+    #: declared cell — the ROUNDUP it feeds is the cell law.
+    tfc_pkt_overhead: Fraction | None = None
 
 
 def load_tfc_config(data: dict) -> TFCRingConfig:
@@ -255,6 +323,46 @@ def load_tfc_config(data: dict) -> TFCRingConfig:
             )
     else:
         cell = None
+    overhead: Fraction | None
+    if "pkt_overhead" in tfc:
+        overhead = frac(tfc["pkt_overhead"])
+        if cell is None:
+            # The overhead constant enters credit consumption through
+            # the ROUNDUP cell law (tfc_pkt_size = payload + overhead,
+            # then ROUNDUP against cells); without a declared cell there
+            # is no consumption law for it to feed.
+            raise ValueError(
+                f"{BACKEND_ID}: tfc.pkt_overhead {overhead} declared "
+                "without tfc.dest_cell_size — the per-packet overhead "
+                "constant (UEC11-FC-R09) enters credit consumption "
+                "through the ROUNDUP cell law (UEC11-FC-R08), so the "
+                "binding BIND-UEC11-FC-R09-L0TFC requires a declared "
+                "cell to execute"
+            )
+        if (
+            overhead.denominator != 1
+            or overhead < TFC_PKT_OVERHEAD_MIN_BYTES
+            or overhead > TFC_PKT_OVERHEAD_MAX_BYTES
+        ):
+            # UEC11-FC-R10 (§3.6.15): tfc_pkt_overhead is configurable
+            # between 0 and 256 bytes. The R09 binding adopts exactly
+            # those values as its validated domain (R10's configurability
+            # recommendation itself stays unsupported); an overhead
+            # outside the domain — or a fractional byte count — is not a
+            # configurable constant, so the binding rejects it at load
+            # time, citing the requirement.
+            raise ValueError(
+                f"{BACKEND_ID}: tfc.pkt_overhead {overhead} is not an "
+                f"integral byte count in {TFC_PKT_OVERHEAD_MIN_BYTES}.."
+                f"{TFC_PKT_OVERHEAD_MAX_BYTES} bytes (UEC11-FC-R10, "
+                "UEC 1.1 §3.6.15: the per-packet overhead constant is "
+                "configurable between 0 and 256 bytes, defaulting to "
+                f"{TFC_PKT_OVERHEAD_DEFAULT_BYTES} per UEC11-FC-R09); "
+                "the overhead binding (UEC11-FC-R09) only executes "
+                "configurable overhead constants"
+            )
+    else:
+        overhead = None
     config = TFCRingConfig(
         topology_id=str(data["topology_id"]),
         ranks=int(data["ranks"]),
@@ -263,6 +371,7 @@ def load_tfc_config(data: dict) -> TFCRingConfig:
         tfc_window_bytes=frac(tfc["window_bytes"]),
         tfc_credit_return_latency_ns=frac(tfc["credit_return_latency_ns"]),
         tfc_dest_cell_size=cell,
+        tfc_pkt_overhead=overhead,
     )
     if config.link_bytes_per_ns <= 0:
         raise ValueError(
@@ -335,8 +444,8 @@ def bandwidth_delay_product(infra: TFCRingConfig) -> Fraction:
 def chunk_bytes(message_bytes: int, ranks: int) -> int:
     """Ring chunk c = M/r, the per-packet payload of the equal-chunk
     schedule (integral by the divisibility guard the executor enforces;
-    ``tfc_pkt_size`` at stage S2 — the per-packet overhead constant is
-    stage S3's law, deliberately absent here)."""
+    the UET payload of ``tfc_pkt_size`` — the per-packet overhead
+    constant composes on top at stage S3)."""
     return message_bytes // ranks
 
 
@@ -344,7 +453,9 @@ def consumed_credit_bytes(payload_bytes: int, cell: Fraction) -> Fraction:
     """UEC11-FC-R08's ROUNDUP law as exact arithmetic:
     cq = ROUNDUP(payload/cell) * cell — credit consumed by one packet of
     ``payload_bytes`` data against cells of ``cell`` bytes (cells are
-    never partially granted; the last cell's slack is wasted credit)."""
+    never partially granted; the last cell's slack is wasted credit).
+    ``payload_bytes`` is the packet's full tfc_pkt_size (payload at S2;
+    payload + tfc_pkt_overhead since S3 — see :func:`tfc_packet_size`)."""
     return -((-payload_bytes) // cell) * cell  # ceiling division, exact
 
 
@@ -352,6 +463,31 @@ def credit_efficiency(payload_bytes: int, cell: Fraction) -> Fraction:
     """Moved bytes per spent credit byte: c/cq. Exactly 1 iff
     payload ≡ 0 (mod cell) — the zero-waste convergence boundary."""
     return Fraction(payload_bytes) / consumed_credit_bytes(payload_bytes, cell)
+
+
+# -- UEC11-FC-R09: the per-packet overhead constant (G2 stage S3) -------------
+
+
+def tfc_packet_size(payload_bytes: int, pkt_overhead: Fraction) -> Fraction:
+    """UEC11-FC-R09's composition law: tfc_pkt_size = UET payload size +
+    tfc_pkt_overhead — the packet the ROUNDUP law quantizes. The same
+    constant is used at both ends STRUCTURALLY (one model, one
+    constant); overhead declared 0 is exactly the overhead-less S2 law."""
+    return payload_bytes + pkt_overhead
+
+
+def credit_efficiency_for_packet(
+    payload_bytes: int, cell: Fraction, pkt_overhead: Fraction
+) -> Fraction:
+    """USEFUL payload per spent credit byte under the composed law:
+    c / ROUNDUP((c + tfc_pkt_overhead)/cell)*cell. The overhead — like
+    the last cell's quantization slack — spends credit without moving
+    modeled bytes (it covers destination buffer footprint: headers, FCS,
+    stored metadata; its wire serialization is the packetization
+    exclusion). Exactly the S2 efficiency c/cq at tfc_pkt_overhead = 0,
+    and exactly 1 iff additionally c ≡ 0 (mod cell)."""
+    cq = consumed_credit_bytes(tfc_packet_size(payload_bytes, pkt_overhead), cell)
+    return Fraction(payload_bytes) / cq
 
 
 def effective_rate_for_chunk(infra: TFCRingConfig, chunk: int) -> Fraction:
@@ -362,11 +498,19 @@ def effective_rate_for_chunk(infra: TFCRingConfig, chunk: int) -> Fraction:
     backend). Declared cell: UEC11-FC-R08's quantization law
     ``min(B, (c/cq) * W/(L+L_cr))`` — a packet spends cq credit to move
     c bytes, so the waste fraction (1 - c/cq) spends credit without
-    moving bytes and throttles the data rate by exactly c/cq."""
+    moving bytes and throttles the data rate by exactly c/cq. Declared
+    overhead additionally (UEC11-FC-R09, since S3): the quantized packet
+    is ``tfc_pkt_size = c + tfc_pkt_overhead``, so cq grows by the
+    overhead's own cell rounding while the moved bytes stay c."""
     if infra.tfc_dest_cell_size is None:
         return effective_rate(infra)
     cap = admission_rate_cap(infra)
-    efficiency = credit_efficiency(chunk, infra.tfc_dest_cell_size)
+    if infra.tfc_pkt_overhead is None:
+        efficiency = credit_efficiency(chunk, infra.tfc_dest_cell_size)
+    else:
+        efficiency = credit_efficiency_for_packet(
+            chunk, infra.tfc_dest_cell_size, infra.tfc_pkt_overhead
+        )
     return min(infra.link_bytes_per_ns, efficiency * cap)
 
 
@@ -375,7 +519,8 @@ def admission_invariant_for_chunk(
 ) -> Fraction:
     """In-flight DATA bytes under the active laws: Rd * RTT, bounded by
     (c/cq)*W when a cell is declared (credit bytes in flight stay <= W
-    always — a cell gates rate, never the window itself)."""
+    always — a cell, and the overhead constant it quantizes, gates rate,
+    never the window itself)."""
     return effective_rate_for_chunk(infra, chunk) * credit_rtt_ns(infra)
 
 
@@ -391,23 +536,26 @@ def execute(ops, infra: TFCRingConfig) -> dict:
     """Execute AllReduce ops on the TFC-windowed ring and emit observations.
 
     O-CONSERVATION (exact): identical ledger to L0 — the window (and, when
-    declared, the cell) gates rate, never byte count; per op total wire
-    bytes are 2*(r-1)*M exactly.
+    declared, the cell and the overhead constant it quantizes) gates rate,
+    never byte count; per op total wire bytes are 2*(r-1)*M exactly.
 
     O-CCT (analytical): per-op completion under the active laws (R02's
     window identity; R08's quantized identity additionally when
-    ``tfc_dest_cell_size`` is declared), mean and max aggregates, exact
-    Fractions serialized alongside floats, plus the binding provenance
-    blocks (requirement ids, window, credit RTT, BDP, effective rate,
-    regime flags) so every stored run names the requirement dispositions
-    it exercised. A topology without a declared cell emits EXACTLY the
-    flagship (pre-S2) observation bytes.
+    ``tfc_dest_cell_size`` is declared; R09's overhead composition on top
+    when ``tfc.pkt_overhead`` is also declared), mean and max aggregates,
+    exact Fractions serialized alongside floats, plus the binding
+    provenance blocks (requirement ids, window, credit RTT, BDP,
+    effective rate, regime flags) so every stored run names the
+    requirement dispositions it exercised. A topology without a declared
+    cell emits EXACTLY the flagship (pre-S2) observation bytes; a cell
+    without a declared overhead emits exactly the S2 observation bytes.
     """
     rtt = credit_rtt_ns(infra)
     rate = effective_rate(infra)
     cap = admission_rate_cap(infra)
     bdp = bandwidth_delay_product(infra)
     cell = infra.tfc_dest_cell_size
+    pkt_overhead = infra.tfc_pkt_overhead
     # Structural admission check (UEC11-FC-R02): exact identity, a
     # violation would be a model bug, not a tunable outcome.
     in_flight = admission_invariant(infra)
@@ -461,7 +609,12 @@ def execute(ops, infra: TFCRingConfig) -> dict:
         }
         if cell is not None:
             chunk = chunk_bytes(op.payload_bytes, infra.ranks)
-            cq = consumed_credit_bytes(chunk, cell)
+            packet = (
+                tfc_packet_size(chunk, pkt_overhead)
+                if pkt_overhead is not None
+                else chunk
+            )
+            cq = consumed_credit_bytes(packet, cell)
             efficiency = Fraction(chunk) / cq
             data_rate = effective_rate_for_chunk(infra, chunk)
             data_in_flight = admission_invariant_for_chunk(infra, chunk)
@@ -476,19 +629,26 @@ def execute(ops, infra: TFCRingConfig) -> dict:
                     "(UEC11-FC-R08 violated; this is a model bug, not a "
                     "tunable parameter)"
                 )
-            cell_blocks.append(
-                {
-                    "op_id": op.op_id,
-                    "chunk_bytes": chunk,
-                    "credit_used_bytes_exact": str(cq),
-                    "credit_efficiency_exact": str(efficiency),
-                    "effective_rate_bytes_per_ns_exact": str(data_rate),
-                    "peak_in_flight_data_bytes_exact": str(data_in_flight),
-                }
-            )
+            cell_entry = {
+                "op_id": op.op_id,
+                "chunk_bytes": chunk,
+                "credit_used_bytes_exact": str(cq),
+                "credit_efficiency_exact": str(efficiency),
+                "effective_rate_bytes_per_ns_exact": str(data_rate),
+                "peak_in_flight_data_bytes_exact": str(data_in_flight),
+            }
             entry["chunk_bytes"] = chunk
             entry["credit_used_bytes_exact"] = str(cq)
             entry["credit_efficiency_exact"] = str(efficiency)
+            if pkt_overhead is not None:
+                # UEC11-FC-R09 provenance: the composed packet the ROUNDUP
+                # quantized, and the ONE constant every op used (the
+                # same-constant-at-both-ends property is structural here).
+                cell_entry["pkt_overhead_bytes"] = int(pkt_overhead)
+                cell_entry["tfc_pkt_size_bytes_exact"] = str(packet)
+                entry["pkt_overhead_bytes"] = int(pkt_overhead)
+                entry["tfc_pkt_size_bytes_exact"] = str(packet)
+            cell_blocks.append(cell_entry)
         per_op.append(entry)
 
     if violations:
@@ -569,6 +729,26 @@ def execute(ops, infra: TFCRingConfig) -> dict:
             else None,
             "per_op": cell_blocks,
         }
+        if pkt_overhead is not None:
+            backend_block["tfc_pkt_overhead_bytes"] = int(pkt_overhead)
+            requirement_bindings.append(
+                {
+                    "binding_id": PKT_BINDING_ID,
+                    "requirement_id": PKT_REQUIREMENT_ID,
+                    "disposition": "simulated_behavior",
+                    "pkt_overhead_range_requirement_id": PKT_RANGE_REQUIREMENT_ID,
+                    "credit_unit_requirement_id": CREDIT_UNIT_REQUIREMENT_ID,
+                }
+            )
+            tfc_block["cell"]["pkt"] = {
+                "requirement_id": PKT_REQUIREMENT_ID,
+                "binding_id": PKT_BINDING_ID,
+                "overhead_bytes": int(pkt_overhead),
+                "pkt_overhead_range_requirement_id": PKT_RANGE_REQUIREMENT_ID,
+                "tfc_pkt_size_bytes_exact": first["tfc_pkt_size_bytes_exact"]
+                if first
+                else None,
+            }
     return {
         "backend": backend_block,
         "requirement_bindings": requirement_bindings,

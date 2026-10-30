@@ -229,7 +229,23 @@ _REQUIREMENTS: tuple[UECRequirement, ...] = (
         anchor_ids=("UEC11-S3.6.15-TFC",),
         keyword="MUST",
         subject="TFC",
-        disposition="unsupported",
+        # Promoted unsupported -> simulated_behavior 2026-10-30 (G2
+        # credit-family ladder stage S3, per the S1 plan in
+        # experiments/uec/credit_family_inventory.md): bound to the
+        # analytical TFC-window backend by binding BIND-UEC11-FC-R09-L0TFC
+        # (essun.specir.bindings) through the opt-in tfc.pkt_overhead
+        # parameter; golden test tests/golden/test_l0_tfc_pkt_golden.py.
+        # The promotion claims the per-packet overhead constant causally
+        # affects backend outputs by composing tfc_pkt_size = c + overhead
+        # inside UEC11-FC-R08's ROUNDUP law (cq = ROUNDUP((c+overhead)/
+        # cell)*cell, rate min(B, (c/cq)*W/(L+L_cr))), with exact
+        # convergence to the S2 identity at overhead = 0 and to the landed
+        # FC-R02 identity at overhead = 0 with c == 0 (mod cell). The
+        # default 256 B is spec-derived via this requirement; the 0..256 B
+        # configurability bounds are cited to UEC11-FC-R10, which itself
+        # stays unsupported; the same-constant-at-both-ends property is
+        # structural in one model, not an executed claim.
+        disposition="simulated_behavior",
         statement=(
             "Source and destination must use the same constant "
             "tfc_pkt_overhead, which defaults to 256 bytes (one credit "

@@ -3083,7 +3083,7 @@ requirements:
     statement: Source and destination must use the same constant tfc_pkt_overhead, which defaults
       to 256 bytes (one credit unit); it covers extra destination memory per packet — Ethernet/IP/UDP/SES
       headers, FCS and stored metadata — because packet sizes can change in transit.
-    disposition: unsupported
+    disposition: simulated_behavior
     module: uec_credits_flow_control
   - requirement_id: UEC11-FC-R10
     anchor_ids:
@@ -5273,6 +5273,48 @@ bindings:
     identity and determinism only; the cell is FREE within the R07-cited domain; B, L, W, L_cr stay
     the flagship''s free parameters. The chunk-as-packet mapping and the fluid steady-window reading
     are registered assumptions (experiments/vertical_slice/assumptions_tfc_cell.yaml), not spec facts.'
+- binding_id: BIND-UEC11-FC-R09-L0TFC
+  requirement_id: UEC11-FC-R09
+  backend: analytical_l0_tfc
+  capability: tfc_credit_windowed_ring
+  parameters:
+    tfc_pkt_overhead: FREE
+  parameter_effect: 'the packet the ROUNDUP law quantizes is composed per UEC11-FC-R09: tfc_pkt_size
+    = c + tfc_pkt_overhead with the ring chunk c = M/r as the UET payload, cq = ROUNDUP(tfc_pkt_size/cell)
+    * cell, useful-data rate = min(B, (c/cq) * W/(L+L_cr)); ring AllReduce completion t = 2*(r-1)/r
+    * M / min(B, (c/cq)*W/(L+L_cr)) + 2*(r-1)*L'
+  enforced_invariants:
+  - per-op in-flight data bytes = Rd*(L+L_cr) <= (c/cq)*W with equality iff the quantized window gates;
+    credit bytes in flight <= W always (the overhead constant, like the cell, gates rate and credit
+    consumption, never the wire-byte count)
+  - tfc_pkt_overhead must be an integral byte count in 0..256 bytes (bounds cited to UEC11-FC-R10);
+    out-of-domain values are rejected at load time citing the requirement
+  - declaring tfc.pkt_overhead without tfc.dest_cell_size is rejected at load time — the ROUNDUP consumption
+    law the overhead feeds is the cell law (UEC11-FC-R08)
+  observable_ids:
+  - O-CCT
+  - O-CONSERVATION
+  spec_derived_constants:
+  - name: tfc_pkt_overhead_default_bytes
+    value: '256'
+    requirement_id: UEC11-FC-R09
+  - name: tfc_pkt_overhead_min_bytes
+    value: '0'
+    requirement_id: UEC11-FC-R10
+  - name: tfc_pkt_overhead_max_bytes
+    value: '256'
+    requirement_id: UEC11-FC-R10
+  golden_test: tests/golden/test_l0_tfc_pkt_golden.py
+  note: 'Convergence anchors: tfc_pkt_overhead = 0 recovers the S2 identity exactly, and overhead
+    0 with c == 0 (mod cell) recovers the landed R02 identity exactly (the overhead and the cell''s
+    slack are the two credit-waste terms of one law). The default constant 256 B is spec-derived (UEC11-FC-R09);
+    the 0..256 B configurability bounds are UEC11-FC-R10''s stated values, whose recommendation disposition
+    stays unsupported. E0 evidence level: identity and determinism only; the overhead value is FREE
+    within the R10-cited domain; B, L, W, L_cr, cell stay the flagship''s and S2''s free parameters.
+    The same-constant-at-both-ends property of the MUST is structural (one model, one constant) —
+    stated as structure, not claimed as executed. The overhead-as-buffer-accounting reading (it spends
+    credit, never wire bytes; header serialization stays a packetization exclusion) is a registered
+    assumption (experiments/vertical_slice/assumptions_tfc_pkt.yaml), not a spec fact.'
 checks:
 - check_id: UEC11-CHK-01
   kind: golden
@@ -5343,6 +5385,37 @@ checks:
     exact steady state when s | W, the (W mod s)/D packetization gap at the Eq. 3 convergence anchor,
     and the exact finite-collective divergence closed forms (in (-D, 0] credit-gated, 0 link-limited)'
   location: tests/golden/test_credit_automaton_golden.py
+- check_id: UEC11-CHK-09
+  kind: golden
+  requirement_ids:
+  - UEC11-FC-R09
+  description: 'per-packet-overhead composed ring AllReduce identity t = 2*(r-1)/r * M / min(B, (c/cq)*W/(L+L_cr))
+    + 2*(r-1)*L with tfc_pkt_size = c + tfc_pkt_overhead (default 256 B, UEC11-FC-R09) inside the
+    ROUNDUP cell law, including the R08 worked example''s native composition (4096 + 256 = 4352 B
+    against 512-B cells => 4608 B), the overhead-is-cell-quantized law (any 1..256 B overhead at an
+    aligned 256-B cell lands the same 9th cell), and the convergence boundary: tfc_pkt_overhead =
+    0 recovers the S2 identity exactly and with c = 0 (mod cell) recovers the landed R02 identity
+    exactly; all expected values derived in the test by exact Fraction arithmetic'
+  location: tests/golden/test_l0_tfc_pkt_golden.py
+- check_id: UEC11-CHK-10
+  kind: negative
+  requirement_ids:
+  - UEC11-FC-R09
+  - UEC11-FC-R10
+  description: a tfc.pkt_overhead outside the configurable set (below 0 B, above 256 B, non-integral)
+    is rejected at load time citing UEC11-FC-R10 — the overhead bounds are spec-cited, and the closed
+    boundaries 0 and 256 load — and a declared overhead without tfc.dest_cell_size is rejected citing
+    the binding (the ROUNDUP consumption law it feeds is the cell law)
+  location: tests/golden/test_l0_tfc_pkt_golden.py
+- check_id: UEC11-CHK-11
+  kind: invariant
+  requirement_ids:
+  - UEC11-FC-R09
+  description: 'quantized admission bound with the composed packet: per-op in-flight data bytes Rd*(L+L_cr)
+    <= (c/cq)*W with equality iff the quantized window gates, credit bytes in flight never exceed
+    W, and the wire-byte ledger is unchanged (the overhead constant gates credit consumption, never
+    byte count; re-derived as an exact Fraction identity for every run)'
+  location: tests/golden/test_l0_tfc_pkt_golden.py
 supported:
   workloads:
   - w1_dense_tp_decode
@@ -5353,9 +5426,11 @@ calibration:
   status: uncalibrated
   targets: []
   note: 'E0 evidence level: identity and determinism only; no UEC hardware measurements exist. The
-    free parameters B, L, W, L_cr (and, for the FC-R08 cell extension, tfc_dest_cell_size within the
-    R07-cited domain) are not standard-derived and not measured; the only spec-derived constants are
-    the 256-byte credit unit (UEC11-FC-R05) and the cell domain values (UEC11-FC-R07)'
+    free parameters B, L, W, L_cr (and, for the FC-R08/FC-R09 consumption extensions, tfc_dest_cell_size
+    within the R07-cited domain and tfc_pkt_overhead within the R10-cited bounds) are not standard-derived
+    and not measured; the only spec-derived constants are the 256-byte credit unit (UEC11-FC-R05),
+    the cell domain values (UEC11-FC-R07), the overhead default 256 B (UEC11-FC-R09) and the overhead
+    bounds 0..256 B (UEC11-FC-R10)'
 omissions:
 - what: '255 of 445 requirements carry disposition unsupported: anchored but executed by no backend
     today'
@@ -5370,12 +5445,14 @@ omissions:
   reason: the S2-S5/S2b ladder interprets transport/link mechanisms relevant to fabric simulation;
     software APIs, management, and compliance chapters are not simulated semantics
 - what: TFC credit request/grant protocol dynamics, retransmission credit exemption (UEC11-FC-R06),
-    shared-CCC credit pooling (UEC11-FC-R16), packet-overhead accounting (UEC11-FC-R09..R10 — stage
-    S3 of the credit-family ladder) and cell-size configuration/support semantics (UEC11-FC-R07)
+    shared-CCC credit pooling (UEC11-FC-R16), per-direction cell/overhead asymmetry of a PDC pair
+    (UEC11-FC-R12), and the cell/overhead configuration-support obligations (UEC11-FC-R07, UEC11-FC-R10)
   reason: a steady granted window W is the modeled abstraction; declared explicitly_unsupported by
-    the analytical_l0_tfc backend's CAPABILITIES. Since G2 stage S2 the cell-quantization CONSUMPTION
-    law (UEC11-FC-R08) executes when tfc_dest_cell_size is declared, with its domain values cited
-    to UEC11-FC-R07 — the obligation itself does not
+    the analytical_l0_tfc backend's CAPABILITIES. Since G2 stages S2/S3 the credit-consumption ARITHMETIC
+    executes — the ROUNDUP cell law (UEC11-FC-R08) when tfc_dest_cell_size is declared, and the per-packet
+    overhead constant (UEC11-FC-R09) composing tfc_pkt_size = payload + tfc_pkt_overhead inside it
+    when tfc.pkt_overhead is also declared — with the domain values cited to UEC11-FC-R07 and UEC11-FC-R10
+    respectively; the support/configurability obligations themselves do not
 - what: RCCC receiver-driven credit scheduling across multiple concurrent sources (3.6.14, UEC11-CM-R66/R67)
   reason: needs multi-flow contention, which no backend models; the dispositions stay informational
     (choice record in src/essun/specir/bindings.py)
@@ -5387,7 +5464,7 @@ omissions:
   reason: excluded by the analytical L0 family's declared fidelity (explicitly_unsupported in every
     L0 backend's CAPABILITIES)
 versioning:
-  profile_version: 0.3.0
+  profile_version: 0.4.0
   bump_rules:
     major:
     - dispositions
