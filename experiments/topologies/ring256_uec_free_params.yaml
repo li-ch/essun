@@ -1,0 +1,34 @@
+# UEC-flavor free stand-in ring at the MID-FREEDOM operating point of the
+# G4 envelope cell experiments/envelopes/uec_vs_ub_window_boundary_tp256_v1.yaml.
+#
+# SCALE HONESTY (why 256): the shared rank freedom A-XDUO-TP spans
+# [2, 1024]; the UB-paper side anchors exactly two scales (rack 64 =
+# UBP-P17, pod 1024 = UBP-P18, both PAPER_REPORTED) and the UEC side
+# anchors none (UEC 1.1 fixes no rank count). 256 sits strictly inside
+# the freedom with NO anchor on either side — the window-term comparison
+# at a scale where both comparators are equally free stand-ins, one rank
+# class below the landed 1024 cell (the pod-scale corner).
+#
+# HONESTY: no UEC-derived numeric value exists at L0 — UEC 1.1
+# (STD-UEC-11, public read) fixes no line rate, hop latency, or rank
+# count usable at an L0 input. Every value below is an explicit FREE
+# parameter from the shared record
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml (A-XDUO-BW,
+# A-XDUO-LAT; the envelope overrides them at each operating point). The
+# unidirectional-ring identity is a free transport-agnostic stand-in
+# (A-XDUO-IDUEC) — UEC 1.1 §1.5.3.3 is informative and mandates no
+# fabric class. This comparator carries NO TFC block: it is the
+# UEC-flavor identity WITHOUT the admission law, the unwindowed control
+# for the flagship comparator (which adds tfc.window_bytes).
+topology_id: uec_free_ring256_v1
+topology_class: unidirectional_ring
+ranks: 256
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  Same ring identity and modeling assumptions as uec_free_ring1024_v1
+  (A-L0-FD full-duplex uniform per-direction links, A-L0-DIV ranks divide
+  the payload), at the mid-freedom A-XDUO-TP operating point 256. No
+  congestion, no credits, no packetization, no UEC semantics above L0
+  (LLR, delivery modes, CMS, TFC) — transport model only.

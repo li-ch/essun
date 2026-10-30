@@ -1,0 +1,47 @@
+# UnifiedBus-paper-flavor flat-ring stand-in at the MID-FREEDOM operating
+# point of the G4 envelope
+# (experiments/envelopes/uec_vs_ub_window_boundary_tp256_v1.yaml).
+#
+# HONESTY (ladder rule): this file is a paper-derived design profile
+# comparator, NOT a normative standard profile; the UnifiedBus
+# specification track stays license-gated (HUM-02). Provenance runs
+# through the PUBLIC_READ sources anchored in experiments/unifiedbus/.
+#
+# SCALE HONESTY (why 256, read before citing): the UB side's declared
+# identity freedom A-XDUO-IDUB has exactly two values — the ANCHORED
+# rack-scale crossbar identity (UBP-P17) and the PERMITTED pod-scale
+# flat-ring stand-in ("flat_ring_pod_when_scale_allows", UBP-P18). 256 is
+# NEITHER anchored scale, so this file is the profile's free transport-
+# agnostic RING STAND-IN at a mid-freedom rank count — the same class of
+# free stand-in the UEC side declares (A-XDUO-IDUEC) — NOT one of the UB
+# profile's anchored identities and NOT a UB topology claim. It exists so
+# the window-term comparison runs at a scale where BOTH flavors are
+# equally free stand-ins (the landed 1024 cell covers the pod-scale
+# corner, where the flat ring IS the permitted stand-in).
+#
+# What is FREE here (public silence, marked, never invented):
+#   - link.bytes_per_ns / link.hop_latency_ns <- shared free parameters
+#     A-XDUO-BW / A-XDUO-LAT (equal by construction to the UEC-flavor
+#     comparator at every operating point; no public UB source anchors a
+#     per-lane rate UBP-F01 or per-hop latency UBP-F02 usable at L0).
+#   - NO flow-control object: the five public sources are silent on any
+#     congestion/flow-control mechanism (UBP-F04) — at L0 this comparator
+#     is an UNWINDOWED ring, which is exactly the comparison's point: the
+#     UEC side executes its spec's admission law, the UB side's declared
+#     freedom contains no window to execute.
+topology_id: ub_flat_ring256_v1
+topology_class: unidirectional_ring
+ranks: 256
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+notes: >
+  Same unidirectional-ring identity and modeling assumptions as
+  ub_flat_pod_ring1024_v1 (A-L0-FD, A-L0-DIV) under the SAME shared free
+  parameters, so any ranking difference against uec_free_ring256_v1 is
+  exactly zero by construction (the envelope's honesty anchor), and any
+  ranking difference the TFC comparator shows is the admission-law term
+  alone. Everything else the UB papers describe (4D full-mesh hierarchy,
+  memory semantics, APR routing, LRS planes, 64+1 backup, software) is
+  L1/L2_REQUIRED or UNSUPPORTED per the experiments/unifiedbus platform
+  map (S3) and appears NOWHERE in any number produced from this file.

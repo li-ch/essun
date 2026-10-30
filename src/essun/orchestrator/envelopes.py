@@ -42,7 +42,13 @@ wall-clock. ``envelope_id`` is the SHA-256 of the canonical manifest plus
 the code version; the emitted ``boundary.json`` is additionally
 CONTENT-ADDRESSED: ``boundary.json.sha256`` records the SHA-256 of the
 exact artifact bytes (recorded in the committed experiment record so the
-artifact is checkable forever). The artifact filenames and the manifest
+artifact is checkable forever). Since G4 (2026-10-30) every run also
+emits the ENVELOPE VISUALIZATION DATA (``orchestrator/envviz.py``):
+``envelope-data.json`` + ``envelope-data.json.sha256`` — the exact per-
+model series and per-pair difference series for the atlas pages, derived
+deterministically from the same table (byte-identical on replay, and a
+byte drift against an existing file is refused like the artifact's own).
+The artifact filenames and the manifest
 key ``boundary_pairs`` carry boundary language since G6 (2026-10-30);
 they were ``reversal.json``/``reversal_pairs`` before, and the renaming
 changed the artifact bytes (hence their content hashes) but no arithmetic.
@@ -84,6 +90,7 @@ from essun.orchestrator.opgrids import (
     expand_operating_points,
     load_ranges,
 )
+from essun.orchestrator import envviz
 from essun.orchestrator.boundaries import detect_boundaries
 from essun.orchestrator.sweeps import ALGORITHMS
 from essun.workload import w1
@@ -788,20 +795,13 @@ def run_envelope(manifest_path, results_root=None) -> dict:
         "boundary.json": artifact_bytes,
         "boundary.md": md_bytes,
         "boundary.json.sha256": (artifact_sha256 + "\n").encode("utf-8"),
+        # The envelope visualization data (G4): same table, deterministic
+        # derivation — refusing a byte drift exactly like the artifact.
+        **envviz.data_payloads(table),
     }
-    if out_dir.exists():
-        for name, payload in expected.items():
-            path = out_dir / name
-            if not path.is_file() or path.read_bytes() != payload:
-                raise EnvelopeError(
-                    f"envelope {envelope_id} already exists with different "
-                    f"{name} bytes; envelope outputs are deterministic — a "
-                    "byte drift is a bug, not a new result"
-                )
-    else:
-        out_dir.mkdir(parents=True, exist_ok=True)
-        for name, payload in expected.items():
-            (out_dir / name).write_bytes(payload)
+    envviz.write_payloads_idempotent(
+        expected, out_dir, f"envelope {envelope_id}"
+    )
 
     return {
         "envelope_id": envelope_id,

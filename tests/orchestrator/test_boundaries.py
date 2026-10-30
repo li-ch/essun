@@ -188,6 +188,39 @@ def test_rejected_candidate_counts_as_unverifiable():
     assert flips[0].boundary_verified is False
 
 
+def test_planted_torus_gap_bandwidth_axis_crossing_is_exact():
+    """PLANTED: the 16-rank ring-vs-torus gap closed form on the BANDWIDTH
+    axis, gap(B) = 2*(r1-1)*(r2-1)*(M/(B*r) - L) — affine in 1/B, not in B.
+
+    With r = 16, r1 x r2 = 4x4, M = 1048576, L = 200 (the atlas 16r-torus
+    cell's own law), the difference changes sign at exactly
+    B* = M/(r*L) = 8192/25 bytes/ns: ring strictly worse below, strictly
+    better above — a TRUE two-sided crossing, the contrast class of the
+    window family's tie-at-and-above saturation boundary.
+    """
+
+    def planted(b: Fraction) -> Fraction:
+        return 2 * 3 * 3 * (F(1048576) / (b * 16) - 200)
+
+    grid = [F(x) for x in (16, 64, 128, 256, 512, 1024)]
+    values_a = [planted(b) for b in grid]
+    flips, regions = detect_boundaries(
+        "A-XDUO-BW", grid, values_a, [F(0)] * 6, difference_at=planted
+    )
+
+    assert len(flips) == 1
+    flip = flips[0]
+    assert (flip.x_lo, flip.x_hi) == (F(256), F(512))
+    assert flip.boundary == F(8192, 25)
+    assert flip.boundary_verified is True
+    assert flip.boundary_method == "affine-reciprocal-verified"
+    assert flip.sign_lo == 1 and flip.sign_hi == -1
+    assert [(r.sign_value, r.from_x, r.to_x) for r in regions] == [
+        (1, F(16), F(256)),
+        (-1, F(512), F(1024)),
+    ]
+
+
 def test_detect_flips_validates_alignment():
     with pytest.raises(ValueError, match="align"):
         detect_flips("T-X", [F(1), F(2)], [F(1)])

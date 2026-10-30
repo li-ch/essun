@@ -1,0 +1,479 @@
+{
+  "artifact_boundary_json_sha256": "8b5eac95ca24a46b105853128a34c5cc654914876ae38debbcb3b2cc35a9f853",
+  "axes": [
+    {
+      "assumption_id": "A-TFC-W",
+      "parameter": "tfc.window_bytes",
+      "points_exact": [
+        "256",
+        "6400",
+        "12800",
+        "25600",
+        "51200",
+        "102400",
+        "256000",
+        "1048576"
+      ],
+      "points_float": [
+        256.0,
+        6400.0,
+        12800.0,
+        25600.0,
+        51200.0,
+        102400.0,
+        256000.0,
+        1048576.0
+      ],
+      "range_exact": [
+        "256",
+        "1048576"
+      ],
+      "unit": "bytes"
+    }
+  ],
+  "code_version": "0.1.0",
+  "envelope": "uec_vs_ub_window_boundary_v1",
+  "envelope_id": "9a5f1296b5616f5bac356482bb4156bb8a2e65b631e1dd5b52915f962af016e0",
+  "evidence_level": "E0",
+  "fixed": [
+    {
+      "assumption_id": "A-XDUO-BW",
+      "parameter": "link.bytes_per_ns | nic.injection_bytes_per_ns",
+      "range_exact": [
+        "1",
+        "1024"
+      ],
+      "unit": "bytes_per_ns",
+      "value_exact": "64",
+      "value_float": 64.0
+    },
+    {
+      "assumption_id": "A-XDUO-LAT",
+      "parameter": "link.hop_latency_ns | link.pair_latency_ns",
+      "range_exact": [
+        "10",
+        "2000"
+      ],
+      "unit": "ns",
+      "value_exact": "200",
+      "value_float": 200.0
+    },
+    {
+      "assumption_id": "A-TFC-CR",
+      "parameter": "tfc.credit_return_latency_ns",
+      "range_exact": [
+        "0",
+        "2000"
+      ],
+      "unit": "ns",
+      "value_exact": "200",
+      "value_float": 200.0
+    },
+    {
+      "assumption_id": "A-XDUO-TP",
+      "parameter": "workload tp_size = topology ranks",
+      "range_exact": [
+        "2",
+        "1024"
+      ],
+      "unit": "ranks",
+      "value_exact": "1024",
+      "value_float": 1024.0
+    },
+    {
+      "assumption_id": "A-XDUO-PAYLOAD",
+      "parameter": "grid.payload_sizes_bytes",
+      "range_exact": [
+        "1024",
+        "16777216"
+      ],
+      "unit": "bytes",
+      "value_exact": "1048576",
+      "value_float": 1048576.0
+    }
+  ],
+  "framing": [
+    "E0 evidence only: every value in this data file is the exact output of a closed-form analytical identity executed by its landed backend under explicit free parameters at exact operating points.",
+    "The *_exact fields are exact fraction strings and are the ONLY comparison inputs; the *_float fields are display mirrors derived from them and never feed a boundary, region, or sign.",
+    "A boundary stated here is a fact about the RANKING RELATION OF MODEL IDENTITIES under declared freedom — not about any measured system; nothing here was run on or says anything about hardware."
+  ],
+  "manifest": {
+    "path": "experiments/envelopes/uec_vs_ub_window_boundary_v1.yaml",
+    "sha256": "d7fa81dcc9ca5870eff5bbb919729baf4bb0952f3a28477b89c78bffbcd95165"
+  },
+  "models": [
+    {
+      "algorithm_id": "allreduce_ring",
+      "backend_id": "analytical_l0",
+      "model": "uec_ring_free"
+    },
+    {
+      "algorithm_id": "envelope_tfc_ring",
+      "backend_id": "analytical_l0_tfc",
+      "model": "uec_tfc_ring"
+    },
+    {
+      "algorithm_id": "allreduce_ring",
+      "backend_id": "analytical_l0",
+      "model": "ub_flat_ring_pod"
+    }
+  ],
+  "observable": "O-CCT",
+  "pairs": [
+    {
+      "axis": "A-TFC-W",
+      "boundaries": [
+        {
+          "boundary_exact": "25600",
+          "boundary_float": 25600.0,
+          "boundary_method": "affine-x-verified",
+          "boundary_verified": true,
+          "bracket_exact": [
+            "12800",
+            "25600"
+          ],
+          "difference_at_bracket_exact": [
+            "32736",
+            "0"
+          ],
+          "sign_hi": 0,
+          "sign_lo": 1
+        }
+      ],
+      "differences_exact": [
+        "3240864",
+        "98208",
+        "32736",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "differences_float": [
+        3240864.0,
+        98208.0,
+        32736.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pair": [
+        "uec_tfc_ring",
+        "ub_flat_ring_pod"
+      ],
+      "points_exact": [
+        "256",
+        "6400",
+        "12800",
+        "25600",
+        "51200",
+        "102400",
+        "256000",
+        "1048576"
+      ],
+      "regions": [
+        {
+          "from_exact": "256",
+          "sign": 1,
+          "sign_reading": "comparator_a_ranks_worse",
+          "to_exact": "12800"
+        },
+        {
+          "from_exact": "25600",
+          "sign": 0,
+          "sign_reading": "exact_tie",
+          "to_exact": "1048576"
+        }
+      ],
+      "signs": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "slice_values_exact": []
+    },
+    {
+      "axis": "A-TFC-W",
+      "boundaries": [
+        {
+          "boundary_exact": "25600",
+          "boundary_float": 25600.0,
+          "boundary_method": "affine-x-verified",
+          "boundary_verified": true,
+          "bracket_exact": [
+            "12800",
+            "25600"
+          ],
+          "difference_at_bracket_exact": [
+            "32736",
+            "0"
+          ],
+          "sign_hi": 0,
+          "sign_lo": 1
+        }
+      ],
+      "differences_exact": [
+        "3240864",
+        "98208",
+        "32736",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "differences_float": [
+        3240864.0,
+        98208.0,
+        32736.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pair": [
+        "uec_tfc_ring",
+        "uec_ring_free"
+      ],
+      "points_exact": [
+        "256",
+        "6400",
+        "12800",
+        "25600",
+        "51200",
+        "102400",
+        "256000",
+        "1048576"
+      ],
+      "regions": [
+        {
+          "from_exact": "256",
+          "sign": 1,
+          "sign_reading": "comparator_a_ranks_worse",
+          "to_exact": "12800"
+        },
+        {
+          "from_exact": "25600",
+          "sign": 0,
+          "sign_reading": "exact_tie",
+          "to_exact": "1048576"
+        }
+      ],
+      "signs": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "slice_values_exact": []
+    },
+    {
+      "axis": "A-TFC-W",
+      "boundaries": [],
+      "differences_exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "differences_float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pair": [
+        "uec_ring_free",
+        "ub_flat_ring_pod"
+      ],
+      "points_exact": [
+        "256",
+        "6400",
+        "12800",
+        "25600",
+        "51200",
+        "102400",
+        "256000",
+        "1048576"
+      ],
+      "regions": [
+        {
+          "from_exact": "256",
+          "sign": 0,
+          "sign_reading": "exact_tie",
+          "to_exact": "1048576"
+        }
+      ],
+      "signs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "slice_values_exact": []
+    }
+  ],
+  "series": [
+    {
+      "axis": "A-TFC-W",
+      "model": "uec_ring_free",
+      "points_exact": [
+        "256",
+        "6400",
+        "12800",
+        "25600",
+        "51200",
+        "102400",
+        "256000",
+        "1048576"
+      ],
+      "points_float": [
+        256.0,
+        6400.0,
+        12800.0,
+        25600.0,
+        51200.0,
+        102400.0,
+        256000.0,
+        1048576.0
+      ],
+      "slice_values_exact": [],
+      "values_exact": [
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936"
+      ],
+      "values_float": [
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0
+      ]
+    },
+    {
+      "axis": "A-TFC-W",
+      "model": "uec_tfc_ring",
+      "points_exact": [
+        "256",
+        "6400",
+        "12800",
+        "25600",
+        "51200",
+        "102400",
+        "256000",
+        "1048576"
+      ],
+      "points_float": [
+        256.0,
+        6400.0,
+        12800.0,
+        25600.0,
+        51200.0,
+        102400.0,
+        256000.0,
+        1048576.0
+      ],
+      "slice_values_exact": [],
+      "values_exact": [
+        "3682800",
+        "540144",
+        "474672",
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936"
+      ],
+      "values_float": [
+        3682800.0,
+        540144.0,
+        474672.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0
+      ]
+    },
+    {
+      "axis": "A-TFC-W",
+      "model": "ub_flat_ring_pod",
+      "points_exact": [
+        "256",
+        "6400",
+        "12800",
+        "25600",
+        "51200",
+        "102400",
+        "256000",
+        "1048576"
+      ],
+      "points_float": [
+        256.0,
+        6400.0,
+        12800.0,
+        25600.0,
+        51200.0,
+        102400.0,
+        256000.0,
+        1048576.0
+      ],
+      "slice_values_exact": [],
+      "values_exact": [
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936",
+        "441936"
+      ],
+      "values_float": [
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0,
+        441936.0
+      ]
+    }
+  ],
+  "status": "PROPOSED"
+}

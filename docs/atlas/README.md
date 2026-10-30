@@ -75,6 +75,63 @@ size.
 | 64r phase collectives | [64r-phases.md](64r-phases.md) | 24 run records (run path) | landed 2026-10-28 (all 24 rerun → identical run ids; run-path-executed like 4r/8r/16r/32r-phases — the sweep-path unreachability re-exercised live at rank 64: the registry holds only the four AllReduce ids, a rank-64 phase grid refused explicitly by gate 1, every phase-vehicle id unknown to it; 4 declared pairings on the committed ring64/rdoubling64 fabrics via the NEW config phase_collectives64_free_params.yaml — the rank-64 mirror, its four pairings exercised through the loader — 2 distinct identities; wire 63M/64 per rank per phase — every variant equal, exactly half the ring AllReduce's 63M/32; ring phases = 63M/4096 + 12600 = the ring AllReduce identity EXACTLY HALVED, delta the constant **−1/2 — carried at a FIFTH rank class**, the ring-phase time column digit-for-digit half the landed 64r-ring ladder's; doubling phases = 63M/4096 + 1200 (k = 6 steps), delta = −(63M/4096 + 24000)/(63M/2048 + 25200) climbing −8021/8442 → −22004/43533 inside the exact envelope (**−20/21**, −1/2) — **the envelope law −(2(r−1)−log₂r)/(2(r−1)) landed at a fifth rank class at its own correct evaluation −(126−6)/126 = −20/21** (derived, not trusted: the 64r-doubling AR envelope −57/63 = −19/21 is the adjacent SHALLOWER fraction — the phase envelope deeper at every landed rank class, its chain k·L halved once, not twice, against the same 2(r−1)·L baseline); −61/84 at the ring's balance M* = 819200 B (ladder −7/12 → −9/14 → −41/60 → −22/31 → −61/84; general form (log₂r − 3(r−1))/(4(r−1))); family gap the constant (r−1−log₂r)·L = **57L = 11400 ns exactly as named, evaluated from the landed law** — rung ladder 200 → 800 → 2200 → 5200 → 11400 ns (1L, 3L, 11L, 26L, 57L); per-phase chain ladder {1, 6, 63}L with gaps 5L, 57L — evenly spaced only where 2·log₂r = r, so r = 4 remains the LAST arithmetic phase ladder (verdict at a fifth rank class); ring-phase balance 819200 B = the ring AR balance = the 64r-torus FOUR-WAY crossover — a three-fold special point (the pending 64r-l05 would test the fourth fold); doubling-phase balance 4915200/63 B = the 64r-doubling AR's own transition — landed transition ladder {1, 6, 63} = {1, log₂r, r−1} in crossbar-balance units, the phase cells riding their AR twins at a third consecutive rank class; RS+AG composes back to the 64r-ring AND 64r-doubling identities exactly, cross-checked exact-string against both landed sweep tables 12/12; more negative than the 32-rank doubling-phase delta at every size (exact ratio law delta_64/delta_32 = (63M+98304000)(62M+25395200)/((126M+103219200)(31M+23347200)), 1240/1197 at M = 0 through 25113751/24190551 at 4 KiB and the grid peak 242792/214767 at 1 MiB — the peak moves 256 KiB → 1 MiB, bracketing the doubling-phase balance — to the 1 large-M limit); shared-unreduced-denominator fact carries (all three M-dependent 64-rank deltas divide 63M/2048 + 25200) but the 32r phase/doubling-AR reduced relation INVERTS: phase denominator exactly twice at 4/8/16 KiB, EQUAL at the other nine — and both cells share the 1 MiB full reduction −44/63 vs −25/63, denominators exactly r−1 = 63 (the 32r analog −28/31 vs −25/31 at 16 KiB); the crossbar −1550/d ladder shares NO reduced denominator with the phase cell at 64r (0 of 12; the 16r 8-of-12 coincidence stays dead); no crossover — translates; O-CONSERVATION 0 violations at every size (total wire at 4 KiB 1548288 = 6 ops × 63 × 4096, exactly half the ring AR config's 3096576); all 24 records rederived independently in exact Fractions — 2,472 per-record field checks incl. the per-step doubling decomposition + 60 exact-string cross-table checks, exact-string equal to the stored observations and both landed sweep tables on every field) |
 | 64r L0.5 | [64r-l05.md](64r-l05.md) | `236d34d3…f260351` (cell-runner path) | landed 2026-10-28 (rerun byte-identical; COMPLETES rank class 64 — the atlas ladder's FINAL rank class — AND WITH IT THE WHOLE ATLAS: all 30 cells of five rank classes x six families landed; both run-path registries closed exactly as at rank 4, 8, 16 and 32 — `analytical_l05` re-rejected live on the rank-64 configs with the rank-4/8/16/32 strings verbatim, the run-path registered list unchanged since the rank-32 record (structural, rank-independent, now exercised at all five landed rank classes), so the vehicle is the cell-local deterministic runner `experiments/atlas/64r_l05/run_atlas_64r_l05_cell.py`, the rank-64 mirror of the pattern; new topology ring64_l05_free_params.yaml carrying I = 64 bytes/ns in-file per the A-L05-INJ convention; identity t = 63M/1024 + 25200 = t_L0(2M) exactly, wire unchanged 63M/32 (digit-for-digit the 64r-ring wire column, cross-checked 12/12 exact-string against the landed sweep table, as is the in-grid ring CCT column); serialization term 63M/2048 = the baseline's OWN bandwidth term; delta = M/(M + 819200) — closed form delta_r(M) = M/(M + L·B·r) exercised at a FIFTH rank class, the ladder's terminal one — climbing 1/201 → 2048/2073 strictly inside (0, 1), the only landed 64-rank family with POSITIVE deltas (slower side of the baseline populated by L0.5 alone at all five landed rank classes — the complete ladder); **THE 32r-l05 PREDICTION CONFIRMED — the half-saturation shift law delta_64(M) = delta_32(M/2) EXACTLY** (exact-string against the landed 32r-l05 table: 8 shared ladder entries one rung down {1/101, 1/51, 4/29, 8/33, 64/89, 128/153, 1024/1049, 2048/2073}, four new at the x4 rungs {1/201 — the predicted 1/101-analog floor —, 2/27, 32/57, 512/537}; by the same law delta_64(M) = delta_16(M/4) = delta_8(M/8) = delta_4(M/16) — the chain closes at its terminal link and spans the whole atlas); every relative delta shrinks via latency-chain dilution (25200 vs 12400 ns; ratio law delta_64/delta_32 = (M+409600)/(M+819200) climbing 101/201 → 4121/4146) while the ABSOLUTE term grows ×63/62 (126 vs 62 serialized transfers, the 2(r−1) rung law's final atlantean rung); M = 819200 B becomes a FOUR-fold special point (ring AR balance + ring phase balance + torus four-way crossover + delta = +1/2, the half rank-independent — the fold the 64r-phases row left pending, now tested and confirmed) — and the lower classes' four-fold points read off this one curve as the exact ladder delta_64(L·B·k) = k/(k+64): 51200 → 1/17, 102400 → 1/9, 204800 → 1/5, 409600 → 1/3, 819200 → 1/2; own balance 409600 B = M*/2 = exactly the rank-32 ring balance point — the L0.5 balance ladder L·B·r/2 = {25600, 51200, 102400, 204800, 409600} walks the ring balance ladder one rank down, fifth consecutive and FINAL rung; 64-rank transition ladder in M*/63 units {1 (crossbar), 6 (doubling AR + phase), 31.5 (L0.5), 63 (ring/torus/phases/L0.5 half-point)} = {1, log₂r, (r−1)/2, r−1}; no crossover — the I→∞ limit IS the baseline, recorded honestly; the stage's derive-then-verify battery caught one pre-execution hand-transcription slip at the 16 MiB rung (read 1024/1073; the law's own value 512/537) — the executed column satisfies the closed form at all 12 sizes, recorded on the page; O-CONSERVATION 0 violations at every size (per-op total wire 126M; total at 4 KiB 3096576 = 6 ops x 126 x 4096, same as 64r-ring), O-CCT identity_cited) |
 
+## Boundary catalog (envelope artifacts over declared free-parameter ranges)
+
+Evidence level **E0 only**: every statement below is an arithmetic fact
+about the RANKING RELATION OF ANALYTICAL MODEL IDENTITIES under declared
+free-parameter ranges, detected exactly (exact Fractions, secant roots
+re-executed and accepted only on an exact zero) by the boundary detector
+(`src/essun/orchestrator/boundaries.py`) over operating-point grids
+(`opgrids.py`, `envelopes.py`). Each artifact is CONTENT-ADDRESSED
+(envelope_id = sha256(canonical manifest + code version); the committed
+record carries the artifact bytes' sha256 and reproduction commands), and
+each entry states the boundary in ONE decision-readable sentence —
+tie-at-and-above / strictly-worse-below for saturation boundaries
+(credit-provisioning thresholds), explicit two-sided sign changes for
+true crossings. The envelope tables, difference series, and exact
+boundary markers are rendered on [envelopes.md](envelopes.md) with the
+visualization data under [envelope-data/](envelope-data/) (exact
+fractions plus display-only float mirrors, generated deterministically by
+`src/essun/orchestrator/envviz.py`; byte-identical on replay). No claim,
+label, or README status upgrades from this catalog.
+
+- **`uec_vs_ub_window_boundary_v1`** — envelope_id `9a5f1296…f016e0`,
+  artifact sha256 `8b5eac95…a9f853` ([record](../../experiments/envelopes/uec_vs_ub_window_boundary_v1.BOUNDARY.md),
+  [data](envelope-data/uec_vs_ub_window_boundary_v1.envelope-data.json)):
+  at 1024 ranks (1 MiB payload, shared B = 64 bytes/ns, L = 200 ns,
+  credit-return 200 ns), the UEC profile's TFC admission-law ring ties the
+  UB paper profile's permitted pod-scale flat ring exactly at and above
+  W\* = 25600 bytes (100 credit units, exactly the bandwidth-delay
+  product B\*(L+L_cr) = 64\*400) and ranks strictly worse at every window
+  below it — a saturation boundary (credit-provisioning threshold), never
+  a two-sided crossing — and the two profiles' unwindowed ring identities
+  tie exactly at every sampled point (delta 0 on the whole grid, the
+  honesty anchor).
+- **`uec_vs_ub_window_boundary_tp256_v1`** — envelope_id
+  `05b4afdf…02e730`, artifact sha256 `17cbc2ab…cb41d` ([record](../../experiments/envelopes/uec_vs_ub_window_boundary_tp256_v1.BOUNDARY.md),
+  [data](envelope-data/uec_vs_ub_window_boundary_tp256_v1.envelope-data.json)):
+  at the mid-freedom scale 256 (inside the shared rank range [2, 1024]
+  with NO anchored identity on either profile side, same shared
+  parameters), the same comparison lands the SAME saturation boundary at
+  exactly W\* = 25600 — tie at and above, strictly worse below, the
+  threshold carrying no rank term exactly as stated before the run — and
+  only the below-threshold penalty magnitude changed with the rank count
+  (worst sampled difference 3231360 ns against the 1024-rank cell's
+  3240864).
+- **`ring_vs_torus16_bw_boundary_v1`** — envelope_id `5e22355a…16721d`,
+  artifact sha256 `89dad19e…24e94a` ([record](../../experiments/envelopes/ring_vs_torus16_bw_boundary_v1.BOUNDARY.md),
+  [data](envelope-data/ring_vs_torus16_bw_boundary_v1.envelope-data.json)):
+  on the shared per-link bandwidth freedom at 16 ranks (1 MiB payload,
+  L = 200 ns), ALL THREE pairwise ranking relations among the flat-ring,
+  2x8-torus, and 4x4-torus identities change sign through exact zero at
+  the same B\* = 8192/25 = 327.68 bytes/ns (all three identities equal
+  12000 ns there) — the ring strictly better below B\* (least per-rank
+  wire, 15M/8 against 11M/4 and 3M) and strictly worse above (30L chain
+  against 16L and 12L), the square torus strictly worse than the skew
+  below and strictly better above — true two-sided crossings, the
+  structural opposite of the window family's tie-at-and-above saturation
+  boundary.
+
 ## Recorded skips
 
 - **4r torus factorization 1x4** (2026-10-28): the config cannot be

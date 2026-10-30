@@ -1,0 +1,87 @@
+# G4 envelope + boundary artifact: the UEC-vs-UB window comparison
+# extended to a SECOND rank corner — the MID-FREEDOM scale 256 (design
+# continuation of uec_vs_ub_window_boundary_v1.yaml, the 1024 pod-scale
+# cell; saturation-boundary language since G6, 2026-10-30).
+#
+# COMPARISON (two existing profiles, one stated operating point):
+#   - UEC side: the UEC profile's flagship executed semantic — the TFC
+#     admission law (UEC11-FC-R02; executed by the credit automaton
+#     binding BIND-UEC11-FC-R02-AUTOMATON, with this ring identity as its
+#     DECLARED steady-state abstraction) on the free ring stand-in
+#     (A-XDUO-IDUEC) at the mid-freedom rank 256.
+#   - UnifiedBus-paper side: the profile's free transport-agnostic ring
+#     stand-in at the same mid-freedom scale — NOT the anchored rack
+#     crossbar (UBP-P17) and NOT the pod-conditional flat ring (UBP-P18),
+#     both anchored elsewhere in the shared rank freedom [2, 1024]; at
+#     256 neither side has an anchored identity, so both comparators are
+#     equally free stand-ins (scale honesty recorded in
+#     ring256_ub_flat_pod_free_params.yaml). The five public UB sources
+#     are silent on any flow-control mechanism (UBP-F04), so this side
+#     carries NO window — that silence is the profile's declared state.
+#
+# SHARED-PARAMETER BAR (unchanged): B and L are the ONE shared record's
+# values (A-XDUO-BW/A-XDUO-LAT) consumed by BOTH flavors; differences
+# between the comparators may come ONLY from the window term.
+#
+# EVIDENCE LEVEL E0, status PROPOSED. Every value is a closed-form
+# analytical identity executed by its landed backend at exact operating
+# points; the artifact ranks MODEL IDENTITIES under declared freedom and
+# says nothing about any measured system.
+#
+# EXPECTED DETECTOR OUTCOME, STATED BEFORE THE RUN (derived from the two
+# identities, not tuned): the saturation boundary sits at exactly
+# W* = B*(L+L_cr) = 64*400 = 25600 bytes (100 credit units) — the SAME
+# boundary as the 1024-rank cell, because the threshold carries no rank
+# term; only the below-threshold penalty magnitude changes with r (it
+# scales with the per-rank traffic T = 2*(r-1)/r * M, here 2088960
+# bytes at r = 256, M = 1 MiB). The detector must find: tie at and above
+# 25600, strictly worse below, boundary verified exactly at 25600 for
+# both windowed pairs; delta exactly 0 at every point for the
+# unwindowed pair (the honesty anchor).
+envelope: uec_vs_ub_window_boundary_tp256_v1
+workload: experiments/workloads/w1_dense_tp_decode_tp256.yaml
+assumption_registries:
+- experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml   # shared B/L, ranks, payload ranges
+- experiments/vertical_slice/assumptions_tfc.yaml        # window W + credit-return ranges
+observable: O-CCT
+payload_assumption: A-XDUO-PAYLOAD
+ranks_assumption: A-XDUO-TP
+fixed:
+- assumption: A-XDUO-BW        # shared link bandwidth (both flavors)
+  value: 64
+- assumption: A-XDUO-LAT       # shared per-hop latency (both flavors)
+  value: 200
+- assumption: A-TFC-CR         # credit-loop return time (UEC binding only)
+  value: 200
+- assumption: A-XDUO-TP        # operating point: mid-freedom rank corner (no anchor either side)
+  value: 256
+- assumption: A-XDUO-PAYLOAD   # 1 MiB: within range, divisible by 256
+  value: 1048576
+axes:
+- assumption: A-TFC-W          # the UEC admission law's declared freedom
+  points: [256, 6400, 12800, 25600, 51200, 102400, 256000, 1048576]
+models:
+- model: uec_ring_free         # UEC flavor, free ring stand-in, NO window (control)
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring256_uec_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+- model: uec_tfc_ring          # UEC profile flagship: TFC admission law executed
+  algorithm: envelope_tfc_ring
+  topology: experiments/topologies/ring256_tfc_window_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+    A-TFC-W: tfc.window_bytes
+    A-TFC-CR: tfc.credit_return_latency_ns
+- model: ub_flat_ring_mid      # UB paper profile: free ring stand-in at mid-freedom scale, no window
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring256_ub_flat_pod_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+boundary_pairs:
+- [uec_tfc_ring, ub_flat_ring_mid]   # the two-profile flagship pair
+- [uec_tfc_ring, uec_ring_free]      # UEC-side control: same boundary against the unwindowed stand-in
+- [uec_ring_free, ub_flat_ring_mid]  # honesty anchor: delta exactly 0 everywhere, no boundary

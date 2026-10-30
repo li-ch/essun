@@ -1,0 +1,17 @@
+# W1 Dense TP Decode — tp_size 256, for the G4 envelope cell
+# uec_vs_ub_window_boundary_tp256_v1 (a mid-freedom rank corner: neither
+# profile's anchored scale — UB anchors 64 and 1024, UEC anchors none).
+# All sizes are integer byte counts; deterministic by construction.
+# Same shape convention as w1_dense_tp_decode_tp4.yaml,
+# w1_dense_tp_decode_tp8.yaml, w1_dense_tp_decode_tp16.yaml,
+# w1_dense_tp_decode_tp32.yaml and w1_dense_tp_decode_tp64.yaml
+# (layers 2 x steps 3 = 6 AllReduce ops per config); only tp_size differs.
+# The per-config payload size is OVERRIDDEN by the envelope's fixed
+# parameter (A-XDUO-PAYLOAD); the allreduce_bytes below is only the
+# file default, recorded in the artifact for provenance.
+workload: w1_dense_tp_decode
+model_name: dense-tp-decode-envelope-256r
+tp_size: 256
+layers: 2
+steps: 3
+allreduce_bytes: 16384   # free parameter A-W1-SIZE (16 KiB), see assumptions_l0.yaml

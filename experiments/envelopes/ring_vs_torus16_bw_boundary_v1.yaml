@@ -1,0 +1,84 @@
+# G4 envelope + boundary artifact: the FIRST envelope on the BANDWIDTH
+# axis and the FIRST two-sided ranking crossing the detector catalogues
+# on a declared freedom axis (G4, 2026-10-30; the window family's
+# boundaries are saturation boundaries — tie at and above, strictly
+# worse below — while this cell's boundaries change sign through zero on
+# BOTH sides).
+#
+# COMPARISON (three algorithm identities inside ONE rank class, all
+# sweep-registered, all on the atlas's landed 16-rank cells): the flat
+# ring baseline vs the two declared 16-rank torus factorizations (2x8
+# skewed, 4x4 square — the first rank class with two), at a fixed
+# operating point with the shared per-link bandwidth B as the ONLY
+# freedom axis.
+#
+# WHY THIS AXIS: the atlas's 16r cells hold B fixed (64 bytes/ns) and
+# walk the payload M; every pairwise torus crossover then sits at
+# M* = L*B*r. Reading the same identities on the B axis at FIXED M moves
+# the crossing to B* = M/(L*r) — inside the shared record's registered
+# A-XDUO-BW range [1, 1024] at this operating point — so the declared
+# bandwidth freedom is where these identities' ranking relation changes.
+#
+# SHARED-PARAMETER BAR: every comparator binds the SAME assumptions
+# (A-XDUO-BW -> link.bytes_per_ns, A-XDUO-LAT -> link.hop_latency_ns);
+# differences may come ONLY from the identities' own wire/chain terms.
+#
+# EVIDENCE LEVEL E0, status PROPOSED. Every value is a closed-form
+# analytical identity executed by its landed backend at exact operating
+# points; the artifact ranks MODEL IDENTITIES under declared freedom and
+# says nothing about any measured system.
+#
+# EXPECTED DETECTOR OUTCOME, STATED BEFORE THE RUN (from the atlas's own
+# factorization law gap = 2*(r1-1)*(r2-1)*(M/(B*r) - L) — the TORUS-minus-
+# ring difference — not tuned): at r = 16, M = 1 MiB, L = 200 ns, ALL
+# THREE pairwise differences are affine in 1/B and change sign at exactly
+# B* = M/(r*L) = 8192/25 = 327.68 bytes/ns (between the 256 and 512 grid
+# points): the ring ranks strictly BETTER than both torus factorizations
+# BELOW B* (wire-dominated regime: the flat ring moves the least per-rank
+# wire 15M/8 against the torus's 11M/4 (2x8) and 3M (4x4)) and strictly
+# WORSE above (chain-dominated regime: its 30L latency chain against 16L
+# and 12L); the two torus factorizations cross each other at the same B*
+# with the square (4x4) worse than the skew (2x8) below B* and better
+# above. The detector must resolve all three boundaries exactly (affine
+# in 1/B -> affine-reciprocal-verified) and report strictly two-sided
+# sign changes through zero, never a tie.
+envelope: ring_vs_torus16_bw_boundary_v1
+workload: experiments/workloads/w1_dense_tp_decode_tp16.yaml
+assumption_registries:
+- experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml   # shared B/L, ranks, payload ranges
+observable: O-CCT
+payload_assumption: A-XDUO-PAYLOAD
+ranks_assumption: A-XDUO-TP
+fixed:
+- assumption: A-XDUO-LAT       # shared per-hop latency (all three identities)
+  value: 200
+- assumption: A-XDUO-TP        # rank class 16 (atlas 16r cells)
+  value: 16
+- assumption: A-XDUO-PAYLOAD   # 1 MiB: within range, divisible by 16, 2, 8, 4
+  value: 1048576
+axes:
+- assumption: A-XDUO-BW        # shared per-link bandwidth: the declared freedom swept
+  points: [16, 32, 64, 128, 256, 512, 1024]
+models:
+- model: ring16                # the 16r atlas baseline identity
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring16_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+- model: torus16_2x8           # 16r torus, skewed factorization (chain 16L, wire 11M/4 at B=64)
+  algorithm: allreduce_torus2d
+  topology: experiments/topologies/torus2d16_2x8_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+- model: torus16_4x4           # 16r torus, square factorization (chain 12L, wire 3M at B=64)
+  algorithm: allreduce_torus2d
+  topology: experiments/topologies/torus2d16_4x4_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+boundary_pairs:
+- [ring16, torus16_4x4]        # baseline vs square torus
+- [ring16, torus16_2x8]        # baseline vs skew torus
+- [torus16_4x4, torus16_2x8]   # intra-family: the two factorizations against each other
