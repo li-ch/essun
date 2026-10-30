@@ -1,0 +1,72 @@
+# Assumption registry for the UEC11-FC-R05 credit-arrival conformance
+# check (G2 credit-family ladder stage S4; the check is
+# tests/golden/test_credit_arrival_golden.py, carried by profile checks
+# UEC11-CHK-12/13/14). SEPARATE file from assumptions_tfc.yaml (and from
+# the S2/S3/G8 files) by the per-run identity house rule: the flagship
+# assumptions file is a hashed manifest input, so appending here would
+# have shifted earlier run ids; a new file cannot.
+#
+# PROVENANCE NOTE: the standard-derived values governing this check are
+# NOT assumptions — the 256-byte credit unit (UEC11-FC-R05, >> 8) and
+# the 24-bit pds.credit field width (UEC11-FC-R01) are spec facts the
+# check cites by requirement id. Every entry below is a modeling choice
+# of the CHECK harness: not standard-derived, not measured.
+assumptions_id: assumptions_tfc_credit_arithmetic_v1
+status: PROPOSED
+assumptions:
+  - id: A-TFCA-ORDER
+    parameter: model.credit_arrival_comparison
+    value: wrapping_order_half_range
+    unit: none
+    range: [wrapping_order_half_range, plain_integer_comparison]
+    rationale: >
+      MODELING CHOICE: the guard "Credit > cumulative_credit" of the
+      UEC11-FC-R05 arrival law is evaluated in the WRAPPING counter's
+      order — the modular difference (Credit - cumulative_credit) mod
+      2^24 is an increase iff it lies in the open half range (0, 2^23) —
+      not as a plain integer comparison. The ordering law itself is the
+      same specification's own statement for its CBFC cyclic counters
+      (UEC11-FC-R28: two cyclic counter values can be reliably ordered
+      only if they differ by less than half the counter range); applying
+      that family-wide law to TFC's pds.credit is this registered
+      bridge. A plain integer comparison would silently drop every
+      legitimate increase spanning the 24-bit wrap (the check's wrap
+      boundary case pins the difference: 2 units granted vs 0).
+    sensitivity: structural (decides which arrivals grant at all)
+    owner: g2-stage-s4
+    review: PROPOSED
+  - id: A-TFCA-INIT
+    parameter: model.credit_arrival_initial_state
+    value: zero_cumulative_zero_credit
+    unit: none
+    range: [zero_cumulative_zero_credit, bring_up_granted_window]
+    rationale: >
+      MODELING CHOICE: the check's harness starts each trace at
+      cumulative_credit = 0 and credit = 0 (and sets the wrap-boundary
+      trace's start state directly as a fixture). Initial-credit
+      bring-up (ccc.credit >= tfc_pkt_overhead, UEC11-FC-R14) is NOT
+      executed by this check — startup transients are a declared
+      exclusion of the family; the arrival law itself is
+      initial-state-independent (every assertion is a difference
+      statement).
+    sensitivity: none (all pinned values are differences or invariants)
+    owner: g2-stage-s4
+    review: PROPOSED
+  - id: A-TFCA-SCOPE
+    parameter: model.credit_arrival_executed_side
+    value: source_credit_accumulation_only
+    unit: none
+    range: [source_credit_accumulation_only, with_destination_buffer_accounting]
+    rationale: >
+      MODELING CHOICE: the check executes the SOURCE-side arrival
+      arithmetic only — how an arriving pds.credit value updates the
+      source's credit balance and cumulative counter. The destination
+      side (buffer cells, the allocation discipline that makes real
+      grants whole 256-B multiples per UEC11-FC-R07) is not modeled;
+      the check pins the sub-unit regime exactly BECAUSE the law as
+      written does not carry slivers forward, and states the R07
+      discipline as the condition under which loss tolerance is exact.
+      No timing, no link, no scheduling enters the check.
+    sensitivity: structural (bounds what the conformance claim covers)
+    owner: g2-stage-s4
+    review: PROPOSED

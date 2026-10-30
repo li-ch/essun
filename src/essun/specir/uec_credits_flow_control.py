@@ -158,7 +158,21 @@ _REQUIREMENTS: tuple[UECRequirement, ...] = (
         anchor_ids=("UEC11-S3.6.15-TFC",),
         keyword="DEFINITIONAL",
         subject="TFC",
-        disposition="informational",
+        # Promoted informational -> conformance_test 2026-10-30 (G2
+        # credit-family ladder stage S4, per the S1 plan in
+        # experiments/uec/credit_family_inventory.md): the arrival
+        # arithmetic is exact and self-contained, so it executes as a
+        # CONFORMANCE CHECK — golden test
+        # tests/golden/test_credit_arrival_golden.py, carried by the
+        # profile CHECKS entries UEC11-CHK-12/13/14 (per the D2 rule a
+        # profile binding may reference only a simulated_behavior
+        # requirement, so the carrier is a check, NOT a binding; no
+        # backend is extended — the law demands none). The one modeling
+        # choice (the wrapping-counter ordering of the Credit >
+        # cumulative_credit guard, law cited to UEC11-FC-R28) is
+        # registered in experiments/vertical_slice/
+        # assumptions_tfc_credit_arithmetic.yaml.
+        disposition="conformance_test",
         statement=(
             "pds.credit is a monotonically increasing wrapping counter; an "
             "increase grants additional credit, giving tolerance to credit "

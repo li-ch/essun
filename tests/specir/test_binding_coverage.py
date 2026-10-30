@@ -139,6 +139,86 @@ def golden_problems(
 # -- the property, pinned ------------------------------------------------------
 
 
+def conformance_test_requirements() -> list[tuple[str, UECRequirement]]:
+    """(stage module, requirement) for every live ``conformance_test``.
+
+    G2 credit-family ladder S4 (2026-10-30) added the second executed
+    carrier: a ``conformance_test`` requirement is exercised by an
+    executable CHECK of the built profile, not by a binding — this is
+    the leg the property extends to below.
+    """
+    live: list[tuple[str, UECRequirement]] = []
+    for dotted in bindings.UEC_REQUIREMENT_MODULES:
+        module = importlib.import_module(dotted)
+        for req in module.requirements():  # type: ignore[attr-defined]
+            if req.disposition == "conformance_test":
+                live.append((dotted, req))
+    return live
+
+
+def _built_profile_checks() -> list[tuple[str, tuple[str, ...], str]]:
+    """(check_id, requirement_ids, location) for every built-profile check."""
+    import yaml
+
+    from essun.specir.profile_format import PROFILE_FORMAT_NAME
+
+    raw = yaml.safe_load(
+        (REPO_ROOT / "experiments/uec/semantic_profile.yaml").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert raw["format"]["name"] == PROFILE_FORMAT_NAME
+    return [
+        (c["check_id"], tuple(c["requirement_ids"]), c.get("location", ""))
+        for c in raw["checks"]
+    ]
+
+
+def test_every_conformance_test_disposition_has_a_check() -> None:
+    # The conformance leg (G2 S4): disposition -> check. Every live
+    # conformance_test requirement is referenced by at least one check
+    # of the BUILT profile whose location is a real file under tests/
+    # citing the requirement — the mirror of legs 1 and 3 for the check
+    # carrier (the D2 rule: a binding may carry only simulated_behavior,
+    # so conformance_test must be exercised some other way, visibly).
+    checks = _built_profile_checks()
+    referenced: dict[str, list[str]] = {}
+    for check_id, requirement_ids, _ in checks:
+        for rid in requirement_ids:
+            referenced.setdefault(rid, []).append(check_id)
+    problems: list[str] = []
+    for module, req in conformance_test_requirements():
+        carriers = referenced.get(req.requirement_id, [])
+        if not carriers:
+            problems.append(
+                f"{req.requirement_id} (module {module}): conformance_test "
+                "with no check in the built profile referencing it"
+            )
+            continue
+        for check_id, requirement_ids, location in checks:
+            if req.requirement_id not in requirement_ids:
+                continue
+            path = pathlib.PurePosixPath(location)
+            file = REPO_ROOT / path
+            if (
+                path.is_absolute()
+                or not path.parts
+                or path.parts[0] != "tests"
+                or not file.is_file()
+                or req.requirement_id
+                not in file.read_text(encoding="utf-8")
+            ):
+                problems.append(
+                    f"{req.requirement_id}: check {check_id} names "
+                    f"{location!r}, which is not a tests/ file citing the "
+                    "requirement it executes"
+                )
+    assert problems == [], (
+        "binding-coverage property violated — conformance_test leg "
+        f"failures: {problems}"
+    )
+
+
 def test_every_simulated_behavior_disposition_has_a_binding() -> None:
     # LEG 1 (forward): disposition -> binding. The UEC profile scope is
     # the five stage modules of bindings.UEC_REQUIREMENT_MODULES; the

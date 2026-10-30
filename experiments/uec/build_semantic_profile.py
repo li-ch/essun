@@ -86,7 +86,12 @@ PROFILE_ID = "uec-1.1-semantic"
 #: changed), so the MINOR component bumps once more.  0.3.0 -> 0.4.0 at
 #: G2 stage S3 (2026-10-30): the UEC11-FC-R09 disposition flip plus its
 #: new binding — the MAJOR class once more (dispositions + bindings).
-PROFILE_VERSION = "0.4.0"
+#: 0.4.0 -> 0.5.0 at G2 stage S4 (2026-10-30): the UEC11-FC-R05
+#: disposition flip (informational -> conformance_test, the profile's
+#: first non-zero conformance count) plus the new checks carrying it —
+#: dispositions is the MAJOR class again, so the 0.x MINOR bumps once
+#: more.
+PROFILE_VERSION = "0.5.0"
 
 #: The executable checks (element 6) — real, existing tests only.  Every
 #: entry names a file that must exist; the conformance test enforces that.
@@ -247,20 +252,90 @@ CHECKS: list[dict] = [
         ),
         "location": "tests/golden/test_l0_tfc_pkt_golden.py",
     },
+    {
+        "check_id": "UEC11-CHK-12",
+        "kind": "golden",
+        "requirement_ids": ["UEC11-FC-R05"],
+        "description": (
+            "credit-arrival arithmetic executed exactly as the DEFINITIONAL "
+            "law states it (G2 stage S4, the profile's first conformance "
+            "check): one credit unit = 256 B (>> 8, the same constant the "
+            "landed executors carry), on increase credit += (Credit - "
+            "cumulative_credit) >> 8 then cumulative_credit = Credit, on a "
+            "no-op neither happens — golden traces with in-test derived "
+            "exact values incl. the boundary cases: arrival equal to "
+            "cumulative (no-op), stale/duplicate/reordered arrivals "
+            "ignored by the monotone guard, a sub-unit increase granting "
+            "zero while cumulative advances, the per-arrival floor NOT "
+            "telescoping for sub-unit streams (0-199-399-599 grants 0 "
+            "units vs 2 direct — the algorithm as written; whole-unit "
+            "allocation is the R07-cited discipline), loss/reorder "
+            "tolerance exact on whole-unit streams (every permutation "
+            "and the loss-shortened path grant the same 6 units), and an "
+            "increase spanning the 24-bit counter wrap granting its "
+            "units under the wrapping order"
+        ),
+        "location": "tests/golden/test_credit_arrival_golden.py",
+    },
+    {
+        "check_id": "UEC11-CHK-13",
+        "kind": "negative",
+        "requirement_ids": ["UEC11-FC-R05", "UEC11-FC-R28"],
+        "description": (
+            "the pinned boundaries DISTINGUISH the arrival law from each "
+            "named misreading (the check has teeth): a plain-integer "
+            "Credit > cumulative_credit comparison drops the "
+            "wrap-spanning increase the law grants (2 units vs 0 — the "
+            "wrapping-counter order is UEC11-FC-R28's cyclic-counter "
+            "ordering law applied to pds.credit, the check's one "
+            "registered modeling choice); granting without the monotone "
+            "guard pays stale duplicates (13 vs 6 units); executing "
+            "cumulative_credit = Credit on a no-op corrupts the next "
+            "genuine increase (4 vs 2 units); a >> 7 or >> 9 unit "
+            "misreads the 256-B delta the law prices at exactly one "
+            "unit; and an arrival that does not fit the 24-bit field "
+            "(UEC11-FC-R01) is rejected naming the field-width fact, "
+            "while a difference of exactly half the range is NOT an "
+            "increase (reliable order needs less than half the range)"
+        ),
+        "location": "tests/golden/test_credit_arrival_golden.py",
+    },
+    {
+        "check_id": "UEC11-CHK-14",
+        "kind": "invariant",
+        "requirement_ids": ["UEC11-FC-R05", "UEC11-FC-R01"],
+        "description": (
+            "structural invariants over a fixed-constant LCG arrival "
+            "stream (no random module, fully deterministic): every "
+            "accepted arrival advances cumulative_credit by a difference "
+            "in the open half range and grants exactly its floored "
+            "units, every ignored arrival leaves the state untouched, "
+            "the counter stays within the 24-bit field (UEC11-FC-R01), "
+            "granted units never exceed the floored total byte advance "
+            "with EQUALITY at every step on whole-unit streams (the "
+            "telescoping identity that makes credit-packet loss "
+            "harmless), and the live UEC11-FC-R05 object still carries "
+            "the law while the 256-B unit equals the constant of both "
+            "landed executors (analytical_l0_tfc and the credit "
+            "automaton) — drift on any side is a hard error"
+        ),
+        "location": "tests/golden/test_credit_arrival_golden.py",
+    },
 ]
 
 #: Known omissions (element 9) — stated visibly, honesty over coverage.
 OMISSIONS: list[dict] = [
     {
         "what": (
-            "255 of 445 requirements carry disposition unsupported: "
+            "254 of 445 requirements carry disposition unsupported: "
             "anchored but executed by no backend today"
         ),
         "reason": (
             "honesty over coverage: per-disposition counts are computed "
             "live (tools/disposition_coverage.py) and frozen in "
             "tests/specir/test_dispositions.py; a promotion is a "
-            "reviewed act with a registered binding"
+            "reviewed act with a registered binding (or, since G2 stage "
+            "S4, a landed conformance check)"
         ),
     },
     {

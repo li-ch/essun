@@ -3041,7 +3041,7 @@ requirements:
       credit, giving tolerance to credit packet loss; one bit represents 256 bytes.  On credit arrival:
       if Credit > cumulative_credit then credit += (Credit − cumulative_credit) >> 8 and cumulative_credit
       = Credit.'
-    disposition: informational
+    disposition: conformance_test
     module: uec_credits_flow_control
   - requirement_id: UEC11-FC-R06
     anchor_ids:
@@ -5416,6 +5416,50 @@ checks:
     W, and the wire-byte ledger is unchanged (the overhead constant gates credit consumption, never
     byte count; re-derived as an exact Fraction identity for every run)'
   location: tests/golden/test_l0_tfc_pkt_golden.py
+- check_id: UEC11-CHK-12
+  kind: golden
+  requirement_ids:
+  - UEC11-FC-R05
+  description: 'credit-arrival arithmetic executed exactly as the DEFINITIONAL law states it (G2 stage
+    S4, the profile''s first conformance check): one credit unit = 256 B (>> 8, the same constant
+    the landed executors carry), on increase credit += (Credit - cumulative_credit) >> 8 then cumulative_credit
+    = Credit, on a no-op neither happens — golden traces with in-test derived exact values incl. the
+    boundary cases: arrival equal to cumulative (no-op), stale/duplicate/reordered arrivals ignored
+    by the monotone guard, a sub-unit increase granting zero while cumulative advances, the per-arrival
+    floor NOT telescoping for sub-unit streams (0-199-399-599 grants 0 units vs 2 direct — the algorithm
+    as written; whole-unit allocation is the R07-cited discipline), loss/reorder tolerance exact on
+    whole-unit streams (every permutation and the loss-shortened path grant the same 6 units), and
+    an increase spanning the 24-bit counter wrap granting its units under the wrapping order'
+  location: tests/golden/test_credit_arrival_golden.py
+- check_id: UEC11-CHK-13
+  kind: negative
+  requirement_ids:
+  - UEC11-FC-R05
+  - UEC11-FC-R28
+  description: 'the pinned boundaries DISTINGUISH the arrival law from each named misreading (the
+    check has teeth): a plain-integer Credit > cumulative_credit comparison drops the wrap-spanning
+    increase the law grants (2 units vs 0 — the wrapping-counter order is UEC11-FC-R28''s cyclic-counter
+    ordering law applied to pds.credit, the check''s one registered modeling choice); granting without
+    the monotone guard pays stale duplicates (13 vs 6 units); executing cumulative_credit = Credit
+    on a no-op corrupts the next genuine increase (4 vs 2 units); a >> 7 or >> 9 unit misreads the
+    256-B delta the law prices at exactly one unit; and an arrival that does not fit the 24-bit field
+    (UEC11-FC-R01) is rejected naming the field-width fact, while a difference of exactly half the
+    range is NOT an increase (reliable order needs less than half the range)'
+  location: tests/golden/test_credit_arrival_golden.py
+- check_id: UEC11-CHK-14
+  kind: invariant
+  requirement_ids:
+  - UEC11-FC-R05
+  - UEC11-FC-R01
+  description: 'structural invariants over a fixed-constant LCG arrival stream (no random module,
+    fully deterministic): every accepted arrival advances cumulative_credit by a difference in the
+    open half range and grants exactly its floored units, every ignored arrival leaves the state untouched,
+    the counter stays within the 24-bit field (UEC11-FC-R01), granted units never exceed the floored
+    total byte advance with EQUALITY at every step on whole-unit streams (the telescoping identity
+    that makes credit-packet loss harmless), and the live UEC11-FC-R05 object still carries the law
+    while the 256-B unit equals the constant of both landed executors (analytical_l0_tfc and the credit
+    automaton) — drift on any side is a hard error'
+  location: tests/golden/test_credit_arrival_golden.py
 supported:
   workloads:
   - w1_dense_tp_decode
@@ -5432,11 +5476,11 @@ calibration:
     the cell domain values (UEC11-FC-R07), the overhead default 256 B (UEC11-FC-R09) and the overhead
     bounds 0..256 B (UEC11-FC-R10)'
 omissions:
-- what: '255 of 445 requirements carry disposition unsupported: anchored but executed by no backend
+- what: '254 of 445 requirements carry disposition unsupported: anchored but executed by no backend
     today'
   reason: 'honesty over coverage: per-disposition counts are computed live (tools/disposition_coverage.py)
     and frozen in tests/specir/test_dispositions.py; a promotion is a reviewed act with a registered
-    binding'
+    binding (or, since G2 stage S4, a landed conformance check)'
 - what: 'spec sections outside the interpreted mechanism set carry anchors but no interpreted requirements:
     chapters 1-2 (introduction, software layer, libfabric/verbs mapping; 2.4 INC detail IS interpreted),
     3.7 TSS, 3.8 references, chapter 4 overview (4.1 trimmed-packet facts ARE interpreted), 5.5 idle
@@ -5464,7 +5508,7 @@ omissions:
   reason: excluded by the analytical L0 family's declared fidelity (explicitly_unsupported in every
     L0 backend's CAPABILITIES)
 versioning:
-  profile_version: 0.4.0
+  profile_version: 0.5.0
   bump_rules:
     major:
     - dispositions

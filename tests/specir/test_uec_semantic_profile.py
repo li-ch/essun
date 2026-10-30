@@ -15,9 +15,9 @@ registry.  This file is the migration's conformance gate:
   citations, keywords and subjects are compared too, so the artifact is
   the same interpretation, not a paraphrase of a paraphrase;
 - the artifact's per-disposition counts equal the live D1 coverage
-  report's UEC totals (188 informational / 254 unsupported /
-  3 simulated_behavior over 445 requirements, 67 free parameters
-  outside the table);
+  report's UEC totals (187 informational / 254 unsupported /
+  3 simulated_behavior / 1 conformance_test over 445 requirements, 67
+  free parameters outside the table);
 - the BINDING check passes against the declared backend: the artifact's
   bindings are exactly the live :data:`essun.specir.bindings.BINDINGS`
   registry (BIND-UEC11-FC-R02-AUTOMATON on the credit automaton — its
@@ -127,8 +127,10 @@ def test_artifact_loads_with_the_uec_identity(profile: LoadedProfile) -> None:
     # binding re-pointed at the credit automaton — again the MAJOR
     # "bindings" class. 0.3.0 -> 0.4.0 at G2 stage S3 (2026-10-30): the
     # UEC11-FC-R09 promotion (dispositions + new binding), same MAJOR
-    # class. A bump is conscious.
-    assert profile.profile_version == "0.4.0"
+    # class. 0.4.0 -> 0.5.0 at G2 stage S4 (2026-10-30): the
+    # UEC11-FC-R05 promotion to conformance_test plus its checks —
+    # dispositions, the MAJOR class once more. A bump is conscious.
+    assert profile.profile_version == "0.5.0"
 
 
 def test_artifact_validates_against_the_published_schema(document: dict) -> None:
@@ -175,13 +177,15 @@ def test_disposition_counts_are_the_live_coverage_totals(
 ) -> None:
     live = uec_profile_coverage().total_counts()
     assert profile.disposition_counts() == live
-    assert live["informational"] == 188
+    assert live["informational"] == 187
     assert live["unsupported"] == 254
     assert (
         live["simulated_behavior"] == 3
     )  # FC-R02 flagship + FC-R08 (G2 S2) + FC-R09 (G2 S3)
     assert live["constraint"] == 0
-    assert live["conformance_test"] == 0
+    assert (
+        live["conformance_test"] == 1
+    )  # FC-R05 credit-arrival arithmetic (G2 S4) — the profile's first
     assert live["not_applicable"] == 0
     assert len(profile.requirements) == 445
 
@@ -310,6 +314,25 @@ def test_simulated_behavior_requirement_is_executed_and_checked(
     assert any(b.extra["binding_id"] == SIMULATED[1] for b in profile.bindings)
     golden = [c for c in profile.checks if c.kind == "golden"]
     assert any(SIMULATED[0] in c.requirement_ids for c in golden)
+
+
+def test_conformance_test_requirement_is_executed_by_checks(
+    profile: LoadedProfile,
+) -> None:
+    # G2 stage S4 (2026-10-30): UEC11-FC-R05 is the profile's first
+    # conformance_test — per the D2 rule its carrier is a CHECK, never a
+    # binding: exercised by golden AND negative checks in a real file,
+    # and no binding may reference it.
+    by_id = profile.requirements_by_id()
+    req = by_id["UEC11-FC-R05"]
+    assert req.disposition == "conformance_test"
+    golden = [c for c in profile.checks if c.kind == "golden"]
+    negative = [c for c in profile.checks if c.kind == "negative"]
+    assert any("UEC11-FC-R05" in c.requirement_ids for c in golden)
+    assert any("UEC11-FC-R05" in c.requirement_ids for c in negative)
+    assert not any(
+        b.requirement_id == "UEC11-FC-R05" for b in profile.bindings
+    ), "a conformance_test requirement is carried by checks, not a binding"
 
 
 # -- checks reference real requirements in real files ---------------------------

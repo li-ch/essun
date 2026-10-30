@@ -67,7 +67,7 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
         "unsupported": 80,
     },
     "essun.specir.uec_credits_flow_control": {
-        "informational": 32,
+        "informational": 31,
         "unsupported": 31,
         # Flagship slice 2026-10-29 (design doc D1 build order item 2):
         # UEC11-FC-R02 (TFC admission law) promoted to simulated_behavior
@@ -86,11 +86,22 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
         # promoted to simulated_behavior via binding
         # BIND-UEC11-FC-R09-L0TFC; golden test
         # tests/golden/test_l0_tfc_pkt_golden.py. Computed live: R09 was
-        # unsupported (keyword MUST), so S3 moves 32->31 unsupported and
-        # 2->3 simulated_behavior; informational stays 32 (the S1 plan's
-        # final informational 31 arrives at S4 with FC-R05 ->
-        # conformance_test).
+        # unsupported (keyword MUST), so S3 moved 32->31 unsupported and
+        # 2->3 simulated_behavior; informational stays 32.
+        # G2 credit-family ladder S4 (2026-10-30, same plan): UEC11-FC-R05
+        # (the credit-arrival arithmetic: one unit = 256 B, the monotone
+        # wrapping counter, credit += (Credit - cumulative_credit) >> 8
+        # on increase) promoted to conformance_test — the plan's first
+        # non-zero conformance count. Per the D2 profile rule a binding
+        # may reference only a simulated_behavior requirement, so the
+        # carrier is the conformance check (golden test
+        # tests/golden/test_credit_arrival_golden.py) carried by the
+        # profile CHECKS entries UEC11-CHK-12/13/14, NOT a binding and
+        # not a backend extension. Computed live: R05 was informational
+        # (keyword DEFINITIONAL), so S4 moves 32->31 informational and
+        # 0->1 conformance_test; unsupported stays 31.
         "simulated_behavior": 3,
+        "conformance_test": 1,
     },
     "essun.specir.uec_f07_mechanisms": {
         "informational": 49,
@@ -99,13 +110,20 @@ EXPECTED_COUNTS: dict[str, dict[str, int]] = {
 }
 
 #: Requirements consciously promoted past the initial honest rule, with
-#: the disposition granted. A promotion is valid ONLY with a binding
-#: registered in essun.specir.bindings whose consistency check is green
-#: (tests/specir/test_bindings.py) — keep this table tiny on purpose.
+#: the disposition granted. A ``simulated_behavior`` promotion is valid
+#: ONLY with a binding registered in essun.specir.bindings whose
+#: consistency check is green (tests/specir/test_bindings.py); a
+#: ``conformance_test`` promotion is valid ONLY with an executable
+#: check in the built profile referencing it (the D2 rule: bindings
+#: carry simulated_behavior requirements, checks exercise
+#: conformance_test ones — both legs re-verified by
+#: tests/specir/test_bindings.py against THIS table). Keep this table
+#: tiny on purpose.
 PROMOTED: dict[str, str] = {
     "UEC11-FC-R02": "simulated_behavior",  # BIND-UEC11-FC-R02-AUTOMATON (G8 re-point)
     "UEC11-FC-R08": "simulated_behavior",  # BIND-UEC11-FC-R08-L0TFC (G2 S2)
     "UEC11-FC-R09": "simulated_behavior",  # BIND-UEC11-FC-R09-L0TFC (G2 S3)
+    "UEC11-FC-R05": "conformance_test",  # UEC11-CHK-12/13/14 (G2 S4)
 }
 
 
