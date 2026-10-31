@@ -199,7 +199,7 @@ scratch store to its declared run id, checks the initial pair equals the
 earlier cross-engine record's twin numbers, and re-parses every
 committed ablation stdout to the recorded walls.
 
-## Part VII — full re-localization (optional, Docker, minutes)
+## Part VII — full re-localization (optional, Docker, ~15 s)
 
 One command re-executes the entire diagnosis chain end to end — all
 minimization probes as real dual-engine run pairs plus the five
@@ -227,10 +227,12 @@ The record is supposed to be impossible to drift silently. Test it:
    `experiments/diagnosis/case_twin_l0_vs_astra/case_record_v1.json`
    (say, the chunk term `430` -> `431`) and re-run Part VI: the
    byte-identity rebuild must fail. Revert.
-2. Edit a wall inside a committed stdout (change `finished, 860 cycles`
-   to `finished, 861 cycles` in `a0_pinned_knobs.stdout`) and re-run
-   Part VI: the stdout-reparse leg must fail (the record's `a0` wall no
-   longer matches the committed evidence). Revert.
+2. Edit a wall inside a committed stdout (change `Wall time: 860` to
+   `Wall time: 861` in `a0_pinned_knobs.stdout`; the parse reads the
+   statistics lines, and the `finished, N cycles` lines are tracked
+   separately as `finished_cycles`) and re-run Part VI: the
+   stdout-reparse leg must fail (the record's `a0` wall no longer
+   matches the committed evidence). Revert.
 3. Run Part IV with `t_l0` set to any other value and watch the
    decomposition stop closing (`a0 - t_l0` no longer equals the recorded
    twin delta): every number in the story is fixed by the committed
@@ -251,5 +253,5 @@ parameters until curves match — see `CONTRIBUTING.md`.
 | Part IV (decomposition from committed stdout) | ~0.3 s | exact rationals; no Docker |
 | Part V (classifier, four calls) | ~0.2 s | recorded labels reproduced mechanically |
 | Part VI (guard test) | ~0.2 s | 5 passed |
-| Part VII (full re-localization, optional) | minutes | Docker; JSON records regenerate byte-identically |
+| Part VII (full re-localization, optional) | 11.2 s | Docker; 34 dual-engine probes + 5 ablations; JSON records regenerate byte-identically |
 | Attacks | ~1 s | both tamper legs fail the guard as designed |
