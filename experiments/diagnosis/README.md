@@ -16,7 +16,8 @@ defect carriers, never registered as backends, never stored as runs).
 
 ```text
 defect_seeding/           leg 3 — seeded-defect detection/classification
-  build_record.py           harness: probe -> minimize -> attribute -> classify
+  build_record.py           record builder: probe -> minimize -> attribute -> classify
+  harness.py                flag-driven runner: one --inject flag per defect, --clean-baseline
   defect_seeding_record_v1.json   4/4 detected, 4/4 classified (committed)
 case_twin_l0_vs_astra/    leg 4 — the misleading twin comparison case study
   run_case_study.py         executor (Docker): minimization + knob ablations
@@ -30,12 +31,27 @@ case_twin_l0_vs_astra/    leg 4 — the misleading twin comparison case study
 ```
 
 Guard tests: `tests/diagnosis/` (minimizer/classifier units,
-`test_defect_seeding.py`, `test_case_twin.py`).
+`test_defect_seeding.py`, `test_case_twin.py`, and `test_defect_harness.py`
+— injections change outputs; clean runs detect nothing; the CLI's exit
+codes fail honestly on findings).
 
 ## Leg 3 — seeded defects (ground truth)
 
 Four silent carriers over real essun engines; the pipeline measured
-**4/4 detected, 4/4 classified to ground truth**:
+**4/4 detected, 4/4 classified to ground truth**, and with every
+injection flag off (clean vs clean) **0 false alarms over 52 clean
+probes** (4 case spaces x initial case + every shrink-ladder
+candidate):
+
+```
+.venv/bin/python experiments/diagnosis/defect_seeding/harness.py            # all four flags
+.venv/bin/python experiments/diagnosis/defect_seeding/harness.py \
+    --inject ignored_gb_unit_conversion                                     # one flag
+.venv/bin/python experiments/diagnosis/defect_seeding/harness.py --clean-baseline
+```
+
+Exit status 1 on any miss, misclassification, or false alarm (the
+finding is printed, never hidden).
 
 | seeded defect | minimal reproducer | classification |
 | --- | --- | --- |

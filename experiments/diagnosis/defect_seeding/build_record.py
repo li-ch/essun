@@ -454,31 +454,103 @@ def _trial(name, initial, probe, ladder, attribute, clean_fn, defect_fn, facts):
     }
 
 
+#: Committed trial order (the record's trials array and every summary
+#: count iterate this; the flag-driven harness.py selects from it).
+TRIAL_ORDER = (
+    "floor_not_roundup_credit_consumption",
+    "drain_batched_credit_return",
+    "ignored_gb_unit_conversion",
+    "latency_omitted_after_first_op",
+)
+
+
+def _trial_specs() -> dict[str, dict]:
+    """The four committed trial specs — the single source of truth shared
+    by :func:`build` and the flag-driven harness (``harness.py``).  Each
+    spec names the initial case, the clean engine, the SILENT defect
+    carrier (the injection), the shrink ladder, the attribution library,
+    and the declaration facts the classifier consumes."""
+    return {
+        # credit-consumption bug: FLOOR vs the ROUNDUP law of UEC11-FC-R08
+        "floor_not_roundup_credit_consumption": {
+            "initial": INITIAL_TFC,
+            "clean_fn": tfc_cell_completion,
+            "defect_fn": defect_tfc_floor_not_roundup,
+            "quantity": "completion_ns_exact",
+            "ladder": tfc_ladder,
+            "attribute": attribute_tfc,
+            "facts": EngineFacts(
+                engine_id="defect_carrier:l0_tfc_cell",
+                bound_requirements=("UEC11-FC-R08", "UEC11-FC-R02"),
+                observable_definition_id="O-CCT(l0_tfc cell-quantized identity)",
+            ),
+        },
+        # return-batching error: whole-window batches, admission law intact
+        "drain_batched_credit_return": {
+            "initial": INITIAL_LINK,
+            "clean_fn": link_transfer_completion,
+            "defect_fn": defect_link_batched_return_completion,
+            "quantity": "completion_ns",
+            "ladder": link_ladder,
+            "attribute": attribute_link,
+            "facts": EngineFacts(
+                engine_id="defect_carrier:credit_automaton",
+                bound_requirements=("UEC11-FC-R02",),
+                observable_definition_id="completion_ns(greedy single link)",
+            ),
+        },
+        # ignored unit conversion: the declared GB (2^30) convention skipped
+        "ignored_gb_unit_conversion": {
+            "initial": INITIAL_RING_UNIT,
+            "clean_fn": ring_chain_completion,
+            "defect_fn": defect_ring_unit_ignored,
+            "quantity": "per_op_completion_ns_exact",
+            "ladder": ring_ladder,
+            "attribute": attribute_ring_unit,
+            "facts": EngineFacts(
+                engine_id="defect_carrier:ring_translation",
+                bound_requirements=(),
+                declared_assumption_ids=("A-AS1-BW-UNIT-analogue",),
+                observable_definition_id="O-CCT(l0 ring)",
+            ),
+        },
+        # silent scheduling omission: the latency term dropped after op 1
+        "latency_omitted_after_first_op": {
+            "initial": INITIAL_RING_SCHED,
+            "clean_fn": ring_chain_completion,
+            "defect_fn": defect_ring_latency_omitted_after_first,
+            "quantity": "per_op_completion_ns_exact",
+            "ladder": ring_ladder,
+            "attribute": attribute_ring_sched,
+            "facts": EngineFacts(
+                engine_id="defect_carrier:l0_ring",
+                bound_requirements=("SPEC:L0-RING-IDENTITY(A-L0-LAT per op)",),
+                observable_definition_id="O-CCT(l0 ring)",
+            ),
+        },
+    }
+
+
+def _run_trial(name: str, spec: dict) -> dict:
+    """Run one trial (probe -> minimize -> attribute -> classify)."""
+    return _trial(
+        name,
+        spec["initial"],
+        _probe_pair(spec["clean_fn"], spec["defect_fn"], spec["quantity"]),
+        spec["ladder"],
+        spec["attribute"],
+        spec["clean_fn"],
+        spec["defect_fn"],
+        spec["facts"],
+    )
+
+
 def build() -> dict:
-    # Trial 1: credit-consumption bug (FLOOR vs UEC11-FC-R08 ROUNDUP).
-    facts_tfc = EngineFacts(
-        engine_id="defect_carrier:l0_tfc_cell",
-        bound_requirements=("UEC11-FC-R08", "UEC11-FC-R02"),
-        observable_definition_id="O-CCT(l0_tfc cell-quantized identity)",
-    )
-    t1 = _trial(
-        "floor_not_roundup_credit_consumption",
-        INITIAL_TFC,
-        _probe_pair(tfc_cell_completion, defect_tfc_floor_not_roundup, "completion_ns_exact"),
-        tfc_ladder,
-        attribute_tfc,
-        tfc_cell_completion,
-        defect_tfc_floor_not_roundup,
-        facts_tfc,
-    )
+    specs = _trial_specs()
+    t1 = _run_trial("floor_not_roundup_credit_consumption", specs["floor_not_roundup_credit_consumption"])
 
     # Trial 2: return-batching error (whole-window batches, admission law
     # intact — verified mechanically on the carrier's own admission trace).
-    facts_link = EngineFacts(
-        engine_id="defect_carrier:credit_automaton",
-        bound_requirements=("UEC11-FC-R02",),
-        observable_definition_id="completion_ns(greedy single link)",
-    )
     config = INITIAL_LINK.as_automaton_config()
     batched = __import__(
         "essun.diagnosis.defects", fromlist=["_BatchedGreedyExecutor"]
@@ -488,16 +560,7 @@ def build() -> dict:
         batched.machine.admissions, INITIAL_LINK.window_bytes,
         config.credit_loop_delay_ns,
     )
-    t2 = _trial(
-        "drain_batched_credit_return",
-        INITIAL_LINK,
-        _probe_pair(link_transfer_completion, defect_link_batched_return_completion, "completion_ns"),
-        link_ladder,
-        attribute_link,
-        link_transfer_completion,
-        defect_link_batched_return_completion,
-        facts_link,
-    )
+    t2 = _run_trial("drain_batched_credit_return", specs["drain_batched_credit_return"])
     t2["admission_law_check_on_carrier_trace"] = {
         "requirement": "UEC11-FC-R02",
         "check": "sliding_window_bound_holds over the carrier's own admissions",
@@ -511,39 +574,10 @@ def build() -> dict:
     }
 
     # Trial 3: ignored unit conversion (declared GB 2^30 convention skipped).
-    facts_unit = EngineFacts(
-        engine_id="defect_carrier:ring_translation",
-        bound_requirements=(),
-        declared_assumption_ids=("A-AS1-BW-UNIT-analogue",),
-        observable_definition_id="O-CCT(l0 ring)",
-    )
-    t3 = _trial(
-        "ignored_gb_unit_conversion",
-        INITIAL_RING_UNIT,
-        _probe_pair(ring_chain_completion, defect_ring_unit_ignored, "per_op_completion_ns_exact"),
-        ring_ladder,
-        attribute_ring_unit,
-        ring_chain_completion,
-        defect_ring_unit_ignored,
-        facts_unit,
-    )
+    t3 = _run_trial("ignored_gb_unit_conversion", specs["ignored_gb_unit_conversion"])
 
     # Trial 4: silent scheduling omission (latency term dropped after op 1).
-    facts_sched = EngineFacts(
-        engine_id="defect_carrier:l0_ring",
-        bound_requirements=("SPEC:L0-RING-IDENTITY(A-L0-LAT per op)",),
-        observable_definition_id="O-CCT(l0 ring)",
-    )
-    t4 = _trial(
-        "latency_omitted_after_first_op",
-        INITIAL_RING_SCHED,
-        _probe_pair(ring_chain_completion, defect_ring_latency_omitted_after_first, "per_op_completion_ns_exact"),
-        ring_ladder,
-        attribute_ring_sched,
-        ring_chain_completion,
-        defect_ring_latency_omitted_after_first,
-        facts_sched,
-    )
+    t4 = _run_trial("latency_omitted_after_first_op", specs["latency_omitted_after_first_op"])
 
     trials = [t1, t2, t3, t4]
     detected = sum(1 for t in trials if t.get("detected"))

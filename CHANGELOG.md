@@ -8,6 +8,10 @@ All notable changes to essun. Format adapted from [Keep a Changelog](https://kee
 
 (History note, 2026-10-31: per-commit hash citations were removed when the repository history was rewritten to purge internal working material; the evidence records under experiments/ and docs/ remain the authoritative provenance.)
 
+### Added — diagnosis fault-injection harness — 2026-10-31
+
+- **Flag-driven runner over the seeded-defect suite**: `experiments/diagnosis/defect_seeding/harness.py` — each of the four committed semantic defects behind a `--inject <defect>` flag (repeatable; `all` by default) running the SAME probe -> minimize -> attribute -> classify pipeline as the committed record (the record builder now exposes its four trial specs as the shared source of truth; `defect_seeding_record_v1.json` still rebuilds byte-identically), plus `--clean-baseline` which re-runs every case space with the injection OFF (clean vs clean) over the initial case and every shrink-ladder candidate: 4/4 detected, 4/4 classified to ground truth, 0 false alarms over 52 clean probes; exit status 1 on any miss, misclassification, or false alarm (findings printed, never hidden). New guard tests `tests/diagnosis/test_defect_harness.py`: every injection actually changes the clean engine's outputs; clean runs detect nothing; the CLI's flag selection and honest exit codes are exercised. Carriers stay diagnostic probes — never registered as backends, never stored as runs, no production code path mutated. `PROPOSED` (same E0 evidence class as the record it re-runs; no engine, anchor, or label changed).
+
 ### Project — 2026-10-29
 
 - **Renamed to essun (Executable Specifications for Scale-Up Networking)** from the working title; package, docs, site, and Docker image names follow. Run ids embed input hashes and the image name, so the W1-smoke goldens were re-stored: L0 916bfc86… -> 146ba565…, ASTRA fb283970… -> c6dc87eb…, uet 65868d02… -> fbb46d16…; no model or observable changed. `documentation-only`.
