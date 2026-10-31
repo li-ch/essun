@@ -1,0 +1,52 @@
+# CROSS-FABRIC PAYLOAD GRID (matrix input, 2026-10-31): the committed
+# cross-design grid (cross_design_uec_vs_ub_paper_l0_v1.yaml) extended
+# along its payload axis to the full ladder the shared registry permits.
+#
+# Purpose: the payload-grid row of docs/atlas/cross-fabric-matrix.md —
+# same-workload large-message completion time (O-CCT) for the two
+# identity-matched unwindowed flavors (UEC free crossbar stand-in vs UB
+# paper rack crossbar) at every grid payload, with the UEC free ring and
+# 2D-torus stand-ins as within-profile context.
+#
+# PAYLOAD GRID (A-XDUO-PAYLOAD range [1024, 16777216] is the authority):
+# the maximally even power-of-two ladder inside the range — exponents
+# {12,13,14,16,17,18,20,21,22,24} (the atlas message-grid pattern x2,x2,x4
+# repeating, truncated at the registered 16 MiB ceiling). Every size is a
+# multiple of 4096, hence divisible by ranks 64 and by both 8x8 torus
+# dimensions, so no A-L*-DIV guard rejects a grid point and every delta
+# compares physically realizable equal-chunk schedules.
+#
+# HONESTY RULES (inherited unchanged from the cross-design grid):
+#   - the UB rows are a PAPER-DERIVED design profile, not a normative
+#     standard profile (specification track license-gated);
+#   - B = 64 bytes/ns and L = 200 ns are the ONE shared record's values
+#     (A-XDUO-BW / A-XDUO-LAT) consumed by every flavor file, so ranking
+#     differences between the identity-matched crossbar rows are exactly 0
+#     by construction — that delta-0 column is this table's honesty anchor
+#     and the delta-zero fairness result the matrix reports;
+#   - the nonzero deltas of the ring/torus stand-in rows are arithmetic
+#     facts of free identity choices (A-XDUO-IDUEC), NOT flavor physics.
+#
+# Baseline = the UEC-flavor crossbar (the identity-matched control), so
+# the UB rack row's delta column reads exactly 0 at every payload size.
+sweep: cross_fabric_payload_grid_v1
+workload: experiments/workloads/w1_dense_tp_decode_rack64.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/topologies/crossbar64_uec_free_params.yaml
+grid:
+  payload_sizes_bytes: [4096, 8192, 16384, 65536, 131072, 262144, 1048576, 2097152, 4194304, 16777216]
+  algorithms:
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/topologies/ring64_uec_free_params.yaml
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/topologies/crossbar64_uec_free_params.yaml     # UEC flavor, identity-matched control (baseline)
+    - experiments/topologies/crossbar64_ub_rack_free_params.yaml  # UB paper flavor: ranks + identity ANCHORED, B/L free
+  - algorithm: allreduce_torus2d
+    topologies:
+    - experiments/topologies/torus2d64_uec_free_params.yaml

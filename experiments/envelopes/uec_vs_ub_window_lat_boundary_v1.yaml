@@ -1,0 +1,70 @@
+# MATRIX INPUT (2026-10-31): the UEC-vs-UB window comparison swept on the
+# SHARED hop-latency axis A-XDUO-LAT (range [10, 2000]) with the window
+# held at W = 25600 bytes — the third reading of the same saturation
+# boundary: latency stretches the credit round trip (L + L_cr), so the
+# fixed window covers the bandwidth-delay product only while
+# B*(L+L_cr) <= W, i.e. L <= W/B - L_cr.
+#
+# COMPARISON (unchanged): UEC TFC admission law (UEC11-FC-R02, the credit
+# automaton binding's declared steady-state abstraction) on the free ring
+# stand-in vs the UB-paper permitted pod-scale flat ring (no window,
+# UBP-F04 silence), plus the unwindowed UEC control and the delta-0
+# honesty anchor pair.
+#
+# EXPECTED DETECTOR OUTCOME, STATED BEFORE THE RUN (derived from the two
+# identities, not tuned): the windowed ring ties the flat ring at every L
+# <= 200 ns and ranks strictly worse above; the saturation boundary sits
+# at exactly L* = W/B - L_cr = 25600/64 - 200 = 200 ns (a grid point:
+# sign 0 at 200, sign 1 at 400, secant root exactly 200 since
+# d(200) = 0). The per-hop latency term 2*(r-1)*L cancels in the
+# difference (both identities carry the same chain), so above the
+# boundary the penalty grows in exact proportion to the credit round
+# trip alone. The honesty-anchor pair stays delta-exactly-0 at every
+# grid point; the UEC control pair reproduces the flagship boundary.
+envelope: uec_vs_ub_window_lat_boundary_v1
+workload: experiments/workloads/w1_dense_tp_decode_pod1024.yaml
+assumption_registries:
+- experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml   # shared B/L, ranks, payload ranges
+- experiments/vertical_slice/assumptions_tfc.yaml        # window W + credit-return ranges
+observable: O-CCT
+payload_assumption: A-XDUO-PAYLOAD
+ranks_assumption: A-XDUO-TP
+fixed:
+- assumption: A-XDUO-BW        # shared link bandwidth (both flavors)
+  value: 64
+- assumption: A-TFC-CR         # credit-loop return time (UEC binding only)
+  value: 200
+- assumption: A-TFC-W          # window FIXED at the 1 MiB cell's boundary value (100 credit units)
+  value: 25600
+- assumption: A-XDUO-TP        # operating point: pod-scale corner of the rank freedom
+  value: 1024
+- assumption: A-XDUO-PAYLOAD   # 1 MiB: same payload as the committed 1 MiB cell
+  value: 1048576
+axes:
+- assumption: A-XDUO-LAT       # the SHARED hop-latency axis, both flavors bound to it
+  points: [25, 50, 100, 200, 400, 800, 1600]
+models:
+- model: uec_ring_free         # UEC flavor, free ring stand-in, NO window (control)
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring1024_uec_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+- model: uec_tfc_ring          # UEC profile flagship: TFC admission law executed
+  algorithm: envelope_tfc_ring
+  topology: experiments/topologies/ring1024_tfc_window_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+    A-TFC-W: tfc.window_bytes
+    A-TFC-CR: tfc.credit_return_latency_ns
+- model: ub_flat_ring_pod      # UB paper profile: permitted pod-scale flat ring, no window
+  algorithm: allreduce_ring
+  topology: experiments/topologies/ring1024_ub_flat_pod_free_params.yaml
+  binds:
+    A-XDUO-BW: link.bytes_per_ns
+    A-XDUO-LAT: link.hop_latency_ns
+boundary_pairs:
+- [uec_tfc_ring, ub_flat_ring_pod]   # the two-profile flagship pair
+- [uec_tfc_ring, uec_ring_free]      # UEC-side control: same boundary against the unwindowed stand-in
+- [uec_ring_free, ub_flat_ring_pod]  # honesty anchor: delta exactly 0 everywhere, no boundary
