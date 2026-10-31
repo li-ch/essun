@@ -601,6 +601,17 @@ tbody tr:nth-child(even) { background: var(--softer); }
 
 td.n, th.n { font-family: var(--mono); font-size: 0.82rem; }
 
+/* per-cell citations and axis ids in dense tables (cross-fabric matrix) */
+.cite {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
 /* ============================================================
    Code
    ============================================================ */

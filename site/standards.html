@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Standards — essun</title>
-<meta name="description" content="How essun ingests scale-up network standards honestly: the UEC 1.1 semantic profile (80 anchors, 445 requirement objects, 67 free parameters), the not-normative UnifiedBus paper-derived profile, and the free-parameter discipline. License review precedes ingestion.">
+<meta name="description" content="How essun ingests scale-up network standards honestly: the UEC 1.1 semantic profile (80 anchors, 445 requirement objects, 67 free parameters), the not-normative UnifiedBus paper-derived profile, the free-parameter discipline, and the cross-fabric comparison matrix (five axes × three pairs, every cell citing its artifact; UALink and CXL absent by license). License review precedes ingestion.">
 <link rel="stylesheet" href="style.css">
 <script src="site.js" defer></script>
 </head>
@@ -103,18 +103,95 @@
     <dt>Platform map</dt>
     <dd>Code-enforced: L0_READY 8 / L1_L2_REQUIRED 28 / UNSUPPORTED 26.</dd>
     <dt>Role</dt>
-    <dd>Carries public-gate leg 2 (a second standard for comparison) with its honest not-normative label. Feeds the cross-standard comparison grid.</dd>
+    <dd>Carries public-gate leg 2 (a second standard for comparison) with its honest not-normative label. Feeds the cross-fabric comparison matrix below.</dd>
     <dt>Label</dt>
     <dd><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> (not normative; public-gate leg 2)</dd>
   </dl>
 </section>
 
-<section id="cross-standard">
+<section id="cross-fabric">
   <p class="kicker">Read this one honestly</p>
-  <h2>The cross-standard comparison — delta zero, by construction</h2>
+  <h2>Cross-fabric comparison — which profile outperforms which, under stated assumptions</h2>
+  <div class="prose">
+    <p>The question we hear most often — which fabric outperforms which — has an honest answer only after the inputs are pinned. Under the fairness bar below, every honestly computable comparison between the two profiles fits one matrix: five observable axes against three profile pairs, fifteen cells in all. Of the fifteen, twelve cells are comparable and restate two findings — the delta-zero tie and the window saturation boundary; one cell is NOT COMPARABLE and two are NOT SAMPLED, each with its reason stated in place. Everything here is evidence level E0 <span class="label label-proposed">PROPOSED</span>: closed-form analytical identities under declared free parameters, ranking model identities rather than hardware, with nothing measured on any system.</p>
+  </div>
+
+  <h3>What a fair comparison requires</h3>
+  <div class="prose">
+    <ul>
+      <li><strong>Identical open choices.</strong> Both profiles consume the one shared free-parameter record — B = 64 bytes/ns and L = 200 ns fed unchanged to every flavor file. Neither the public UEC 1.1 text nor the five public UnifiedBus papers anchors a per-lane rate or per-hop latency usable at this fidelity, so a ranking that differed through those inputs would be an artifact of unequal inputs, not of the fabrics.</li>
+      <li><strong>Pinned sources.</strong> The UEC side runs the license-cleared UEC 1.1 semantic profile; the UnifiedBus side is a paper-derived design profile from five public papers — not a normative standard profile, because the specification track stays license-gated. UALink and CXL have no profile at all (license-blocked, never ingested).</li>
+      <li><strong>Mechanisms stated, not smuggled.</strong> The one executed mechanism asymmetry is the UEC TFC credit window (admission law UEC11-FC-R02); the UnifiedBus side carries no window because its public sources are silent on flow control (UBP-F04) — declared silence, not a modeling shortcut.</li>
+      <li><strong>Same workload, one operating point per artifact.</strong> The same-workload gate pins one W1 Dense TP Decode shape (2 layers × 3 steps = 6 AllReduce ops) and one tp_size per artifact, so every delta compares the same work.</li>
+    </ul>
+  </div>
+
   <div class="callout warn">
     <p class="callout-title">Delta zero, by construction</p>
     <p>The grid <code>experiments/sweeps/cross_design_uec_vs_ub_paper_l0_v1.yaml</code> compares the UEC-flavored and paper-derived-UnifiedBus-flavored columns on shared L0 free parameters. Both columns share the same free parameters, so the UnifiedBus row coincides exactly with the identity-matched UEC control: delta 0 is an arithmetic fact of the construction, not a measured difference between standards. A real cross-standard numeric comparison becomes possible only when standard-derived values exist — which today none do.</p>
+  </div>
+
+  <h3>The one executed mechanism</h3>
+  <div class="prose">
+    <p>The one executed mechanism that separates the profiles at this fidelity is the UEC transport flow control admission law (requirement UEC11-FC-R02): a source must not transmit bytes it holds no credit for. The closed form says the windowed ring ties the unwindowed ring exactly when the granted window covers the bandwidth-delay product, W ≥ B·(L + L<sub>cr</sub>), and ranks strictly worse below it, with a penalty proportional to the shortfall. At our shared operating point the boundary sits at exactly 25600 bytes — 100 UEC credit units — and the windowed side is never faster at any sampled point, so the transition is a saturation boundary rather than a ranking crossing.</p>
+    <p>The boundary carries no message and no rank term: it did not move when we changed payload (1 MiB and 16 MiB) or rank count (256 and 1024), while the penalty scaled from 3240864 ns to 51853824 ns at the worst sampled window, both at 1024 ranks. Read in the shared axes, the same boundary becomes a provisioning rule: with the window fixed at 25600 bytes, the tie holds at and below B = 64 B/ns and at and below L = 200 ns, because one fixed window stops covering the product exactly when the credit-loop round trip exceeds W/B = 400 ns. We state the threshold exactly because the platform computes it exactly; what the matrix never shows is the windowed side winning.</p>
+  </div>
+
+  <h3>The matrix</h3>
+  <p class="prose">The columns are three pairs. The two-profile pair sets the UEC profile's flagship executed semantic — the TFC window admission law (UEC11-FC-R02) — against the UnifiedBus paper profile's ring stand-in with no window. The mechanism ablation controls for that pair: the same windowed ring against its own unwindowed twin, isolating the admission-law term. The anchor pair matches identities at the rack scale the UnifiedBus paper fixes — 64 NPUs per rack (UBP-P17) — where the delta-zero tie lives.</p>
+  <div class="tablewrap">
+  <table>
+    <thead>
+      <tr><th>Observable / axis</th><th>UEC TFC window vs UnifiedBus-paper flat</th><th>UEC window-on vs window-off (ablation)</th><th>UEC crossbar stand-in vs UB-paper rack crossbar</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Large-message completion, payload grid</strong><span class="cite">O-CCT</span></td>
+        <td><strong>Unwindowed side wins or ties</strong> at every sampled point — two payload corners × two rank corners, worst penalty 51853824 ns. Flip: tie exactly when W ≥ B·(L + L<sub>cr</sub>); the boundary 25600 B carries no payload and no rank term, and below it the penalty scales with the per-rank traffic 2(r−1)/r · M.<span class="cite">9a5f1296…f016e0 · 05b4afdf…02e730 · 6d9a30db…bab119</span></td>
+        <td>Identical verdict and identical artifacts to the pair column — the UnifiedBus side carries no window (UBP-F04), so both comparisons exercise the same admission-law term.<span class="cite">9a5f1296…f016e0 · 05b4afdf…02e730 · 6d9a30db…bab119</span></td>
+        <td><strong>Tie (exact)</strong> at all 10 payload-grid sizes and both committed cross-design sizes — delta exactly 0 everywhere. No flip exists: the two rows are the same identity under the one shared record, and the anchored rack scale 64 (UBP-P17) is matched by the UEC stand-in.<span class="cite">242bacc4…64e985 · 9d07ec4a…f72fb9</span></td>
+      </tr>
+      <tr>
+        <td><strong>Saturation boundary, window axis</strong><span class="cite">O-CCT · A-TFC-W</span></td>
+        <td><strong>Windowed side strictly worse on [256, 12800]; exact tie on [25600, 1048576]</strong> — never better at any sampled point (9 strictly-worse / 15 tie grid points). Flip: the exact boundary W* = B·(L + L<sub>cr</sub>) = 25600 B — exactly 100 UEC credit units — secant-resolved and verified by re-execution in every artifact of the cell.<span class="cite">9a5f1296…f016e0 · 05b4afdf…02e730 · 6d9a30db…bab119</span></td>
+        <td>Identical verdict and identical artifacts to the pair column — the UnifiedBus side carries no window (UBP-F04), so both comparisons exercise the same admission-law term.<span class="cite">9a5f1296…f016e0 · 05b4afdf…02e730 · 6d9a30db…bab119</span></td>
+        <td><span class="notyet">NOT COMPARABLE</span> The window axis does not exist for this pair: both comparators are unwindowed — the public UnifiedBus sources are silent on any flow-control mechanism (UBP-F04), and the UEC crossbar stand-in declares no TFC binding at this fidelity — so there is no window term to rank.<span class="cite">no artifact — the axis does not exist for this pair</span></td>
+      </tr>
+      <tr>
+        <td><strong>Ranking under swept shared bandwidth</strong><span class="cite">O-CCT · A-XDUO-BW</span></td>
+        <td><strong>Windowed side strictly worse on [128, 1024]; exact tie on [8, 64]</strong> — never better at any sampled point (4 strictly-worse / 4 tie grid points). Flip: the same boundary read in the swept variable — with W fixed at 25600 B, the tie holds at and below B = 64 B/ns.<span class="cite">f2019c52…e4814b</span></td>
+        <td>Identical verdict and identical artifacts to the pair column — the UnifiedBus side carries no window (UBP-F04), so both comparisons exercise the same admission-law term.<span class="cite">f2019c52…e4814b</span></td>
+        <td><span class="notyet">NOT SAMPLED</span> The axis is shared and comparable in principle — both identities consume the same bind — but no envelope sweeps it for this pair; the tie is an arithmetic identity, sampled only at the payload grid's fixed operating point.<span class="cite">no swept artifact for this axis</span></td>
+      </tr>
+      <tr>
+        <td><strong>Ranking under swept shared hop latency</strong><span class="cite">O-CCT · A-XDUO-LAT</span></td>
+        <td><strong>Windowed side strictly worse on [400, 1600]; exact tie on [25, 200]</strong> — never better at any sampled point (3 strictly-worse / 4 tie grid points). Flip: the same boundary read in the swept variable — with W fixed at 25600 B, the tie holds while the credit-loop round trip stays at or below W/B = 400 ns.<span class="cite">81f555ea…3b8554</span></td>
+        <td>Identical verdict and identical artifacts to the pair column — the UnifiedBus side carries no window (UBP-F04), so both comparisons exercise the same admission-law term.<span class="cite">81f555ea…3b8554</span></td>
+        <td><span class="notyet">NOT SAMPLED</span> The axis is shared and comparable in principle — both identities consume the same bind — but no envelope sweeps it for this pair; the tie is an arithmetic identity, sampled only at the payload grid's fixed operating point.<span class="cite">no swept artifact for this axis</span></td>
+      </tr>
+      <tr>
+        <td><strong>Wire-byte ledger</strong><span class="cite">O-CONSERVATION</span></td>
+        <td><strong>Tie (exact)</strong> — the window gates rate, never bytes: per-rank wire traffic is the same identity on both sides of every pair. No flip can exist at this fidelity — the admission law spends credit without moving modeled bytes, and every evaluation re-runs the structural conservation self-check.<span class="cite">9a5f1296…f016e0 · 05b4afdf…02e730 · 6d9a30db…bab119 · f2019c52…e4814b · 81f555ea…3b8554</span></td>
+        <td>Identical verdict and identical artifacts to the pair column — the UnifiedBus side carries no window (UBP-F04), so both comparisons exercise the same admission-law term.<span class="cite">9a5f1296…f016e0 · 05b4afdf…02e730 · 6d9a30db…bab119 · f2019c52…e4814b · 81f555ea…3b8554</span></td>
+        <td><strong>Tie (exact)</strong> — identical per-rank wire ledger 2(r−1)/r · M at every payload, 0 conservation violations in every row; the flavor labels move no bytes.<span class="cite">242bacc4…64e985 · 9d07ec4a…f72fb9</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Every comparable cell is derived programmatically from content-addressed artifacts by <code>tools/cross_fabric_matrix.py</code> — verdicts, boundaries, and regions come from the artifacts' own output, never hand-typed — and the tool's <code>--check</code> mode refuses drift against the committed page, a check the test suite runs. Short refs above: envelopes <code>9a5f1296…f016e0</code>, <code>05b4afdf…02e730</code>, <code>6d9a30db…bab119</code> (window axis), <code>f2019c52…e4814b</code> (bandwidth axis), <code>81f555ea…3b8554</code> (latency axis); sweeps <code>242bacc4…64e985</code> and <code>9d07ec4a…f72fb9</code> (payload grid, cross-design). Full per-cell evidence: <a href="https://github.com/li-ch/essun/tree/main/docs/atlas"><code>docs/atlas/cross-fabric-matrix.md</code></a> in the repository.</p>
+  <div class="prose">
+    <p>The comparable cells restate the two findings above, and the empty cells matter just as much. Where a mechanism is absent on one side — the window axis for the unwindowed pair — the cell reads NOT COMPARABLE with the reason stated in place. Where the axis is comparable in principle but no artifact samples it for that pair, the cell reads NOT SAMPLED rather than inventing a number; honest empties are part of the deliverable.</p>
+  </div>
+
+  <h3>What the matrix does not compare</h3>
+  <div class="prose">
+    <ul>
+      <li><strong>One mechanism axis.</strong> Only the TFC credit window separates the profiles at this fidelity; its cell-quantization and packet-overhead laws (UEC11-FC-R08/R09) refine the windowed side only and appear in no cross cell.</li>
+      <li><strong>UALink and CXL: no column.</strong> Their specification documents are license-restricted and were never ingested, so no pair and no cell exists — any UALink or CXL comparison number from this platform would be fabricated.</li>
+      <li><strong>Hierarchy and multi-level fabrics.</strong> The UnifiedBus paper's hierarchical full-mesh with asymmetric per-level widths, memory semantics, APR routing, and the pod-of-racks hierarchy need a fidelity no landed backend executes yet.</li>
+      <li><strong>Congestion, packetization, and collective overlap</strong> are out of scope at this fidelity — declared unsupported by every backend involved.</li>
+      <li><strong>No claim label upgrades.</strong> The page derives its verdicts from committed artifacts; it upgrades no claim's evidence label, and the two window columns agree by the declared UBP-F04 silence, not by evidence about UnifiedBus hardware.</li>
+    </ul>
   </div>
 </section>
 
