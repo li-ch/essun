@@ -68,6 +68,10 @@ Detailed component status lives in [docs/status.md](docs/status.md).
 
 - [Website and white paper](https://li-ch.github.io/essun/)
 - [Quickstart and usage guide](docs/usage.md)
+- [Case study: a misleading cross-engine comparison, minimized and
+  explained](docs/case-studies/misleading-comparison-01.md) — what our
+  diagnosis pipeline does when two engines disagree +118% and a diff
+  cannot say why
 - [Vision and roadmap](https://li-ch.github.io/essun/roadmap.html)
 - [How essun compares to related simulators](https://li-ch.github.io/essun/comparison.html)
 

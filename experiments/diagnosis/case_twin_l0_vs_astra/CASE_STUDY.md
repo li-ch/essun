@@ -17,7 +17,8 @@ topology file, identical workload bytes**: r=72, B=828 B/ns, L=200 ns,
 one 2 GiB-class AllReduce (the CAL-A3 2 GiB floor bracket — the same
 twin as the G7 case study).
 
-Engine A says 514,346.6 ns. Engine B says 11,216,448 ns. **+118.07%**
+Engine A says 2129415031/414 ≈ 5,143,514.6 ns. Engine B says 11,216,448
+ns. **+118.07%**
 (exactly the G7 record's +118.1% twin delta — this study's initial pair
 re-derives it, run ids in the record).
 
