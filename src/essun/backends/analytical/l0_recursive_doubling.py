@@ -52,6 +52,16 @@ All arithmetic uses :class:`fractions.Fraction`. B and L are free parameters
 carried by the assumptions file — NOT standard-derived values and NOT
 measurements (provenance rules).
 
+Endpoint latency term (optional, per collective op): a topology MAY declare
+``endpoint.latency_ns`` = E, a free software/endpoint latency charged ONCE
+per collective op — at the AllReduce level only, never per step or phase
+(A-L0E-LAT / A-L0E-CHG in experiments/vertical_slice/assumptions_l0e.yaml):
+
+    t(M, r) = 2*(r-1)/r * M/B + 2*log2(r)*L + E
+
+The phase identities t_reduce/t_bcast below stay endpoint-free; a topology
+that declares no ``endpoint`` block keeps the landed identity BYTE-FOR-BYTE.
+
 Divisibility (O1 honesty fix, increment 5a; assumption A-L0D-DIV in
 experiments/vertical_slice/assumptions_l0.yaml): the halving schedule sends
 chunks M/2^i and the doubling schedule sends chunks 2^(i-1)*M/r, so the
@@ -72,7 +82,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from fractions import Fraction
 
-from essun.backends.analytical.l0 import require_divisible
+from essun.backends.analytical.l0 import (
+    endpoint_term_ns,
+    load_endpoint_latency_ns,
+    require_divisible,
+)
 
 BACKEND_ID = "analytical_l0_recursive_doubling"
 
@@ -118,6 +132,9 @@ class RecursiveDoublingConfig:
     injection_bytes_per_ns: Fraction  # B: per-rank injection bandwidth
     pair_latency_ns: Fraction  # L: uniform per-pair exchange latency
     steps: int  # k = log2(r), derived and re-checked at load
+    # E: endpoint (software) latency per collective op (free, A-L0E-LAT).
+    # None = the term is NOT declared — the landed identity, byte-for-byte.
+    endpoint_latency_ns: Fraction | None = None
 
 
 def load_recursive_doubling_config(data: dict) -> RecursiveDoublingConfig:
@@ -142,6 +159,7 @@ def load_recursive_doubling_config(data: dict) -> RecursiveDoublingConfig:
         injection_bytes_per_ns=frac(data["nic"]["injection_bytes_per_ns"]),
         pair_latency_ns=frac(data["link"]["pair_latency_ns"]),
         steps=_log2_steps(ranks),
+        endpoint_latency_ns=load_endpoint_latency_ns(data),
     )
 
 
@@ -185,10 +203,14 @@ def rd_broadcast_phase_time_ns(
 def rd_allreduce_time_ns(
     message_bytes: int, infra: RecursiveDoublingConfig
 ) -> Fraction:
-    """t = t_reduce + t_bcast = 2*(r-1)/r * M/B + 2*log2(r)*L (serialized phases)."""
+    """t = t_reduce + t_bcast + E = 2*(r-1)/r * M/B + 2*log2(r)*L + E.
+
+    Serialized phases; E — the optional endpoint (software) latency — is
+    charged ONCE per collective op, never per phase or step (A-L0E-CHG).
+    """
     return rd_reduce_phase_time_ns(message_bytes, infra) + rd_broadcast_phase_time_ns(
         message_bytes, infra
-    )
+    ) + endpoint_term_ns(infra)
 
 
 def rd_traffic_per_rank(message_bytes: int, ranks: int) -> Fraction:
@@ -264,24 +286,27 @@ def execute(ops, infra: RecursiveDoublingConfig) -> dict:
             )
         reduce_time = rd_reduce_phase_time_ns(op.payload_bytes, infra)
         broadcast_time = rd_broadcast_phase_time_ns(op.payload_bytes, infra)
-        completion = reduce_time + broadcast_time
+        endpoint = endpoint_term_ns(infra)
+        completion = reduce_time + broadcast_time + endpoint
         times.append(completion)
         total_wire += op_wire
-        per_op.append(
-            {
-                "op_id": op.op_id,
-                "payload_bytes": op.payload_bytes,
-                "steps_per_phase": infra.steps,
-                "per_rank_wire_bytes_exact": str(per_rank),
-                "total_wire_bytes_exact": str(op_wire),
-                "reduce_steps": reduce_steps,
-                "broadcast_steps": broadcast_steps,
-                "reduce_phase_time_ns_exact": str(reduce_time),
-                "broadcast_phase_time_ns_exact": str(broadcast_time),
-                "completion_time_ns_exact": str(completion),
-                "completion_time_ns": float(completion),
-            }
-        )
+        op_record = {
+            "op_id": op.op_id,
+            "payload_bytes": op.payload_bytes,
+            "steps_per_phase": infra.steps,
+            "per_rank_wire_bytes_exact": str(per_rank),
+            "total_wire_bytes_exact": str(op_wire),
+            "reduce_steps": reduce_steps,
+            "broadcast_steps": broadcast_steps,
+            "reduce_phase_time_ns_exact": str(reduce_time),
+            "broadcast_phase_time_ns_exact": str(broadcast_time),
+            "completion_time_ns_exact": str(completion),
+            "completion_time_ns": float(completion),
+        }
+        if infra.endpoint_latency_ns is not None:
+            # per-op reconciliation: reduce + bcast + endpoint == completion.
+            op_record["endpoint_term_ns_exact"] = str(endpoint)
+        per_op.append(op_record)
 
     if violations:
         raise AssertionError(
@@ -290,16 +315,19 @@ def execute(ops, infra: RecursiveDoublingConfig) -> dict:
 
     count = len(times)
     mean_time = sum(times) / count if count else Fraction(0)
+    model = {
+        "transport_model": CAPABILITIES["transport_model"],
+        "topology_id": infra.topology_id,
+        "ranks": infra.ranks,
+        "steps_log2_ranks": infra.steps,
+        "injection_bytes_per_ns_exact": str(infra.injection_bytes_per_ns),
+        "pair_latency_ns_exact": str(infra.pair_latency_ns),
+    }
+    if infra.endpoint_latency_ns is not None:
+        model["endpoint_latency_ns_exact"] = str(infra.endpoint_latency_ns)
     return {
         "backend_id": BACKEND_ID,
-        "model": {
-            "transport_model": CAPABILITIES["transport_model"],
-            "topology_id": infra.topology_id,
-            "ranks": infra.ranks,
-            "steps_log2_ranks": infra.steps,
-            "injection_bytes_per_ns_exact": str(infra.injection_bytes_per_ns),
-            "pair_latency_ns_exact": str(infra.pair_latency_ns),
-        },
+        "model": model,
         "observables": {
             "O-CONSERVATION": {
                 "kind": "exact",

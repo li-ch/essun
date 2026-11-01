@@ -54,6 +54,25 @@ RS/AG identities exist in l0_crossbar as the internal phases of its
 AllReduce decomposition; executing them as first-class ops is outside this
 stage's pre-registered content.
 
+Endpoint latency term (optional, per issued collective op): a fabric MAY
+declare ``endpoint.latency_ns`` = E (A-L0E-LAT / A-L0E-CHG in
+experiments/vertical_slice/assumptions_l0e.yaml). Each ReduceScatter /
+AllGather op below is ONE issued collective call, so each carries +E:
+
+      t_rs_ring(M, r) = (r-1)/r * M / B + (r-1) * L + E
+      t_ag_ring(M, r) = (r-1)/r * M / B + (r-1) * L + E   [same for dbl: +E]
+
+Composition with the term (A-L0P-COMP amended by A-L0E-CHG): the fused
+AllReduce identities (l0, l0d) charge E ONCE per op, while issuing the two
+phases separately charges it twice —
+
+      RS(M) + AG(M) = AllReduce(M) + E      (when E is declared)
+      RS(M) + AG(M) = AllReduce(M)          (E absent — the landed identity)
+
+— two issued calls cost two software overheads; the fused AllReduce is one.
+The transport parts still compose exactly. A topology that declares no
+``endpoint`` block keeps every landed identity BYTE-FOR-BYTE.
+
 All arithmetic uses :class:`fractions.Fraction`. B and L are the SAME free
 parameters already registered for the two fabrics (A-L0-BW / A-L0-LAT for
 the ring, A-L0D-BW / A-L0D-LAT for the exchange fabric) — this stage
@@ -80,7 +99,7 @@ from fractions import Fraction
 
 from essun.backends.analytical import l0
 from essun.backends.analytical import l0_recursive_doubling as l0d
-from essun.backends.analytical.l0 import require_divisible
+from essun.backends.analytical.l0 import endpoint_term_ns, require_divisible
 
 BACKEND_ID = "analytical_l0_phase_collectives"
 
@@ -185,20 +204,22 @@ def allgather_result_bytes(message_bytes: int, ranks: int) -> Fraction:
 def ring_reducescatter_time_ns(
     message_bytes: int, ranks: int, infra: l0.InfraConfig
 ) -> Fraction:
-    """t_rs = (r-1)/r * M / B + (r-1) * L  [frozen stage identity]."""
+    """t_rs = (r-1)/r * M / B + (r-1) * L + E  [one issued op, one E]."""
     return (
         phase_traffic_per_rank(message_bytes, ranks) / infra.link_bytes_per_ns
         + (ranks - 1) * infra.hop_latency_ns
+        + endpoint_term_ns(infra)
     )
 
 
 def ring_allgather_time_ns(
     message_bytes: int, ranks: int, infra: l0.InfraConfig
 ) -> Fraction:
-    """t_ag = (r-1)/r * M / B + (r-1) * L — symmetric to the RS phase."""
+    """t_ag = (r-1)/r * M / B + (r-1) * L + E — symmetric to the RS phase."""
     return (
         phase_traffic_per_rank(message_bytes, ranks) / infra.link_bytes_per_ns
         + (ranks - 1) * infra.hop_latency_ns
+        + endpoint_term_ns(infra)
     )
 
 
@@ -210,27 +231,28 @@ def ring_allgather_time_ns(
 def halving_reducescatter_time_ns(
     message_bytes: int, infra: l0d.RecursiveDoublingConfig
 ) -> Fraction:
-    """t_rs = sum_i (M/2^i)/B + log2(r)*L = (r-1)/r * M/B + log2(r)*L.
+    """t_rs = sum_i (M/2^i)/B + log2(r)*L + E = (r-1)/r * M/B + log2(r)*L + E.
 
     The literal per-step sum over the landed S3 halving schedule; the
-    fractions telescope to the closed form (pinned by tests).
+    fractions telescope to the closed form (pinned by tests). One issued
+    op, one endpoint term (A-L0E-CHG).
     """
     total = Fraction(0)
     for step in range(1, infra.steps + 1):
         chunk = l0d.reduce_step_chunk(message_bytes, step, infra.ranks)
         total += chunk / infra.injection_bytes_per_ns + infra.pair_latency_ns
-    return total
+    return total + endpoint_term_ns(infra)
 
 
 def doubling_allgather_time_ns(
     message_bytes: int, infra: l0d.RecursiveDoublingConfig
 ) -> Fraction:
-    """t_ag = sum_i (2^(i-1)*M/r)/B + log2(r)*L = (r-1)/r * M/B + log2(r)*L."""
+    """t_ag = sum_i (2^(i-1)*M/r)/B + log2(r)*L + E = (r-1)/r * M/B + log2(r)*L + E."""
     total = Fraction(0)
     for step in range(1, infra.steps + 1):
         chunk = l0d.broadcast_step_chunk(message_bytes, step, infra.ranks)
         total += chunk / infra.injection_bytes_per_ns + infra.pair_latency_ns
-    return total
+    return total + endpoint_term_ns(infra)
 
 
 # ---------------------------------------------------------------------------
@@ -243,7 +265,9 @@ def ring_allreduce_from_phases_time_ns(
 ) -> Fraction:
     """AllReduce(M) = RS(M) + AG(M), serialized phases (A-L0P-COMP).
 
-    Equals l0.ring_allreduce_time_ns exactly — identity, not approximation;
+    Equals l0.ring_allreduce_time_ns exactly when no endpoint term is
+    declared, and exceeds it by exactly one E when one is (two issued phase
+    calls carry two endpoint terms, the fused AllReduce one — A-L0E-CHG);
     pinned by golden tests against independently derived literals.
     """
     return ring_reducescatter_time_ns(
@@ -256,7 +280,8 @@ def rd_allreduce_from_phases_time_ns(
 ) -> Fraction:
     """AllReduce(M) = halving RS(M) + doubling AG(M) (A-L0P-COMP).
 
-    Equals l0d.rd_allreduce_time_ns exactly — the S3 two-phase form.
+    Equals l0d.rd_allreduce_time_ns exactly when no endpoint term is
+    declared, and exceeds it by exactly one E when one is (A-L0E-CHG).
     """
     return halving_reducescatter_time_ns(
         message_bytes, infra
@@ -377,6 +402,11 @@ def execute_ring_phases(ops, infra: l0.InfraConfig) -> dict:
             "algorithm_family": "ring",
             "link_bytes_per_ns_exact": str(infra.link_bytes_per_ns),
             "hop_latency_ns_exact": str(infra.hop_latency_ns),
+            **(
+                {"endpoint_latency_ns_exact": str(infra.endpoint_latency_ns)}
+                if infra.endpoint_latency_ns is not None
+                else {}
+            ),
         },
         per_op,
         times,
@@ -466,6 +496,11 @@ def execute_doubling_phases(ops, infra: l0d.RecursiveDoublingConfig) -> dict:
             "steps_log2_ranks": infra.steps,
             "injection_bytes_per_ns_exact": str(infra.injection_bytes_per_ns),
             "pair_latency_ns_exact": str(infra.pair_latency_ns),
+            **(
+                {"endpoint_latency_ns_exact": str(infra.endpoint_latency_ns)}
+                if infra.endpoint_latency_ns is not None
+                else {}
+            ),
         },
         per_op,
         times,

@@ -16,6 +16,22 @@ exact. B and L are free parameters carried by the experiment's assumptions
 file — they are NOT standard-derived values and NOT measurements
 (provenance rules).
 
+Endpoint latency term (optional, per collective op): a topology MAY declare
+``endpoint.latency_ns`` = E, a free software/endpoint latency charged ONCE
+per collective op on top of the wire identity (A-L0E-LAT / A-L0E-CHG in
+experiments/vertical_slice/assumptions_l0e.yaml):
+
+    t(M, r) = T(M, r) / B + 2 * (r - 1) * L + E
+
+The term models the software stack cost of one issued collective (launch,
+protocol setup, completion) — the quantity class the app-level latency
+anchors measure. A topology that declares no ``endpoint`` block keeps the
+landed identity BYTE-FOR-BYTE (no output field, no time term); per-phase,
+per-transfer, or per-hop charging of E are different identities and are
+declared unsupported by A-L0E-CHG. The 2D torus model (l0_torus2d) does not
+read the term: its extension is a separate registered step, and the
+assumption entry says so.
+
 Divisibility (O1 honesty fix; assumption A-L0-DIV in
 experiments/vertical_slice/assumptions_l0.yaml): the chunked construction
 behind the identities is physically realizable with equal chunks only when
@@ -69,6 +85,47 @@ class InfraConfig:
     ranks: int
     link_bytes_per_ns: Fraction
     hop_latency_ns: Fraction
+    # E: endpoint (software) latency per collective op (free, A-L0E-LAT).
+    # None = the term is NOT declared — the landed identity, byte-for-byte.
+    endpoint_latency_ns: Fraction | None = None
+
+
+def load_endpoint_latency_ns(data: dict) -> Fraction | None:
+    """Load the optional endpoint (software) latency E from a topology dict.
+
+    Declaration: ``endpoint: {latency_ns: <value>}``. Absent block -> None
+    (the landed identities and their emitted payloads stay byte-identical).
+    A declared value — including 0 — ACTIVATES the term: completion times
+    gain +E once per collective op and the emitted model payload records it
+    (A-L0E-LAT / A-L0E-CHG, experiments/vertical_slice/assumptions_l0e.yaml).
+    Negative values are rejected explicitly; values above the registered
+    range upper are NOT rejected here (out-of-range placements are executed
+    deliberately by the calibration ladder so the miss is visible in
+    artifacts — the same rule as B and L).
+    """
+    endpoint = data.get("endpoint")
+    if endpoint is None:
+        return None
+    if "latency_ns" not in endpoint:
+        raise ValueError(
+            "endpoint block declared without latency_ns; the endpoint term is "
+            "declared as endpoint.latency_ns (A-L0E-LAT) — an empty or partial "
+            "block is a typo, not a different identity"
+        )
+    value = Fraction(str(endpoint["latency_ns"]))
+    if value < 0:
+        raise ValueError(f"endpoint.latency_ns must be >= 0, got {value}")
+    return value
+
+
+def endpoint_term_ns(config) -> Fraction:
+    """E as an additive time term; exactly 0 when the term is not declared.
+
+    Shared by every endpoint-extended identity so the charging rule (once
+    per collective op, A-L0E-CHG) lives in exactly one place.
+    """
+    value = getattr(config, "endpoint_latency_ns", None)
+    return Fraction(0) if value is None else value
 
 
 def load_infra(data: dict) -> InfraConfig:
@@ -82,6 +139,7 @@ def load_infra(data: dict) -> InfraConfig:
         ranks=int(data["ranks"]),
         link_bytes_per_ns=frac(link["bytes_per_ns"]),
         hop_latency_ns=frac(link["hop_latency_ns"]),
+        endpoint_latency_ns=load_endpoint_latency_ns(data),
     )
 
 
@@ -129,7 +187,11 @@ def require_divisible(
 
 def ring_allreduce_time_ns(message_bytes: int, ranks: int, infra: InfraConfig) -> Fraction:
     traffic = ring_traffic_per_rank(message_bytes, ranks)
-    return traffic / infra.link_bytes_per_ns + 2 * (ranks - 1) * infra.hop_latency_ns
+    return (
+        traffic / infra.link_bytes_per_ns
+        + 2 * (ranks - 1) * infra.hop_latency_ns
+        + endpoint_term_ns(infra)
+    )
 
 
 def execute(ops, infra: InfraConfig) -> dict:
@@ -211,15 +273,18 @@ def execute(ops, infra: InfraConfig) -> dict:
 
     count = len(times)
     mean_time = sum(times) / count if count else Fraction(0)
+    model = {
+        "transport_model": CAPABILITIES["transport_model"],
+        "topology_id": infra.topology_id,
+        "ranks": infra.ranks,
+        "link_bytes_per_ns_exact": str(infra.link_bytes_per_ns),
+        "hop_latency_ns_exact": str(infra.hop_latency_ns),
+    }
+    if infra.endpoint_latency_ns is not None:
+        model["endpoint_latency_ns_exact"] = str(infra.endpoint_latency_ns)
     return {
         "backend_id": BACKEND_ID,
-        "model": {
-            "transport_model": CAPABILITIES["transport_model"],
-            "topology_id": infra.topology_id,
-            "ranks": infra.ranks,
-            "link_bytes_per_ns_exact": str(infra.link_bytes_per_ns),
-            "hop_latency_ns_exact": str(infra.hop_latency_ns),
-        },
+        "model": model,
         "observables": {
             "O-CONSERVATION": {
                 "kind": "exact",

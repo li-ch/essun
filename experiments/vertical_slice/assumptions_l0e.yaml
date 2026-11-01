@@ -1,0 +1,75 @@
+# Assumption registry for the L0 endpoint (software) latency term (split
+# from assumptions_l0.yaml per the house rule — per-model files so
+# unrelated additions cannot shift other models' run identities; the same
+# split produced assumptions_l05.yaml. Same house format.)
+#
+# WHY THIS TERM EXISTS (the v0.2 calibration proposal's standing gap,
+# docs/calibration/CALIBRATION_PROPOSAL_v0.2.md section 3.3): the measured
+# small-message software-latency floor (~0.86-1.83 us implied effective
+# latency across three generations and two fabric classes) was unreached by
+# every wire-class placement because NO L0 identity carried a
+# software/endpoint latency term. This registry declares that term as a
+# free parameter. It fixes the MODEL, not any label or anchor value.
+assumptions_id: assumptions_l0e_v1
+status: PROPOSED
+assumptions:
+  - id: A-L0E-LAT
+    parameter: endpoint.latency_ns
+    value: 0
+    unit: ns
+    range: [0, 9000]
+    rationale: >
+      Free parameter NEW in the endpoint-extended L0 family: E, the
+      software/endpoint latency charged once per collective op on top of
+      the wire identity (launch, protocol setup, completion — the
+      quantity class the app-level latency anchors measure). Value 0 (or a
+      topology declaring no endpoint block) is the landed identity exactly.
+      The declared free range is drawn from the anchor SET's fit-side
+      members only (split record 3862e227..., group G3): lower endpoint 0
+      = the structural default (no endpoint term — the pre-extension
+      identity); upper endpoint 9000 ns = GF-10's measured app-level P2P
+      figure ("around 9 us", Li et al. IEEE TPDS 32(1), DGX-1 V100/NVLink-2
+      era), the only MEASURED software-inclusive anchor the fit set stages.
+      NO holdout anchor number enters this range (the split record's
+      no-leakage rule). Not standard-derived; the one measured figure is an
+      external published measurement used as a RANGE ANCHOR, never a
+      shipped value.
+    sensitivity: high for O-CCT at small messages (the whole term is the
+      floor at M -> 0), zero for O-CONSERVATION (moves no bytes)
+    owner: l0-models
+    review: PROPOSED
+  - id: A-L0E-CHG
+    parameter: model.endpoint_charging
+    value: one_per_collective_op
+    unit: none
+    range: [one_per_collective_op, per_phase, per_transfer, per_hop]
+    rationale: >
+      Modeling assumption: E is charged ONCE per issued collective op
+      (AllReduce = one op = one E), identically across identities, making
+      E a per-collective floor that does not scale with the latency chain
+      — the structure the measured small-message floors show (roughly
+      rank- and chain-independent launch costs). Per-phase, per-transfer,
+      and per-hop charging are different identities and are declared
+      unsupported by the extended backends. Consequences pinned by golden
+      tests: the fused AllReduce carries one E while two separately issued
+      phase ops (phase collectives) carry two, so RS(M) + AG(M) =
+      AllReduce(M) + E when E is declared (A-L0P-COMP amended); the
+      L0.5-vs-L0 convergence identity is unchanged (E cancels — both sides
+      carry it). Applicability: the ring (l0), crossbar (l0_crossbar),
+      recursive-doubling (l0_recursive_doubling), phase-collectives
+      (l0_phase_collectives) and L0.5 (l05) identities. NOT the torus
+      (l0_torus2d): its endpoint extension is a separate registered step
+      and its input space does not read the key today; NOT the TFC window
+      or the credit automaton (UEC flagship slice, different stage).
+    sensitivity: high for O-CCT whenever E > 0 (sets how many times the
+      term enters a composed schedule), zero for O-CONSERVATION
+    owner: l0-models
+    review: PROPOSED
+notes: >
+  Byte-identity fence: a topology that declares no endpoint block produces
+  byte-identical run payloads to the pre-extension backends (no output
+  field, no time term) — pinned by the determinism/replay suite and the
+  calibration guard tests (the S2..S6 committed records re-execute
+  unchanged). A declared endpoint.latency_ns of 0 activates the term with
+  value zero: same numbers as the landed identity, different (honest)
+  bytes — a distinct run, never confused with the term being absent.

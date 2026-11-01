@@ -30,6 +30,16 @@ All arithmetic uses :class:`fractions.Fraction`. B and L are free parameters
 carried by the assumptions file — NOT standard-derived values and NOT
 measurements (provenance rules).
 
+Endpoint latency term (optional, per collective op): a topology MAY declare
+``endpoint.latency_ns`` = E, a free software/endpoint latency charged ONCE
+per collective op — at the AllReduce level only, never per phase
+(A-L0E-LAT / A-L0E-CHG in experiments/vertical_slice/assumptions_l0e.yaml):
+
+    t(M, r) = 2*(r-1)/r * M / B + 2L + E
+
+The phase identities t_rs/t_ag below stay endpoint-free; a topology that
+declares no ``endpoint`` block keeps the landed identity BYTE-FOR-BYTE.
+
 Divisibility (O1 honesty fix, increment 5a; assumption A-L0X-DIV in
 experiments/vertical_slice/assumptions_l0.yaml): each phase sends r-1 chunks
 of M/r bytes, so the construction is physically realizable only when r
@@ -51,7 +61,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from fractions import Fraction
 
-from essun.backends.analytical.l0 import require_divisible
+from essun.backends.analytical.l0 import (
+    endpoint_term_ns,
+    load_endpoint_latency_ns,
+    require_divisible,
+)
 
 BACKEND_ID = "analytical_l0_crossbar"
 
@@ -80,6 +94,9 @@ class CrossbarConfig:
     ranks: int
     injection_bytes_per_ns: Fraction  # B: per-rank single-port injection bandwidth
     pair_latency_ns: Fraction  # L: uniform per-pair transfer latency
+    # E: endpoint (software) latency per collective op (free, A-L0E-LAT).
+    # None = the term is NOT declared — the landed identity, byte-for-byte.
+    endpoint_latency_ns: Fraction | None = None
 
 
 def load_crossbar_config(data: dict) -> CrossbarConfig:
@@ -97,6 +114,7 @@ def load_crossbar_config(data: dict) -> CrossbarConfig:
         ranks=ranks,
         injection_bytes_per_ns=frac(data["nic"]["injection_bytes_per_ns"]),
         pair_latency_ns=frac(data["link"]["pair_latency_ns"]),
+        endpoint_latency_ns=load_endpoint_latency_ns(data),
     )
 
 
@@ -128,10 +146,15 @@ def crossbar_allgather_time_ns(
 def crossbar_allreduce_time_ns(
     message_bytes: int, ranks: int, infra: CrossbarConfig
 ) -> Fraction:
-    """t = t_rs + t_ag = 2*(r-1)/r * M / B + 2L (serialized phases)."""
+    """t = t_rs + t_ag + E = 2*(r-1)/r * M / B + 2L + E.
+
+    Serialized phases; E — the optional endpoint (software) latency — is
+    charged ONCE per collective op, never per phase (A-L0E-CHG).
+    """
     return (
         crossbar_reduce_scatter_time_ns(message_bytes, ranks, infra)
         + crossbar_allgather_time_ns(message_bytes, ranks, infra)
+        + endpoint_term_ns(infra)
     )
 
 
@@ -177,21 +200,24 @@ def execute(ops, infra: CrossbarConfig) -> dict:
             op.payload_bytes, infra.ranks, infra
         )
         allgather = crossbar_allgather_time_ns(op.payload_bytes, infra.ranks, infra)
-        completion = reduce_scatter + allgather
+        endpoint = endpoint_term_ns(infra)
+        completion = reduce_scatter + allgather + endpoint
         times.append(completion)
         total_wire += op_wire
-        per_op.append(
-            {
-                "op_id": op.op_id,
-                "payload_bytes": op.payload_bytes,
-                "per_rank_wire_bytes_exact": str(per_rank),
-                "total_wire_bytes_exact": str(op_wire),
-                "reduce_scatter_time_ns_exact": str(reduce_scatter),
-                "allgather_time_ns_exact": str(allgather),
-                "completion_time_ns_exact": str(completion),
-                "completion_time_ns": float(completion),
-            }
-        )
+        op_record = {
+            "op_id": op.op_id,
+            "payload_bytes": op.payload_bytes,
+            "per_rank_wire_bytes_exact": str(per_rank),
+            "total_wire_bytes_exact": str(op_wire),
+            "reduce_scatter_time_ns_exact": str(reduce_scatter),
+            "allgather_time_ns_exact": str(allgather),
+            "completion_time_ns_exact": str(completion),
+            "completion_time_ns": float(completion),
+        }
+        if infra.endpoint_latency_ns is not None:
+            # per-op reconciliation: rs + ag + endpoint == completion.
+            op_record["endpoint_term_ns_exact"] = str(endpoint)
+        per_op.append(op_record)
 
     if violations:
         raise AssertionError(
@@ -200,15 +226,18 @@ def execute(ops, infra: CrossbarConfig) -> dict:
 
     count = len(times)
     mean_time = sum(times) / count if count else Fraction(0)
+    model = {
+        "transport_model": CAPABILITIES["transport_model"],
+        "topology_id": infra.topology_id,
+        "ranks": infra.ranks,
+        "injection_bytes_per_ns_exact": str(infra.injection_bytes_per_ns),
+        "pair_latency_ns_exact": str(infra.pair_latency_ns),
+    }
+    if infra.endpoint_latency_ns is not None:
+        model["endpoint_latency_ns_exact"] = str(infra.endpoint_latency_ns)
     return {
         "backend_id": BACKEND_ID,
-        "model": {
-            "transport_model": CAPABILITIES["transport_model"],
-            "topology_id": infra.topology_id,
-            "ranks": infra.ranks,
-            "injection_bytes_per_ns_exact": str(infra.injection_bytes_per_ns),
-            "pair_latency_ns_exact": str(infra.pair_latency_ns),
-        },
+        "model": model,
         "observables": {
             "O-CONSERVATION": {
                 "kind": "exact",

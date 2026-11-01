@@ -32,6 +32,17 @@ infinity. ``injection_bytes_per_ns = None`` encodes that limit (the term is
 exactly 0), where t_L05 == l0.ring_allreduce_time_ns == the landed golden
 literals, and phase times == the landed l0_phase_collectives ring identities.
 
+Endpoint latency term (optional, per collective op): a topology MAY declare
+``endpoint.latency_ns`` = E (A-L0E-LAT / A-L0E-CHG in
+experiments/vertical_slice/assumptions_l0e.yaml), charged ONCE per
+AllReduce op on top of the serialized phase sum:
+
+    t_L05(M, r) = 2 * (r-1) * (c/I + c/B + L) + E
+
+E cancels from the convergence identity (both sides carry it), so the
+exact disagreement stays 2*(r-1)*c/I at every E. A topology that declares
+no ``endpoint`` block keeps the landed identity BYTE-FOR-BYTE.
+
 Construction reading (why (r-1)*s is the textbook pipelined form): run the
 phase in r-1 lockstep slots of duration s per transmitting NIC — every rank
 puts one chunk on its outgoing link per slot, a chunk received in slot k is
@@ -123,6 +134,9 @@ class L05Config:
     # I -> infinity limit — serialization term exactly 0 — which is the
     # convergence anchor to the landed L0 identity.
     injection_bytes_per_ns: Fraction | None
+    # E: endpoint (software) latency per collective op (free, A-L0E-LAT).
+    # None = the term is NOT declared — the landed identity, byte-for-byte.
+    endpoint_latency_ns: Fraction | None = None
 
 
 def load_l05_config(data: dict) -> L05Config:
@@ -170,6 +184,7 @@ def load_l05_config(data: dict) -> L05Config:
         link_bytes_per_ns=link_bw,
         hop_latency_ns=hop_lat,
         injection_bytes_per_ns=injection,
+        endpoint_latency_ns=l0.load_endpoint_latency_ns(data),
     )
 
 
@@ -216,13 +231,15 @@ def phase_time_ns(message_bytes: int, ranks: int, config: L05Config) -> Fraction
 
 
 def allreduce_time_ns(message_bytes: int, ranks: int, config: L05Config) -> Fraction:
-    """t_L05 = 2 * t_phase — serialized ReduceScatter + AllGather phases.
+    """t_L05 = 2 * t_phase + E — serialized ReduceScatter + AllGather phases.
 
     Equals the landed l0.ring_allreduce_time_ns PLUS exactly
     2*(r-1)/r*M/I (see :func:`serialization_term_ns`); at the injection
-    limit the two identities coincide exactly.
+    limit the two identities coincide exactly. The optional endpoint term
+    E (once per collective op, A-L0E-CHG) rides on top and cancels from
+    the convergence identity (both sides carry it).
     """
-    return 2 * phase_time_ns(message_bytes, ranks, config)
+    return 2 * phase_time_ns(message_bytes, ranks, config) + l0.endpoint_term_ns(config)
 
 
 def serialization_term_ns(message_bytes: int, ranks: int, config: L05Config) -> Fraction:
@@ -239,12 +256,13 @@ def serialization_term_ns(message_bytes: int, ranks: int, config: L05Config) -> 
 
 
 def _l0_anchor_config(config: L05Config) -> l0.InfraConfig:
-    """The landed L0 ring fabric with the SAME B and L (shared parameters)."""
+    """The landed L0 ring fabric with the SAME B, L (and E) — shared parameters."""
     return l0.InfraConfig(
         topology_id=config.topology_id,
         ranks=config.ranks,
         link_bytes_per_ns=config.link_bytes_per_ns,
         hop_latency_ns=config.hop_latency_ns,
+        endpoint_latency_ns=config.endpoint_latency_ns,
     )
 
 
@@ -339,21 +357,24 @@ def execute(ops, config: L05Config) -> dict:
 
     count = len(times)
     mean_time = sum(times) / count if count else Fraction(0)
+    model = {
+        "transport_model": CAPABILITIES["transport_model"],
+        "topology_id": config.topology_id,
+        "ranks": config.ranks,
+        "link_bytes_per_ns_exact": str(config.link_bytes_per_ns),
+        "hop_latency_ns_exact": str(config.hop_latency_ns),
+        "injection_bytes_per_ns_exact": (
+            None
+            if config.injection_bytes_per_ns is None
+            else str(config.injection_bytes_per_ns)
+        ),
+        "at_injection_limit": config.injection_bytes_per_ns is None,
+    }
+    if config.endpoint_latency_ns is not None:
+        model["endpoint_latency_ns_exact"] = str(config.endpoint_latency_ns)
     return {
         "backend_id": BACKEND_ID,
-        "model": {
-            "transport_model": CAPABILITIES["transport_model"],
-            "topology_id": config.topology_id,
-            "ranks": config.ranks,
-            "link_bytes_per_ns_exact": str(config.link_bytes_per_ns),
-            "hop_latency_ns_exact": str(config.hop_latency_ns),
-            "injection_bytes_per_ns_exact": (
-                None
-                if config.injection_bytes_per_ns is None
-                else str(config.injection_bytes_per_ns)
-            ),
-            "at_injection_limit": config.injection_bytes_per_ns is None,
-        },
+        "model": model,
         "observables": {
             "O-CONSERVATION": {
                 "kind": "exact",

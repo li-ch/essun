@@ -291,6 +291,18 @@
           },
           "additionalProperties": true
         },
+        "endpoint": {
+          "type": "object",
+          "description": "Endpoint (software) latency context of the analytical topology (contract 0.5.0 additive extension, applies to the unidirectional_ring / fully_connected_crossbar / fully_connected_exchange dialects and the serialized-ring L0.5 class; NOT torus2d_ring_x_ring — its extension is a separate registered step; NOT the TFC window class). Carries the parameters registered in experiments/vertical_slice/assumptions_l0e.yaml.",
+          "properties": {
+            "latency_ns": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Free parameter (A-L0E-LAT): endpoint/software latency E charged once per collective op (A-L0E-CHG); declared range [0, 9000] ns (the upper endpoint is the fit-set anchor GF-10's measured app-level P2P figure — the registration's own provenance, never a tuned enclosure; out-of-range values are executed deliberately by the calibration ladder so misses stay visible, same rule as B and L). An absent endpoint block keeps the landed identity and every existing run payload byte-identical; a declared value — including 0 — activates the term (same numbers, honest bytes)."
+            }
+          },
+          "additionalProperties": false
+        },
         "notes": {
           "type": "string"
         }
