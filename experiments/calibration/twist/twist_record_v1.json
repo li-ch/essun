@@ -1,0 +1,589 @@
+{
+  "backing": {
+    "inputs": [
+      "experiments/calibration/twist/sweep_twist_torus128_v1.yaml",
+      "experiments/calibration/twist/sweep_twist_torus256_v1.yaml",
+      "experiments/calibration/twist/run_twist_a5_slice128.yaml",
+      "experiments/calibration/twist/run_twist_a5_slice256.yaml",
+      "experiments/calibration/twist/topologies/ (20 files)",
+      "experiments/calibration/twist/profiles/implementation_profile_l0_torus2d_cal_twist_v1.yaml",
+      "experiments/calibration/a5/workloads/w1_dense_tp_decode_tp{128,256}_4kib.yaml (committed stage-A5 workloads, reused)",
+      "experiments/calibration/a5/topologies/torus2d{128,256}_a5_{8x16,8x32}_b50_v1.yaml (the committed stage-A5 anchor-point files, reused as the immutable-S5 bridge rows)",
+      "experiments/calibration/s5/fit_record_v1.json (the committed S5 record, READ for the immutability bridge — never re-fitted, never edited)"
+    ],
+    "reproduce": "make sweep EXP=experiments/calibration/twist/sweep_twist_torus128_v1.yaml ; make sweep EXP=experiments/calibration/twist/sweep_twist_torus256_v1.yaml ; make run EXP=experiments/calibration/twist/run_twist_a5_slice128.yaml ; make run EXP=experiments/calibration/twist/run_twist_a5_slice256.yaml ; python experiments/calibration/twist/build_twist_record.py",
+    "run_ids": [
+      "6197d3adf776ab8479caa2ec88e5c7acd325c1b78a183935ff8d1bcbf5dc5da8",
+      "1e55ccfa2d10ca5a113b4263d91f76d6b83bd5808599c3b3deadee257634f0f1"
+    ],
+    "run_roles": {
+      "twist128": "twist-direction executed-invariance reference run (torus 8x16, B=50 reading 1, w=2 range ceiling; held_out: false)",
+      "twist256": "twist-direction executed-invariance reference run (torus 8x32, B=50 reading 1, w=2 range ceiling; held_out: false)"
+    },
+    "sweep_ids": [
+      "4328bb00dd7dcae76a342d60d0fec306e707ca66c991e6affcbe295a21cd03f3",
+      "b6e40ab682800841306618730a49c4e3c07f1d319f3d8c6ae0982103f3aac86a"
+    ]
+  },
+  "calibration_target": [
+    "CAL-A5"
+  ],
+  "evidence_dimensions": {
+    "calibration_target": [
+      "CAL-A5"
+    ],
+    "held_out": {
+      "held_out": false,
+      "scope": "this re-fit touches only CAL-A5's staged geometry ratios and per-link readings; the split record defines NO within-series holdout for CAL-A5, every row is fit-side, and no held-out anchor id appears anywhere in this record's bytes"
+    },
+    "independent_reproduction": [],
+    "known_omissions": [
+      "the identity's OUTPUT is exactly invariant in the twist's capacity-gain direction (min-link bound): the measured 1.63x/1.31x is unreachable on the wiring axis at any admissible w — the axis's whole envelope has minimum CCT equal to the regular CCT",
+      "the demanded twisted CCTs (5580.96 / 11833.65 ns) lie BELOW the identity's B->infinity latency-chain floors (8800 / 15200 ns) — unreachable on the unbounded B axis (S5) and on the whole wiring axis (this stage)",
+      "the anchor's observable class is bisection-bound ALL-TO-ALL throughput: no L0 identity in this repo executes all-to-all, so the geometry effect has no observable to land on — the standing requirement is a new COLLECTIVE identity (all-to-all with a bisection/wiring term), not a new parameter",
+      "the L-absorption values (120.09 / 151.73 ns) remain the only single-parameter routes to the demand — misattribution class, recorded never selected (unchanged from S5)",
+      "3D slices projected 3D->2D (declared projection, distortion declared in every topology file); per-link direction convention UNVERIFIED (both readings remain executed from S5, neither chosen)",
+      "no software/endpoint latency term on this backend yet (the parallel H1 program owns that axis); the 4 KiB regime is hop-latency-dominated (96.7% / 98.1% at the faithful shapes)",
+      "no congestion, no credits, no packetization, no reconfiguration (static topology; OCS ms-scale switching is quasi-static and bounds only dynamic-topology modeling)"
+    ],
+    "verification": [
+      {
+        "check": "tests/calibration/test_twist_fit.py",
+        "scope": "TWIST-stage guard — re-executes the stage's two sweeps and two runs into a scratch store, rebuilds this record byte-identically, and checks the invariants (the one-sided law exact at every executed row; the anchor-point/bridge-row equality; no holdout anchor id anywhere in the record bytes; the A-L0T-WIRE registry point untouched at 1 and A-L0T-BW at 64; the demanded-CCT-below-the-whole-wiring-axis arithmetic exact at both slices)"
+      },
+      {
+        "check": "tests/golden/test_l0_torus2d_wiring_golden.py",
+        "scope": "the wiring term's golden identities (hand-derived): the one-sided law, the B-displacement equivalence of the active side, wiring-invariant conservation and traffic, the loader's declared/undeclared payload contract"
+      },
+      {
+        "check": "tests/calibration/test_anchor_split.py",
+        "scope": "the split record's own immutability guard (S1) — the data separation this re-fit runs under"
+      },
+      {
+        "check": "tests/calibration/test_s5_fit.py",
+        "scope": "the S5 record's byte-immutability guard — the historical falsification this stage sharpens (its Torus2DConfig check is now a superset check on the six v1 fields; the S5 record bytes are unchanged)"
+      }
+    ]
+  },
+  "evidence_levels": {
+    "fit": "PROPOSED wiring-axis falsification re-execution against one external published ratio pair; no E3/E4 language — the anchor is not our testbed, and owner adjudication precedes any label move",
+    "runs_and_sweeps": "E0 (analytical executions; deterministic, content-addressed, replay reproduces byte-identical artifacts)"
+  },
+  "evidence_schema_version": 2,
+  "executed_sweeps": {
+    "torus128": {
+      "cross_check": "every executed row equals the wiring-extended closed form at the same (payload, shape, B, L=200, w) — exact Fraction string equality; wire bytes equal 2*(2-1/r1-1/r2)*M at EVERY w (wiring moves rates, never bytes)",
+      "grid": "11 configs x 6 ops at payload 4096 (the anchor's DMA size)",
+      "manifest_path": "experiments/calibration/twist/sweep_twist_torus128_v1.yaml",
+      "one_sided_law_executed": {
+        "active_rows_exact": {
+          "1/2": "234848/25",
+          "3/4": "689696/75"
+        },
+        "bridge_row_exact": "227424/25",
+        "inert_rows_exact": [
+          "227424/25",
+          "227424/25",
+          "227424/25",
+          "227424/25",
+          "227424/25"
+        ],
+        "statement": "every w >= 1 row equals the w=1 row EXACTLY (227424/25 ns) — the twist's capacity-gain direction is inert on this identity (the ring's k-1 non-wrap edges bound its rate); every w < 1 row is strictly slower and equals the landed identity at per-link B*w exactly (the derating side coincides with a B displacement)"
+      },
+      "payload_fence": "single payload 4096 = the anchor's individual DMA size (fit-side; no within-series holdout exists for CAL-A5)",
+      "rows": [
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "234848/25",
+          "cct_ns_float": 9393.92,
+          "effective_rate_exact": "25",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1/2",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b50_w0_5_v1",
+          "w_exact": "1/2",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "689696/75",
+          "cct_ns_float": 9195.946666666667,
+          "effective_rate_exact": "75/2",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "3/4",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b50_w0_75_v1",
+          "w_exact": "3/4",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "227424/25",
+          "cct_ns_float": 9096.96,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b50_w1_v1",
+          "w_exact": "1",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "227424/25",
+          "cct_ns_float": 9096.96,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b50_w1_25_v1",
+          "w_exact": "5/4",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "227424/25",
+          "cct_ns_float": 9096.96,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b50_w1_5_v1",
+          "w_exact": "3/2",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "227424/25",
+          "cct_ns_float": 9096.96,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b50_w1_75_v1",
+          "w_exact": "7/4",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "227424/25",
+          "cct_ns_float": 9096.96,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b50_w2_v1",
+          "w_exact": "2",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "227424/25",
+          "cct_ns_float": 9096.96,
+          "delta_vs_w1_exact": "0",
+          "effective_rate_exact": "50",
+          "family": "immutable_s5_bridge",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_a5_8x16_b50_v1",
+          "w_exact": "1 (UNDECLARED — the landed identity)",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "9264",
+          "cct_ns_float": 9264.0,
+          "effective_rate_exact": "32",
+          "family": "registry_B64_triangle",
+          "min_link_rate_factor_exact": "1/2",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b64_w0_5_v1",
+          "w_exact": "1/2",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "9032",
+          "cct_ns_float": 9032.0,
+          "effective_rate_exact": "64",
+          "family": "registry_B64_triangle",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b64_w1_v1",
+          "w_exact": "1",
+          "wire_bytes_per_rank_exact": "14848"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "9032",
+          "cct_ns_float": 9032.0,
+          "effective_rate_exact": "64",
+          "family": "registry_B64_triangle",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x16",
+          "topology_id": "torus2d128_tw_8x16_b64_w2_v1",
+          "w_exact": "2",
+          "wire_bytes_per_rank_exact": "14848"
+        }
+      ],
+      "sweep_id": "4328bb00dd7dcae76a342d60d0fec306e707ca66c991e6affcbe295a21cd03f3",
+      "sweep_name": "cal_twist_torus128_v1"
+    },
+    "torus256": {
+      "cross_check": "every executed row equals the wiring-extended closed form at the same (payload, shape, B, L=200, w) — exact Fraction string equality; wire bytes equal 2*(2-1/r1-1/r2)*M at EVERY w (wiring moves rates, never bytes)",
+      "grid": "11 configs x 6 ops at payload 4096 (the anchor's DMA size)",
+      "manifest_path": "experiments/calibration/twist/sweep_twist_torus256_v1.yaml",
+      "one_sided_law_executed": {
+        "active_rows_exact": {
+          "1/2": "395104/25",
+          "3/4": "1170208/75"
+        },
+        "bridge_row_exact": "387552/25",
+        "inert_rows_exact": [
+          "387552/25",
+          "387552/25",
+          "387552/25",
+          "387552/25",
+          "387552/25"
+        ],
+        "statement": "every w >= 1 row equals the w=1 row EXACTLY (387552/25 ns) — the twist's capacity-gain direction is inert on this identity (the ring's k-1 non-wrap edges bound its rate); every w < 1 row is strictly slower and equals the landed identity at per-link B*w exactly (the derating side coincides with a B displacement)"
+      },
+      "payload_fence": "single payload 4096 = the anchor's individual DMA size (fit-side; no within-series holdout exists for CAL-A5)",
+      "rows": [
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "395104/25",
+          "cct_ns_float": 15804.16,
+          "effective_rate_exact": "25",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1/2",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b50_w0_5_v1",
+          "w_exact": "1/2",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "1170208/75",
+          "cct_ns_float": 15602.773333333333,
+          "effective_rate_exact": "75/2",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "3/4",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b50_w0_75_v1",
+          "w_exact": "3/4",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "387552/25",
+          "cct_ns_float": 15502.08,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b50_w1_v1",
+          "w_exact": "1",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "387552/25",
+          "cct_ns_float": 15502.08,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b50_w1_25_v1",
+          "w_exact": "5/4",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "387552/25",
+          "cct_ns_float": 15502.08,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b50_w1_5_v1",
+          "w_exact": "3/2",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "387552/25",
+          "cct_ns_float": 15502.08,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b50_w1_75_v1",
+          "w_exact": "7/4",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "387552/25",
+          "cct_ns_float": 15502.08,
+          "effective_rate_exact": "50",
+          "family": "anchor_w_grid",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b50_w2_v1",
+          "w_exact": "2",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "50",
+          "cct_ns_exact": "387552/25",
+          "cct_ns_float": 15502.08,
+          "delta_vs_w1_exact": "0",
+          "effective_rate_exact": "50",
+          "family": "immutable_s5_bridge",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_a5_8x32_b50_v1",
+          "w_exact": "1 (UNDECLARED — the landed identity)",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "15672",
+          "cct_ns_float": 15672.0,
+          "effective_rate_exact": "32",
+          "family": "registry_B64_triangle",
+          "min_link_rate_factor_exact": "1/2",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b64_w0_5_v1",
+          "w_exact": "1/2",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "15436",
+          "cct_ns_float": 15436.0,
+          "effective_rate_exact": "64",
+          "family": "registry_B64_triangle",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b64_w1_v1",
+          "w_exact": "1",
+          "wire_bytes_per_rank_exact": "15104"
+        },
+        {
+          "B_exact": "64",
+          "cct_ns_exact": "15436",
+          "cct_ns_float": 15436.0,
+          "effective_rate_exact": "64",
+          "family": "registry_B64_triangle",
+          "min_link_rate_factor_exact": "1",
+          "shape": "8x32",
+          "topology_id": "torus2d256_tw_8x32_b64_w2_v1",
+          "w_exact": "2",
+          "wire_bytes_per_rank_exact": "15104"
+        }
+      ],
+      "sweep_id": "b6e40ab682800841306618730a49c4e3c07f1d319f3d8c6ae0982103f3aac86a",
+      "sweep_name": "cal_twist_torus256_v1"
+    }
+  },
+  "fits": {
+    "cal_a5_twist_refit": {
+      "metric_discipline": "ratio vs ratio, the S5 discipline UNCHANGED: all-to-all throughput and AllReduce CCT are never compared; the anchor's ratio is read onto the model's OWN anchor-point CCT only to compute what the ratio demands of the model",
+      "noise_scale_comparison_provenance": "the demanded cuts (63%/31%) remain 7.875x / 3.875x CAL-A6's 8% software-version swing upper (a FIT-SET anchor, group G2) — an order above every noise scale in the anchor set, so the effect cannot be absorbed as measurement noise (unchanged from S5)",
+      "per_link_placement": {
+        "readings_vs_plan_span_20_64": "UNCHANGED from S5 (20/25/50 inside, 70 above, both readings executed, neither chosen); the registry point 64 sits +28% above reading 1 — a PLACEMENT fact, the registry value untouched",
+        "registry_wiring_point": {
+          "statement": "the A-L0T-WIRE registry point stays 1: no anchor value selects any wiring value, and the anchor's ratios 1.63/1.31 are NOT members of the swept uniform grid (membership is pure registry-range arithmetic)",
+          "value": "1 (the regular torus — every existing topology)"
+        }
+      },
+      "per_slice": {
+        "128": {
+          "anchor_point_cct_ns_exact": "227424/25",
+          "b_to_infinity_latency_chain_floor_ns_exact": "8800",
+          "demanded_cct_cut_pct": 63.0,
+          "floor_margin_exact": "28428/44825",
+          "l_absorption_misattribution_leg": {
+            "in_declared_range": true,
+            "status": "STANDS UNCHANGED from S5 (record 43fca722...): the only single-parameter routes to the demanded CCT are the L-absorption values — charging a bisection-structure effect to per-hop latency — and the B displacement rows S5 already executed and classified (81.5 / 65.5); the wiring field's arrival changes none of them; recorded, never selected",
+            "value_exact": "5383072/44825",
+            "value_float": "120.090842163971"
+          },
+          "measured_twisted_over_regular_all_to_all_exact": "163/100",
+          "required_twisted_cct_ns_exact": "909696/163",
+          "required_twisted_cct_ns_float": 5580.957055214724,
+          "wiring_axis_verdict": {
+            "axis_minimum_cct_ns_exact": "227424/25",
+            "delivered_fraction_of_required_gain_exact": "0",
+            "delivered_fraction_pct": 0.0,
+            "statement": "the wiring axis's ENTIRE envelope (every admissible w, in or out of the declared range [1/2, 2]) has minimum CCT exactly the regular CCT 227424/25 ns: w >= 1 is exactly inert (the min-link bound) and w < 1 only derates — the demanded 909696/163 ns lies BELOW the axis's whole range, so the axis delivers EXACTLY 0% of the demanded gain",
+            "versus_unbounded_b_axis": {
+              "delivered_fraction_exact": "928/17325",
+              "delivered_fraction_pct": 5.3564213564213565,
+              "note": "the B axis at least delivers its bandwidth-term share even unbounded (S5's 928/17325 and 944/14725, re-derived exactly here); the wiring axis delivers exactly 0 — strictly less expressible, and in the WRONG place to matter"
+            }
+          }
+        },
+        "256": {
+          "anchor_point_cct_ns_exact": "387552/25",
+          "b_to_infinity_latency_chain_floor_ns_exact": "15200",
+          "demanded_cct_cut_pct": 31.0,
+          "floor_margin_exact": "48444/62225",
+          "l_absorption_misattribution_leg": {
+            "in_declared_range": true,
+            "status": "STANDS UNCHANGED from S5 (record 43fca722...): the only single-parameter routes to the demanded CCT are the L-absorption values — charging a bisection-structure effect to per-hop latency — and the B displacement rows S5 already executed and classified (81.5 / 65.5); the wiring field's arrival changes none of them; recorded, never selected",
+            "value_exact": "9441472/62225",
+            "value_float": "151.73116914423463"
+          },
+          "measured_twisted_over_regular_all_to_all_exact": "131/100",
+          "required_twisted_cct_ns_exact": "1550208/131",
+          "required_twisted_cct_ns_float": 11833.648854961832,
+          "wiring_axis_verdict": {
+            "axis_minimum_cct_ns_exact": "387552/25",
+            "delivered_fraction_of_required_gain_exact": "0",
+            "delivered_fraction_pct": 0.0,
+            "statement": "the wiring axis's ENTIRE envelope (every admissible w, in or out of the declared range [1/2, 2]) has minimum CCT exactly the regular CCT 387552/25 ns: w >= 1 is exactly inert (the min-link bound) and w < 1 only derates — the demanded 1550208/131 ns lies BELOW the axis's whole range, so the axis delivers EXACTLY 0% of the demanded gain",
+            "versus_unbounded_b_axis": {
+              "delivered_fraction_exact": "944/14725",
+              "delivered_fraction_pct": 6.410865874363328,
+              "note": "the B axis at least delivers its bandwidth-term share even unbounded (S5's 928/17325 and 944/14725, re-derived exactly here); the wiring axis delivers exactly 0 — strictly less expressible, and in the WRONG place to matter"
+            }
+          }
+        }
+      },
+      "role": "topology-sensitivity FALSIFIER, re-executed on the now-existing wiring axis (plan §1.1 row CAL-A5; A-L0T-WIRE is the honest expressiveness added; the anchor's ratio still selects NOTHING)",
+      "sharpened_falsification": "CAL-A5's 63%/31% geometry effect remains INEXPRESSIBLE, now with the field present: the missing expressiveness is not a geometry FIELD (that is added, registered free, and never tuned) but a geometry-SENSITIVE TERM — an all-to-all / bisection-bound collective identity. On every identity the torus family executes (per-dimension ring-decomposed AllReduce), a wiring-capacity gain is provably inert (min-link bound, executed at both slices and at the registry B), the unbounded B axis delivers at most 5.356%/6.411% of the demanded gain (S5, re-derived), and the only single-parameter routes to the demand are the flagged L-absorption misattributions (120.09/151.73 ns). Any future absorption of this anchor requires a new COLLECTIVE identity (all-to-all with a bisection/wiring term), recorded here as the standing requirement — building one NOW to reach 1.63/1.31 would be tuning toward the anchor, and is out of bounds by the program fence",
+      "split_role": "DEGENERATE (no series) — unchanged: the anchor's whole staged signal is fit-side; the split record defines NO within-series holdout for CAL-A5",
+      "staged_signal": "TPU v4 measured twisted-vs-regular torus all-to-all ratios 1.63x (4x4x8, r=128) / 1.31x (4x8x8, r=256) at individual 4 KiB DMAs; per-link ICI 6 links @ 50 GB/s (direction convention UNVERIFIED — both readings remain executed from S5, neither chosen); NO absolute (size -> time) series exists, so no CCT-vs-CCT comparison is defined",
+      "structural_leg_status": {
+        "now": "CLOSED AS INPUT BLINDNESS: the schema carries link.wrap_wiring_factor (A-L0T-WIRE) and the executed sweeps distinguish the inputs — but the model's OUTPUT is exactly invariant in the twist's capacity-gain direction (the min-link bound), so the model's twisted/regular AllReduce-CCT ratio is STILL exactly 1 for every w >= 1",
+        "s5_claim": "the input schema carries NO geometry field (verified against the landed Torus2DConfig) — twisted and regular tori of the same (r1, r2, B, L) map to IDENTICAL model inputs (record 43fca722..., falsification_1_structural)",
+        "why": "a uniform-ring AllReduce has no bottleneck link: its rate is set by its k-1 non-wrap edges, and the twist's mechanism (wrap/bisection capacity redistribution) cannot speed a balanced ring — it acts on collectives whose bottleneck is the CUT (all-to-all), which no L0 identity in this repo executes"
+      }
+    }
+  },
+  "model": {
+    "assumptions": {
+      "landed": "A-L0T-SEQ / A-L0T-UNIF / A-L0T-SHAPE / A-L0T-BW / A-L0T-LAT / A-L0T-DIV (experiments/vertical_slice/assumptions_l0.yaml, untouched)",
+      "new": "A-L0T-WIRE (experiments/vertical_slice/assumptions_l0tw.yaml — a SEPARATE file so the hashed assumptions_l0.yaml inputs of the landed ladder do not re-hash)"
+    },
+    "backend_ids": [
+      "analytical_l0_torus2d"
+    ],
+    "identity": "t_2d(M, r1, r2) = t_ring(M, r1) + t_ring(M, r2) with t_ring(M, k) = 2*(k-1)/k*M/(B*min(1, w)) + 2*(k-1)*L — the landed identity at the min-link effective rate; w is the wrap-edge wiring factor (link.wrap_wiring_factor, free parameter A-L0T-WIRE, registry point 1 = the regular torus, declared range [1/2, 2] structural bounds)",
+    "one_sided_law": "rate = B*min(1, w): every w >= 1 equals w = 1 EXACTLY (the ring's k-1 non-wrap edges bound its rate — the twist's capacity-gain direction is inert on this identity); every w < 1 equals the landed identity at B*w (the derating side coincides with a per-link-B displacement); wire counts, hop latency, and O-CONSERVATION never move"
+  },
+  "prior_records": {
+    "relationship": "this record SHARPENS the S5 falsification (structural input blindness -> output invariance on a now-existing axis + the collective-class gap); it does not replace, edit, or re-fit the S5 record, whose bytes and committed copy are unchanged",
+    "s5_fit_record_id": "43fca722ff77711d67b2879dca1407510dd6a60132e047d6b34fd7b7ee6bb34b",
+    "s5_run_ids": {
+      "slice128": "43091e1545280c151bb56769897cff7e538e3c3e8935d8ab11bb5599d49c9458",
+      "slice256": "645e8b4f2a733ab358c60be719c1575757ec21bc6ed0ffd8402c7a146fbbb6b5"
+    }
+  },
+  "record_kind": "calibration_fit",
+  "registry_state_unchanged": {
+    "A-L0T-BW": {
+      "range": "[1, 1024]",
+      "value": "64"
+    },
+    "A-L0T-WIRE": {
+      "range": "[1/2, 2] (declared, structural bounds)",
+      "value": "1"
+    },
+    "statement": "no registry value or range moves in this stage; no anchor output selects any parameter value; the anchor's ratios 1.63/1.31 are not sweep-grid members"
+  },
+  "s5_immutability_bridge": {
+    "checks": [
+      {
+        "equivalent_B_exact": "25",
+        "s5_committed_row_cct_exact": "234848/25",
+        "slice": "128",
+        "twist_stage_cct_exact": "234848/25",
+        "w_exact": "1/2"
+      },
+      {
+        "equivalent_B_exact": "75/2",
+        "note": "no committed S5 row at this B (the S5 grid was {64k}); the equality with the landed identity at B*w is asserted against the closed form",
+        "s5_committed_row_cct_exact": null,
+        "slice": "128",
+        "twist_stage_cct_exact": "689696/75",
+        "w_exact": "3/4"
+      },
+      {
+        "equivalent_B_exact": "50",
+        "note": "the anchor point: S5's committed B=50 row == the declared w=1 row == the undeclared bridge row",
+        "s5_committed_row_cct_exact": "227424/25",
+        "slice": "128",
+        "twist_stage_cct_exact": "227424/25",
+        "w_exact": "1"
+      },
+      {
+        "equivalent_B_exact": "25",
+        "s5_committed_row_cct_exact": "395104/25",
+        "slice": "256",
+        "twist_stage_cct_exact": "395104/25",
+        "w_exact": "1/2"
+      },
+      {
+        "equivalent_B_exact": "75/2",
+        "note": "no committed S5 row at this B (the S5 grid was {64k}); the equality with the landed identity at B*w is asserted against the closed form",
+        "s5_committed_row_cct_exact": null,
+        "slice": "256",
+        "twist_stage_cct_exact": "1170208/75",
+        "w_exact": "3/4"
+      },
+      {
+        "equivalent_B_exact": "50",
+        "note": "the anchor point: S5's committed B=50 row == the declared w=1 row == the undeclared bridge row",
+        "s5_committed_row_cct_exact": "387552/25",
+        "slice": "256",
+        "twist_stage_cct_exact": "387552/25",
+        "w_exact": "1"
+      }
+    ],
+    "statement": "the wiring axis's ACTIVE side is exactly the B axis it displaces: this stage's w<1 rows equal the S5 record's own committed rows at B = 50*w where such rows exist (exact Fraction equality against the committed S5 copy, never re-fitted) — the re-fit re-derives S5's arithmetic from a superset schema without moving it"
+  },
+  "split_record": {
+    "committed_copy": "experiments/calibration/split/anchor_split_v1.json",
+    "group": "G4 — torus-geometry falsifier + UEC-class transport / congestion-management envelopes (fitting stage S5; this stage re-fits that group's falsifier axis after a model change, per the S7 dispatch's model-fix-then-refit pattern)",
+    "immutability": "the split record is IMMUTABLE and untouched: same split, same group assignment, same holdout set (the holdout stays holdout); the re-fit changes the MODEL's input space, never the data separation",
+    "no_leakage": "none of the split record's cross-anchor holdouts or its blocked anchor is read by any objective, swept value, or tolerance in this record (mechanically asserted: their ids appear nowhere in the record bytes)",
+    "record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20",
+    "within_series_rules": "CAL-A5 carries NO within-series split (the split record's within_series_splits lists only CAL-A3/CAL-A6/GF-02/GF-04); the anchor's whole staged signal is fit-side and no held-out reporting run exists in this stage"
+  },
+  "stage": "calibration re-fit record, TWIST (the H2 wiring-axis re-fit of the CAL-A5 falsifier after the wrap-edge wiring model change; group G4)",
+  "status": "PROPOSED — owner adjudication required; no claim, label, or shipped parameter value changes; NO O-CCT fit exists on this axis and none is claimed — the deliverable is a SHARPENED FALSIFICATION (docs/calibration/TORUS_TWIST_REFIT.md)",
+  "store_run_cross_checks": [
+    {
+      "calibration_target": [
+        "CAL-A5"
+      ],
+      "cct_ns_exact": "227424/25",
+      "cct_ns_float": 9096.96,
+      "experiment_id": "EXP-CAL-TWIST-A5-REFIT-128-001",
+      "held_out": false,
+      "identity": "torus2d 8x16 (B=50, L=200, w=2 declared at the range ceiling)",
+      "mapping": "twist-direction executed-invariance reference: the faithful 8x16 projection at B=50 (reading 1), L=200, w=2, payload 4096 — CCT byte-equal in every time field to the S5 anchor run 43091e15...",
+      "payload_bytes": 4096,
+      "run_id": "6197d3adf776ab8479caa2ec88e5c7acd325c1b78a183935ff8d1bcbf5dc5da8",
+      "verdict": "store run == closed form of the wiring-extended identity (exact Fraction string equality) AND == the regular anchor-point CCT exactly (the executed invariance at the range ceiling); v2 dimensions as declared (held_out: false); the model payload records the declared factor with its min-link rate limit 1"
+    },
+    {
+      "calibration_target": [
+        "CAL-A5"
+      ],
+      "cct_ns_exact": "387552/25",
+      "cct_ns_float": 15502.08,
+      "experiment_id": "EXP-CAL-TWIST-A5-REFIT-256-001",
+      "held_out": false,
+      "identity": "torus2d 8x32 (B=50, L=200, w=2 declared at the range ceiling)",
+      "mapping": "twist-direction executed-invariance reference: the faithful 8x32 projection at B=50 (reading 1), L=200, w=2, payload 4096 — CCT byte-equal in every time field to the S5 anchor run 645e8b4f...",
+      "payload_bytes": 4096,
+      "run_id": "1e55ccfa2d10ca5a113b4263d91f76d6b83bd5808599c3b3deadee257634f0f1",
+      "verdict": "store run == closed form of the wiring-extended identity (exact Fraction string equality) AND == the regular anchor-point CCT exactly (the executed invariance at the range ceiling); v2 dimensions as declared (held_out: false); the model payload records the declared factor with its min-link rate limit 1"
+    }
+  ]
+}

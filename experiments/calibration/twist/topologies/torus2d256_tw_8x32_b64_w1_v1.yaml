@@ -1,0 +1,47 @@
+# Calibration-ladder TWIST-stage topology: 2D torus (ring x ring) at
+# CAL-A5's faithful r=256 projection (8x32, the declared 3D->2D
+# partition of the anchor's 4x4x8 / 4x8x8 slice — see the committed
+# stage-A5 files), link B = 64 bytes/ns (the A-L0T-BW registry point; anchor-blind context rows), L = 200 ns (the
+# A-L0T-LAT registry point), and the stage's swept axis DECLARED:
+# link.wrap_wiring_factor = w = 1 (the regular torus, DECLARED (activates the payload record; the undeclared landed identity is byte-identical in time)) — the wrap-edge wiring
+# factor, free parameter A-L0T-WIRE (declared range [1/2, 2], structural
+# bounds; experiments/vertical_slice/assumptions_l0tw.yaml).
+#
+# WIRING SEMANTICS (the honest mechanism, never tuned toward any anchor
+# OUTPUT): w is the effective rate of each dimension ring's single wrap
+# (bisection-crossing) edge as a multiple of the uniform link rate. The
+# ring rate takes the pipeline min-link bound B*min(1, w): w < 1 derates
+# the bandwidth term (exactly a per-link-B displacement on that side);
+# w >= 1 is EXACTLY INERT on this identity (the k-1 non-wrap edges bound
+# the rate). Wire counts, hop latency, and conservation never move. The
+# grid value 1 is pure registry-range arithmetic over the declared
+# [1/2, 2] axis (uniform quarter steps), fixed BEFORE any deviation was
+# computed; the anchor's measured ratios (1.63 / 1.31) are NOT grid
+# members and select NOTHING here.
+#
+# This file exists to make the twisted/regular distinction EXPRESSIBLE AS
+# MODEL INPUT (the S5 falsification's structural-blindness leg: record
+# 43fca722..., "the input schema carries NO geometry field"). What the
+# anchor demands of the now-existing axis is measured by the stage
+# builder (experiments/calibration/twist/build_twist_record.py) against
+# the SAME immutable split record 3862e227... — nothing is tuned.
+topology_id: torus2d256_tw_8x32_b64_w1_v1
+topology_class: torus2d_ring_x_ring
+ranks: 256
+grid:
+  dim1_ranks: 8
+  dim2_ranks: 32
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+  wrap_wiring_factor: 1
+notes: >
+  Two wrapped dimensions; dimension-d rings connect ranks that agree on
+  the other dimension's coordinate. Dimensions execute sequentially over
+  the full message (A-L0T-SEQ); both dimensions share B and L
+  (A-L0T-UNIF); the wrap wiring factor is declared (A-L0T-WIRE, active
+  payload record). No congestion, no credits, no packetization, no
+  reconfiguration (static topology) — L0 transport model only.
+  Provenance: B = 64 B/ns (the A-L0T-BW registry point; anchor-blind context rows); L = 200 ns free A-L0T-LAT
+  registry point; w = 1 (the regular torus, DECLARED (activates the payload record; the undeclared landed identity is byte-identical in time)); shape = declared 3D->2D projection
+  of CAL-A5's slice (see header).

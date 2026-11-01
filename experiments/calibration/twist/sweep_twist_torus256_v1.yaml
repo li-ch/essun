@@ -1,0 +1,64 @@
+# Calibration-ladder TWIST FIT SWEEP (the H2 re-fit of the CAL-A5
+# falsifier axis after the wiring model change), slice 2 of 2: sweep the
+# DECLARED free range of A-L0T-WIRE (link.wrap_wiring_factor, registry
+# value 1, declared range [1/2, 2], experiments/vertical_slice/
+# assumptions_l0tw.yaml) on the L0 2D-torus identity at CAL-A5's faithful
+# r=256 projection (8x32, the declared 3D->2D partition of the anchor's
+# 4x8x8 slice), B = 50 B/ns (the anchor point, reading 1), L = the
+# A-L0T-LAT registry 200 ns, payload 4096 B = the anchor's individual DMA
+# size — per the SAME immutable split record 3862e227... (committed at
+# experiments/calibration/split/anchor_split_v1.json; CAL-A5 stays the
+# group-G4 falsifier anchor, fitting stage S5's axis).
+#
+# Rows, four declared families (nothing tuned toward any anchor OUTPUT):
+#   (a) the UNIFORM, ANCHOR-BLIND w grid over the declared range [1/2, 2]
+#       in quarter steps: 1/2, 3/4, 1, 5/4, 3/2, 7/4, 2 (7 members; the
+#       anchor's measured ratios 1.63 / 1.31 are NOT grid members and
+#       select nothing; membership is pure registry-range arithmetic);
+#   (b) the committed stage-A5 anchor-point topology (undeclared wiring,
+#       B=50) as the IMMUTABLE-S5 BRIDGE row — its executed CCT must
+#       equal the S5 record's anchor point exactly (the builder asserts
+#       it) and the declared w=1 row must equal it exactly as well
+#       (declared-vs-undeclared equivalence);
+#   (c) the same w triangle at the A-L0T-BW registry point B = 64
+#       (w in {1/2, 1, 2}) — the law executed at the shipped registry
+#       configuration, anchor-blind context rows;
+#   (d) nothing else. L stays at 200 ns (the latency axis was S4's, and
+#       its endpoint extension is the separate H1 program).
+#
+# EXPECTED LAW (pre-declared, asserted by the builder): every w >= 1 row
+# equals the w=1 row EXACTLY (the min-link bound: the ring's k-1 non-wrap
+# edges bound its rate — the twist's capacity-gain direction is inert on
+# this identity); every w < 1 row equals the landed identity at B*w
+# exactly (the derating side coincides with a per-link-B displacement).
+# The S5 falsification (record 43fca722...) said the input schema carried
+# NO geometry field; this sweep is the executed instrument of the re-fit
+# now that the field exists. NOTHING IS TUNED: the registry value of
+# A-L0T-WIRE stays 1, the registry value of A-L0T-BW stays 64.
+sweep: cal_twist_torus256_v1
+workload: experiments/calibration/a5/workloads/w1_dense_tp_decode_tp256_4kib.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_torus2d
+  topology: experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w1_v1.yaml
+grid:
+  payload_sizes_bytes: [4096]   # CAL-A5's individual DMA size; exact, gate-accepted
+  algorithms:
+  - algorithm: allreduce_torus2d
+    topologies:
+    # uniform anchor-blind w grid at the anchor point B=50 (reading 1)
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w0_5_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w0_75_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w1_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w1_25_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w1_5_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w1_75_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w2_v1.yaml
+    # the committed stage-A5 anchor point (undeclared wiring): the immutable-S5 bridge row
+    - experiments/calibration/a5/topologies/torus2d256_a5_8x32_b50_v1.yaml
+    # the law at the A-L0T-BW registry point B=64 (anchor-blind context rows)
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b64_w0_5_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b64_w1_v1.yaml
+    - experiments/calibration/twist/topologies/torus2d256_tw_8x32_b64_w2_v1.yaml

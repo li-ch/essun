@@ -1,0 +1,74 @@
+# Calibration-ladder TWIST-stage RUN (the H2 re-fit of the CAL-A5
+# falsifier axis after the wiring model change, slice 4x8x8 -> 8x32 at
+# r=256): the L0 2D-torus identity at the anchor point B = 50 B/ns
+# (reading 1), L = the A-L0T-LAT registry 200 ns, payload 4096 B = the
+# anchor's individual all-to-all DMA size — with the wrap-edge wiring
+# factor DECLARED at its range CEILING w = 2 (free parameter A-L0T-WIRE,
+# declared range [1/2, 2], the structural bound of wrap-capacity
+# redistribution; experiments/vertical_slice/assumptions_l0tw.yaml).
+#
+# This is the twist-direction EXECUTED-INVARIANCE reference row: the
+# min-link bound of the uniform-ring identity (its k-1 non-wrap edges
+# bound its rate) makes EVERY w >= 1 row exactly equal the w = 1 row, so
+# this run's completion time is byte-equal in every time field to the
+# committed stage-A5 anchor run (645e8b4f...) — the executed statement
+# that the S5 falsification's structural leg ("the input schema carries
+# NO geometry field", record 43fca722...) is now closed as INPUT
+# blindness while the OUTPUT stays provably invariant in the twist's
+# capacity-gain direction. The anchor's measured ratio 1.31 (this slice)
+# demands a 31% CCT cut; the wiring axis delivers exactly 0% of it at
+# every admissible w in the gain direction (the builder recomputes both
+# sides with exact Fractions). NOTHING IS TUNED: no anchor value is
+# selected, the A-L0T-WIRE registry point stays 1 (regular), the
+# A-L0T-BW registry point stays 64.
+#
+# claim_id deliberately EMPTY (fence: no claim upgrades, no label moves).
+# E0. v2 dimensions: calibration_target [CAL-A5], held_out FALSE (the
+# split record defines no within-series holdout for CAL-A5; same
+# immutable split record 3862e227... as S5).
+
+experiment_id: EXP-CAL-TWIST-A5-REFIT-256-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/a5/workloads/w1_dense_tp_decode_tp256_4kib.yaml
+infra_graph:
+  path: experiments/calibration/twist/topologies/torus2d256_tw_8x32_b50_w2_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/twist/profiles/implementation_profile_l0_torus2d_cal_twist_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0tw.yaml
+backends:
+- analytical_l0_torus2d
+seed: 20261101
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: torus2d256_tw_8x32_b50_w2_v1 (the declared 3D->2D projection 8x32 of CAL-A5's 4x8x8 slice, r=256; B = 50 B/ns reading 1; L = 200 ns registry point; w = 2, the A-L0T-WIRE declared-range ceiling)
+  workload: w1_dense_tp_decode tp128, payload 4096 B (the anchor's individual DMA size)
+  implementation: analytical L0 free-parameter identity with the wrap-edge wiring term (A-L0T-WIRE); the CAL-A5 role stays the falsifier — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_twist_fit.py
+    scope: TWIST-stage guard — re-executes the stage's evidence chain (2 sweeps + 2 runs) and rebuilds the twist record byte-identically with the one-sided-law and immutability invariants
+  calibration_target:
+  - CAL-A5
+  held_out:
+    held_out: false
+    scope: fit-side execution at CAL-A5's anchor point under the same immutable split record 3862e227... (the anchor stages ratios, not a series; no within-series holdout exists)
+  independent_reproduction: []
+  known_omissions:
+  - the wrap wiring factor is now an expressible INPUT (A-L0T-WIRE), but the identity's OUTPUT is exactly invariant in the twist's capacity-gain direction (min-link bound) — the measured 1.31x (this slice) is still unreachable, now provably on the wiring axis too
+  - the demanded twisted CCT (11833.65 ns this slice) lies below the B->infinity latency floor (15200 ns) — unreachable on the unbounded B axis (S5 record 43fca722...) and on the whole wiring axis
+  - all-to-all (the anchor's collective) is never compared to the model's AllReduce — ratio-space falsification only, no mixed metric; the anchor's observable class (bisection-bound all-to-all throughput) has no L0 identity in this repo
+  - 3D slices projected 3D->2D (declared projection, distortion declared in the topology file)
+  - no software/endpoint latency term on this backend yet (the parallel H1 program owns that axis); the 4 KiB regime is hop-latency-dominated (98.1% at this shape)
+  - no congestion, no credits, no packetization, no reconfiguration (static topology; OCS ms-scale switching is quasi-static and bounds only dynamic-topology modeling)

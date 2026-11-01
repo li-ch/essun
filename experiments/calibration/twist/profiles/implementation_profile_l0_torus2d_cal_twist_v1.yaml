@@ -1,0 +1,51 @@
+# Implementation profile for the calibration-ladder TWIST-stage runs and
+# sweeps on the analytical L0 2D-torus backend (the H2 re-fit of the
+# CAL-A5 falsifier axis after the wiring model change, under the same
+# immutable split record 3862e227... as S5).
+implementation_profile_id: analytical_l0_torus2d_cal_twist_v1
+status: PROPOSED   # calibration re-fit candidate inputs; review pending
+backend: analytical_l0_torus2d
+fidelity: L0
+model: >
+  per-dimension sequential full-message ring AllReduce on a 2D torus with
+  the wrap-edge wiring term: t_2d(M, r1, r2) = t_ring(M, r1) + t_ring(M,
+  r2) with t_ring(M, k) = 2*(k-1)/k * M/(B*min(1, w)) + 2*(k-1)*L — the
+  landed identity at the min-link effective rate (see
+  src/essun/backends/analytical/l0_torus2d.py); assumptions A-L0T-SEQ /
+  A-L0T-UNIF / A-L0T-SHAPE / A-L0T-BW / A-L0T-LAT / A-L0T-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml and A-L0T-WIRE from
+  experiments/vertical_slice/assumptions_l0tw.yaml. ONE-SIDED LAW (a
+  property of the identity, not a tuning choice): the ring rate is
+  bounded by its k-1 non-wrap edges, so every w >= 1 equals w = 1
+  EXACTLY (the twist's capacity-gain direction is inert) and every w < 1
+  coincides with a per-link-B displacement (rate B*w).
+free_parameters_source: experiments/vertical_slice/assumptions_l0tw.yaml
+free_parameters_swept: >
+  w (link.wrap_wiring_factor, A-L0T-WIRE; declared free range [1/2, 2],
+  registry point 1 = the regular torus) is THIS STAGE'S swept axis: (a)
+  the anchor-blind uniform quarter-step grid 1/2, 3/4, 1, 5/4, 3/2, 7/4,
+  2 at the anchor point B = 50 (pure registry-range arithmetic; the
+  anchor's measured ratios 1.63 / 1.31 are NOT grid members and select
+  nothing); (b) the committed stage-A5 anchor-point topology (undeclared
+  wiring) as the immutable-S5 bridge row; (c) the triangle {1/2, 1, 2} at
+  the A-L0T-BW registry point B = 64. B and L stay at their registry /
+  anchor-point placements (the B axis was S5's; the latency axis was
+  S4's). NOTHING IS TUNED: the registry values stay 1 (A-L0T-WIRE) and 64
+  (A-L0T-BW); no anchor output selects any value.
+measurement_source: >
+  CAL-A5 staged numbers (Google TPU v4, ISCA 2023, arXiv:2304.01433:
+  twisted-torus all-to-all 1.63x on 4x4x8 and 1.31x on 4x8x8 vs regular
+  torus, individual 4 KiB DMAs; per-link ICI 6 @ 50 GB/s; docs/
+  calibration/anchors_staging.md §A5; confidence H) — external published
+  ratios, compared as the falsifier's RATIO-SPACE demand against the
+  model's now-existing wiring axis, as PROPOSED evidence; not our
+  testbed, no E3/E4 language. All-to-all throughput and AllReduce CCT are
+  never compared to each other (no mixed metric); the anchor's ratio is
+  read onto the model's OWN anchor-point CCT only to compute what the
+  ratio demands of the model (the S5 metric discipline, unchanged).
+evidence_dimensions: >
+  every TWIST-stage run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target = CAL-A5 / held_out / 
+  independent_reproduction / known_omissions); the split record defines NO
+  within-series holdout for CAL-A5, so every stage run is fit-side
+  (held_out: false).
