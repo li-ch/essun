@@ -1,0 +1,23 @@
+# Calibration-ladder S6e HOLDOUT-EVALUATION topology (the
+# small-message-axis rerun; anchor GF-11 (GB200-class microbenchmarks, r=2 decomposition point), r=2): the
+# fully-connected (crossbar) abstraction at L = 200 ns and B = 64 B/ns (UNCHANGED registry
+# points) with the endpoint latency free parameter A-L0E-LAT
+# (endpoint.latency_ns) at E = 600 ns — an S4e FITTED PLACEMENT carried
+# bit-exact from the S4e fit record d91aaf87... (0 = wire-class origin,
+# 600 = CAL-A10 end-to-end reading, 8800 = GF-10 primary pair reading).
+# Evaluation-only (held_out): the anchor's measured rows are EVALUATION
+# targets, never fit inputs; NOTHING IS TUNED.
+topology_id: crossbar2_s6e_e600_v1
+topology_class: fully_connected_crossbar
+ranks: 2
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+endpoint:
+  latency_ns: 600
+notes: >
+  Non-blocking fully-connected abstraction; single-port
+  injection shared across the peers (A-L0X-PORT). The endpoint term E is charged once per collective op
+  (A-L0E-CHG). L = 200 and B = 64 are the UNCHANGED registry points;
+  E is the S4e fitted placement named in the header.

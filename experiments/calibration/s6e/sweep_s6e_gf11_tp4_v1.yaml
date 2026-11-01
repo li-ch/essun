@@ -1,0 +1,31 @@
+# Calibration-ladder S6e HOLDOUT-EVALUATION SWEEP (anchor GF-11, r=4
+# bracket): the S4e fitted endpoint placements E in {600, 8800} on the
+# three corpus identities at the anchor's rank count r=4 and declared
+# 128-B size reading — the split record's OWN assignment (group G3
+# parameter_axes; small-message O-CCT predicted from the endpoint axis
+# and EXTERNALLY checked on the holdout). The measured bracket:
+# near-optimal one-shot 2370 ns vs stock NCCL ring 11000 ns. NOTHING
+# IS TUNED.
+sweep: cal_s6e_gf11_tp4_v1
+workload: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp4_128b.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s6e/topologies/crossbar4_s6e_e600_v1.yaml
+grid:
+  payload_sizes_bytes: [128]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/s6e/topologies/crossbar4_s6e_e600_v1.yaml
+    - experiments/calibration/s6e/topologies/crossbar4_s6e_e8800_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/s6e/topologies/ring4_s6e_e600_v1.yaml
+    - experiments/calibration/s6e/topologies/ring4_s6e_e8800_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/s6e/topologies/exchange4_s6e_e600_v1.yaml
+    - experiments/calibration/s6e/topologies/exchange4_s6e_e8800_v1.yaml

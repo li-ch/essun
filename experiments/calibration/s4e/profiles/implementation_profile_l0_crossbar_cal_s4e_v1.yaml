@@ -1,0 +1,46 @@
+# Implementation profile for the calibration-ladder S4e runs and sweeps on
+# the analytical L0 crossbar backend (the endpoint-latency axis — the
+# small-message-axis rerun of S4 group G3 under the SAME immutable split
+# record 3862e227...).
+implementation_profile_id: analytical_l0_crossbar_cal_s4e_v1
+status: PROPOSED   # calibration fit candidate inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity with the
+  optional endpoint latency term: t = 2(r-1)/r*M/B + 2L + E (see
+  src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml PLUS A-L0E-LAT /
+  A-L0E-CHG from experiments/vertical_slice/assumptions_l0e.yaml. E is
+  charged once per collective op, never per phase. The crossbar pair
+  reading is the PRIMARY mapping for the software-inclusive anchors: a
+  P2P pair access is ONE pair traversal + ONE endpoint (t_p2p = L + E).
+free_parameters_source: experiments/vertical_slice/assumptions_l0e.yaml
+free_parameters_swept: >
+  E (endpoint.latency_ns, A-L0E-LAT; declared free range [0, 9000] ns,
+  registry point 0 = the term's structural default) is THIS STAGE'S swept
+  axis: (a) the anchor-blind grid — the declared-range endpoints 0 and
+  9000 and the powers of two inside the range 16..8192 — plus (b) the
+  group's anchor-provenance points under mappings declared in advance:
+  8800 (GF-10's measured app-level P2P 9000 read as t_p2p = L + E at the
+  registry L = 200 — the PRIMARY pair reading) and 600 (CAL-A10's
+  assumption-class end-to-end 800 read as L + E — the declared
+  end-to-end reading). L stays at the A-L0X-LAT registry point 200 and B
+  at the A-L0X-BW registry point 64 on every S4e-authored row; the four
+  wire-latency registry entries are UNCHANGED. NOTHING IS TUNED:
+  fitted/anchor E values are recorded diagnostics; the registry value
+  stays 0.
+measurement_source: >
+  G3 staged signals (docs/calibration/anchors_staging.md section A8/A9/
+  A10, anchors_gapfill.md section GF-10; E1 transcription builders
+  committed at experiments/calibration/{a8,a9,a10,gf10}/) — external
+  published latency-axis points, compared as PARAMETER-AXIS PLACEMENTS
+  plus the smoke-regime O-CCT predictions this axis implies, as PROPOSED
+  evidence in results/calibration/; not our testbed, no E3/E4 language.
+evidence_dimensions: >
+  every S4e run manifest declares the five v2 evidence dimensions
+  (verification / calibration_target = the G3 anchor ids / held_out /
+  independent_reproduction / known_omissions); the split record defines
+  NO within-series holdout for any G3 anchor, so every S4e run is
+  fit-side (held_out: false).

@@ -1,0 +1,37 @@
+# Calibration-ladder S6e HOLDOUT-EVALUATION SWEEP (anchor GF-01, r=8,
+# latency-axis): the S4e fitted endpoint placements E in {0, 600, 8800}
+# on the three corpus identities at the anchor's rank count and
+# small-message sizes (8/32/64 B latency-only rows, 16/64 KiB
+# reconciling rows) — the split record's OWN assignment (group G3
+# parameter_axes; small-message O-CCT predicted from the endpoint axis
+# and EXTERNALLY checked on the holdout GF-01 small rows). The 15
+# topology files are the COMMITTED S4e stage files carrying the fitted
+# placements bit-exact (the committed-files reuse pattern; no new values
+# authored). CCT-vs-CCT targets; the anchor's eager/graph band. NOTHING
+# IS TUNED.
+sweep: cal_s6e_gf01_small_v1
+workload: experiments/workloads/w1_dense_tp_decode_small.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/calibration/s4e/topologies/crossbar8_s4e_e0_v1.yaml
+grid:
+  payload_sizes_bytes: [8, 32, 64, 16384, 65536]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/calibration/s4e/topologies/crossbar8_s4e_e0_v1.yaml
+    - experiments/calibration/s4e/topologies/crossbar8_s4e_e600_v1.yaml
+    - experiments/calibration/s4e/topologies/crossbar8_s4e_e8800_v1.yaml
+  - algorithm: allreduce_ring
+    topologies:
+    - experiments/calibration/s4e/topologies/ring8_s4e_e0_v1.yaml
+    - experiments/calibration/s4e/topologies/ring8_s4e_e600_v1.yaml
+    - experiments/calibration/s4e/topologies/ring8_s4e_e8800_v1.yaml
+  - algorithm: allreduce_recursive_doubling
+    topologies:
+    - experiments/calibration/s4e/topologies/exchange8_s4e_e0_v1.yaml
+    - experiments/calibration/s4e/topologies/exchange8_s4e_e600_v1.yaml
+    - experiments/calibration/s4e/topologies/exchange8_s4e_e8800_v1.yaml

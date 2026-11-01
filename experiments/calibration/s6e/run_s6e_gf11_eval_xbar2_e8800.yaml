@@ -1,0 +1,52 @@
+# Calibration-ladder S6e HOLDOUT-EVALUATION RUN (anchor GF-11, r=2
+# decomposition point, the GF-10 primary E placement): the
+# endpoint-extended crossbar identity at E = 8800 ns (the GF-10 PRIMARY placement, carried bit-exact
+# from the S4e fit record d91aaf87...), executed UNTOUCHED at the
+# anchor's declared 128-B size reading and its own r=2. The measured
+# decomposition: LL2 RTT 306 ns x 2 + remote store 792 ns = 1404 ns SoL
+# (the anchor's own equation, verified in the S6 v1 record). GF-11 is
+# the regime-disjoint same-fabric HOLDOUT (split record 3862e227...,
+# plan 3.5(c)); NOTHING IS TUNED; the gap is the finding.
+#
+# claim_id deliberately EMPTY. E0. v2 dimensions; calibration_target [];
+# held_out TRUE, evaluation-only scope.
+experiment_id: EXP-CAL-S6E-GF11-EVAL-XBAR2-E8800-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp2_128b.yaml
+infra_graph:
+  path: experiments/calibration/s6e/topologies/crossbar2_s6e_e8800_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s6e/profiles/implementation_profile_l0_crossbar_cal_s6e_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0e.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261101
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar2_s6e_e8800_v1 (single-port crossbar at the anchor's own r=2; L = 200 ns and B = 64 B/ns registry points; E = 600 ns carried bit-exact from the S4e fit record)
+  workload: w1_dense_tp_decode tp2, payload 128 B (the anchor's declared 128-B cache-line size reading)
+  implementation: analytical L0 identity executing an S4e fitted endpoint placement for holdout evaluation — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s6e_holdout.py
+    scope: S6e holdout guard — re-executes the stage's evidence chain and rebuilds the holdout record byte-identically with the nothing-tunes invariants
+  calibration_target: []
+  held_out:
+    held_out: true
+    scope: evaluation-only against holdout anchor GF-11 (split record 3862e227... holdout set) — the anchor's measured decomposition and bracket are EVALUATION targets, never fit inputs; nothing tunes
+  independent_reproduction: []
+  known_omissions:
+  - the lumped symmetric 2L + E still cannot express the measured asymmetric decomposition (2x306 RTT + 792 store) — carried from S6 v1, unchanged by the endpoint term
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

@@ -1,0 +1,35 @@
+# Calibration-ladder S4e ENDPOINT-LATENCY fit-sweep topology (the
+# small-message-axis rerun on the SAME immutable split 3862e227...,
+# fitting stage S4e = the endpoint-term mirror of S4 group G3):
+# fully-connected (crossbar / single non-blocking switch stage) abstraction of 8 ranks at L = 200 ns (A-L0X-LAT link.pair_latency_ns, registry
+# value UNCHANGED) and B = 64 (A-L0X-BW nic.injection_bytes_per_ns) (registry point UNCHANGED), with
+# the endpoint latency free parameter A-L0E-LAT (endpoint.latency_ns,
+# registry value 0, DECLARED free range [0, 9000] ns, experiments/
+# vertical_slice/assumptions_l0e.yaml) at E = 128 ns.
+#
+# GRID member: power of two 128 inside the declared range [0, 9000] (anchor-blind)
+#
+# Identity (src/essun/backends/analytical/l0_crossbar.py): t = 2(r-1)/r*M/B + 2L + E
+# = 448 + 2*200 = 848 + 2L + E ns at the smoke payload 16384 (B=64, L=200).
+# NOTHING IS TUNED: the grid was fixed by registry-range arithmetic and
+# the anchor-provenance points by the anchors' OWN staged figures under
+# mappings declared in advance; the A-L0*-LAT registry values stay 200 and
+# the A-L0E-LAT registry value stays 0.
+
+topology_id: crossbar8_s4e_e128_v1
+topology_class: fully_connected_crossbar
+ranks: 8
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+endpoint:
+  latency_ns: 128
+notes: >
+  Non-blocking fully-connected abstraction; single-port injection shared
+  across the 7 peers (A-L0X-PORT). The endpoint term E is charged ONCE
+  per collective op (A-L0E-CHG), never per phase. L = 200 and B = 64 are
+  the UNCHANGED A-L0X-LAT / A-L0X-BW registry points; E is this stage's
+  swept axis. The crossbar pair reading is the PRIMARY mapping for the
+  software-inclusive anchors (each stages a pair-level or app-level
+  figure; a P2P pair access is ONE pair traversal + ONE endpoint).

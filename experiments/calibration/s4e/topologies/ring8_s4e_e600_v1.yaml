@@ -1,0 +1,33 @@
+# Calibration-ladder S4e ENDPOINT-LATENCY fit-sweep topology (the
+# small-message-axis rerun on the SAME immutable split 3862e227...,
+# fitting stage S4e = the endpoint-term mirror of S4 group G3):
+# unidirectional-ring abstraction of 8 ranks at L = 200 ns (A-L0-LAT link.hop_latency_ns, registry
+# value UNCHANGED) and B = 64 (A-L0-BW link.bytes_per_ns) (registry point UNCHANGED), with
+# the endpoint latency free parameter A-L0E-LAT (endpoint.latency_ns,
+# registry value 0, DECLARED free range [0, 9000] ns, experiments/
+# vertical_slice/assumptions_l0e.yaml) at E = 600 ns.
+#
+# PROVENANCE point: CAL-A10's assumption-class end-to-end 800 ns read as L(pair) + E(endpoint) at the registry L=200 -> E = 600 (the declared end-to-end reading)
+#
+# Identity (src/essun/backends/analytical/l0.py): t = 2(r-1)/r*M/B + 2(r-1)*L + E
+# = 448 + 14*200 = 3248 + 14L + E ns at the smoke payload 16384 (B=64, L=200).
+# NOTHING IS TUNED: the grid was fixed by registry-range arithmetic and
+# the anchor-provenance points by the anchors' OWN staged figures under
+# mappings declared in advance; the A-L0*-LAT registry values stay 200 and
+# the A-L0E-LAT registry value stays 0.
+
+topology_id: ring8_s4e_e600_v1
+topology_class: unidirectional_ring
+ranks: 8
+link:
+  bytes_per_ns: 64
+  hop_latency_ns: 200
+endpoint:
+  latency_ns: 600
+notes: >
+  Unidirectional ring, full-duplex uniform per-direction links
+  (A-L0-FD); equal-chunk construction behind the identity (A-L0-DIV).
+  The endpoint term E is charged ONCE per collective op (A-L0E-CHG),
+  never per hop or per phase. L = 200 and B = 64 are the UNCHANGED
+  A-L0-LAT / A-L0-BW registry points; E is this stage's swept axis.
+  No congestion, no credits, no packetization, no in-network computing.

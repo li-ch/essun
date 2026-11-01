@@ -1,0 +1,32 @@
+# Implementation profile for the calibration-ladder S6e holdout-evaluation
+# runs (the small-message-axis rerun; evaluation-only against the split
+# record's holdout anchors under the SAME immutable split 3862e227...).
+implementation_profile_id: analytical_l0_crossbar_cal_s6e_v1
+status: PROPOSED   # evaluation-only inputs; review pending
+backend: analytical_l0_crossbar
+fidelity: L0
+model: >
+  single-port fully-connected crossbar AllReduce identity with the
+  endpoint latency term: t = 2(r-1)/r*M/B + 2L + E (see
+  src/essun/backends/analytical/l0_crossbar.py); assumptions
+  A-L0X-PORT / A-L0X-BW / A-L0X-LAT / A-L0X-DIV from
+  experiments/vertical_slice/assumptions_l0.yaml PLUS A-L0E-LAT /
+  A-L0E-CHG from experiments/vertical_slice/assumptions_l0e.yaml.
+free_parameters_source: experiments/vertical_slice/assumptions_l0e.yaml
+free_parameters_swept: >
+  NONE — this stage evaluates the S4e FITTED endpoint-axis placements
+  (E in {0, 600, 8800} plus the flagged 9000 alternative, carried
+  bit-exact from the S4e fit record d91aaf87...) against holdout
+  measured rows. L stays at the A-L0X-LAT registry point 200 and B at
+  the A-L0X-BW registry point 64. NOTHING IS TUNED: the anchor rows are
+  evaluation targets, never fit inputs (the split record's no-leakage
+  rule); every model-side number is an executed artifact.
+measurement_source: >
+  the split record's holdout anchors' staged measured rows (their E1
+  stage records and the S6 v1 holdout record 89f6256b... are the
+  committed transcription sources) — external published measurements,
+  evaluation-only.
+evidence_dimensions: >
+  every S6e run manifest declares the five v2 evidence dimensions with
+  held_out TRUE (evaluation-only); no S6e artifact reads any holdout
+  number as an input to a fit objective, swept value, or tolerance.

@@ -1,0 +1,473 @@
+{
+  "backing": {
+    "inputs": [
+      "experiments/calibration/s6e/sweep_s6e_gf11_tp4_v1.yaml",
+      "experiments/calibration/s6e/sweep_s6e_gf01_small_v1.yaml",
+      "experiments/calibration/s6e/run_s6e_gf11_eval_xbar2_e600.yaml",
+      "experiments/calibration/s6e/run_s6e_gf11_eval_xbar2_e8800.yaml",
+      "experiments/calibration/s6e/topologies/ (8 files)",
+      "experiments/calibration/s6e/profiles/ (1 file)",
+      "experiments/calibration/s4e/topologies/ (the r=8 e0/e600/e8800 rows, committed reuse)",
+      "experiments/calibration/gf11/workloads/w1_dense_tp_decode_tp{2,4}_128b.yaml (committed anchor workloads)",
+      "experiments/calibration/s4e/fit_record_v1.json (the placements under evaluation)",
+      "experiments/calibration/s6/holdout_record_v1.json (89f6256b... — the v1 holdout record, the staged measured rows' committed transcription source)"
+    ],
+    "reproduce": "make sweep EXP=experiments/calibration/s6e/sweep_s6e_gf11_tp4_v1.yaml ; make sweep EXP=experiments/calibration/s6e/sweep_s6e_gf01_small_v1.yaml ; make run EXP=(each of the two run_s6e_*.yaml manifests) ; python experiments/calibration/s6e/build_holdout_record.py",
+    "run_ids": [
+      "51fcccd63dee24747eb4a5251fb8d17164cc330c63b976878cab1d3f5f347ec4",
+      "9ab8dc8fe82a2d61ac586f59b858cab664b83f364281ca3dccde8687247bb2a3"
+    ],
+    "run_roles": {
+      "51fcccd63dee24747eb4a5251fb8d17164cc330c63b976878cab1d3f5f347ec4": "GF-11 r=2 decomposition-point evaluation run at E = 600 (held_out: true)",
+      "9ab8dc8fe82a2d61ac586f59b858cab664b83f364281ca3dccde8687247bb2a3": "GF-11 r=2 decomposition-point evaluation run at E = 8800 (held_out: true)"
+    },
+    "sweep_ids": [
+      "242873ae8a27e76549843f1187ac0275af277ce75b62121acaafc46badbd8d38",
+      "da3eb61d989663f7f0f7fde0c7e9f26ed6f66c29dd09e1c7b3312662427479e6"
+    ]
+  },
+  "calibration_target": [],
+  "cross_anchor_observations": {
+    "generation_span_statement": "the three decades the corpus measures — near-optimal current-gen ~1.0-2.0 us, stock-NCCL current-gen ~10.5 us, RCCL-eager current-gen ~13.5-16.7 us, V100-era app-P2P 9 us — overlap across generations and stacks: generation alone does not order them, the software stack does",
+    "the_implied_E_table": "at the registry pair (B=64, L=200), the holdout small-message rows imply: GF-11 near-optimal legs 1002-1967 ns (crossbar r2/r4; 1167/1567 on the ring/exchange chains), GF-03 D2D 1200/1400 ns, GF-11 NCCL leg 9797-10597 ns, GF-01 eager band 9178-16339 ns (the lowest GF-01 demand is the 64 KiB ring row 9178)",
+    "the_sharpened_falsification": [
+      "1. UNOCCUPIED WINDOW (the evidential gap): the fit-side placements span E in {0, 600, 8800}; the window the current-gen holdouts demand (1002-1967 ns) lies between 600 and 8800 with NO fit-side anchor inside it — the fit set stages NO current-generation software/endpoint measurement (its only measured software-inclusive figure, GF-10, is V100-era DGX-1 app-level P2P; the current-gen decompositions live in HOLDOUT anchors, which the immutable split rightly forbids as fit inputs). The gap is no longer structural but EVIDENTIAL: it cannot be closed by model work, only by a new fit-side anchor (a future split's business, never this one)",
+      "2. RANGE-TOP CHALLENGE (the anchors disagree with each other): GF-01's RCCL eager collective floor demands implied E 9178-16339 ns — ABOVE the declared range upper 9000 that GF-10's own figure defines — while GF-11's NCCL leg demands 9797-10597 (also above). Across the corpus the software-inclusive magnitude spans ~10x (SoL 1.4 us to eager 16.7 us): a single uniform E with one range cannot serve RCCL-eager, stock-NCCL and near-optimal stacks simultaneously — the anchors demand a software-stack/generation AXIS on the endpoint term (the E-side sibling of S3's software-version axis), which the model still lacks",
+      "3. SHAPE DEMANDS UNCHANGED (carried): the lumped symmetric 2L + E cannot express GF-11's asymmetric decomposition (2x306 RTT + 792 store); the affine-plus-floor response cannot express GF-01's non-monotone eager band or a flat-then-rising transition; uniform E cannot express pair heterogeneity — all carried from S6 v1 unchanged by this term"
+    ],
+    "what_the_term_earned": "the model CLASS now reaches the measured current-generation small-message floor window (~1.0-2.0 us implied E): every near-optimal-leg and D2D implied value sits INSIDE the declared range [0, 9000] — where S4 v1 proved the wire-class axis could not reach the floor at ANY in-range placement, the endpoint-extended class can. The structural omission is FIXED"
+  },
+  "evaluation": {
+    "gf01": {
+      "anchor": "GF-01 (AMD ROCm blog; RCCL 2.22.3/ROCm 6.3 all_reduce_perf on 8 MI300X, 7-hop full-mesh xGMI; staging anchors_gapfill.md section GF-01; confidence M-H)",
+      "findings": {
+        "closest_landing_and_its_status": "the closest fit-side landing is the GF-10 placement on the ring at 16 KiB: 12048 vs 13540 ns = 0.890 (-11.0%) — a V100-era P2P figure landing near an MI300X RCCL eager AllReduce floor is a cross-stack magnitude coincidence, NOT a validation (the same placement overshoots the GB200 near-optimal leg 4x, the r4 bracket above)",
+        "fabric_class_caveat": "the full-mesh class is OUT-OF-DOMAIN for the single-port abstraction (A-L0X-PORT) — carried from S6 v1; the crossbar rows are structure-inadmissible here for the same reason, the ring rows remain the in-domain reading",
+        "non_monotone_floor_inexpressible": "the measured eager series is NON-monotone in size (t(8 B)=16610 > t(16 KiB)=13540) while every fixed-(B, L, E) identity is strictly monotone (asserted on the executed rows) — an expressiveness limit of the affine-plus-floor family, not a parameter mismatch (carried from S6 v1, unchanged by the endpoint term)",
+        "underprediction_persists_at_a10": "the A10 end-to-end placement (600) under-predicts the eager band 0.09-0.28x across identities and sizes — the assumption-class figure is software-free and it shows"
+      },
+      "implied_effective_E": {
+        "crossbar_band_float": [
+          11578.0,
+          16339.125
+        ],
+        "definition": "measured row - wire term - chain*L at the registry (B=64, L=200) — declared diagnostics FROM the measurements; no run id; NOTHING is set to them",
+        "per_identity_per_size_exact": {
+          "crossbar": {
+            "16384": "12692",
+            "32": "130713/8",
+            "64": "64833/4",
+            "65536": "11578",
+            "8": "518713/32"
+          },
+          "exchange": {
+            "16384": "11892",
+            "32": "124313/8",
+            "64": "61633/4",
+            "65536": "10778",
+            "8": "493113/32"
+          },
+          "ring": {
+            "16384": "10292",
+            "32": "111513/8",
+            "64": "55233/4",
+            "65536": "9178",
+            "8": "441913/32"
+          }
+        },
+        "placement": "GF-01's whole eager band demands an implied E of 9178-16339 ns across identities — ENTIRELY ABOVE the declared range upper 9000 (the fit-set anchor GF-10's own P2P figure defines that upper): the RCCL eager collective floor on MI300X exceeds even the V100-era app-level P2P figure by 1.02-1.82x; NO in-range E reproduces this floor on ANY identity",
+        "ring_band_exact": [
+          "9178",
+          "111513/8"
+        ],
+        "ring_band_float": [
+          9178.0,
+          13939.125
+        ]
+      },
+      "measured_band": "eager 16.61-16.74 us at 8-64 B and 13.54/13.77 us at 16/64 KiB (the reconciling rows; graph mode 16.38/6.32/9.14 us brackets software launch overhead — a pure software-stack effect)",
+      "placement_ratios": {
+        "crossbar_a10_e600": {
+          "16384": {
+            "cct_ns_exact": "1448",
+            "ratio_over_eager_exact": "362/3385",
+            "ratio_over_eager_float": 0.1069423929098966
+          },
+          "32": {
+            "cct_ns_exact": "8007/8",
+            "ratio_over_eager_exact": "2669/44640",
+            "ratio_over_eager_float": 0.05978942652329749
+          },
+          "64": {
+            "cct_ns_exact": "4007/4",
+            "ratio_over_eager_exact": "4007/66440",
+            "ratio_over_eager_float": 0.06031005418422637
+          },
+          "65536": {
+            "cct_ns_exact": "2792",
+            "ratio_over_eager_exact": "1396/6885",
+            "ratio_over_eager_float": 0.2027596223674655
+          },
+          "8": {
+            "cct_ns_exact": "32007/32",
+            "ratio_over_eager_exact": "32007/531520",
+            "ratio_over_eager_float": 0.060217865743528
+          }
+        },
+        "crossbar_gf10_e8800": {
+          "16384": {
+            "cct_ns_exact": "9648",
+            "ratio_over_eager_exact": "2412/3385",
+            "ratio_over_eager_float": 0.7125553914327917
+          },
+          "32": {
+            "cct_ns_exact": "73607/8",
+            "ratio_over_eager_exact": "73607/133920",
+            "ratio_over_eager_float": 0.549634109916368
+          },
+          "64": {
+            "cct_ns_exact": "36807/4",
+            "ratio_over_eager_exact": "36807/66440",
+            "ratio_over_eager_float": 0.5539885611077664
+          },
+          "65536": {
+            "cct_ns_exact": "10992",
+            "ratio_over_eager_exact": "1832/2295",
+            "ratio_over_eager_float": 0.7982570806100218
+          },
+          "8": {
+            "cct_ns_exact": "294407/32",
+            "ratio_over_eager_exact": "294407/531520",
+            "ratio_over_eager_float": 0.553896372667068
+          }
+        },
+        "crossbar_wireclass_e0": {
+          "16384": {
+            "cct_ns_exact": "848",
+            "ratio_over_eager_exact": "212/3385",
+            "ratio_over_eager_float": 0.06262924667651404
+          },
+          "32": {
+            "cct_ns_exact": "3207/8",
+            "ratio_over_eager_exact": "1069/44640",
+            "ratio_over_eager_float": 0.023947132616487454
+          },
+          "64": {
+            "cct_ns_exact": "1607/4",
+            "ratio_over_eager_exact": "1607/66440",
+            "ratio_over_eager_float": 0.024187236604455147
+          },
+          "65536": {
+            "cct_ns_exact": "2192",
+            "ratio_over_eager_exact": "1096/6885",
+            "ratio_over_eager_float": 0.15918663761801016
+          },
+          "8": {
+            "cct_ns_exact": "12807/32",
+            "ratio_over_eager_exact": "12807/531520",
+            "ratio_over_eager_float": 0.024095048163756773
+          }
+        },
+        "ring_a10_e600": {
+          "16384": {
+            "cct_ns_exact": "3848",
+            "ratio_over_eager_exact": "962/3385",
+            "ratio_over_eager_float": 0.2841949778434269
+          },
+          "32": {
+            "cct_ns_exact": "27207/8",
+            "ratio_over_eager_exact": "3023/14880",
+            "ratio_over_eager_float": 0.20315860215053763
+          },
+          "64": {
+            "cct_ns_exact": "13607/4",
+            "ratio_over_eager_exact": "1237/6040",
+            "ratio_over_eager_float": 0.20480132450331126
+          },
+          "65536": {
+            "cct_ns_exact": "5192",
+            "ratio_over_eager_exact": "2596/6885",
+            "ratio_over_eager_float": 0.37705156136528684
+          },
+          "8": {
+            "cct_ns_exact": "108807/32",
+            "ratio_over_eager_exact": "108807/531520",
+            "ratio_over_eager_float": 0.20470913606261287
+          }
+        },
+        "ring_gf10_e8800": {
+          "16384": {
+            "cct_ns_exact": "12048",
+            "ratio_over_eager_exact": "3012/3385",
+            "ratio_over_eager_float": 0.889807976366322
+          },
+          "32": {
+            "cct_ns_exact": "92807/8",
+            "ratio_over_eager_exact": "92807/133920",
+            "ratio_over_eager_float": 0.6930032855436081
+          },
+          "64": {
+            "cct_ns_exact": "46407/4",
+            "ratio_over_eager_exact": "46407/66440",
+            "ratio_over_eager_float": 0.6984798314268513
+          },
+          "65536": {
+            "cct_ns_exact": "13392",
+            "ratio_over_eager_exact": "248/255",
+            "ratio_over_eager_float": 0.9725490196078431
+          },
+          "8": {
+            "cct_ns_exact": "371207/32",
+            "ratio_over_eager_exact": "371207/531520",
+            "ratio_over_eager_float": 0.698387642986153
+          }
+        },
+        "ring_wireclass_e0": {
+          "16384": {
+            "cct_ns_exact": "3248",
+            "ratio_over_eager_exact": "812/3385",
+            "ratio_over_eager_float": 0.2398818316100443
+          },
+          "32": {
+            "cct_ns_exact": "22407/8",
+            "ratio_over_eager_exact": "7469/44640",
+            "ratio_over_eager_float": 0.1673163082437276
+          },
+          "64": {
+            "cct_ns_exact": "11207/4",
+            "ratio_over_eager_exact": "11207/66440",
+            "ratio_over_eager_float": 0.16867850692354003
+          },
+          "65536": {
+            "cct_ns_exact": "4592",
+            "ratio_over_eager_exact": "2296/6885",
+            "ratio_over_eager_float": 0.3334785766158315
+          },
+          "8": {
+            "cct_ns_exact": "89607/32",
+            "ratio_over_eager_exact": "89607/531520",
+            "ratio_over_eager_float": 0.16858631848284167
+          }
+        }
+      }
+    },
+    "gf03": {
+      "anchor": "GF-03 (B300/Blackwell-Ultra-class practitioner data, confidence M — a noisy external point, recorded as such; staging anchors_gapfill.md section GF-03)",
+      "d2d_points": {
+        "implied_E_pair_reading_exact": {
+          "1400": "1200",
+          "1600": "1400"
+        },
+        "measured": "device-to-device latency ~1.4-1.6 us",
+        "placement": "both implied E (1200 / 1400 ns) sit INSIDE the declared range and INSIDE the same 1.0-2.0 us window GF-11's near-optimal legs demand — a THIRD independent fabric generation pointing at the same unoccupied window; in-range, unreached by any fit-side placement"
+      },
+      "midsize_row_carried": "the 2 MiB AllReduce row (42-52 us) is the size-dependent software-effective-bandwidth axis finding (the v0.2 proposal's axis 1), carried UNCHANGED — the endpoint term does not address wire-dominated rows, and at registry B the row is wire-dominated"
+    },
+    "gf11": {
+      "anchor": "GF-11 ('Achieving Near Speed-of-Light Latency in GPU Collectives', arXiv:2607.16100; GB200 NVL72 + 2/4-GPU GB200 microbenchmarks; staging anchors_gapfill.md section GF-11; confidence H; NCCL 2.29.1 / NVSHMEM 3.5.21 / MSCCL++ 0.8.0 pins)",
+      "implied_effective_E": {
+        "above_range_members": [
+          "r4_nccl_crossbar",
+          "r4_nccl_ring",
+          "r4_nccl_exchange"
+        ],
+        "definition": "solving each chain for E at the registry (B=64, L=200), wire term removed — declared diagnostics FROM the measurements; no run id; NOTHING is set to them",
+        "in_range_members": [
+          "r2_sol_crossbar",
+          "r4_nearopt_crossbar",
+          "r4_nearopt_ring",
+          "r4_nearopt_exchange"
+        ],
+        "per_point_exact": {
+          "r2_sol_crossbar": "1002",
+          "r4_nccl_crossbar": "10597",
+          "r4_nccl_exchange": "10197",
+          "r4_nccl_ring": "9797",
+          "r4_nearopt_crossbar": "1967",
+          "r4_nearopt_exchange": "1567",
+          "r4_nearopt_ring": "1167"
+        },
+        "per_point_float": {
+          "r2_sol_crossbar": 1002.0,
+          "r4_nccl_crossbar": 10597.0,
+          "r4_nccl_exchange": 10197.0,
+          "r4_nccl_ring": 9797.0,
+          "r4_nearopt_crossbar": 1967.0,
+          "r4_nearopt_exchange": 1567.0,
+          "r4_nearopt_ring": 1167.0
+        },
+        "placement": "every near-optimal-leg implied E (1002-1967 ns across chains and rank counts) sits INSIDE the declared range [0, 9000] — the model CLASS now reaches the measured current-gen floor decade structurally — but the fit-side placements {0, 600, 8800} leave that whole 0.86-1.97 us window UNOCCUPIED; the NCCL-leg implied E (9797-10597) sits ABOVE the range upper the fit set itself defines"
+      },
+      "matched_fitted_configurations": {
+        "configs": "the S4e endpoint-axis placements E in {0, 600, 8800} + the flagged 9000 alternative at B=64/L=200, on the three corpus identities at the anchor's rank counts r=2/4",
+        "matching_basis": "the split record's OWN assignment — G3 parameter_axes: small-message O-CCT predicted from the (now endpoint-extended) axis and EXTERNALLY checked on the holdout; GF-11 is the regime-disjoint same-fabric instance (plan 3.5(c))"
+      },
+      "r2_decomposition_point": {
+        "finding": "the A10 end-to-end placement (E=600) lands at 1002/1404 = 0.714 of the 2-GPU SoL (-28.6%); the GF-10 placement (E=8800, V100-era app-level P2P) OVERSHOOTS the current-gen SoL by 6.56x — the two fit-side software-inclusive anchors bracket the point from opposite sides with a 14.7x gap between them, and the decade between them is exactly where the point sits",
+        "measured": "LL2 RTT 306 ns + remote store 792 ns close the anchor's own SoL equation 2*306+792 = 1404 EXACTLY (re-verified here, as in S6 v1)",
+        "placements": {
+          "gf11_xbar2_e600": {
+            "E_ns_exact": "600",
+            "cct_ns_exact": "1002",
+            "cct_over_sol_exact": "167/234",
+            "cct_over_sol_float": 0.7136752136752137,
+            "delta_vs_sol_pct": -28.63247863247863,
+            "run_id": "51fcccd63dee24747eb4a5251fb8d17164cc330c63b976878cab1d3f5f347ec4"
+          },
+          "gf11_xbar2_e8800": {
+            "E_ns_exact": "8800",
+            "cct_ns_exact": "9202",
+            "cct_over_sol_exact": "4601/702",
+            "cct_over_sol_float": 6.554131054131054,
+            "delta_vs_sol_pct": 555.4131054131054,
+            "run_id": "9ab8dc8fe82a2d61ac586f59b858cab664b83f364281ca3dccde8687247bb2a3"
+          }
+        },
+        "structure_caveat_unchanged": "the decomposition STRUCTURE (2 RTT + 1 store, asymmetric) still has no expression in the lumped symmetric 2L + E — the endpoint term adds a floor, not a component split (carried from S6 v1)"
+      },
+      "r4_bracket": {
+        "finding": "at E=600 the three chains land 1003/1803/1403 ns (0.42-0.76x of the near-optimal leg; 0.09-0.16x of NCCL) — under-predicting; at E=8800 they land 9203/10003/9603 ns (3.9-4.2x the near-optimal leg; 0.84-0.91x of NCCL) — the V100-era figure approximately reproduces the CURRENT stock-NCCL leg (a generation-coincidence of software heaviness, not a validation: the same placement overshoots the near-optimal leg 4x on the same fabric)",
+        "measured": "small-message AllReduce on 4 GB200s at the declared 128-B reading — near-optimal one-shot 2370 ns vs stock NCCL 2.29.1 ring 11000 ns",
+        "table": {
+          "a10_e600": {
+            "crossbar": {
+              "vs_nccl_11000": {
+                "cct_ns_exact": "1003",
+                "delta_pct": -90.88181818181819,
+                "ratio_over_target_exact": "1003/11000",
+                "ratio_over_target_float": 0.09118181818181818
+              },
+              "vs_nearopt_2370": {
+                "cct_ns_exact": "1003",
+                "delta_pct": -57.67932489451477,
+                "ratio_over_target_exact": "1003/2370",
+                "ratio_over_target_float": 0.42320675105485234
+              }
+            },
+            "exchange": {
+              "vs_nccl_11000": {
+                "cct_ns_exact": "1403",
+                "delta_pct": -87.24545454545455,
+                "ratio_over_target_exact": "1403/11000",
+                "ratio_over_target_float": 0.12754545454545455
+              },
+              "vs_nearopt_2370": {
+                "cct_ns_exact": "1403",
+                "delta_pct": -40.801687763713076,
+                "ratio_over_target_exact": "1403/2370",
+                "ratio_over_target_float": 0.5919831223628692
+              }
+            },
+            "ring": {
+              "vs_nccl_11000": {
+                "cct_ns_exact": "1803",
+                "delta_pct": -83.60909090909091,
+                "ratio_over_target_exact": "1803/11000",
+                "ratio_over_target_float": 0.16390909090909092
+              },
+              "vs_nearopt_2370": {
+                "cct_ns_exact": "1803",
+                "delta_pct": -23.924050632911392,
+                "ratio_over_target_exact": "601/790",
+                "ratio_over_target_float": 0.760759493670886
+              }
+            }
+          },
+          "gf10_e8800": {
+            "crossbar": {
+              "vs_nccl_11000": {
+                "cct_ns_exact": "9203",
+                "delta_pct": -16.336363636363636,
+                "ratio_over_target_exact": "9203/11000",
+                "ratio_over_target_float": 0.8366363636363636
+              },
+              "vs_nearopt_2370": {
+                "cct_ns_exact": "9203",
+                "delta_pct": 288.31223628691987,
+                "ratio_over_target_exact": "9203/2370",
+                "ratio_over_target_float": 3.8831223628691984
+              }
+            },
+            "exchange": {
+              "vs_nccl_11000": {
+                "cct_ns_exact": "9603",
+                "delta_pct": -12.7,
+                "ratio_over_target_exact": "873/1000",
+                "ratio_over_target_float": 0.873
+              },
+              "vs_nearopt_2370": {
+                "cct_ns_exact": "9603",
+                "delta_pct": 305.1898734177215,
+                "ratio_over_target_exact": "3201/790",
+                "ratio_over_target_float": 4.0518987341772155
+              }
+            },
+            "ring": {
+              "vs_nccl_11000": {
+                "cct_ns_exact": "10003",
+                "delta_pct": -9.063636363636364,
+                "ratio_over_target_exact": "10003/11000",
+                "ratio_over_target_float": 0.9093636363636364
+              },
+              "vs_nearopt_2370": {
+                "cct_ns_exact": "10003",
+                "delta_pct": 322.0675105485232,
+                "ratio_over_target_exact": "10003/2370",
+                "ratio_over_target_float": 4.220675105485232
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "evidence_levels": {
+    "evaluation": "PROPOSED holdout evaluation of fit-side placements against external published measurements; no E3/E4 language — none of the anchors is our testbed, and owner adjudication precedes any label move",
+    "runs_and_sweeps": "E0 (analytical executions; deterministic, content-addressed, replay reproduces byte-identical artifacts)"
+  },
+  "evidence_schema_version": 2,
+  "fitted_configurations_evaluated": {
+    "fixed_pair": "B = 64 and L = 200 at their UNCHANGED registry points on every row",
+    "placements": {
+      "a10_e600": "E = 600 (CAL-A10 assumption-class end-to-end reading)",
+      "gf10_alt_e9000_flagged": "E = 9000 (flagged whole-figure alternative; carried, never selected — it changes no verdict here: at these rows it shifts predictions by +200 ns)",
+      "gf10_e8800": "E = 8800 (GF-10 measured V100-era app-level P2P, primary pair reading)",
+      "wireclass_e0": "E = 0 (the registry origin; the landed v1 world in numbers)"
+    },
+    "source": "the S4e fit record d91aaf874b983a684a230babe59a38c7ee6c2b5bc88cc39340ddfe481145c8c8 (committed at experiments/calibration/s4e/fit_record_v1.json)"
+  },
+  "headline": "the endpoint term made the measured current-gen floor window REACHABLE (every near-optimal-leg implied E 1002-1967 ns sits in range — the S4 v1 structural impossibility is gone), but the window is UNOCCUPIED: the fit-side placements {0, 600, 8800} bracket it from both sides with no anchor inside (the only measured software-inclusive fit anchor is V100-era; the current-gen figures are holdout, and stay holdout). GF-10's placement reproduces the stock-NCCL leg of the GB200 bracket (0.84-0.91x, a generation-coincidence of software heaviness) while overshooting the near-optimal leg 4x on the same fabric and under-predicting GF-01's eager floor; GF-01's whole eager band demands implied E 9178-16339 ns — ABOVE the range top GF-10 itself defines: the anchors demand a software-stack/generation axis on the endpoint term (~10x spread across stacks), which the model still lacks. THE DELIVERABLE IS THE SHARPENED FALSIFICATION (cross_anchor_observations): structural omission FIXED; evidential gap (no current-gen fit-side anchor) and software-stack axis REMAIN; shape demands (asymmetric decomposition, non-monotone floor) carried unchanged",
+  "held_out": {
+    "held_out": true,
+    "scope": "evaluation-only against the split record's small-message-axis holdout members (GF-01 small rows, GF-11, GF-03): every measured row here is an evaluation target; no holdout number enters any fit objective, swept value, or tolerance; the implied_effective_E diagnostics are declared FROM the measurements and nothing is set to them"
+  },
+  "independent_reproduction": [],
+  "known_omissions": [
+    "no fit-side anchor stages a current-generation software/endpoint measurement — the demanded E window (1002-1967 ns) is unoccupied by the fit set; closable only by a new fit-side anchor through a future split record, never by tuning",
+    "a single uniform E cannot express the ~10x software-stack spread the corpus measures (near-optimal vs stock-NCCL vs RCCL-eager); the endpoints demand a software-stack/generation axis the model lacks",
+    "the lumped symmetric 2L + E cannot express measured asymmetric decompositions (GF-11 2x306+792); affine-plus-floor cannot express non-monotone eager floors (GF-01) or flat-then-rising transitions; uniform E cannot express per-pair heterogeneity (GF-10 manual routing)",
+    "the full-mesh fabric class stays OUT-OF-DOMAIN for the single-port abstraction (A-L0X-PORT) — the crossbar GF-01 rows are structure-inadmissible; ring rows are the in-domain reading",
+    "the torus identity carries no endpoint term (A-L0E-CHG applicability); no torus row exists in this evaluation",
+    "no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)"
+  ],
+  "nothing_tuned": "every model-side number in this record is an executed artifact at placements carried bit-exact from the S4e fit record; the implied_effective_E values are declared diagnostics solved FROM the measured rows at the registry pair — no parameter is set to any of them, no range is moved, no anchor output is targeted; the A-L0E-LAT registry value stays 0 and the wire-latency registry values stay 200",
+  "record_kind": "calibration_holdout_evaluation",
+  "split_record": {
+    "committed_copy": "experiments/calibration/split/anchor_split_v1.json",
+    "holdout_members_evaluated": "the split record's small-message-axis holdout members: GF-01 (small rows), GF-11, GF-03 (latency points; the 2 MiB row carried as the mid-size axis); CAL-A4 and GF-06 are NOT this axis's members and are not evaluated here",
+    "no_leakage": "no holdout number entered any S4e fit objective, swept value, or tolerance (mechanically asserted there: no holdout anchor id in that record's bytes); this record is the sanctioned evaluation-only use",
+    "record_id": "3862e227327afe98562e17a32b9498278552c3bf55fe5b6715d7a4e0e9d94f20"
+  },
+  "stage": "calibration holdout-evaluation record, S6e (the small-message-axis rerun of the S6 external check under the same immutable split)",
+  "status": "PROPOSED — owner adjudication required; this record evaluates fitted placements against holdout anchors and changes no label, registry value, or claim",
+  "verification": [
+    {
+      "check": "tests/calibration/test_s6e_holdout.py",
+      "scope": "S6e holdout guard — re-executes the stage's evidence chain (two sweeps, two runs) into a scratch store and rebuilds this record byte-identically, checking the nothing-tunes invariants (every executed row equals its closed form; both runs held_out TRUE with calibration_target []; the fit-side placements carried bit-exact from the S4e record)"
+    },
+    {
+      "check": "tests/calibration/test_s4e_fit.py",
+      "scope": "the fit-side record's own guard — the placements this stage evaluates"
+    }
+  ]
+}

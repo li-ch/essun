@@ -1,0 +1,64 @@
+# Calibration-ladder S4e FIT-SIDE RUN (group G3, anchor GF-10, the
+# WHOLE-FIGURE alternative reading, FLAGGED — never selected): the L0
+# crossbar identity at E = 9000 ns on A-L0E-LAT — the same measured
+# app-level P2P headline as the primary run, read whole onto E (no wire
+# deduction): E = 9000.
+#
+# WHY FLAGGED (the mirror of S4 v1's flagged 4500/7 ring-chain
+# alternative): the declared PRIMARY mapping (t_p2p = L + E, run
+# EXP-CAL-S4E-GF10-FIT-E8800-001) charges the ONE pair crossing the
+# anchor's own transport reading states; reading the whole 9000 onto E
+# contradicts that premise by zeroing the wire. Executed so S6e/S7 see
+# the full ambiguity — the two readings differ by exactly the registry
+# L (200 ns, 2.2% of the figure) and do NOT change any qualitative
+# verdict. NEVER SELECTED. NOTHING IS TUNED.
+#
+# Note: E = 9000 is ALSO the declared-range upper endpoint — the grid
+# membership it holds by construction (the registration drew the range
+# from this anchor's figure); this run's role here is the flagged
+# alternative reading, recorded as such.
+#
+# claim_id is deliberately EMPTY (fence). E0. v2 dimensions:
+# calibration_target [GF-10], held_out FALSE.
+experiment_id: EXP-CAL-S4E-GF10-ALT-E9000-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/s4e/topologies/crossbar8_s4e_e9000_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s4e/profiles/implementation_profile_l0_crossbar_cal_s4e_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0e.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261101
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_s4e_e9000_v1 (single non-blocking switch stage, r=8; L = 200 ns UNCHANGED registry point; B = 64 B/ns fixed registry point; E = 9000 ns = GF-10's measured app-level P2P headline read WHOLE onto A-L0E-LAT — the flagged whole-figure alternative, never selected)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (the smoke value)
+  implementation: analytical L0 identity with the endpoint term; a flagged degenerate placement — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s4e_fit.py
+    scope: S4e fit guard — re-executes the stage's evidence chain and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - GF-10
+  held_out:
+    held_out: false
+    scope: fit-side execution of the flagged whole-figure reading (the split record defines no within-series holdout for this anchor)
+  independent_reproduction: []
+  known_omissions:
+  - the flagged-alternative status — the PRIMARY reading (E = 8800, t_p2p = L + E) charges the pair crossing the anchor's transport reading states; this reading zeroes it; recorded ambiguity, never selected
+  - the anchor figure is V100-era app-level P2P (DGX-1); QUANTITY-CLASS CAVEAT as in the primary run
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

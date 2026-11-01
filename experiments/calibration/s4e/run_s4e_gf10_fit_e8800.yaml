@@ -1,0 +1,68 @@
+# Calibration-ladder S4e FIT-SIDE RUN (group G3, anchor GF-10, the
+# PRIMARY E-axis placement): the L0 crossbar identity at E = 8800 ns on
+# A-L0E-LAT — Li et al. (IEEE TPDS 32(1) 2020/2019, arXiv:1903.04611)
+# Tartan-suite app-level P2P latency "around 9 us" for NVLink
+# directly-connected GPU pairs on DGX-1 (V100/NVLink-2 era; staging
+# anchors_gapfill.md §GF-10; confidence M-H).
+#
+# THE DECLARED MAPPING (stated in advance, the v1 pair reading extended
+# by the new term): a DGX-1 direct P2P access crosses ONE pair (no
+# switch, no chain) AND the app-level figure bundles the software stack,
+# so t_p2p = L + E with L at its UNCHANGED registry point 200 ->
+# E = 9000 - 200 = 8800 ns. The fit is DEGENERATE (the anchor's staged
+# figure under the declared mapping IS the fitted E; zero residual
+# degrees of freedom) and IN RANGE ([0, 9000], at 97.8% of the upper
+# endpoint the anchor itself defines). NOTHING IS TUNED: this is the
+# anchor's own number placed on the axis it demanded — the structural
+# fix the v0.2 proposal's §3.3 named ("any future software/endpoint
+# latency term must place the small-message floor in that decade").
+# Whether it LANDS in the measured current-gen decade is the S6e
+# holdout evaluation's question, never this fit's target.
+#
+# claim_id is deliberately EMPTY (fence: no claim upgrades). Evidence
+# level E0. v2 evidence dimensions: calibration_target [GF-10],
+# held_out FALSE (the split record defines no within-series holdout for
+# GF-10; the anchor's staged points are fit-side signal).
+experiment_id: EXP-CAL-S4E-GF10-FIT-E8800-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/s4e/topologies/crossbar8_s4e_e8800_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s4e/profiles/implementation_profile_l0_crossbar_cal_s4e_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0e.yaml
+backends:
+- analytical_l0_crossbar
+seed: 20261101
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: crossbar8_s4e_e8800_v1 (single non-blocking switch stage, r=8; L = 200 ns UNCHANGED registry point; B = 64 B/ns fixed registry point; E = 8800 ns = GF-10's measured app-level P2P 9000 read as t_p2p = L + E on A-L0E-LAT — the declared PRIMARY mapping)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (the smoke value — the regime this axis predicts per the split record)
+  implementation: analytical L0 identity with the endpoint term; the GF-10 fit is a degenerate parameter-axis placement under a mapping declared in advance — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s4e_fit.py
+    scope: S4e fit guard — re-executes the S4e sweep and the four S4e runs into a scratch store, rebuilds the calibration fit record byte-identically, and checks the separation invariants (anchor-blind grid membership, no holdout anchor id in the record bytes, wire-latency registry values untouched at 200, A-L0E-LAT registry value untouched at 0)
+  calibration_target:
+  - GF-10
+  held_out:
+    held_out: false
+    scope: fit-side execution at GF-10's app-level figure under the declared t_p2p = L + E mapping (the split record defines no within-series holdout for this anchor)
+  independent_reproduction: []
+  known_omissions:
+  - the anchor figure is V100-era app-level P2P on DGX-1 (one-plus generations older than the current GB200/MI300X classes); its transport-class spread 5-27 us is carried as staged facts, never averaged
+  - the lumped symmetric endpoint term cannot express measured asymmetric latency decompositions; uniform E cannot express per-pair heterogeneity (the anchor's manual-routing 2x/3x pairs)
+  - QUANTITY-CLASS CAVEAT (the staging doc's own) — app-level P2P bounds a different thing than bare wire hop latency; the placement maps the SOFTWARE-INCLUSIVE class onto E, it does not re-measure the wire axis
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)

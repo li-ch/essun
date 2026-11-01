@@ -1,0 +1,61 @@
+# Calibration-ladder S4e FIT-SIDE RUN (group G3, the WIRE-CLASS origin
+# reference): the L0 ring identity at E = 0 ns on A-L0E-LAT — the axis
+# origin, where the endpoint term is active at its registry value and
+# the identity reduces to the landed v1 numbers exactly (ring: 448 +
+# 14*200 = 3248 ns at the smoke payload).
+#
+# ROLE (a placement statement, not a fit): CAL-A8's emulated CXL band
+# {64, 140} ns and CAL-A9's design-estimate budget 80 ns are WIRE-CLASS
+# / memory-class signals with no software-stack component; their v1
+# projections onto L (S4 record ef9c4517..., immutable) are deliberately
+# NOT re-read onto E by this stage — re-reading them onto the new axis
+# would be tuning toward the measured decade, exactly what the fence
+# forbids. This run executes the E-axis origin as their reference row:
+# the wire-class anchors place E at 0 by their own quantity class.
+#
+# claim_id is deliberately EMPTY (fence). E0. v2 dimensions:
+# calibration_target [CAL-A8, CAL-A9], held_out FALSE.
+experiment_id: EXP-CAL-S4E-WIRECLASS-E0-001
+research_question: RQ2
+claim_id: ""
+baseline_id: null
+workload_ir:
+  path: experiments/workloads/w1_dense_tp_decode_small.yaml
+infra_graph:
+  path: experiments/calibration/s4e/topologies/ring8_s4e_e0_v1.yaml
+standard_profile:
+  path: experiments/vertical_slice/profiles/standard_profile_none.yaml
+implementation_profile:
+  path: experiments/calibration/s4e/profiles/implementation_profile_l0_ring_cal_s4e_v1.yaml
+assumptions:
+  path: experiments/vertical_slice/assumptions_l0e.yaml
+backends:
+- analytical_l0
+seed: 20261101
+repetitions: 1
+metrics: []
+observables:
+- O-CONSERVATION
+- O-CCT
+counterexample_policy: minimize_then_refine
+validity_domain:
+  topology: ring8_s4e_e0_v1 (unidirectional ring, r=8; L = 200 ns and B = 64 B/ns UNCHANGED registry points; E = 0 ns = the A-L0E-LAT registry point — the term active at its structural default, numbers identical to the landed v1 identity)
+  workload: w1_dense_tp_decode tp8, payload 16384 B (the smoke value)
+  implementation: analytical L0 identity with the endpoint term at its registry origin; the wire-class reference row of the E axis — PROPOSED, review required; nothing tunes on this run
+evidence_level_requested: E0
+evidence_dimensions:
+  verification:
+  - check: tests/calibration/test_s4e_fit.py
+    scope: S4e fit guard — re-executes the stage's evidence chain and rebuilds the calibration fit record byte-identically with the separation invariants
+  calibration_target:
+  - CAL-A8
+  - CAL-A9
+  held_out:
+    held_out: false
+    scope: fit-side execution at the E-axis origin referencing the wire-class anchors' quantity class (no within-series holdout exists for them)
+  independent_reproduction: []
+  known_omissions:
+  - the wire-class anchors' v1 L-axis placements are immutable in the S4 v1 record; this stage deliberately does NOT re-read them onto E (no tuning toward the measured small-message decade)
+  - CAL-A8's MEASURED outputs (workload-goal fractions) remain structurally inexpressible (no population/SLO axis — stage A8's enumeration, carried)
+  - CAL-A9's (link, switch, stage-count) decomposition remains inexpressible in the lumped L (carried)
+  - no congestion, no credit flow control, no packetization, no multi-port injection, no in-network reduction (analytical L0 transport model only)
