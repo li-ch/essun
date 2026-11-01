@@ -25,6 +25,35 @@ where t_ring is the landed unidirectional-ring identity (l0.py), whose two
 phases are the standard reduce-scatter + allgather decomposition
 (Thakur-Rabenseifner direct-algorithm linear model): each phase moves
 (k-1)/k * M bytes per rank at bandwidth B and (k-1) hops at latency L.
+Under a declared wrap wiring factor the ring's bandwidth term runs at the
+min-link effective rate B*min(1, w) (A-L0T-WIRE; see the wrap-edge
+paragraph below — the latency term and the wire counts never move).
+
+Wrap-edge wiring factor (optional, per topology; free parameter A-L0T-WIRE
+in experiments/vertical_slice/assumptions_l0tw.yaml): a topology MAY
+declare ``link.wrap_wiring_factor`` = w, the effective rate of each
+dimension ring's single wrap (bisection-crossing) edge as a multiple of
+the uniform link rate B. w = 1 is the regular torus (each ring's wrap
+edge is its own full-rate link); w < 1 models wiring/routing that derates
+the wrap edge; w > 1 models redistributed wrap capacity (the twisted-
+torus mechanism class). The term enters through the pipeline's min-link
+bound — a ring's steady-state rate is set by its SLOWEST edge:
+
+    rate(w) = B * min(1, w)
+    t_ring(M, k) = 2*(k-1)/k * M / (B * min(1, w)) + 2*(k-1)*L
+
+ONE-SIDED LAW (a property of the identity, not a tuning choice): for
+every w >= 1 the ring rate stays B — bounded by its k-1 non-wrap edges —
+so t(w >= 1) == t(1) EXACTLY; the twist's capacity-gain direction is
+inert on this identity (the min-link bound), and only the derating
+direction (w < 1) is active, where it coincides exactly with a per-link-B
+displacement (rate B*w). A topology that declares no wiring factor keeps
+the landed identity and its emitted payloads BYTE-FOR-BYTE (no output
+field, no time term); a DECLARED value — including 1 — is recorded in
+the emitted model payload. Hop latency L is unchanged by wiring
+(A-L0T-UNIF: the twist changes which links carry traffic, not the
+per-hop propagation), and wire traffic is unchanged (wiring changes
+rates, never bytes).
 
 Wire traffic (exact, per rank, sum over dimensions):
 
@@ -104,16 +133,58 @@ class Torus2DConfig:
     dim2_ranks: int  # r2: ranks per dimension-2 ring
     link_bytes_per_ns: Fraction  # B: uniform across both dimensions (A-L0T-UNIF)
     hop_latency_ns: Fraction  # L: uniform across both dimensions (A-L0T-UNIF)
+    # w: wrap-edge wiring factor (free, A-L0T-WIRE). None = not declared —
+    # the landed identity, byte-for-byte. A declared value (even 1)
+    # ACTIVATES the wiring term and is recorded in the model payload.
+    wrap_wiring_factor: Fraction | None = None
+
+    def wrap_wiring_effective(self) -> Fraction:
+        """w as a multiplicative factor; exactly 1 when not declared."""
+        return Fraction(1) if self.wrap_wiring_factor is None else self.wrap_wiring_factor
+
+    def wrap_rate_limit(self) -> Fraction:
+        """The min-link pipeline factor min(1, w) on the ring rate."""
+        return min(Fraction(1), self.wrap_wiring_effective())
 
     def dim_ring_view(self, dim: int) -> InfraConfig:
-        """Ring view of one dimension, reusing the landed l0 ring kernel."""
+        """Ring view of one dimension, reusing the landed l0 ring kernel.
+
+        The wrap-edge wiring factor enters as the pipeline's min-link rate
+        bound: the dimension ring runs at B * min(1, w) (A-L0T-WIRE), so the
+        ring kernel is handed the effective rate directly.
+        """
         group = self.dim1_ranks if dim == 1 else self.dim2_ranks
         return InfraConfig(
             topology_id=f"{self.topology_id}:dim{dim}",
             ranks=group,
-            link_bytes_per_ns=self.link_bytes_per_ns,
+            link_bytes_per_ns=self.link_bytes_per_ns * self.wrap_rate_limit(),
             hop_latency_ns=self.hop_latency_ns,
         )
+
+
+def load_wrap_wiring_factor(data: dict) -> Fraction | None:
+    """Load the optional wrap-edge wiring factor w from a topology dict.
+
+    Declaration: ``link.wrap_wiring_factor``. Absent key -> None (the
+    landed identity and its emitted payloads stay byte-identical). A
+    declared value — including 1 — ACTIVATES the term: the model payload
+    records it and the ring rate takes the min-link bound B*min(1, w)
+    (A-L0T-WIRE, experiments/vertical_slice/assumptions_l0tw.yaml).
+    Non-positive values are rejected explicitly (a non-positive edge rate
+    is a typo, not a wiring); values outside the registered range
+    [1/2, 2] are NOT rejected here — out-of-range placements are executed
+    deliberately by the calibration ladder so the miss is visible in
+    artifacts (the same rule as B and L).
+    """
+    link = data["link"]
+    if "wrap_wiring_factor" not in link:
+        return None
+    value = Fraction(str(link["wrap_wiring_factor"]))
+    if value <= 0:
+        raise ValueError(
+            f"{BACKEND_ID}: link.wrap_wiring_factor must be > 0, got {value}"
+        )
+    return value
 
 
 def load_torus2d_config(data: dict) -> Torus2DConfig:
@@ -140,6 +211,7 @@ def load_torus2d_config(data: dict) -> Torus2DConfig:
         dim2_ranks=dim2,
         link_bytes_per_ns=frac(link["bytes_per_ns"]),
         hop_latency_ns=frac(link["hop_latency_ns"]),
+        wrap_wiring_factor=load_wrap_wiring_factor(data),
     )
 
 
@@ -265,17 +337,23 @@ def execute(ops, infra: Torus2DConfig) -> dict:
 
     count = len(times)
     mean_time = sum(times) / count if count else Fraction(0)
+    model_block = {
+        "transport_model": CAPABILITIES["transport_model"],
+        "topology_id": infra.topology_id,
+        "ranks": infra.ranks,
+        "dim1_ranks": infra.dim1_ranks,
+        "dim2_ranks": infra.dim2_ranks,
+        "link_bytes_per_ns_exact": str(infra.link_bytes_per_ns),
+        "hop_latency_ns_exact": str(infra.hop_latency_ns),
+    }
+    if infra.wrap_wiring_factor is not None:
+        # Only a DECLARED factor is recorded (A-L0T-WIRE); an undeclared
+        # topology keeps the landed payload bytes exactly.
+        model_block["wrap_wiring_factor_exact"] = str(infra.wrap_wiring_factor)
+        model_block["wrap_rate_limit_exact"] = str(infra.wrap_rate_limit())
     return {
         "backend_id": BACKEND_ID,
-        "model": {
-            "transport_model": CAPABILITIES["transport_model"],
-            "topology_id": infra.topology_id,
-            "ranks": infra.ranks,
-            "dim1_ranks": infra.dim1_ranks,
-            "dim2_ranks": infra.dim2_ranks,
-            "link_bytes_per_ns_exact": str(infra.link_bytes_per_ns),
-            "hop_latency_ns_exact": str(infra.hop_latency_ns),
-        },
+        "model": model_block,
         "observables": {
             "O-CONSERVATION": {
                 "kind": "exact",

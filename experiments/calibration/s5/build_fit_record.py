@@ -297,9 +297,17 @@ def sweep_rows(sweep_id: str) -> list[dict]:
 # 1. The CAL-A5 geometry falsifier (the group's main duty).
 # ---------------------------------------------------------------------------
 def fit_cal_a5() -> dict:
-    # (a) structural blindness, verified against the landed dataclass
+    # (a) structural blindness, verified against the landed dataclass.
+    # History note (stage TWIST, 2026-11-01): Torus2DConfig has since
+    # gained the wrap_wiring_factor field (A-L0T-WIRE,
+    # experiments/vertical_slice/assumptions_l0tw.yaml), so this is now a
+    # SUPERSET check on the six v1 fields. The record's structural claim
+    # ("the input schema carries NO geometry field") describes the schema
+    # AS IT LANDED at S5 and stays byte-identical history; the live-schema
+    # exact check and the wiring-axis re-fit live in the twist stage
+    # (experiments/calibration/twist/).
     fields = {f.name for f in dataclasses.fields(Torus2DConfig)}
-    assert fields == {"topology_id", "ranks", "dim1_ranks", "dim2_ranks",
+    assert fields >= {"topology_id", "ranks", "dim1_ranks", "dim2_ranks",
                       "link_bytes_per_ns", "hop_latency_ns"}, fields
 
     rows_by_slice: dict[int, dict[Fraction, Fraction]] = {128: {}, 256: {}}

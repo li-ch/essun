@@ -1,0 +1,52 @@
+# Assumption registry for the L0 2D-torus wrap-edge wiring factor
+# (calibration stage TWIST, the H2 model change; split record S1
+# 3862e227..., fitting stage S5 group G4 — the CAL-A5 falsifier axis).
+# Handoff rule: every assumption has a range, rationale, sensitivity,
+# owner and review status.
+#
+# This file is SEPARATE from assumptions_l0.yaml on purpose: the
+# assumptions file is a hashed input of every run manifest that names it,
+# so appending here (a new registered free parameter) must not re-hash
+# the landed calibration/golden inputs. Same pattern as
+# assumptions_l0e.yaml (the endpoint latency term).
+assumptions_id: assumptions_l0tw_v1
+status: PROPOSED
+assumptions:
+  - id: A-L0T-WIRE
+    parameter: link.wrap_wiring_factor
+    value: 1
+    unit: dimensionless
+    range: [0.5, 2]
+    rationale: >
+      Free parameter for the analytical 2D torus only: w is the effective
+      rate of each dimension ring's single wrap (bisection-crossing) edge
+      as a multiple of the uniform link rate B. w = 1 is the regular torus
+      (every ring's wrap edge is its own full-rate link) and is the
+      landed identity BYTE-FOR-BYTE (a topology that declares no factor
+      behaves as w = 1 and emits no field). The declared range endpoints
+      are STRUCTURAL bounds, not measurements and not standard-derived
+      values: a torus wrap cut carries each ring's forward flow on one
+      dedicated wrap link per direction, so reallocating wrap capacity
+      across the cut's two link directions can at most double an edge's
+      rate (upper 2) and, symmetrically, sharing an edge between two
+      flows at worst halves it (lower 0.5). The term enters the identity
+      through the pipeline min-link bound: the ring rate is
+      B * min(1, w), so w < 1 derates the ring's bandwidth term (exactly
+      a per-link-B displacement on that side) and w >= 1 leaves it
+      unchanged — the capacity-gain direction (the twisted-torus
+      mechanism class) is INERT on this identity, a property of the
+      uniform-ring model (its k-1 non-wrap edges bound the rate), not a
+      tuning choice. Hop latency, wire counts, and O-CONSERVATION never
+      move (wiring changes rates, never bytes or propagation).
+    sensitivity: bandwidth term of O-CCT only, ONE-SIDED (active for
+      w < 1, exactly inert for w >= 1); zero for O-CONSERVATION and for
+      wire traffic
+    owner: WS2
+    review: PROPOSED
+notes: >
+  Registered to close the S5 falsification's structural-blindness leg
+  (record 43fca722...: "the input schema carries NO geometry field") the
+  honest way: the wiring axis is now an expressible model INPUT, and what
+  the anchor demands of it is measured, never tuned toward (the
+  CAL-A5 ratio 1.63/1.31 selects NO value here; the registry point stays
+  1). No normative value is used anywhere in this file.

@@ -250,6 +250,11 @@
               "minimum": 0,
               "description": "Free parameter (e.g. A-L0-LAT / A-L0T-LAT): per-hop latency."
             },
+            "wrap_wiring_factor": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Free parameter (A-L0T-WIRE, contract 0.4.0 additive extension): wrap-edge wiring factor w for torus2d_ring_x_ring — the effective rate of each dimension ring's single wrap (bisection-crossing) edge as a multiple of link.bytes_per_ns. 1 = regular torus (the landed identity when the key is absent); < 1 derates the ring rate to B*w (min-link pipeline bound); >= 1 is exactly inert on the ring identity (the k-1 non-wrap edges bound the rate). Declared range [0.5, 2] (structural bounds, experiments/vertical_slice/assumptions_l0tw.yaml); not standard-derived, not measured."
+            },
             "pair_latency_ns": {
               "type": "number",
               "minimum": 0,
