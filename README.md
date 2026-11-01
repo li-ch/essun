@@ -72,6 +72,8 @@ Detailed component status lives in [docs/status.md](docs/status.md).
   explained](docs/case-studies/misleading-comparison-01.md) — what our
   diagnosis pipeline does when two engines disagree +118% and a diff
   cannot say why
+- [Reproduce the flagship slice and report friction](https://github.com/li-ch/essun/issues/1) —
+  guided clean-clone walkthroughs (~10 min per part); tell us where it hurt
 - [Vision and roadmap](https://li-ch.github.io/essun/roadmap.html)
 - [How essun compares to related simulators](https://li-ch.github.io/essun/comparison.html)
 
