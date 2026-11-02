@@ -75,6 +75,12 @@ different labels for different claims."
 - When a commit or document cites earlier labeled work, reproduce the
   label it carried. Labels are evidence statements; a citing party cannot
   upgrade them.
+- `EXTERNALLY_REPRODUCED` lands only through the recorded procedure:
+  a public reproduction report is transcribed into
+  `experiments/reproductions/` and adjudicated against the published
+  independence criteria — the record type refuses self-judged
+  independence and the validators refuse the label without the support
+  (`docs/reproduction-policy.md`). No record exists today.
 - Paper-facing numbers stay `[RESULT: metric, experiment, status]`
   placeholders until an immutable run record exists, and the frozen
   claim-word vocabulary in `tools/paper_check.py` is enforced by

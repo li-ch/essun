@@ -1,0 +1,23 @@
+# Example external-reproduction record (the shape, not a claim).
+#
+# A real copy of this file lands in experiments/reproductions/ only after a
+# public report exists to transcribe (funnel issue #1); this example exists
+# so the schema has a positive instance. Every field mirrors what the report
+# must state per docs/reproduction-policy.md. Note what is deliberately
+# ABSENT here: no adjudication block, and every independence criterion null
+# (unknown) — an attempt records a report; only an adjudication applies the
+# verification procedure, and none exists anywhere in this repository today.
+reported: "2026-11-02"
+report_url: https://github.com/li-ch/essun/issues/1#issuecomment-0000000000
+reproducer: "@example-handle"
+reproduced_at_commit: cb7f9fc137a43982b68c896b4c942148cb07c113
+environment: "Apple M2 Pro, macOS 15.1, Python 3.12.4, no Docker"
+outcome: byte_identical
+divergence_notes: null
+reproduced_run_ids:
+  - dc7d83b6afa23ef33fd87512eb637bd737ab8ad905a6802bc6d0965be1da21d9
+independence:
+  distinct_hands: null
+  distinct_machine: null
+  released_artifacts_only: null
+  public_report: null

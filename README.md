@@ -74,6 +74,9 @@ Detailed component status lives in [docs/status.md](docs/status.md).
   cannot say why
 - [Reproduce the flagship slice and report friction](https://github.com/li-ch/essun/issues/1) —
   guided clean-clone walkthroughs (~10 min per part); tell us where it hurt
+- [External reproductions](https://li-ch.github.io/essun/reproductions.html) —
+  every public attempt listed in the open, and [the policy](docs/reproduction-policy.md)
+  defining what counts as independent reproduction
 - [Vision and roadmap](https://li-ch.github.io/essun/roadmap.html)
 - [How essun compares to related simulators](https://li-ch.github.io/essun/comparison.html)
 

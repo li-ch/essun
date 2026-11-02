@@ -3,8 +3,11 @@
 Implements the ``EvidenceStore`` contract (IMPLEMENTATION_GUIDE §5: run
 records and evidence links are append-only): ``put_run`` /
 ``link_run_to_claim`` / ``list_runs``, plus the counterexample, figure,
-and reproduction-bundle operations — ``put_counterexample``,
-``register_figure``, ``export_reproduction_bundle``.
+reproduction-bundle, and external-reproduction operations —
+``put_counterexample``, ``register_figure``,
+``export_reproduction_bundle``, ``put_reproduction`` /
+``put_adjudication`` (the EXTERNALLY_REPRODUCED record type of
+:mod:`essun.evidence.reproductions`).
 
 Layout (identical to the run-record format the run path already
 wrote, so existing artifacts remain valid store content):
@@ -13,6 +16,7 @@ wrote, so existing artifacts remain valid store content):
       claims_index.jsonl              # append-only claim links, one per line
       counterexamples.jsonl           # append-only counterexample records
       figures_index.jsonl             # append-only figure provenance entries
+      reproductions.jsonl             # append-only reproduction attempts + adjudications
       <run_id>/run.json               # run payload + run_id, canonical JSON
       <run_id>/observations.json      # observations, canonical JSON
 
@@ -292,6 +296,126 @@ class EvidenceStore:
     def counterexamples(self) -> list[dict]:
         """All recorded counterexample entries, in append order."""
         return _read_index(self.root / COUNTEREXAMPLES_INDEX)
+
+    # ------------------------------------------------------------------
+    # external reproductions (append-only index; record + adjudication)
+    # ------------------------------------------------------------------
+
+    def put_reproduction(self, attempt: dict) -> str:
+        """Append an external-reproduction ATTEMPT; returns its content id.
+
+        The attempt is validated by
+        :mod:`essun.evidence.reproductions` — which refuses any
+        self-judged independence criterion, so what lands here is a
+        report, never a label — and every cited ``reproduced_run_ids``
+        entry must already exist in this store (the same
+        only-from-immutable-runs rule the counterexample and figure
+        indexes enforce).  ``reproduction_id`` is the SHA-256 of the
+        canonical-JSON attempt: identical content is idempotent, and an
+        existing id with different bytes is an append-only violation.
+        """
+        from .reproductions import (  # deferred: reproductions imports this module
+            REPRODUCTIONS_INDEX,
+            reproduction_id,
+            reproduction_problems,
+        )
+
+        problems = reproduction_problems(attempt)
+        if problems:
+            raise EvidenceError("; ".join(problems))
+        for run_id in attempt["reproduced_run_ids"]:
+            if not (self.run_dir(run_id) / RUN_RECORD).is_file():
+                raise EvidenceError(
+                    f"cannot record reproduction: run {run_id} is not in the store"
+                )
+        content_id = reproduction_id(attempt)
+        entry = {**attempt, "kind": "reproduction", "reproduction_id": content_id}
+        index_path = self.root / REPRODUCTIONS_INDEX
+        for stored in _read_index(index_path):
+            if stored.get("reproduction_id") == content_id:
+                if stored == entry:
+                    return content_id  # idempotent: identical attempt
+                raise EvidenceError(
+                    f"append-only violation: reproduction {content_id} is "
+                    f"already recorded with different bytes"
+                )
+        _append_index(index_path, entry)
+        return content_id
+
+    def put_adjudication(self, adjudication: dict, reproduction_id: str) -> str:
+        """Append an ADJUDICATION of a stored attempt; returns its content id.
+
+        The adjudication is cross-checked against the stored attempt it
+        names — the cross-field gate that refuses a verdict of
+        ``externally_reproduced`` without a ``byte_identical`` outcome, a
+        non-author reproducer, and all four independence criteria judged
+        met (:mod:`essun.evidence.reproductions`).  This method is the
+        only path through which that label becomes reachable; the id is
+        the SHA-256 of the canonical-JSON adjudication plus the
+        reproduction id, so judging never rewrites the attempt's
+        identity and identical judgments are idempotent.
+        """
+        from .reproductions import (  # deferred: reproductions imports this module
+            REPRODUCTIONS_INDEX,
+            adjudication_problems,
+        )
+
+        _require_str(reproduction_id, "reproduction_id")
+        attempt = None
+        for stored in _read_index(self.root / REPRODUCTIONS_INDEX):
+            if (
+                stored.get("kind") == "reproduction"
+                and stored.get("reproduction_id") == reproduction_id
+            ):
+                attempt = stored
+                break
+        if attempt is None:
+            raise EvidenceError(
+                f"cannot adjudicate: reproduction {reproduction_id} is not in the store"
+            )
+        problems = adjudication_problems(adjudication, attempt)
+        if problems:
+            raise EvidenceError("; ".join(problems))
+        content_id = hashlib.sha256(
+            (canonical_json(adjudication) + canonical_json({"of": reproduction_id})).encode("utf-8")
+        ).hexdigest()
+        entry = {
+            **adjudication,
+            "kind": "adjudication",
+            "of_reproduction": reproduction_id,
+            "adjudication_id": content_id,
+        }
+        index_path = self.root / REPRODUCTIONS_INDEX
+        for stored in _read_index(index_path):
+            if stored.get("adjudication_id") == content_id:
+                if stored == entry:
+                    return content_id  # idempotent: identical judgment
+                raise EvidenceError(
+                    f"append-only violation: adjudication {content_id} is "
+                    f"already recorded with different bytes"
+                )
+        _append_index(index_path, entry)
+        return content_id
+
+    def reproductions(self) -> list[dict]:
+        """All recorded reproduction attempts, in append order."""
+        from .reproductions import REPRODUCTIONS_INDEX  # deferred import
+
+        return [
+            entry
+            for entry in _read_index(self.root / REPRODUCTIONS_INDEX)
+            if entry.get("kind") == "reproduction"
+        ]
+
+    def adjudications(self) -> list[dict]:
+        """All recorded adjudications, in append order."""
+        from .reproductions import REPRODUCTIONS_INDEX  # deferred import
+
+        return [
+            entry
+            for entry in _read_index(self.root / REPRODUCTIONS_INDEX)
+            if entry.get("kind") == "adjudication"
+        ]
 
     # ------------------------------------------------------------------
     # figure provenance (append-only index; consumed by the figure gate)
