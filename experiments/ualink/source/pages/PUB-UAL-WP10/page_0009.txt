@@ -1,0 +1,38 @@
+ 
+Security 
+The UALink security feature, referred to as UALinkSec, is intended to protect traffic on a UALink network 
+and switches from a physical adversary; the adversary might be present at the time of the attack or may 
+have placed a device (e.g., an interposer) to snoop or tamper with the UALink traffic. Additionally, in 
+platforms that support Confidential Computing (CC), UALinkSec protects the Tenant data on a UALink 
+network and switches from the infrastructure provider and other Tenants co‐located on the same 
+UALink Pod. CC implies that a Trusted Execution Environment (TE E) (e.g., Intel TDX, AMD SEV and ARM 
+CCA) exists on the platform. The TEE under the control of the Tenant is responsible for UALinkSec 
+configuration. When enabled, UALinkSec provides data confidentiality and optional data integrity 
+(including replay protection).  
+UALinkSec supports encryption and authentication of all the UPL I protocol channels – requests, read 
+responses, and write responses.  
+Accelerator X
+Functional/Protocol Layer
+Transaction Layer
+Protocol FLITs
+Data Layer
+DL FLITs
+Ethernet
+PHY Layer
+Accelerator Y
+Functional/Protocol Layer
+Transaction Layer
+Protocol FLITs
+Data Layer
+DL FLITs
+Ethernet
+PHY Layer
+UALink Protocol 
+Layer Interface
+UPLI
+ULS
+UALink 
+Switch
+ 
+Figure 9: End‐to‐End encryption and authentication 
+   

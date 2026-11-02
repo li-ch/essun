@@ -1,0 +1,18 @@
+ 
+TransacƟon Layer (TL) 
+ 
+The Transaction Layer (TL) is responsible for converting protocol messages from the inbound channels of 
+the two UPLI interfaces (Originator/Completer) into outbound (TX) TL Flits. The TL also converts TL Flits 
+received from the inbound (RX) DL back into UPLI messages on the UPLI interfaces.   
+ 
+Figure 7: Transaction Layer Interfaces 
+Figure 7 schematically illustrates the TL Interfaces and their connections between the various channels 
+for the two UPLI interfaces. It also illustrates the relationship to the Tx and Rx TL Flit Channels. Due to 
+the symmetry of the interfaces, the format for both the Receive and Transmit Flits is identical. Each 64‐
+byte Transmit Flit and Receive Flit Channel encodes the information for a UPLI Request Channel, 
+Originator Data Channel, Read Response/Data Channel, and Write Response Channel. 
+The Transaction Layer supports a streaming address cache to compress addresses. This enables TL to 
+achieve a very high bidirectional protocol efficiency where requests and completions are transferred in 
+both TX and RX directions. 
+  
+

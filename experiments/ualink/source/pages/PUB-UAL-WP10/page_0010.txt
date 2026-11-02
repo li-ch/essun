@@ -1,0 +1,75 @@
+ 
+Manageability 
+A UALink Pod is comprised of one or more UALink Accelerators connected via the UALink network and 
+managed by a UALink Pod Controller. Each Accelerator is hosted on a UALink System Node, and 
+Accelerator traffic may be routed through the UALink fabric via UALink Switches. Multiple UALink Pods 
+may be connected to create even larger Accelerator clusters; however, inter‐Pod communication and 
+control is not specified by the UALink specification.   
+Figure 10 illustrates a possible UALink Pod set up with Switch and Server Platforms. A System node with 
+four UALink Accelerators (each with three ports), two host CPUs, a NIC, and a BMC is shown. The UALink 
+Switches are responsible for routing traffic between Accelerators and are managed by 
+software/firmware called a Switch Management Agent. Physical Switches are implemented in hardware 
+but may be partitioned into multiple Switches for the purpose of routing and creating Virtual Pods. 
+Often, Physical Switches are hosted on Switch Platforms that run the Switch Management Agent on a 
+processor (such as an x86 CPU or a Baseboard Management Control ler). The processor is attached to 
+each Physical Switch via a high‐speed interface such as PCIe®, as well as to a network interface for 
+communication with the Pod Controller.   
+UALink Switch Platform 3
+Processo r
+NIC
+Swit ch Mgmt 
+Agent
+UALink Switch
+TPM
+BMC
+UALink Switch Platform 2
+Pr ocesso r
+NIC
+Swit ch Mgmt 
+Agent
+UALink Switch
+TPM
+BMC
+UALink Switch Platform 1
+Processo r
+NIC
+Swit ch Mgmt 
+Agent
+UALink Switch
+UALink Pod
+REST API GUI
+ UALink
+ Pod
+ Controller
+Initialization & Setup
+Fault Mgmt & RAS
+vPod Mgmt
+Telemetry & R eports
+Workload Mgmt
+TPM
+BMC
+Switch Manag ement Interf ace
+UALink System Node 2
+Acc Acc Acc Acc
+CPU CPU
+NIC BMC
+UALink System Node 3
+Acc Acc Acc Acc
+CPU CPU
+NIC BMC
+No de 
+Mgmt 
+Agent
+UALink System Node 1
+Acc Acc Acc Acc
+CPU CPU
+NIC BMC
+No de 
+Mgmt 
+Agent
+No de 
+Mgmt 
+Agent
+System  Node  Management  Interfa ce Out‐of‐Band Management Interface
+ 
+Figure 10: UALink Rack Scale system management interface   

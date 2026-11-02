@@ -1,0 +1,28 @@
+ 
+ 
+Ultra Accelerator Link™ (UALink™) is a new industry standard to enable scale‐up interconnects for next 
+generation AI workloads. The UALink 200G 1.0 Specification was initially developed by the UALink 
+Consortium Promoter Group Members from Alibaba, AMD, Apple, Astera Labs, AWS, Cisco, Google, 
+HPE, Intel, Meta, Microsoft, and Synopsys and is now also supported and adopted by more than 70 
+Contributor and Adopter Members. 
+IntroducƟon 
+AI models are rapidly growing, demanding higher compute, memory , and interconnect performance.  
+The cost and complexity of delivering reliable scale‐up solutions is a significant burden for the entire 
+industry. Scale‐up solutions are critical to distribute AI models across a Pod with 100s of accelerators. 
+There is a growing demand from the industry to establish standards‐based scale‐up network solutions 
+for training and inference workloads. The UALink Consortium’s mission is to establish an open standard 
+to deliver a scalable, performant, resilient and cost‐effective networking solution for scale‐up 
+connections.   
+UALink is designed to deliver scale‐up solutions, optimized for area, latency and power, featuring 
+ Improved link eﬃciency for bidirecƟonal memory access to provide maximum data bandwidth 
+ Decreased Total Cost of Ownership (TCO) by leveraging exisƟng Ethernet infrastructure including 
+the use of cables, connectors, reƟmers, and management soŌware   
+ Reduced soŌware complexity using memory semanƟcs with direct read, write, atomic 
+transacƟons and maintaining the same ordering model to host aƩached, local, and remote 
+accelerator memory. 
+ 
+ 
+Figure 1: Multi‐Node & Multi‐Plane Switching in a Scale‐Up Rack Infrastructure 
+Introducing UALink 200G 1.0 Specification 
+By: Nathan Kalyanasundharam  
+AMD Corporate Fellow and UALink Consortium Technical Task Force Co‐Chair 

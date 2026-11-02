@@ -1,0 +1,49 @@
+# UALink license-gate source record (repo level).
+# Rows copied VERBATIM from the license-gate source registry
+# (docs-side handoff sources.csv, 2026-10-28 registry state).  The registry
+# rows remain the writable master: changes there must be re-copied here,
+# never paraphrased.  This record is the UALink activation kit's fence:
+# every row the fetch guard and the profile builder know about is here, and
+# the APPROVAL_REQUIRED row below is the pending HUM-02 license question —
+# never fetched, never interpreted, kept visible on purpose.
+sources:
+  - id: STD-UALINK-HOME
+    category: standard
+    title: UALink specification index
+    version: current
+    url: https://ualinkconsortium.org/specification/
+    access: PUBLIC_READ
+    role: Document-family tracking
+    notes: Common DL/PL Manageability Chiplet
+  - id: STD-UALINK-COMMON20
+    category: standard
+    title: UALink Common 2.0 Evaluation Copy page
+    version: "2.0"
+    url: https://ualinkconsortium.org/specification/ualink-common-2-0-specification/
+    access: APPROVAL_REQUIRED
+    role: License and authorized semantic input
+    notes: Review internal evaluation derivative implementation and AI scope
+  - id: STD-UALINK-20-PR
+    category: standard
+    title: UALink 2.0 official release announcement
+    version: "2.0"
+    url: https://ualinkconsortium.org/wp-content/uploads/2026/04/UALink-2.0-Specification-PR_FINAL.pdf
+    access: PUBLIC_READ
+    role: Release facts
+    notes: Not full normative text
+  - id: STD-UALINK-10-WP
+    category: standard
+    title: UALink 1.0 public whitepaper
+    version: "1.0"
+    url: https://ualinkconsortium.org/wp-content/uploads/2025/04/UALink-1.0-White_Paper_FINAL.pdf
+    access: PUBLIC_READ
+    role: Architecture-level model
+    notes: Not full specification
+  - id: STD-UALINK-OVERVIEW
+    category: standard
+    title: UALink 200G technical overview
+    version: "1.0"
+    url: https://ualinkconsortium.org/blog/ualink-200g-1-0-specification-overview-802/
+    access: PUBLIC_READ
+    role: Technical cross-check
+    notes: Verify against authorized specification

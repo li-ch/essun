@@ -1,0 +1,17 @@
+ 
+Data Link Layer (DL) 
+ 
+The Data Link sits between the Transaction layer and the Physical Layer. The Data Link packs 64‐byte 
+Flits from the transaction layer into 640 Bytes Flits for the Physical Layer. The Data Link also provides a 
+message service between link partners that originates and terminates at the Data Link layer. The 
+message service is used for advertising the Transaction Layer rate, querying device and port ID on 
+connected Link Partner, and other functions. The message service also provides a UART (Universal 
+Anonymous Receiver Transmitter) style communication between lin k partners, intended for F/W 
+(Firmware) communications. The Link level replay is provided on a 640 Byte Flit basis. A 32‐bit CRC is 
+computed, checked, and included as part of the 640 Byte Flit. 
+ 
+ 
+Figure 6: Data Link Layer Block Diagram 
+ 
+   
+

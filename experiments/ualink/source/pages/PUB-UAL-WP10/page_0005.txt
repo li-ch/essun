@@ -1,0 +1,51 @@
+ 
+to the TL. The UALink PL receives DL Flits and produces a code word with FEC encoding that is serialized 
+and transmitted through a serial link. The PL can also receive a serialized code word with FEC from a link 
+partner on a switch or accelerator to perform FEC decoding and convert that into a DL Flit. 
+ 
+Physical Layer (PL) 
+The UALink PHY is based on 802.3 Ethernet PHY. UALink is defined for one, two, or four serial lanes 
+running at a serial rate of 212.5G (200GBASE‐KR1/CR1, 400GBASE‐KR2/CR2, 800GBASE‐KR4/CR4), as 
+well as a lower speed serial rate option of 106.25G (100GBASE‐KR1/CR1, 200GBASE‐KR2/CR2, 
+400GBASE‐KR4/CR4). 
+ 
+The * in Figure 5 indicates modifications from IEEE 802.3. The PCS (Physical Coding Sublayer)/PMA 
+(Physical Medium Attachment Interface) operates in additional c odeword interleave modes, with 
+reduced interleave, to achieve better FEC latency at the cost of decreased burst error correction. The 
+PMD is unmodified from 802.3. Auto Negotiation and Link Training (AN/LT) is unmodified from 802.3. 
+The 64B/66B encoding is a subset of what 802.3 supports. 
+ 
+The PCS and RS (Reconciliation Layer ‐ an interface between PCA and DL) require additional behavior to 
+synchronize DL Flits to codewords, so that 640‐byte Flits from the DL fit exactly into one RS (544, 514) 
+codeword. This will optimize latency and minimize replay Flits. The DL generates a CRC as part of each 
+640‐byte DL Flit. 
+ 
+  medium
+PHY
+Physical
+Data Link
+Network
+Transport
+Session
+Presentation
+Application
+OSI
+Reference
+Model
+layers
+PMD
+PMA*
+PCS*
+Reconciliation (RS)*
+Link Level Replay
+DL‐message service
+Flit Packer DL
+Higher Layers
+MDI
+64B/66B code*
+TL
+UP LI
+Accelerator
+Pacing/rate adaptation
+ 
+Figure 5: Physical Layer   

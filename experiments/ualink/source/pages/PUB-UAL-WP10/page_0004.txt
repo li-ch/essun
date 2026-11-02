@@ -1,0 +1,53 @@
+ 
+Link Stack 
+A UALink stack shown in Figure 4 includes a 
+ 
+ Protocol Layer 
+ TransacƟon Layer 
+ Data Link Layer and 
+ Physical Layer 
+ 
+UALink200 Stack
+Accelerator
+Functional/Protocol Layer
+Transaction Layer
+Protocol FLITs
+Data Layer
+DL FLITs
+Ethernet
+PHY Layer
+Switch/Accelerator
+Functional/Protocol Layer
+Transaction Layer
+Protocol FLITs
+Data Layer
+DL FLITs
+Ethernet
+PHY Layer
+Serial Link
+UALink Protocol 
+Layer Interface
+UPLI
+TL FLIT (64B)
+Transaction Layer Interface
+DL FLIT (640B)
+212.5G 
+ Data Link Layer Interface
+SerDes
+DL+FEC (680B)
+ 
+Figure 4: UALink Stack 
+ 
+Messages between accelerators are transmitted over UALink. UALi nk is a symmetrical protocol that 
+supports the same set of messages and channels in both transmit and receive paths. These messages 
+pass through multiple functional layers of the UALink stack. The UALink Stack consists of an independent 
+UPLI (UALink Protocol Layer Interface) Originator and an independent UPLI Completer, along with logic 
+units to implement the UALink Protocol Layers. The Completer and Originator are connected to a 
+Transport Layer (TL). The TL converts the Protocol Channels into a TL Flit that is passed to the Data Link 
+(DL) Layer. Similarly, the TL receives a TL Flit from the DL that is unpacked into the UPLI Protocol 
+Channels received by the Completer and the Originator. A Comple ter interface receives requests from 
+peer accelerators and returns responses. An Originator interface initiates requests targeting remote 
+accelerators and receives responses in return.   
+The UALink DL receives several TL Flits, adds CRC (Cyclic Redundancy Check) protection, a header to the 
+Flit to form a DL Flit, and passes the DL Flit on to the UALink Physical Layer (PL). Similarly, the DL can 
+receive DL Flits from the PL, strips the CRC and header from the Flit, and form TL Flits that are passed on 

@@ -60,7 +60,12 @@ Docker the demo runs the analytical legs and says exactly what it skipped).
   workload layer but are rejected loudly by today's backends — executing
   them needs fabric models we have not built.
 - UALink and CXL profiles are license-gated and absent; the UnifiedBus
-  profile is derived from public papers and is labeled non-normative.
+  profile is derived from public papers and is labeled non-normative. A
+  UALink activation kit (skeleton profile + worked example on the
+  consortium's public excerpts + activation runbook, no spec text
+  ingested) is ready in
+  [experiments/ualink/](experiments/ualink/ACTIVATION.md) for the day the
+  license question is answered.
 
 Detailed component status lives in [docs/status.md](docs/status.md).
 

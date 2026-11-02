@@ -1,0 +1,145 @@
+The diagram in Figure 4 shows how address translation and data transfer work between a source and destination accelerator:
+
+Source Accelerator: Starts with a virtual address, translated by the ACC MMU to a physical address.
+
+Network PA / Local Host SPA: Depending on the address type, it uses either Network PA or Local Host SPA.
+
+Cross-Domain Request: The Link MMU handles cross-domain address translation.
+
+Destination Accelerator: Receives the translated address for data transfer.
+
+This process ensures efficient communication and data handling between accelerators.
+
+Figure 4: Address translation and data transfer in partitioned global address space
+
+Addressing in UALink
+
+Figure 5 shows how address translation and data transfer work between a source and destination accelerator. The source accelerator starts with a virtual address, which the Accelerator MMU translates into a Network Physical Address (NPA) or System Physical Address (SPA). The Link MMU then handles cross-domain requests, translating these addresses for the destination accelerator. This process ensures efficient communication and data handling across different system nodes.
+
+Figure 5: UALink efficient address translation and data transfer across system accelerators
+
+UALink Protocol Stack
+
+UALink consists of a well-defined protocol stack, which includes the following layers:
+
+Protocol Layer: UPLI (UALink Protocol Level Interface) is compatible with UALink switches and offers features such as read, write, and atomic memory operations. It supports split request/response messages to improve bandwidth utilization and uses identification tags per port to handle multiple outstanding requests.
+
+Transaction Layer: The Transaction Layer (TL) manages the credits and handles the packing and unpacking of the TL flits. It connects two UPLI interfaces: one from a UPLI Originator and one from a UPLI Completer.
+
+Data Link Layer: The Data Link Layer (DL) handles the transfer of data between the Transaction Layer (TL) and the Physical Layer (PL).
+
+Physical Layer: The Physical (PHY) Layer includes the Physical Coding Sublayer (PCS) and is based on the IEEE P802.3dj draft standard. This allows the leveraging of existing Ethernet technology and tweaking it to meet the specific needs of UALink.
+
+Each layer plays a crucial role in ensuring efficient communication and data transfer within the system. This layered approach allows for modularity and flexibility, making it easier to manage and optimize the protocol for various applications.
+
+Figure 6: UALink protocol stack—a layered design for efficient system communication
+
+Efficient scaling of AI accelerators is crucial for achieving high performance and throughput. UALink, the de-facto standard for AI accelerator interconnects, plays a pivotal role in enabling this scalability by providing low-latency, high-bandwidth communication between accelerators. As an active member of the UALink Consortium, Cadence offers fully verified UALink IP subsystems, including both controllers and silicon-proven PHYs. These subsystems are optimized for robust performance in both short and long-reach applications, delivering industry-leading PPA.
+
+Download the UALink 200G 1.0 Specification and the UALink 1.0 Specification White Paper to learn more.
+
+LinkedIn
+
+LinkedinX-twitterYoutube
+
+UALink™: an open industry Interconnect standard meeting market demand for advanced AI Accelerator-to-Accelerator communication.
+
+Quick Links
+
+Specifications
+
+About
+
+About UALink
+
+FAQ
+
+Leaders
+
+Contact Us
+
+Members
+
+Members
+
+Member Login
+
+Join UALink
+
+News & Events
+
+Industry Events
+
+Member Company Support Videos
+
+Press Room
+
+Resources
+
+Blog
+
+Webinars
+
+Ultra Accelerator Link™ (UALink™) Resource Library
+
+Specifications
+
+About
+
+About UALink
+
+FAQ
+
+Leaders
+
+Contact Us
+
+Members
+
+Members
+
+Member Login
+
+Join UALink
+
+News & Events
+
+Industry Events
+
+Member Company Support Videos
+
+Press Room
+
+Resources
+
+Blog
+
+Webinars
+
+Ultra Accelerator Link™ (UALink™) Resource Library
+
+Specifications
+
+About
+
+About UALink
+
+FAQ
+
+Leaders
+
+Contact Us
+
+Members
+
+Members
+
+Member Login
+
+Join UALink
+
+News & Events
+
+Industry Events
+
+Member Company Support Videos

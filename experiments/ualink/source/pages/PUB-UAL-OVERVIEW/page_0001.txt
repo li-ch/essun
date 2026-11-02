@@ -1,0 +1,109 @@
+UALink™ 200G 1.0 Specification Overview – UALink ConsortiumSkip to content
+
+Specifications
+
+About
+
+About UALink
+
+FAQ
+
+Leaders
+
+Contact Us
+
+Members
+
+Members
+
+Member Login
+
+Join UALink
+
+News & Events
+
+Industry Events
+
+Member Company Support Videos
+
+Press Room
+
+Resources
+
+Blog
+
+Webinars
+
+Ultra Accelerator Link™ (UALink™) Resource Library
+
+Specifications
+
+About
+
+About UALink
+
+FAQ
+
+Leaders
+
+Contact Us
+
+Members
+
+Members
+
+Member Login
+
+Join UALink
+
+News & Events
+
+Industry Events
+
+Member Company Support Videos
+
+Press Room
+
+Resources
+
+Blog
+
+Webinars
+
+Ultra Accelerator Link™ (UALink™) Resource Library
+
+Search
+
+UALink™ 200G 1.0 Specification Overview
+
+Nolan Morgan
+
+May 15, 2025
+
+4 min read
+
+By: Anish Mathew, Arif Khan, Joe Chen, and Gautam Singampalli (Cadence)
+
+Scaling up Using UALink
+
+Current standards fall short when it comes to scaling AI, which is precisely where Ultra Accelerator Link™ (UALink™) proves to be a transformative solution. UALink is an open standard designed to enable effective accelerator communications and expansion within a pod. It offers significant performance headroom to handle intensive workloads, making it ideal for AI applications. The scale-up memory fabric ensures low latency and simple load/store semantics while supporting atomic operations and direct memory access (DMA). Additionally, UALink provides high bandwidth per unit of power and area, making it a highly efficient solution for scaling up AI infrastructure.
+
+As AI workloads continue to grow, the need for both scale-up and scale-out strategies becomes critical. Scale-up involves enhancing the capacity and bandwidth at the rack level to handle more data and more complex models. This is where UALink excels, providing the necessary infrastructure to support increased computational demands.
+
+Figure 1: Motivation behind scale-up
+
+Key UALink Features
+
+UALink offers a robust set of features designed to enhance performance and scalability. Using memory semantics with read, write, and atomic operations, UALink ensures efficient data handling. Coherency is maintained through software with transactions ranging from 64 to 256 bytes. The simple source/destination-based routing can handle up to 1024 endpoints, with future releases potentially extending this to 4096 endpoints. UALink utilizes a vendor-defined, 57-bit physical address space and supports ordered request addresses from source to destination, though completions are not ordered.
+
+A system node in UALink consists of one or more hosts connected to one or more accelerators using specific interconnects such as PCIe®, CXL®, or CHI C2C. These nodes are typically managed under a single OS image. UALink is designed to provide a low-latency interconnect across system nodes, ensuring efficient communication and data transfer. However, it is important to note that a host CPU may not access memory attached to a remote system node, maintaining the integrity and performance of the local system.
+
+Figure 2: UALink connectivity across system nodes
+
+The Multi-Node Accelerator System (M Accelerators x N Ports) for UALink is designed to enhance scalability and performance in AI compute environments. A UALink station is defined as a group of four UALink lanes, supporting a maximum of 800 Gb/s traffic in v1.0. This system allows multiple accelerators to connect through numerous ports, facilitating efficient data transfer and communication across nodes. By leveraging UALink’s low-latency interconnect, the system ensures optimal performance for intensive AI workloads, enabling seamless expansion and integration of accelerators within a network.
+
+Figure 3: Scalable multi-node accelerator system with UALink high-speed interconnect
+
+Translation in the Partitioned Global Address Space
+
+In the Partitioned Global Address Space, the Memory Management Unit (MMU) maintains page table entries (PTE) to manage memory imports via OpenSHMem or a custom shared memory library. These PTEs correspond to in-domain or cross-domain addresses, identified by an address translation (AT) bit. Address pointers are split into 10 bits of accelerator ID and an address handle, which are managed from the host over the Ethernet network. When importing memory, the accelerator creates an entry in its PTE for the destination handle and destination accelerator ID. Conversely, the exporting accelerator creates an entry in its PTE for the source accelerator ID and the address handle, ensuring efficient memory translation and access across the system.

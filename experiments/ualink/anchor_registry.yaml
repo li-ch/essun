@@ -1,0 +1,291 @@
+registry_family: ualink_member_public_excerpts
+honesty_note: 'MEMBER-PUBLIC EXCERPT anchors only: the UALink Consortium''s own public whitepaper (STD-UALINK-10-WP)
+  and public 200G technical overview (STD-UALINK-OVERVIEW), both PUBLIC_READ rows of the license-gate
+  source registry. The UALink specification family is member-gated (STD-UALINK-COMMON20 APPROVAL_REQUIRED,
+  HUM-02 pending) and was never fetched. An excerpt figure is never a normative value: the activation
+  skeleton interprets nothing and promotes nothing.'
+sources:
+- source_id: PUB-UAL-WP10
+  title: UALink 1.0 public whitepaper
+  url: https://ualinkconsortium.org/wp-content/uploads/2025/04/UALink-1.0-White_Paper_FINAL.pdf
+  handoff_row: STD-UALINK-10-WP
+  access: PUBLIC_READ
+  role: 'Member-public architecture excerpt: UALink 1.0 design targets, protocol stack shape, memory-operation
+    classes'
+  found_via: Pre-cleared PUBLIC_READ row STD-UALINK-10-WP in the license-gate source registry
+  kind: pdf
+  raw_format: pdf
+  doc_sha256: 24050437b9ba4e34e019702b714262144bbf01418203b73b6f6da9198e682416
+  extractor: pypdf 6.21.4 (one page per PDF page; no timestamps)
+  page_count: 11
+  pages_dir: experiments/ualink/source/pages/PUB-UAL-WP10
+  chunking: pdf-pages
+  notes: 'Consortium-published whitepaper; NOT the specification (registry row: ''Not full specification'')'
+- source_id: PUB-UAL-OVERVIEW
+  title: Official UALink 200G 1.0 technical overview (consortium blog)
+  url: https://ualinkconsortium.org/blog/ualink-200g-1-0-specification-overview-802/
+  handoff_row: STD-UALINK-OVERVIEW
+  access: PUBLIC_READ
+  role: 'Member-public technical excerpt: 200G signaling-rate context, layer structure at overview level'
+  found_via: Pre-cleared PUBLIC_READ row STD-UALINK-OVERVIEW in the license-gate source registry
+  kind: public_page
+  raw_format: html
+  doc_sha256: 6d6512de2aaae73b3713123a54d6fd85e39538939081c97d2073046c952576d2
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 3
+  pages_dir: experiments/ualink/source/pages/PUB-UAL-OVERVIEW
+  chunking: paragraph-chunks~4000
+  notes: Official blog overview; registry row says 'Verify against authorized specification' — it is cross-check
+    grade, never a normative source
+anchors:
+- id: UAL-WP10-1-DESIGN-GOALS
+  source_id: PUB-UAL-WP10
+  section: '0'
+  title: 'Introduction: optimized for area, latency, power'
+  category: architecture
+  page: 1
+  quote: UALink is designed to deliver scale‐up solutions, optimized for area, latency and power
+  page_sha256: 87ace70b3d34fc0365befef4585ec608ceafc0be1f309ae817a2d4b31eb7dd41
+- id: UAL-WP10-1-MEMSEMANTICS
+  source_id: PUB-UAL-WP10
+  section: '0'
+  title: 'Introduction: memory semantics, direct read/write/atomic'
+  category: memory_semantics
+  page: 1
+  quote: Reduced soŌware complexity using memory semanƟcs with direct read, write, atomic transacƟons
+  page_sha256: 87ace70b3d34fc0365befef4585ec608ceafc0be1f309ae817a2d4b31eb7dd41
+- id: UAL-WP10-2-LANE-DATA-RATE
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Overview: maximum data rate 200 GT/s per lane'
+  category: link_scale
+  page: 2
+  quote: The UALink 1.0 specification supports a maximum data rate of 200 GT/s per lane.
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-SIGNALING-RATE
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Overview: 212.5 GT/s signaling incl. FEC overhead'
+  category: link_scale
+  page: 2
+  quote: The signaling rate is higher at 212.5 GT/s to account for the bandwidth required by Ethernet
+    Layer 1 for Forward Error Correction Code (FEC)
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-LINK-WIDTHS
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Overview: x1 / x2 / x4 lane groupings'
+  category: link_scale
+  page: 2
+  quote: 'UALink lanes can be configured into various groupings: a single‐lane Link (x1 Link), a dual‐lane
+    Link (x2 Link), or a quad‐lane Link (x4 Link).'
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-STATION-800G
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Overview: Station = 4 lanes, 800 Gbps each TX and RX'
+  category: link_scale
+  page: 2
+  quote: A group of four lanes constitutes a Station, offering a maximum bandwidth of 800 Gbps each in
+    transmit (TX) and receive (RX) directions.
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-GOALS-FLOWCTRL
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Figure 2 goals: credit-based flow control (named feature)'
+  category: flow_control
+  page: 2
+  quote: Credit‐Based Flow Control
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-GOALS-VCS
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Figure 2 goals: virtual channels (named feature)'
+  category: routing
+  page: 2
+  quote: Virtual Channels
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-GOALS-RTT
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Figure 2 goals: req-to-resp RTT < 1 microsecond'
+  category: latency
+  page: 2
+  quote: Req‐To‐Resp RTT < 1µs
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-GOALS-CABLE
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Figure 2 goals: cable length < 4 meters'
+  category: link_scale
+  page: 2
+  quote: cable length < 4 meters
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-2-GOALS-ENDPOINTS
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Figure 2 goals: end points <= 1K'
+  category: scale
+  page: 2
+  quote: end points <= 1K
+  page_sha256: f0ed33757792db1787b8ca954d1b311bf83c11396370a618cfc846b297afb877
+- id: UAL-WP10-3-ULS-1024
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'System: ULS switches connect up to 1024 endpoints'
+  category: scale
+  page: 3
+  quote: UALink Switches (ULS) connect up to 1024 Accelerators or endpoints.
+  page_sha256: 6853e44818fdcef8d12792e99ee31ff7189c80896676ca64b79091e3ed0108ac
+- id: UAL-WP10-3-ROUTING-ID
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'System: unique 10-bit routing identifier per accelerator'
+  category: routing
+  page: 3
+  quote: Each Accelerator is assigned a unique 10‐bit routing identifier.
+  page_sha256: 6853e44818fdcef8d12792e99ee31ff7189c80896676ca64b79091e3ed0108ac
+- id: UAL-WP10-6-DL-FLITS
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'DL: packs 64-byte TL flits into 640-byte flits'
+  category: flit_format
+  page: 6
+  quote: The Data Link packs 64‐byte Flits from the transaction layer into 640 Bytes Flits for the Physical
+    Layer.
+  page_sha256: 811abd3b57ceb6cad67af790b3f532f9022289ba177db15ccbca5757d2ffa497
+- id: UAL-WP10-6-LLR-REPLAY
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'DL: link-level replay on a 640-byte flit basis'
+  category: reliability
+  page: 6
+  quote: The Link level replay is provided on a 640 Byte Flit basis.
+  page_sha256: 811abd3b57ceb6cad67af790b3f532f9022289ba177db15ccbca5757d2ffa497
+- id: UAL-WP10-6-CRC32
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'DL: 32-bit CRC computed per 640-byte flit'
+  category: flit_format
+  page: 6
+  quote: A 32‐bit CRC is computed, checked, and included as part of the 640 Byte Flit.
+  page_sha256: 811abd3b57ceb6cad67af790b3f532f9022289ba177db15ccbca5757d2ffa497
+- id: UAL-WP10-8-HEADER-SIZES
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'TL: compressed request header 8B; write response and flow control 4B'
+  category: flit_format
+  page: 8
+  quote: A compressed request header is 8 Bytes, and a compressed write response and flow control each
+    are 4 Bytes.
+  page_sha256: dd06371e2af33a8e5429405697ca4dc952a1c893c027f3605e7c18f3297b7b06
+- id: UAL-WP10-8-PACK-EFFICIENCY
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'TL: example packing efficiency 95.2% (20/21 flits)'
+  category: performance
+  page: 8
+  quote: five write requests, five write completions, and one Flow Control packet are sent over 21 TL
+    Flits achieving an efficiency of 95.2% (20/21)
+  page_sha256: dd06371e2af33a8e5429405697ca4dc952a1c893c027f3605e7c18f3297b7b06
+- id: UAL-WP10-9-UALSEC
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Security: confidentiality plus optional integrity with replay protection'
+  category: security
+  page: 9
+  quote: UALinkSec provides data confidentiality and optional data integrity (including replay protection)
+  page_sha256: f354e1848f4796527baa68c987a532b4df83b4898a35284733ae76409b6cf0e7
+- id: UAL-WP10-10-INTERPOD
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Manageability: inter-Pod communication not specified'
+  category: manageability
+  page: 10
+  quote: inter‐Pod communication and control is not specified by the UALink specification
+  page_sha256: 3b0822069a836ff37ff62090ced5e0dc13186d76bc4078554f67c083f0dcb194
+- id: UAL-WP10-11-LOADSTORE-1024
+  source_id: PUB-UAL-WP10
+  section: '1'
+  title: 'Summary: load/store across a Pod of up to 1024 accelerators'
+  category: memory_semantics
+  page: 11
+  quote: load/store operaƟons across an enƟre Pod of up to 1024 accelerators
+  page_sha256: a4915615846caf719e77e994534844272749b18c8f5afab9f3afd1ef01a18b61
+- id: UAL-OV-1-MEMSEMANTICS
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Features: memory semantics read/write/atomic'
+  category: memory_semantics
+  page: 1
+  quote: Using memory semantics with read, write, and atomic operations, UALink ensures efficient data
+    handling.
+  page_sha256: c973c73731263efeb3ff95469fc6f35ddb5a218e8cb610f5127fed617b755f30
+- id: UAL-OV-1-COHERENCY-SW
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Features: software coherency, 64-256 byte transactions'
+  category: memory_semantics
+  page: 1
+  quote: Coherency is maintained through software with transactions ranging from 64 to 256 bytes.
+  page_sha256: c973c73731263efeb3ff95469fc6f35ddb5a218e8cb610f5127fed617b755f30
+- id: UAL-OV-1-ROUTING-1024
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Features: src/dst routing, 1024 endpoints now, 4096 future'
+  category: routing
+  page: 1
+  quote: The simple source/destination-based routing can handle up to 1024 endpoints, with future releases
+    potentially extending this to 4096 endpoints.
+  page_sha256: c973c73731263efeb3ff95469fc6f35ddb5a218e8cb610f5127fed617b755f30
+- id: UAL-OV-1-ADDR-57BIT
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Features: vendor-defined 57-bit physical address space'
+  category: memory_semantics
+  page: 1
+  quote: UALink utilizes a vendor-defined, 57-bit physical address space
+  page_sha256: c973c73731263efeb3ff95469fc6f35ddb5a218e8cb610f5127fed617b755f30
+- id: UAL-OV-1-ORDERING
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Features: ordered requests, unordered completions'
+  category: memory_semantics
+  page: 1
+  quote: supports ordered request addresses from source to destination, though completions are not ordered
+  page_sha256: c973c73731263efeb3ff95469fc6f35ddb5a218e8cb610f5127fed617b755f30
+- id: UAL-OV-1-HOST-FENCE
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Features: host CPU may not access remote-node memory'
+  category: memory_semantics
+  page: 1
+  quote: a host CPU may not access memory attached to a remote system node
+  page_sha256: c973c73731263efeb3ff95469fc6f35ddb5a218e8cb610f5127fed617b755f30
+- id: UAL-OV-1-STATION-800G
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Station: four UALink lanes, max 800 Gb/s in v1.0'
+  category: link_scale
+  page: 1
+  quote: A UALink station is defined as a group of four UALink lanes, supporting a maximum of 800 Gb/s
+    traffic in v1.0.
+  page_sha256: c973c73731263efeb3ff95469fc6f35ddb5a218e8cb610f5127fed617b755f30
+- id: UAL-OV-2-TL-CREDITS
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Stack: TL manages the credits'
+  category: flow_control
+  page: 2
+  quote: The Transaction Layer (TL) manages the credits and handles the packing and unpacking of the TL
+    flits.
+  page_sha256: 662366b98153adff0a59b6ad7af1b77c9e7fc2d6049727fe793ab663b077dd93
+- id: UAL-OV-2-PHY-8023DJ
+  source_id: PUB-UAL-OVERVIEW
+  section: '1'
+  title: 'Stack: PHY based on the IEEE P802.3dj draft standard'
+  category: architecture
+  page: 2
+  quote: The Physical (PHY) Layer includes the Physical Coding Sublayer (PCS) and is based on the IEEE
+    P802.3dj draft standard.
+  page_sha256: 662366b98153adff0a59b6ad7af1b77c9e7fc2d6049727fe793ab663b077dd93

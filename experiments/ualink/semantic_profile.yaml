@@ -1,0 +1,247 @@
+# UALink activation skeleton — essun-profile v0.1 artifact.
+# GENERATED FILE (M5 UALink activation kit, 2026-11-02); regenerate with:
+#   .venv/bin/python experiments/ualink/build_semantic_profile.py
+# ACTIVATION SKELETON, NOT A PROFILE (stated here and in the artifact):
+# zero interpreted requirements; the UALink specification family is
+# member-gated (HUM-02 pending) and was never fetched. The two member-public
+# excerpts (consortium whitepaper + 200G overview) exercise the pipeline and
+# anchor the free-parameter skeleton only. Conformance gate:
+# tests/specir/test_ualink_activation_skeleton.py (loads, visible absence,
+# license fence, zero-binding honesty, corruption rejection, byte-identical
+# regeneration).
+format:
+  name: essun-profile
+  version: '0.1'
+profile_id: ualink-activation-skeleton
+source:
+  name: UALink member-public excerpts (activation skeleton; the member-gated specification is not
+    a source of this artifact)
+  document_id: ualink_member_public_excerpts
+  revision: aa6ba58a133d89cb60c1932751bb4b6a0029429031f9fcbce824f2bf50fba464
+  normative: false
+  note: 'ACTIVATION SKELETON, NOT A PROFILE: this artifact interprets zero UALink requirements. It
+    exists so that the moment the pending license question (HUM-02) is answered with permission, the
+    second NORMATIVE essun profile lands in one work session through the already-wired path: license-gated
+    fetch guard -> sha-pinned extraction -> anchored quotes -> requirement modules -> this format
+    (experiments/ualink/ACTIVATION.md). Its freedom element records, before the specification is ever
+    read, the eight degrees of freedom a UALink profile will carry; the member-public excerpts anchor
+    what they state as graded candidates and what they leave silent as explicit free parameters'
+provenance:
+  source_record: experiments/ualink/source_record.yaml
+  access: PUBLIC_READ
+  paper_sources:
+  - source_id: PUB-UAL-OVERVIEW
+    title: Official UALink 200G 1.0 technical overview (consortium blog)
+    url: https://ualinkconsortium.org/blog/ualink-200g-1-0-specification-overview-802/
+    access: PUBLIC_READ
+    doc_sha256: 6d6512de2aaae73b3713123a54d6fd85e39538939081c97d2073046c952576d2
+    handoff_row: STD-UALINK-OVERVIEW
+  - source_id: PUB-UAL-WP10
+    title: UALink 1.0 public whitepaper
+    url: https://ualinkconsortium.org/wp-content/uploads/2025/04/UALink-1.0-White_Paper_FINAL.pdf
+    access: PUBLIC_READ
+    doc_sha256: 24050437b9ba4e34e019702b714262144bbf01418203b73b6f6da9198e682416
+    handoff_row: STD-UALINK-10-WP
+  anchor_registry: experiments/ualink/anchor_registry.yaml
+  gated_specification_rows:
+  - STD-UALINK-COMMON20 (APPROVAL_REQUIRED, never fetched)
+  license_status: 'HUM-02 (UALink license question) PENDING: no answer received; the specification
+    family (STD-UALINK-COMMON20 and the DL/PL, Manageability, Chiplet documents it indexes) was never
+    fetched and is not interpreted here. When an answer permits ingestion, activation follows experiments/ualink/ACTIVATION.md.'
+  evidence_grades_in_use:
+  - MEMBER_PUBLIC_EXCERPT
+  note: 'license review precedes ingestion: the repo source record carries the verbatim license-gate
+    rows, including the gated specification row, which was never fetched and is not interpreted here.
+    Raw fetched bytes stay out of git (.cache/ualink_sources/); extracted pages carry per-page sha256;
+    quotes in the anchor registry are citation-bounded and re-matched at load'
+requirements:
+  objects: []
+  note: 'no UALink requirement is interpreted: the specification documents are member-gated (HUM-02
+    pending; STD-UALINK-COMMON20 APPROVAL_REQUIRED, never fetched), and the member-public excerpts
+    this skeleton anchors are architecture-level documents the license-gate registry itself marks
+    ''not full specification''. This element is the wired slot authorized text lands in at activation
+    (experiments/ualink/ACTIVATION.md); it is empty by content, never by omission'
+freedom:
+- parameter_id: UAL-F01
+  name: credit_flow_control_law
+  freedom: credit-based flow control is NAMED by both member-public excerpts (a Figure-2 goal bullet;
+    'the TL manages the credits') but no public text states the credit unit, window size, or return-path
+    law — the exact admission mechanics a simulation of UALink flow control needs
+  anchor_ids:
+  - UAL-WP10-2-GOALS-FLOWCTRL
+  - UAL-OV-2-TL-CREDITS
+  domain: FREE
+  category: flow_control
+- parameter_id: UAL-F02
+  name: latency_component_breakdown
+  freedom: the only public latency statement is a design GOAL (req-to-resp RTT < 1 microsecond); no
+    per-hop, per-switch, serialization, or propagation component is reported anywhere public
+  anchor_ids:
+  - UAL-WP10-2-GOALS-RTT
+  domain: FREE
+  category: latency
+  candidates:
+  - label: Req-To-Resp RTT < 1 microsecond — a Figure-2 design goal, not a measured or component latency
+    anchor_id: UAL-WP10-2-GOALS-RTT
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+- parameter_id: UAL-F03
+  name: per_lane_rate_scope
+  freedom: the whitepaper states 200 GT/s maximum data rate per lane and 212.5 GT/s signaling (FEC/layer-1
+    overhead); the figures are excerpt-stated architecture facts, not spec-anchored values — their
+    scope (which links, which speeds mandatory vs optional, the 106.25G lower option's role) is not
+    fixed by any public normative text
+  anchor_ids:
+  - UAL-WP10-2-LANE-DATA-RATE
+  - UAL-WP10-2-SIGNALING-RATE
+  domain: FREE
+  category: link_scale
+  candidates:
+  - label: maximum data rate 200 GT/s per lane (whitepaper)
+    anchor_id: UAL-WP10-2-LANE-DATA-RATE
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+  - label: signaling rate 212.5 GT/s incl. FEC overhead
+    anchor_id: UAL-WP10-2-SIGNALING-RATE
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+- parameter_id: UAL-F04
+  name: flit_and_payload_sizes
+  freedom: the excerpts state concrete sizes (64-byte TL flits packed into 640-byte DL flits with
+    a 32-bit CRC; compressed request header 8 bytes, write response and flow control 4 bytes each;
+    software-coherency transactions 64-256 bytes) — excerpt figures, kept as graded candidates; full
+    format fields, packing rules, and the max-payload law are not public
+  anchor_ids:
+  - UAL-WP10-6-DL-FLITS
+  - UAL-WP10-8-HEADER-SIZES
+  - UAL-OV-1-COHERENCY-SW
+  domain: FREE
+  category: flit_format
+  candidates:
+  - label: 64B TL flit -> 640B DL flit, 32-bit CRC
+    anchor_id: UAL-WP10-6-DL-FLITS
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+  - label: compressed header 8B; write response and flow control 4B each
+    anchor_id: UAL-WP10-8-HEADER-SIZES
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+  - label: coherency transactions 64-256 bytes (software)
+    anchor_id: UAL-OV-1-COHERENCY-SW
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+- parameter_id: UAL-F05
+  name: memory_consistency_model
+  freedom: ordering appears only at overview grade (ordered request addresses, unordered completions;
+    a host CPU may not access remote-node memory); no public text defines the consistency model, the
+    atomic-operation set, or fence semantics
+  anchor_ids:
+  - UAL-OV-1-ORDERING
+  - UAL-OV-1-HOST-FENCE
+  - UAL-WP10-1-MEMSEMANTICS
+  domain: FREE
+  category: memory_semantics
+- parameter_id: UAL-F06
+  name: pod_scale_and_addressing
+  freedom: 1024 endpoints is stated by both excerpts (with 4096 named as a potential future extension,
+    10-bit routing identifiers, and a vendor-defined 57-bit physical address space); the excerpts
+    do not fix the binding of these numbers as normative limits — kept as graded candidates until
+    authorized text anchors them
+  anchor_ids:
+  - UAL-WP10-3-ULS-1024
+  - UAL-OV-1-ROUTING-1024
+  - UAL-WP10-3-ROUTING-ID
+  - UAL-OV-1-ADDR-57BIT
+  domain: FREE
+  category: scale
+  candidates:
+  - label: up to 1024 endpoints per pod (both excerpts)
+    anchor_id: UAL-WP10-3-ULS-1024
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+  - label: 4096 endpoints — 'future releases potentially'
+    anchor_id: UAL-OV-1-ROUTING-1024
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+  - label: unique 10-bit routing identifier per accelerator
+    anchor_id: UAL-WP10-3-ROUTING-ID
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+- parameter_id: UAL-F07
+  name: switch_and_topology_structure
+  freedom: multi-node, multi-plane switching and a UALink Switch (ULS) class are named; no public
+    text states switch radix, staging levels, plane wiring, or scheduling — the structure a topology
+    model would need
+  anchor_ids:
+  - UAL-WP10-3-ULS-1024
+  - UAL-WP10-1-DESIGN-GOALS
+  domain: FREE
+  category: topology
+- parameter_id: UAL-F08
+  name: virtual_channels_and_llr_detail
+  freedom: virtual channels are a named goal with no public count or semantics; link-layer retransmission
+    (LLR) is named with its replay basis (640-byte flit) but no public retry law (timeouts, retry
+    counts, error classification)
+  anchor_ids:
+  - UAL-WP10-2-GOALS-VCS
+  - UAL-WP10-6-LLR-REPLAY
+  domain: FREE
+  category: reliability
+  candidates:
+  - label: link-level replay on a 640-byte flit basis
+    anchor_id: UAL-WP10-6-LLR-REPLAY
+    evidence_grade: MEMBER_PUBLIC_EXCERPT
+bindings: []
+checks: []
+supported:
+  workloads:
+  - w1_dense_tp_decode
+  observables:
+  - O-CCT
+  - O-CONSERVATION
+calibration:
+  status: uncalibrated
+  targets: []
+  note: nothing executes, so nothing is calibrated; no UALink hardware measurements exist on this
+    platform, and the excerpt-stated figures (RTT goal, packing efficiency) are design claims carried
+    with their grade, never calibration targets
+omissions:
+- what: 'ZERO interpreted requirements: this artifact is an activation SKELETON, not a UALink profile
+    — it interprets no requirement from any source, public or gated'
+  reason: the UALink specification family is member-gated (HUM-02 pending; STD-UALINK-COMMON20 APPROVAL_REQUIRED,
+    never fetched), and the member-public excerpts are architecture-level documents the license-gate
+    registry itself marks 'not full specification' — insufficient for normative interpretation even
+    where quotable
+- what: the 'supported' element names the ACTIVATION TARGET surface (the cross-design L0 comparison's
+    workload and observables), not an executed surface — nothing executes today
+  reason: the format requires at least one workload and observable id; the honest declaration is the
+    surface activation aims at (w1_dense_tp_decode under O-CCT/O-CONSERVATION, the same shape as the
+    UEC/UnifiedBus comparison), stated here so no reader mistakes it for a claim that UALink behavior
+    runs anywhere
+- what: zero backend capability bindings and zero executable checks inside the artifact
+  reason: bindings attach to simulated_behavior requirements and checks exercise requirements; with
+    zero requirements both lists are empty by content. The skeleton's real invariants — the license
+    fence (gated rows never fetched; the fetch guard refuses them) and byte-identical regeneration
+    — live as tests at tests/specir/test_ualink_activation_skeleton.py
+- what: 'no excerpt figure is promoted to a value: 200 GT/s per lane, 64B/640B flits, 8B/4B headers,
+    1024 endpoints, and every other number the member-public excerpts state stays a graded CANDIDATE
+    under an explicit free parameter (UAL-F01..F08)'
+  reason: an excerpt-stated figure is evidence about a public document, not a normative value; promotion
+    requires an authorized-spec anchor, which does not exist until HUM-02 is answered and activation
+    runs
+- what: 'the UALink specification documents themselves (Common 2.0 Evaluation Copy and the DL/PL,
+    Manageability, Chiplet family): not fetched, not read, not interpreted'
+  reason: license review precedes ingestion (workspace rule); the gated row STD-UALINK-COMMON20 (APPROVAL_REQUIRED)
+    is kept verbatim and visible in the source record precisely so its pending status cannot be forgotten
+- what: 'no calibration: no UALink hardware measurements exist on this platform'
+  reason: verification is not calibration; a skeleton that executes nothing has nothing to calibrate,
+    and the status says so
+versioning:
+  profile_version: 0.1.0
+  bump_rules:
+    major:
+    - dispositions
+    - bindings
+    - anchor_ids
+    - sources
+    minor:
+    - requirements
+    - freedom
+    - checks
+    - supported
+    patch:
+    - notes
+  note: the version tracks this ARTIFACT; activation (the first interpreted requirement, binding,
+    authorized-spec anchor, or authorized source) is a MAJOR bump to 1.0.0 by rule — a skeleton never
+    silently becomes a profile

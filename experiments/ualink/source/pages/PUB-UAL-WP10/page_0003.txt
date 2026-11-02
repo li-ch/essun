@@ -1,0 +1,47 @@
+ 
+Figure 3 depicts a system with multiple nodes, each containing a Host processor and four Accelerators. 
+The system includes 'M' Accelerators overall, each with 'N' symmetric Ports distributing traffic evenly. 
+Each System Node is managed by one OS image. UALink Switches (ULS) connect up to 1024 Accelerators 
+or endpoints. Each Accelerator is assigned a unique 10‐bit routing identifier. These connected 
+Accelerators form a scale‐up Pod. Each UALink Switch port connects to a distinct Accelerator. The 
+number of Switch ports matches the number of connected Accelerators. 
+ 
+ 
+ACC
+Nx  2 b
+…2
+ACC
+…
+ACC
+…
+ACC
+…
+ACC
+…2
+ACC
+…
+ACC
+…
+ACC
+…. . .
+‘M’ Accelerators
+…
+. . .ULS 1 ULS N
+M x 2b
+UALink
+2b@ 212.5G
+OS- Domain
+HOSTHOST
+‘N’ Ports
+Server Node 
+(SN0)
+ 
+Figure 3: UALink Based Multi‐Accelerator System 
+A Pod may be partitioned into Virtual Pods. A Virtual Pod is a group of one or more Accelerators in the 
+Pod that may communicate amongst themselves but not with any other Accelerator in the Pod. The Pod 
+may be divided into Virtual Pods by partitioning the Switches into non‐overlapping subsets of Ports on 
+each Switch. The Ports within a subset can communicate with one another but not with any Port outside 
+the subset. Switches provide the mechanisms to configure partitions. All Accelerators in a Pod have a 
+unique Accelerator ID, regardless of Virtual Pod partitioning.   
+ 
+  

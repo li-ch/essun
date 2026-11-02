@@ -1,0 +1,65 @@
+ 
+UALink enables scalable interconnect performance to match growth in compute, memory bandwidth 
+and capacity. Interconnect performance scalability is met by enabling multi‐node systems and a multi‐
+plane switching ecosystem.    
+The UALink 1.0 specification defines protocols and interfaces for low latency accelerator‐to‐accelerator 
+communication.   
+ 
+Overview 
+ 
+The UALink 1.0 specification supports a maximum data rate of 200 GT/s per lane. The signaling rate is 
+higher at 212.5 GT/s to account for the bandwidth required by Ethernet Layer 1 for Forward Error 
+Correction Code (FEC) and additional Layer 1 encoding. UALink lanes can be configured into various 
+groupings: a single‐lane Link (x1 Link), a dual‐lane Link (x2 Link), or a quad‐lane Link (x4 Link). A group of 
+four lanes constitutes a Station, offering a maximum bandwidth  of 800 Gbps each in transmit (TX) and 
+receive (RX) directions. The number of accelerators and bandwid th allocated to each accelerator can be 
+scaled to meet the demands of AI applications. Figure 2 shares the high‐level features and goals for 
+UALink based accelerator systems. 
+UALink
+PHY Layer
+IEEE P802.3dj Layer 1
+ Standard FEC
+ Lower latency via 1‐way and 2‐
+way code word interleave
+ Minor tweaks for 680‐Byte FLIT 
+code word alignment
+FEC Statistics
+Physical Layer (incl. FEC)
+200Gbps/lane & 100Gbps/lane
+PMA
+UALink TL / DL Features & Goals
+ Fixed Payloads (64B/640B)
+ Virtual Channels
+ Link Layer Retransmission (LLR)
+ Credit‐Based Flow Control
+ Same address ordering
+ Target Low Latency Operation
+ cable length  < 4 meters
+ Req‐To‐Resp RTT < 1µs
+ 1‐4 racks
+ end points <= 1K
+ Requests & Responses for 
+Multiple src <‐> dst pairs can be 
+packed together
+ E2E Encryption & Authentication
+UALink
+Link Layer
+UALink TL / Protocol
+OS/Drivers/Libraries
+Applications
+Link Layer Retry (LLR ; incl. CRC)
+ 
+UALink Link Layer Support
+UALink Logical Link Control
+TL/Protocol 
+unique to 
+UALink
+DL is unique to 
+UALink 
+Standard
+Ethernet PHY
+PMD
+Accelerator Core
+Security
+ 
+Figure 2: UALink Features & Goals 

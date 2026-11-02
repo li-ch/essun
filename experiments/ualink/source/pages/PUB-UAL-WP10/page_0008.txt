@@ -1,0 +1,8 @@
+ 
+Figure 8 illustrates an example where five write requests, five write completions, and one Flow Control 
+packet are sent over 21 TL Flits achieving an efficiency of 95.2% (20/21). A compressed request header is 
+8 Bytes, and a compressed write response and flow control each are 4 Bytes. 
+ 
+Figure 8: Write requests with max payload (256B) and completions packing 
+   
+

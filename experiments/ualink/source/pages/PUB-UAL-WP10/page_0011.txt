@@ -1,0 +1,30 @@
+ 
+Summary 
+UALink is an open industry standard scale‐up interconnect set to transform data center connecƟvity. 
+Tailored for ultra‐high bandwidth and low‐latency exchanges among homogeneous accelerated 
+compuƟng devices, UALink is key to unlocking a new epoch of compute eﬃciency.  
+UALink is at the vanguard of innovaƟon in the ArƟﬁcial Intelligence and Machine Learning domains, 
+providing an open ecosystem path to a dedicated accelerator interconnect leveraging the ubiquitous 
+Ethernet ecosystem. By incorporaƟng UALink Switches, accelerators with UALink capability, can expand 
+the scale‐up domain, creaƟng ultra‐high bandwidth mulƟ‐node Accelerator Pods. UALink also enables a 
+simple soŌware model by supporƟng load/store operaƟons across an enƟre Pod of up to 1024 
+accelerators. The technologies developed by the UALink Consortium will have a lasting impact, 
+improving performance, ease of use, and the TCO of demanding AI  and HPC applications of the future. 
+About the Ultra Accelerator Link ConsorƟum 
+ 
+The Ultra Accelerator Link (UALink) Consortium, incorporated in October 2024, is an open industry 
+standard group dedicated to developing the UALink specifications, a high‐speed, scale‐up accelerator 
+interconnect technology that advances next‐generation AI & HPC cluster performance. The consortium 
+is led by a board made up of stalwarts of the industry; Alibaba, AMD, Apple, Astera Labs, AWS, Cisco, 
+Google, HPE, Intel, Meta, Microsoft, and Synopsys. The Consortium develops technical specifications 
+that facilitate breakthrough performance for emerging AI usage models while supporting an open 
+ecosystem for data center accelerators.  
+ 
+For more information on the UALink Consortium, please visit www.UALinkConsortium.org 
+ 
+Interested to Contribute?  
+Join the UALink Consortium to participate in the technical working groups and influence the direction of 
+the UALink specification. Learn more about UALink membership here.   
+ 
+Ultra Accelerator Link and UALink are trademarks of the UALink Consortium. All other trademarks are 
+the property of their respective owners. 
