@@ -1,0 +1,62 @@
+# Example comparison submission v0 (the shape, exercised on real runs).
+#
+# A real copy of this file lands in experiments/community/ only after a
+# submission passed the door and the maintainer review (see
+# docs/submission-format.md); this example exists so the format has a
+# positive instance whose every number traces to a stored run in the
+# tree that built it. It is the two-arm shape: one workload, one shared
+# free-parameter record, two arms differing ONLY on the declared axis
+# (topology), results paired across arms, each citing run ids.
+#
+# The run ids and values below are the calibration-stage S4 latency pair
+# (experiments/calibration/s4/): same committed workload and assumptions,
+# topology files differing only in link.hop_latency_ns (64 vs 140 ns on
+# the free parameter A-L0-LAT). Values are the stored
+# O-CCT/completion_time_ns_max observations of those runs. Re-verify in a
+# tree that holds the rebuilt runs: python -m essun.evidence.submissions
+# examples/submission.example.yaml --verify
+#
+# Deliberately ABSENT: no review block (the door refuses a self-review),
+# no label words, no untraceable number.
+format_version: 0
+submitted: "2026-11-02"
+submitter: "@example-handle"
+source_url: https://github.com/li-ch/essun/issues/2#issuecomment-0000000000
+essun_commit: 2e5d4c5057e25c2077576a497a230a8725f60ff1
+backend: analytical_l0
+workload:
+  kind: w1_dense_tp_decode
+  parameters:
+    tp_size: 8
+    layers: 2
+    steps: 3
+    allreduce_bytes: 16384
+shared_parameters:
+  record: experiments/vertical_slice/assumptions_l0.yaml
+  values:
+    A-L0-BW: 64
+arms:
+  - label: ring8-l64
+    profile: none
+    topology: experiments/calibration/s4/topologies/ring8_s4_l64_v1.yaml
+    parameters: {}
+  - label: ring8-l140
+    profile: none
+    topology: experiments/calibration/s4/topologies/ring8_s4_l140_v1.yaml
+    parameters: {}
+comparison:
+  differs_on: [topology]
+  control: false
+results:
+  - arm: ring8-l64
+    observable: O-CCT
+    metric: completion_time_ns_max
+    value: 1344
+    run_ids:
+      - 2ca54ead178cd0a361be29124c3e4c37053d1e75125ac02600792384dc5e905d
+  - arm: ring8-l140
+    observable: O-CCT
+    metric: completion_time_ns_max
+    value: 2408
+    run_ids:
+      - 774cc400a6446bd77d4f28e0a297462a0bbfee84e6c8b1e7d8fe3803c964a66d

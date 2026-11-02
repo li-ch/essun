@@ -7,7 +7,7 @@
 
 PY := .venv/bin/python
 
-.PHONY: help demo ci-local bootstrap validate-schemas test run sweep paper-check disposition-report clean
+.PHONY: help demo ci-local bootstrap validate-schemas test run sweep paper-check disposition-report check-submission clean
 
 help: ## Print this target list (the default goal — a bare `make` shows this)
 	@echo "essun — Makefile targets (default goal: help; this list is live: make help)"
@@ -45,6 +45,12 @@ run: ## Run one experiment manifest — make run EXP=path/to/manifest.yaml
 
 sweep: ## Run one sweep manifest — make sweep EXP=path/to/sweep.yaml
 	$(PY) -m essun.orchestrator.sweeps $(EXP)
+
+# Comparison submission v0 door (docs/submission-format.md): format +
+# fairness + tree gates on one submission file; VERIFY=1 adds the store
+# gates (every cited run id must be rebuilt locally and match exactly).
+check-submission: ## Validate a comparison submission — make check-submission FILE=path/to/submission.yaml [VERIFY=1]
+	$(PY) -m essun.evidence.submissions $(FILE) $(if $(VERIFY),--verify,)
 
 paper-check: ## Paper placeholder/claim-word discipline check (tools/paper_check.py)
 	$(PY) tools/paper_check.py

@@ -112,6 +112,31 @@ property is what makes an id citable:
 - A task is complete only when tests and generated artifacts are linked
   from the result.
 
+## Submitting an operating point (comparison submission v0)
+
+Anyone can add an operating point to the community table — a workload,
+the shared free-parameter record, one or two arms over committed
+topology files, and results citing run ids. The door is a documented
+format plus a validator, not an institution:
+
+- Spec: `docs/submission-format.md`; worked instance:
+  `examples/submission.example.yaml`; entry point: the
+  comparison-submission issue template.
+- The validator rejects malformed input by design (the malformed
+  classes are pinned by tests) and checks fairness delta-zero-style:
+  the arms may differ only on declared axes, shared parameters are
+  read out of the committed topology files, and a `control: true` pair
+  must report exactly equal values. Pre-check locally with
+  `make check-submission FILE=your-submission.yaml` (add `VERIFY=1`
+  for the store gates).
+- A number enters the table only if it traces, exactly, to a run id
+  that regenerates from the public tree; the maintainer review
+  re-executes the cited manifests. New topology/workload files land by
+  PR first (license review precedes ingestion of any standard
+  document).
+- A published row is not an evidence-label upgrade — the ladder above
+  is unchanged by this door.
+
 ## Interface-affecting decisions
 
 Decisions that affect public interfaces, research claims, source permissions

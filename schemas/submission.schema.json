@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/scaleup/submission.schema.json",
+  "title": "Comparison submission v0 (and optional maintainer review)",
+  "description": "One operating-point submission: workload, shared free-parameter record, one or two arms over committed topology files, and results citing content-addressed run ids (docs/submission-format.md). Shape only — the fairness gates (declared-axis exactness, no shared-parameter shadowing, paired results, the delta-zero control), the door's refusal of a self-written review, and the store verification (values must trace to the cited runs exactly) live in essun.evidence.submissions, where the whole submission is available for cross-checking. What the shape DOES freeze: run ids are 64-hex (a result without a run id is not schema-valid), the review block's decision vocabulary, and format_version 0.",
+  "type": "object",
+  "required": [
+    "format_version",
+    "submitted",
+    "submitter",
+    "source_url",
+    "essun_commit",
+    "backend",
+    "workload",
+    "shared_parameters",
+    "arms",
+    "results"
+  ],
+  "properties": {
+    "format_version": {
+      "const": 0,
+      "description": "The format version this schema and essun.evidence.submissions validate."
+    },
+    "submitted": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Date the submission was posted (ISO YYYY-MM-DD)."
+    },
+    "submitter": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Public identity of the submitter, as declared in the source thread."
+    },
+    "source_url": {
+      "type": "string",
+      "pattern": "^https?://",
+      "description": "Public, auditable pointer to the submission (issue or PR)."
+    },
+    "essun_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Full commit hash of the public tree the cited runs were executed at."
+    },
+    "backend": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Backend id (one of the BACKEND_ID constants of the backend modules; essun.evidence.submissions.BACKENDS is the checked vocabulary)."
+    },
+    "workload": {
+      "type": "object",
+      "required": ["kind", "parameters"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A workload generator kind (the WORKLOAD_KIND constants of essun.workload.*)."
+        },
+        "parameters": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "anyOf": [{"type": "integer", "minimum": 1}, {"type": "string", "minLength": 1}]
+          },
+          "description": "The workload's integer shape parameters (plus optional string parameters like model_name); cross-checked against the cited runs' workload file at review."
+        }
+      },
+      "additionalProperties": false
+    },
+    "shared_parameters": {
+      "type": "object",
+      "required": ["record", "values"],
+      "properties": {
+        "record": {
+          "type": "string",
+          "pattern": "^[\\w./-]+$",
+          "minLength": 1,
+          "description": "Repo-relative committed free-parameter record both arms consume unchanged."
+        },
+        "values": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {"type": "integer", "minimum": 1},
+          "description": "Parameter id -> value, one record's values fed to every arm; verified against each arm's topology file at the door (equal inputs, read from the files)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "arms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["label", "profile", "topology", "parameters"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Arm label results reference; unique within the submission."
+          },
+          "profile": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Standard-profile vocabulary id ('none' at v0; the vocabulary widens only when a backend consumes a semantic profile as a run input)."
+          },
+          "topology": {
+            "type": "string",
+            "pattern": "^[\\w./-]+$",
+            "minLength": 1,
+            "description": "Repo-relative committed topology file; the fabric's semantics at L0 enter through this file's honesty headers."
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": {"type": "integer", "minimum": 1},
+            "description": "Arm-local free-parameter binds; may not shadow a shared_parameters id."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "required": ["differs_on", "control"],
+      "properties": {
+        "differs_on": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["profile", "topology", "parameters"]},
+          "description": "The axes the arms differ on — and the ONLY fields they may differ on; the validator recomputes the actual difference set and requires exact equality."
+        },
+        "control": {
+          "type": "boolean",
+          "description": "true declares the arms numerically identical (the delta-zero honesty anchor); paired values must then be exactly equal."
+        }
+      },
+      "additionalProperties": false
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["arm", "observable", "metric", "value", "run_ids"],
+        "properties": {
+          "arm": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Which arm's result this row is; must name a declared label."
+          },
+          "observable": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Registered observable id (essun.observables registry)."
+          },
+          "metric": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The field of the observation holding the value (e.g. completion_time_ns_max)."
+          },
+          "value": {
+            "anyOf": [
+              {"type": "integer"},
+              {"type": "string", "pattern": "^-?[0-9]+(/[0-9]+)?(\\.[0-9]+)?$"}
+            ],
+            "description": "The reported value, exact (integer or exact numeric string); at review it must equal the cited runs' stored observation exactly."
+          },
+          "run_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "description": "The stored run ids that produced this value. Required: a result without a run id is an opinion."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["decision", "reviewer", "date", "basis", "verified_run_ids"],
+      "properties": {
+        "decision": {
+          "enum": ["published", "rejected"],
+          "description": "The maintainer's decision; 'published' requires every cited run id in verified_run_ids."
+        },
+        "reviewer": {"type": "string", "minLength": 1},
+        "date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What was re-executed and checked (commands, commits, what matched)."
+        },
+        "verified_run_ids": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "description": "Run ids re-executed locally that regenerated byte-for-byte."
+        }
+      },
+      "additionalProperties": false,
+      "description": "Maintainer-appended only; a review block in a door submission is refused."
+    }
+  },
+  "additionalProperties": false
+}
