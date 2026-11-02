@@ -1,0 +1,33 @@
+NVSwitch Latency: Figure 13 shows the latency for PCIe and NVSwitch in the DGX-2 platform. There are in total 16 GPUs in the system, so the grid is much finer. The pattern is very regular: all the remote access are homogeneous, either for PCIe or NVSwitch, confirming that NVSwitch is all-to-all fully-connected. Although accessing GPUs on the other baseboard incurs two switch hops, we can see that the difference of latency is very small, almost negligible.
+
+III-A2 Sustainable Bandwidth
+
+Figure 7 and 7 illustrate the uni- and bidirection sustainable bandwidth for PCIe and NVLink of the two DGX-1 platforms, respectively. Figure 10 and 10 show the uni- and bidirection bandwidth for PCIe and NV-SLI in the SLI platform. Finally, Figure 13 and Figure 13 show the uni- and bidirection bandwidth for PCIe and NVSwitch in DGX-2.
+
+PCIe Unidirection Bandwidth: From Figure 7-(A) and (B), we can observe slight NUMA effects on PCIe accesses: two GPUs sharing the same PCIe switch (e.g., G2 and G3 in Figure 1) exhibit lower bandwidth in the measurement. For other GPUs, no matter whether sharing the same socket, the bandwidth appears to be the same. Similar effects have also been observed in Figure 13-(A), in which four GPUs sharing the same Level-2 PCIe switch (e.g., G0 to G3 in Figure 4) deliver lower bandwidth.
+
+PCIe Bidirection Bandwidth: The NUMA effects on bidirectional bandwidth for GPUs sharing the same PCIe switch (e.g., Figure 7-(A) and (B), Figure 13-(A)) are much more prominent than those on unidirection bandwidth. The PCIe NUMA effect here is an interesting novel observation: it describes a scenario that nearby access presenting lower performance than remote access. We label such a NUMA effect as “anti-locality”. To the best of our knowledge, few existing work have discussed this phenomenon before, without mentioning leveraging it for performance tuning practice. The anti-locality effect is possibly due to the unbalanced physical signal paths on the PCIe-switch chipsets [27]. Note, this PCIe anti-locality effect is only observed for bandwidth.
+
+NVLink Unidirection Bandwidth: The NVLink scenario is more complicated. For NVLink-V1 in Figure 7-(C), there are three connection types: local access, neighboring nodes directly connected by NVLink, and remote nodes requiring additional routing, corresponding to the topology illustrated in Figure 1-(A). For NVLink-V2 in Figure 7-(D), there are four connection types: local access, close neighboring nodes connected by dual links (i.e., the “backbone ring”), general neighboring nodes connected by one link, and remote nodes, corresponding to the topology in Figure 1-(B). As such, there are three types of NUMA effects for NVLink:
+
+•
+
+NUMA among neighbors and remote nodes for NVLink-V1 and V2 on both latency and bandwidth.
+
+•
+
+NUMA among neighbor nodes for NVLink-V2. This is due to different number of links (either 1 or 2) to connect neighboring nodes in V100-DGX-1. Typically, the latency remains similar but these two types of links introduce bandwidth difference.
+
+•
+
+NUMA among remote nodes for NVLink-V2. This is caused by the choice of routing. Figure 7-(C) and (D) show the bandwidth disparity for choosing different paths.
+
+NVLink Bidirection Bandwidth: The three types of NVLink NUMA effects for bidirectional bandwidth are much more obvious than that for unidirectional bandwidth, as discussed in the caption of Figure 7.
+
+NV-SLI Unidirection Bandwidth: Since NV-SLI only incorporates two GPUs, where the communication is symmetric, showing no NUMA effect in Figure 10-(B).
+
+NV-SLI Bidirection Bandwidth: The bidirectional condition is similar to unidirection condition, except that the bandwidth doubles, as shown in Figure 10-(B).
+
+NVSwitch Unidirection Bandwidth: Shown in Figure 13-(B), the bandwidth for all remote access through NVSwitch are consistent or UMA, implying that one more NVSwitch hop does not degrade bandwidth.
+
+NVSwitch Bidirection Bandwidth: Bidirection bandwidth condition is similar, except that the bandwidth doubles, as shown in Figure 13-(B).

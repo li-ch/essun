@@ -1,6 +1,11 @@
 # Shared free-parameter record for the FIRST cross-design same-workload L0
 # comparison: UEC-flavored vs UnifiedBus-paper-flavored L0.
 #
+# M1 extension (2026-11-02): the record now also feeds the NVLink-paper
+# flavor (A-XDUO-IDNV) of the three-architecture comparison; the shared
+# values are unchanged — a third consumer of the SAME B/L record, never a
+# third record.
+#
 # HONESTY RULE (absolute): the UnifiedBus side of this comparison is a
 # paper-derived design profile, NOT a normative standard profile. The
 # UnifiedBus specification track stays license-gated (pending license review). The
@@ -125,6 +130,30 @@ assumptions:
       map and appears NOWHERE in the sweep numbers. The flavor label on
       this one row is exactly as strong as this anchor chain: paper-derived
       design profile, NOT a normative standard profile.
+    sensitivity: high for O-CCT (identity choice), zero for O-CONSERVATION
+    owner: profile
+    review: PROPOSED
+  - id: A-XDUO-IDNV
+    parameter: nvlink-paper-flavor L0 identity choice
+    value: crossbar_identity_switched_domain_matched_free_ranks
+    unit: none
+    range: [crossbar_identity_switched_domain_matched_free_ranks, anchored_domain_ranks_when_workload_allows]
+    rationale: >
+      ANCHORED IDENTITY with a MATCHED-FREE rank scale (M1, the third
+      fabric): the crossbar identity is the paper-reported structure of
+      the NVSwitch fabric (NVP-P01: an 18x18 fully connected non-blocking
+      crossbar, PAPER_REPORTED), and the domain it serves is the 72-GPU
+      NVLink5 rack (NVP-P13, VENDOR_CLAIMED). The rank scale asymmetry is
+      the reverse of the UB side's: 64 here is NOT anchored — the
+      anchored NVLink domain scale is 72 (NVP-P13), and this flavor runs
+      at the ONE shared workload's tp=64 as a stated matched-free choice
+      so the same-workload gate holds; nothing beyond one rack is public
+      (NVP-F06). Everything else architecturally distinctive about the
+      family (switch wiring NVP-F04, flow control NVP-F03, packets
+      NVP-F05) is L1/L2 or FREE per the platform map and appears NOWHERE
+      in the sweep numbers. The flavor label is exactly as strong as this
+      anchor chain: paper-derived design profile, NOT a normative standard
+      profile — no public NVLink/NVSwitch specification exists.
     sensitivity: high for O-CCT (identity choice), zero for O-CONSERVATION
     owner: profile
     review: PROPOSED

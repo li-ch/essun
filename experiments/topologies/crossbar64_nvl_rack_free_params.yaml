@@ -1,0 +1,54 @@
+# NVLink-paper-flavored L0 configuration for the three-architecture
+# cross-fabric comparison (M1, 2026-11-02). HONESTY (ladder rule): this
+# file is a paper-derived design profile, NOT a normative standard
+# profile. No public NVLink/NVSwitch specification document exists — the
+# specification track is licensee/NDA-gated (STD-NV-SPEC, never fetched);
+# every provenance chain below runs through the five PUBLIC_READ sources
+# anchored in experiments/nvlink/ (M1 S1).
+#
+# What is ANCHORED here (structure only, never physics):
+#   - identity = fully-connected crossbar <- the M1 platform map's L0_READY
+#     rows for NVP-P01 (an 18x18 fully connected non-blocking crossbar,
+#     PAPER_REPORTED, the NVSwitch fabric's own structure) and NVP-P13
+#     (the 72-GPU NVLink5 switched domain, VENDOR_CLAIMED, whose
+#     single-domain claim is what one logical-hop adjacency assumes).
+#   - ranks = 64 <- MATCHED-FREE, not anchored: the anchored NVLink domain
+#     scale is 72 (NVP-P13), and this file runs at the ONE shared
+#     workload's tp_size=64 so the platform's same-workload gate holds
+#     (the reverse asymmetry of the UB flavor, whose 64 IS its rack
+#     anchor; no public NVLink domain beyond one rack exists, NVP-F06).
+# What is FREE here (public silence, marked, never invented):
+#   - nic.injection_bytes_per_ns = 64 <- shared free parameter A-XDUO-BW;
+#     no public per-link NVLink5 rate exists (NVP-F01: the 1.8 TB/s
+#     per-GPU and 130 TB/s aggregate vendor figures are anchored
+#     candidates with unstated per-link scope and are NOT used).
+#   - link.pair_latency_ns = 200 <- shared free parameter A-XDUO-LAT
+#     (NVP-F02: only V100-era measured P2P outcomes are public; they are
+#     calibration context, never L0 inputs).
+#   - no window / flow control: the public sources are silent on the
+#     NVLink/NVSwitch flow-control mechanism (NVP-F03), so this flavor
+#     carries no admission term — declared silence, not a modeling
+#     shortcut.
+# The bandwidth/latency numbers are equal by construction to the UEC- and
+# UB-flavor files of the same comparison (shared record
+# experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml), so any delta
+# this row shows against them is an arithmetic fact of the anchored
+# identity choice at the matched rank scale — not a measured difference
+# between UEC, UnifiedBus, and NVLink hardware.
+topology_id: nvl_rack64_crossbar_v1
+topology_class: fully_connected_crossbar
+ranks: 64
+nic:
+  injection_bytes_per_ns: 64
+link:
+  pair_latency_ns: 200
+notes: >
+  Same crossbar identity and modeling assumptions as
+  crossbar64_uec_free_params.yaml (A-L0X-PORT single-port injection,
+  A-L0X-LAT, A-L0X-DIV) at the shared comparison rank count 64 (matched-
+  free; the anchored NVLink5 domain is 72, NVP-P13). Everything else the
+  public sources describe (switch trays and wiring NVP-F04, two-level
+  hierarchy context NVP-P21, NUMA effects NVP-P09, TPU ICI class member
+  NVP-P18/P20) is L1/L2_REQUIRED or UNSUPPORTED per the M1 platform map
+  and appears NOWHERE in any number produced from this file. No
+  congestion, no credits, no packetization — L0 transport model only.

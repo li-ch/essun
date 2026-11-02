@@ -1,0 +1,35 @@
+Scale-outCollectiveInfiniBand with GPUDirectLatency, bandwidth and efficiencyDeveloped based on nccl-tests[21] linking to NCCL-V2 [23]
+
+Fig. 5: P100/V100-DGX-1 P2P communication latency. The red blocks along the anti-diagonal are local communication. The fact that other blocks are all green in (A) and (B) indicate that no NUMA effect appears on PCIe for latency. The orange and blue blocks in (C) and (D) are refer to neighbor nodes and remote nodes respectively which exhibit clear disparity.
+
+Fig. 6: DGX-1 P2P unidirectional bandwidth. Although not very obvious, we can see 2x2 blocks in (A) and (B) along anti-diagonal, which indicates the anti-locality NUMA effect for unidirection bandwidth on PCIe. (C) and (D) confirm NUMA among neighbors and remote nodes. The other two types of NUMA for NVLink-V2 are not quite clear in (D). They are more obvious for bidirection bandwidth.
+
+Fig. 7: DGX-1 P2P bidirectional bandwidth. The 2x2 blue/red blocks along anti-diagonal in (A) and (B) clearly illustrate the anti-locality NUMA effect on PCIe. In (D), the yellow blocks compared with the green blocks show the NUMA among neighboring nodes. Meanwhile, the light green blocks along the anti-diagonal (not quite obvious though) imply the existence of NUMA among remote nodes.
+
+III GPU Interconnect Microbenchmarking
+
+We evaluate the basic characteristics of the six GPU interconnects using the microbenchmarks (listed in Table II) from the Tartan Benchmark Suite[25] on the platforms listed in Table I, focusing on both Peer-to-Peer (P2P) and Collective (CL) communication patterns. For intra-node P2P, we especially concentrate on assessing the new node-level NVLink, NVSwitch and NV-SLI technologies in terms of topology, latency, bandwidth, efficiency on message size and NUMA effects. For inter-node P2P, we discuss properties such as latency, bandwidth and efficiency on message size. We use cudaEvent to measure the latency and calculate the bandwidth.
+
+III-AIntra-Node P2P Communication
+
+III-A1 Start-up Latency
+
+Figure 7 shows the start-up communication latency (i.e., raw latency for transmitting the shortest message) among arbitrary pair of GPUs via PCIe and NVLink for the P100 and V100 DGX-1 platforms. As already mentioned, NVLink is not P2P self-routed; for GPUs that are not directly connected by NVLink (e.g., G0 and G5 in Figure 1), there are two routing paths that only require a single transit (e.g., from G0 to G5, either G1 or G4 can be the router). In such scenarios, Figure 7 shows the path exhibiting shorter latency.
+
+PCIe Latency: Figure 7-(A) and (B) demonstrate that the communication latency for accessing different pairs of GPUs via PCIe are similar, implying that no NUMA effects appear in latency through PCIe. In other words, the three types of latency by going through one PCIe switch (e.g., G0 and G1), across local CPU socket (e.g., G0 and G2), and across the QPI bridge (e.g., G0 and G6) in Figure 1 are roughly the same. Meanwhile, comparing Figure 7-(A) and (B), the PCIe latency is increased slightly (e.g., from green to light blue) from P100-DGX-1 to V100-DGX-1. As the bandwidth keeps unchanged, this may suggest a deeper communication pipeline design in V100-DGX-1 with Little’s Law [26].
+
+NVLink V1&V2 Latency: Compared to PCIe in Figure 7-(A) and (B), NVLink in Figure 7-(C) and (D) shows significant NUMA effects. For nodes that are directly connected, the latency is around 9μ​s\mu s; for nodes that require manual routing, the latency is increased by about 2x for P100-DGX-1 and 3x for V100-DGX-1. Again, we observe that NVLink-V2 exhibits higher latency than NVLink-V1, potentially due to a deeper pipeline or lower operating frequency.
+
+Fig. 8: SLI-System P2P communication latency.
+
+Fig. 9: SLI-System P2P unidirectional bandwidth.
+
+Fig. 10: SLI-System P2P bidirectional bandwidth.
+
+Fig. 11: DGX-2 P2P communication latency.
+
+Fig. 12: DGX-2 P2P unidirectional bandwidth.
+
+Fig. 13: DGX-2 P2P bidirectional bandwidth.
+
+NV-SLI Latency: Figure 10 shows the latency for PCIe and NV-SLI in the SLI platform. For the dual-GPU system, there are three latency levels: local access which is about 5μ\mus; NV-SLI access to the opposite GPU which is about 8μ\mus; and PCIe access to the opposite GPU, which is about 13μ\mus. Note, the two GPUs are directly linked by NV-SLI without any intervention from other units such as CPU, DMA, etc.

@@ -1,0 +1,29 @@
+CL Efficiency on Message Size: Figure 21 shows CL bandwidth with respect to message size increasing from 8B to 1GB for 8 GPUs. As can be seen, for PCIe, CL-bandwidth saturates at about 224=162^{24}=16MB; whereas for NVLink, bandwidth saturates around 228=2562^{28}=256MB. Again, the five CL patterns exhibit similar trend in terms of bandwidth when scaling the message size.
+
+III-B2 NV-SLI CL Communication
+
+CL Latency and Bandwidth: Since the SLI-system contains only two GPUs, we use histogram figures to show the latency and bandwidth for the 5 CL communication patterns. As can be seen in Figure 23 and 23, the latency for NV-SLI is similar, around 18μ​s\mu s; but for PCIe, reduce and all_reduce show significantly lower latency than the other three, even less than on NV-SLI. The bandwidth are similar for both PCIe and NV-SLI, except that reduce_scatter showing poorer bandwidth than the others on both PCIe and NV-SLI.
+
+CL Efficiency on Message Size: Figure 25 shows CL bandwidth with respect to message size for the two GPUs. Both PCIe and NV-SLI bandwidth start to saturate at about 220=12^{20}=1MB. The figure confirms that reduce_scatter bandwidth is lower than the others for large message size, but at the same time indicating that all_gather delivers a relative low bandwidth with the same message size before saturated.
+
+Fig. 22: SLI-system PCIe and NV-SLI CL communication latency.
+
+Fig. 23: SLI-system PCIe and NV-SLI CL communication bandwidth.
+
+Fig. 24: SLI-system PCIe and NV-SLI CL bandwidth efficiency.
+
+Fig. 25: DGX-2 PCIe and NVSwitch CL communication latency.
+
+Fig. 26: DGX-2 PCIe and NVSwitch CL communication bandwidth.
+
+Fig. 27: DGX-2 PCIe and NVSwitch CL bandwidth efficiency with 16 GPUs.
+
+III-B3 NVSwitch CL Communication
+
+CL Latency and Bandwidth: Figure 25 illustrates CL communication latency with respect to the number of GPUs on DGX-2, corresponding to PCIe and NVSwitch. As can be seen, due to UMA for NVSwitch, the five curves in Figure 25-(B) are rather aligned. Figure 25-(B) confirms the long latency for all_reduce on tree-based PCIe interconnect, in consistent with Figure 19-(A) and (C). Also note that except all_reduce, the other CL primitives show lower startup latency on PCIe than on NVSwitch when the participanting GPUs are more than three, implying that the advantage of NVSwitch (as well as NVLink) is on bandwidth rather than latency. This observation is confirmed in Figure 27. As can be seen, NVSwitch shows tremendously higher bandwidth than PCIe, particularly for reduce, all_reduce and broadcast. reduce_scatter and all_gather show staggering behavior on bandwidth for NVSwitch; the values are much better with 2, 4, 8 and 16 GPUs than other numbers of GPUs, in consistent with NVLink scenarios in Figure 20-(B)/(D). Since NVSwitch is UMA, it implies that this staggering issue is not due to interconnect topology but NCCL’s implementation.
+
+CL Efficiency on Message Size: Figure 27 shows CL bandwidth with respect to message size for 16 GPUs on the DGX-2 system. As can be seen, the curves for PCIe in Figure 27-(A) are in consistent with PCIe in Figure 21-(A) and (C): the five curves are mostly aligned for small (e.g., ≤\leq32KB) and large (e.g., ≥\geq32MB) messages, but not the case in-between for reduce and broadcast. This divergence also appears for NVLink-V1 & V2 in Figure 21-(B) and (D), but disappears for NVSwitch in Figure 27-(B). As NVSwitch is UMA, we suppose this disalignment is brought by the NUMA effect in the PCIe and NVLink networks.
+
+III-CInter-Node P2P Communication
+
+We measure the latency and bandwidth of inter-node P2P communication on SummitDev Supercomputer[29] and Summit Supercomputer[6] from Oak Ridge National Laboratory. SummitDev is a supercomputer system with 54 nodes. Each node contains two IBM Power-8 CPUs and four NVIDIA P100 GPUs. The GPU interconnect is NVLink-V1. Summit features 4,608 nodes, each with two IBM Power-9 CPUs and six NVIDIA V100 GPUs. The GPU interconnect is NVLink-V2. Both SummitDev and Summit support GPUDirect.

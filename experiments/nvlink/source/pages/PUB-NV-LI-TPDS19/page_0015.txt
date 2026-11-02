@@ -1,0 +1,25 @@
+VI Related Work
+
+Intra-node GPU Computing. Spafford et al. [52] analyzed the NUMA effects in a multi-GPU node and provided optimization guidance. Kim et al. [15] proposed to rely on hybrid-memory-cubes (HMCs) to build a memory network for simplifying multi-GPU memory management and improving programmability. Wang et al. [53] presented a design to realize GPU-Aware MPI to support data communication among intra-node GPUs with standard MPI. Ben-Nun et al. [54] described an automatic multi-GPU partition framework to distribute workload based on their memory access patterns. Cabezas et al. [55] showed a software solution, including programming interfaces, compiler support and runtime, to partition GPU kernels for multi-GPU execution in a single node. Finally, Sun et al. [56] evaluated the potential performance benefit and tradeoffs of AMD’s Radeon Open Compute (ROC) platform for Heterogeneous System Architecture (HSA).
+
+Multi-node GPU Computing. For MPI-based multi-node GPU computing, Wang et al. [57] introduced a MPI design that integrates CUDA data movement transparently with MPI. Gysi et al. [58] proposed a hardware approach to overlap computation and communication in a GPU cluster. Klenk et al. [59] analyzed the exascale proxy applications on their communication patterns and proposed a matching algorithm for GPUs to comply with MPI constraints. Awan et al. [60] proposed a pipelined chain design for MPI broadcast collective operations on multi-GPU nodes to facilitate various deep learning frameworks.
+
+VII Conclusion
+
+In this paper, we characterize and evaluate six types of modern GPU interconnects, including PCIe, NVLink-V1, NVLink-V2, NV-SLI, NVSwitch, and InfiniBand with GPUDirect-RDMA, using the Tartan Benchmark Suite over six GPU servers and HPC platforms: NVIDIA’s P100-DGX-1, V100-DGX-1, DGX-2, RTX2080-SLI systems, and ORNL’s SummitDev and Summit supercomputers, covering both Peer-to-Peer and Collective communication patterns. We addressed four new types of NUMA effects for intra-node GPU communication, and proposed some insightful observations for enabling practical optimization guidelines. This evaluation study attempts to help the HPC community to push forward multi-GPU research and development, particularly the construction of more mature multi-GPU programming, execution, and performance models.
+
+Acknowledgments
+
+This research was supported by the Application Assessment program within the Exascale Computing Project (17-SC-20-SC), a collaborative effort of the U.S. Department of Energy Office of Science and the National Nuclear Security Administration. This research was supported by the U.S. DOE Office of Science, Office of Advanced Scientific Computing Research, under award 66150: “CENATE - Center for Advanced Architecture Evaluation”. This research was supported by the High Performance Data Analytics (HPDA) program at PNNL. This research used resources of the Oak Ridge Leadership Computing Facility at the Oak Ridge National Laboratory, which is supported by the Office of Science of the U.S. Department of Energy under Contract No. DE-AC05-00OR22725. The Pacific Northwest National Laboratory is operated by Battelle for the U.S. Department of Energy under contract DE-AC05-76RL01830.
+
+References
+
+[1] P. Goyal, P. Dollár, R. Girshick, P. Noordhuis, L. Wesolowski, A. Kyrola, A. Tulloch, Y. Jia, and K. He, “Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour,” arXiv preprint arXiv:1706.02677, 2017.
+
+[2] O. Fuhrer, T. Chadha, T. Hoefler, G. Kwasniewski, X. Lapillonne, D. Leutwyler, D. Lüthi, C. Osuna, C. Schär, T. C. Schulthess et al., “Near-global climate simulation at 1 km resolution: establishing a performance baseline on 4888 gpus with cosmo 5.0,” Geoscientific Model Development, 2018.
+
+[3] H. Mikami, H. Suganuma, P. U-chupala, Y. Tanaka, and Y. Kageyama, “Massively Distributed SGD: ImageNet/ResNet-50 Training in a Flash,” arXiv preprint arXiv:1811.05233, 2018.
+
+[4] NVIDIA, “NVIDIA DGX-1 System Architecture White Paper,” 2017.
+
+[5] NVIDIA, “NVIDIA DGX-2H The World’s Most Powerful System for The Most Complex AI Challenges,” 2018.

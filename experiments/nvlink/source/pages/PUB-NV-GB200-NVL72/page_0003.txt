@@ -1,0 +1,91 @@
+Read Datasheet
+
+Overview
+
+Highlights
+
+GB200 NVL4
+
+Features
+
+Specs
+
+Overview
+
+Highlights
+
+GB200 NVL4
+
+Features
+
+Specs
+
+Overview
+
+Highlights
+
+GB200 NVL4
+
+Features
+
+Specs
+
+Overview
+
+Unlocking Real-Time Trillion-Parameter Models
+
+The NVIDIA GB200 NVL72 connects 36 Grace CPUs and 72 Blackwell GPUs in a rack-scale, liquid-cooled design. It boasts a 72-GPU NVIDIA NVLink™ domain that acts as a single, massive GPU and delivers 30x faster real-time trillion-parameter large language model (LLM) inference, with 10x greater performance for mixture-of-experts (MoE) architectures.
+
+The GB200 Grace Blackwell Superchip is a key component of the NVIDIA GB200 NVL72, connecting two high-performance NVIDIA Blackwell Tensor Core GPUs and an NVIDIA Grace™ CPU using the NVLink-C2C interconnect to the two Blackwell GPUs.
+
+The Blackwell Rack-Scale Architecture for Real-Time Trillion-Parameter Inference and Training
+
+The NVIDIA GB200 NVL72 is an exascale computer in a single rack. With 72 NVIDIA Blackwell GPUs interconnected by the largest NVIDIA NVLink domain ever offered, NVLink Switch System provides 130 terabytes per second (TB/s) of low-latency GPU communications for AI and high-performance computing (HPC) workloads.
+
+Tech Blog
+
+Highlights
+
+Supercharging Next-Generation AI and Accelerated Computing
+
+LLM Inference
+
+30xvs. NVIDIA H100 GPU
+
+LLM Training
+
+4xvs. H100
+
+Energy Efficiency
+
+25xvs. H100
+
+Data Processing
+
+18xvs. CPU
+
+LLM inference and energy efficiency: TTL = 50 milliseconds (ms) real time, FTL = 5s, 32,768 input/1,024 output, NVIDIA HGX™ H100 scaled over InfiniBand (IB) vs. GB200 NVL72, training 1.8T MOE 4096x HGX H100 scaled over IB vs. 456x GB200 NVL72 scaled over IB. Cluster size: 32,768
+
+A database join and aggregation workload with Snappy / Deflate compression derived from TPC-H Q4 query. Custom query implementations for x86, H100 single GPU and single GPU from GB200 NLV72 vs. Intel Xeon 8480+
+
+Projected performance subject to change.
+
+Real-Time LLM Inference
+
+GB200 NVL72 introduces cutting-edge capabilities and a second-generation Transformer Engine, which enables FP4 AI. When coupled with fifth-generation NVIDIA NVLink, it delivers 30x faster real-time LLM inference performance for trillion-parameter language models. This advancement is made possible with a new generation of Tensor Cores, which introduce new microscaling formats, optimized for high-throughput, low-latency AI Inference. Additionally, the GB200 NVL72 uses NVLink and liquid cooling to create a single massive 72-GPU rack that can overcome communication bottlenecks.
+
+Massive-Scale Training
+
+GB200 NVL72 features a faster second-generation Transformer Engine, offering FP8 precision and enabling a remarkable 4x faster training for large language models at scale. This breakthrough is complemented by the fifth-generation NVLink, which provides 1.8 TB/s of GPU-to-GPU interconnect, InfiniBand networking, and NVIDIA Magnum IO™ software.
+
+Energy-Efficient Infrastructure
+
+Liquid-cooled GB200 NVL72 racks reduce a data center’s carbon footprint and energy consumption. Liquid cooling increases compute density, reduces the amount of floor space used, and facilitates high-bandwidth, low-latency GPU communication with large NVLink domain architectures. Compared to NVIDIA H100 air-cooled infrastructure, GB200 delivers 25x more performance at the same power, while reducing water consumption.
+
+Data Processing
+
+Databases play critical roles in handling, processing, and analyzing large volumes of data for enterprises. GB200 takes advantage of the high-bandwidth memory performance, NVLink-C2C, and dedicated decompression engines in the NVIDIA Blackwell architecture to speed up key database queries by 18x compared to CPU and deliver a 5x better TCO.
+
+NVIDIA GB200 NVL4
+
+NVIDIA GB200 NVL4 unlocks the future of converged HPC and AI, delivering revolutionary performance through a bridge connecting four NVIDIA NVLink Blackwell GPUs unified with two Grace CPUs over NVLink-C2C interconnect. Compatible with liquid-cooled NVIDIA MGX™ modular servers, it provides up to 2x performance for scientific computing, AI for science training, and inference applications over the prior generation.

@@ -1,0 +1,56 @@
+# THREE-ARCHITECTURE CROSS-FABRIC PAYLOAD GRID (M1, 2026-11-02): the
+# payload axis of the cross-fabric matrix extended to a third fabric —
+# the identity-matched unwindowed crossbar rows of ALL THREE profiles
+# (UEC free stand-in, UnifiedBus-paper rack, NVLink-paper switched
+# domain) at every grid payload of the shared registry ladder.
+#
+# Purpose: the payload-grid cells of the matrix's third-fabric columns
+# (docs/atlas/cross-fabric-matrix.md) — same-workload large-message
+# completion time (O-CCT) for the UEC-vs-NVLink and UB-vs-NVLink pairs,
+# derived from ONE artifact. The committed two-architecture sweeps
+# (cross_design_uec_vs_ub_paper_l0_v1, cross_fabric_payload_grid_v1)
+# are UNCHANGED: this is an additional artifact, so every previously
+# pinned artifact id stays valid.
+#
+# PAYLOAD GRID (A-XDUO-PAYLOAD range [1024, 16777216] is the authority):
+# the same maximally even power-of-two ladder as
+# cross_fabric_payload_grid_v1 — exponents {12,13,14,16,17,18,20,21,22,24}
+# (atlas message-grid pattern x2,x2,x4 repeating, truncated at the 16 MiB
+# ceiling). Every size divides by ranks 64, so no A-L*-DIV guard rejects
+# a grid point.
+#
+# HONESTY RULES (inherited from the committed cross-design grid, one more
+# flavor of the same kind):
+#   - the UB and NVLink rows are PAPER-DERIVED design profiles, not
+#     normative standard profiles (UnifiedBus specification license-gated;
+#     no public NVLink/NVSwitch specification exists — licensee/NDA-gated);
+#   - B = 64 bytes/ns and L = 200 ns are the ONE shared record's values
+#     (A-XDUO-BW / A-XDUO-LAT, experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml)
+#     consumed by every flavor file, so ranking differences among the
+#     three crossbar rows are exactly 0 by construction — that delta-0
+#     column is this artifact's honesty anchor (three architectures, one
+#     shared bind, three anchored identity chains);
+#   - rank-scale asymmetries are stated per flavor: UB's 64 IS its rack
+#     anchor (UBP-P17); NVLink's 64 is a matched-free choice against its
+#     anchored 72-GPU domain (NVP-P13, A-XDUO-IDNV); UEC's 64 is free
+#     (UEC 1.1 fixes no rank count).
+#
+# Baseline = the UEC-flavor crossbar (the identity-matched control), so
+# both paper-derived rows' delta columns read exactly 0 at every payload
+# size.
+sweep: cross_fabric_3arch_payload_grid_v1
+workload: experiments/workloads/w1_dense_tp_decode_rack64.yaml
+observables:
+- O-CONSERVATION
+- O-CCT
+baseline:
+  algorithm: allreduce_crossbar
+  topology: experiments/topologies/crossbar64_uec_free_params.yaml
+grid:
+  payload_sizes_bytes: [4096, 8192, 16384, 65536, 131072, 262144, 1048576, 2097152, 4194304, 16777216]
+  algorithms:
+  - algorithm: allreduce_crossbar
+    topologies:
+    - experiments/topologies/crossbar64_uec_free_params.yaml      # UEC flavor, identity-matched control (baseline)
+    - experiments/topologies/crossbar64_ub_rack_free_params.yaml  # UB paper flavor: ranks + identity ANCHORED, B/L free
+    - experiments/topologies/crossbar64_nvl_rack_free_params.yaml # NVLink paper flavor: identity ANCHORED (NVP-P01/P13), ranks matched-free, B/L free

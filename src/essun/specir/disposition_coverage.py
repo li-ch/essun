@@ -84,12 +84,24 @@ UEC_STAGE_MODULES: tuple[tuple[str, str], ...] = (
 #: since ladder S5; see the module's ``requirements()`` alias).
 UNIFIEDBUS_PROFILE_MODULE = "essun.specir.unifiedbus_paper_profile"
 
+#: Dotted name of the NVLink-class paper profile module (M1, 2026-11-02;
+#: same shape as the UnifiedBus family — the third fabric).
+NVLINK_PROFILE_MODULE = "essun.specir.nvlink_paper_profile"
+
 #: One-line status note for the UnifiedBus section (paper-derived family;
 #: the table itself carries the honest counts, zeros kept).
 UNIFIEDBUS_NOTE = (
     "paper-derived, not normative; the family's requirement objects are "
     "its design parameters (UBP-P01..P54), dispositioned at ladder S5 "
     "with zero executed — no reviewed binding exists for UnifiedBus"
+)
+
+#: One-line status note for the NVLink-class section (M1, third fabric).
+NVLINK_NOTE = (
+    "paper-derived, not normative; the family's requirement objects are "
+    "its design parameters (NVP-P01..P24), dispositioned under the same "
+    "S5 rule with zero executed — no reviewed binding exists for the "
+    "NVLink-class family (no public NVLink/NVSwitch specification exists)"
 )
 
 #: Dotted module of the credit/flow-control family — the G2 ladder window.
@@ -320,9 +332,40 @@ def unifiedbus_profile_coverage() -> ProfileCoverage:
     )
 
 
+def nvlink_profile_coverage() -> ProfileCoverage:
+    """Coverage of the NVLink-class paper-derived profile (M1), computed live.
+
+    Same family shape as the UnifiedBus paper profile: design parameters
+    carry D1 dispositions under the same initial rule (structure facts
+    informational, everything else unsupported; zero executed — no reviewed
+    binding exists for the NVLink-class family either).
+    """
+    module = importlib.import_module(NVLINK_PROFILE_MODULE)
+    return ProfileCoverage(
+        profile="NVLink-class paper-derived profile",
+        label=(
+            "paper-derived, not normative; the third fabric "
+            "(experiments/nvlink/)"
+        ),
+        modules=(
+            ModuleCoverage(
+                module=NVLINK_PROFILE_MODULE,
+                label="paper profile (design parameters)",
+                counts=module_disposition_counts(module),
+            ),
+        ),
+        free_parameters=len(module.free_parameters()),
+        note=NVLINK_NOTE,
+    )
+
+
 def coverage_report() -> tuple[ProfileCoverage, ...]:
     """Every profile the platform ships, in report order."""
-    return (uec_profile_coverage(), unifiedbus_profile_coverage())
+    return (
+        uec_profile_coverage(),
+        unifiedbus_profile_coverage(),
+        nvlink_profile_coverage(),
+    )
 
 
 def reconcile_window(window: LadderWindow) -> LadderWindow:

@@ -1,0 +1,23 @@
+II-DNVLink-SLI
+
+Scalable Link Interface (SLI) [13], or Crossfire[14], are traditionally used for graphic purposes only [15]. However, the recent Turing architecture GPUs (e.g., TU102, TU104) bring with them a new form of high-speed multi-GPU bridge, based on the NVLink-V2 interconnect technology. The bridge pairs up two GPUs so they can communicate with each other and co-render games, co-run GPGPU tasks, or co-share GPU memory spaces. In our SLI platform, the TU104 based RTX2080 GPU offers one x8 NVLink-V2 links, with up to 25 GB/s per direction per link, delivering an aggregate bidirectional bandwidth of 50 GB/s. Only two-way NVLink-SLI is supported for Turing GPUs.
+
+II-ENVSwitch
+
+NVSwitch[16] is proposed mainly to address all-to-all communication in many emerging applications such as deep neural network training. NVSwitch currently only appears in DGX-2. The topology for NVSwitch and PCIe in DGX-2 are shown in Figure 4 and Figure 4, respectively. NVSwitch is an NVLink-V2 based switch chip for intra-node communication, featuring 18 ports of NVLink per switch. Shown in Figure 4, there are two baseboards; each contains 6 NVSwitches and hosts 8 GPUs. This is because a V100 GPU incorporates 6 NVLink slots, being able to connect to 6 NVSwitches simultaneously, each target per link, at 50 GB/s bidirectional bandwidth. Each NVSwitch is a 18x18 fully connected non-blocking crossbar: (1) 8 of the 18 ports are used for intra-baseboard communication, which means any of the 8 GPUs on one baseboard can talk with any other GPUs on the same baseboard at a full bandwidth of 50 GB/s ×\times 6 switches =300 GB/s via a single NVSwitch hop; (2) Another 8 of the 18 ports are are used to connect to the opposite baseboard, meaning that each of the GPUs on one baseboard can talk to any GPUs on the other baseboard also at a full bandwidth of 300 GB/s, but through 2 NVSwitch hops. The baseboard-to-baseboard raw bisection bandwidth is thus 25 GB/s ×\times 8 links/switch ×\times 6 switches=2.4 TB/s; (3) The left 2 ports per NVSwitch are reserved (e.g., the red circle in Figure 4).
+
+To keep data integrity, Cyclical Redundancy Coding (CRC) is imposed to detect NVLink transfer errors and replay the transfer when necessary. Error-Correcting Codes (ECC) is enabled for the datapaths, routing, and state structures. In addition, final hop-address fidelity checks and buffer over/under-flow checks can be enforced in NVSwitch. To avoid illegal out-of-range access, a fabric manager monitors the routing tables for each particular application.
+
+II-FInfiniBand with GPUDirect-RDMA
+
+GPUDirect InfiniBand: We will not discuss InfiniBand [17] itself since it is already widely used for HPC platforms today and has been extensively studied. Instead, we focus on its relation with GPU. Since the Kepler architecture, NVIDIA GPUs have introduced GPUDirect-RDMA[18] (Correspondingly, AMD proposed ROCn-RDMA[19]). It enables third-party PCIe devices, especially the IB Host-Channel-Adapter (i.e., HCA) to directly access GPU device memory via PCIe without any assistance from CPU or staging through the main memory, which significantly improves the efficiency of inter-node GPU communication. To achieve IB RDMA, GPU vendors offer an OS kernel extension to return a DMA bus mapping for GPU device memory. When a user creates an IB region, it signals the IB driver with the target address of the GPU device memory. IB driver then calls a routine to obtain the DMA mapping. Finally, a normal IB virtual memory structure is returned to the user program as if it targets normal CPU memory. GPUDirect-RDMA is enabled for both SummitDev and Summit.
+
+TABLE II: Tartan Microbenchmarks.
+
+ScalingCommunicationInterconnectMetricsDescription
+
+Scale-upPeer-to-PeerPCIe, NVLink-V1 and V2Latency, bandwidth and efficiencyDeveloped based on p2pBandwidthLatencyTest from CUDA SDK [20]
+
+Scale-upCollectivePCIe, NVLink-V1 and V2Latency, bandwidth and efficiencyDeveloped based on nccl-tests[21] linking to NCCL-V1 [22] and V2 [23]
+
+Scale-outPeer-to-PeerInfiniBand with GPUDirectLatency, bandwidth and efficiencyDeveloped based on MPI-GPU-BW[24]

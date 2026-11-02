@@ -182,6 +182,7 @@ def test_coverage_report_lists_both_profiles() -> None:
     assert [p.profile for p in profiles] == [
         "UEC 1.1 semantic profile",
         "UnifiedBus paper-derived profile",
+        "NVLink-class paper-derived profile",
     ]
 
 
@@ -203,8 +204,11 @@ def test_rendered_report_shows_unsupported_plainly() -> None:
     assert " 22 " in ub_section.replace("\n", " ")  # unsupported, plainly
     assert "0/54 = 0.0%" in ub_section  # zero executed, plainly
     assert "8" in ub_section  # free parameters outside the table
+    nv_section = text.split("Profile: NVLink-class paper-derived profile")[1]
+    assert " 5 " in nv_section.replace("\n", " ")  # unsupported, plainly
+    assert "0/24 = 0.0%" in nv_section  # zero executed, plainly
     assert "445" in text and "4 executed" in text  # platform total line
-    assert "499 disposition-bearing requirements" in text  # 445 + 54
+    assert "523 disposition-bearing requirements" in text  # 445 + 54 + 24
 
 
 def test_json_report_keeps_zeros_and_sums() -> None:
@@ -223,6 +227,13 @@ def test_json_report_keeps_zeros_and_sums() -> None:
     assert ub["free_parameters"] == 8
     assert set(ub["modules"][0]["counts"]) == set(DISPOSITIONS)  # zeros kept
     assert ub["note"]
+    nv = data["profiles"][2]
+    assert len(nv["modules"]) == 1
+    assert sum(nv["total_counts"].values()) == nv["requirements_total"] == 24
+    assert nv["executed"] == 0
+    assert nv["free_parameters"] == 6
+    assert nv["total_counts"]["unsupported"] == 5  # honesty, plainly kept
+    assert nv["note"]
 
 
 # -- the CLI artifact ------------------------------------------------------------

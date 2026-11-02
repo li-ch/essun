@@ -1,0 +1,325 @@
+registry_family: nvlink_class_public_papers
+honesty_note: Paper-derived NVLink-class design profile anchors from PUBLIC papers and public pages only;
+  NOT a normative NVLink/NVSwitch specification profile. No public specification document exists — the
+  specification track is licensee/NDA-gated (STD-NV-SPEC) and was never fetched.
+sources:
+- source_id: PUB-NV-LI-TPDS19
+  title: 'Evaluating Modern GPU Interconnect: PCIe, NVLink, NV-SLI, NVSwitch and GPUDirect (IEEE TPDS
+    2019; arXiv:1903.04611)'
+  url: https://arxiv.org/html/1903.04611
+  handoff_row: PUB-NV-LI-TPDS19
+  access: PUBLIC_READ
+  role: 'Primary public paper: measured NVLink-V1/V2 and NVSwitch P2P latency/bandwidth, DGX-1/DGX-2 topologies,
+    NVSwitch crossbar structure, NUMA effects'
+  found_via: Calibration anchor staging (docs/calibration/anchors_staging.md additional candidates, Li
+    et al. TPDS 2019); arXiv native HTML
+  kind: arxiv_html
+  raw_format: html
+  doc_sha256: ee4f4e66d9e526ec66e89b3ec98ac6b411dcd846d80c7a0a68b91c360a0acbd5
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 18
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-LI-TPDS19
+  notes: arXiv HTML of the TPDS paper; raw bytes hashed at fetch time; the only public MEASURED latency/bandwidth
+    microbenchmarks of this family in the source set
+- source_id: PUB-NV-TPU4-ICI23
+  title: 'TPU v4: An Optically Reconfigurable Supercomputer for Machine Learning with Hardware Support
+    for Embeddings (ISCA 2023; arXiv:2304.01433)'
+  url: https://arxiv.org/pdf/2304.01433
+  handoff_row: PUB-NV-TPU4-ICI23
+  access: PUBLIC_READ
+  role: 'Class-member public paper: TPU v4 ICI link specs, 3D torus + OCS, twisted-torus measurements,
+    and the paper''s own NVSwitch characterization'
+  found_via: Calibration anchor CAL-A5 (docs/calibration/anchors_staging.md A5); no arXiv HTML exists
+    for 2304.04133-era submissions, so the public arXiv PDF is the fetched form
+  kind: arxiv_pdf
+  raw_format: pdf
+  doc_sha256: 94f08ac4cd041e46e5037876793761df8043296ac374aa5372af7afb0bdf3ce2
+  extractor: pypdf 6.21.4 page.extract_text (one PDF page = one page)
+  page_count: 14
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-TPU4-ICI23
+  notes: The independent (non-NVIDIA) member of the NVLink-class family; parameters drawn from it describe
+    TPU ICI, never NVIDIA hardware, and say so in their names
+- source_id: PUB-NV-GB200-UG
+  title: Hardware - NVIDIA DGX GB Rack Scale Systems User Guide (NVLink switch section)
+  url: https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html
+  handoff_row: STD-NV-GB200-UG
+  access: PUBLIC_READ
+  role: 'Vendor official documentation page: NVLink5 switch chip capacity/ports, switch trays, rack composition'
+  found_via: Calibration anchor CAL-A1 (anchors_staging.md A1)
+  kind: vendor_doc_page
+  raw_format: html
+  doc_sha256: 97dbc45676abec7422faf8573335a6795bc46931759efce45269f9b4c418957b
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 2
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-GB200-UG
+  notes: Official docs page; figures are vendor spec claims, labeled VENDOR_CLAIMED in the profile
+- source_id: PUB-NV-GB200-NVL72
+  title: NVIDIA GB200 NVL72 product page
+  url: https://www.nvidia.com/en-us/data-center/gb200-nvl72/
+  handoff_row: STD-NV-GB200-NVL72
+  access: PUBLIC_READ
+  role: 'Vendor product page: 72-GPU NVLink domain, per-GPU and aggregate NVLink5 bandwidth figures'
+  found_via: Calibration anchor CAL-A2 (anchors_staging.md A2)
+  kind: vendor_product_page
+  raw_format: html
+  doc_sha256: 383943b560655af57f8b2007e1608b2f7b26f78b0b3fcb911a93a8e554636fdd
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 5
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-GB200-NVL72
+  notes: Marketing page; every figure is a vendor claim (VENDOR_CLAIMED), spec ceilings rather than measurements
+- source_id: PUB-NV-NCCL-1054
+  title: 'NVIDIA/nccl issue #1054: The total nvlink bandwidth obtained by NCCL topo is not the actual
+    total bandwidth'
+  url: https://github.com/NVIDIA/nccl/issues/1054
+  handoff_row: PUB-NV-NCCL-1054
+  access: PUBLIC_READ
+  role: 'NCCL project public tracker: the library''s internal NVLink bandwidth model (20 GB/s per link)
+    and the app-level ~80% derating, maintainer reply on the record'
+  found_via: 'Calibration anchor CAL-A12 (anchors_gapfill.md; issue #1054)'
+  kind: project_tracker_page
+  raw_format: html
+  doc_sha256: fdac0548d96933ea2c019b8f1e76d817e65bd918bafc5ebf4f4a9d69ba414134
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 1
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-NCCL-1054
+  notes: Official public page of the NCCL project (the reference communication stack for this fabric family);
+    community issue body plus maintainer answer, carried OFFICIAL_PUBLIC_PAGE
+anchors:
+- id: NVP-LI-1-DGX-SIZES
+  source_id: PUB-NV-LI-TPDS19
+  section: '1'
+  title: DGX-1 8 GPUs / DGX-2 16 GPUs (NVLink, NVSwitch)
+  category: scale
+  page: 1
+  quote: which incorporate 8 and 16 P100/V100 GPUs connected by NVLink and NVSwitch, respectively.
+  page_sha256: 282d826c8d1dd29bccfc81b07055bb348320c1927921e49743aeee23e2adb7ae
+- id: NVP-LI-1-NUMA-FOUR
+  source_id: PUB-NV-LI-TPDS19
+  section: '1'
+  title: Four NUMA effect classes, three from NVLink topology
+  category: performance
+  page: 1
+  quote: 'we have observed four new types of GPU communication network NUMA effects:'
+  page_sha256: 282d826c8d1dd29bccfc81b07055bb348320c1927921e49743aeee23e2adb7ae
+- id: NVP-LI-2-P100-QUADSLOTS
+  source_id: PUB-NV-LI-TPDS19
+  section: '2'
+  title: P100 GPU has quad NVLink slots
+  category: link_scale
+  page: 3
+  quote: A Pascal-P100 GPU has quad NVLink slots.
+  page_sha256: 2eb83051ec76dde9b4acacdd71278c45e10869810f95fb2a01dfe5af4894b911
+- id: NVP-LI-2-NVSWITCH-PORTS
+  source_id: PUB-NV-LI-TPDS19
+  section: '2'
+  title: 'NVSwitch: NVLink-V2 switch chip, 18 NVLink ports'
+  category: link_scale
+  page: 4
+  quote: NVSwitch is an NVLink-V2 based switch chip for intra-node communication, featuring 18 ports of
+    NVLink per switch.
+  page_sha256: ae9742e6e6f010bae17f597ced0b7ee9602def62305e95add800f305ba6bfd35
+- id: NVP-LI-2-NVSWITCH-CROSSBAR
+  source_id: PUB-NV-LI-TPDS19
+  section: '2'
+  title: Each NVSwitch is an 18x18 fully connected non-blocking crossbar
+  category: topology
+  page: 4
+  quote: 'Each NVSwitch is a 18x18 fully connected non-blocking crossbar: (1) 8 of the 18 ports are used
+    for intra-baseboard communication'
+  page_sha256: ae9742e6e6f010bae17f597ced0b7ee9602def62305e95add800f305ba6bfd35
+- id: NVP-LI-2-V100-LINKS-BW
+  source_id: PUB-NV-LI-TPDS19
+  section: '2'
+  title: 'V100: 6 NVLink slots, 50 GB/s bidirectional per link'
+  category: link_scale
+  page: 4
+  quote: a V100 GPU incorporates 6 NVLink slots, being able to connect to 6 NVSwitches simultaneously,
+    each target per link, at 50 GB/s bidirectional bandwidth.
+  page_sha256: ae9742e6e6f010bae17f597ced0b7ee9602def62305e95add800f305ba6bfd35
+- id: NVP-LI-2-DGX2-BASEBOARDS
+  source_id: PUB-NV-LI-TPDS19
+  section: '2'
+  title: 'DGX-2: two baseboards, 6 NVSwitches and 8 GPUs each'
+  category: topology
+  page: 4
+  quote: there are two baseboards; each contains 6 NVSwitches and hosts 8 GPUs
+  page_sha256: ae9742e6e6f010bae17f597ced0b7ee9602def62305e95add800f305ba6bfd35
+- id: NVP-LI-3-NVLINK-LATENCY
+  source_id: PUB-NV-LI-TPDS19
+  section: '3'
+  title: NVLink P2P latency ~9us direct, 2-3x routed (measured)
+  category: latency
+  page: 5
+  quote: the latency is around 9μ​s\mu s; for nodes that require manual routing, the latency is increased
+    by about 2x for P100-DGX-1 and 3x for V100-DGX-1.
+  page_sha256: d1e6735df77280ce2cbeadf1e8e85ca317a3375039ea4f8050fb567cebbe8111
+- id: NVP-LI-3-NVSWITCH-HOMOG
+  source_id: PUB-NV-LI-TPDS19
+  section: '3'
+  title: NVSwitch remote access homogeneous, all-to-all fully-connected
+  category: latency
+  page: 6
+  quote: all the remote access are homogeneous, either for PCIe or NVSwitch, confirming that NVSwitch
+    is all-to-all fully-connected.
+  page_sha256: 741710ad6706eae59ddf442098711a310f4ae9407589da02c65c83c9b2db7d21
+- id: NVP-TPU4-0-OCS-TOPOLOGY
+  source_id: PUB-NV-TPU4-ICI23
+  section: '0'
+  title: OCSes dynamically reconfigure the interconnect topology
+  category: topology
+  page: 1
+  quote: Optical circuit switches (OCSes) dynamically reconfigure its interconnect topology to improve
+    scale, availability, utilization, modularity, deployment, security, power, and performance;
+  page_sha256: cff608c2970549b0ba0d57488ca7f37f2c6fd69ec2acf36706d017d37460d334
+- id: NVP-TPU4-2.1-OCS-MS
+  source_id: PUB-NV-TPU4-ICI23
+  section: '2.1'
+  title: 'Palomar OCS: MEMS mirrors switch in milliseconds'
+  category: routing
+  page: 2
+  quote: The resulting Google Palomar OCS is based on 3D Micro-Electro-Mechanical Systems (MEMS) mirrors
+    that switch in milliseconds.
+  page_sha256: 86b1952f64ca4bb1cd564f45063ef5106c248532e15ef5d01a46101b7cb2118c
+- id: NVP-TPU4-4-TWIST-GAIN
+  source_id: PUB-NV-TPU4-ICI23
+  section: '4'
+  title: 'Twisted torus: 1.63x/1.31x all-to-all over regular torus'
+  category: performance
+  page: 4
+  quote: The twisted torus improves all-to-all throughput by 1.63x and 1.31x over the regular torus on
+    4×4×8 and 4×8×8 slices, respectively.
+  page_sha256: 35f178413fb802c0f5e4802c7653c0e0462362a0803a3d58061ee8b4c19fba3c
+- id: NVP-TPU4-5-T4-ICI-LINKS
+  source_id: PUB-NV-TPU4-ICI23
+  section: '5'
+  title: 'TPU v4 ICI: 6 links @ 50 GB/s (v3: 4 @ 70 GB/s)'
+  category: link_scale
+  page: 7
+  quote: Inter Chip Interconnect 6 links @ 50 GB/s 4 links @ 70 GB/s
+  page_sha256: aa87654de405d68f6ce976976befddd1e30efb805582f5a910f396898d8b98a6
+- id: NVP-TPU4-5-T4-SCALE
+  source_id: PUB-NV-TPU4-ICI23
+  section: '5'
+  title: 'Largest scale: 4096 chips (v3: 1024)'
+  category: scale
+  page: 7
+  quote: Largest scale configuration 4096 chips 1024 chips
+  page_sha256: aa87654de405d68f6ce976976befddd1e30efb805582f5a910f396898d8b98a6
+- id: NVP-TPU4-7.2-ICI-ROUTER
+  source_id: PUB-NV-TPU4-ICI23
+  section: '7.2'
+  title: Built-in router between ICI links (torus)
+  category: topology
+  page: 10
+  quote: Every TPU since 2017 has had its own built-in router between links (ICI) to neighboring chips
+    in the torus.
+  page_sha256: 936de921d82fdf8fab5fa9fc2f84c65aecc7400404065faf943e74e00c339ae5
+- id: NVP-TPU4-7.2-NVSWITCH-256
+  source_id: PUB-NV-TPU4-ICI23
+  section: '7.2'
+  title: 'NVSwitch: 8 GPUs one switch, up to 256 two levels'
+  category: scale
+  page: 10
+  quote: which uses electrical packet switching for 8 GPUs with one switch and up to 256 GPUs with two
+    levels of switches.
+  page_sha256: 936de921d82fdf8fab5fa9fc2f84c65aecc7400404065faf943e74e00c339ae5
+- id: NVP-TPU4-7.3-ICI-VS-IB
+  source_id: PUB-NV-TPU4-ICI23
+  section: '7.3'
+  title: 'ICI link bandwidth 2x IB: 400 vs 200 Gbit/s'
+  category: link_scale
+  page: 10
+  quote: ICI link bandwidth is 2x IB—400 vs 200 Gbit/s
+  page_sha256: 936de921d82fdf8fab5fa9fc2f84c65aecc7400404065faf943e74e00c339ae5
+- id: NVP-UG-1-SWITCH-57.6T
+  source_id: PUB-NV-GB200-UG
+  section: '1'
+  title: 'NVLink5 switch: 57.6 Tbps full duplex'
+  category: link_scale
+  page: 1
+  quote: The NVLink switch system delivers an unprecedented 57.6 terabits per second (Tbps) of full duplex
+    bandwidth for the fifth-generation NVLink in a 1U design.
+  page_sha256: b4c8fc92fb4b4a24535d19f2d243f38fab90a6815f365d93448a83f4a84b61cf
+- id: NVP-UG-1-SWITCH-PORTS
+  source_id: PUB-NV-GB200-UG
+  section: '1'
+  title: 2x NVLink NVSwitches per tray, 72 NVLink ports each
+  category: link_scale
+  page: 1
+  quote: 2x NVLink NVSwitches, each of which has 72 NVLink ports
+  page_sha256: b4c8fc92fb4b4a24535d19f2d243f38fab90a6815f365d93448a83f4a84b61cf
+- id: NVP-UG-1-COMPUTE-TRAYS
+  source_id: PUB-NV-GB200-UG
+  section: '1'
+  title: '18x compute trays: 2 Grace CPUs + 4 Blackwell GPUs each'
+  category: scale
+  page: 1
+  quote: 18x 1RU compute trays, each with 2 Grace CPUs and 4 Blackwell GPUs.
+  page_sha256: b4c8fc92fb4b4a24535d19f2d243f38fab90a6815f365d93448a83f4a84b61cf
+- id: NVP-UG-1-SWITCH-TRAYS
+  source_id: PUB-NV-GB200-UG
+  section: '1'
+  title: 9x 1RU NVLink switch trays
+  category: scale
+  page: 1
+  quote: 9x 1RU NVLink switch trays.
+  page_sha256: b4c8fc92fb4b4a24535d19f2d243f38fab90a6815f365d93448a83f4a84b61cf
+- id: NVP-NVL72-1-RACK-COMPOSITION
+  source_id: PUB-NV-GB200-NVL72
+  section: '1'
+  title: 36 Grace CPUs + 72 Blackwell GPUs, rack-scale liquid-cooled
+  category: scale
+  page: 3
+  quote: The NVIDIA GB200 NVL72 connects 36 Grace CPUs and 72 Blackwell GPUs in a rack-scale, liquid-cooled
+    design.
+  page_sha256: 1a69c41de44290267cbcff5837079e313d8c3fa2f7c812c31f8ffa918d29188c
+- id: NVP-NVL72-1-DOMAIN-72
+  source_id: PUB-NV-GB200-NVL72
+  section: '1'
+  title: One 72-GPU NVLink domain acting as a single, massive GPU
+  category: scale
+  page: 3
+  quote: It boasts a 72-GPU NVIDIA NVLink™ domain that acts as a single, massive GPU
+  page_sha256: 1a69c41de44290267cbcff5837079e313d8c3fa2f7c812c31f8ffa918d29188c
+- id: NVP-NVL72-1-AGGREGATE-130TB
+  source_id: PUB-NV-GB200-NVL72
+  section: '1'
+  title: 'NVLink Switch System: 130 TB/s GPU communications'
+  category: link_scale
+  page: 3
+  quote: With 72 NVIDIA Blackwell GPUs interconnected by the largest NVIDIA NVLink domain ever offered,
+    NVLink Switch System provides 130 terabytes per second (TB/s) of low-latency GPU communications
+  page_sha256: 1a69c41de44290267cbcff5837079e313d8c3fa2f7c812c31f8ffa918d29188c
+- id: NVP-NVL72-1-PERGPU-1.8TB
+  source_id: PUB-NV-GB200-NVL72
+  section: '1'
+  title: 'Fifth-generation NVLink: 1.8 TB/s GPU-to-GPU'
+  category: link_scale
+  page: 3
+  quote: the fifth-generation NVLink, which provides 1.8 TB/s of GPU-to-GPU interconnect,
+  page_sha256: 1a69c41de44290267cbcff5837079e313d8c3fa2f7c812c31f8ffa918d29188c
+- id: NVP-NCCL-1-TOTALBW-240
+  source_id: PUB-NV-NCCL-1054
+  section: '1'
+  title: NCCL topo totalBw 240 GB/s on 8-GPU A100
+  category: software
+  page: 1
+  quote: I found that the system->totalBw obtained at ncclTopoSearchInit was only 240GB/s.
+  page_sha256: ed4a56acf035195c3129f174638f0233817c69c45139efa7dc27c0892bda469c
+- id: NVP-NCCL-1-MODEL-20GB
+  source_id: PUB-NV-NCCL-1054
+  section: '1'
+  title: NCCL topo.h models an NVLink at 20 GB/s (not 25)
+  category: software
+  page: 1
+  quote: in the src/graph/topo.h file, an nvlink bandwidth is defined as 20GB/s instead of 25GB/s.
+  page_sha256: ed4a56acf035195c3129f174638f0233817c69c45139efa7dc27c0892bda469c
+- id: NVP-NCCL-1-DERATE-80
+  source_id: PUB-NV-NCCL-1054
+  section: '1'
+  title: App-level NVLink bandwidth ~80% of peak (maintainer)
+  category: performance
+  page: 1
+  quote: The NVLink peak bandwidth and the real application-level bandwidth are different, since there
+    is an overhead for NVLink packets. Roughly, the app-level bandwidth is 80% of the peak bandwidth.
+  page_sha256: ed4a56acf035195c3129f174638f0233817c69c45139efa7dc27c0892bda469c

@@ -146,3 +146,109 @@ def test_every_comparable_cell_cites_artifacts(matrix):
             for ref in cell.refs:
                 assert ref.artifact_id in ids
                 assert ref.kind in ("sweep", "envelope")
+
+
+# ---------------------------------------------------------------------------
+# The M1 third-fabric columns (UEC vs NVLink-paper, UB-paper vs NVLink-paper)
+# ---------------------------------------------------------------------------
+
+
+def test_third_fabric_column_delta_zero(matrix):
+    """Cell: payload-grid row, UEC crossbar vs NVLink-paper crossbar."""
+    cell = _cell(matrix, "occt_payload_grid", "uec_vs_nv_crossbar")
+    assert cell.comparable
+    assert "TIE (exact) at all 10 payload-grid sizes" in cell.verdict
+    assert cell.winner.startswith("neither")
+    assert "NVP-P01" in cell.flip and "NVP-P13" in cell.flip
+    assert {r.artifact_id for r in cell.refs} == {
+        matrix["sweeps"]["three_arch"]["sweep_id"]
+    }
+    # The tie claim is re-derived per payload from the sweep table itself.
+    table = matrix["sweeps"]["three_arch"]["table"]
+    uec, nv = {}, {}
+    for row in table["configs"]:
+        if row["topology"]["path"].endswith("crossbar64_uec_free_params.yaml"):
+            uec[row["payload_bytes"]] = row["o_cct"]["completion_time_ns_mean_exact"]
+        if row["topology"]["path"].endswith("crossbar64_nvl_rack_free_params.yaml"):
+            nv[row["payload_bytes"]] = row["o_cct"]["completion_time_ns_mean_exact"]
+    assert len(uec) == 10
+    assert uec == nv  # delta exactly 0 at every size, third fabric included
+
+
+def test_paper_derived_pair_column_delta_zero(matrix):
+    """Cell: payload-grid row, UB-paper crossbar vs NVLink-paper crossbar."""
+    cell = _cell(matrix, "occt_payload_grid", "ub_vs_nv_crossbar")
+    assert cell.comparable
+    assert "TIE (exact) at all 10 payload-grid sizes" in cell.verdict
+    assert "UBP-P17" in cell.flip and "NVP-P13" in cell.flip
+    table = matrix["sweeps"]["three_arch"]["table"]
+    ub, nv = {}, {}
+    for row in table["configs"]:
+        if row["topology"]["path"].endswith("crossbar64_ub_rack_free_params.yaml"):
+            ub[row["payload_bytes"]] = row["o_cct"]["completion_time_ns_mean_exact"]
+        if row["topology"]["path"].endswith("crossbar64_nvl_rack_free_params.yaml"):
+            nv[row["payload_bytes"]] = row["o_cct"]["completion_time_ns_mean_exact"]
+    assert ub == nv
+
+
+def test_third_fabric_conservation_ties(matrix):
+    for col in ("uec_vs_nv_crossbar", "ub_vs_nv_crossbar"):
+        cell = _cell(matrix, "oconservation", col)
+        assert cell.comparable
+        assert cell.verdict.startswith("TIE (exact)")
+        assert {r.artifact_id for r in cell.refs} == {
+            matrix["sweeps"]["three_arch"]["sweep_id"]
+        }
+
+
+def test_third_fabric_honest_empties_are_explicit_and_uncited(matrix):
+    # UEC window vs NV: NOT SAMPLED with the strongest reason — no public
+    # NVLink domain beyond one rack (NVP-F06), so no honest pod-scale NV
+    # stand-in exists; the cell cites no artifact.
+    window = _cell(matrix, "occt_window_boundary", "uec_vs_nv_crossbar")
+    assert not window.comparable
+    assert window.verdict.startswith("NOT SAMPLED")
+    assert "NVP-F06" in window.verdict
+    assert window.refs == []
+
+    # UB vs NV window: NOT COMPARABLE — both unwindowed by declared
+    # silence (UBP-F04 and NVP-F03).
+    both_flat = _cell(matrix, "occt_window_boundary", "ub_vs_nv_crossbar")
+    assert not both_flat.comparable
+    assert both_flat.verdict.startswith("NOT COMPARABLE")
+    assert "UBP-F04" in both_flat.verdict and "NVP-F03" in both_flat.verdict
+    assert both_flat.refs == []
+
+    for row_id in ("occt_bw_axis", "occt_lat_axis"):
+        for col in ("uec_vs_nv_crossbar", "ub_vs_nv_crossbar"):
+            cell = _cell(matrix, row_id, col)
+            assert not cell.comparable
+            assert cell.verdict.startswith("NOT SAMPLED")
+            assert cell.refs == []
+
+
+def test_matrix_census_three_architectures(matrix):
+    """5 rows x 5 columns; the census is derived, never typed."""
+    columns = matrix["columns"]
+    assert [c["id"] for c in columns] == [
+        "uec_window_vs_ub_flat",
+        "uec_window_on_vs_off",
+        "uec_vs_ub_crossbar",
+        "uec_vs_nv_crossbar",
+        "ub_vs_nv_crossbar",
+    ]
+    comparable = not_comparable = not_sampled = 0
+    for row in matrix["rows"]:
+        assert set(row["cells"]) == {c["id"] for c in columns}
+        for cell in row["cells"].values():
+            if cell.comparable:
+                comparable += 1
+            elif cell.verdict.startswith("NOT COMPARABLE"):
+                not_comparable += 1
+            elif cell.verdict.startswith("NOT SAMPLED"):
+                not_sampled += 1
+            else:
+                raise AssertionError(f"unclassified cell: {cell.verdict!r}")
+    total = comparable + not_comparable + not_sampled
+    assert total == 25  # 5 rows x 5 columns
+    assert (comparable, not_comparable, not_sampled) == (16, 2, 7)

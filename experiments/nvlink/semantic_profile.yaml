@@ -1,0 +1,515 @@
+# NVLink-class paper-derived profile — essun-profile v0.1 artifact.
+# GENERATED FILE (M1, 2026-11-02); regenerate with:
+#   .venv/bin/python experiments/nvlink/build_semantic_profile.py
+# PAPER-DERIVED, NOT NORMATIVE (stated here and in the artifact): no public
+# NVLink/NVSwitch specification exists — the specification track is
+# licensee/NDA-gated and never fetched; the profile interprets five
+# PUBLIC_READ papers/pages only. Dispositions are READ from the live specir
+# registry (the M1 record); this migration does not assign or change any
+# disposition. Anchor citations are unchanged from the paper-profile module
+# and resolve against experiments/nvlink/anchor_registry.yaml. Conformance
+# gate: tests/specir/test_nvlink_semantic_profile.py (loads, disposition
+# parity with the live registry, zero-binding honesty, corruption
+# rejection, byte-identical regeneration).
+format:
+  name: essun-profile
+  version: '0.1'
+profile_id: nvlink-class-paper-derived
+source:
+  name: NVLink-class public papers and public pages (paper-derived design profile)
+  document_id: nvlink_class_public_papers
+  revision: 03d304a120d286664d794f876aa85b6b4d07ae6d84cf4c5ffb7e529eac01ed3b
+  normative: false
+  note: 'PAPER-DERIVED, NOT NORMATIVE: this is a design profile of the NVLink-class scale-up family
+    (the fabrics NVLink/NVSwitch exemplify, plus the class member TPU v4 ICI) AS REPORTED by five
+    public papers and public pages — not an NVLink/NVSwitch standard profile. No public specification
+    document exists; the specification track stays licensee-gated and was never fetched. Every requirement
+    carries its evidence grade; a vendor-claimed number is never laundered as a neutral fact, and
+    paper-derived values keep their paper anchors while everything the sources do not state stays
+    an explicit free parameter'
+provenance:
+  source_record: experiments/nvlink/source_record.yaml
+  access: PUBLIC_READ
+  paper_sources:
+  - source_id: PUB-NV-GB200-NVL72
+    title: NVIDIA GB200 NVL72 product page
+    url: https://www.nvidia.com/en-us/data-center/gb200-nvl72/
+    access: PUBLIC_READ
+    doc_sha256: 383943b560655af57f8b2007e1608b2f7b26f78b0b3fcb911a93a8e554636fdd
+  - source_id: PUB-NV-GB200-UG
+    title: Hardware - NVIDIA DGX GB Rack Scale Systems User Guide (NVLink switch section)
+    url: https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html
+    access: PUBLIC_READ
+    doc_sha256: 97dbc45676abec7422faf8573335a6795bc46931759efce45269f9b4c418957b
+  - source_id: PUB-NV-LI-TPDS19
+    title: 'Evaluating Modern GPU Interconnect: PCIe, NVLink, NV-SLI, NVSwitch and GPUDirect (IEEE
+      TPDS 2019; arXiv:1903.04611)'
+    url: https://arxiv.org/html/1903.04611
+    access: PUBLIC_READ
+    doc_sha256: ee4f4e66d9e526ec66e89b3ec98ac6b411dcd846d80c7a0a68b91c360a0acbd5
+  - source_id: PUB-NV-NCCL-1054
+    title: 'NVIDIA/nccl issue #1054: The total nvlink bandwidth obtained by NCCL topo is not the actual
+      total bandwidth'
+    url: https://github.com/NVIDIA/nccl/issues/1054
+    access: PUBLIC_READ
+    doc_sha256: fdac0548d96933ea2c019b8f1e76d817e65bd918bafc5ebf4f4a9d69ba414134
+  - source_id: PUB-NV-TPU4-ICI23
+    title: 'TPU v4: An Optically Reconfigurable Supercomputer for Machine Learning with Hardware Support
+      for Embeddings (ISCA 2023; arXiv:2304.01433)'
+    url: https://arxiv.org/pdf/2304.01433
+    access: PUBLIC_READ
+    doc_sha256: 94f08ac4cd041e46e5037876793761df8043296ac374aa5372af7afb0bdf3ce2
+  anchor_registry: experiments/nvlink/anchor_registry.yaml
+  gated_specification_row: STD-NV-SPEC (APPROVAL_REQUIRED, never fetched; no public NVLink/NVSwitch
+    specification exists — the record keeps the verbatim row)
+  evidence_grades_in_use:
+  - OFFICIAL_PUBLIC_PAGE
+  - PAPER_REPORTED
+  - VENDOR_CLAIMED
+  note: 'license review precedes ingestion: the repo source record carries the verbatim license-gate
+    rows, including the gated specification row, which was never fetched and is not interpreted here.
+    Raw fetched pages stay under experiments/nvlink/source/ with per-page sha256; quotes in the anchor
+    registry are citation-bounded and re-matched at load; requirement statements below are paraphrases
+    in essun''s own words with every number as the source states it'
+requirements:
+  objects:
+  - requirement_id: NVP-P01
+    anchor_ids:
+    - NVP-LI-2-NVSWITCH-CROSSBAR
+    statement: Each NVSwitch is an 18x18 fully connected non-blocking crossbar; 8 of the 18 ports
+      serve intra-baseboard communication.
+    disposition: informational
+    name: nvswitch_crossbar_class
+    category: topology
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+    notes: 'Same sentence continues: any of the 8 GPUs on one baseboard reaches any other at a full
+      bandwidth of 50 GB/s x 6 switches = 300 GB/s via a single NVSwitch hop.'
+  - requirement_id: NVP-P02
+    anchor_ids:
+    - NVP-LI-2-DGX2-BASEBOARDS
+    statement: 'DGX-2 NVSwitch fabric: two baseboards, each containing 6 NVSwitches and hosting 8
+      GPUs.'
+    disposition: informational
+    name: dgx2_baseboards
+    category: topology
+    value_kind: DESIGN_CONSTANT
+    unit: baseboards; NVSwitches; GPUs
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P20
+    anchor_ids:
+    - NVP-TPU4-0-OCS-TOPOLOGY
+    - NVP-TPU4-7.2-ICI-ROUTER
+    statement: 'TPU v4 ICI (class member, not NVIDIA): a 3D torus with a built-in router per chip
+      between ICI links; OCSes dynamically reconfigure the interconnect topology.'
+    disposition: informational
+    name: tpu_ici_topology
+    category: topology
+    value_kind: DESIGN_CLASS
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P03
+    anchor_ids:
+    - NVP-LI-2-NVSWITCH-PORTS
+    statement: 'NVSwitch (NVLink-V2 generation): a switch chip featuring 18 ports of NVLink for intra-node
+      communication.'
+    disposition: informational
+    name: nvswitch2_ports
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: NVLink ports
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P04
+    anchor_ids:
+    - NVP-LI-2-V100-LINKS-BW
+    statement: 'V100 GPU: 6 NVLink slots connecting to 6 NVSwitches simultaneously, at 50 GB/s bidirectional
+      bandwidth per link.'
+    disposition: informational
+    name: nvlink2_gpu_links
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: NVLink slots; GB/s
+    evidence_grade: PAPER_REPORTED
+    notes: 'Same page: baseboard-to-baseboard raw bisection bandwidth 25 GB/s x 8 links/switch x 6
+      switches = 2.4 TB/s.'
+  - requirement_id: NVP-P05
+    anchor_ids:
+    - NVP-LI-2-P100-QUADSLOTS
+    statement: 'P100 GPU: quad (4) NVLink slots; a dual-GPU system gangs all four for 4x single-link
+      bandwidth.'
+    disposition: informational
+    name: nvlink1_gpu_links
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: NVLink slots
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P10
+    anchor_ids:
+    - NVP-UG-1-SWITCH-57.6T
+    statement: 'NVLink5 switch system: 57.6 Tbps of full-duplex bandwidth in a 1U design.'
+    disposition: informational
+    name: nvlink5_switch_capacity
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: Tbps
+    evidence_grade: VENDOR_CLAIMED
+    notes: Spec ceiling on a vendor documentation page, never a measurement.
+  - requirement_id: NVP-P11
+    anchor_ids:
+    - NVP-UG-1-SWITCH-PORTS
+    statement: Each NVLink switch tray has 2 NVLink NVSwitch chips, each with 72 NVLink ports.
+    disposition: informational
+    name: nvlink5_switch_ports
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: chips; NVLink ports
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: NVP-P14
+    anchor_ids:
+    - NVP-NVL72-1-PERGPU-1.8TB
+    statement: 'Fifth-generation NVLink: 1.8 TB/s of GPU-to-GPU interconnect.'
+    disposition: informational
+    name: nvlink5_per_gpu_bw
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: TB/s
+    evidence_grade: VENDOR_CLAIMED
+    notes: Vendor spec ceiling (bidirectional class); the per-link rate is not stated — see NVP-F01.
+  - requirement_id: NVP-P15
+    anchor_ids:
+    - NVP-NVL72-1-AGGREGATE-130TB
+    statement: NVLink Switch System provides 130 TB/s of low-latency GPU communications across the
+      72-GPU domain.
+    disposition: informational
+    name: nvlink5_aggregate_bw
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: TB/s
+    evidence_grade: VENDOR_CLAIMED
+    notes: Aggregate spec ceiling; never an achieved value.
+  - requirement_id: NVP-P18
+    anchor_ids:
+    - NVP-TPU4-5-T4-ICI-LINKS
+    statement: 'TPU v4 ICI (class member, not NVIDIA): 6 links at 50 GB/s per chip; TPU v3 had 4 links
+      at 70 GB/s.'
+    disposition: informational
+    name: tpu_ici_links
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: links; GB/s
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P22
+    anchor_ids:
+    - NVP-TPU4-7.3-ICI-VS-IB
+    statement: 'ICI link bandwidth is 2x IB: 400 vs 200 Gbit/s.'
+    disposition: informational
+    name: ici_vs_ib_bw
+    category: link_scale
+    value_kind: DESIGN_CONSTANT
+    unit: Gbit/s
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P06
+    anchor_ids:
+    - NVP-LI-1-DGX-SIZES
+    statement: 'DGX-1: 8 P100/V100 GPUs connected by NVLink; DGX-2: 16 GPUs connected by NVSwitch.'
+    disposition: informational
+    name: dgx1_dgx2_scales
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: GPUs
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P12
+    anchor_ids:
+    - NVP-UG-1-COMPUTE-TRAYS
+    - NVP-UG-1-SWITCH-TRAYS
+    statement: 'DGX GB rack: 18x 1RU compute trays (2 Grace CPUs + 4 Blackwell GPUs each) and 9x 1RU
+      NVLink switch trays.'
+    disposition: informational
+    name: gb200_rack_composition
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: trays
+    evidence_grade: VENDOR_CLAIMED
+    notes: The 18x4 multiplication yields the 72-GPU rack; the switch tier is 9 trays x 2 chips (NVP-P11).
+  - requirement_id: NVP-P13
+    anchor_ids:
+    - NVP-NVL72-1-RACK-COMPOSITION
+    - NVP-NVL72-1-DOMAIN-72
+    statement: 'GB200 NVL72: 36 Grace CPUs and 72 Blackwell GPUs in one rack-scale design; a 72-GPU
+      NVLink domain acting as a single, massive GPU.'
+    disposition: informational
+    name: nvlink5_domain
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: GPUs; CPUs
+    evidence_grade: VENDOR_CLAIMED
+  - requirement_id: NVP-P19
+    anchor_ids:
+    - NVP-TPU4-5-T4-SCALE
+    statement: 'TPU v4 (class member, not NVIDIA): largest scale configuration 4096 chips; TPU v3
+      reached 1024.'
+    disposition: informational
+    name: tpu_ici_scale
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: chips
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P21
+    anchor_ids:
+    - NVP-TPU4-7.2-NVSWITCH-256
+    statement: 'Independent paper''s NVSwitch characterization: electrical packet switching for 8
+      GPUs with one switch, up to 256 GPUs with two levels of switches.'
+    disposition: informational
+    name: nvswitch_two_level_scale
+    category: scale
+    value_kind: DESIGN_CONSTANT
+    unit: GPUs
+    evidence_grade: PAPER_REPORTED
+    notes: Cross-vendor (Google) view of NVSwitch-generation scale; the NVIDIA public pages in this
+      set state no multi-rack domain (see NVP-F06).
+  - requirement_id: NVP-P07
+    anchor_ids:
+    - NVP-LI-3-NVLINK-LATENCY
+    statement: Measured NVLink P2P start-up latency around 9 microseconds for directly connected nodes;
+      manual-routing paths increase it about 2x (P100-DGX-1) to 3x (V100-DGX-1).
+    disposition: unsupported
+    name: nvlink2_p2p_latency
+    category: latency
+    value_kind: REPORTED_MEASURE
+    unit: µs
+    evidence_grade: PAPER_REPORTED
+    notes: V100-era measured OUTCOME (cudaEvent microbenchmark, shortest message); not a per-hop decomposition
+      and not current-gen — see NVP-F02.
+  - requirement_id: NVP-P08
+    anchor_ids:
+    - NVP-LI-3-NVSWITCH-HOMOG
+    statement: 'Measured on DGX-2: all remote accesses are homogeneous for NVSwitch, confirming all-to-all
+      fully-connected behavior.'
+    disposition: unsupported
+    name: nvswitch_p2p_homogeneity
+    category: latency
+    value_kind: REPORTED_MEASURE
+    unit: ''
+    evidence_grade: PAPER_REPORTED
+    notes: 'Same paragraph: cross-baseboard access incurs two switch hops, but the latency difference
+      is very small, almost negligible.'
+  - requirement_id: NVP-P23
+    anchor_ids:
+    - NVP-TPU4-2.1-OCS-MS
+    statement: TPU v4's Palomar OCS reconfigures through 3D MEMS mirrors that switch in milliseconds.
+    disposition: informational
+    name: ocs_reconfig_timescale
+    category: routing
+    value_kind: DESIGN_CONSTANT
+    unit: ms (timescale)
+    evidence_grade: PAPER_REPORTED
+    notes: Reconfiguration timescale, not a data-path latency.
+  - requirement_id: NVP-P09
+    anchor_ids:
+    - NVP-LI-1-NUMA-FOUR
+    statement: Four GPU-communication NUMA effect classes observed; three are triggered by NVLink's
+      topology, connectivity, and routing, one by a PCIe chipset design issue.
+    disposition: unsupported
+    name: nvlink_numa_effects
+    category: performance
+    value_kind: REPORTED_MEASURE
+    unit: effect classes
+    evidence_grade: PAPER_REPORTED
+  - requirement_id: NVP-P17
+    anchor_ids:
+    - NVP-NCCL-1-DERATE-80
+    statement: 'Maintainer guidance on the NCCL tracker: application-level NVLink bandwidth is roughly
+      80% of peak, due to NVLink packet overhead.'
+    disposition: unsupported
+    name: nccl_app_derating
+    category: performance
+    value_kind: REPORTED_MEASURE
+    unit: '%'
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+    notes: The spec-to-measured derating bridge (calibration anchor CAL-A12's figure); an outcome-class
+      claim, never an L0 input.
+  - requirement_id: NVP-P24
+    anchor_ids:
+    - NVP-TPU4-4-TWIST-GAIN
+    statement: 'TPU v4 measured: the twisted torus improves all-to-all throughput by 1.63x (4x4x8
+      slice) and 1.31x (4x8x8) over the regular torus.'
+    disposition: unsupported
+    name: twisted_torus_gain
+    category: performance
+    value_kind: REPORTED_MEASURE
+    unit: x
+    evidence_grade: PAPER_REPORTED
+    notes: Topology-sensitivity falsifier for torus identities (the calibration track's CAL-A5).
+  - requirement_id: NVP-P16
+    anchor_ids:
+    - NVP-NCCL-1-MODEL-20GB
+    - NVP-NCCL-1-TOTALBW-240
+    statement: NCCL topo detection models an NVLink at 20 GB/s (src/graph/topo.h), yielding system->totalBw
+      of 240 GB/s on an 8-GPU A100 against 300 GB/s physical.
+    disposition: informational
+    name: nccl_nvlink_model
+    category: software
+    value_kind: DESIGN_CONSTANT
+    unit: GB/s
+    evidence_grade: OFFICIAL_PUBLIC_PAGE
+    notes: The reference communication stack's internal constant (NVLink3-era A100), not a link specification.
+  note: 'the requirement objects of this paper-derived family are its design parameters (NVP-P01..P24);
+    none is executed: paper-stated structure facts are informational, everything else is unsupported,
+    and a promotion requires a reviewed binding (none exists)'
+freedom:
+- parameter_id: NVP-F01
+  name: per_link_line_rate
+  freedom: No public source states a per-link NVLink5 line rate in GB/s; only the per-GPU (1.8 TB/s)
+    and aggregate (130 TB/s) figures exist, and the per-GPU NVLink5 link count is itself not stated
+    (72 switch ports per chip is a switch-side figure). Neither candidate below is a per-link NVLink5
+    rate.
+  anchor_ids:
+  - NVP-NVL72-1-PERGPU-1.8TB
+  - NVP-NVL72-1-AGGREGATE-130TB
+  - NVP-LI-2-V100-LINKS-BW
+  domain: FREE
+  category: link_scale
+  candidates:
+  - label: 1.8 TB/s per GPU — vendor aggregate, scope not per-link
+    anchor_id: NVP-NVL72-1-PERGPU-1.8TB
+    evidence_grade: VENDOR_CLAIMED
+  - label: 50 GB/s bidirectional per link — NVLink-V2 generation, measured-paper scope
+    anchor_id: NVP-LI-2-V100-LINKS-BW
+    evidence_grade: PAPER_REPORTED
+- parameter_id: NVP-F02
+  name: per_hop_latency_current_gen
+  freedom: NVIDIA publishes no per-hop or pair latency for current-generation NVLink/NVSwitch; the
+    only public measured figures are V100-era P2P outcomes (~9 microseconds class), and no component
+    breakdown exists in any cited source.
+  anchor_ids:
+  - NVP-LI-3-NVLINK-LATENCY
+  - NVP-LI-3-NVSWITCH-HOMOG
+  domain: FREE
+  category: latency
+  candidates:
+  - label: ~9 µs direct P2P, 2-3x routed — V100-era measured outcome
+    anchor_id: NVP-LI-3-NVLINK-LATENCY
+    evidence_grade: PAPER_REPORTED
+- parameter_id: NVP-F03
+  name: flow_control_mechanism
+  freedom: None of the five public sources describes the NVLink/NVSwitch flow-control or congestion
+    mechanism; no window, credit, or backpressure law is public, so no admission term may be modeled
+    for this family.
+  anchor_ids:
+  - NVP-LI-2-NVSWITCH-CROSSBAR
+  - NVP-UG-1-SWITCH-57.6T
+  domain: FREE
+  category: routing
+- parameter_id: NVP-F04
+  name: switch_fabric_wiring
+  freedom: How the 9 switch trays' 2x72-port NVLink5 chips wire the 72 GPUs (links per GPU on the
+    switch side, fat-tree shape, oversubscription) is not public; only chip, tray, and aggregate-bandwidth
+    figures appear.
+  anchor_ids:
+  - NVP-UG-1-SWITCH-TRAYS
+  - NVP-UG-1-SWITCH-PORTS
+  - NVP-NVL72-1-PERGPU-1.8TB
+  domain: FREE
+  category: topology
+- parameter_id: NVP-F05
+  name: packet_flit_format
+  freedom: No public NVLink packet or FLIT format, MTU, or header layout exists in any cited source;
+    packet overhead is referenced only as an aggregate derating (NVP-P17).
+  anchor_ids:
+  - NVP-NCCL-1-DERATE-80
+  domain: FREE
+  category: routing
+- parameter_id: NVP-F06
+  name: domain_scale_beyond_72
+  freedom: The public record fixes no NVLink domain beyond the 72-GPU NVL72 rack; whether and how
+    NVLink domains compose beyond one rack is stated by none of the cited sources.
+  anchor_ids:
+  - NVP-NVL72-1-DOMAIN-72
+  - NVP-TPU4-7.2-NVSWITCH-256
+  domain: FREE
+  category: scale
+  candidates:
+  - label: up to 256 GPUs with two levels of switches — independent paper's NVSwitch-generation characterization
+    anchor_id: NVP-TPU4-7.2-NVSWITCH-256
+    evidence_grade: PAPER_REPORTED
+bindings: []
+checks:
+- check_id: NVP-CHK-01
+  kind: invariant
+  requirement_ids:
+  - NVP-P01
+  - NVP-P13
+  - NVP-P14
+  description: 'the three-architecture comparison''s NVLink-paper flavor is anchored, not free: its
+    crossbar identity must be backed by the platform map''s L0_READY rows for NVP-P01/NVP-P13, the
+    flavor file must carry the paper-derived, not-normative marker plus the NVP-F01/NVP-F02/NVP-F03
+    silence citations and the matched-free rank statement (the anchored domain scale is 72, NVP-P13;
+    the comparison workload pins tp=64), and bandwidth B must enter only with the rate FREE (NVP-F01)
+    — drift is a hard error, not silent'
+  location: tests/specir/test_unifiedbus_l0_flavors.py
+supported:
+  workloads:
+  - w1_dense_tp_decode
+  observables:
+  - O-CCT
+  - O-CONSERVATION
+calibration:
+  status: uncalibrated
+  targets: []
+  note: 'E0 evidence level: identity and determinism only; this artifact calibrates nothing. The reported
+    figures (57.6 Tbps, 1.8 TB/s, 130 TB/s, ~9 microsecond V100 P2P, ~80% derating) are vendor/paper
+    claims carried with their grades, never calibration targets of this artifact; the measured GB200
+    series and the derating guidance live in the calibration track (docs/calibration/, anchors CAL-A1/A2/A3/A12)
+    under its own split discipline — the free parameters NVP-F01/NVP-F02 gate every numeric B/L'
+omissions:
+- what: 'zero backend capability bindings: the profile is executed by no backend, and its 24 requirements
+    carry no executed disposition (19 informational / 5 unsupported)'
+  reason: 'a binding is a reviewed act (essun.specir.bindings); none exists for the paper-derived
+    family. The platform map''s L0_READY rows (essun.specir.nvlink_platform_map) are mappings to landed
+    knobs, NOT bindings: they record which knobs NVLink-class structure facts could feed, and the
+    three-architecture comparison consumes them under shared free parameters — no requirement''s execution
+    is claimed'
+- what: 'any NVLink/NVSwitch specification: not interpreted, not cited as a source — no public specification
+    document exists'
+  reason: the specification track is licensee/NDA-gated (experiments/nvlink/source_record.yaml row
+    STD-NV-SPEC, APPROVAL_REQUIRED, never fetched); this profile is built ONLY from the five PUBLIC_READ
+    papers/pages of the paper-anchor registry
+- what: '5 of 24 requirements carry disposition unsupported: measured outcome figures (V100-era P2P
+    latency, derating, twisted-torus gains) and the observed NUMA-effect classes'
+  reason: 'honesty over coverage: per-disposition counts are computed live (tools/disposition_coverage.py)
+    and frozen in tests/specir/test_nvlink_paper_profile.py; a promotion is a reviewed act with a
+    registered binding'
+- what: 'no numeric bandwidth or latency value is derived from the profile: per-link rate and per-hop
+    latency are explicit free parameters (NVP-F01 / NVP-F02), so any run consumes them as recorded
+    free assumptions'
+  reason: no public source states a per-link NVLink5 rate or a current-gen latency breakdown; inventing
+    one is forbidden (free-parameter rule). The anchored candidates (1.8 TB/s per GPU, 130 TB/s aggregate,
+    50 GB/s per link at V100 era, ~9 microsecond V100 P2P) keep their own evidence grades and are
+    never promoted to values
+- what: 'no golden or negative execution checks: the profile has no executable value semantics to
+    pin'
+  reason: checks exercise requirements through bindings; with zero bindings the only executable check
+    is the anchoring invariant NVP-CHK-01. Golden checks arrive only with the first reviewed binding
+- what: the measured GB200 NVL72 NCCL series (calibration anchor CAL-A3) is not a source of this profile
+  reason: the operator's support article is Cloudflare-gated against deterministic fetching, and measured
+    calibration anchors belong to the calibration track (docs/calibration/), whose split discipline
+    governs them; re-anchoring them here would duplicate that governance, not strengthen it
+versioning:
+  profile_version: 0.1.0
+  bump_rules:
+    major:
+    - dispositions
+    - bindings
+    - anchor_ids
+    - sources
+    minor:
+    - requirements
+    - freedom
+    - checks
+    - supported
+    patch:
+    - notes
+  note: the profile version tracks this ARTIFACT, not the source set (source.revision is the computed
+    digest of the five pinned documents and changes with any of them); anchor citations are immutable
+    — a changed citation is a new version, never a silent edit

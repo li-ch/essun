@@ -28,10 +28,17 @@ from essun.specir.unifiedbus_l0_flavors import (
     BASELINE,
     COMPARISON_RANKS,
     FLAVOR_TOPOLOGIES,
+    NV_PAPER_TOPOLOGY,
+    NV_PROFILE_MARKER,
+    NV_RANK_SCALE_MARKER,
     ASSUMPTIONS_PATH,
     SHARED_FREE_B_BYTES_PER_NS,
     SHARED_FREE_L_NS,
+    SWEEP_3ARCH_MANIFEST_PATH,
+    SWEEP_3ARCH_NAME,
     SWEEP_MANIFEST_PATH,
+    THREE_ARCH_PAYLOAD_SIZES,
+    THREE_ARCH_TOPOLOGIES,
     UB_PROFILE_MARKER,
     UEC_FREE_MARKER,
     assert_flavors_valid,
@@ -279,3 +286,146 @@ def test_table_json_carries_provenance_hashes(tmp_path):
     for row in table["configs"]:
         assert set(row["input_hashes"]) == {"workload_sha256", "topology_sha256"}
         assert len(row["input_hashes"]["topology_sha256"]) == 64
+
+
+# ---------------------------------------------------------------------------
+# The M1 NVLink-paper flavor (third fabric): matched-free rank scale,
+# marker + silence citations, the three-architecture manifest gate, and
+# the sweep's three-way delta-0 anchor
+# ---------------------------------------------------------------------------
+
+
+def test_nv_rank_scale_is_matched_free_and_flagged_when_stripped():
+    # The anchored NVLink domain is 72 (NVP-P13); the flavor runs at the
+    # shared workload's 64 as a STATED matched-free choice. Stripping the
+    # statement (in any case or line-wrap form) trips the check.
+    import re
+
+    text = (REPO / NV_PAPER_TOPOLOGY.path).read_text(encoding="utf-8")
+    data = _load_yaml(NV_PAPER_TOPOLOGY.path)
+
+    stripped = re.sub(r"(?i)matched\s*-\s*free", "X", text)
+    problems = flavor_file_problems(NV_PAPER_TOPOLOGY, stripped, data)
+    assert any(NV_RANK_SCALE_MARKER in problem for problem in problems)
+
+
+def test_tampered_nv_ranks_flagged_naming_the_domain_anchor():
+    data = _load_yaml(NV_PAPER_TOPOLOGY.path)
+    text = (REPO / NV_PAPER_TOPOLOGY.path).read_text(encoding="utf-8")
+    tampered = copy.deepcopy(data)
+    tampered["ranks"] = 72  # the anchored domain smuggled into a tp=64 grid
+    problems = flavor_file_problems(NV_PAPER_TOPOLOGY, text, tampered)
+    assert any("ranks" in problem and "NVP-P13" in problem for problem in problems)
+
+
+def test_nv_file_requires_marker_and_silence_citations():
+    text = (REPO / NV_PAPER_TOPOLOGY.path).read_text(encoding="utf-8")
+    data = _load_yaml(NV_PAPER_TOPOLOGY.path)
+
+    stripped = text
+    for word in ("PAPER-DERIVED", "paper-derived", "NORMATIVE", "normative"):
+        stripped = stripped.replace(word, "X")
+    problems = flavor_file_problems(NV_PAPER_TOPOLOGY, stripped, data)
+    assert any(NV_PROFILE_MARKER in problem for problem in problems)
+
+    for missing in ("NVP-F01", "NVP-F02", "NVP-F03", "NVP-P01", "NVP-P13"):
+        problems = flavor_file_problems(
+            NV_PAPER_TOPOLOGY, text.replace(missing, ""), data
+        )
+        assert any(missing in problem for problem in problems)
+
+
+def test_three_arch_manifest_grid_is_exactly_the_three_crossbars():
+    workload = _load_yaml("experiments/workloads/w1_dense_tp_decode_rack64.yaml")
+    manifest = _load_yaml(SWEEP_3ARCH_MANIFEST_PATH)
+
+    # positive: the committed manifest is exactly the declared three
+    problems = workload_manifest_problems(
+        workload,
+        manifest,
+        sweep_name=SWEEP_3ARCH_NAME,
+        expected_topologies=THREE_ARCH_TOPOLOGIES,
+        payload_sizes=THREE_ARCH_PAYLOAD_SIZES,
+    )
+    assert problems == []
+
+    # a fourth, unprovenanced row is rejected
+    rogue = copy.deepcopy(manifest)
+    rogue["grid"]["algorithms"][0]["topologies"].append(
+        "experiments/topologies/ring64_uec_free_params.yaml"
+    )
+    problems = workload_manifest_problems(
+        workload, rogue, sweep_name=SWEEP_3ARCH_NAME,
+        expected_topologies=THREE_ARCH_TOPOLOGIES,
+        payload_sizes=THREE_ARCH_PAYLOAD_SIZES,
+    )
+    assert any("flavor grid" in problem for problem in problems)
+
+    # dropping the NV row is rejected too (every declared row required)
+    missing = copy.deepcopy(manifest)
+    missing["grid"]["algorithms"][0]["topologies"].pop()
+    problems = workload_manifest_problems(
+        workload, missing, sweep_name=SWEEP_3ARCH_NAME,
+        expected_topologies=THREE_ARCH_TOPOLOGIES,
+        payload_sizes=THREE_ARCH_PAYLOAD_SIZES,
+    )
+    assert any("flavor grid" in problem for problem in problems)
+
+
+def test_nv_provenance_chain_resolves_in_the_m1_registry():
+    from essun.specir import nvlink_paper_profile as nv_profile
+    from essun.specir.unifiedbus_sources import PaperAnchorRegistry
+
+    registry = PaperAnchorRegistry.load(
+        path=REPO / "experiments/nvlink/anchor_registry.yaml", repo_root=REPO
+    )
+    registry.assert_valid()
+    identity = next(
+        p for p in nv_profile.parameters() if p.parameter_id == "NVP-P01"
+    )
+    domain = next(
+        p for p in nv_profile.parameters() if p.parameter_id == "NVP-P13"
+    )
+    assert identity.evidence_grade == "PAPER_REPORTED"
+    assert domain.evidence_grade == "VENDOR_CLAIMED"
+    assert "72" in domain.as_reported
+    for param in (identity, domain):
+        for anchor_id in param.anchor_ids:
+            assert anchor_id in registry.by_id()
+
+
+def test_three_arch_sweep_three_way_delta_zero(tmp_path):
+    # The M1 honesty anchor: under the one shared B/L record, ALL THREE
+    # architectures' crossbar rows tie exactly at every payload size.
+    first = run_sweep(REPO / SWEEP_3ARCH_MANIFEST_PATH, results_root=tmp_path / "a")
+    second = run_sweep(REPO / SWEEP_3ARCH_MANIFEST_PATH, results_root=tmp_path / "b")
+    assert first["sweep_id"] == second["sweep_id"]
+
+    by_topo = {}
+    for row in first["table"]["configs"]:
+        suffix = row["topology"]["path"].rsplit("/", 1)[-1]
+        by_topo.setdefault(suffix, {})[row["payload_bytes"]] = row
+    assert len(by_topo) == 3
+    sizes = sorted(next(iter(by_topo.values())))
+    assert sizes == list(THREE_ARCH_PAYLOAD_SIZES)
+    topos = (
+        "crossbar64_uec_free_params.yaml",
+        "crossbar64_ub_rack_free_params.yaml",
+        "crossbar64_nvl_rack_free_params.yaml",
+    )
+    for size in sizes:
+        values = {
+            by_topo[topo][size]["o_cct"]["completion_time_ns_mean_exact"]
+            for topo in topos
+        }
+        assert len(values) == 1, f"three-way tie broken at payload {size}"
+    for size in sizes:
+        wires = {
+            by_topo[topo][size]["per_rank_wire_bytes_exact"] for topo in topos
+        }
+        assert len(wires) == 1  # one wire identity across three fabrics
+    for topo in topos:
+        for size in sizes:
+            row = by_topo[topo][size]
+            assert row["delta_vs_baseline"]["delta_exact"] == "0"
+            assert row["o_conservation"]["violations"] == 0

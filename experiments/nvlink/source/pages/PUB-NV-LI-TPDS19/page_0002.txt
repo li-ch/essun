@@ -1,0 +1,31 @@
+Gaining performance from multi-GPU scaling, however, is not trivial, mainly because (i) There are no mature multi-GPU parallel programming, execution and performance models, largely due to the limited knowledge on how modern GPUs are interconnected as well as their communication patterns; (ii) Traditionally, inter-GPU communication shares the same bus interconnect as CPU-GPU communication, such as PCIe. This situation recently changed due to the introduction of GPU-oriented interconnect such as NVLink, NV-SLI and NVSwitch. However, their characteristics, as well as the performance impact on real-world multi-GPU applications are still unknown, limiting the efforts to leverage them for advanced performance tuning and delivery.
+
+In this paper, we fill this gap by thoroughly characterizing a variety of modern GPU interconnects, including PCIe, NVLink Version-1, NVLink Version-2, NV-SLI, NVSwitch, and GPUDirect. We measured their raw startup latency, sustainable uni/bi-directional bandwidth, network topology, communication efficiency, routing, and NUMA effects, under the two communication patterns: Peer-to-Peer (P2P) and Collective (CL). Based on these results, we summarize several observations, challenges to address, and potential research topics regarding to multi-GPU execution. Through this evaluation, software designers can gain deeper knowledge about the latest GPU interconnects, paving the way for building more mature multi-GPU programming, execution and performance models, and reliable simulators for better guiding application development and performance tuning.
+
+II Modern GPU Interconnect
+
+We focus on six types of modern GPU interconnect: PCIe, NVLink-V1, NVLink-V2, NV-SLI, NVSwitch, and GPUDirect-enabled InfiniBand. Table I lists the platforms we used for evaluation. For GPU-GPU communication, P100-DGX-1, V100-DGX-1 are for evaluating PCIe, NVLink-V1 and NVLink-V2. SLI is for NV-SLI. DGX-2 is for NVSwitch. SummitDev and Summit are for assessing inter-node InfiniBand interconnect with GPUDirect-RDMA. We first briefly review every technology.
+
+TABLE I: Evaluation Platforms. “Arch” refers to GPU architecture generation. “SP/DP GFlops” refer to GPU theoretical single/double floating-point performance. “Rtm” refers to CUDA runtime version.
+
+PlatformConfigurationInterconnectCPUCompilerGPUGPU ArchSP/DP GFlopsGPU MemoryRtm
+
+P100-DGX-1Single node, 8 GPUsNVLink-V1Intel Xeon E5-2698gcc-4.8.4Tesla-P100Pascal10609/530416GB HBM2 @ 732 GB/s8.0
+
+V100-DGX-1Single node, 8 GPUsNVLink-V2Intel Xeon E5-2698gcc-5.4.0Tesla-V100Volta14899/745016GB HBM2 @ 900 GB/s9.0
+
+DGX-2Single node, 16 GPUsNVSwitchIntel Xeon P-8168gcc-7.3.0Tesla-V100Volta14899/745016GB HBM2 @ 900 GB/s9.0
+
+SLISingle node, 2 GPUsNVLink-SLIIntel Xeon E5-2680gcc-4.8.5RTX-2080Turing10068/314.68GB GDDR6 @ 448 GB/s10.0
+
+SummitDev54 nodes, 4 GPUs/nodeNVLink-V1IBM Power-8xlc-13.1.6Tesla-P100Pascal10609/530416GB HBM2 @ 732 GB/s8.0
+
+Summit4600 nodes, 6 GPUs/nodeNVLink-V2IBM Power-9xlc-16.1.1Tesla-V100Volta14899/745016GB HBM2 @ 900 GB/s9.2
+
+II-APCIe
+
+Peripheral-Component-Interconnect-Express-Bus (PCIe), is a high-speed serial computer expansion bus standard. Traditionally, a GPU-integrated system connect one or multiple GPU devices to the CPUs via PCIe. However, compared to the interconnect between CPU and DRAM, PCIe is much slower. It often becomes a major performance bottleneck for GPU-acceleration [8, 9, 10]. Such a condition exacerbates when PCIe based GPU P2P communication is adopted [4].
+
+Fig. 1: PCIe and NVLink-V1/V2 topology for P100-DGX-1 and V100-DGX-1.
+
+The dash-lines in Figure 1-(A) illustrate how the eight GPUs are interconnected by PCIe (and QPI) in DGX-1. As is shown, the PCIe network in DGX-1 forms a balanced tree structure, e.g., GPU-0 and GPU-1 are connected via a PCIe switch. The switch is further connected to CPU Socket-0. Similar scenarios apply to other GPUs. Finally, the dual CPU sockets are bridged by QuickPath Interconnect or QPI [11]. PCIe in DGX-2 also form a tree-based topology, but adopts two-level PCIe switches, as shown in Figure 4.

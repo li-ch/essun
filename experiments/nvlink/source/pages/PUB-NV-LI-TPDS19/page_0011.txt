@@ -1,0 +1,43 @@
+CL Bandwidth: In terms of bandwidth in Figure 30-(B), similar to NVLink (Figure 20-(B) and (D)), strong NUMA effects emerge under 3 and 5 nodes for reduce_scatter and all_gather on SummitDev. And for Summit, this happens under 3, 5, 6, 7 nodes in Figure 31. Nevertheless, the bandwidth overall remains unchanged. This is different from the bandwidth scenarios exhibited by both PCIe (decreasing) and NVLink (increasing) in the inter-node P2P communication study.
+
+CL Efficiency on Message Size: Finally, the bandwidth for the five CL operations converge and saturate around 32/64MB message size, demonstrating nearly 16/32 GB/s sustainable peak bandwidth on SummitDev in Figure 31-(C), and Summit in Figure 31-(C), respectively. Overall, Summit delivers much better GPU inter-node communication performance than SummitDev.
+
+TABLE III: Tartan Benchmark Suite.
+
+AppBrief Descriptionabbr.DomainCommScalingPattern
+
+ConvNet2Convolution neural networks via data, model and hybrid parallelismCNNMachine LearningCUDAScale-upP2P
+
+CusimannGlobal optimization via parallel simulated annealing algorithmCSMOptimizationOpenMPScale-upCPU-GPU
+
+GMMMultivariate data clustering via Expectation Maximization with Gaussian mixture modelGMMData AnalysisOpenMPScale-upCL-Broadcast
+
+KmeansKmeans clustering for double-precision data on multi-GPUs attached to the same nodeKMNData AnalysisCUDAScale-upCL-AllReduce
+
+MonteCarloMonte Carlo option pricing from CUDA SDKMTCFinanceCUDAScale-upCPU-GPU
+
+PlanarDepth-first-search (DFS) and backtracking to solve Planar Langford’s SequencesPLNNumber TheoryCUDAScale-upCPU-GPU
+
+TruekeExchange Monte Carlo for 3D random field Ising modelTRKHPC SimulationOpenMPScale-upCL-Broadcast
+
+B2rEqwp3D earthquake wave-propogation model simulation using 4-order finite difference methodBRQHPC SimulationMPIScale-outP2P
+
+DiffusionA multi-GPU implementation of 3D Heat Equation and inviscid Burgers’ EquationDFFHPC SimulationMPIScale-outP2P
+
+LuleshLivermore unstructured Lagrangian explicit shock hydrodynamicsLLHMolecular DynamicsMPIScale-outP2P
+
+CoMDA reference implementation of classical molecular dynamics algorithms and workloadsCMDMolecular DynamicsMPIScale-outP2P/CL
+
+PrbenchPage rank computation by multi-GPUsPRBGraph ProcessingMPIScale-outP2P/CL
+
+HITSimulating Homogeneous Isotropic Turbulence by solving Navier-Stokes equations in 3DHITHPC SimulationMPIScale-outCL All-to-All
+
+MatvecMatrix multiplication via mpi-scatter, broadcast and gatherMAMLinear AlgebraMPIScale-outCL
+
+IV GPU Interconnect Benchmarking
+
+The microbenchmarking exhibit some basic characteristics of modern GPU interconnects. However, in terms of real multi-GPU applications, their impact remains unknown. In this section, we use the Tartan Benchmark Suite [25] to evaluate the impact of the GPU interconnect. The applications are listed in Table III. Particularly, we focus on two aspects: (1) the impact of a faster GPU interconnect such as NVLink, compared with PCIe on intra-node scale-up applications; (2) the impact of GPUDirect-RDMA on inter-node scale-out applications. We perform two types of scaling measurement: (a) strong scaling, which fixes the problem size and measures the time reduction when increasing the number of GPUs; (b) weak scaling, which measures the time reduction when increasing the number of GPUs with fixed problem size per GPU. For overall performance, we use the entire application speedup (measured by CPU-side time command for whole application elapsed-time) as the performance metric, making a fair comparison across applications. For scale-up applications, we use the vendor-provided nvprof to measure the three types of GPU communication: HostToDevice (H2D), DeviceToHost (D2H) and DeviceToDevice (D2D) in order to gain more knowledge about the underlying communication pattern. All the reported data points of the figures in this section are the average results of multiple times’ execution.
+
+IV-AIntra-node Scale-up
+
+Fig. 32: Normalized latency reduction by NVLink-V1 and NCCL-V2 of strong scaling for single-node scaling-up on NVIDIA P100-DGX-1.

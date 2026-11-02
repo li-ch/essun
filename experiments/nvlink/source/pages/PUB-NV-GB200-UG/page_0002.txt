@@ -1,0 +1,84 @@
+NVOS 2.0 or later for NVLink switch life cycle provisioning and telemetry
+
+BMC for attestation and recovery
+
+FM and SM as the NVLink control planes that run on the switch tray
+
+CPU ERoT for security
+
+DGX GB200
+
+NVLink Switch Tray - Top view#
+
+DGX GB300
+
+NVLink Switch Tray - Top view#
+
+Power Shelves#
+
+The DGX GB rack system uses a bus bar structure to distribute power in the rack. Power whips energize power shelves from a remote power panel. The power shelves convert AC power into nominal 50V-51V DC output and distribute it through the bus bar to the rack components. Multiple power shelves are used in the rack to supply redundant power.
+
+The rack power consumption is approximately 120kW. The power shelf uses six air-cooled 5.5kW PSUs in eight power shelves that provide N+N redundancy and the required input power of 33kW per power shelf.
+
+Power Shelf - Top view#
+
+Top-of-Rack Ethernet Switches#
+
+Top-of-rack (TOR) switches are used to connect all BMCs in the compute trays (including BlueField-3 BMCs) and the switch trays to the management network. The following system and switch ports are connected to this switch:
+
+Out-of-band management BMC from the compute trays
+
+BlueField-3 BMCs from the compute trays
+
+DGX GB200 TOR Ethernet Switch#
+
+Console Access#
+
+Each NVLink switch provides an RJ45 interface for RS232 serial access. The default serial baud rate is 115200 baud.
+
+Leak Detection#
+
+Leak detection in the DGX GB rack system’s liquid cooling system prevents damage to equipment, ensures system reliability and uptime, protects data integrity, and maintains safety. Early detection helps avoid costly repairs, downtime, and regulatory compliance issues, optimizes the cooling efficiency, and prevents secondary damage to infrastructure.
+
+previous
+
+NVIDIA DGX GB Rack Scale Systems User Guide
+
+next
+
+Networking
+
+On this page
+
+Rack Configuration
+
+Compute Trays
+
+NVLink Switch Trays
+
+Power Shelves
+
+Top-of-Rack Ethernet Switches
+
+Console Access
+
+Leak Detection
+
+Privacy Policy |
+
+Your Privacy Choices |
+
+Terms of Service |
+
+Accessibility |
+
+Corporate Policies |
+
+Product Security |
+
+Contact
+
+Copyright © 2022-2026, NVIDIA Corporation.
+
+Last updated on Sep 17, 2026.
+

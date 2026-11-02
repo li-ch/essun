@@ -1,0 +1,99 @@
+Evaluating Modern GPU Interconnect: PCIe, NVLink, NV-SLI, NVSwitch and GPUDirect
+
+Report GitHub Issue
+
+×
+
+Title:
+
+Content selection saved. Describe the issue below:
+
+Description:
+
+Submit without GitHubSubmit in GitHub
+
+arXiv is now an independent nonprofit!Learn more×
+
+Back to arXiv
+
+Why HTML?Report IssueBack to AbstractDownload PDF
+
+Abstract
+
+I Introduction
+
+II Modern GPU Interconnect
+
+II-APCIe
+
+II-BNVLink-V1
+
+II-CNVLink-V2
+
+II-DNVLink-SLI
+
+II-ENVSwitch
+
+II-FInfiniBand with GPUDirect-RDMA
+
+III GPU Interconnect Microbenchmarking
+
+III-AIntra-Node P2P Communication
+
+III-A1 Start-up Latency
+
+III-A2 Sustainable Bandwidth
+
+III-A3 Routing
+
+III-A4 Efficiency on Message Size
+
+III-BIntra-Node Collective Communication
+
+III-B1 DGX-1 CL Communication
+
+III-B2 NV-SLI CL Communication
+
+III-B3 NVSwitch CL Communication
+
+III-CInter-Node P2P Communication
+
+III-DInter-Node Collective Communication
+
+IV GPU Interconnect Benchmarking
+
+IV-AIntra-node Scale-up
+
+IV-BInter-node Scale-out
+
+V Discussion
+
+VI Related Work
+
+VII Conclusion
+
+References
+
+License: arXiv.org perpetual non-exclusive license
+
+arXiv:1903.04611v1 [cs.AR] 11 Mar 2019
+
+Evaluating Modern GPU Interconnect: PCIe, NVLink, NV-SLI, NVSwitch and GPUDirect
+
+Ang Li Shuaiwen Leon Song Jieyang Chen Jiajia Li Xu Liu Nathan Tallent and Kevin Barker ††thanks: Ang Li is a research scientist in Pacific Northwest National Laboratory.
+
+E-mail: ang.li@pnnl.gov††thanks: Manuscript received January 19, 2019.
+
+Abstract
+
+High performance multi-GPU computing becomes an inevitable trend due to the ever-increasing demand on computation capability in emerging domains such as deep learning, big data and planet-scale simulations. However, the lack of deep understanding on how modern GPUs can be connected and the real impact of state-of-the-art interconnect technology on multi-GPU application performance become a hurdle. In this paper, we fill the gap by conducting a thorough evaluation on five latest types of modern GPU interconnects: PCIe, NVLink-V1, NVLink-V2, NVLink-SLI and NVSwitch, from six high-end servers and HPC platforms: NVIDIA P100-DGX-1, V100-DGX-1, DGX-2, OLCF’s SummitDev and Summit supercomputers, as well as an SLI-linked system with two NVIDIA Turing RTX-2080 GPUs. Based on the empirical evaluation, we have observed four new types of GPU communication network NUMA effects: three are triggered by NVLink’s topology, connectivity and routing, while one is caused by PCIe chipset design issue. These observations indicate that, for an application running in a multi-GPU node, choosing the right GPU combination can impose considerable impact on GPU communication efficiency, as well as the application’s overall performance. Our evaluation can be leveraged in building practical multi-GPU performance models, which are vital for GPU task allocation, scheduling and migration in a shared environment (e.g., AI cloud and HPC centers), as well as communication-oriented performance tuning.
+
+Index Terms:
+
+Performance Evaluation, GPU, Interconnect, NUMA, PCIe, NVLink, NVSwitch, SLI, GPUDirect, RDMA, NCCL
+
+I Introduction
+
+Multi-GPU execution nowadays becomes an inevitable trend for warehouse GPGPU computing. This is due to the ever-increasing demand of computation capability from emerging domains such as machine learning, big data and planet-scale simulations [1, 2]. With increasingly larger problem to solve, scalable GPU computing becomes necessary. Recently, a research group from Sony leveraged 3,456 GPUs to train a ResNet-50 neural network for ImageNet in 122 seconds, achieving near optimal GPU scaling efficiency [3]. The Swiss National Supercomputing Center (CSCS) relied on 4,888 GPUs in the Piz Daint supercomputer to simulate near-global climate in ultra-high resolution [2].
+
+Multi-GPU execution scales in two directions: vertically scaling-up in a single node and horizontally scaling-out across multiple nodes. Good examples to describe the intra-node scale-up scenario are the latest NVIDIA DGX-1 [4] and DGX-2 [5] super-AI servers, which incorporate 8 and 16 P100/V100 GPUs connected by NVLink and NVSwitch, respectively. For the inter-node scale-out scenario, the U.S. Department of Energy (DOE) has recently deployed two GPU-accelerated supercomputers Summit[6] and Sierra[7] in Oak Ridge and Livermore National Laboratories, with more than 3400 GPU-integrated nodes interconnected.

@@ -1,0 +1,59 @@
+[6] OLCF, “Summit: The Next Leap in Leadership-Class Computing Systems for Open Science,” https://www.olcf.ornl.gov/for-users/system-user-guides/summit/.
+
+[7] OLCF, “Sierra: Supporting NNSA’s stockpile stewardship mission through simulation in lieu of underground testing,” https://computation.llnl.gov/computers/sierra.
+
+[8] S. Pabst, A. Koch, and W. Straßer, “Fast and scalable cpu/gpu collision detection for rigid and deformable surfaces,” in Computer Graphics Forum. Wiley Online Library, 2010.
+
+[9] Q. Xu, H. Jeon, and M. Annavaram, “Graph processing on GPU: Where are the bottlenecks?” in International Symposium on Workload Characterization (IISWC). IEEE, 2014.
+
+[10] “The System Bottleneck Shifts to PCI-Express,” https://www.nextplatform.com/2017/07/14/system-bottleneck-shifts-pci-express/.
+
+[11] D. Ziakas, A. Baum, R. A. Maddox, and R. J. Safranek, “Intel® quickpath interconnect architectural features supporting scalable system architectures,” in High Performance Interconnects (HOTI), 2010 IEEE 18th Annual Symposium on. IEEE, 2010.
+
+[12] D. Foley and J. Danskin, “Ultra-Performance Pascal GPU and NVLink Interconnect,” IEEE Micro, 2017.
+
+[13] NVIDIA, “SLI best practices,” Tech. Rep., 2007.
+
+[14] AMD, “ATI CrossFire Pro User Guide,” Tech. Rep., 2009.
+
+[15] G. Kim, M. Lee, J. Jeong, and J. Kim, “Multi-GPU system design with memory networks,” in 47th Annual IEEE/ACM International Symposium on Microarchitecture (MICRO). IEEE, 2014.
+
+[16] NVIDIA, “NVIDIA NVSWITCH – The World’s Highest-Bandwidth On-Node Switch,” http://images.nvidia.com/content/pdf/nvswitch-technical-overview.pdf.
+
+[17] P. Grun, “Introduction to infiniband for end users,” White paper, InfiniBand Trade Association, 2010.
+
+[18] NVIDIA, “Developing a Linux Kernel Module using GPUDirect RDMA,” http://docs.nvidia.com/cuda/gpudirect-rdma/index.html.
+
+[19] AMD, “ROCm Driver RDMA Peer to Peer Support,” https://github.com/RadeonOpenCompute/ROCnRDMA.
+
+[20] NVIDIA, “CUDA SDK Code Samples,” 2015.
+
+[21] NVIDIA, “NCCL Tests,” https://github.com/NVIDIA/nccl-tests.
+
+[22] NVIDIA, “NVIDIA Collective Communications Library (NCCL-V1),” https://github.com/NVIDIA/nccl.
+
+[23] NVIDIA, “NVIDIA Collective Communications Library (NCCL-V2),” https://developer.nvidia.com/nccl.
+
+[24] “MPI-GPU-BW,” https://github.com/frroberts/MPI-GPU-BW.
+
+[25] A. Li, S. Song, J. Chen, X. Liu, N. Tallent, and K. Barker, “Tartan: Evaluating Modern GPU Interconnect via a Multi-GPU Benchmark Suite,” in International Symposium on Workload Characterization (IISWC). IEEE, 2018.
+
+[26] J. D. Little, “A proof for the queuing formula: L= λ\lambda W,” Operations research, 1961.
+
+[27] Cirrascale, “Cirrascale SR3514: Unexpected Performance Inequality. Technical Brief M901A-092014.”
+
+[28] AMD, “ROCm Communication Collectives Library (RCCL),” https://github.com/ROCmSoftwarePlatform/rccl.
+
+[29] OLCF, “Summit Early Access Development Platform,” https://www.olcf.ornl.gov/for-users/system-user-guides/summitdev-quickstart-guide/.
+
+[30] NVIDIA, “Developing a Linux Kernel Module using GPUDirect RDMA,” https://docs.nvidia.com/cuda/gpudirect-rdma/index.html.
+
+[31] S. Shams, R. Platania, K. Lee, and S.-J. Park, “Evaluation of Deep Learning Frameworks Over Different HPC Architectures,” in 37th International Conference on Distributed Computing Systems (ICDCS). IEEE, 2017.
+
+[32] N. R. Tallent, N. A. Gawande, C. Siegel, A. Vishnu, and A. Hoisie, “Evaluating On-Node GPU Interconnects for Deep Learning Workloads,” in International Workshop on Performance Modeling, Benchmarking and Simulation of High Performance Computer Systems. Springer, 2017.
+
+[33] S. Potluri, A. Goswami, D. Rossetti, C. Newburn, M. G. Venkata, and N. Imam, “GPU-Centric Communication on NVIDIA GPU Clusters with InfiniBand: A Case Study with OpenSHMEM,” in HiPC-24. IEEE, 2017.
+
+[34] E. Agostini, D. Rossetti, and S. Potluri, “GPUDirect Async: Exploring GPU synchronous communication techniques for InfiniBand clusters,” Journal of Parallel and Distributed Computing, 2018.
+
+[35] M. LeBeane, K. Hamidouche, B. Benton, M. Breternitz, S. K. Reinhardt, and L. K. John, “GPU triggered networking for intra-kernel communications,” in International Conference for High Performance Computing, Networking, Storage and Analysis (SC). ACM, 2017.

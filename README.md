@@ -65,7 +65,10 @@ Docker the demo runs the analytical legs and says exactly what it skipped).
   consortium's public excerpts + activation runbook, no spec text
   ingested) is ready in
   [experiments/ualink/](experiments/ualink/ACTIVATION.md) for the day the
-  license question is answered.
+  license question is answered. The NVLink-class profile is likewise
+  paper-derived from five public papers/pages (no public NVLink/NVSwitch
+  specification exists) and extends the cross-fabric matrix to three
+  architectures.
 
 Detailed component status lives in [docs/status.md](docs/status.md).
 
@@ -82,6 +85,11 @@ Detailed component status lives in [docs/status.md](docs/status.md).
 - [External reproductions](https://li-ch.github.io/essun/reproductions.html) —
   every public attempt listed in the open, and [the policy](docs/reproduction-policy.md)
   defining what counts as independent reproduction
+- [Community operating points](https://li-ch.github.io/essun/community.html) —
+  the submission door: [format v0](docs/submission-format.md) plus a
+  validator that rejects malformed input and checks fairness
+  delta-zero-style; anyone can add an operating point, and the table
+  lists what came through
 - [Vision and roadmap](https://li-ch.github.io/essun/roadmap.html)
 - [How essun compares to related simulators](https://li-ch.github.io/essun/comparison.html)
 

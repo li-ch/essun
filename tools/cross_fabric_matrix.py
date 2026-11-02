@@ -56,6 +56,12 @@ DOC_PATH = REPO / "docs" / "atlas" / "cross-fabric-matrix.md"
 SWEEP_MANIFESTS = {
     "cross_design": REPO / "experiments" / "sweeps" / "cross_design_uec_vs_ub_paper_l0_v1.yaml",
     "payload_grid": REPO / "experiments" / "sweeps" / "cross_fabric_payload_grid_v1.yaml",
+    # M1 (2026-11-02): the three-architecture payload grid — the
+    # identity-matched crossbar rows of ALL THREE profiles at every grid
+    # payload (UEC free stand-in, UnifiedBus-paper rack, NVLink-paper
+    # switched domain). The two committed two-architecture sweeps are
+    # unchanged, so every previously pinned artifact id stays valid.
+    "three_arch": REPO / "experiments" / "sweeps" / "cross_fabric_3arch_payload_grid_v1.yaml",
 }
 ENVELOPE_MANIFESTS = {
     # window axis (A-TFC-W) at three operating points
@@ -70,6 +76,7 @@ WINDOW_AXIS_KEYS = ("w_1mib_1024r", "w_1mib_256r", "w_16mib_1024r")
 
 UEC_CROSSBAR_TOPO = "crossbar64_uec_free_params.yaml"
 UB_CROSSBAR_TOPO = "crossbar64_ub_rack_free_params.yaml"
+NV_CROSSBAR_TOPO = "crossbar64_nvl_rack_free_params.yaml"
 
 # Pair selectors (resolved per artifact: the mid-freedom envelope names its
 # UnifiedBus stand-in `ub_flat_ring_mid`, the pod-scale ones
@@ -100,12 +107,34 @@ NOT_COMPARABLE_WINDOW = (
     "on any flow-control mechanism, UBP-F04; the UEC crossbar stand-in "
     "declares no TFC binding at L0), so there is no window term to rank"
 )
+NOT_COMPARABLE_WINDOW_UB_NV = (
+    "NOT COMPARABLE — the window axis does not exist for this pair: both "
+    "paper-derived comparators are unwindowed because their public "
+    "sources are silent on any flow-control mechanism (UnifiedBus: "
+    "UBP-F04; NVLink-class: NVP-F03), so there is no window term to rank"
+)
 NOT_SAMPLED_SHARED_AXIS = (
     "NOT SAMPLED — the axis is shared and comparable in principle (both "
     "identities consume the same bind), but no envelope sweeps it for this "
     "pair; the two identities are the same function of the shared "
     "parameters, so the tie is an arithmetic identity, sampled only at the "
     "payload grid's fixed operating point"
+)
+NOT_SAMPLED_WINDOW_UEC_NV = (
+    "NOT SAMPLED — no envelope artifact sweeps this pair, and none could "
+    "honestly be created at the window family's pod-scale operating "
+    "points: the public NVLink-class record fixes a switched 72-GPU "
+    "domain (NVP-P13, VENDOR_CLAIMED) and no domain beyond one rack "
+    "(NVP-F06), so there is no source-basis for an NV-side flat-ring "
+    "stand-in at 256-1024 ranks to pair against the UEC TFC window. A "
+    "pair cell requires an artifact, not an analogy"
+)
+NOT_SAMPLED_SHARED_AXIS_NV = (
+    "NOT SAMPLED — no envelope sweeps the shared bandwidth/latency axes "
+    "for this pair; the UEC/NVLink and UB/NVLink crossbar identities are "
+    "the same function of the one shared B/L record (A-XDUO-BW / "
+    "A-XDUO-LAT), so any ranking there is an arithmetic identity, sampled "
+    "at all ten payload-grid sizes by the three-architecture sweep"
 )
 
 
@@ -240,6 +269,81 @@ def _cell_crossbar_payload_grid(sweeps: dict) -> Cell:
             + "; per-rank wire ledger and completion time identical at "
             "every size (see the sweep tables' delta columns, all exactly 0)."
         ],
+    )
+
+
+def _cell_3arch_payload_grid(sweeps: dict, topo_a: str, topo_b: str,
+                             label_a: str, label_b: str, flip: str) -> Cell:
+    """Row 1 for one pair of the three-architecture payload grid (M1).
+
+    The pair's verdict is DERIVED from the three-architecture sweep
+    artifact: both flavors' rows must tie exactly at every grid size (the
+    delta-zero fairness anchor extended to the third fabric) — a single
+    differing size raises, so a drifted artifact can never render a
+    hand-typed TIE.
+    """
+    grid = sweeps["three_arch"]["table"]
+    rows_a = _sweep_rows_by_topo(grid, topo_a)
+    rows_b = _sweep_rows_by_topo(grid, topo_b)
+    if sorted(rows_a) != sorted(rows_b) or not rows_a:
+        raise AssertionError(
+            f"three-architecture grid mismatch for {topo_a} vs {topo_b}; "
+            "the sweep artifact is not the declared three-flavor grid"
+        )
+    for size in sorted(rows_a):
+        if Fraction(rows_a[size]["o_cct"]["completion_time_ns_mean_exact"]) != Fraction(
+            rows_b[size]["o_cct"]["completion_time_ns_mean_exact"]
+        ):
+            raise AssertionError(
+                f"{label_a} vs {label_b} differ at payload {size}; the "
+                "three-architecture delta-zero anchor is broken"
+            )
+    return Cell(
+        verdict=(
+            f"TIE (exact) at all {len(rows_a)} payload-grid sizes of the "
+            "three-architecture sweep (delta exactly 0 everywhere)"
+        ),
+        refs=[Ref(sweeps["three_arch"]["sweep_id"], "sweep")],
+        winner="neither (delta exactly 0 by construction)",
+        flip=flip,
+        detail_lines=[
+            "Payload grid (bytes): "
+            + ", ".join(str(s) for s in sorted(rows_a))
+            + f"; per-rank wire ledger and completion time identical at "
+            "every size for both flavors of this pair (one sweep artifact "
+            "carries all three architectures' rows)."
+        ],
+    )
+
+
+def _cell_3arch_conservation(sweeps: dict, topo_a: str, topo_b: str,
+                             label_a: str, label_b: str) -> Cell:
+    """O-CONSERVATION cell for one pair of the three-architecture grid."""
+    grid = sweeps["three_arch"]["table"]
+    for row in grid["configs"]:
+        if row["o_conservation"]["violations"] != 0:
+            raise AssertionError("conservation violation in a three-architecture sweep row")
+    rows_a = _sweep_rows_by_topo(grid, topo_a)
+    rows_b = _sweep_rows_by_topo(grid, topo_b)
+    for size in sorted(rows_a):
+        if rows_a[size]["per_rank_wire_bytes_exact"] != rows_b[size]["per_rank_wire_bytes_exact"]:
+            raise AssertionError(
+                f"wire ledgers differ between {label_a} and {label_b}"
+            )
+    return Cell(
+        verdict=(
+            "TIE (exact): identical per-rank wire ledger "
+            "2*(r-1)/r * M at every payload, 0 conservation violations "
+            "in every three-architecture row"
+        ),
+        refs=[Ref(sweeps["three_arch"]["sweep_id"], "sweep")],
+        winner="neither; the flavor labels move no bytes",
+        flip=(
+            "no flip can exist: both identities emit the same wire traffic "
+            "per rank under the one shared B/L record; the sweep runner "
+            "checks the ledger per row and the backends self-check it "
+            "structurally"
+        ),
     )
 
 
@@ -490,6 +594,27 @@ def build_matrix(results_root: Path | None = None) -> tuple[dict, str]:
                 "scale 64 (UBP-P17): the delta-zero fairness anchor"
             ),
         },
+        {
+            "id": "uec_vs_nv_crossbar",
+            "name": "UEC crossbar stand-in vs NVLink-paper crossbar",
+            "description": (
+                "the third-fabric identity-matched unwindowed pair (M1): the "
+                "NVLink-paper flavor's identity is anchored (NVSwitch "
+                "non-blocking crossbar, NVP-P01) at a stated matched-free "
+                "rank scale against its anchored 72-GPU domain (NVP-P13) — "
+                "the delta-zero anchor extended to a third architecture"
+            ),
+        },
+        {
+            "id": "ub_vs_nv_crossbar",
+            "name": "UB-paper rack crossbar vs NVLink-paper crossbar",
+            "description": (
+                "the paper-derived pair (M1): two paper-derived profiles, "
+                "two anchoring directions (UB ranks anchored at its rack 64, "
+                "UBP-P17; NV identity anchored, ranks matched-free against "
+                "its 72-GPU domain, NVP-P13) — one shared bind, one tie"
+            ),
+        },
     ]
     rows = [
         {
@@ -503,6 +628,31 @@ def build_matrix(results_root: Path | None = None) -> tuple[dict, str]:
                     envelopes, PAIR_ABLATION
                 ),
                 "uec_vs_ub_crossbar": _cell_crossbar_payload_grid(sweeps),
+                "uec_vs_nv_crossbar": _cell_3arch_payload_grid(
+                    sweeps, UEC_CROSSBAR_TOPO, NV_CROSSBAR_TOPO,
+                    "the UEC crossbar stand-in", "the NVLink-paper crossbar",
+                    (
+                        "no flip exists: the two rows are the same identity "
+                        "under the one shared B/L record (A-XDUO-BW / "
+                        "A-XDUO-LAT); the NV side's anchored difference is "
+                        "its identity chain (NVSwitch non-blocking crossbar, "
+                        "NVP-P01, PAPER_REPORTED) at a matched-free rank "
+                        "scale against its anchored 72-GPU domain (NVP-P13, "
+                        "VENDOR_CLAIMED; A-XDUO-IDNV states the asymmetry)"
+                    ),
+                ),
+                "ub_vs_nv_crossbar": _cell_3arch_payload_grid(
+                    sweeps, UB_CROSSBAR_TOPO, NV_CROSSBAR_TOPO,
+                    "the UB-paper rack crossbar", "the NVLink-paper crossbar",
+                    (
+                        "no flip exists: same identity, one shared record; "
+                        "the two paper-derived chains differ in anchoring "
+                        "direction (UB: ranks anchored at its rack 64, "
+                        "UBP-P17; NV: identity anchored, ranks matched-free "
+                        "against its 72-GPU domain, NVP-P13) — structure "
+                        "anchors, never physics"
+                    ),
+                ),
             },
         },
         {
@@ -516,6 +666,8 @@ def build_matrix(results_root: Path | None = None) -> tuple[dict, str]:
                     envelopes, PAIR_ABLATION, WINDOW_AXIS_KEYS
                 ),
                 "uec_vs_ub_crossbar": _not_comparable(NOT_COMPARABLE_WINDOW),
+                "uec_vs_nv_crossbar": _not_comparable(NOT_SAMPLED_WINDOW_UEC_NV),
+                "ub_vs_nv_crossbar": _not_comparable(NOT_COMPARABLE_WINDOW_UB_NV),
             },
         },
         {
@@ -529,6 +681,8 @@ def build_matrix(results_root: Path | None = None) -> tuple[dict, str]:
                     envelopes, PAIR_ABLATION, ("bw_axis",)
                 ),
                 "uec_vs_ub_crossbar": _not_comparable(NOT_SAMPLED_SHARED_AXIS),
+                "uec_vs_nv_crossbar": _not_comparable(NOT_SAMPLED_SHARED_AXIS_NV),
+                "ub_vs_nv_crossbar": _not_comparable(NOT_SAMPLED_SHARED_AXIS_NV),
             },
         },
         {
@@ -542,6 +696,8 @@ def build_matrix(results_root: Path | None = None) -> tuple[dict, str]:
                     envelopes, PAIR_ABLATION, ("lat_axis",)
                 ),
                 "uec_vs_ub_crossbar": _not_comparable(NOT_SAMPLED_SHARED_AXIS),
+                "uec_vs_nv_crossbar": _not_comparable(NOT_SAMPLED_SHARED_AXIS_NV),
+                "ub_vs_nv_crossbar": _not_comparable(NOT_SAMPLED_SHARED_AXIS_NV),
             },
         },
         {
@@ -556,6 +712,14 @@ def build_matrix(results_root: Path | None = None) -> tuple[dict, str]:
                 ),
                 "uec_vs_ub_crossbar": _cell_conservation(
                     sweeps, envelopes, "crossbar_pair"
+                ),
+                "uec_vs_nv_crossbar": _cell_3arch_conservation(
+                    sweeps, UEC_CROSSBAR_TOPO, NV_CROSSBAR_TOPO,
+                    "the UEC crossbar stand-in", "the NVLink-paper crossbar"
+                ),
+                "ub_vs_nv_crossbar": _cell_3arch_conservation(
+                    sweeps, UB_CROSSBAR_TOPO, NV_CROSSBAR_TOPO,
+                    "the UB-paper rack crossbar", "the NVLink-paper crossbar"
                 ),
             },
         },
@@ -590,22 +754,26 @@ def render_markdown(matrix: dict) -> str:
     lines.append("## What a fair comparison requires (the fairness bar)")
     lines.append("")
     lines.append(
-        "- **Identical open choices.** Both profiles consume the ONE shared "
-        "free-parameter record "
+        "- **Identical open choices.** All three profiles consume the ONE "
+        "shared free-parameter record "
         "(`experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml`): B = 64 "
         "bytes/ns and L = 200 ns are one record's values fed unchanged to "
-        "every flavor file. No public source on either side anchors a "
+        "every flavor file. No public source on any side anchors a "
         "per-lane rate or per-hop latency usable at L0 (UBP-F01/UBP-F02 "
-        "mark the UnifiedBus silence; UEC 1.1 fixes neither), so any ranking "
-        "that differed through B or L would be an artifact of unequal inputs."
+        "mark the UnifiedBus silence; NVP-F01/NVP-F02 mark the NVLink-class "
+        "silence; UEC 1.1 fixes neither), so any ranking that differed "
+        "through B or L would be an artifact of unequal inputs."
     )
     lines.append(
         "- **Pinned sources.** The UEC side runs the public-read UEC 1.1 "
         "semantic profile (license-cleared ingestion, 80 anchors); the "
         "UnifiedBus side is a PAPER-DERIVED design profile from five public "
         "papers (53 anchors) — not a normative standard profile (the "
-        "specification track stays license-gated). UALink and CXL have no "
-        "profile at all (license-blocked, never ingested)."
+        "specification track stays license-gated); the NVLink-class side "
+        "(M1) is likewise a PAPER-DERIVED design profile from five public "
+        "papers/pages (28 anchors) — no public NVLink/NVSwitch "
+        "specification exists, and none was fetched. UALink and CXL have "
+        "no profile at all (license-blocked, never ingested)."
     )
     lines.append(
         "- **Mechanisms stated, not smuggled.** The one executed mechanism "
@@ -619,7 +787,11 @@ def render_markdown(matrix: dict) -> str:
         "- **Same workload, one operating point per artifact.** The "
         "platform's same-workload gate pins one W1 Dense TP Decode shape "
         "(2 layers x 3 steps = 6 AllReduce ops) and one tp_size per "
-        "artifact, so every delta compares the same work."
+        "artifact, so every delta compares the same work. The rank-scale "
+        "asymmetries are stated per flavor and printed in the flavor "
+        "files: the UB flavor's 64 IS its rack anchor (UBP-P17); the "
+        "NVLink flavor's 64 is a matched-free choice against its anchored "
+        "72-GPU domain (NVP-P13, A-XDUO-IDNV); the UEC side's 64 is free."
     )
     lines.append("")
     lines.append("## The pairs (columns)")
@@ -691,6 +863,18 @@ def render_markdown(matrix: dict) -> str:
         "as such everywhere."
     )
     lines.append(
+        "- **NVLink-class: paper-derived, and no specification exists.** "
+        "The NVLink-class columns are a paper-derived design profile from "
+        "five public papers/pages; the vendor's interface specifications "
+        "are licensee/NDA documents that were never fetched (source record "
+        "STD-NV-SPEC). Its window-pair cells against the UEC TFC window "
+        "are NOT SAMPLED for the strongest reason there is: the public "
+        "record fixes a switched 72-GPU domain and no domain beyond one "
+        "rack (NVP-F06), so no honest NV-side pod-scale ring stand-in "
+        "exists to pair against — a pair cell requires an artifact, not "
+        "an analogy."
+    )
+    lines.append(
         "- **Hierarchy and multi-level fabrics: NOT COMPARABLE (fidelity).** "
         "The UnifiedBus paper's hierarchical full-mesh with asymmetric "
         "per-level widths, memory semantics, APR routing, and the "
@@ -727,6 +911,8 @@ def render_markdown(matrix: dict) -> str:
     lines.append("  experiments/sweeps/cross_design_uec_vs_ub_paper_l0_v1.yaml")
     lines.append(".venv/bin/python -m essun.orchestrator.sweeps \\")
     lines.append("  experiments/sweeps/cross_fabric_payload_grid_v1.yaml")
+    lines.append(".venv/bin/python -m essun.orchestrator.sweeps \\")
+    lines.append("  experiments/sweeps/cross_fabric_3arch_payload_grid_v1.yaml")
     lines.append(".venv/bin/python -m essun.orchestrator.envelopes \\")
     lines.append("  experiments/envelopes/uec_vs_ub_window_boundary_v1.yaml")
     lines.append(".venv/bin/python -m essun.orchestrator.envelopes \\")

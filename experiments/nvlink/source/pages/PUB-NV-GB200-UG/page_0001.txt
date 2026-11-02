@@ -1,0 +1,179 @@
+Hardware — NVIDIA DGX GB Rack Scale Systems User Guide
+
+Skip to main content
+
+Back to topCtrl+K
+
+NVIDIA DGX GB Rack Scale Systems User Guide
+
+SearchCtrl+K
+
+SearchCtrl+K
+
+NVIDIA DGX GB Rack Scale Systems User Guide
+
+Table of Contents
+
+Overview
+
+Hardware
+
+Networking
+
+Storage
+
+Software
+
+Safety
+
+Rack Operations
+
+System Control and Configuration
+
+Redfish Commands
+
+Rack Reboot Sequence
+
+System Health Check
+
+Legal Information
+
+Compliance
+
+Third-Party License Notices
+
+Notices
+
+NVIDIA Docs Hub
+
+NVIDIA DGX Platform
+
+NVIDIA DGX Systems
+
+Hardware
+
+Is this page helpful?
+
+Hardware#
+
+DGX Grace Blackwell rack scale systems are rack scale solutions for graphics processing units (GPUs) connected by NVLink through the NVLink passive copper cable cartridge backplane. The complete DGX GB rack system comprises compute trays with one or two compute boards, NVLink switch trays, an NVLink passive copper cable backplane, power shelves, a bus bar, and liquid cooling manifolds.
+
+Rack Configuration#
+
+An NVL72 rack is an NVIDIA rack with 72-GPU NVL domains. Each NVL72 rack contains:
+
+18x 1RU compute trays, each with 2 Grace CPUs and 4 Blackwell GPUs.
+
+9x 1RU NVLink switch trays.
+
+2x TOR Switches for management.
+
+Power shelves for supplying power to all trays and switches.
+
+DGX GB200
+
+DGX GB200 Rack Configuration - Front view of four 72-GPU racks#
+
+DGX GB300
+
+DGX GB300 Rack Configuration - Front view of four 72-GPU racks#
+
+The rear side of the system provides access to the cable management system, the inlets and outlets to the liquid cooling manifolds and the manifolds themselves, the cable cartridges, and the power bus bar.
+
+DGX GB200
+
+DGX GB200 Rack Configuration - Rear view#
+
+DGX GB300
+
+DGX GB300 Rack Configuration - Rear view#
+
+Compute Trays#
+
+The compute tray in a DGX GB rack system is an enclosure that holds the compute boards and peripheral accessory boards and runs an OS image. The compute trays are cooled by liquid that runs up and down the rack through manifolds, then through the cold plates that are attached to the CPUs and the GPUs in the tray. The rest of the components like networking and storage devices are air cooled, which is pushed through the system by the fans. The compute trays in a rack are interconnected via NVLink through the connectors at the back of the tray, which enables communication with the other compute trays via the NVSwitch trays.
+
+DGX GB200
+
+DGX GB200 Compute Tray#
+
+DGX GB300
+
+DGX GB300 Compute Tray#
+
+The following table provides information about the DGX GB rack system compute tray configuration.
+
+Component
+
+Function
+
+Compute
+
+Compute node
+
+2x Grace™ CPUs and 4x Blackwell™ GPUs
+
+Networking
+
+Cluster network
+
+DGX GB200: 4x NVIDIA ConnectX-7 single port 400G OSFP NIC
+
+DGX GB300: 4x NVIDIA ConnectX-8 single port 800G OSFP NIC
+
+Storage/management network
+
+2x NVIDIA BlueField-3 DPU, dual port 400G Infiniband or Ethernet
+
+Out-of-band management network
+
+1x 1GbE x RJ45 from the compute tray BMC module
+
+2x 1GbE x RJ45 from the BlueField-3 BMC interface
+
+Storage
+
+Data cache
+
+4x 3.84TB E1.S NVMe per compute tray with software RAID 0
+
+Boot drive
+
+1x 1.92TB M.2 NVMe
+
+DGX GB200
+
+DGX GB200 Compute Tray - Block diagram#
+
+DGX GB300
+
+DGX GB300 Compute Tray - Block diagram#
+
+Out-of-Band (OOB) management of the compute tray hardware resources is provided by a combination of Board Management Controller (BMC) and Host Management Controller (HMC) microcontrollers. External access is available through standard BMC and console interfaces.
+
+The figure below shows a top view of the DGX GB rack system compute tray and identifies the main components.
+
+DGX GB200
+
+DGX GB200 Compute Tray - Top view#
+
+DGX GB300
+
+DGX GB300 Compute Tray - Top view#
+
+The figure below shows a front view of the DGX GB rack system compute tray and identifies the main components.
+
+DGX GB200
+
+DGX GB200 Compute Tray - Front view#
+
+DGX GB300
+
+DGX GB300 Compute Tray - Front view#
+
+NVLink Switch Trays#
+
+The NVLink switch system delivers an unprecedented 57.6 terabits per second (Tbps) of full duplex bandwidth for the fifth-generation NVLink in a 1U design.
+
+Each switch tray has 2x NVLink switches, and each switch tray has the following components:
+
+2x NVLink NVSwitches, each of which has 72 NVLink ports

@@ -1,0 +1,68 @@
+# NVLink-class license-gate source record (repo level).
+# Rows are the license-review record for the paper-derived NVLink-class
+# profile (M1, 2026-11-02). Scope choice, mirroring the UnifiedBus record
+# (experiments/unifiedbus/source_record.yaml): the SPECIFICATION TRACK row
+# (STD-NV-SPEC) is gated — NVIDIA's NVLink/NVSwitch interface
+# specifications are proprietary documents distributed to licensees and
+# partners under NDA; no public specification document exists. That row
+# was never fetched and nothing on it is interpreted. Every row the
+# profile actually anchors is PUBLIC_READ (papers, vendor public pages,
+# one project public tracker page). Rows here are the writable master for
+# the license guard in experiments/nvlink/fetch_sources.py; changes are
+# made here, never paraphrased away.
+sources:
+  - id: STD-NV-SPEC
+    category: license
+    title: NVIDIA NVLink and NVSwitch interface specifications (licensee program documents)
+    version: not publicly distributed
+    url: https://www.nvidia.com/en-us/data-center/nvlink/
+    access: APPROVAL_REQUIRED
+    role: Specification-track gate
+    notes: Proprietary vendor specifications distributed to licensees/partners under NDA;
+      no public NVLink/NVSwitch specification document exists. Never fetched; this row
+      is the recorded gate, not a source.
+  - id: STD-NV-GB200-UG
+    category: standard
+    title: Hardware - NVIDIA DGX GB Rack Scale Systems User Guide (NVLink switch section)
+    version: current
+    url: https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html
+    access: PUBLIC_READ
+    role: Vendor public documentation page
+    notes: Official docs.nvidia.com hardware page; spec figures, never measurements
+  - id: STD-NV-GB200-NVL72
+    category: standard
+    title: NVIDIA GB200 NVL72 product page
+    version: current
+    url: https://www.nvidia.com/en-us/data-center/gb200-nvl72/
+    access: PUBLIC_READ
+    role: Vendor public product page
+    notes: Marketing/spec page; figures are vendor-claimed, labeled as such
+  - id: PUB-NV-LI-TPDS19
+    category: paper
+    title: 'Evaluating Modern GPU Interconnect: PCIe, NVLink, NV-SLI, NVSwitch and
+      GPUDirect (IEEE TPDS 2019; arXiv:1903.04611)'
+    version: v2 (arXiv HTML)
+    url: https://arxiv.org/html/1903.04611
+    access: PUBLIC_READ
+    role: Peer-reviewable public paper (measured microbenchmarks)
+    notes: P100/V100 DGX-1, DGX-2 NVSwitch, SLI, Summit; P2P latency/bandwidth measurements
+  - id: PUB-NV-TPU4-ICI23
+    category: paper
+    title: 'TPU v4: An Optically Reconfigurable Supercomputer for Machine Learning
+      with Hardware Support for Embeddings (ISCA 2023; arXiv:2304.01433)'
+    version: v3 (arXiv PDF)
+    url: https://arxiv.org/pdf/2304.01433
+    access: PUBLIC_READ
+    role: 'Peer-reviewable public paper (class member: TPU v4 ICI)'
+    notes: The NVLink-class family's independent public-paper member; ICI link specs,
+      3D torus, OCS, twisted-torus measurements
+  - id: PUB-NV-NCCL-1054
+    category: paper
+    title: 'NVIDIA/nccl issue #1054: The total nvlink bandwidth obtained by NCCL topo
+      is not the actual total bandwidth'
+    version: current
+    url: https://github.com/NVIDIA/nccl/issues/1054
+    access: PUBLIC_READ
+    role: NCCL project public tracker page
+    notes: Issue body plus maintainer reply on the record; NCCL's internal NVLink
+      bandwidth model and app-level derating

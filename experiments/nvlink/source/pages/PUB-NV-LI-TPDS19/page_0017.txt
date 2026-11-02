@@ -1,0 +1,39 @@
+[36] J. Yin, “Early experiences with Machine Learning and Deep Learning on Summit/SummitDev,” https://www.olcf.ornl.gov/wp-content/uploads/2018/12/summit_training_mldl.pdf, 2018.
+
+[37] NERSC, “Perlmutter: NERSC’s Next Supercomputer,” https://www.nersc.gov/systems/perlmutter/.
+
+[38] A. Li, Y. Tay, A. Kumar, and H. Corporaal, “Transit: A visual analytical model for multithreaded machines,” in International Symposium on High-Performance Parallel and Distributed Computing (HPDC). ACM, 2015.
+
+[39] A. Li, S. L. Song, E. Brugel, A. Kumar, D. Chavarria-Miranda, and H. Corporaal, “X: A comprehensive analytic model for parallel machines,” in International Parallel and Distributed Processing Symposium (IPDPS). IEEE, 2016.
+
+[40] A. Li, W. Liu, M. R. Kristensen, B. Vinter, H. Wang, K. Hou, A. Marquez, and S. L. Song, “Exploring and analyzing the real impact of modern on-package memory on HPC scientific kernels,” in International Conference for High Performance Computing, Networking, Storage and Analysis (SC). ACM, 2017.
+
+[41] A. Li, G.-J. van den Braak, A. Kumar, and H. Corporaal, “Adaptive and transparent cache bypassing for GPUs,” in International Conference for High Performance Computing, Networking, Storage and Analysis (SC). ACM, 2015.
+
+[42] A. Li, G.-J. van den Braak, H. Corporaal, and A. Kumar, “Fine-grained synchronizations and dataflow programming on GPUs,” in International Conference on Supercomputing (ICS). ACM, 2015.
+
+[43] A. Li, S. L. Song, M. Wijtvliet, A. Kumar, and H. Corporaal, “SFU-driven transparent approximation acceleration on GPUs,” in International Conference on Supercomputing (ICS). ACM, 2016.
+
+[44] A. Li, S. L. Song, A. Kumar, E. Z. Zhang, D. Chavarría-Miranda, and H. Corporaal, “Critical points based register-concurrency autotuning for GPUs,” in Conference on Design, Automation & Test in Europe, 2016.
+
+[45] W. Liu, A. Li, J. Hogg, I. S. Duff, and B. Vinter, “A synchronization-free algorithm for parallel sparse triangular solves,” in European Conference on Parallel Processing (EuroPar). Springer, 2016.
+
+[46] J. Li, Y. Ma, C. Yan, and R. Vuduc, “Optimizing sparse tensor times matrix on multi-core and many-core architectures,” in Proceedings of the Sixth Workshop on Irregular Applications: Architectures and Algorithms. IEEE Press, 2016.
+
+[47] A. Li, S. L. Song, W. Liu, X. Liu, A. Kumar, and H. Corporaal, “Locality-aware CTA clustering for modern GPUs,” ACM SIGOPS Operating Systems Review, 2017.
+
+[48] A. Li, W. Zhao, and S. L. Song, “Bvf: enabling significant on-chip power savings via bit-value-favor for throughput processors,” in Proceedings of the 50th Annual IEEE/ACM International Symposium on Microarchitecture. ACM, 2017.
+
+[49] A. Li, W. Liu, L. Wang, K. Barker, and S. L. Song, “Warp-consolidation: A novel execution model for gpus,” in International Conference on Supercomputing (ICS). ACM, 2018.
+
+[50] D. Shen, S. L. Song, A. Li, and X. Liu, “Cudaadvisor: Llvm-based runtime profiling for modern gpus,” in Proceedings of the 2018 International Symposium on Code Generation and Optimization. ACM, 2018.
+
+[51] L. Wang, J. Ye, Y. Zhao, W. Wu, A. Li, S. L. Song, Z. Xu, and T. Kraska, “Superneurons: Dynamic GPU memory management for training deep neural networks,” in ACM SIGPLAN Notices. ACM, 2018.
+
+[52] K. Spafford, J. S. Meredith, and J. S. Vetter, “Quantifying NUMA and contention effects in multi-GPU systems,” in GPGPU-4. ACM, 2011.
+
+[53] H. Wang, S. Potluri, D. Bureddy, C. Rosales, and D. K. Panda, “GPU-aware MPI on RDMA-enabled clusters: Design, implementation and evaluation,” IEEE Transactions on Parallel and Distributed Systems, 2014.
+
+[54] T. Ben-Nun, E. Levy, A. Barak, and E. Rubin, “Memory access patterns: the missing piece of the multi-GPU puzzle,” in International Conference for High Performance Computing, Networking, Storage and Analysis (SC). ACM, 2015.
+
+[55] J. Cabezas, L. Vilanova, I. Gelado, T. B. Jablin, N. Navarro, and W.-m. W. Hwu, “Automatic parallelization of kernels in shared-memory multi-GPU nodes,” in International Conference on Supercomputing (SC). ACM, 2015.

@@ -1,0 +1,23 @@
+II-BNVLink-V1
+
+Known as the first generation of NVLink, NVLink-V1 is a wire-based communication interface for near-range devices based on High-Speed-Signaling-Interconnect (NVHS) [4, 12]. It supports P2P communication that enables CPU-GPU or GPU-GPU linking. It allows direct read and write on remote CPU’s host-memory and/or peer GPU’s device-memory. Remote atomic operations are also feasible. NVLink is bidirectional; each link consists of two sublinks — one for each direction. Each sublink further contains eight differential NVHS lanes. An embedded clock is integrated for transmission. The packet size varies from 16 bytes to 256 bytes (one 128-bit flit to sixteen 128-bit flits). The communication efficiency is strongly correlated to the packet size. Overall, it is reported to be twice as efficient as PCIe [12].
+
+An NVLink can be viewed as a cable with two terminal-plugs whereas each GPU incorporates several NVLink slots. How these slots are connected via the NVLink cables dictate the topology and bandwidth of the GPU network. Multiple cables can be ganged together to enhance bandwidth when they are linking the same endpoints. A Pascal-P100 GPU has quad NVLink slots. Therefore, for a dual-GPU system, a direct setting would be two GPUs connected by four NVLinks, leading to 4×\times bandwidth of a single link.
+
+P100-DGX-1: The GPU network topology for DGX-1 is known as Hypercube Mesh. As shown in Figure 1-(A), each GPU occupies a corner of the cube and all the 12 edges are NVLink connections. For the upper and lower planes, the diagonals are also connected, forming two fully-connected subsets. Such a topology design is balanced, with stronger connectivity inside a plane. In other words, accessing within a plane is UMA, while accessing nodes across planes leads to NUMA (when they are not directly linked, e.g., from GPU-0 to GPU-7). In fact, NVLink is not self-routed when the two terminals are not directly linked. It relies on explicit routing through a user-specified intermediate node.
+
+Fig. 2: NVLink interconnect topology for SummitDev and Summit.
+
+SummitDev: The interconnect topology inside a machine node in SummitDev is illustrated in Figure 2-(A). As can be seen, the four P100 GPUs per node are partitioned into two subsets; two GPUs per subset. A subset, together with a Power-8 CPU socket, constituting a triple-node fully-connected subnetwork. Every two nodes (either CPU or GPU) in a subnetwork are connected by two NVLink-V1 links. The two subnetworks communicate via an X-Bus at 38 GB/s. Note, unlike DGX-1, there is no direct connection between GPUs from separated subnetworks, as all the four NVLink slots of the P100 GPUs have already been occupied.
+
+II-CNVLink-V2
+
+Fig. 3: NVSwitch interconnect topology in DGX-2.
+
+Fig. 4: PCIe interconnect topology in DGX-2.
+
+The second generation of NVLink improves per-link bandwidth and adds more link-slots per GPU: in addition to 4 link-slots in P100, each V100 GPU features 6 NVLink slots; the bandwidth of each link is also enhanced by 25%. Besides, a low-power operating mode is introduced for saving power in case a link is not being heavily exploited. The extra two link-slots have enabled certain alternation to the original network topology.
+
+V100-DGX-1: Shown in Figure 1-(B), the V100-DGX-1 does not choose to further strengthen the connectivity within a plane, but forming a fast Backbone Ring inside the Hypercube-Mesh network. Each connection in this ring enables 2×\times bandwidth compared to other links. We suspect this is to improve the efficiency of collective communication, as further discussed in Section III-B.
+
+Summit: Figure 2-(B) shows the interconnect network topology for a machine node in Summit. The six GPUs are also organized in two subnetworks, but each with three GPUs. A subset, together with a Power-9 CPU socket, forming a quad-node fully-connect subnetwork. Every two nodes (either CPU or GPU) in a subnetwork are connected by two NVLink-V2 links. The two subnetworks are connected again via an X-Bus, at 64 GB/s. With one more node in the subnetwork, all the 6 NVLink slots per V100 GPU are fully utilized; there is no GPU direct connection between subsets.

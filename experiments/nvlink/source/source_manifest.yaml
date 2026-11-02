@@ -1,0 +1,251 @@
+registry_family: nvlink_class_public_papers
+honesty_note: Paper-derived NVLink-class profile sources only (public papers and public pages); no public
+  NVLink/NVSwitch specification exists — the specification track is licensee/NDA-gated (STD-NV-SPEC) and
+  was never fetched
+sources:
+- source_id: PUB-NV-LI-TPDS19
+  title: 'Evaluating Modern GPU Interconnect: PCIe, NVLink, NV-SLI, NVSwitch and GPUDirect (IEEE TPDS
+    2019; arXiv:1903.04611)'
+  url: https://arxiv.org/html/1903.04611
+  handoff_row: PUB-NV-LI-TPDS19
+  access: PUBLIC_READ
+  role: 'Primary public paper: measured NVLink-V1/V2 and NVSwitch P2P latency/bandwidth, DGX-1/DGX-2 topologies,
+    NVSwitch crossbar structure, NUMA effects'
+  found_via: Calibration anchor staging (docs/calibration/anchors_staging.md additional candidates, Li
+    et al. TPDS 2019); arXiv native HTML
+  kind: arxiv_html
+  raw_format: html
+  doc_sha256: ee4f4e66d9e526ec66e89b3ec98ac6b411dcd846d80c7a0a68b91c360a0acbd5
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 18
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-LI-TPDS19
+  notes: arXiv HTML of the TPDS paper; raw bytes hashed at fetch time; the only public MEASURED latency/bandwidth
+    microbenchmarks of this family in the source set
+  pages:
+  - page: 1
+    file: pages/PUB-NV-LI-TPDS19/page_0001.txt
+    sha256: 282d826c8d1dd29bccfc81b07055bb348320c1927921e49743aeee23e2adb7ae
+    chars: 4371
+  - page: 2
+    file: pages/PUB-NV-LI-TPDS19/page_0002.txt
+    sha256: f3a073cc580aed9a437c454871e118951e0a61cd9537289c9fa57216237940e1
+    chars: 4075
+  - page: 3
+    file: pages/PUB-NV-LI-TPDS19/page_0003.txt
+    sha256: 2eb83051ec76dde9b4acacdd71278c45e10869810f95fb2a01dfe5af4894b911
+    chars: 4185
+  - page: 4
+    file: pages/PUB-NV-LI-TPDS19/page_0004.txt
+    sha256: ae9742e6e6f010bae17f597ced0b7ee9602def62305e95add800f305ba6bfd35
+    chars: 4122
+  - page: 5
+    file: pages/PUB-NV-LI-TPDS19/page_0005.txt
+    sha256: d1e6735df77280ce2cbeadf1e8e85ca317a3375039ea4f8050fb567cebbe8111
+    chars: 4380
+  - page: 6
+    file: pages/PUB-NV-LI-TPDS19/page_0006.txt
+    sha256: 741710ad6706eae59ddf442098711a310f4ae9407589da02c65c83c9b2db7d21
+    chars: 4060
+  - page: 7
+    file: pages/PUB-NV-LI-TPDS19/page_0007.txt
+    sha256: 47e05b9b68e9c29c4b99188f7ecd97584e86ff9b75a6e1c9c5d6186031f183cd
+    chars: 4178
+  - page: 8
+    file: pages/PUB-NV-LI-TPDS19/page_0008.txt
+    sha256: 838697b54bbd46f5a2bbe0d2720cf9971d00ea59fccf96d77c7839e06f20a051
+    chars: 4814
+  - page: 9
+    file: pages/PUB-NV-LI-TPDS19/page_0009.txt
+    sha256: d561abd0d31f9bdb9ce2d390faa9bc44c171cf4b7f1c164deb97e5b6c0c86142
+    chars: 4037
+  - page: 10
+    file: pages/PUB-NV-LI-TPDS19/page_0010.txt
+    sha256: 2031f45090ca62be722383a87b270ff5aeea408934b45c1cb8c044ea7745ac2e
+    chars: 4414
+  - page: 11
+    file: pages/PUB-NV-LI-TPDS19/page_0011.txt
+    sha256: a5f93f46757925581e54abe011b152d94a26e80bd124183ea6091d6bd839a084
+    chars: 4069
+  - page: 12
+    file: pages/PUB-NV-LI-TPDS19/page_0012.txt
+    sha256: 1ab978a2ac26c2c7f2d65144693dc3f6bdedf32d0757f0742bbe198b8e3be02a
+    chars: 4716
+  - page: 13
+    file: pages/PUB-NV-LI-TPDS19/page_0013.txt
+    sha256: 88738538aaa7d8f1dcdc7cf19ed7f5d0d6f04c7aaeecbd9417b07f2db760d7be
+    chars: 4139
+  - page: 14
+    file: pages/PUB-NV-LI-TPDS19/page_0014.txt
+    sha256: a41c3245e66ac1b8d4013338536b725c8fba8116449a9b64a7c4ca5b64e17e43
+    chars: 4125
+  - page: 15
+    file: pages/PUB-NV-LI-TPDS19/page_0015.txt
+    sha256: fc5f008bdfedab99c322c0e0c37023adae5dd5c119492816b5580ed69c27a25d
+    chars: 4116
+  - page: 16
+    file: pages/PUB-NV-LI-TPDS19/page_0016.txt
+    sha256: 68dd2943865129523eeecf81fd0dd162b36e7fe54969f94007367e75a7ef4ba6
+    chars: 4255
+  - page: 17
+    file: pages/PUB-NV-LI-TPDS19/page_0017.txt
+    sha256: 76166eb027a9f1fcc3bdc868660651628e456c869519a0b5043bf427c7642e0b
+    chars: 4063
+  - page: 18
+    file: pages/PUB-NV-LI-TPDS19/page_0018.txt
+    sha256: eb7040717bdcf5c0f8a5184bd57cc55c21d062a63dbf0b2fc2c12182cfe9e08f
+    chars: 2363
+- source_id: PUB-NV-TPU4-ICI23
+  title: 'TPU v4: An Optically Reconfigurable Supercomputer for Machine Learning with Hardware Support
+    for Embeddings (ISCA 2023; arXiv:2304.01433)'
+  url: https://arxiv.org/pdf/2304.01433
+  handoff_row: PUB-NV-TPU4-ICI23
+  access: PUBLIC_READ
+  role: 'Class-member public paper: TPU v4 ICI link specs, 3D torus + OCS, twisted-torus measurements,
+    and the paper''s own NVSwitch characterization'
+  found_via: Calibration anchor CAL-A5 (docs/calibration/anchors_staging.md A5); no arXiv HTML exists
+    for 2304.04133-era submissions, so the public arXiv PDF is the fetched form
+  kind: arxiv_pdf
+  raw_format: pdf
+  doc_sha256: 94f08ac4cd041e46e5037876793761df8043296ac374aa5372af7afb0bdf3ce2
+  extractor: pypdf 6.21.4 page.extract_text (one PDF page = one page)
+  page_count: 14
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-TPU4-ICI23
+  notes: The independent (non-NVIDIA) member of the NVLink-class family; parameters drawn from it describe
+    TPU ICI, never NVIDIA hardware, and say so in their names
+  pages:
+  - page: 1
+    file: pages/PUB-NV-TPU4-ICI23/page_0001.txt
+    sha256: cff608c2970549b0ba0d57488ca7f37f2c6fd69ec2acf36706d017d37460d334
+    chars: 5549
+  - page: 2
+    file: pages/PUB-NV-TPU4-ICI23/page_0002.txt
+    sha256: 86b1952f64ca4bb1cd564f45063ef5106c248532e15ef5d01a46101b7cb2118c
+    chars: 4679
+  - page: 3
+    file: pages/PUB-NV-TPU4-ICI23/page_0003.txt
+    sha256: e39b79008efbeaf8a67de2f9609728ded21e40f16a55fe1ecb6874e927dc16c9
+    chars: 3661
+  - page: 4
+    file: pages/PUB-NV-TPU4-ICI23/page_0004.txt
+    sha256: 35f178413fb802c0f5e4802c7653c0e0462362a0803a3d58061ee8b4c19fba3c
+    chars: 5277
+  - page: 5
+    file: pages/PUB-NV-TPU4-ICI23/page_0005.txt
+    sha256: fdcfd5b2f339356cbdfa0be8b754cd2ba58ff6d991948e000da9bbea435901cc
+    chars: 6374
+  - page: 6
+    file: pages/PUB-NV-TPU4-ICI23/page_0006.txt
+    sha256: 08b3efaf29e4ca660a648a5f968964197837cbe94990d46d9666fc6db5768908
+    chars: 4565
+  - page: 7
+    file: pages/PUB-NV-TPU4-ICI23/page_0007.txt
+    sha256: aa87654de405d68f6ce976976befddd1e30efb805582f5a910f396898d8b98a6
+    chars: 4522
+  - page: 8
+    file: pages/PUB-NV-TPU4-ICI23/page_0008.txt
+    sha256: 2cedcb5fec39b1aa4851ba0ed2de52d11c27d8e69fc30b7a38bfb493e165ea81
+    chars: 4439
+  - page: 9
+    file: pages/PUB-NV-TPU4-ICI23/page_0009.txt
+    sha256: 078f145973d8ceae5e8229132924665e38bc2f0f2c7dd4e918b716c5aa7e06c6
+    chars: 3817
+  - page: 10
+    file: pages/PUB-NV-TPU4-ICI23/page_0010.txt
+    sha256: 936de921d82fdf8fab5fa9fc2f84c65aecc7400404065faf943e74e00c339ae5
+    chars: 6851
+  - page: 11
+    file: pages/PUB-NV-TPU4-ICI23/page_0011.txt
+    sha256: eb8d146515ab6c98c04b8a21c8af99a3364055f9bdaa90d0ed1ad6b8c0913c32
+    chars: 5603
+  - page: 12
+    file: pages/PUB-NV-TPU4-ICI23/page_0012.txt
+    sha256: 1aa76b762cf433390511d261431a0af0335d3de82dbbf880b35e5ba825c4b9b4
+    chars: 6747
+  - page: 13
+    file: pages/PUB-NV-TPU4-ICI23/page_0013.txt
+    sha256: 1eeae330c313c91eac93ebf73c03b858228032ffb3ce04ae2228c1eea9f855f0
+    chars: 7466
+  - page: 14
+    file: pages/PUB-NV-TPU4-ICI23/page_0014.txt
+    sha256: ec7516c495e4c44b2eeae157e2f2beaa3060aa8235a8aa1ad60c3f25c2851c94
+    chars: 6647
+- source_id: PUB-NV-GB200-UG
+  title: Hardware - NVIDIA DGX GB Rack Scale Systems User Guide (NVLink switch section)
+  url: https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html
+  handoff_row: STD-NV-GB200-UG
+  access: PUBLIC_READ
+  role: 'Vendor official documentation page: NVLink5 switch chip capacity/ports, switch trays, rack composition'
+  found_via: Calibration anchor CAL-A1 (anchors_staging.md A1)
+  kind: vendor_doc_page
+  raw_format: html
+  doc_sha256: 97dbc45676abec7422faf8573335a6795bc46931759efce45269f9b4c418957b
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 2
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-GB200-UG
+  notes: Official docs page; figures are vendor spec claims, labeled VENDOR_CLAIMED in the profile
+  pages:
+  - page: 1
+    file: pages/PUB-NV-GB200-UG/page_0001.txt
+    sha256: b4c8fc92fb4b4a24535d19f2d243f38fab90a6815f365d93448a83f4a84b61cf
+    chars: 4226
+  - page: 2
+    file: pages/PUB-NV-GB200-UG/page_0002.txt
+    sha256: 9fa803a8203207df8d8cdf1bead687d28d83361ac414f084ae86cdc2c61bbee6
+    chars: 2183
+- source_id: PUB-NV-GB200-NVL72
+  title: NVIDIA GB200 NVL72 product page
+  url: https://www.nvidia.com/en-us/data-center/gb200-nvl72/
+  handoff_row: STD-NV-GB200-NVL72
+  access: PUBLIC_READ
+  role: 'Vendor product page: 72-GPU NVLink domain, per-GPU and aggregate NVLink5 bandwidth figures'
+  found_via: Calibration anchor CAL-A2 (anchors_staging.md A2)
+  kind: vendor_product_page
+  raw_format: html
+  doc_sha256: 383943b560655af57f8b2007e1608b2f7b26f78b0b3fcb911a93a8e554636fdd
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 5
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-GB200-NVL72
+  notes: Marketing page; every figure is a vendor claim (VENDOR_CLAIMED), spec ceilings rather than measurements
+  pages:
+  - page: 1
+    file: pages/PUB-NV-GB200-NVL72/page_0001.txt
+    sha256: 3f9b29d5f3297c83d35cd3dc9157fb50decb3993fb3162c0f6cd3cb9de0a3910
+    chars: 4249
+  - page: 2
+    file: pages/PUB-NV-GB200-NVL72/page_0002.txt
+    sha256: 41a3edcb1c3111e962189a48cf67d16b160efd57f177976dadecc68e817701a5
+    chars: 4273
+  - page: 3
+    file: pages/PUB-NV-GB200-NVL72/page_0003.txt
+    sha256: 1a69c41de44290267cbcff5837079e313d8c3fa2f7c812c31f8ffa918d29188c
+    chars: 4186
+  - page: 4
+    file: pages/PUB-NV-GB200-NVL72/page_0004.txt
+    sha256: 9e4d6dba24d4db203c7efa878bf05be7ef34d3192894e1fc00e7a7d7a8331ba7
+    chars: 4139
+  - page: 5
+    file: pages/PUB-NV-GB200-NVL72/page_0005.txt
+    sha256: a4cd9e906381841f5b436cfa770a063ab548138cbddcf069f006223c90f9894e
+    chars: 1051
+- source_id: PUB-NV-NCCL-1054
+  title: 'NVIDIA/nccl issue #1054: The total nvlink bandwidth obtained by NCCL topo is not the actual
+    total bandwidth'
+  url: https://github.com/NVIDIA/nccl/issues/1054
+  handoff_row: PUB-NV-NCCL-1054
+  access: PUBLIC_READ
+  role: 'NCCL project public tracker: the library''s internal NVLink bandwidth model (20 GB/s per link)
+    and the app-level ~80% derating, maintainer reply on the record'
+  found_via: 'Calibration anchor CAL-A12 (anchors_gapfill.md; issue #1054)'
+  kind: project_tracker_page
+  raw_format: html
+  doc_sha256: fdac0548d96933ea2c019b8f1e76d817e65bd918bafc5ebf4f4a9d69ba414134
+  extractor: stdlib html.parser (skip script/style/noscript/svg; paragraph chunks ~4000 chars)
+  page_count: 1
+  pages_dir: experiments/nvlink/source/pages/PUB-NV-NCCL-1054
+  notes: Official public page of the NCCL project (the reference communication stack for this fabric family);
+    community issue body plus maintainer answer, carried OFFICIAL_PUBLIC_PAGE
+  pages:
+  - page: 1
+    file: pages/PUB-NV-NCCL-1054/page_0001.txt
+    sha256: ed4a56acf035195c3129f174638f0233817c69c45139efa7dc27c0892bda469c
+    chars: 3914

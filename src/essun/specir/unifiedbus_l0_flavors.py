@@ -1,31 +1,42 @@
-"""Flavor configs for the first cross-design same-workload
-L0 comparison table (UEC flavor vs UnifiedBus PAPER-DERIVED flavor).
+"""Flavor configs for the cross-design same-workload L0 comparison table
+(UEC flavor vs UnifiedBus PAPER-DERIVED flavor, extended 2026-11-02 with
+the NVLink-paper PAPER-DERIVED flavor — three architectures, M1).
 
 This module turns the stage's honesty rules into executable checks so the
 comparison cannot drift into tuning:
 
 1. **Equal free parameters (mechanical):** every flavor topology file in
    the sweep :data:`experiments/sweeps/cross_design_uec_vs_ub_paper_l0_v1.yaml`
+   and the three-architecture payload grid
+   :data:`experiments/sweeps/cross_fabric_3arch_payload_grid_v1.yaml`
    carries the SAME shared free bandwidth (B = 64 bytes/ns) and latency
    (L = 200 ns) from the ONE shared record
    :data:`experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml`
    (A-XDUO-BW / A-XDUO-LAT).  Any file that changes one knob without the
    record is a hard error — the flavors may differ ONLY through anchored
    structure, never through unequal free parameters.
-2. **Anchored rank scale:** the UnifiedBus flavor's ``ranks = 64`` is not
-   a free choice; it is pinned to the S2 profile parameter ``UBP-P17``
-   (64 NPUs per rack, PAPER_REPORTED, anchor
-   ``UBP-UBMESH-3.3.1-RACK-64NPU``) whose anchors must resolve in the S1
-   public-source registry.  The UEC flavor's rank count is explicitly
-   FREE (UEC 1.1 fixes none) — the asymmetry is stated, not hidden.
+2. **Anchored rank scale, both directions stated:** the UnifiedBus
+   flavor's ``ranks = 64`` is not a free choice; it is pinned to the S2
+   profile parameter ``UBP-P17`` (64 NPUs per rack, PAPER_REPORTED,
+   anchor ``UBP-UBMESH-3.3.1-RACK-64NPU``) whose anchors must resolve in
+   the S1 public-source registry.  The NVLink-paper flavor's ``ranks =
+   64`` is the REVERSE asymmetry, and the check enforces that the file
+   says so: the anchored NVLink5 domain scale is 72 (``NVP-P13``,
+   VENDOR_CLAIMED) and 64 is a stated MATCHED-FREE choice against it
+   (``A-XDUO-IDNV``) so the same-workload gate holds.  The UEC flavor's
+   rank count is explicitly FREE (UEC 1.1 fixes none).
 3. **Anchored identity:** the UB flavor's crossbar identity must be backed
    by the S3 platform map's L0_READY rows for ``UBP-P17`` (rack full-mesh
-   level) and ``UBP-P06`` (switch-free adjacency precedent).
-4. **Honesty labels in the artifacts:** the UB flavor file must carry the
-   marker "paper-derived design profile, NOT a normative standard
-   profile" and cite the bandwidth/latency silences it runs inside
-   (``UBP-F01`` / ``UBP-F02``); the UEC flavor files must carry the
-   "no UEC-derived numeric value" marker.  Dropping a label trips a check.
+   level) and ``UBP-P06`` (switch-free adjacency precedent); the NV
+   flavor's by the M1 platform map's L0_READY rows for ``NVP-P01`` (the
+   paper-reported NVSwitch non-blocking crossbar) and ``NVP-P13`` (the
+   72-GPU switched domain).
+4. **Honesty labels in the artifacts:** the UB and NV flavor files must
+   carry the marker "paper-derived design profile, NOT a normative
+   standard profile" and cite the bandwidth/latency silences they run
+   inside (``UBP-F01`` / ``UBP-F02``; ``NVP-F01`` / ``NVP-F02`` /
+   ``NVP-F03``); the UEC flavor files must carry the "no UEC-derived
+   numeric value" marker.  Dropping a label trips a check.
 
 Whether a paper-derived profile satisfies the public-release gate's "2
 distinct standards" leg is an open decision (the normative
@@ -61,6 +72,15 @@ COMPARISON_RANKS: int = 64
 #: Payload sizes of the sweep grid (free parameters, A-XDUO-PAYLOAD).
 PAYLOAD_SIZES_BYTES: tuple[int, ...] = (16384, 1048576)
 
+#: Payload ladder of the cross-fabric payload grids (the shared registry
+#: A-XDUO-PAYLOAD range's power-of-two ladder; identical for the committed
+#: two-architecture grid and the M1 three-architecture grid so their rows
+#: interleave without re-anchoring).
+THREE_ARCH_PAYLOAD_SIZES: tuple[int, ...] = (
+    4096, 8192, 16384, 65536, 131072, 262144,
+    1048576, 2097152, 4194304, 16777216,
+)
+
 #: Torus stand-in grid shape (free design-space choice, A-L0T-SHAPE pattern).
 TORUS_GRID: tuple[int, int] = (8, 8)
 
@@ -69,10 +89,22 @@ ASSUMPTIONS_PATH: str = "experiments/unifiedbus/assumptions_uec_vs_ub_l0.yaml"
 WORKLOAD_PATH: str = "experiments/workloads/w1_dense_tp_decode_rack64.yaml"
 SWEEP_MANIFEST_PATH: str = "experiments/sweeps/cross_design_uec_vs_ub_paper_l0_v1.yaml"
 SWEEP_NAME: str = "cross_design_uec_vs_ub_paper_l0_v1"
+#: The M1 three-architecture payload grid (UEC + UB + NVLink crossbars).
+SWEEP_3ARCH_MANIFEST_PATH: str = "experiments/sweeps/cross_fabric_3arch_payload_grid_v1.yaml"
+SWEEP_3ARCH_NAME: str = "cross_fabric_3arch_payload_grid_v1"
 
 #: Absolute honesty marker every UB-flavor artifact must carry (case-folded
 #: match): the ladder's rule 1, stated in the artifact itself.
 UB_PROFILE_MARKER: str = "paper-derived design profile, not a normative standard profile"
+
+#: The same marker for the NVLink-paper flavor (M1): same rule, third
+#: fabric, stated in the artifact itself.
+NV_PROFILE_MARKER: str = "paper-derived design profile, not a normative standard profile"
+
+#: The matched-free statement the NV flavor's rank scale must carry: the
+#: anchored NVLink domain is 72 (NVP-P13) and 64 is a stated matched-free
+#: choice — the asymmetry is printed, never hidden.
+NV_RANK_SCALE_MARKER: str = "matched-free"
 
 #: The UEC-flavor honesty marker: Q1's UEC ladder has landed SEMANTICS, not
 #: L0 numbers, so UEC-flavor files must say so where they stand.
@@ -85,6 +117,13 @@ ADJACENCY_PARAMETER_ID: str = "UBP-P06"  # switch-free 16-NPU crossbar precedent
 LANE_STRUCTURE_PARAMETER_ID: str = "UBP-P07"  # B = 72 x per-lane rate, structure only
 BW_SILENCE_PARAMETER_ID: str = "UBP-F01"  # per-lane rate FREE
 LAT_SILENCE_PARAMETER_ID: str = "UBP-F02"  # latency breakdown FREE
+
+# NVLink-paper provenance pins (M1 profile ids; experiments/nvlink/).
+NV_IDENTITY_PARAMETER_ID: str = "NVP-P01"  # NVSwitch non-blocking crossbar, PAPER_REPORTED
+NV_DOMAIN_PARAMETER_ID: str = "NVP-P13"  # 72-GPU NVLink5 domain, VENDOR_CLAIMED
+NV_BW_SILENCE_PARAMETER_ID: str = "NVP-F01"  # per-link NVLink5 rate FREE
+NV_LAT_SILENCE_PARAMETER_ID: str = "NVP-F02"  # current-gen per-hop latency FREE
+NV_FC_SILENCE_PARAMETER_ID: str = "NVP-F03"  # flow-control mechanism silence
 
 #: Assumption-record entries every check re-reads (rule: every
 #: assumption carries parameter, value, unit, range, rationale,
@@ -110,7 +149,7 @@ class FlavorConfigError(Exception):
 class FlavorTopology:
     """One flavor row of the cross-design sweep grid."""
 
-    flavor: str  # "UEC_FREE" | "UB_PAPER"
+    flavor: str  # "UEC_FREE" | "UB_PAPER" | "NV_PAPER"
     algorithm: str
     topology_class: str
     path: str  # repo-relative
@@ -128,9 +167,12 @@ class FlavorTopology:
         return node
 
 
-#: The exact grid of the cross-design sweep (mirrors the manifest; drift
-#: between this tuple and the manifest file is an error, never a re-pin).
-FLAVOR_TOPOLOGIES: tuple[FlavorTopology, ...] = (
+#: The exact grid of the committed two-architecture cross-design sweep
+#: (mirrors the manifest; drift between this tuple and the manifest file
+#: is an error, never a re-pin).  The M1 NV flavor joins the
+#: three-architecture payload grid below, not this manifest, so the
+#: committed sweep's artifact id is untouched.
+CROSS_DESIGN_TOPOLOGIES: tuple[FlavorTopology, ...] = (
     FlavorTopology(
         flavor="UEC_FREE",
         algorithm="allreduce_ring",
@@ -168,6 +210,32 @@ FLAVOR_TOPOLOGIES: tuple[FlavorTopology, ...] = (
         latency_knob="link.hop_latency_ns",
         grid=TORUS_GRID,
     ),
+)
+
+#: The NVLink-paper flavor of the three-architecture payload grid (M1):
+#: identity ANCHORED (NVP-P01/NVP-P13), rank scale matched-free against
+#: the anchored 72-GPU domain, B/L shared free parameters.
+NV_PAPER_TOPOLOGY = FlavorTopology(
+    flavor="NV_PAPER",
+    algorithm="allreduce_crossbar",
+    topology_class="fully_connected_crossbar",
+    path="experiments/topologies/crossbar64_nvl_rack_free_params.yaml",
+    topology_id="nvl_rack64_crossbar_v1",
+    bandwidth_knob="nic.injection_bytes_per_ns",
+    latency_knob="link.pair_latency_ns",
+)
+
+#: Every declared flavor topology (both manifests' union).
+FLAVOR_TOPOLOGIES: tuple[FlavorTopology, ...] = CROSS_DESIGN_TOPOLOGIES + (
+    NV_PAPER_TOPOLOGY,
+)
+
+#: The exact config set of the three-architecture payload grid (the three
+#: identity-matched crossbars; drift against its manifest is an error).
+THREE_ARCH_TOPOLOGIES: tuple[FlavorTopology, ...] = (
+    CROSS_DESIGN_TOPOLOGIES[1],  # UEC crossbar (baseline)
+    CROSS_DESIGN_TOPOLOGIES[2],  # UB paper crossbar
+    NV_PAPER_TOPOLOGY,           # NVLink paper crossbar
 )
 
 #: Baseline of the sweep: the identity-matched UEC control, so the UB row's
@@ -216,6 +284,11 @@ def flavor_file_problems(spec: FlavorTopology, text: str, data: dict) -> list[st
                 " — on the UB flavor this rank count is ANCHORED (UBP-P17), "
                 "not a free choice" if spec.flavor == "UB_PAPER" else ""
             )
+            + (
+                " — on the NV flavor the anchored domain scale is 72 "
+                "(NVP-P13) and 64 is a stated MATCHED-FREE choice, so the "
+                "statement itself is required" if spec.flavor == "NV_PAPER" else ""
+            )
         )
 
     bw = spec.knob_value(data, spec.bandwidth_knob)
@@ -261,6 +334,29 @@ def flavor_file_problems(spec: FlavorTopology, text: str, data: dict) -> list[st
             (LANE_STRUCTURE_PARAMETER_ID, "B = 72 x per-lane-rate structure"),
             (BW_SILENCE_PARAMETER_ID, "per-lane rate silence (B stays FREE)"),
             (LAT_SILENCE_PARAMETER_ID, "latency-breakdown silence (L stays FREE)"),
+        ):
+            if pin not in text:
+                problems.append(f"{label}: must cite {pin} ({why})")
+    elif spec.flavor == "NV_PAPER":
+        if NV_PROFILE_MARKER not in folded:
+            problems.append(
+                f"{label}: missing the honesty marker {NV_PROFILE_MARKER!r} — "
+                "the NVLink-paper flavor is paper-derived, NOT a normative "
+                "standard profile, and the artifact must say so"
+            )
+        if NV_RANK_SCALE_MARKER not in folded:
+            problems.append(
+                f"{label}: missing the matched-free rank statement "
+                f"({NV_RANK_SCALE_MARKER!r}) — the anchored NVLink domain "
+                "scale is 72 (NVP-P13), and 64 must be stated as a "
+                "matched-free choice, never passed off as anchored"
+            )
+        for pin, why in (
+            (NV_IDENTITY_PARAMETER_ID, "anchored NVSwitch crossbar identity"),
+            (NV_DOMAIN_PARAMETER_ID, "anchored 72-GPU domain scale"),
+            (NV_BW_SILENCE_PARAMETER_ID, "per-link rate silence (B stays FREE)"),
+            (NV_LAT_SILENCE_PARAMETER_ID, "current-gen latency silence (L stays FREE)"),
+            (NV_FC_SILENCE_PARAMETER_ID, "flow-control silence (no window)"),
         ):
             if pin not in text:
                 problems.append(f"{label}: must cite {pin} ({why})")
@@ -338,7 +434,14 @@ def assumptions_problems(assumptions: dict) -> list[str]:
     return problems
 
 
-def workload_manifest_problems(workload: dict, manifest: dict) -> list[str]:
+def workload_manifest_problems(
+    workload: dict,
+    manifest: dict,
+    *,
+    sweep_name: str = SWEEP_NAME,
+    expected_topologies: tuple[FlavorTopology, ...] = CROSS_DESIGN_TOPOLOGIES,
+    payload_sizes: tuple[int, ...] = PAYLOAD_SIZES_BYTES,
+) -> list[str]:
     problems: list[str] = []
     if not isinstance(workload, dict) or not isinstance(manifest, dict):
         return ["workload or sweep manifest is not a mapping"]
@@ -354,8 +457,8 @@ def workload_manifest_problems(workload: dict, manifest: dict) -> list[str]:
             "every config) is what makes this comparison literal"
         )
 
-    if manifest.get("sweep") != SWEEP_NAME:
-        problems.append(f"manifest sweep name {manifest.get('sweep')!r} != {SWEEP_NAME!r}")
+    if manifest.get("sweep") != sweep_name:
+        problems.append(f"manifest sweep name {manifest.get('sweep')!r} != {sweep_name!r}")
     if manifest.get("workload") != WORKLOAD_PATH:
         problems.append(
             f"manifest workload {manifest.get('workload')!r} != {WORKLOAD_PATH!r}"
@@ -365,13 +468,13 @@ def workload_manifest_problems(workload: dict, manifest: dict) -> list[str]:
         problems.append(
             f"manifest baseline {(baseline.get('algorithm'), baseline.get('topology'))!r} "
             f"!= the identity-matched control {BASELINE!r} — the baseline choice "
-            "is what makes the UB row's delta-0 coincidence visible"
+            "is what makes the paper-derived rows' delta-0 coincidence visible"
         )
 
     grid = manifest.get("grid") or {}
     sizes = grid.get("payload_sizes_bytes")
-    if tuple(sizes or ()) != PAYLOAD_SIZES_BYTES:
-        problems.append(f"grid.payload_sizes_bytes {sizes!r} != {list(PAYLOAD_SIZES_BYTES)!r}")
+    if tuple(sizes or ()) != payload_sizes:
+        problems.append(f"grid.payload_sizes_bytes {sizes!r} != {list(payload_sizes)!r}")
     for size in sizes or ():
         if not isinstance(size, int) or size % COMPARISON_RANKS or size % TORUS_GRID[0]:
             problems.append(
@@ -380,7 +483,7 @@ def workload_manifest_problems(workload: dict, manifest: dict) -> list[str]:
                 f"{TORUS_GRID[0]})"
             )
 
-    expected_pairs = {(spec.algorithm, spec.path) for spec in FLAVOR_TOPOLOGIES}
+    expected_pairs = {(spec.algorithm, spec.path) for spec in expected_topologies}
     actual_pairs: set[tuple[str, str]] = set()
     entries = grid.get("algorithms")
     if not isinstance(entries, list):
@@ -402,7 +505,9 @@ def workload_manifest_problems(workload: dict, manifest: dict) -> list[str]:
 
 
 def provenance_problems(repo_root: Path) -> list[str]:
-    """Anchor-chain checks, offline (S1 pages and registry are committed)."""
+    """Anchor-chain checks, offline (S1 pages and registries are committed)."""
+    from essun.specir import nvlink_paper_profile as nv_profile
+    from essun.specir import nvlink_platform_map as nv_platform_map
     from essun.specir import unifiedbus_paper_profile as profile
     from essun.specir import unifiedbus_platform_map as platform_map
     from essun.specir.unifiedbus_sources import PaperAnchorRegistry
@@ -471,6 +576,85 @@ def provenance_problems(repo_root: Path) -> list[str]:
                 f"S3 map row for {parameter_id} does not back the "
                 "fully_connected_crossbar identity the UB flavor file uses"
             )
+
+    # -- the M1 NVLink-paper chain: identity (NVP-P01, paper-reported
+    # NVSwitch crossbar) + domain scale (NVP-P13, vendor-claimed 72-GPU
+    # domain, matched-free at 64) + the three silences, all resolving in
+    # the experiments/nvlink/ registry, with the M1 platform map's
+    # L0_READY rows backing the crossbar identity.
+    nv_registry = PaperAnchorRegistry.load(
+        path=repo_root / "experiments/nvlink/anchor_registry.yaml",
+        repo_root=repo_root,
+    )
+    nv_anchors = nv_registry.by_id()
+    nv_parameters = {p.parameter_id: p for p in nv_profile.parameters()}
+    nv_frees = {f.parameter_id: f for f in nv_profile.free_parameters()}
+
+    identity = nv_parameters.get(NV_IDENTITY_PARAMETER_ID)
+    if identity is None:
+        problems.append(f"M1 profile missing {NV_IDENTITY_PARAMETER_ID}")
+    else:
+        if identity.evidence_grade != "PAPER_REPORTED":
+            problems.append(
+                f"{NV_IDENTITY_PARAMETER_ID} grade {identity.evidence_grade!r} "
+                "!= 'PAPER_REPORTED' — the crossbar-identity anchor is a "
+                "paper measurement-grade claim and must not launder a "
+                "weaker grade"
+            )
+        for anchor_id in identity.anchor_ids:
+            if anchor_id not in nv_anchors:
+                problems.append(
+                    f"anchor {anchor_id} does not resolve in the M1 "
+                    "public-source registry — the NV identity chain is broken"
+                )
+    domain = nv_parameters.get(NV_DOMAIN_PARAMETER_ID)
+    if domain is None:
+        problems.append(f"M1 profile missing {NV_DOMAIN_PARAMETER_ID}")
+    else:
+        if "72" not in domain.as_reported:
+            problems.append(
+                f"{NV_DOMAIN_PARAMETER_ID}.as_reported does not state the "
+                "72-GPU domain scale the NV flavor's matched-free statement "
+                "cites"
+            )
+        if domain.evidence_grade != "VENDOR_CLAIMED":
+            problems.append(
+                f"{NV_DOMAIN_PARAMETER_ID} grade {domain.evidence_grade!r} != "
+                "'VENDOR_CLAIMED' — the domain scale is a vendor public-page "
+                "figure and must carry its grade"
+            )
+    for free_id in (
+        NV_BW_SILENCE_PARAMETER_ID,
+        NV_LAT_SILENCE_PARAMETER_ID,
+        NV_FC_SILENCE_PARAMETER_ID,
+    ):
+        free = nv_frees.get(free_id)
+        if free is None:
+            problems.append(f"M1 profile missing free parameter {free_id}")
+        elif free.domain != "FREE":
+            problems.append(f"{free_id}.domain {free.domain!r} != 'FREE'")
+    for parameter_id in (NV_IDENTITY_PARAMETER_ID, NV_DOMAIN_PARAMETER_ID):
+        matching = [
+            entry
+            for entry in nv_platform_map.by_bucket("L0_READY")
+            if entry.parameter_id == parameter_id
+        ]
+        if not matching:
+            problems.append(
+                f"M1 platform map has no L0_READY row for {parameter_id}"
+            )
+            continue
+        backed = any(
+            target.backend_id == "analytical_l0_crossbar"
+            and target.topology_class == "fully_connected_crossbar"
+            for entry in matching
+            for target in entry.targets
+        )
+        if not backed:
+            problems.append(
+                f"M1 map row for {parameter_id} does not back the "
+                "fully_connected_crossbar identity the NV flavor file uses"
+            )
     return problems
 
 
@@ -512,6 +696,21 @@ def flavor_problems(repo_root: Path | str = REPO_ROOT) -> list[str]:
         problems += workload_manifest_problems(
             yaml.safe_load(workload_path.read_text(encoding="utf-8")),
             yaml.safe_load(manifest_path.read_text(encoding="utf-8")),
+        )
+
+    # The M1 three-architecture payload grid: the three identity-matched
+    # crossbars (UEC control, UB paper, NVLink paper) on the same shared
+    # workload and the full payload ladder the registry permits.
+    three_arch_path = root / SWEEP_3ARCH_MANIFEST_PATH
+    if not three_arch_path.is_file():
+        problems.append(f"missing three-architecture sweep manifest {SWEEP_3ARCH_MANIFEST_PATH}")
+    elif workload_path.is_file():
+        problems += workload_manifest_problems(
+            yaml.safe_load(workload_path.read_text(encoding="utf-8")),
+            yaml.safe_load(three_arch_path.read_text(encoding="utf-8")),
+            sweep_name=SWEEP_3ARCH_NAME,
+            expected_topologies=THREE_ARCH_TOPOLOGIES,
+            payload_sizes=THREE_ARCH_PAYLOAD_SIZES,
         )
 
     problems += provenance_problems(root)
