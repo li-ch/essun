@@ -1,0 +1,9 @@
+# Source pointers for the trust dashboard (tools/trust_dashboard.py --fetch).
+# This is the only human input the dashboard accepts, and it is a pointer,
+# never a number: the counts themselves are always read from the sources.
+schema: trust-sources/v1
+github_repository: li-ch/essun
+# null until the owner records the published paper's arXiv id (a one-line
+# edit at submission time); with null, citations read UNKNOWN — there is
+# no public paper to count citations of, and unknown is not zero.
+arxiv_id: null

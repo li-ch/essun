@@ -1,0 +1,20 @@
+citations:
+  arxiv_id: null
+  as_of: '2026-11-02'
+  count: null
+  note: "no public paper to count citations of yet \u2014 the arXiv id is recorded\
+    \ in experiments/trust/sources.yaml when the paper exists"
+  source: semanticscholar
+github:
+  as_of: '2026-11-02'
+  issues_from_strangers: 0
+  issues_total: 1
+  pulls_from_strangers: 0
+  pulls_total: 0
+  repository: li-ch/essun
+repo:
+  as_of_commit: a6b14cd4e0be412212723e30437d77449fb68f64
+  community_submissions_total: 0
+  externally_reproduced_total: 0
+  reproduction_attempts_total: 0
+schema: trust-indicators/v1

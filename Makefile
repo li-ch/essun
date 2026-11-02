@@ -7,7 +7,7 @@
 
 PY := .venv/bin/python
 
-.PHONY: help demo ci-local bootstrap validate-schemas test run sweep paper-check disposition-report check-submission clean
+.PHONY: help demo ci-local bootstrap validate-schemas test run sweep paper-check disposition-report check-submission trust-dashboard clean
 
 help: ## Print this target list (the default goal — a bare `make` shows this)
 	@echo "essun — Makefile targets (default goal: help; this list is live: make help)"
@@ -54,6 +54,14 @@ check-submission: ## Validate a comparison submission — make check-submission 
 
 paper-check: ## Paper placeholder/claim-word discipline check (tools/paper_check.py)
 	$(PY) tools/paper_check.py
+
+# Trust dashboard (docs: experiments/trust/README.md): re-render
+# site/trust.html from the committed records + snapshot; FETCH=1 also
+# refreshes the GitHub/citation counts from their public APIs (the CI
+# path, .github/workflows/trust-dashboard.yml). The suite fails if the
+# page, the snapshot, and the tree drift apart.
+trust-dashboard: ## Re-render the trust dashboard — make trust-dashboard [FETCH=1 refreshes the fetched counts]
+	$(PY) tools/trust_dashboard.py $(if $(FETCH),--fetch,)
 
 # Design doc D1 gate (2026-10-29): a coverage report (per-disposition
 # counts) ships with every profile. Counts are computed live from

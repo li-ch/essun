@@ -90,6 +90,10 @@ Detailed component status lives in [docs/status.md](docs/status.md).
   validator that rejects malformed input and checks fairness
   delta-zero-style; anyone can add an operating point, and the table
   lists what came through
+- [Trust dashboard](https://li-ch.github.io/essun/trust.html) —
+  the adoption indicators (reproduction attempts, issues and pull
+  requests from strangers, submissions, citations) auto-generated from
+  committed records and public APIs; zeros stay zeros
 - [Vision and roadmap](https://li-ch.github.io/essun/roadmap.html)
 - [How essun compares to related simulators](https://li-ch.github.io/essun/comparison.html)
 

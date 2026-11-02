@@ -1,0 +1,66 @@
+# Refresh the trust dashboard (site/trust.html) from its public sources.
+#
+# Weekly (and on demand): fetch the GitHub issue/pull-request counts and
+# the citation count (once sources.yaml names a public arXiv id), render
+# the page, and commit the refreshed snapshot + page with a machine
+# identity if anything changed. A failed fetch fails the job BEFORE
+# anything is written — the page keeps its last committed values and the
+# failure is visible, never absorbed into a zero.
+#
+# The other update path is the suite itself: landing a record under
+# experiments/reproductions/ or experiments/community/ without
+# re-rendering fails tests/evidence/test_trust_dashboard.py (the same
+# freshness gate as the reproduction board and the community table), so
+# `make test` on every push keeps the repo-derived rows honest between
+# weekly fetches.
+#
+# The commit below uses the standard github-actions bot identity: it is
+# clearly machine-made, and the job history is public — the page's age
+# and its refreshes are visible, not hidden.
+
+name: Refresh trust dashboard
+
+on:
+  schedule:
+    - cron: "17 4 * * 1" # Mondays 04:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trust-dashboard
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the render dependency (PyYAML only)
+        run: python -m pip install --quiet PyYAML
+
+      - name: Fetch public indicators and render the page
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 tools/trust_dashboard.py --fetch
+
+      - name: Commit the refreshed dashboard if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet experiments/trust/indicators.yaml site/trust.html; then
+            echo "trust-dashboard: no change to commit"
+          else
+            git add experiments/trust/indicators.yaml site/trust.html
+            git commit -m "[ci] refresh the trust dashboard from public sources"
+            git push
+          fi
