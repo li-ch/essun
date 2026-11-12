@@ -1,0 +1,18 @@
+# Transport-agnostic analytical topology: multi-plane single-tier switch, 64 ranks.
+# Rank-64 mirror of multiplane_switch16_free_v1 (A-L0M-BW / A-L0M-LAT free
+# parameters); aggregate per-rank injection stays at the atlas-wide 64 B/ns
+# convention so cross-family comparisons share one bandwidth anchor.
+schema_version: 0.6.0
+topology_id: multiplane_switch64_free_v1
+topology_class: multiplane_switch
+ranks: 64
+planes: 8
+nic:
+  port_bytes_per_ns: 8       # aggregate 64 B/ns — the atlas-wide B convention
+link:
+  pair_latency_ns: 200
+notes: >
+  Same multi-plane identity as multiplane_switch16_free_v1 at rank class 64:
+  t = 2*(N-1)/N * M/(P*B_port) + 2L; divisibility guard A-L0M-DIV uses
+  ranks * planes = 512. No congestion, no credits, no packetization — L0
+  transport model only. Scope-fenced from the run-path/sweep registries.

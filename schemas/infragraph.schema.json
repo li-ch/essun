@@ -210,9 +210,10 @@
             "fully_connected_crossbar",
             "fully_connected_exchange",
             "unidirectional_ring_with_serialization",
-            "unidirectional_ring_tfc_window"
+            "unidirectional_ring_tfc_window",
+            "multiplane_switch"
           ],
-          "description": "Committed analytical topology classes; extending this set requires a schema_version bump. Extended with unidirectional_ring_with_serialization in contract 0.2.0 (second frontier F1: the L0.5 serialized ring, experiments/topologies/ring8_l05_free_params.yaml); extended with unidirectional_ring_tfc_window in contract 0.3.0 (flagship slice: the TFC credit-windowed ring executing UEC requirement UEC11-FC-R02, experiments/topologies/ring8_tfc_window_v1.yaml)."
+          "description": "Committed analytical topology classes; extending this set requires a schema_version bump. Extended with unidirectional_ring_with_serialization in contract 0.2.0 (second frontier F1: the L0.5 serialized ring, experiments/topologies/ring8_l05_free_params.yaml); extended with unidirectional_ring_tfc_window in contract 0.3.0 (flagship slice: the TFC credit-windowed ring executing UEC requirement UEC11-FC-R02, experiments/topologies/ring8_tfc_window_v1.yaml). Extended with multiplane_switch in contract 0.6.0 (parallel single-tier switch planes, striped collectives, experiments/topologies/multiplane_switch16_free_params.yaml — free parameters planes and nic.port_bytes_per_ns)."
         },
         "ranks": {
           "type": "integer",
@@ -270,6 +271,11 @@
               "type": "number",
               "exclusiveMinimum": 0,
               "description": "Free parameter (e.g. A-L0X-BW / A-L0D-BW): per-rank single-port injection bandwidth."
+            },
+            "port_bytes_per_ns": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Free parameter (A-L0M-BW, contract 0.6.0): per-plane port injection bandwidth for multiplane_switch."
             }
           },
           "additionalProperties": true
@@ -305,6 +311,11 @@
         },
         "notes": {
           "type": "string"
+        },
+        "planes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Free parameter (A-L0M-PLANE, contract 0.6.0): number of parallel single-tier switch planes; present only for multiplane_switch. Aggregate per-rank injection = planes * nic.port_bytes_per_ns; the plane count is a deployment choice, never standard-derived."
         }
       },
       "additionalProperties": true
