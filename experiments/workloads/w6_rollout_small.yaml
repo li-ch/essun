@@ -1,0 +1,18 @@
+# W6 RL Rollout — smoke configuration (generation burst + weight sync).
+# All sizes are integer byte counts; deterministic by construction (no RNG
+# anywhere: emission is round-major, then step, then layer, sync ops last
+# within each round with the "sync-" op-id prefix).
+# One rollout round: 3 decode-style steps x 2 layer AllReduces (16384 B),
+# then one weight-sync phase of 2 AllReduces (65536 B). 8 ops per round,
+# 16 ops total. Every numeric value below is a made-up NEUTRAL free
+# parameter — none is measured or derived from any system.
+schema_version: "1.2.0"  # first document on the w6-extended generator contract
+workload: w6_rollout
+model_name: rl-rollout-smoke
+tp_size: 8          # free parameter: TP group size (ranks in every AllReduce)
+layers: 2           # free parameter: AllReduces per generation step
+gen_steps: 3        # free parameter: decode-style steps per rollout round
+gen_bytes: 16384    # free parameter: bytes per generation AllReduce
+sync_allreduces: 2  # free parameter: AllReduces per weight-sync phase
+sync_bytes: 65536   # free parameter: bytes per weight-sync AllReduce
+rounds: 2           # free parameter: rollout rounds

@@ -154,8 +154,9 @@ from ..workload.w1 import WORKLOAD_KIND as _W1  # noqa: E402 (near use)
 from ..workload.w2 import WORKLOAD_KIND as _W2  # noqa: E402
 from ..workload.w3 import WORKLOAD_KIND as _W3  # noqa: E402
 from ..workload.w5 import WORKLOAD_KIND as _W5  # noqa: E402
+from ..workload.w6 import WORKLOAD_KIND as _W6  # noqa: E402
 
-WORKLOAD_KINDS = (_W1, _W2, _W3, _W5)
+WORKLOAD_KINDS = (_W1, _W2, _W3, _W5, _W6)
 
 #: Required integer parameters per workload kind (the generator configs'
 #: positional fields), plus optional string parameters.  W3's
@@ -171,6 +172,10 @@ WORKLOAD_PARAMETERS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     ),
     _W5: (
         ("tp_size", "prefill_nodes", "requests", "chunks_per_request", "chunk_bytes", "decode_steps"),
+        ("model_name",),
+    ),
+    _W6: (
+        ("tp_size", "layers", "gen_steps", "gen_bytes", "sync_allreduces", "sync_bytes", "rounds"),
         ("model_name",),
     ),
 }

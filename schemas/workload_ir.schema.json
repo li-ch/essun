@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.org/essun/workload_ir.schema.json",
   "title": "Workload IR",
-  "description": "Draft contract for workload descriptions referenced by the experiment manifest's workload_ir role (T004 / G4). Repo-level contract: lives outside Scale-up_Agent_Handoff/ per the handoff fence; promotion into the handoff schema set is an owner/ADR decision. Two dialects are recognized: an explicit event-DAG form (handoff example style: request arrivals, decode steps, collectives, KV transfers with depends_on edges) and a generator-parameter form (experiments/workloads/*.yaml: parameters for the W1/W2/W3/W5 deterministic generators). The dialects are disjoint by their identity keys (workload_id vs workload). Integer byte counts only (handoff determinism rules). schema_version changes on every public change to this contract. Version record: 2026-10-28 (T030) added w3_moe_dispatch_combine to the generator ladder; documents on the extended contract declare schema_version 1.0.0 (the first explicitly versioned generator-form documents). 2026-10-28 (T031) added w5_pd_kv_prefill_decode (PD/KV memory-semantic event generator) and made `layers` kind-conditional: required for the w1/w2/w3 kinds, forbidden for w5 (W5's positional structure is requests/chunks/steps, not transformer layers); documents on the further-extended contract declare schema_version 1.1.0.",
+  "description": "Draft contract for workload descriptions referenced by the experiment manifest's workload_ir role (T004 / G4). Repo-level contract: lives outside Scale-up_Agent_Handoff/ per the handoff fence; promotion into the handoff schema set is an owner/ADR decision. Two dialects are recognized: an explicit event-DAG form (handoff example style: request arrivals, decode steps, collectives, KV transfers with depends_on edges) and a generator-parameter form (experiments/workloads/*.yaml: parameters for the W1/W2/W3/W5/W6 deterministic generators). The dialects are disjoint by their identity keys (workload_id vs workload). Integer byte counts only (handoff determinism rules). schema_version changes on every public change to this contract. Version record: 2026-10-28 (T030) added w3_moe_dispatch_combine to the generator ladder; documents on the extended contract declare schema_version 1.0.0 (the first explicitly versioned generator-form documents). 2026-10-28 (T031) added w5_pd_kv_prefill_decode (PD/KV memory-semantic event generator) and made `layers` kind-conditional: required for the w1/w2/w3 kinds, forbidden for w5 (W5's positional structure is requests/chunks/steps, not transformer layers); documents on the further-extended contract declare schema_version 1.1.0. 2026-11-12 added w6_rollout (RL rollout generator: per round a generation burst of gen_steps x layers AllReduces then one weight-sync phase of sync_allreduces AllReduces, sync- op-id prefix); documents on the w6-extended contract declare schema_version 1.2.0.",
   "type": "object",
   "properties": {
     "schema_version": {
@@ -241,7 +241,7 @@
     },
     "generatorParamsForm": {
       "type": "object",
-      "description": "Repo generator style: deterministic parameters for the W1/W2/W3/W5 workload generators (essun.workload.w1/w2/w3/w5).",
+      "description": "Repo generator style: deterministic parameters for the W1/W2/W3/W5/W6 workload generators (essun.workload.w1/w2/w3/w5/w6).",
       "required": [
         "workload",
         "model_name",
@@ -257,9 +257,10 @@
             "w1_dense_tp_decode",
             "w2_dense_tp_prefill",
             "w3_moe_dispatch_combine",
-            "w5_pd_kv_prefill_decode"
+            "w5_pd_kv_prefill_decode",
+            "w6_rollout"
           ],
-          "description": "Committed workload kinds (WORKLOAD_KIND in essun.workload); extending the ladder requires a schema_version bump. w3 (T030) issues all-to-all ops and w5 (T031) issues memory-semantic KV ops (kv_alloc/kv_write/kv_transfer/kv_visible/kv_read/kv_release); no registered backend executes either op class: W3/W5 manifests are rejected loudly by the capability gates and need L1/L2 to run."
+          "description": "Committed workload kinds (WORKLOAD_KIND in essun.workload); extending the ladder requires a schema_version bump. w3 (T030) issues all-to-all ops and w5 (T031) issues memory-semantic KV ops (kv_alloc/kv_write/kv_transfer/kv_visible/kv_read/kv_release); no registered backend executes either op class: W3/W5 manifests are rejected loudly by the capability gates and need L1/L2 to run. w6 (RL rollout) issues plain AllReduces and runs on every AllReduce-capable model."
         },
         "model_name": {
           "type": "string",
@@ -385,6 +386,31 @@
           "minimum": 1,
           "description": "W5 only: uniform fixed decode steps per request (A-W5-STEP); each step reads every chunk once."
         },
+        "gen_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W6 only: decode-style generation steps per rollout round."
+        },
+        "gen_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W6 only: free parameter, integer bytes per generation-phase AllReduce."
+        },
+        "sync_allreduces": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W6 only: AllReduces in the per-round weight-sync phase (sync- op-id prefix)."
+        },
+        "sync_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W6 only: free parameter, integer bytes per weight-sync AllReduce."
+        },
+        "rounds": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "W6 only: rollout rounds (generation burst then weight sync, round-major emission)."
+        },
         "notes": {
           "type": "string"
         }
@@ -397,7 +423,8 @@
                 "enum": [
                   "w1_dense_tp_decode",
                   "w2_dense_tp_prefill",
-                  "w3_moe_dispatch_combine"
+                  "w3_moe_dispatch_combine",
+                  "w6_rollout"
                 ]
               }
             },

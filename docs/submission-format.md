@@ -40,7 +40,7 @@ format cannot grow silently.
 | `source_url` | public, auditable pointer to the submission (issue/PR) |
 | `essun_commit` | full hash of the public tree the cited runs were executed at |
 | `backend` | a backend id (`essun.evidence.submissions.BACKENDS`, the `BACKEND_ID` constants of the backend modules) |
-| `workload` | `{kind, parameters}` — a workload generator kind (`w1_dense_tp_decode`, `w2_dense_tp_prefill`, `w3_moe_dispatch_combine`, `w5_pd_kv_prefill_decode`) with its integer shape parameters |
+| `workload` | `{kind, parameters}` — a workload generator kind (`w1_dense_tp_decode`, `w2_dense_tp_prefill`, `w3_moe_dispatch_combine`, `w5_pd_kv_prefill_decode`, `w6_rollout`) with its integer shape parameters |
 | `shared_parameters` | `{record, values}` — ONE free-parameter record both arms consume unchanged, and the shared `{id: value}` binds |
 | `arms` | one or two arm blocks: `{label, profile, topology, parameters}` |
 | `comparison` | two arms only: `{differs_on, control}` |

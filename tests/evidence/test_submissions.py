@@ -632,9 +632,15 @@ def test_backend_vocabulary_matches_the_modules() -> None:
 
 
 def test_workload_vocabulary_matches_the_generators() -> None:
-    from essun.workload import w1, w2, w3, w5
+    from essun.workload import w1, w2, w3, w5, w6
 
-    assert set(WORKLOAD_KINDS) == {w1.WORKLOAD_KIND, w2.WORKLOAD_KIND, w3.WORKLOAD_KIND, w5.WORKLOAD_KIND}
+    assert set(WORKLOAD_KINDS) == {
+        w1.WORKLOAD_KIND,
+        w2.WORKLOAD_KIND,
+        w3.WORKLOAD_KIND,
+        w5.WORKLOAD_KIND,
+        w6.WORKLOAD_KIND,
+    }
     assert set(DIFF_AXES) == {"profile", "topology", "parameters"}
 
 

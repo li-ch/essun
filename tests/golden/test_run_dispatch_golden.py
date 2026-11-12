@@ -88,6 +88,7 @@ def test_dispatch_registries_cover_all_models_and_workloads():
         "w2_dense_tp_prefill",
         "w3_moe_dispatch_combine",
         "w5_pd_kv_prefill_decode",
+        "w6_rollout",
     ]
 
 
