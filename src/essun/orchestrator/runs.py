@@ -64,6 +64,7 @@ from essun.workload import w1
 from essun.workload import w2
 from essun.workload import w3
 from essun.workload import w5
+from essun.workload import w6
 
 # The deterministic orchestrator, not an agent, owns execution (IMPLEMENTATION_GUIDE §2).
 # In-process analytical models plus the Docker-pinned external adapters
@@ -93,11 +94,14 @@ BACKENDS = {
 # or W5 manifest must fail the collective capability gate below, loudly —
 # that rejection is a tested behavior (tests/negative/test_dispatch_gates.py),
 # not a run path that silently fakes MoE or KV traffic on an AllReduce model.
+# W6 (RL rollout) issues plain AllReduces and therefore RUNS on every
+# AllReduce-capable model (tests/golden/test_w6_rollout_golden.py).
 WORKLOADS = {
     w1.WORKLOAD_KIND: (w1.load_w1_config, w1.generate_w1_ops),
     w2.WORKLOAD_KIND: (w2.load_w2_config, w2.generate_w2_ops),
     w3.WORKLOAD_KIND: (w3.load_w3_config, w3.generate_w3_ops),
     w5.WORKLOAD_KIND: (w5.load_w5_config, w5.generate_w5_ops),
+    w6.WORKLOAD_KIND: (w6.load_w6_config, w6.generate_w6_ops),
 }
 
 # Model dispatch: for each registered backend/model id, the fabric loader and
