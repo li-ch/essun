@@ -1,0 +1,22 @@
+# Transport-agnostic analytical topology: multi-plane single-tier switch, 16 ranks.
+# Values are explicit FREE PARAMETERS (A-L0M-BW / A-L0M-LAT): per-plane port
+# rate and plane count are modeling choices, not standard-derived, not
+# measured. Aggregate per-rank injection = planes * port rate. See
+# experiments/vertical_slice/assumptions_l0.yaml and the l0_multiplane module.
+schema_version: 0.6.0
+topology_id: multiplane_switch16_free_v1
+topology_class: multiplane_switch
+ranks: 16
+planes: 4
+nic:
+  port_bytes_per_ns: 16      # aggregate 64 B/ns — the atlas-wide B convention
+link:
+  pair_latency_ns: 200
+notes: >
+  P parallel single-tier switch planes; every rank holds one port per plane;
+  one collective stripes its payload evenly across planes (divisibility
+  guard A-L0M-DIV requires ranks * planes to divide the payload). Completion
+  time = 2*(N-1)/N * M/(P*B_port) + 2L. Degenerate planes=1 reduces to the
+  fully-connected crossbar identity at B = port rate. No congestion, no
+  credits, no packetization — L0 transport model only. Scope-fenced: not
+  registered in the run-path or sweep registries.
