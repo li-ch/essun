@@ -105,6 +105,57 @@ class TestDecodeStepTerms:
         # local side: 8 + 64 + 8 + 0 = 80; comm side: 328 -> max = 328
         assert step == Fraction(328)
 
+    def test_context_scales_kv_read_and_attention_adds_compute(self):
+        # Every decode step attends over the request's WHOLE context:
+        # KV read = context * kv_bytes_per_token; attention flops add to compute.
+        collective_ns, p2p_ns = fixed_fabric()
+        model = roofline.DecodeTokenModel(
+            active_flops_per_token=64,
+            weight_bytes_per_token=512,
+            kv_bytes_per_token=64,
+            comm_bytes_per_token=64,
+            comm_ops_per_token=2,
+            context_tokens=1000,
+            attention_flops_per_token=4 * 1000 * 8,
+        )
+        terms = roofline.decode_step_terms_ns(
+            base_card(), model,
+            ranks=8, batch=1, kv_hit_rate=1,
+            collective_ns=collective_ns, p2p_ns=p2p_ns,
+        )
+        # compute: (64 + 32000) / 8 = 4008 ns
+        assert terms["compute_ns"] == Fraction(4008)
+        # kv local: (1 * 1000 * 64 * 1 / 8) / 1 = 8000 ns
+        assert terms["kv_local_ns"] == Fraction(8000)
+
+    def test_context_remote_bytes_feed_p2p(self):
+        collective_ns, p2p_ns = fixed_fabric()
+        model = roofline.DecodeTokenModel(
+            active_flops_per_token=64,
+            weight_bytes_per_token=512,
+            kv_bytes_per_token=64,
+            comm_bytes_per_token=64,
+            comm_ops_per_token=0,
+            context_tokens=1000,
+        )
+        terms = roofline.decode_step_terms_ns(
+            base_card(), model,
+            ranks=8, batch=2, kv_hit_rate=Fraction(1, 2),
+            collective_ns=collective_ns, p2p_ns=p2p_ns,
+        )
+        # remote bytes: 2 * 1000 * 64 * 1/2 / 8 = 8000 B; p2p: 8000/1 + 10
+        assert terms["kv_remote_ns"] == Fraction(8010)
+
+    def test_zero_context_rejected(self):
+        with pytest.raises(ValueError, match="context_tokens"):
+            roofline.DecodeTokenModel(
+                active_flops_per_token=64,
+                weight_bytes_per_token=512,
+                kv_bytes_per_token=64,
+                comm_bytes_per_token=64,
+                context_tokens=0,
+            )
+
     def test_batch_scales_compute_and_comm_not_weights(self):
         # A decode STEP processes `batch` tokens: compute and the collective
         # payload scale with batch; the weight read is once per step.

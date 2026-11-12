@@ -22,10 +22,10 @@ The step processes ``batch`` tokens, so compute, KV, and communication
 scale with ``batch``; the weight read is ONCE per step (amortized by
 batching — the term that makes larger batches more efficient per token):
 
-    compute_ns   = batch * active_flops_per_token / (ranks * card.flops_per_ns)
+    compute_ns   = batch * (active + attention) flops_per_token / (ranks * card.flops_per_ns)
     weights_ns   = (weight_bytes_per_token / ranks) / card.hbm_bytes_per_ns
-    kv_local_ns  = (batch * kv_bytes_per_token * h / ranks) / hbm_bytes_per_ns
-    kv_remote_ns = p2p_ns(batch * kv_bytes_per_token * (1-h) / ranks)   [0 if no remote bytes]
+    kv_local_ns  = (batch * context * kv_bytes_per_token * h / ranks) / hbm_bytes_per_ns
+    kv_remote_ns = p2p_ns(batch * context * kv_bytes_per_token * (1-h) / ranks)   [0 if no remote bytes]
     comm_ns      = comm_ops_per_token * collective_ns(batch * comm_bytes_per_token)
 
 ``kv_hit_rate`` h in [0,1] splits KV reads between local HBM (at HBM
@@ -103,13 +103,23 @@ class CardParameters:
 
 @dataclass(frozen=True)
 class DecodeTokenModel:
-    """Decode-step free parameters (caller-supplied model shape)."""
+    """Decode-step free parameters (caller-supplied model shape).
+
+    ``kv_bytes_per_token`` is the per-token KV size; the per-step KV read
+    of one request is ``context_tokens * kv_bytes_per_token`` (every decode
+    step attends over the request's whole context). ``context_tokens`` = 1
+    keeps the original per-token-only semantics. ``attention_flops_per_token``
+    (default 0) is the caller-derived attention compute per token — e.g.
+    4 * context * hidden for QK^T + attention·V at context length.
+    """
 
     active_flops_per_token: int
     weight_bytes_per_token: int
     kv_bytes_per_token: int
     comm_bytes_per_token: int
     comm_ops_per_token: int = 1
+    context_tokens: int = 1
+    attention_flops_per_token: int = 0
 
     def __post_init__(self) -> None:
         if int(self.active_flops_per_token) < 1:
@@ -132,6 +142,14 @@ class DecodeTokenModel:
             raise ValueError(
                 f"comm_ops_per_token must be >= 0, got {self.comm_ops_per_token}"
             )
+        if int(self.context_tokens) < 1:
+            raise ValueError(
+                f"context_tokens must be >= 1, got {self.context_tokens}"
+            )
+        if int(self.attention_flops_per_token) < 0:
+            raise ValueError(
+                f"attention_flops_per_token must be >= 0, got {self.attention_flops_per_token}"
+            )
 
     def to_dict(self) -> dict:
         return {
@@ -140,6 +158,8 @@ class DecodeTokenModel:
             "kv_bytes_per_token": int(self.kv_bytes_per_token),
             "comm_bytes_per_token": int(self.comm_bytes_per_token),
             "comm_ops_per_token": int(self.comm_ops_per_token),
+            "context_tokens": int(self.context_tokens),
+            "attention_flops_per_token": int(self.attention_flops_per_token),
         }
 
 
@@ -196,9 +216,10 @@ def decode_step_terms_ns(
 ) -> dict[str, Fraction]:
     """The five decode terms (exact Fractions) under the declared identities."""
     hit = _validate_common(ranks, batch, kv_hit_rate)
-    compute = Fraction(model.active_flops_per_token * batch, ranks) / card.flops_per_ns
+    flops_per_token = model.active_flops_per_token + model.attention_flops_per_token
+    compute = Fraction(flops_per_token * batch, ranks) / card.flops_per_ns
     weights = Fraction(model.weight_bytes_per_token, ranks) / card.hbm_bytes_per_ns
-    kv_total = Fraction(batch * model.kv_bytes_per_token)
+    kv_total = Fraction(batch * model.kv_bytes_per_token * model.context_tokens)
     kv_local = (kv_total * hit / ranks) / card.hbm_bytes_per_ns
     remote_bytes = kv_total * (1 - hit) / ranks
     kv_remote = p2p_ns(remote_bytes) if remote_bytes > 0 else Fraction(0)
