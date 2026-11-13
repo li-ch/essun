@@ -1,0 +1,18 @@
+# ODS whitepaper source manifest (repo representation).
+# The PDF itself stays out of git; this manifest pins it and the
+# per-page extracted text under experiments/ods/source/pages/ is the
+# in-repo representation (UEC pattern). Owner legally obtained the
+# document and confirmed public anchored usage on 2026-11-13.
+source:
+  source_id: STD-ODS-WP10
+  title: 开放解构节点（ODS）系统架构技术白皮书（1.0 版）
+  publisher: ODCC (开放数据中心委员会)
+  version: "1.0"
+  pdf_sha256: 9c6457bf98fdad7fed53d2525cb8c2175a315df4abb26fb6b532bf175bba3a89
+  page_count: 91
+  extractor: pypdf 6.21.4 + NFKC normalization
+  notes: >-
+    No copyright or usage notice appears inside the document (scanned).
+    Owner provided the file from a legal channel and confirmed public
+    anchored-quotation usage on 2026-11-13. Page numbering note: the
+    printed page number on each page equals the PDF page number minus 2.

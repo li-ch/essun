@@ -1,0 +1,148 @@
+source:
+  source_id: STD-ODS-WP10
+  title: 开放解构节点（ODS）系统架构技术白皮书（1.0 版）
+  publisher: ODCC (开放数据中心委员会)
+  version: '1.0'
+  pdf_sha256: 9c6457bf98fdad7fed53d2525cb8c2175a315df4abb26fb6b532bf175bba3a89
+  page_count: 91
+  extractor: pypdf 6.21.4 + NFKC normalization
+  pages_dir: experiments/ods/source/pages
+anchors:
+- id: ODS10-P08-SCOPE
+  section: 前言
+  title: 版本范围（仅硬件系统架构，互联协议不定义）
+  page: 8
+  quote: 本技术白皮书 1.0 版本主要聚焦于定义开放解构的超节点硬件系统技术架构,暂不涉及互联协议的具体定义。
+  page_sha256: 77b3f369340f0e4d75c9739723583984318ee1d6262d54ffcc35523e583d9636
+- id: ODS10-P15-OPENETH
+  section: '2'
+  title: 设计原则一（开放以太技术路线）
+  page: 15
+  quote: 基于开放以太技术路线,充分发挥以太网产业生态繁荣、兼容广泛的优势
+  page_sha256: e011b12dc5ed8fd4ac4d048fd91060a7c9e11a850c576d1ffcf5f87334324940
+- id: ODS10-P15-DISAGG
+  section: '2'
+  title: 设计原则二（硬件架构全面解构）
+  page: 15
+  quote: 计算节点采用轻量化定制服务器形态,交换节点基于标准化交换机架构,通过通用铜缆或光纤接口实现计算与交换节点的高效互联
+  page_sha256: e011b12dc5ed8fd4ac4d048fd91060a7c9e11a850c576d1ffcf5f87334324940
+- id: ODS10-P15-SCALE
+  section: '2'
+  title: 设计原则三（规模弹性扩展）
+  page: 15
+  quote: 支持从几十卡到上千卡的平滑弹性扩展
+  page_sha256: e011b12dc5ed8fd4ac4d048fd91060a7c9e11a850c576d1ffcf5f87334324940
+- id: ODS10-P16-HIGHRADIX
+  section: '2'
+  title: 设计原则五（高基数交换机减少跳数）
+  page: 16
+  quote: 优先采用高基数(High-Radix)交换机,简化网络结构,减少数据交换跳数,降低端到端通信延迟
+  page_sha256: a2d7bee84d8020a283b92538ec9e704e15db88c81ae24fb360c999bd57162062
+- id: ODS10-P17-SWITCHCAP
+  section: 3.1.1
+  title: 基础 ODS 交换机容量档位
+  page: 17
+  quote: 交换机可以选择 51.2T(128*400G)交换机或 102.4T(128*800G)交换机
+  page_sha256: f3c9854e6af719140de78a4e07a90c3c1a950be18e51479dcb97a5257c1c8f06
+- id: ODS10-P17-BASEMAX
+  section: 3.1.1
+  title: 基础 ODS 单级最大规模
+  page: 17
+  quote: 最大支持 256 卡(液冷)和 128 卡(风冷)规模
+  page_sha256: f3c9854e6af719140de78a4e07a90c3c1a950be18e51479dcb97a5257c1c8f06
+- id: ODS10-P18-4X800G
+  section: 3.1.2
+  title: 64 卡示例每 GPU 四条 800G AEC
+  page: 18
+  quote: 每个GPU 的通过 4 个 800G AEC 线缆连接到 4 个交换机
+  page_sha256: f7302577bd0a0f8096fe1f6b7a367f132e49cc83fe3a07ab9e6aaf851cd68374
+- id: ODS10-P20-ROCE24
+  section: 3.1.3
+  title: Gaudi3 每 GPU 24 个 200G RoCE 接口
+  page: 20
+  quote: 每个 GPU 提供 24 个 200G RoCE 接口
+  page_sha256: 7152c19d144b0f8cd1761330fe096dbca4556976beb799b818d386682cfcef0a
+- id: ODS10-P20-SIXSW
+  section: 3.1.3
+  title: 64 卡示例 6 台 51.2T 交换机
+  page: 20
+  quote: 集群设计采用 6 台 51.2T 交换机实现互联
+  page_sha256: 7152c19d144b0f8cd1761330fe096dbca4556976beb799b818d386682cfcef0a
+- id: ODS10-P21-8PLANES
+  section: 3.2.1
+  title: 级联一级 8 平面方案
+  page: 23
+  quote: 部署 8 台 51.2T 高性能交换机(128*400G),对应构建8 个 Scale-up 网络平面
+  page_sha256: 6d6dde466abeba8036900c551b1066a49316bbd4eab739ae6fdec27835de8f74
+- id: ODS10-P22-RESERVE50
+  section: 3.2.1
+  title: 一级交换预留 50% 端口
+  page: 22
+  quote: 第一级交换机需预留50% 端口资源,专门用于后续与第二级互联设备的级联扩展
+  page_sha256: bf1127a72a14cf3820edf0cab0693b19a91ebed9f4eed8cba5f198709c33300d
+- id: ODS10-P22-OCS
+  section: 3.2.1
+  title: 二级互联推荐 OCS
+  page: 22
+  quote: 强烈推荐采用 OCS(光电路交换机)替代
+  page_sha256: bf1127a72a14cf3820edf0cab0693b19a91ebed9f4eed8cba5f198709c33300d
+- id: ODS10-P23-MAX8192
+  section: 3.2.1
+  title: 51.2T 加 51.2T 最大 8192 卡
+  page: 25
+  quote: 当第一级、第二级交换均采用 51.2 T 的交换机(128*400G 端口)时,最大可支持 8192 卡超节点集群
+  page_sha256: f1d9e231753943ad28f62801636b1a395230c22901c5c0cd337321a04cc9d462
+- id: ODS10-P26-MAX16384
+  section: 3.2.1
+  title: 102.4T 加 102.4T 最大 16384 卡
+  page: 26
+  quote: 最大可支持 16384 卡超节点集群
+  page_sha256: 023be077be2ec87254b40a313694c14ac36569aba2dc26bb49905c1910f244c1
+- id: ODS10-P26-MAX2048OCS
+  section: 3.2.1
+  title: 102.4T 加 OCS 最大 2048 卡
+  page: 26
+  quote: 第二级交换机替换为 OCS(256*256)时,最大支持 2048 卡超节点集群
+  page_sha256: 023be077be2ec87254b40a313694c14ac36569aba2dc26bb49905c1910f244c1
+- id: ODS10-P51-LAT1US
+  section: 5.1
+  title: 网络总时延建议小于 1 微秒
+  page: 51
+  quote: 建议交换机网络中的总时延小于 1us
+  page_sha256: cf8f682599b4ead921dcb4d9cc82e5a9f011fc6466410217dacc126c3b8fba8e
+- id: ODS10-P51-SHORT64B
+  section: 5.1
+  title: 64 字节短报文线速（原生内存语义）
+  page: 51
+  quote: 交换机建议支持短报文(64 字节)的线速转发,来满足原生内存语义的传输需求
+  page_sha256: cf8f682599b4ead921dcb4d9cc82e5a9f011fc6466410217dacc126c3b8fba8e
+- id: ODS10-P51-LLR
+  section: 5.1
+  title: 链路层重传建议
+  page: 51
+  quote: 交换机建议支持链路层重传(LLR)功能
+  page_sha256: cf8f682599b4ead921dcb4d9cc82e5a9f011fc6466410217dacc126c3b8fba8e
+- id: ODS10-P51-SPRAY
+  section: 5.1
+  title: 包喷洒与 FARE 建议
+  page: 51
+  quote: 交换机须支持包喷洒功能
+  page_sha256: cf8f682599b4ead921dcb4d9cc82e5a9f011fc6466410217dacc126c3b8fba8e
+- id: ODS10-P69-AEC7M
+  section: 6.1
+  title: AEC 112G SerDes 最大 7 米
+  page: 69
+  quote: 112Gbps SerDes 速率最大传输距离可以达到 7 米
+  page_sha256: 570e7ace98f836cfdf4fc68c96c4d97c952e8366104b601ef3d93f91e2af1ec8
+- id: ODS10-P71-AECLAT
+  section: 6.1
+  title: AEC 双向延时建议低于 50 纳秒
+  page: 71
+  quote: 建议双向延时低于 50ns
+  page_sha256: aba4826b7293575123ff042106e2a9b9313f2942c55c8b442346de7985fcaeb4
+- id: ODS10-P75-OPTMENU
+  section: 6.2.4
+  title: 四种光互联方案共存
+  page: 75
+  quote: 四种光互联方案会在一定时间内会共存
+  page_sha256: 23c1506b6bd9629ffd28bd2ccb21737c57d7179a65b6e4a608c4af6c6e5de973

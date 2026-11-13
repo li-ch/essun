@@ -1,0 +1,23 @@
+开放解构超节点(ODS)系统架构技术白皮书
+38
+HPM 1 800W 800W
+PCIE SW 1 150W 150W
+HN NIC 1 60W 60W
+GPU NIC 4 45W 180W
+SSD 4 20W 80W
+54V FAN 8 95W 760W
+12V FAN 8 39W 312W
+Miscs 1 10W 10W
+VR loss+PDN
+loss
+1 150W 1850W
+Total 6102W
+表 4-5
+互联方案建议优先选择 AEC,800G OSFP AEC 典型的功耗为 10W
+(单端)。
+54V 设计有额外的安规要求,请参照 “Open Accelerator
+Infrastructure (OAI) -Universal Baseboard (UBB) Base Specification
+r2.0 v0.5”。
+4.2.9 SI 设计要求
+本节针对 112G Serdes 的互连,提出计算节点的信号完整性设计要求
+。

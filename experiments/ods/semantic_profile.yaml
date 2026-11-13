@@ -1,0 +1,299 @@
+# ODS 1.0 (ODCC Open Disaggregated SuperPoD) semantic profile — essun-profile v0.1 artifact.
+# GENERATED FILE; regenerate with:
+#   .venv/bin/python experiments/ods/build_semantic_profile.py
+# Interpretation of the ODCC whitepaper "开放解构节点（ODS）系统架构技术白皮书" 1.0
+# (91 pages, sha256 in the source record). The 1.0 edition explicitly limits
+# itself to the hardware system architecture and does not define the interconnect
+# protocol (anchor ODS10-P08-SCOPE); no protocol-semantics requirement is
+# interpreted here. Anchor quotes resolve against
+# experiments/ods/anchor_registry.yaml; page text lives under
+# experiments/ods/source/pages/. Conformance gate:
+# tests/specir/test_ods_semantic_profile.py (loads, anchors resolve verbatim,
+# quote length, zero-binding honesty, corruption rejection, byte-identical
+# regeneration).
+bindings: []
+calibration:
+  note: 'E0 evidence level: interpretation and anchoring only; no ODS hardware measurements
+    exist and no backend claims ODS support (bindings empty by honest absence).'
+  status: uncalibrated
+checks: []
+format:
+  name: essun-profile
+  version: '0.1'
+freedom:
+- anchor_ids:
+  - ODS10-P18-4X800G
+  - ODS10-P20-ROCE24
+  domain: FREE
+  freedom: The whitepaper gives examples (4x800G AEC = 3.2 Tbps per GPU in the 64-card reference;
+    24x200G RoCE interfaces available per GPU) but states no normative per-xPU scale-up bandwidth;
+    any profile-level value stays free.
+  module: ods_topology
+  name: per_xpu_scaleup_bandwidth
+  parameter_id: ODS10-F01
+- anchor_ids:
+  - ODS10-P21-8PLANES
+  domain: FREE
+  freedom: First-tier plane count is configuration-dependent (8 planes with 51.2T switches
+    or 4 planes with 102.4T switches); the profile keeps it free per configuration.
+  module: ods_topology
+  name: plane_count
+  parameter_id: ODS10-F02
+- anchor_ids:
+  - ODS10-P21-8PLANES
+  domain: FREE
+  freedom: Per-GPU per-plane single-link rate is 400G in the 8-plane scheme and 800G in the
+    4-plane scheme; not fixed normatively.
+  module: ods_topology
+  name: per_plane_link_rate
+  parameter_id: ODS10-F03
+- anchor_ids:
+  - ODS10-P22-OCS
+  domain: FREE
+  freedom: Second tier may be an electrical switch or an OCS (OCS strongly recommended); deployment
+    choice.
+  module: ods_topology
+  name: l2_interconnect_type
+  parameter_id: ODS10-F04
+- anchor_ids:
+  - ODS10-P51-LAT1US
+  domain: FREE
+  freedom: The <1 us total in-network latency is a recommendation; the profile records it
+    as a parameter an evaluation may instantiate.
+  module: ods_interconnect
+  name: network_total_latency_budget
+  parameter_id: ODS10-F05
+- anchor_ids:
+  - ODS10-P71-AECLAT
+  domain: FREE
+  freedom: The <50 ns bidirectional AEC delay is a recommendation; kept as a parameter.
+  module: ods_interconnect
+  name: aec_bidirectional_delay
+  parameter_id: ODS10-F06
+- anchor_ids:
+  - ODS10-P08-SCOPE
+  domain: FREE
+  freedom: Edition 1.0 does not define the interconnect protocol; all protocol semantics remain
+    unspecified and therefore free.
+  module: ods_system
+  name: protocol_semantics
+  parameter_id: ODS10-F07
+omissions:
+- reason: Edition 1.0 explicitly limits itself to the hardware system architecture and does
+    not define the interconnect protocol (ODS10-P08-SCOPE); this is the document's scope statement,
+    not a coverage gap of this profile.
+  what: Protocol semantics are not interpreted
+- reason: The format requires at least one workload and observable id; the honest declaration
+    is the surface the cross-standard comparison aims at, stated here so no reader mistakes
+    it for a claim that ODS behavior executes anywhere.
+  what: The 'supported' element names the TARGET comparison surface (the cross-design L0 identity
+    under w1_dense_tp_decode with O-CCT and O-CONSERVATION), not an executed ODS surface —
+    no backend claims ODS support today
+- reason: No requirement carries a simulated_behavior disposition (the whitepaper describes
+    architecture, not simulated behavior), so both lists are empty by content; the profile's
+    real invariants — verbatim anchors against page text and byte-identical regeneration —
+    live as tests at tests/specir/test_ods_semantic_profile.py.
+  what: Zero backend bindings and zero executable checks
+- reason: A whitepaper example or recommendation is evidence about a public document, not
+    a normative value; each keeps its anchor and every unstated quantity stays free.
+  what: 'No whitepaper example figure is promoted to a normative value: 3.2 Tbps per GPU (4x800G),
+    24x200G RoCE interfaces, 8/4 plane schemes, <1 us and <50 ns latency recommendations all
+    stay graded statements under their anchors or explicit free parameters (ODS10-F01..F07)'
+profile_id: ods-1.0-semantic
+provenance:
+  access: PUBLIC_READ_VIA_OWNER
+  anchor_registry: experiments/ods/anchor_registry.yaml
+  license_status: No usage notice appears inside the document (scanned); the owner confirmed
+    public anchored-quotation usage on 2026-11-13 (STD-ODS-LICENSE, RESOLVED_BY_OWNER). The
+    PDF stays out of git; the page-text representation lives under experiments/ods/source/pages/.
+  paper_sources:
+  - access: PUBLIC_READ_VIA_OWNER
+    doc_sha256: 9c6457bf98fdad7fed53d2525cb8c2175a315df4abb26fb6b532bf175bba3a89
+    source_id: STD-ODS-WP10
+    title: 开放解构节点（ODS）系统架构技术白皮书（1.0 版）
+    url: null
+  source_record: experiments/ods/source_record.yaml
+requirements:
+  objects:
+  - anchor_ids:
+    - ODS10-P08-SCOPE
+    disposition: informational
+    keyword: DEFINITIONAL
+    module: ods_system
+    requirement_id: ODS10-SYS-R01
+    statement: The 1.0 edition defines the open disaggregated superpod hardware system architecture
+      only; the interconnect protocol is explicitly out of scope, so this profile interprets
+      no protocol semantics.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P15-OPENETH
+    disposition: constraint
+    keyword: OPEN
+    module: ods_system
+    requirement_id: ODS10-SYS-R02
+    statement: The design route is open Ethernet for the scale-up network, reusing the Ethernet
+      ecosystem and maximizing a unified scale-up / scale-out technology stack.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P15-DISAGG
+    disposition: constraint
+    keyword: DISAGGREGATION
+    module: ods_system
+    requirement_id: ODS10-SYS-R03
+    statement: Compute nodes are lightweight customized servers and switch nodes are standardized
+      switches; the two interconnect through generic copper or fiber ports, disaggregating
+      the hardware architecture.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P15-SCALE
+    disposition: constraint
+    keyword: SCALING
+    module: ods_system
+    requirement_id: ODS10-SYS-R04
+    statement: The system scales smoothly from tens of cards to more than a thousand cards
+      (design principle; the per-configuration maxima live in the topology requirements).
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P16-HIGHRADIX
+    disposition: constraint
+    keyword: EFFICIENCY
+    module: ods_system
+    requirement_id: ODS10-SYS-R05
+    statement: High-radix switches are preferred to simplify the network, reduce switch hop
+      count, and lower end-to-end latency (part of the interconnect-efficiency principle,
+      alongside copper-first cabling and minimizing optical-electrical conversion).
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P17-SWITCHCAP
+    - ODS10-P17-BASEMAX
+    disposition: constraint
+    keyword: SINGLE_TIER
+    module: ods_topology
+    requirement_id: ODS10-TOPO-R06
+    statement: The base ODS uses one tier of full peer-to-peer switching; the switch is either
+      51.2T (128x400G) or 102.4T (128x800G), and one tier supports at most 256 cards (liquid
+      cooled) or 128 cards (air cooled), limited by port density and cable reach.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P18-4X800G
+    - ODS10-P20-ROCE24
+    - ODS10-P20-SIXSW
+    disposition: informational
+    keyword: EXAMPLE
+    module: ods_topology
+    requirement_id: ODS10-TOPO-R07
+    statement: 'The 64-card air-cooled reference (Gaudi3): each GPU connects through four
+      800G AEC cables to four switches (3.2 Tbps per GPU), each GPU exposes 24x200G RoCE interfaces,
+      and the cluster uses six 51.2T switches.'
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P21-8PLANES
+    - ODS10-P22-RESERVE50
+    disposition: constraint
+    keyword: MULTI_PLANE
+    module: ods_topology
+    requirement_id: ODS10-TOPO-R08
+    statement: The cascade first tier builds 8 scale-up planes (8x 51.2T, one 400G link per
+      GPU per plane) or 4 planes (4x 102.4T, one 800G link per GPU per plane), and reserves
+      50% of first-tier ports for the cascade uplinks.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P22-OCS
+    disposition: constraint
+    keyword: CASCADE_TIER2
+    module: ods_topology
+    requirement_id: ODS10-TOPO-R09
+    statement: The second tier uses either the same switch model or an optical circuit switch
+      (OCS); the OCS is strongly recommended to remove repeated optical-electrical conversion.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P23-MAX8192
+    - ODS10-P26-MAX16384
+    - ODS10-P26-MAX2048OCS
+    disposition: constraint
+    keyword: MAX_SCALE
+    module: ods_topology
+    requirement_id: ODS10-TOPO-R10
+    statement: 'Maximum cluster size is determined by the two tiers: 51.2T+51.2T reaches 8192
+      cards; 102.4T+102.4T reaches 16384 cards; replacing the second tier with a 256x256 OCS
+      gives 1024 cards (first tier 51.2T) or 2048 cards (first tier 102.4T).'
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P51-LAT1US
+    disposition: constraint
+    keyword: LATENCY
+    module: ods_interconnect
+    requirement_id: ODS10-INT-R11
+    statement: Switches must support cut-through or an equivalent function to reduce latency;
+      the total in-network latency is recommended to stay below 1 microsecond.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P51-SHORT64B
+    disposition: constraint
+    keyword: MEMORY_SEMANTICS
+    module: ods_interconnect
+    requirement_id: ODS10-INT-R12
+    statement: Switches are recommended to forward 64-byte short packets at line rate to serve
+      native memory-semantics traffic (the transport itself is not defined in edition 1.0).
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P51-LLR
+    disposition: constraint
+    keyword: RELIABILITY
+    module: ods_interconnect
+    requirement_id: ODS10-INT-R13
+    statement: Link-layer retransmission (LLR) is recommended on switches to improve packet
+      error-retransmission efficiency.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P51-SPRAY
+    disposition: constraint
+    keyword: LOAD_BALANCING
+    module: ods_interconnect
+    requirement_id: ODS10-INT-R14
+    statement: Switches must support packet spraying, with weight-based spraying as defined
+      by the FARE (fully adaptive routing Ethernet) protocol recommended.
+    subject: ODS
+  - anchor_ids:
+    - ODS10-P69-AEC7M
+    - ODS10-P71-AECLAT
+    - ODS10-P75-OPTMENU
+    disposition: constraint
+    keyword: CABLES
+    module: ods_interconnect
+    requirement_id: ODS10-INT-R15
+    statement: Compute-to-switch links prefer AEC copper (up to 7 m at 112G SerDes; bidirectional
+      cable delay recommended below 50 ns); switch-to-switch links use optics, with FRO /
+      LPO / LRO / CPO coexisting as the optical menu.
+    subject: ODS
+source:
+  document_id: ods_wp_1_0
+  name: ODCC Open Disaggregated SuperPoD (ODS) system architecture whitepaper 1.0
+  normative: false
+  note: Interpretation of the ODCC ODS 1.0 whitepaper (Chinese edition). The document defines
+    the hardware system architecture and states that the 1.0 edition does not define the interconnect
+    protocol; requirements here are mechanism-existence interpretations with verbatim anchors,
+    values the document states as examples or recommendations keep their anchors and everything
+    unstated stays an explicit free parameter.
+  revision: 9c6457bf98fdad7fed53d2525cb8c2175a315df4abb26fb6b532bf175bba3a89
+supported:
+  observables:
+  - O-CCT
+  - O-CONSERVATION
+  workloads:
+  - w1_dense_tp_decode
+versioning:
+  bump_rules:
+    major:
+    - dispositions
+    - bindings
+    - anchor_ids
+    minor:
+    - requirements
+    - freedom
+    - checks
+    - supported
+    patch:
+    - notes
+  note: The profile version tracks this ARTIFACT, not the whitepaper edition.
+  profile_version: 0.1.0

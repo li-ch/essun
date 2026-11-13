@@ -1,0 +1,11 @@
+开放解构超节点(ODS)系统架构技术白皮书
+31
+长 宽 板厚 TOP 限高 BOT 限高
+424mm 360mm 3.6mm 区域合理定义 2.1mm
+表 4-1
+图 4-6
+4.2.4 CPU 主板
+CPU 主板框图(图 4-7)。本参考设计采用 单路 Intel BHS-AP 平台
+,搭载 GNR-AP CPU,支持 12 条 DDR5 内存。通过 MCIO 连接器 提供
+88 条 PCIe Gen5 lane 对外接口。主板集成 CPLD 用于上电控制和状态监
+控,并配备 标准 OCP DC-SCM 连接器,外接 DC-SCM 卡实现 BMC 管

@@ -1,0 +1,37 @@
+# ODS (ODCC Open Disaggregated SuperPoD) 1.0 source record (repo level).
+# License review PRECEDED ingestion (workspace rule 3): the document
+# carries no copyright or usage notice (full-text scan); the owner
+# obtained it through a legal channel and confirmed on 2026-11-13 that
+# anchored quotation in the public repository is permitted. The PDF
+# itself stays out of git; the per-page extracted text under
+# experiments/ods/source/pages/ is the in-repo representation (the
+# same pattern as experiments/uec/source/).
+sources:
+  - id: STD-ODS-WP10
+    category: standard
+    title: 开放解构节点（ODS）系统架构技术白皮书（1.0 版）
+    publisher: ODCC (开放数据中心委员会)
+    version: "1.0"
+    url: null
+    access: PUBLIC_READ_VIA_OWNER
+    role: Architecture whitepaper (hardware system architecture; the
+      1.0 edition explicitly does not define the interconnect protocol)
+    notes: >-
+      Owner-provided copy (legal channel), sha256
+      9c6457bf98fdad7fed53d2525cb8c2175a315df4abb26fb6b532bf175bba3a89,
+      91 pages. No usage notice appears in the document; owner confirmed
+      public anchored-quotation usage on 2026-11-13. Anchor quotes are
+      kept to <= 120 characters with attribution.
+  - id: STD-ODS-LICENSE
+    category: license
+    title: ODS whitepaper usage terms
+    version: "n/a (no notice in document)"
+    url: null
+    access: RESOLVED_BY_OWNER
+    role: Usage and derivative review
+    notes: >-
+      No license or usage notice exists inside the document (scanned).
+      Resolution recorded here: the owner reviewed the acquisition
+      channel on 2026-11-13 and confirmed public anchored quotation;
+      whole-document redistribution beyond the page-text representation
+      stays out of scope of that confirmation.

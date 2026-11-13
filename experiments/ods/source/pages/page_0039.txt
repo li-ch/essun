@@ -1,0 +1,12 @@
+开放解构超节点(ODS)系统架构技术白皮书
+37
+图 4-13
+高速硬盘背板外形尺寸如下(表 4-4 ):
+长 宽 板厚 TOP 限高 BOT 限高
+163mm 39.3mm 2mm N/A N/A
+表 4-4
+4.2.8 计算节点 power 设计要求
+PDB 两路输出 54V 和 12V, 提供节点内各个子系统的供电需求,
+power budget table 如下,可用于选择合适的 PSU。
+Component Count Power Total Power
+Gaudi3 OAM 4 900W 3600W
