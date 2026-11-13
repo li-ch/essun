@@ -1,0 +1,23 @@
+开放解构超节点(ODS)系统架构技术白皮书
+41
+参数 要求
+COM ≥3.0dB
+FOMILD ≤0.25dB
+ERL ≥10dB
+表 4-7
+COM、FOMILD 与 ERL 的具体计算定义可参见 IEEE Std 802.3
+Annex 93A。COM(Channel Operating Margin)通过计算计算信道的信
+噪比裕量来评估链路性能,主要评估链路的信号完整性、噪声容限和误码率
+性能。FOMILD(Figure of Merit for Insertion Loss Deviation)参数通
+过评估插入损耗相对于理想平滑曲线的偏差来衡量链路性能,量化了实际插
+入损耗与拟合曲线之间的差异。FOMILD 主要评估链路的频率响应平坦度和
+阻抗连续性,确保信道在工作频带内具有平滑的传输特性,避免因阻抗不匹
+配或结构不连续导致的信号反射和失真。ERL(Effective Return Loss)参
+数通过评估链路的有效回波损耗来衡量阻抗匹配性能,量化了信号在传输过
+程中因阻抗不连续而产生的反射损耗。ERL 主要评估链路的阻抗匹配质量和
+反射特性,确保传输线路具有良好的阻抗连续性,最小化信号反射对传输质
+量的影响。
+在满足通道的设计要求基础上,对于作为 Host 侧的 GPU OAM 与
+UBB 以及作为 Module 侧的 OSFP 模块应满足标准 IEEE Std 802.3
+Annex 120.G 与 OIF-CEI 5.2 112G VSR PAM4 中对于 Host 与
+Module 的所有输入与输出要求。

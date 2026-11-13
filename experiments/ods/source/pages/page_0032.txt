@@ -1,0 +1,16 @@
+开放解构超节点(ODS)系统架构技术白皮书
+30
+4.2.3 GPU Baseboard 参考设计
+GPU Baseboard 的板框图(图 4-5)。以 Intel Gaudi3 为例,
+Baseboard 搭载 4 个 GPU OAM 模块,每个 OAM 模块支持 24 条 200
+Gbps 以太网接口。
+为满足业界标准互联要求,这些接口通过 6 个 OSFP 接口 对外呈现,
+实现单板 共 24 个 OSFP 端口 的高速网络连接能力。
+图 4-5
+GPU Baseboard 4 个 GPU 的 PCIe 信号通过 MCIO cable 连接到
+PCIe SW 板的 PCIe Switch 下行接口。
+板上的 54V 和 12V 电源来自 PDB 板,54V 转 3.3V 的 power
+module 主要用于给 24 个 OSFP module 供电。
+Sideband 信号连接器用于 CPU 主板对于 GPU 板上电时序和 GPU
+的管理,板上 CPLD 主要用于上电时序控制和对 GPU 信号控制。
+GPU baseboard 外形(图 4-6)尺寸如下(表 4-1 )

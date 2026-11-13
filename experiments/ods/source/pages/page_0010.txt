@@ -1,0 +1,20 @@
+8
+AEC 有源电子电缆 Active Electrical Cable
+DAC 直连电缆 Direct Attach Copper Cable
+AOC 有源光缆 Active Optical Cable
+FRO 全重定时光模块 Full Retimer Optics
+LPO 线性可插拔光模块 Linear Pluggable Optics
+LRO 线性接收光模块 Linear Receive Optics
+CPO 共封装光学技术 Co-Packaged Optics
+OE 硅光引擎 Optical Engine
+ELS 外部激光光源 External Laser Source
+QSFP
+四通道小型可插拔光模块 Quad Small Form-factor
+Pluggable
+OSFP
+八通道小型可插拔光模块 Octal Small Form-factor
+Pluggable
+Console 控制串口
+MGMT 管理网口
+USB 通用串行总线 Universal Serial Bus
+VGA 视频图形阵列端口 Video Graphics Array

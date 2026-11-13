@@ -1,0 +1,12 @@
+开放解构超节点(ODS)系统架构技术白皮书
+33
+图 4-8
+4.2.5 PCIe Switch 板
+PCIe Switch 板框图(图 4-9),单板集成 2 个 Broadcom
+PEX89104 Switch:
+● 每个 Switch 配备 2 个 PCIe Gen5 x16 上行口
+● 下行口包括:
+➢ 2 个 x16 CEM slot,用于 Scale-Out NIC
+➢ 2 个 x16 接口连接 GPU Baseboard
+➢ 2 个 x8 接口连接 2 个 x4 NVMe 存储,通过 HSBP 扩展
+➢ 电源由 PDB 提供,sideband 信号来自 GPU Baseboard。
