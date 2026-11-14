@@ -23,6 +23,14 @@ an immutable run record that anyone can re-derive from a clean clone.
   verbatim, hash-verified quotes from the specification and organizes 445
   requirements behind an explicit label: what the spec requires, where it
   leaves implementers free, and what essun does not model.
+- **Model a multi-plane switch fabric end to end.** The
+  `multiplane_switch` topology family (planes and per-plane port rate as
+  free parameters, payload divisibility guarded, pointwise equal to the
+  crossbar when planes x port rate equals aggregate bandwidth), a
+  serving-roofline composition that turns wire time into exact
+  SLO-constrained per-card throughput (decode and prefill, two-pool
+  attention/expert splits), and an RL-rollout workload generator (W6)
+  join the analytical family.
 - **Trust the honesty machinery.** Every result carries an evidence label;
   one axis today is CALIBRATED within a stated domain, everything else stays at or below `IMPLEMENTED_UNVERIFIED` (we say which, plainly);
   `make paper-check` mechanically rejects overclaiming vocabulary in the
@@ -68,7 +76,12 @@ Docker the demo runs the analytical legs and says exactly what it skipped).
   license question is answered. The NVLink-class profile is likewise
   paper-derived from five public papers/pages (no public NVLink/NVSwitch
   specification exists) and extends the cross-fabric matrix to three
-  architectures.
+  architectures. The ODS profile (the ODCC Open Disaggregated SuperPoD
+  architecture whitepaper 1.0) interprets a fifth public fabric: 15
+  anchored requirements with page-verified quotes, its published figures
+  kept as graded examples and recommendations rather than normative
+  values, and the whitepaper's own scope limit (hardware architecture,
+  no interconnect protocol in 1.0) interpreted as-is.
 
 Detailed component status lives in [docs/status.md](docs/status.md).
 

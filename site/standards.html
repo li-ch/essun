@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Standards — essun</title>
-<meta name="description" content="How essun ingests scale-up network standards honestly: the UEC 1.1 semantic profile (80 anchors, 445 requirement objects, 67 free parameters), the not-normative UnifiedBus paper-derived profile, the free-parameter discipline, and the cross-fabric comparison matrix (five axes × three pairs, every cell citing its artifact; UALink and CXL absent by license). License review precedes ingestion.">
+<meta name="description" content="How essun ingests scale-up network standards honestly: the UEC 1.1 semantic profile (80 anchors, 445 requirement objects, 67 free parameters), the not-normative UnifiedBus paper-derived profile, the fifth public profile of the ODCC ODS 1.0 open-superpod architecture, the free-parameter discipline, and the cross-fabric comparison matrix (five axes × three pairs, every cell citing its artifact; UALink stays a license-fenced activation kit and CXL is absent by license). License review precedes ingestion.">
 <link rel="stylesheet" href="style.css">
 <script src="site.js" defer></script>
 </head>
@@ -109,6 +109,24 @@
     <dd>Carries public-gate leg 2 (a second standard for comparison) with its honest not-normative label. Feeds the cross-fabric comparison matrix below.</dd>
     <dt>Label</dt>
     <dd><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> (not normative; public-gate leg 2)</dd>
+  </dl>
+</section>
+
+
+<section id="ods-profile">
+  <p class="kicker">Fifth public profile — a same-domain open superpod architecture</p>
+  <h2>ODS (ODCC Open Disaggregated SuperPoD) 1.0 profile</h2>
+  <dl class="facts">
+    <dt>Source</dt>
+    <dd>The ODCC Open Disaggregated SuperPoD system-architecture whitepaper 1.0 (91 pages), provided through a legal channel with public anchored-quotation usage confirmed; the PDF stays out of git, and 91 per-page text files are the in-repo representation, hashed page by page.</dd>
+    <dt>15 requirements, 7 free parameters</dt>
+    <dd>System, topology, and interconnect modules; 23 anchors, every quote a verbatim substring of its page text (at most 120 characters, single-hit verified at load). The whitepaper states its 1.0 edition defines the hardware architecture and not the interconnect protocol, so the profile interprets no protocol semantics.</dd>
+    <dt>Published figures stay graded</dt>
+    <dd>The 3.2&nbsp;Tbps per-xPU figure is a reference-design example (4&times;800G AEC per GPU); the &lt;1&nbsp;&micro;s total-network latency and the &lt;50&nbsp;ns AEC cable delay are recommendations; the 8/4-plane schemes are configuration options. Each keeps its anchor; everything unstated stays an explicit free parameter.</dd>
+    <dt>Not in the cross-fabric matrix yet</dt>
+    <dd>A matrix cell requires an executed sweep artifact; the ODS profile ships interpretation machinery with zero executed comparisons, so it adds no column today.</dd>
+    <dt>Label</dt>
+    <dd><span class="label label-unverified">IMPLEMENTED_UNVERIFIED</span> (interpretation and anchoring only; no hardware claim)</dd>
   </dl>
 </section>
 
